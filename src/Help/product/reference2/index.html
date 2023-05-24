@@ -1,0 +1,1282 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-ca">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>Reference Index</title>
+</head>
+
+<body>
+
+<h1><font color="#FF0000">FKiSS Key Topics</font></h1>
+<hr>
+
+<p>Welcome to the UltraKiss reference documentation. To open an online book, choose a book from the Contents page in the upper
+left of the Help Viewer. Click the book icon to expand the book topics. Then, click a topic to
+view it.</p>
+
+<p>&nbsp;</p>
+
+<h2>Introduction</h2>
+
+<p>KiSS (Kisekae Set System) is an image processing system used to create
+computer representations of two-dimensional virtual dolls. FKiSS is an event
+language that facilitates the
+programming of automated actions and system interaction with the user. This
+document describes the KiSS configuration file format and the syntax and
+semantics of the FKiSS programming language.</p>
+<p>UltraKiss  extended and standardized many aspects of the FKiSS language. The standardization,  refered to as FKiSS version 5, was designed to correct many of the FKiSS language deficiencies. Each UltraKiss FKiSS command is either a backward compatible extension to previous versions of FKiSS (<font color="#800000">FKiSS5</font>), or is a new  command implemented for completeness or new capabilities (<font color="#800000">FKiSS5 Extension</font>), or is an UltraKiss viewer specific command (<font color="#800000">UltraKiss Extension</font>). </p>
+<p>&nbsp;</p>
+<p><b><a name="FKiSS_Language">The FKiSS Language</a></b></p>
+<div align="center">
+  <center>
+  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td width="35%"><a href="kiss_data_types.html">Data Types</a></td>
+    <td width="65%" rowspan="10" valign="top"><p>The FKiSS programming language allows  programmed  capabilities when developing KiSS sets. The language was originally conceived as a non-procedural language that would respond to various events, but with the development of FKiSS 3 a procedural structure was imposed that introduced program variables and control logic.</p><br>
+      <p>With FKiSS 5, the FKiSS programming language provides integer and real number arithmetic, string and character manipulation, nested if-statements for logic control, subroutines and function capable label blocks, with local and global variables to manage state information. </p>
+      </td>
+  </tr>
+  <tr>
+    <td><a href="kiss_image_types.html">Image Types</a></td>
+    </tr>
+  <tr>
+    <td><a href="kiss_audio_types.html">Audio Types</a></td>
+    </tr>
+  <tr>
+    <td><a href="kiss_video_types.html">Video Types</a></td>
+    </tr>
+  <tr>
+    <td><a href="kiss_object_groups.html">Object Groups</a></td>
+    </tr>
+  <tr>
+    <td><a href="kiss_object_groups.html">Cel Groups</a></td>
+    </tr>
+  <tr>
+    <td><a href="components.html"> Components</a></td>
+    </tr>
+  <tr>
+    <td><a href="kiss_variables.html"> Variables</a></td>
+    </tr>
+  <tr>
+    <td><a href="kiss_subroutines.html">Subroutines</a></td>
+    </tr>
+  <tr>
+    <td><a href="kiss_subroutines.html">Functions</a></td>
+    </tr>
+</table>
+  </center>
+</div>
+
+<p>&nbsp;</p>
+
+<p><b><a name="CNF_File">The KiSS Configuration (CNF) File</a></b></p>
+<div align="center">
+  <center>
+  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td width="35%"><a href="kiss_cnf_file.html">Titles and Comments</a></td>
+    <td width="65%" rowspan="9" valign="top"><p>The KiSS set configuration file is the control file that identifies the images and objects that compose a KiSS set. This file must exist in every KiSS set. </p><br>
+      <p>UltraKiss automatically maintains and generates the CNF file  to eliminate much of the manual efforts previously required by KiSS artists.</p><br>
+      <p>Edit changes to the CNF file are automatically applied to the current KiSS set. This edit-test process is an improved  development cycle from earlier KiSS viewers. </p></td>
+  </tr>
+  <tr>
+    <td><a href="kiss_cnf_file.html#includesection">Include Files</a></td>
+    </tr>
+  <tr>
+    <td><a href="kiss_cnf_file.html#optionsection">Option Section</a></td>
+    </tr>
+  <tr>
+    <td><a href="kiss_cnf_file.html#screensection">Screen Section</a></td>
+    </tr>
+  <tr>
+    <td><a href="kiss_cnf_file.html#palettesection">Palette Section</a></td>
+    </tr>
+  <tr>
+    <td><a href="kiss_cnf_file.html#celsection">Cel Section</a></td>
+    </tr>
+  <tr>
+    <td><a href="kiss_cnf_file.html#tags">Cel Tags</a></td>
+    </tr>
+  <tr>
+    <td><a href="kiss_cnf_file.html#pagesetsection">Page Set Section</a></td>
+    </tr>
+  <tr>
+    <td><a href="kiss_cnf_file.html#fkisssection">FKiSS Section</a></td>
+    </tr>
+</table>
+  </center>
+</div>
+
+<p>&nbsp;</p>
+
+<p><b><a name="events">FKiSS Events</a></b></p>
+<div align="center">
+  <center>
+  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td width="150"><a href="alarm.html">alarm</a></td>
+      <td> Activates when an alarm fires</td>
+      <td width="20%"><font color="#800000">FKiSS5 </font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="apart.html">apart</a></td>
+      <td> Triggers when touching cels come apart</td>
+      <td width="20%"> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="begin.html">begin</a></td>
+      <td> Triggers when data set is first viewed</td>
+      <td width="20%">  </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="catch.html">catch</a></td>
+      <td> Triggers on mouse down if object is not maximum fixed</td>
+      <td width="20%">  </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="col.html">col</a></td>
+      <td>  Activates when the palette group is changed</td>
+      <td width="20%">  </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="collide.html">collide</a></td>
+      <td> Triggers when non-touching cels touch</td>
+      <td width="20%"> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="detached.html">detached</a></td>
+      <td> Signals object no longer attached to parent</td>
+      <td width="20%"> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="drop.html">drop</a></td>
+      <td>Triggers on mouse up if object is is not maximum fixed</td>
+      <td width="20%"></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="end.html">end</a></td>
+      <td>  Activates when a data set is closed</td>
+      <td width="20%">  </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="fixcatch.html">fixcatch</a></td>
+      <td>  Triggers on mouse down if object is fixed</td>
+      <td width="20%">  </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="fixdrop.html">fixdrop</a></td>
+      <td>  Triggers on mouse up if object is fixed</td>
+      <td width="20%">  </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="in.html">in</a></td>
+      <td> Triggers when object bounding boxes overlap</td>
+      <td width="20%"> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="initialize.html">initialize</a></td>
+      <td>  Triggers when a data set is initialized</td>
+      <td width="20%">  </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="keypress.html">keypress</a></td>
+      <td> Activates when the user presses a key</td>
+      <td width="20%"><font color="#800000">FKiSS5 </font> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="keyrelease.html">keyrelease</a></td>
+      <td> Activates when the user releases a key</td>
+      <td width="20%"><font color="#800000">FKiSS5 </font> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="keytype.html">keytype</a></td>
+      <td> Activates when the user types a key</td>
+      <td width="20%"> <font color="#800000">FKiSS5 Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="label.html">label</a></td>
+      <td> Program module grouping</td>
+      <td width="20%"><font color="#800000">FKiSS5 </font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="mediastart.html">mediastart</a></td>
+      <td> Triggers when a media file starts playing</td>
+      <td width="20%"> <font color="#800000">FKiSS5 Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="mediastop.html">mediastop</a></td>
+      <td> Triggers when a media file stops playing</td>
+      <td width="20%"> <font color="#800000">FKiSS5 Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="mousein.html">mousein</a></td>
+      <td> Triggers when mouse enters cel or group</td>
+      <td width="20%"> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="mouseout.html">mouseout</a></td>
+      <td> Triggers when mouse leaves cel or group</td>
+      <td width="20%"> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="never.html">never</a></td>
+      <td> This event is never triggered</td>
+      <td width="20%"> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="out.html">out</a></td>
+      <td> Triggers when object bounding boxes no longer overlap</td>
+      <td width="20%"> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="overflow.html">overflow</a></td>
+      <td> Exception handler for errors</td>
+      <td width="20%"> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="press.html">press</a></td>
+      <td> Triggers on mouse down regardless of fix</td>
+      <td width="20%"> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="release.html">release</a></td>
+      <td> Triggers on mouse up regardless of fix</td>
+      <td width="20%"> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="set.html">set</a></td>
+      <td> Activates when the page set is changed</td>
+      <td width="20%"> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="stillin.html">stillin</a></td>
+      <td> Triggers when object bounding boxes still overlap</td>
+      <td width="20%"> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="stillout.html">stillout</a></td>
+      <td> Triggers when object bounding boxes still do not overlap</td>
+      <td width="20%"> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="unfix.html">unfix</a></td>
+      <td> Triggers when object fix value becomes zero</td>
+      <td width="20%"> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="version.html">version</a></td>
+      <td> Triggers when the viewer version is greater than command version</td>
+      <td width="20%"> </td>
+    </tr>
+  </table>
+  </center>
+</div>
+
+<p>&nbsp;</p>
+
+<p><b><a name="actions.arithmetic">FKiSS Actions - Arithmetic</a></b></p>
+<div align="center">
+  <center>
+  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td width="150"><a href="add.html">add</a></td>
+      <td> Addition statement</td>
+      <td width="20%"><font color="#800000">FKiSS5 </font> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="sub.html">sub</a></td>
+      <td> Subtraction statement</td>
+      <td width="20%"><font color="#800000">FKiSS5 </font> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="mul.html">mul</a></td>
+      <td> Multiplication statement</td>
+      <td width="20%"><font color="#800000">FKiSS5 </font> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="div.html">div</a></td>
+      <td> Integer division statement</td>
+      <td width="20%"><font color="#800000">FKiSS5 </font> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="mod.html">mod</a></td>
+      <td> Modulus statement (remainder)</td>
+      <td width="20%"><font color="#800000">FKiSS5 </font> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="random.html">random</a></td>
+      <td> Random number generator</td>
+      <td width="20%"><font color="#800000">FKiSS5 </font> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="sqrt.html">sqrt</a></td>
+      <td> Integer square root of a number</td>
+      <td width="20%"> <font color="#800000">FKiSS5 Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="math.html">math</a></td>
+      <td> Mathematical functions (sin, cos, log, exp, and so on)</td>
+      <td width="20%"> <font color="#800000">FKiSS5 Extension</font></td>
+    </tr>
+  </table>
+  </center>
+</div>
+
+<p>&nbsp;</p>
+
+<p><b><a name="actions.alarms">FKiSS Actions - Alarms</a></b></p>
+<div align="center">
+  <center>
+  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td width="150"><a href="timer.html">timer</a></td>
+      <td> Sets a timer to fire an alarm after a specified delay</td>
+      <td width="20%"><font color="#800000">FKiSS5 </font> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="randomtimer.html">randomtimer</a></td>
+      <td> Sets a timer to fire an alarm after a random delay</td>
+      <td width="20%"><font color="#800000">FKiSS5 </font> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="lettimer.html">lettimer</a></td>
+      <td> Returns the remaining time on a timer</td>
+      <td width="20%"><font color="#800000">FKiSS5 </font> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="iffixed.html">iffixed</a></td>
+      <td>  Sets a timer if an object or cel is fixed</td>
+      <td width="20%"><font color="#800000">FKiSS5 </font> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="ifmapped.html">ifmapped</a></td>
+      <td>  Sets a timer if an object or cel is visible</td>
+      <td width="20%"><font color="#800000">FKiSS5 </font> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="ifmoved.html">ifmoved</a></td>
+      <td>  Sets a timer if an object or cel has moved</td>
+      <td width="20%"><font color="#800000">FKiSS5 </font> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="ifnotfixed.html">ifnotfixed</a></td>
+      <td>  Sets a timer if an object or cel is not fixed</td>
+      <td width="20%"><font color="#800000">FKiSS5 </font> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="ifnotmapped.html">ifnotmapped</a></td>
+      <td>  Sets a timer if an object or cel is not visible</td>
+      <td width="20%"><font color="#800000">FKiSS5 </font> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="ifnotmoved.html">ifnotmoved</a></td>
+      <td>  Sets a timer if an object or cel has not moved</td>
+      <td width="20%"><font color="#800000">FKiSS5 </font> </td>
+    </tr>
+  </table>
+  </center>
+</div>
+
+<p>&nbsp;</p>
+
+<p><b><a name="actions.components">FKiSS Actions - Components</a></b></p>
+<div align="center">
+  <center>
+  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td width="150"><a href="additem.html">addItem</a></td>
+      <td> Add an item to a list or combobox </td>
+      <td width="20%"><font color="#800000">UltraKiss Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="removeitem.html">removeItem</a></td>
+      <td> Remove a list or combobox item by value</td>
+      <td width="20%"><font color="#800000">UltraKiss Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="removeall.html">removeAll</a></td>
+      <td> Remove all list or combobox items</td>
+      <td width="20%"><font color="#800000">UltraKiss Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="gettext.html#getText">getText</a></td>
+      <td> Get component text</td>
+      <td width="20%"><font color="#800000">UltraKiss Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="gettext.html#setText">setText</a></td>
+      <td> Set component text</td>
+      <td width="20%"> <font color="#800000">UltraKiss Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="getselected.html">getSelected</a></td>
+      <td> Get button component selection state</td>
+      <td width="20%"> <font color="#800000">UltraKiss Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="setselected.html">setSelected</a></td>
+      <td> Set button component selection state</td>
+      <td width="20%"> <font color="#800000">UltraKiss Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="getindexof.html">getIndexOf</a></td>
+      <td> Get index of component item by value </td>
+      <td width="20%"><font color="#800000">UltraKiss Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="getvalueat.html">getValueAt</a></td>
+      <td> Get list component  value at specified index</td>
+      <td width="20%"> <font color="#800000">UltraKiss Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="setvalueat.html">setValueAt</a></td>
+      <td> Set list component  value at specified index </td>
+      <td width="20%"> <font color="#800000">UltraKiss Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="getselectedindex.html">getSelectedIndex</a></td>
+      <td> Get index of first selected item</td>
+      <td width="20%"> <font color="#800000">UltraKiss Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="getnextselectedindex.html">getNextSelectedIndex</a></td>
+      <td> Get index of  next selected item </td>
+      <td width="20%"><font color="#800000">UltraKiss Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="setselectedindex.html">setSelectedIndex</a></td>
+      <td> Set component selection by index</td>
+      <td width="20%"> <font color="#800000">UltraKiss Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="getselectedvalue.html">getSelectedValue</a></td>
+      <td> Get component selected item value</td>
+      <td width="20%"> <font color="#800000">UltraKiss Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="setselectedvalue.html">setSelectedValue</a></td>
+      <td> Set component selection by value</td>
+      <td width="20%"> <font color="#800000">UltraKiss Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="getselecteditem.html">getSelectedItem</a></td>
+      <td> Get combobox selected item value </td>
+      <td width="20%"> <font color="#800000">UltraKiss Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="setselecteditem.html">setSelectedItem</a></td>
+      <td> Set combobox selection by value </td>
+      <td width="20%"> <font color="#800000">UltraKiss Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="getitemcount.html">getItemCount</a></td>
+      <td> Get number of list items</td>
+      <td width="20%"> <font color="#800000">UltraKiss Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="getenabled.html">getEnabled</a></td>
+      <td> Get the enable state of the component</td>
+      <td width="20%"> <font color="#800000">UltraKiss Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="setenabled.html">setEnabled</a></td>
+      <td> Enable or disable the component</td>
+      <td width="20%"> <font color="#800000">UltraKiss Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="setattributes.html">setAttributes</a></td>
+      <td> Set one or more  component attributes</td>
+      <td width="20%"> <font color="#800000">UltraKiss Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="getattributes.html">getAttributes</a></td>
+      <td> Get all component attributes or a specific attribute</td>
+      <td width="20%"> <font color="#800000">UltraKiss Extension</font></td>
+    </tr>
+  </table>
+  </center>
+</div>
+
+<p>&nbsp;</p>
+
+<p><b><a name="actions.conditional">FKiSS Actions - Conditional Control</a></b></p>
+<div align="center">
+  <center>
+  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td width="150"><a href="ifequal.html">ifequal</a></td>
+      <td> Logical if statement</td>
+      <td width="20%"><font color="#800000">FKiSS5 </font> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="ifgreaterthan.html">ifgreaterthan</a></td>
+      <td> Comparative if statement</td>
+      <td width="20%"><font color="#800000">FKiSS5 </font> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="iflessthan.html">iflessthan</a></td>
+      <td> Comparative if statement</td>
+      <td width="20%"><font color="#800000">FKiSS5 </font> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="ifnotequal.html">ifnotequal</a></td>
+      <td> Logical not if statement</td>
+      <td width="20%"><font color="#800000">FKiSS5 </font> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="else.html">else</a></td>
+      <td> If statement optional part</td>
+      <td width="20%"><font color="#800000">FKiSS5 </font> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="elseifequal.html">elseifequal</a></td>
+      <td> Else variant (equal)</td>
+      <td width="20%"><font color="#800000">FKiSS5 </font> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="elseifgreaterthan.html">elseifgreaterthan</a></td>
+      <td> Else variant (greater than)</td>
+      <td width="20%"><font color="#800000">FKiSS5 </font> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="elseiflessthan.html">elseiflessthan</a></td>
+      <td> Else variant (less than)</td>
+      <td width="20%"><font color="#800000">FKiSS5 </font> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="elseifnotequal.html">elseifnotequal</a></td>
+      <td> Else variant (not equal)</td>
+      <td width="20%"><font color="#800000">FKiSS5 </font> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="endif.html">endif</a></td>
+      <td> If statement end</td>
+      <td width="20%"><font color="#800000">FKiSS5 </font> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="iffixed.html">iffixed</a></td>
+      <td>  Sets a timer if an object or cel is fixed</td>
+      <td width="20%"><font color="#800000">FKiSS5 </font> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="ifmapped.html">ifmapped</a></td>
+      <td>  Sets a timer if an object or cel is visible</td>
+      <td width="20%"><font color="#800000">FKiSS5 </font> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="ifmoved.html">ifmoved</a></td>
+      <td>  Sets a timer if an object or cel has moved</td>
+      <td width="20%"><font color="#800000">FKiSS5 </font> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="ifnotfixed.html">ifnotfixed</a></td>
+      <td>  Sets a timer if an object or cel is not fixed</td>
+      <td width="20%"><font color="#800000">FKiSS5 </font> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="ifnotmapped.html">ifnotmapped</a></td>
+      <td>  Sets a timer if an object or cel is not visible</td>
+      <td width="20%"><font color="#800000">FKiSS5 </font> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="ifnotmoved.html">ifnotmoved</a></td>
+      <td>  Sets a timer if an object or cel has not moved</td>
+      <td width="20%"><font color="#800000">FKiSS5 </font> </td>
+    </tr>
+  </table>
+  </center>
+</div>
+
+<p>&nbsp;</p>
+
+<p><b><a name="actions.environmental">FKiSS Actions - Environment Control</a></b></p>
+<div align="center">
+  <center>
+  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td width="150"><a href="changecol.html">changecol</a></td>
+      <td>  Switches to a new color palette</td>
+      <td width="20%"><font color="#800000">FKiSS5 </font> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="changeset.html">changeset</a></td>
+      <td>  Switches to a new page set</td>
+      <td width="20%"><font color="#800000">FKiSS5 </font> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="shell.html">shell</a></td>
+      <td> Invokes a shell program on the host</td>
+      <td width="20%"> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="viewport.html">viewport</a></td>
+      <td> Changes the playfield window viewing  offset</td>
+      <td width="20%"> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="windowsize.html">windowsize</a></td>
+      <td> Changes the playfield window size</td>
+      <td width="20%"> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="letmaxpage.html">letmaxpage</a></td>
+      <td> Get the maximum pages defined</td>
+      <td width="20%"> <font color="#800000">FKiSS5 Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="letmaxcolor.html">letmaxcolor</a></td>
+      <td> Get the maximum color sets defined</td>
+      <td width="20%"> <font color="#800000">FKiSS5 Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="setmodal.html">setmodal</a></td>
+      <td> Set the modal event object source</td>
+      <td width="20%"> <font color="#800000">UltraKiss Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="letmodal.html">letmodal</a></td>
+      <td> Return the modal object source</td>
+      <td width="20%"> <font color="#800000">UltraKiss Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="viewer.html">viewer</a></td>
+      <td> Viewer specific commands</td>
+      <td width="20%"> <font color="#800000">UltraKiss Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="environment.html">environment</a></td>
+      <td> A generic system request</td>
+      <td width="20%"> <font color="#800000">UltraKiss Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="event.html">event</a></td>
+      <td> Fires an existing press, release, or  other event</td>
+      <td width="20%"> <font color="#800000">UltraKiss Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="paint.html">paint</a></td>
+      <td> Force a redraw of the current screen</td>
+      <td width="20%"> <font color="#800000">UltraKiss Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="wait.html">wait</a></td>
+      <td> Suspend an activity and wait for a notify signal </td>
+      <td width="20%"> <font color="#800000">UltraKiss Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="signal.html">signal</a></td>
+      <td> Notify a suspended activity</td>
+      <td width="20%"> <font color="#800000">UltraKiss Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="sleep.html">sleep</a></td>
+      <td> Pause an activity  for a period of time </td>
+      <td width="20%"> <font color="#800000">UltraKiss Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="mouserelease.html">mouseRelease</a></td>
+      <td> Force a mouse release</td>
+      <td width="20%"> <font color="#800000">UltraKiss Extension</font></td>
+    </tr>
+  </table>
+  </center>
+</div>
+
+<p>&nbsp;</p>
+
+<p><b><a name="actions.io">FKiSS Actions - I/O Control</a></b></p>
+<div align="center">
+  <center>
+  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td width="150"><a href="open.html">open</a></td>
+      <td> Open a file</td>
+      <td width="20%"> <font color="#800000">UltraKiss Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="read.html">read</a></td>
+      <td> Read a line</td>
+      <td width="20%"> <font color="#800000">UltraKiss Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="write.html">write</a></td>
+      <td> Write a line</td>
+      <td width="20%"> <font color="#800000">UltraKiss Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="close.html">close</a></td>
+      <td> Close a file</td>
+      <td width="20%"> <font color="#800000">UltraKiss Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="edit.html">edit</a></td>
+      <td> Edit a file</td>
+      <td width="20%"> <font color="#800000">UltraKiss Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="valuepool.html">valuepool</a></td>
+      <td> Establish a local properties pool</td>
+      <td width="20%"> <font color="#800000">DirectKiss Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="loadvalue.html">loadvalue</a></td>
+      <td> Load a property variable</td>
+      <td width="20%"> <font color="#800000">DirectKiss Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="deletevalue.html">deletevalue</a></td>
+      <td> Remove a property variable</td>
+      <td width="20%"> <font color="#800000">DirectKiss Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="savevalue.html">savevalue</a></td>
+      <td> Set a property variable</td>
+      <td width="20%"> <font color="#800000">DirectKiss Extension</font></td>
+    </tr>
+  </table>
+  </center>
+</div>
+
+<p>&nbsp;</p>
+
+<p><b><a name="actions.key">FKiSS Actions - Key Processing</a></b></p>
+<div align="center">
+  <center>
+  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td width="150"><a href="letkey.html">letkey</a></td>
+      <td> Returns index of first key pressed in list</td>
+      <td width="20%"></td>
+    </tr>
+    <tr>
+      <td width="150">l<a href="letkeychar.html">etkeychar</a></td>
+      <td> Returns the last key typed character</td>
+      <td width="20%"><font color="#800000">FKiSS5 Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="letkeycode.html">letkeycode</a></td>
+      <td> Returns the last key typed virtual key code</td>
+      <td width="20%"><font color="#800000">FKiSS5 Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="letkeymap.html">letkeymap</a></td>
+      <td> Returns binary key mapping for multiple key strokes</td>
+      <td width="20%"></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="letkeymodifier.html">letkeymodifier</a></td>
+      <td> Returns the last key typed modifiers</td>
+      <td width="20%"><font color="#800000">FKiSS5 Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="letkeystring.html">letkeystring</a></td>
+      <td> Returns the last typed line as a string&nbsp;</td>
+      <td width="20%"><font color="#800000">FKiSS5 Extension</font></td>
+    </tr>
+  </table>
+  </center>
+</div>
+
+<p>&nbsp;</p>
+
+<p><b><a name="actions.label">FKiSS Actions - Label Modules</a></b>
+</p>
+<div align="center">
+  <center>
+  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td width="150"><a href="gosub.html">gosub</a></td>
+      <td> Subroutine call to label module</td>
+      <td width="20%"><font color="#800000">FKiSS5 </font> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="gosubrandom.html">gosubrandom</a></td>
+      <td> Random selection of subroutine label module</td>
+      <td width="20%"><font color="#800000">FKiSS5 </font> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="goto.html">goto</a></td>
+      <td> Jump to a label module</td>
+      <td width="20%"><font color="#800000">FKiSS5 </font> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="gotorandom.html">gotorandom</a></td>
+      <td> Random selection of label module</td>
+      <td width="20%"><font color="#800000">FKiSS5 </font> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="exitevent.html">exitevent</a></td>
+      <td> Exit a label module or event module </td>
+      <td width="20%"> </td>
+    </tr>
+  </table>
+  </center>
+</div>
+
+<p>&nbsp;</p>
+
+<p><b><a name="actions.loop">FKiSS Actions - Loop Control</a></b></p>
+<div align="center">
+  <center>
+  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td width="150"><a href="for.html">for</a></td>
+      <td> Loop statement</td>
+      <td width="20%"> <font color="#800000">FKiSS5 Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="next.html">next</a></td>
+      <td> Loop terminator statement</td>
+      <td width="20%"> <font color="#800000">FKiSS5 Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="repeat.html">repeat</a></td>
+      <td> Repeat a label block gosub 'n' times</td>
+      <td width="20%"> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="exitloop.html">exitloop</a></td>
+      <td> Exit a repeat statement</td>
+      <td width="20%"> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="while.html">while</a></td>
+      <td> While statement</td>
+      <td width="20%"> <font color="#800000">FKiSS5 Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="endwhile.html">endwhile</a></td>
+      <td> While statement end</td>
+      <td width="20%"> <font color="#800000">FKiSS5 Extension</font></td>
+    </tr>
+  </table>
+  </center>
+</div>
+
+<p>&nbsp;</p>
+
+<p><b><a name="actions.mapping">FKiSS Actions - Mapping</a></b></p>
+<div align="center">
+  <center>
+  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td width="150"><a href="map.html">map</a></td>
+      <td> Makes an object or cel visible</td>
+      <td width="20%"> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="altmap.html">altmap</a></td>
+      <td>  Inverts an object or cel visibility</td>
+      <td width="20%">  </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="unmap.html">unmap</a></td>
+      <td> Makes an object or cel invisible</td>
+      <td width="20%"> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="animate.html">animate</a></td>
+      <td> Enables or disables cel animation</td>
+      <td width="20%"> <font color="#800000">UltraKiss Extension</font> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="ifmapped.html">ifmapped</a></td>
+      <td>  Sets a timer if an object or cel is visible</td>
+      <td width="20%"><font color="#800000">FKiSS5 </font> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="ifnotmapped.html">ifnotmapped</a></td>
+      <td>  Sets a timer if an object or cel is not visible</td>
+      <td width="20%"><font color="#800000">FKiSS5 </font> </td>
+    </tr>
+  </table>
+  </center>
+</div>
+
+<p>&nbsp;</p>
+
+<p><b><a name="actions.messages">FKiSS Actions - Messages</a></b></p>
+<div align="center">
+  <center>
+  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td width="150"><a href="debug.html">debug</a></td>
+      <td>  Shows a message dialog box</td>
+      <td width="20%"><font color="#800000">FKiSS5 </font> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="notify.html">notify</a></td>
+      <td>  Shows a message dialog box</td>
+      <td width="20%"><font color="#800000">FKiSS5 </font> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="confirm.html">confirm</a></td>
+      <td> Shows a modal confirmation dialog box</td>
+      <td width="20%"> <font color="#800000">UltraKiss Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="showstatus.html">showstatus</a></td>
+      <td> Shows a message in the viewer status bar</td>
+      <td width="20%"> <font color="#800000">UltraKiss Extension</font></td>
+    </tr>
+  </table>
+  </center>
+</div>
+
+<p>&nbsp;</p>
+
+<p><b><a name="actions.movement">FKiSS Actions - Movement</a></b></p>
+<div align="center">
+  <center>
+  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td width="150"><a href="move.html">move</a></td>
+      <td> Moves an object or cel in x and y dimension</td>
+      <td width="20%"><font color="#800000">FKiSS5 </font> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="movebyx.html">movebyx</a></td>
+      <td> Moves an object or cel in x dimension relative to another object </td>
+      <td width="20%"><font color="#800000">FKiSS5 </font> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="movebyy.html">movebyy</a></td>
+      <td> Moves an object or cel in y dimension relative to another object </td>
+      <td width="20%"><font color="#800000">FKiSS5 </font> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="moverandx.html">moverandx</a></td>
+      <td> Moves an object or cel by random amount in x dimension</td>
+      <td width="20%"><font color="#800000">FKiSS5 </font> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="moverandy.html">moverandy</a></td>
+      <td> Moves an object or cel by random amount in y dimension</td>
+      <td width="20%"><font color="#800000">FKiSS5 </font>  </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="moveto.html">moveto</a></td>
+      <td> Moves an object or cel to an absolute (x,y) location</td>
+      <td width="20%"><font color="#800000">FKiSS5 </font> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="movetorand.html">movetorand</a></td>
+      <td> Moves an object or cel to a random location</td>
+      <td width="20%">&nbsp; </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="restrictx.html">restrictx</a></td>
+      <td> Restrict object movement in X direction</td>
+      <td width="20%"><font color="#800000">FKiSS5 </font> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="restricty.html">restricty</a></td>
+      <td> Restrict object movement in Y direction</td>
+      <td width="20%"><font color="#800000">FKiSS5 </font> </td>
+    </tr>
+  </table>
+  </center>
+</div>
+
+<p>&nbsp;</p>
+
+<p><b><a name="actions.attachment">FKiSS Actions - Object Attachment</a></b></p>
+<div align="center">
+  <center>
+  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td width="150"><a href="attach.html">attach</a></td>
+      <td> Attach an object to a parent</td>
+      <td width="20%"><font color="#800000">FKiSS5 </font> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="clone.html">clone</a></td>
+      <td> Create a new object</td>
+      <td width="20%"> <font color="#800000">UltraKiss Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="destroy.html">destroy</a></td>
+      <td> Destroy an object</td>
+      <td width="20%"> <font color="#800000">UltraKiss Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="letcloned.html">letcloned</a></td>
+      <td> Identify the source object of a cloned object</td>
+      <td width="20%"> <font color="#800000">UltraKiss Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="detach.html">detach</a></td>
+      <td> Detach an object from its parent</td>
+      <td width="20%"><font color="#800000">FKiSS5 </font> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="glue.html">glue</a></td>
+      <td> Attach an object but movements do not detach</td>
+      <td width="20%"><font color="#800000">FKiSS5 </font> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="letchild.html">letchild</a></td>
+      <td> Returns lowest numbered object attached</td>
+      <td width="20%"></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="letparent.html">letparent</a></td>
+      <td> Returns number of parent object</td>
+      <td width="20%"></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="letsibling.html">letsibling</a></td>
+      <td> Returns next lowest numbered object attached</td>
+      <td width="20%"></td>
+    </tr>
+  </table>
+  </center>
+</div>
+
+<p>&nbsp;</p>
+
+<p><b><a name="actions.state">FKiSS Actions - Object and Cel State</a></b></p>
+<div align="center">
+  <center>
+  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td width="150"><a href="letcollide.html">letcollide</a></td>
+      <td> Returns non-zero if identified cels are touching</td>
+      <td width="20%"></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="letinside.html">letinside</a></td>
+      <td> Returns non-zero if identified objects overlap</td>
+      <td width="20%"></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="letcomment.html">letcomment</a></td>
+      <td> Returns the cel comment text</td>
+      <td width="20%"><font color="#800000">UltraKiss Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="letfix.html">letfix</a></td>
+      <td> Returns fix value of object</td>
+      <td width="20%"><font color="#800000">FKiSS5</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="letframe.html">letframe</a></td>
+      <td> Return current frame of object</td>
+      <td width="20%"><font color="#800000">FKiSS5 </font> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="letheight.html">letheight</a></td>
+      <td> Returns height of visible object</td>
+      <td width="20%"></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="letwidth.html">letwidth</a></td>
+      <td> Returns width of visible object</td>
+      <td width="20%"></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="letinitx.html">letinitx</a></td>
+      <td> Returns initial x ordinate of object</td>
+      <td width="20%"></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="letinity.html">letinity</a></td>
+      <td> Returns initial y ordinate of object</td>
+      <td width="20%"></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="letkcf.html">letkcf</a></td>
+      <td> Returns a cel palette file number</td>
+      <td width="20%"> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="letlevel.html">letlevel</a></td>
+      <td> Returns the object draw level</td>
+      <td width="20%"> <font color="#800000">FKiSS5 Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="letmapped.html">letmapped</a></td>
+      <td> Returns the visibility of object</td>
+      <td width="20%"></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="letobjecth.html">letobjecth</a></td>
+      <td> Returns height of object</td>
+      <td width="20%"><font color="#800000">FKiSS5 Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="letobjectw.html">letobjectw</a></td>
+      <td> Returns width of object</td>
+      <td width="20%"><font color="#800000">FKiSS5 Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="letobjectx.html">letobjectx</a></td>
+      <td> Returns x-coordinate of object</td>
+      <td width="20%"></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="letobjecty.html">letobjecty</a></td>
+      <td> Returns y-coordinate of object</td>
+      <td width="20%"></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="letpal.html">letpal</a></td>
+      <td> Returns current palette group number</td>
+      <td width="20%"></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="setfix.html">setfix</a></td>
+      <td> Sets the fix value for an object</td>
+      <td width="20%"> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="setkcf.html">setkcf</a></td>
+      <td> Set a cel or object new palette file</td>
+      <td width="20%"><font color="#800000">FKiSS5 </font> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="setpal.html">setpal</a></td>
+      <td> Set a cel or object fixed palette group</td>
+      <td width="20%"><font color="#800000">FKiSS5 </font> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="setframe.html">setframe</a></td>
+      <td> Sets the current frame of object</td>
+      <td width="20%"><font color="#800000">FKiSS5 </font> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="setlevel.html">setlevel</a></td>
+      <td> Sets the object draw level</td>
+      <td width="20%"> <font color="#800000">FKiSS5 Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="letcel.html">letcel</a></td>
+      <td> Returns cel currently selected</td>
+      <td width="20%"> <font color="#800000">FKiSS5 Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="letcatch.html">letcatch</a></td>
+      <td> Returns object currently selected</td>
+      <td width="20%"></td>
+    </tr>
+  </table>
+  </center>
+</div>
+
+<p>&nbsp;</p>
+
+<p><b><a name="actions.transparency">FKiSS Actions - Transparency</a></b></p>
+<div align="center">
+  <center>
+  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td width="150"><a href="ghost.html">ghost</a></td>
+      <td> Makes cels or objects unresponsive to the mouse</td>
+      <td width="20%"> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="lettransparent.html">lettransparen</a>t</td>
+      <td>Returns current cel or object transparency</td>
+      <td width="20%"></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="transparent.html">transparent</a></td>
+      <td> Adjusts a cel or object transparency</td>
+      <td width="20%"> </td>
+    </tr>
+  </table>
+  </center>
+</div>
+
+<p>&nbsp;</p>
+
+<p><b><a name="actions.sound">FKiSS Actions - Sound and Music</a> and Video </b></p>
+<div align="center">
+  <center>
+  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td width="150"><a href="sound.html">sound</a></td>
+      <td> Plays a sound file</td>
+      <td width="20%"><font color="#800000">FKiSS5 </font> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="music.html">music</a></td>
+      <td> Plays a sequencer file</td>
+      <td width="20%"><font color="#800000">FKiSS5 </font> </td>
+    </tr>
+    <tr>
+      <td width="150"><a href="movie.html">movie</a></td>
+      <td> Shows a movie</td>
+      <td width="20%"> <font color="#800000">UltraKiss Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="mediaplayer.html">mediaplayer</a></td>
+      <td> Invokes the media player for a playlist</td>
+      <td width="20%"> <font color="#800000">UltraKiss Extension</font></td>
+    </tr>
+  </table>
+  </center>
+</div>
+
+<p>&nbsp;</p>
+
+<p><b><a name="actions.string">FKiSS Actions - String Processing</a></b></p>
+<div align="center">
+  <center>
+  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td width="150"><a href="concat.html">concat</a></td>
+      <td> String concatenation</td>
+      <td width="20%"> <font color="#800000">FKiSS5 Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="indexof.html">indexof</a></td>
+      <td> Returns the index of substring in string</td>
+      <td width="20%"> <font color="#800000">FKiSS5 Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="replacestr.html">replacestr</a></td>
+      <td> Replaces a substring in string</td>
+      <td width="20%"> <font color="#800000">FKiSS5 Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="strlen.html">strlen</a></td>
+      <td>Returns the length of a string</td>
+      <td width="20%"><font color="#800000">FKiSS5 Extension</font></td>
+    </tr>
+    <tr>
+      <td width="150"><a href="substr.html">substr</a></td>
+      <td> String substring operation</td>
+      <td width="20%"> <font color="#800000">FKiSS5 Extension</font></td>
+    </tr>
+    <tr>
+      <td><a href="format.html">format</a></td>
+      <td>Format a decimal number</td>
+      <td><font color="#800000">FKiSS5 Extension</font></td>
+    </tr>
+  </table>
+  </center>
+</div>
+
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><p align="center"><font face="Arial" size="2" color="#800000">Kisekae UltraKiss and UltraKiss are trademarks of William Miles.&nbsp;<br>
+        Copyright &#169; 2002-2023 William Miles. All rights reserved.</font></p></td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><br>
+<br>
+<br>
+</p>
+
+</body>
+
+</html>

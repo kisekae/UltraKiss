@@ -1,0 +1,562 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-ca">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>Archive Manager Menu</title>
+</head>
+
+<body>
+
+<h1><font color="#FF0000">Archive Manager Menu Commands</font></h1>
+<hr>
+
+<p><font face="Arial">Welcome to the Kisekae Archive Manager program documentation. The Archive
+Manager menu provides a
+standard drop down list of commands for all archive functions.&nbsp;</font></p>
+
+
+
+<p>&nbsp;</p>
+
+
+
+<h2 align="left"> <font color="#000080" face="Arial"> File Menu</font></h2>
+<font face="Arial">
+The File menu has commands to create new archive files, or load and save
+existing archive files.&nbsp; The Archive Manager can also copy, rename or
+delete archive files.</font>
+
+<p>&nbsp;</p>
+<h3><a name="FileNew"><font color="#800000" face="Arial">New</font></a></h3>
+
+<p><font face="Arial">New archive files are created from the New menu on the Archive Manager main program
+screen.&nbsp; New archive files are initially empty and file elements can be
+added to the empty archive file with the Edit-Add command.&nbsp;&nbsp; Figure 1 shows a
+create archive file dialog screen for new archive files.&nbsp; The new file
+name must be entered and it must have an archive file type
+extension.&nbsp;&nbsp;</font></p>
+
+<p><font face="Arial">Empty LZH files created with this command will exist when the file is
+closed.&nbsp; Empty ZIP and JAR files are not retained on close.</font></p>
+
+<p>&nbsp;</p>
+
+<p align="center"><font face="Arial"><img border="0" src="images/menu_01.gif" width="425" height="263"></font></p>
+
+<p align="center"><font face="Arial">Figure 1. Create Archive&nbsp;&nbsp;</font></p>
+<h3>&nbsp;</h3>
+<h3><a name="FileOpen"><font color="#800000" face="Arial">Open...</font></a></h3>
+<p><font face="Arial">The Open command is used to open an existing archve file of an LZH, ZIP, or
+JAR type recognized by the Kisekae
+UltraKiss program.&nbsp;</font></p>
+
+<p><font face="Arial">Figure 2 shows a standard Microsoft Windows file Open dialog.&nbsp;
+The file Open dialog can be used to select any file.&nbsp; If the selected file is of
+a recognized archive type then the file will be
+opened.&nbsp; If the file type is not recognized then an error message
+will be displayed.</font></p>
+
+<p>&nbsp;</p>
+
+<p align="center">
+<font face="Arial">
+<img border="0" src="images/menu_02.gif" width="425" height="263"></font></p>
+<p align="center"> <font face="Arial"> Figure 2. Open Dialog</font></p>
+
+<p>&nbsp;</p>
+<p><font face="Arial">The example in Figure 2 selected the archive file TESTSETC.LZH.&nbsp; When an
+archive file is opened the Archive Manager will display a selection list of elements found within the archive.&nbsp;These elements can be
+of any type.&nbsp; Figure 3 shows the Archive Manager screen after the file
+TESTSETC.LZH has been loaded.&nbsp;&nbsp;</font>
+</p>
+
+<p>&nbsp;
+</p>
+
+<p align="center">
+<font face="Arial">
+<img border="0" src="images/intro_02.jpg" width="508" height="286"></font></p>
+<p align="center"> <font face="Arial"> Figure 3. Archive Manager Screen</font></p>
+
+<p>&nbsp;</p>
+<h3><a name="FileClose"><font color="#800000" face="Arial">Close</font></a></h3>
+
+<p><font face="Arial">The Close command is used to close the currently active archive file.&nbsp;When
+a file is closed the Archive Manager will display an inactive screen as shown in Figure 4.</font></p>
+
+<p>&nbsp;</p>
+<p align="center">
+<font face="Arial">
+<img border="0" src="images/intro_01.jpg" width="508" height="286"></font></p>
+<p align="center"> <font face="Arial"> Figure 4. Archive Manager Inactive Screen</font></p>
+
+<p>&nbsp;</p>
+
+<h3><a name="FileCopy"><font color="#800000" face="Arial">Copy...</font></a></h3>
+
+<p><font face="Arial">The Copy command creates a new archive file with the specified name and
+writes all archive elements from the active archive file into this new
+file.&nbsp; The new archive file can be of any supported archive type.&nbsp; The
+Copy command is used to convert an archive file from one file type to another,
+or to copy a file from one file name to another.</font></p>
+
+<p><font face="Arial">Figure 5 shows the archive file copy dialog.&nbsp; The new file name must be
+entered and it must have an archive file type extension.&nbsp; It is not
+possible to copy an archive file to a non-archive type file.</font></p>
+
+<p><font face="Arial">When the copy is complete the original archive file is closed and retained on
+disk.&nbsp; The Archive Manager will now reference the new archive file.</font></p>
+
+<p>&nbsp;</p>
+
+<p align="center"><font face="Arial"><img border="0" src="images/menu_05.gif" width="426" height="264"></font></p>
+
+<p align="center"><font face="Arial">Figure 5.&nbsp; Copy Archive&nbsp;&nbsp;</font></p>
+
+<p>&nbsp;</p>
+
+<h3><a name="FileRename"><font color="#800000" face="Arial">Rename...</font></a></h3>
+
+<p><font face="Arial">The Rename command behaves exactly like the <a href="#FileCopy">File-Copy</a>
+command except that the original archive file is deleted after the copy is
+complete.&nbsp; The Archive Manager will be opened to the renamed archive file.</font></p>
+
+<p>&nbsp;</p>
+
+<h3><a name="FileDelete"><font color="#800000" face="Arial">Delete...</font></a></h3>
+
+<p><font face="Arial">The File Delete command is used to delete the active archive file.&nbsp; The
+prompt dialog shown in Figure 6 is displayed to confirm the deletion
+operation.&nbsp; If the deletion is cancelled nothing is done.&nbsp; If the
+deletion is acknowledged then the file is deleted and the Archive Manager will
+display an inactive screen as shown in Figure 4.</font></p>
+
+<p>&nbsp;</p>
+
+<p align="center"><font face="Arial"><img border="0" src="images/menu_06.gif" width="391" height="122"></font></p>
+
+
+
+<p align="center"><font face="Arial">Figure 6.&nbsp; File Deletion Prompt</font></p>
+
+
+
+<p align="left">&nbsp;</p>
+
+
+
+<h3><a name="FileExit"><font color="#800000" face="Arial">Exit</font></a></h3>
+
+
+
+<p><font face="Arial">The Exit command closes any loaded archive file and terminates the Archive
+Manager program.</font></p>
+
+
+
+<p>&nbsp;</p>
+
+
+
+
+
+
+
+<p>&nbsp;</p>
+<h2 align="left"><font color="#000080" face="Arial">Edit Menu</font></h2>
+<font face="Arial">
+The Archive Manager Edit menu is used to add, extract, view, or locate elements
+within the current archive file.&nbsp; Each edit change requires that the
+archive file be rewritten.&nbsp; For large archives this can be time
+consuming.&nbsp; It may be more effective to extract the complete archive to a
+standard file directory, edit the elements as required, and then recompress the
+elements from the file directory into a new archive file.&nbsp;</font>
+
+<p>&nbsp;</p>
+<h3><a name="EditAdd"><font color="#800000" face="Arial">Add</font></a></h3>
+
+<p> <font face="Arial"> The Add command instructs the Archive Manager to add new file elements to
+the archive.&nbsp; The Add screen is shown in Figure 7.&nbsp; Under normal circumstances you would simply
+select a file element and add this to the archive file, replacing any existing
+element of the same name within the archive.&nbsp; For further information and a
+detailed description of the Add screen options, see the <a href="add.html">Add
+Functions</a> document.</font></p>
+
+<p> &nbsp;</p>
+
+<p align="center"> <font face="Arial"> <img border="0" src="images/menu_07.gif" width="449" height="415"></font></p>
+
+<p align="center"> <font face="Arial"> Figure 7.&nbsp; Add Screen</font></p>
+
+<p>&nbsp;</p>
+
+<h3><a name="EditExtract"><font color="#800000" face="Arial">Extract</font></a></h3>
+
+<p><font face="Arial">The Extract command instructs the Archive Manager to extract file elements
+from the archive into a file directory.&nbsp; The Extract screen is shown in
+Figure 8.&nbsp; Under normal
+circumstances you would simply extract all file elements from the archive and
+write them into a file directory, replacing any existing element of the same
+name.&nbsp; For further information and a detailed description of the Extract
+screen options, see the <a href="extract.html">Extract Functions</a> document.</font></p>
+<p>&nbsp;</p>
+<p align="center"><font face="Arial"><img border="0" src="images/intro_04.jpg" width="553" height="314"></font></p>
+<p align="center"><font face="Arial">Figure 8. Extract Screen</font></p>
+
+<p> &nbsp;</p>
+
+<p> <font face="Arial"> Elements selected for extraction are identified by left
+clicking on the element line within the archive element list.&nbsp; Multiple
+elements can be selected by holding the Ctrl key down while selecting a new
+element.&nbsp; A series of elements can be selected by selecting the first
+element, then holding the Shift key down as another element further down in the
+list is selected.&nbsp; Elements can be unselected by Ctrl clicking on a
+selected element.&nbsp; Figure 9 shows selected elements within an archive
+element list.</font></p>
+
+<p> &nbsp;</p>
+
+<p align="center"> <font face="Arial"> <img border="0" src="images/intro_06.jpg" width="508" height="286"></font></p>
+
+<p align="center"> <font face="Arial"> Figure 9.&nbsp; Selected Archive Elements</font></p>
+
+<p>&nbsp;</p>
+
+<h3><a name="EditDelete"><font color="#800000" face="Arial">Delete</font></a></h3>
+
+<p> <font face="Arial"> The Edit Delete command is used to delete selected elements from the archive
+file.&nbsp; This command is not the same as the File-Delete command that is used
+to delete
+the complete archive file.&nbsp;&nbsp;</font></p>
+
+<p> <font face="Arial"> Elements selected for either deletion are identified by left
+clicking on the element line within the archive element list.&nbsp; Multiple
+elements can be selected by holding the Ctrl key down while selecting a new
+element.&nbsp; A series of elements can be selected by selecting the first
+element, then holding the Shift key down as another element further down in the
+list is selected.&nbsp; Elements can be unselected by Ctrl clicking on a
+selected element.&nbsp; Figure 9 shows selected elements within an archive
+element list.</font></p>
+
+<p align="left"> <font face="Arial"> To delete the selected elements use either the Edit-Delete
+command or press the Delete key.&nbsp; A file deletion prompt as shown in Figure
+6 will request confirmation of the deletion operation.&nbsp; If the
+deletion is acknowledged then the archive file is rewritten to exclude the
+selected elements.&nbsp; On completion of the write the Archive Manager will
+display an updated element list for the active archive file.</font></p>
+
+<p>&nbsp;</p>
+
+<h3><a name="EditView"><font color="#800000" face="Arial">View</font></a></h3>
+
+<p> <font face="Arial"> The View command instructs the Archive Manager to extract the first selected
+element from the archive element list and invoke the appropriate editor tool for
+the element.&nbsp; Text files and KiSS configuration files are loaded into the <a href="../texteditor/index.html">Text
+Editor</a>.&nbsp; Image files are loaded into the <a href="../imageeditor/index.html">Image
+Editor</a>.&nbsp; KiSS palette files are loaded into the <a href="../coloreditor/index.html">Color
+Editor</a>.&nbsp; Sound files and movie files are loaded into the <a href="../mediaplayer/index.html">Media
+Player</a>.</font></p>
+
+<p> <font face="Arial"> If the file is of a type not recognized by UltraKiss then a prompt will ask
+if the file should be viewed as a text file.&nbsp; All files will default to a
+text view if the Archive Manager <a href="#OptionsViewAsText">View As Text</a>
+option is set.</font></p>
+
+<p> <font face="Arial"> The View command is automatically invoked if an element in the archive list
+is double clicked.</font></p>
+
+<p>&nbsp;</p>
+
+<h3><a name="EditFind"><font color="#800000" face="Arial">Find</font></a></h3>
+
+<p> <font face="Arial"> The Find edit command is used to find elements of a particular type or name
+within the archive file element list.&nbsp; Figure 10 is an example of the Find
+dialog screen.&nbsp;&nbsp;</font></p>
+
+<p> <font face="Arial"> When entering search names the wildcard character (*) can be used to select
+names that match a partial search pattern.&nbsp; Wildcards can be used as name
+prefixes or name suffixes for either the file name or file extension.&nbsp; For
+example, the pattern 'set*' will find all element names beginning with the
+characters 'set'.&nbsp; The pattern '*set' will find all element names ending
+with the characters 'set'.&nbsp; A stand alone wildcard character can be used to
+match with any name or extension.</font></p>
+
+<p> &nbsp;</p>
+
+<p align="center"> <font face="Arial"> <img border="0" src="images/menu_10.gif" width="325" height="178"></font></p>
+
+<p align="center"> <font face="Arial"> Figure 10.&nbsp; Find Element</font></p>
+
+<p align="center"> &nbsp;</p>
+
+<p> <font face="Arial"> The Find button is used to find the first occurrence of the name
+pattern.&nbsp; The search begins from the current location in the archive
+element list.&nbsp; The Find All button searches for all names in the archive
+that match the pattern.&nbsp; All matching names will be selected.&nbsp; The OK
+button closes the Find dialog screen.&nbsp; All selected elements remain
+selected on close.</font></p>
+
+<p> <font face="Arial"> The path drop down selection box is used to restrict the search to archive
+elements with a specified path name.&nbsp; If no path name is specified then the
+search is unrestricted.&nbsp; The Archive Manager retains absolute or relative path names for files in the
+archive if the <a href="add.html#SaveRelativePath">Save Relative Path</a> or <a href="add.html#SaveAbsolutePath">Save
+Absolute Path</a> option is set when files are added to the archive.&nbsp; If an
+archive file contains path names then the Path drop down selection box will list
+all unique path names found within the archive.&nbsp; Figure 11 illustrates an
+example archive file with relative path names.</font></p>
+
+<p> &nbsp;</p>
+
+<p align="center"> <font face="Arial"> <img border="0" src="images/menu_11.jpg" width="509" height="286"></font></p>
+
+<p align="center"> <font face="Arial"> Figure 11.&nbsp; Find Element Path</font></p>
+
+<p align="left"> &nbsp;</p>
+
+<p align="left"> &nbsp;</p>
+
+<h3><a name="EditSelectAll"><font color="#800000" face="Arial">Select All</font></a></h3>
+
+
+
+
+
+
+
+<p align="left"> <font face="Arial"> The Select All command is used to select all archive element
+names in the archive list.&nbsp; This command is useful for selecting all
+elements in the archive for extract, or for selecting all elements and then unselecting only those
+elements not required for extract.</font></p>
+
+<p align="left"> &nbsp;</p>
+
+<h3><a name="EditUnselectAll"><font color="#800000" face="Arial">Unselect All</font></a></h3>
+
+
+
+
+
+
+
+<p align="left"> <font face="Arial"> The Select All command is used to unselect all archive element
+names in the archive list.</font></p>
+
+<p align="left"> &nbsp;</p>
+
+<p align="left"> &nbsp;</p>
+
+<h2 align="left"><font color="#000080" face="Arial">Options Menu</font></h2>
+<font face="Arial">
+The Archive Manager Options menu is used to set default program options for the
+display and processing of archive files.</font>
+<p>&nbsp;</p>
+<h3><a name="OptionsSort"><font color="#800000" face="Arial">Sort</font></a></h3>
+
+
+
+
+
+
+
+<p><font face="Arial">The Sort option is a pop-down selection list that is used to identify the
+primary sort column for ordering the archive element list.&nbsp; Figure 12 shows
+the sort menu selection for an Archive Manager screen.&nbsp; The unsorted option
+lists the archive elements in the order in which they were written in the
+archive file.&nbsp; Sorting by Name, Date, uncompressed Size, compression Ratio,
+compressed or Packed size, or by a Path name and name combination is
+possible.&nbsp;&nbsp;</font></p>
+
+
+
+
+
+
+
+<p>&nbsp;</p>
+
+
+
+
+
+
+
+<p align="center"><font face="Arial"><img border="0" src="images/menu_12.jpg" width="509" height="287"></font></p>
+
+
+
+
+
+
+
+<p align="center"><font face="Arial">Figure 12.&nbsp; Sort Selection</font></p>
+
+
+
+
+
+
+
+<p align="left">&nbsp;</p>
+
+
+
+
+
+
+
+<p align="left"><font face="Arial">The archive element display can also be
+sorted by column if the column headings are clicked.&nbsp; Clicking once will
+sort the column in an ascending sequence.&nbsp; Clicking on the column again
+will invert the sort order.</font></p>
+
+
+
+
+
+
+
+<p>&nbsp;</p>
+
+
+
+
+
+
+
+<h3><a name="OptionsViewAsText"><font color="#800000" face="Arial">View As Text</font></a></h3>
+
+
+
+
+
+
+
+<p><font face="Arial">The View As Text option, if set, forces all element <a href="#EditView">View</a>
+operations to use the Text Editor for viewing the file contents.&nbsp;&nbsp;</font></p>
+
+
+
+
+
+
+
+<p>&nbsp;</p>
+
+
+
+
+
+
+
+<p align="left"> &nbsp;</p>
+
+<h2 align="left"><font color="#000080" face="Arial">Help Menu</font></h2>
+<font face="Arial">
+The Media Player Help menu is used to display the online program documentation and
+product license information.</font>
+<p>&nbsp;</p>
+<h3><a name="HelpContents"><font color="#800000" face="Arial">Contents</font></a></h3>
+
+
+
+
+
+
+
+<p><font face="Arial">The Contents command invokes the Archive Manager online help system.&nbsp; Access to
+all product documentation is available.&nbsp; The online help system provides a
+complete index and navigation system to various topics of interest.</font></p>
+
+
+
+
+
+
+
+<h3>&nbsp;</h3>
+
+
+
+
+
+
+
+<h3><a name="HelpAbout"><font color="#800000" face="Arial">About</font></a></h3>
+
+
+
+
+
+
+
+<p><font face="Arial">The About command shows a standard program information dialog that provides
+copyright and program version information.&nbsp; Figure 13 show an example of the Kisekae UltraKiss program About dialog.&nbsp;&nbsp;</font></p>
+
+
+
+
+
+
+
+<p>&nbsp;</p>
+
+
+
+
+
+
+
+<p align="center"><font face="Arial"><img border="0" src="../images/about.jpg" width="596" height="459"></font></p>
+
+
+
+
+
+
+
+<p align="center"> <font face="Arial"> Figure 13. About Dialog</font></p>
+
+
+
+
+
+
+
+<p>&nbsp;</p>
+
+
+
+
+
+
+
+<p>&nbsp;</p>
+
+
+
+
+
+
+
+<p align="left">&nbsp;</p>
+<hr>
+<p align="left">Next Document:&nbsp; <a href="toolbar.html">Toolbar Commands<br>
+</a>Prior Document:&nbsp; <a href="index.html">Archive Manager Introduction</a></p>
+
+<p align="left">Copyright (c) 2002-2023 William Miles</p>
+
+
+<p align="left">&nbsp;</p>
+
+
+
+
+
+
+
+</body>
+
+</html>

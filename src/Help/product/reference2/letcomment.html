@@ -1,0 +1,68 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>string</title>
+</head>
+
+<body>
+
+<h4><a name="letcomment" id="letcomment">letcomment</a>()</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp;
+letcomment (variable,target)</p>
+<p>
+The letcomment() statement returns the comment text associated with the cel or object in the specified variable. </p>
+<p>The <em>target</em>  can be a cel name, an object group specifier, or a cel group specifier. For object groups or cel groups the comment text associated with the group is the comment text for the first cel declared within the group. Comment text is specified in the KiSS configuration file when cel images are declared. Comment text always follows a semicolon on the cel declaration line. </p>
+<p> Note that comment text does not contain any tag specifiers on the cel declaration, but does include all text following any tag specifiers. </p>
+<p>&nbsp;</p>
+<p>&nbsp;  </p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+    <table border="1" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td width="20%">FKiSS 5 &nbsp;</td>
+        <td width="30%">letcomment(S,&quot;shirt.cel&quot;)&nbsp; </td>
+        <td>Variable S is set to the comment string for &quot;shirt.cel&quot; </td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+    <table border="1" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td>AllAmbiguous</td>
+        <td>apply test to all ambiguous cels </td>
+        <td>default value &quot;<font color="#0000FF">false</font>&quot; (Compatibility option)</td>
+      </tr>
+      <tr>
+        <td>ContextMap</td>
+        <td>use page context to disambiguate cels </td>
+        <td>default value &quot;<font color="#0000FF">true</font>&quot; (Compatibility option)</td>
+      </tr>
+      <tr>
+        <td width="20%">VariableCase</td>
+        <td width="30%">variable names are case sensitive</td>
+        <td>default value &quot;<font color="#0000FF">false</font>&quot; (Compatibility option)</td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<div align="center"></div>
+<p><font color="#FF0000"><b>&nbsp;Example:&nbsp;</b></font></p>
+<p>
+<font face="Courier New">;@letcomment(S,&quot;shirt.cel&quot;)&nbsp;;&nbsp;S contains the comment string <br> 
+;@letcomment(N,#3)&nbsp;;&nbsp;S contains the comment string of the first cel in #3<br>
+<br>
+<br>
+</font></p>
+<p>&nbsp; </p>
+</body>
+
+</html>

@@ -1,0 +1,155 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>map</title>
+</head>
+
+<body>
+
+<h4><a name="savevalue" id="savevalue">savevalue</a>()&nbsp;</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; savevalue(property,value)</p>
+<p>The savevalue() statement is used to assign a string or numeric value to a named property stored in a <em>valuepool</em>. A valuepool is a DirectKiss viewer extension designed to maintain permanent storage of properties and associated values. </p>
+<p>FKiSS traditionally had no method to store data. As such, it was not possible to retain information between different executions of a KiSS set. To alleviate this problem DirectKiss introduced a  mechanism to  load and store variable values from persistent storage. The DirectKiss variable storage is called a <em>valuepool</em>, and this is a collection of named properties with  values. </p>
+<p>The <em>property</em> parameter must be a string literal or a variable containing a string value that specifies optionally the name of the properties collection and the property to be referenced. Property terms have the general syntax of:' [poolname.]property'. The valuepool() command can be used to set the default properties collection that will be used for property terms when  the optional pool name is not specified.</p>
+<p>The property collection is known as a pool, and the concept of a private pool or a public pool exists. A private pool is simply an unnamed properties collection that is specific to the current set configuration or CNF file. A public pool is a named collection that can be accessed by any KiSS set that uses the pool name. A fully qualified public property term consists of a poolname with a terminating period followed by the property name. A fully qualified private property term consists of a period followed by the property name. An unqualified property term is just the property name, and in this case the default pool name is taken from the last executed valuepool() statement. If a valuepool() statement has not been executed then the default pool will be the private pool for the configuration set. </p>
+<p>Property parameters may be specified as:</p>
+<table width="80%"  border="0" cellspacing="5" cellpadding="5">
+  <tr>
+    <td><strong>Syntax</strong></td>
+    <td><strong>Example</strong></td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td><font face="Arial, Helvetica, sans-serif">poolname.property</font></td>
+    <td><font face="Arial, Helvetica, sans-serif">MyPool.Score</font></td>
+    <td><font face="Arial, Helvetica, sans-serif">Property 'Score' in public pool 'MyPool' </font></td>
+  </tr>
+  <tr>
+    <td><font face="Arial, Helvetica, sans-serif">.property</font></td>
+    <td><font face="Arial, Helvetica, sans-serif">.Score</font></td>
+    <td><font face="Arial, Helvetica, sans-serif">Property 'Score' in the configuration private pool </font></td>
+  </tr>
+  <tr>
+    <td><font face="Arial, Helvetica, sans-serif">property</font></td>
+    <td><font face="Arial, Helvetica, sans-serif">Score</font></td>
+    <td><font face="Arial, Helvetica, sans-serif">Property 'Score' in default pool set by valuepool() command </font></td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<p>The <em>value</em> parameter can be specified as a string literal value enclosed in quotation marks or a numeric literal value, or as a variable that contains a string value or a numeric value. The property is always written to the valuepool as a text string. A subsequent loadvalue() statement for the property will set a variable to the property string value. This string value is automatically converted to a numeric representation when used in numeric statements. </p>
+<p>If the  specified valuepool does not exist then the savevalue() statement will create a new valuepool with the specified name. This valuepool is written to permanent storage when the set is closed. </p>
+<p>UltraKiss valuepools or property collections are stored as text files in the same directory from which the set configuration file or archive file was loaded. All valuepool files have a '.properties' filename extension. Public valuepools are stored using the filename <em>'poolname</em>.properties', where poolname is the public valuepool name. Private value pools use the archive file name followed by the set configuration element name as the poolname. If the KiSS set was loaded from an extracted file directory then the private valuepool name uses only the configuration element name as the poolname.</p>
+<p>UltraKiss valuepools or property collections are read from text files found in the same directory from which the set configuration file or archive file was loaded. If the valuepool does not exist and the KiSS set was loaded from an archive file then the initial valuepool will be accessed from the achive file contents. If the valuepool cannot be found a new emptry valuepool is created. </p>
+<p>&nbsp; </p>
+<table width="80%"  border="1" align="center" cellpadding="5" cellspacing="5" bordercolor="#000000" bgcolor="#FFFF99">
+  <tr>
+    <td><div align="center">Note: DirectKiss valuepools are viewer specific and not compatible with other viewers. </div></td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<p>Related actions: <a href="read.html">read()</a>, <a href="write.html">write(),</a> <a href="close.html">close()</a>, <a href="edit.html">edit()</a>, <a href="open.html">open()</a>, <a href="loadvalue.html">loadvalue()</a>, <a href="valuepool.html">valuepool()</a>, <a href="deletevalue.html">deletevalue()</a> </p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+    <table border="1" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td width="20%">DirectKiss Extension</td>
+        <td width="30%">loadvalue(X,&quot;MyScores.Score&quot;) </td>
+        <td>Sets variable X to the value of the 'Score' property in public pool 'MyScores' </td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td>variablecase</td>
+        <td>enforce case sensitive property names &nbsp;&nbsp;</td>
+        <td>default value &quot;<font color="#0000FF">false</font>&quot; (FKiSS option)</td>
+      </tr>
+    </table>
+  </center>
+</div>
+<div align="center"></div>
+<div align="center"></div>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>&nbsp;Example:&nbsp;<br>
+</b></font></p>
+<p><font face="Courier New, Courier, mono">;@begin() ; <br>
+  ;@ loadvalue(V1,&quot;TestPool.Score&quot;) ; public valuepool <br>
+  ;@ loadvalue(V2,&quot;.Test&quot;) ; private valuepool <br>
+;@ notify(&quot;Initial 'TestPool' value for 'Score' is &quot;,V1) ; <br>
+;@ notify(</font><font face="Courier New, Courier, mono">&quot;Initial private pool value for 'Test' is &quot;,V2) ; <br>
+  <br>
+  ;@press(#4) ; <br>
+  ;@ valuepool(&quot;TestPool&quot;) ; <br>
+  ;@ debug(&quot;Setting public pool 'TestPool' parameter 'Score' to 100&quot;) ; <br>
+  ;@ savevalue(&quot;Score&quot;,100) ; <br>
+  ;@ debug(&quot;Loading public pool 'TestPool' parameter 'Score'&quot;) ; <br>
+  ;@ loadvalue(N1,&quot;Score&quot;) ; <br>
+  ;@ debug(&quot;Value loaded was &quot;,N1) ; <br>
+  ;@ sub(N2,N1,1) ; <br>
+  ;@ debug(&quot;Setting public pool 'TestPool' parameter 'Score' to &quot;,N2) ; <br>
+  ;@ savevalue(&quot;Score&quot;,N2) ; <br>
+  ;@ debug(&quot;Loading public pool 'TestPool' parameter 'Score'&quot;) ; <br>
+  ;@ loadvalue(N3,&quot;Score&quot;) ; <br>
+  ;@ debug(&quot;Value loaded was &quot;,N3) ; <br>
+  ;@ debug(&quot;Deleting public pool 'TestPool' parameter 'Score'&quot;) ; <br>
+  ;@ deletevalue(&quot;Score&quot;) ; <br>
+  ;@ debug(&quot;Loading public pool 'TestPool' parameter 'Score'&quot;) ; <br>
+  ;@ loadvalue(N4,&quot;Score&quot;) ; <br>
+  ;@ debug(&quot;Value loaded was &quot;,N4) ; <br>
+  ;@ debug(&quot;Setting public pool 'TestPool' parameter 'Score' to 'Fifty'&quot;) ; <br>
+  ;@ savevalue(&quot;Score&quot;,&quot;Fifty&quot;) ; <br>
+  ;@ debug(&quot;Loading public pool 'TestPool' parameter 'Score'&quot;) ; <br>
+  ;@ loadvalue(S1,&quot;Score&quot;) ; <br>
+  ;@ debug(&quot;Value loaded was &quot;,S1) ; <br>
+  ;@ debug(&quot;Loading private pool parameter 'Score'&quot;) ; <br>
+  ;@ loadvalue(S2,&quot;.Score&quot;) ; <br>
+  ;@ debug(&quot;Value loaded was &quot;,S2) ; <br>
+  ;@ debug(&quot;Loading private pool parameter 'Test'&quot;) ; <br>
+  ;@ loadvalue(S3,&quot;.Test&quot;) ; <br>
+  ;@ debug(&quot;Value loaded was &quot;,S3) ; 
+</font></p>
+<p><font face="Courier New, Courier, mono">;@press(#5) ; <br>
+  ;@ valuepool(&quot;&quot;) ; <br>
+  ;@ debug(&quot;Setting private pool parameter 'Test' to 50&quot;) ; <br>
+  ;@ savevalue(&quot;Test&quot;,50) ; <br>
+  ;@ debug(&quot;Loading private pool 'TestPool' parameter 'Test'&quot;) ; <br>
+  ;@ loadvalue(PN1,&quot;Test&quot;) ; <br>
+  ;@ debug(&quot;Value loaded was &quot;,PN1) ; <br>
+  ;@ sub(PN2,PN1,1) ; <br>
+  ;@ debug(&quot;Setting private pool 'TestPool' parameter 'Test' to &quot;,PN2) ; <br>
+  ;@ savevalue(&quot;Test&quot;,PN2) ; <br>
+  ;@ debug(&quot;Loading private pool 'TestPool' parameter 'Test'&quot;) ; <br>
+  ;@ loadvalue(PN3,&quot;Test&quot;) ; <br>
+  ;@ debug(&quot;Value loaded was &quot;,PN3) ; <br>
+  ;@ debug(&quot;Deleting private pool 'TestPool' parameter 'Test'&quot;) ; <br>
+  ;@ deletevalue(&quot;Test&quot;) ; <br>
+  ;@ debug(&quot;Loading private pool 'TestPool' parameter 'Test'&quot;) ; <br>
+  ;@ loadvalue(PN4,&quot;Test&quot;) ; <br>
+  ;@ debug(&quot;Value loaded was &quot;,PN4) ; <br>
+  ;@ debug(&quot;Setting private pool 'TestPool' parameter 'Test' to 'Twenty'&quot;) ; <br>
+  ;@ savevalue(&quot;Test&quot;,&quot;Twenty&quot;) ; <br>
+  ;@ debug(&quot;Loading private pool 'TestPool' parameter 'Test'&quot;) ; <br>
+  ;@ loadvalue(PS1,&quot;Test&quot;) ; <br>
+  ;@ debug(&quot;Value loaded was &quot;,PS1) ; <br>
+  ;@ debug(&quot;Loading public pool 'TestPool' parameter 'Test'&quot;) ; <br>
+  ;@ loadvalue(PS2,&quot;TestPool.Test&quot;) ; <br>
+  ;@ debug(&quot;Value loaded was &quot;,PS2) ; <br>
+  ;@ debug(&quot;Loading public pool 'TestPool' parameter 'Score'&quot;) ; <br>
+  ;@ loadvalue(PS3,&quot;TestPool.Score&quot;) ; <br>
+  ;@ debug(&quot;Value loaded was &quot;,PS3) ; <br>
+</font></p>
+<p><font face="Courier New, Courier, mono">
+</font></p>
+</body>
+
+</html>

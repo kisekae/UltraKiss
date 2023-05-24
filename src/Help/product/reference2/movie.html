@@ -1,0 +1,123 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>label</title>
+</head>
+
+<body>
+
+<h4><a name="movie" id="movie">movie</a>()</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; movie (filename[,repeat])<br>
+<br>
+The movie() command will initiate the playback of a video cel. The filename may be a literal specification of a cel or a variable that contains a cel name. </p>
+<p>Video cels are mapped when they are playing. </p>Multiple movie() commands can be concurrently active. A movie(&quot;&quot;) command with an empty filename will terminate all currently playing movie cels.
+<p>The optional integer repeat count indicates the number of times the movie  should be played. A negative repeat count will result in countinuous repeated playback.</p>
+<p>The FKiSS5 mediastart() and mediastop() events can also be used to control movie playback. These events fire on movie initiation and movie termination for the specified movie file. </p>
+<p>Video cels also contain attributes that specify  playback control information and presentation styles. Video cels attributes are:</p>
+<table width="80%"  border="0" cellspacing="1" cellpadding="1">
+  <tr>
+    <td width="17%"><font face="Courier New, Courier, mono">controls</font><font face="Courier New, Courier, mono">&nbsp;</font></td>
+    <td width="83%">movie player controls are shown </td>
+  </tr>
+  <tr>
+    <td><font face="Courier New, Courier, mono">repeat</font></td>
+    <td>movie repeats indefinately </td>
+  </tr>
+  <tr>
+    <td><font face="Courier New, Courier, mono">border</font></td>
+    <td>border thickness, in pixels </td>
+  </tr>
+  <tr>
+    <td><font face="Courier New, Courier, mono">bc</font></td>
+    <td>background colour, integer RGB value </td>
+  </tr>
+  <tr>
+    <td><font face="Courier New, Courier, mono">fc</font></td>
+    <td>foreground colour, integer RGB value </td>
+  </tr>
+  <tr>
+    <td><font face="Courier New, Courier, mono">bdc</font></td>
+    <td>border colour, integer RGB value </td>
+  </tr>
+  <tr>
+    <td><font face="Courier New, Courier, mono">fontname</font></td>
+    <td>preferred font name, string </td>
+  </tr>
+  <tr>
+    <td><font face="Courier New, Courier, mono">fontsize</font></td>
+    <td>preferred font size, in points </td>
+  </tr>
+  <tr>
+    <td><font face="Courier New, Courier, mono">fontstyle</font></td>
+    <td>preferred font style:, normal, bold, italic</td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<p>Related events: <a href="mediastart.html">mediastart(),</a> <a href="mediastop.html">mediastop()</a> <br>
+  Related actions:  <a href="mediaplayer.html">mediaplayer(),</a> <a href="getattributes.html">getAttributes()</a>, <a href="getattributes.html">setAttributes()</a> <br>
+</p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+  <table border="1" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td width="26%">UltraKiss extension </td>
+      <td width="24%">let(C,&quot;mymovie.avi&quot;)<br>
+        movie(C,-1)</td>
+      <td width="50%">&nbsp;</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<table width="80%"  border="1" align="center" cellpadding="5" cellspacing="5" bordercolor="#000000" bgcolor="#FFFF99">
+  <tr>
+    <td><div align="center">Note: The UltraKiss movie() command is viewer specific and not compatible with other viewers. </div></td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+  <table border="1" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td>CacheVideo</td>
+      <td>cache video files in memory </td>
+      <td>default value &quot;<font color="#0000FF">false</font>&quot; (General option)</td>
+    </tr>
+    <tr>
+      <td width="20%">VariableCase</td>
+      <td width="30%">variable names are case sensitive</td>
+      <td>default value &quot;<font color="#0000FF">false</font>&quot; (FKiSS
+        option)</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;
+
+</p>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>FKiSS 5 Example:</b></font></p>
+<p><font face="Courier New">#2.999 button2.button : 0 ;%u %size[100,50] %attributes[text=&quot;Stop&quot;] <br>
+  #2.999 button1.button : 0 ;%size[100,50] %attributes[text=&quot;Play&quot;] <br>
+  #1 FOX.AVI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: 0 ;%size[320,240] %attributes[repeat] <br>
+  <br>
+
+  ;@press(&quot;button2.button&quot;) ; <br>
+  ;@ movie(&quot;&quot;) ; <br>
+  ;@ altmap(#2) ; <br>
+  ;@press(&quot;button1.button&quot;) ; <br>
+  ;@ movie(&quot;fox.avi&quot;,-1) ; <br>
+  ;@ altmap(#2) ; <br>
+</font></p>
+<p>&nbsp; </p>
+<p>&nbsp;</p>
+
+</body>
+
+</html>

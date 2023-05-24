@@ -1,0 +1,54 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>map</title>
+</head>
+
+<body>
+
+<h4><a name="for" id="for">for</a>()&nbsp;</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; for
+(control,start,end[,increment])</p>
+<p>This statement specifies the beginning of an iteration loop. The 'for' statement control parameter must be a variable. This variable is incremented or decremented by the increment amount on each iteration loop. </p>
+<p>The <em>control</em> variable is initially set to the start value and the loop will terminate when the control variable exceeds the end value.</p>
+<p>The <em>start</em>, <em>end</em>, and optional <em>increment</em> parameters can be integer constants or variables that contain integer values. The increment value, if not specified, defaults to 1 if the start value is less or equal to the end value and -if the end value is less than the start value. </p>
+<p>The 'for' statement initializes the control variable to the start value on first entry. The 'for' statement executes any following code until the first matching 'next' statement for the same control variable  is executed. This 'next' statement causes code execution to return to the currently preceeding 'for' statement with the same control variable. </p>
+<p>On each subsequent 'for' statement entry the control variable is modified by the increment amount and the the resulting value is compared to the end value. If the increment is positive and the control variable exceeds the end value then the iteration loop is satisfied and code execution continues on the statement immediately following the 'next' statement that caused the 'for' statement re-entry. </p>
+<p>It is possible to nest 'for' loops  providing that each 'for' loop uses a unique control variable. </p>
+<p>A 'for' loop can be terminated early by assigning the end value to the control variable.</p>
+<p>&nbsp;</p>
+<p>Related actions: <a href="next.html">next()</a>, <a href="while.html">while()</a>,
+<a href="repeat.html">repeat()</a></p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td>VariableCase</td>
+      <td>variable names are case sensitive</td>
+      <td>default value &quot;<font color="#0000FF">false</font>&quot; (Compatibility option)</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>&nbsp;Example:&nbsp;<br>
+</b></font>
+</p>
+<p>
+<font face="Courier New">;@ for(I,1,5)<br>
+;@ &nbsp;debug(&quot;I is &quot;,I)&nbsp;<br>
+;@&nbsp;&nbsp;for(J,3,1)<br>
+;@&nbsp;&nbsp;&nbsp;mul(X,I,J)<br>
+;@&nbsp;&nbsp;&nbsp;debug(&quot;I is &quot;,I,&quot; J is &quot;,J,&quot; I*J is &quot;,X)<br>
+;@&nbsp;&nbsp;next(J)<br>
+;@&nbsp;next(I)<br>
+</font></p>
+<p><font face="Courier New"></font></p>
+</body>
+
+</html>

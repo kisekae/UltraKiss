@@ -1,0 +1,117 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>KiSS Audio Types</title>
+</head>
+
+<body>
+
+<h2 align="center"><font face="Arial" color="#FF0000">KiSS Audio Types</font></h2>
+<p>The original KiSS specification implemented audio capabilities using sound
+files and music files.&nbsp; Sound files were implicitly associated with
+streaming audio and music files were intended for sequencer type audio files.
+This was the typical technology to support audio in the early days. Therefore, sound files are traditionally Microsoft WAV files and Sun
+AU files, and music files are traditionally MIDI files.</p>
+<p>Today, MP3 sound is standard for music. Many other audio formats also exist,
+and even within some formats such as WAV different encodings can be used. FKiSS
+5 capable viewers should offer support for MP3 files and other popular formats
+and provide improved capabilities for managing audio playback.&nbsp;</p>
+<p>Regretfully, there
+is no standard way to ensure audio compatibility across different systems.&nbsp;</p>
+<p>The ability to play different sounds is a basic feature of a KiSS viewer.
+Music and sound are separate entities and playback of music files is distinct
+from sound files.</p>
+<p>There is no official designation as to whether multiple sound or music files
+should be played concurrently or separately. Many KiSS viewers will play sounds
+concurrently. The sound(&quot;&quot;) and music(&quot;&quot;) commands with no
+file name specified are signals to stop all sound and music playback
+instantly.&nbsp;</p>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>Example:&nbsp;<br>
+</b></font>
+</p>
+<p><font face="Courier New">;[FKiSS Section]<br>
+;@EventHandler<br>
+<br>
+; Sound tests<br>
+; -----------<br>
+<br>
+;@press(#7)                                                 ;<br>
+;@ sound(&quot;spacemusic.au&quot;) ;<br>
+;@press(#8)                                                 ;<br>
+;@ sound(&quot;22-new.aif&quot;) ;<br>
+;@press(#9)                                                 ;<br>
+;@ sound(&quot;sfx-medley.rmf&quot;) ;<br>
+;@press(#10)                                                ;<br>
+;@ sound(&quot;trippygaia1.mid&quot;) ;<br>
+;@press(#11)                                                ;<br>
+;@ sound("Bass Test - 100hz.mp3&quot;) ;<br>
+;@press(#12)                                                ;<br>
+;@ sound(&quot;1-welcome.wav&quot;) ;<br>
+<br>
+; Music tests<br>
+; -----------<br>
+<br>
+;@press(#21)                                                ;<br>
+;@ music(&quot;spacemusic.au&quot;) ;<br>
+;@press(#22)                                                ;<br>
+;@ music(&quot;22-new.aif&quot;) ;<br>
+;@press(#23)                                                ;<br>
+;@ music(&quot;sfx-medley.rmf&quot;) ;<br>
+;@press(#24)                                                ;<br>
+;@ music(&quot;trippygaia1.mid&quot;) ;<br>
+;@press(#25)                                                ;<br>
+;@ music("Bass Test - 100hz.mp3&quot;) ;<br>
+;@press(#26)                                                ;<br>
+<br>
+; MediaPlayer tests<br>
+; -----------------&nbsp;<br>
+<br>
+;@press(#14)                                                ;<br>
+;@ mediaplayer(&quot;spacemusic.au&quot;) ;<br>
+;@press(#15)                                                ;<br>
+;@ mediaplayer(&quot;22-new.aif&quot;) ;<br>
+;@press(#16)                                                ;<br>
+;@ mediaplayer(&quot;sfx-medley.rmf&quot;) ;<br>
+;@press(#17)                                                ;<br>
+;@ mediaplayer(&quot;trippygaia1.mid&quot;) ;<br>
+;@press(#18)                                                ;<br>
+;@ mediaplayer("Bass Test - 100hz.mp3&quot;) ;<br>
+;@press(#19)                                                ;<br>
+;@ mediaplayer(&quot;1-welcome.wav&quot;) ;<br>
+;@press(#20)                                                ;<br>
+;@ mediaplayer(&quot;playlist.lst&quot;)   ;<br>
+;@ music(&quot;1-welcome.wav&quot;) ;<br>
+<br>
+<br>
+; Stop controls<br>
+; ------------------------------<br>
+<br>
+;@press(#78)                                                ;<br>
+;@ sound("")                          ;<br>
+;@press(#81)                                                ;<br>
+;@ music("")                          ;<br>
+;@press(#84)                                                ;<br>
+;@ mediaplayer(&quot;&quot;)                    ;<br>
+</font></p>
+<p></p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<p>WAV, AU, and MIDI file formats should be supported by all KISS viewers&nbsp;
+FKiSS 5 viewers should implement MP3 sound and music playback. Support for other
+audio formats such as RMF, AIFF, and others is viewer dependent. </p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">FKiSS 5 extensions:</font></b></p>
+<p>FKiSS 5 introduces the <a href="#mediastart">mediastart()</a> and <a href="#madiastop">mediastop()
+</a> events to facilitate
+control of media playback. Basic FKiSS is deficient in that sound playback can be initiated through the sound() or music() action command, but no process
+exists to recognize when such files stopped or started.</p>
+<p>FKiSS 5 extends the syntax of <a href="#sound">sound() </a>and <a href="#music">music()
+</a>action commands to allow for the specification of an optional repeat count
+on the audio playback.</p>
+
+</body>
+
+</html>

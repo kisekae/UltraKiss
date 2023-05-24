@@ -1,0 +1,119 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>ifmapped</title>
+</head>
+
+<body>
+
+<h4><a name="ifmapped">ifmapped</a>()</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; ifmapped
+(target,alarmname,duration)</p>
+<p>The ifmapped() statement tests a target object, image cel, or cel group
+visibility. If the target is visible a timer is set for the specified alarm, to
+fire after the specified time duration. </p>
+<p>The <em>target</em> can be a literal object number, a cel name, or a cel group name, or a variable that maintains a  valid representation of a target. </p>
+<p>The <em>alarmname</em> is an identifier for an alarm or a string variable that contains the name of an alarm. If the object is visible a timer is set for the specified alarm, to fire after the specified time duration. </p>
+<p>The <em>duration</em> is an integer number or a variable with an integer value that specifies the duration time in milliseconds. </p>
+<p>Object groups, cel groups, and image cels can all have their visibility
+changed through map() and unmap() action commands, or setframe() commands. An object group and a cel
+group are considered to be visible or mapped if any image cel within the group
+is visible or mapped.&nbsp;
+</p>
+<p>This command fails silently if the target or alarm does not exist.</p>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>FKiSS 5 Syntax:</b></font>&nbsp;&nbsp;&nbsp;&nbsp; ifmapped(target,alarmname,duration[, argument1, argument2, ...])</p>
+<p>UltraKiss FKiSS5 introduces the ability to pass parameters to the alarm code module, similar to parameters on label modules. The optional parameter list specifies a set of variables or literal constants that can be referenced as local variables within the alarm code module. With FKiSS 5 the alarm name can also be specified through a variable that has a string value, providing that the variable name is not the same as an existing alarm name. </p>
+<p>The optional argument list specifies a set of variable names that must be referenced as local variables within the alarm module. </p>
+<p>Local variable names are prefixed with an '<font face="Courier New, Courier, mono">@</font>' sign. Thus, the variable '<font face="Courier New, Courier, mono">@N</font>' is a local variable declared and referenced within the module and is distinct from any global variable '<font face="Courier New, Courier, mono">N</font>'. Calling any module recursively creates new instances of all local variables distinct from any other local variable of the same name.</p>
+<p>&nbsp; </p>
+<p>
+Related actions: <a href="ifnotmapped.html">ifnotmapped()</a>, <a href="ifmoved.html">ifmoved(),</a> <a href="iffixed.html">iffixed()</a>, <a href="map.html">map(),</a> <a href="#ifmapped">unmap()</a>, <a href="setframe.html">setframe()</a>, <a href="ifnotmoved.html">ifnotmoved()</a>, <a href="ifnotfixed.html">ifnotfixed()</a></p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+    <table border="1" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td width="20%">FKiSS 2</td>
+        <td width="30%">ifmapped(#5,12,1000)</td>
+        <td>object comparisons, integer alarm identifiers</td>
+      </tr>
+      <tr>
+        <td width="20%">FKiSS 3&nbsp;</td>
+        <td width="30%">ifmapped(&quot;face.cel&quot;,12,T)</td>
+        <td>variables for objects, alarms, and durations</td>
+      </tr>
+      <tr>
+        <td width="20%">FKiSS 4&nbsp;</td>
+        <td width="30%">ifmapped(!ThisGroup,NextAlarm,Time)</td>
+        <td>cel groups, variables for alarms, durations</td>
+      </tr>
+      <tr>
+        <td>FKiSS 5</td>
+        <td>ifmapped(Target,NextAlarm,Time) or ifmapped(&quot;face.cel&quot;,12,T,Param1,Param2)</td>
+        <td>variables for objects and cels, with alarm parameters </td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+    <table border="1" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td width="20%">VariableCase</td>
+        <td width="30%">variable names are case sensitive</td>
+        <td>default value &quot;<font color="#0000FF">false</font>&quot; (Compatibility option)</td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>Example Code (FKiSS3):&nbsp; </b></font></p>
+<p><font face="Courier New, Courier, mono">#6 angelven.cel *0 : 1 2 ;<br>
+  #6 angelmer.cel *3 : 1 ;<br>
+  #6 angeljup.cel *2 : 1 ;<br>
+  #2 angelmar.cel *1 : 0 2 ;<br>
+  #1 angelven.cel *0 : 0 ;</font></p>
+<p><font face="Courier New, Courier, mono">;@set(2) ; Set 2 cel button state<br>
+  ;@ letmapped(N1,&quot;angelven.cel&quot;) ; <br>
+  ;@ letmapped(N2,&quot;button1a.cel&quot;) ; <br>
+  ;@ ifequal(N1,N2) exitevent() endif() ; <br>
+  ;@ altmap(#3) ; </font></p>
+<p><font face="Courier New, Courier, mono">;@press(#4) ; Press event to verify the 'ifmapped' state <br>
+  ;@ ifmapped(&quot;angelven.cel&quot;,1,1) ; <br>
+  ;@ ifnotmapped(&quot;angelven.cel&quot;,2,1) ; <br>
+  ;@ ifmapped(&quot;angelmar.cel&quot;,3,1) ; <br>
+  ;@ ifnotmapped(&quot;angelmar.cel&quot;,4,1) ; <br>
+  <br>
+  ;@press(#3) ; Press event to alter the map of &quot;angelven.cel&quot; <br>
+  ;@ letmapped(N,&quot;button1a.cel&quot;) ; <br>
+  ;@ ifnotequal(N,0) ; <br>
+  ;@ unmap(&quot;angelven.cel&quot;) ; <br>
+  ;@ else() ; <br>
+  ;@ map(&quot;angelven.cel&quot;) ; <br>
+  ;@ endif() ; <br>
+  ;@ altmap(#3) ; <br>
+  <br>
+  </font><font face="Courier New, Courier, mono">;@alarm(3) ; Alarm fired if group #2 is mapped <br>
+  ;@ notify(&quot;Object #2 angelmercury is mapped&quot;) ; </font></p>
+<p><font face="Courier New, Courier, mono">;@alarm(4) ; Alarm fired if group #2 is unmapped <br>
+  ;@ notify(&quot;Object #2 angelmercury is unmapped&quot;) ; </font></p>
+<p><font face="Courier New, Courier, mono">;@alarm(1) ; Alarm fired if &quot;angelven.cel&quot; is mapped <br>
+  ;@ notify(&quot;Cel angelven.cel is mapped&quot;) ;</font></p>
+<p><font face="Courier New, Courier, mono"> </font><font face="Courier New, Courier, mono">;@alarm(2) ; Alarm fired if &quot;angelven.cel&quot; is unmapped <br>
+  ;@ notify(&quot;Cel angelven.cel is unmapped&quot;) ; <br>
+  </font><br>
+</p>
+<p></p>
+<p>&nbsp;
+
+</p>
+</body>
+
+</html>

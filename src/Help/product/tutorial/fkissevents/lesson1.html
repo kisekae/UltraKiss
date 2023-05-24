@@ -1,0 +1,133 @@
+<html>
+	<head>
+		<title>Image Tutorial Lesson 1</title></head>
+	<body>
+		<h1 align="center"><font color="#000000">Event Tutorial</font></h1>
+		<h1 align="center"><font color="#ff0000">Lesson 1. Programming FKiSS Events</font></h1>
+		<p>&nbsp;</p>
+		<ol>
+			<li>
+				This tutorial will show you how to program simple FKiSS events that can add
+				dynamic effects to your KiSS set.&nbsp; Ensure that UltraKiss is showing the
+				main logo screen.&nbsp; Close any existing set.
+				<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">File-New</FONT>.&nbsp; This will create a new KiSS
+				set at size (448,320) with a black border and one empty page.
+				<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">File-Properties</FONT> to change the new KiSS
+				configuration (CNF) file properties.&nbsp; The attributes section of the
+				Properties dialog will show a playfield size of (448,320).&nbsp; Press the
+				small button beside this attribute and change the screen size to <FONT color="#cc6600">
+					(800,600)</FONT>.&nbsp; Exit the configuration Properties dialog by
+				pressing the OK button.
+				<p>&nbsp;</p>
+			<li>
+				The first page of our set will be a menu page.&nbsp; We will add two buttons to
+				this page to switch to other pages in the set.&nbsp; Each button will have a
+				'press' event attached to it.&nbsp; The 'press' event will have the FKiSS code
+				that we use to switch to a new page.<BR>
+				<BR>
+				On the main UltraKiss screen use <FONT color="#000099">Edit-Import Image to New
+					Object</FONT>.&nbsp; Select the <FONT color="#cc6600">button1.cel</FONT> file
+				from the Tutorial/FKiSS directory.&nbsp; This is a truecolor or Cherry Kiss cel
+				so you will not see a prompt&nbsp;for anassociated palette file.&nbsp; The
+				image will be loaded and positioned at the upper left corner of the playfield.<BR>
+				<BR>
+				Drag the button to the center of the screen.&nbsp; <FONT color="#cc6600">Repeat
+					this step to import button2.cel</FONT>.&nbsp; Position the second button
+				below the first button.
+				<p>&nbsp;</p>
+			<li>
+				<FONT color="#cc6600">Right-click</FONT> on the first button to display the
+				button property dialog. We want to fix the button in place so that it cannot be
+				moved. Choose <font color="#000099">Image Context - Properties</font>. Press the little button beside the <FONT color="#cc6600">Lock Value</FONT>
+				attribute and change the value to 9999 in the popup window. Click OK and
+				observe that the button properties now indicates that the button is fixed.<br>
+				<br>
+				Repeat this step for <FONT color="#cc6600">button2.cel</FONT>.
+				<p>&nbsp;</p>
+		  <li>
+				Use <FONT color="#000099">Edit-Unselect All <FONT color="#000000">to remove the
+						selection boxes or </FONT><FONT color="#cc6600">right-click</FONT></FONT><FONT color="#000000">
+					anywhere on the background</FONT>.&nbsp; Next, <FONT color="#cc6600">right-click</FONT>
+				on the first button again. This time the contexual selection popup window will
+				show. Select <FONT color="#000099">Object Properties</FONT> and then select <FONT color="#000099">
+					Event Wizard</FONT>.
+				<p>&nbsp;</p>
+		  <li>
+				The <FONT color="#000099">FKiSS Event Wizard</FONT> dialog will show. The Event
+				Source should be set to '<FONT color="#cc6600">Group&nbsp;n button1.cel</FONT>',
+				the first button, where 'n' is probably 1 but could be another object number.
+				Follow the instructions in the Wizard window. Choose the '<FONT color="#cc6600">press</FONT>'
+				event from the Event selection box.
+				<p>&nbsp;</p>
+		  <li>
+				The text area should now display the generated FKiSS code for a '<FONT color="#cc6600">press</FONT>'
+				event on the selected button object. The object number '<FONT color="#cc6600">#n</FONT>'
+				from above is used. A default action statement to display a notify dialog is
+				automatically generated for you.<br>
+				<br>
+				You can edit the FKiSS code if you wish. We will replace the default action
+				statement in Lesson 2.
+				<p>&nbsp;</p>
+		  <li>
+				Click <FONT color="#000099">OK</FONT> to create the new event. If there are no
+				syntax errors in the event code it will become part of the new event code for
+				the set and you can actually try out the event.&nbsp; <FONT color="#cc6600">Press
+					the button</FONT>.&nbsp; See the notify dialog.<BR>
+				<BR>
+				If there is a syntax error you will receive an error message and the Text
+				Editor will be automatically invoked so that the error can be corrected.
+				<p>&nbsp;</p>
+		  <li>
+				Next, <FONT color="#cc6600">right-click</FONT> on the second button. We will
+				define an event on the cel this time, rather than on
+				the&nbsp;group.&nbsp;&nbsp;When the contexual selection popup window shows,
+				select <FONT color="#000099">Image Properties</FONT> and then select <FONT color="#000099">
+					Event Wizard</FONT>.
+				<p>&nbsp;</p>
+		  <li>
+				Once again the <FONT color="#000099">FKiSS Event Wizard</FONT> dialog will
+				show. The Event Source should be set to '<FONT color="#cc6600">KissCel&nbsp;n
+					button2.cel</FONT> ', the second button, where 'n' is probably&nbsp;2 but
+				could be another cel number. Follow the instructions in the Wizard window.
+				Choose the '<FONT color="#cc6600">catch</FONT>' event from the Event selection
+				box.
+				<p>&nbsp;</p>
+		  <li>
+				The text area should now display the generated FKiSS code for a '<FONT color="#cc6600">catch</FONT>
+				' event on the selected button object. The cel name'<FONT color="#cc6600">button2.cel</FONT>'
+				should be used. Again, a default action statement to display a notify dialog is
+				automatically generated for you.<br>
+				<br>
+				You can edit the FKiSS code if you wish. We will replace the default action
+				statement in Lesson 2.
+				<p>&nbsp;</p>
+		  <li>
+				Click <FONT color="#000099">OK</FONT> to create the new event. If there are no
+				syntax errors in the event code it will become part of the new event code for
+				the set and you can actually try out the event.&nbsp; <FONT color="#cc6600">Press
+					the button</FONT>.&nbsp; See the notify dialog.<BR>
+				<BR>
+				If there is a syntax error you will receive an error message and the Text
+				Editor will be automatically invoked so that the error can be corrected.
+				<p>&nbsp;</p>
+		  <li>
+				Use <FONT color="#000099">File-Save As</FONT> to save your work.&nbsp; Save the
+				new KiSS set to the Tutorial/FKiSS directory or a directory of your
+				choice.&nbsp; The configuration element name should be <FONT color="#cc6600">CNF1.cnf</FONT>
+				if you began this tutorial after first starting UltraKiss.&nbsp; You can
+				overwrite any existing element of the same name.
+				<p>&nbsp;</p>
+		  </li>
+		</ol>
+		<p align="left">&nbsp;</p>
+		<hr>
+		<p align="left">Next Document:&nbsp; <A href="lesson2.html">Event Tutorial Lesson 2<br>
+			</A>Prior Document:&nbsp; <A href="../../tutorials.html">UltraKiss Tutorials</A></p>
+		<p align="left">Copyright (c) 2002-2023 William Miles</p>
+
+	</body>
+</html>

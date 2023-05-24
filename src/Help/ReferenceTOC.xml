@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE toc
+  PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp TOC Version 1.0//EN"
+         "http://java.sun.com/products/javahelp/toc_1_0.dtd">
+
+<toc version="1.0">
+  <tocitem text="">
+   <tocitem text="KiSS">
+    <tocitem text="KiSS/GS Reference" target="reference.kiss"/>
+    <tocitem text="FKiSS1 Specifications" target="reference.fkiss1"/>
+    <tocitem text="FKiSS2 Specifications" target="reference.fkiss2"/>
+    <tocitem text="FKiSS3 Specifications" target="reference.fkiss3"/>
+    <tocitem text="FKiSS4 Specifications" target="reference.fkiss4"/>
+    <tocitem text="FKiSS5 Specifications" target="reference.fkiss5"/>
+    <tocitem text="LZH Specifications" target="reference.lzh"/>
+    <tocitem text="GIF89a Specifications" target="reference.gif89a"/>
+    <tocitem text="PNG Specifications" target="reference.png"/>
+    <tocitem text="BMP Specifications" target="reference.bmp"/>
+  </tocitem>
+ </tocitem>
+</toc>
+
+

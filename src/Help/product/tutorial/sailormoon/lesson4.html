@@ -1,0 +1,163 @@
+<html>
+	<head>
+		<title>Sailor Moon Lesson 4</title>
+	</head>
+	<body>
+		<h1 align="center"><font color="#000000">Sailor Moon Tutorial</font></h1>
+		<h1 align="center"><font color="#ff0000">Lesson 4. Adding Events to the KiSS Set</font></h1>
+		<p>&nbsp;</p>
+		<ol>
+			<li>
+				We will now add action events to our set.&nbsp; The cat seems an appropriate
+				object to play with.&nbsp; If we touch the cat the doll should change from the
+				Sailor Moon costume to the school uniform.&nbsp; If you are continuing on from
+				lesson 3 you can skip to step 3.&nbsp; Otherwise, ensure that UltraKiss is
+				showing the main logo screen.&nbsp; Close any existing data set.  This lesson requires
+				editing of the KiSS set so ensure that the Edit Enable toggle button on the toolbar
+				is set.<img src="images/editenable.gif" width="16" height="16" hspace="5" align="absmiddle">
+				<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">File-Open</FONT> to load the configuration file
+				<FONT color="#cc6600">CNF3.cnf</FONT> from the Tutorial/Sailor Moon directory or the directory
+				you used in lesson 3.&nbsp; This will load the Sailor Moon KiSS set created in
+				exercise 3 and you should see the doll in its sailor costume on page 0.
+				<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">View-Page Set 1</FONT>, or click on the page 1
+				toolbar button to switch to page 1.&nbsp; The sailor moon doll with its
+				alternate wardrobe should now be visible.
+				<p>&nbsp;</p>
+		  <li>
+				We are going to make the sailor costume on the doll invisible.&nbsp; One method for adding
+				action events to your KiSS set is to manually edit the set configuration file. Use
+				<FONT color="#000099">View-Active Configuration</FONT> or press <FONT color="#000099">F11</FONT> to
+				open the text editor for the current configuration.&nbsp; Position the
+				cursor at the end of the file and add the following lines:<br>
+				<br>
+				<font face="Courier New">;@EventHandler<br>
+					;@set(1)<br>
+					;@ unmap(#4) unmap(#5) unmap(#6) unmap(#7) unmap(#8)<br>
+				</font>
+				<br>
+				<FONT color="#cc6600">Note:&nbsp; If you copy and paste these lines from the help
+					documentation into your configuration file you must ensure that the semicolon
+					and at-sign combination appears at the beginning of every line.&nbsp; You can
+					copy the help text by selecting the text and pressing Ctrl-C to copy the text
+					to the clipboard. Use Ctrl-V to paste the text into the configuration file.</FONT><BR>
+				<BR>
+				The EventHandler statement begins the FKiSS event section.&nbsp; All commands
+				except EventHandler must be written with lower case letters.&nbsp; The term
+				EventHandler must appear exactly as shown, with the E and H
+				capitalized.&nbsp;&nbsp;<br>
+				<br>
+				The set(1) event is fired whenever you switch to page 1.&nbsp; The unmap
+				commands make all objects in the sailor costume invisible.&nbsp; The group
+				numbers #4, #5, #6, #7, #8 are the object groups that are associated with the
+				images for the leftboot, rightboot, fuku, leftglove, rightglove, and bow.&nbsp;
+				These numbers can be seen if you scroll the editor to the Cel Section of the
+				configuration file.&nbsp; If your numbers are different use the object numbers
+				from your file.
+				<p>&nbsp;</p>
+		  <li>
+				Use the <FONT color="#000099">File-Exit</FONT> command in the text editor to
+				apply your changes.&nbsp; If you happened to have made a typing mistake you
+				will see an error when the changes are applied.&nbsp; If this occurs, re-edit
+				the configuration file to correct any mistakes.&nbsp; If there are no errors
+				the KiSS set should reload and open to page 0.
+				<p>&nbsp;</p>
+		  <li>
+				Use <FONT color="#000099">View-Page Set 1</FONT>, or click on the page 1
+				toolbar button to switch to page 1.&nbsp; Now you should see the sailor moon
+				doll and its alternate wardrobe, but the sailor costume will no longer be
+				visible.&nbsp; The set(1) event will have fired and unmapped all the sailor
+				costume images.&nbsp; If this did not work, use <FONT color="#000099">View-Active
+				Configuration</FONT> and edit your configuration file.&nbsp; Check that you
+				have the correct object numbers in the unmap() statements.
+				<p>&nbsp;</p>
+		  <li>
+				Now, properly position the alternate wardrobe on the doll.&nbsp; If necessary,
+				adjust the object layering order.&nbsp; For example, the skirt should tuck
+				underneath the shirt.&nbsp; If the layering order is not correct use the
+				<FONT color="#000099">Edit-Adjust Layering</FONT> command to reorder the images as
+				required.&nbsp; When layering, items at the top of the list appear in front of
+				all items below. Select the object of interest within the list and
+				drag it to the proper position.&nbsp; Objects at the top of the list appear
+				in front of all lower objects.&nbsp; If the list does not want to scroll down,
+				ensure that your mouse pointer is near the lower left or lower right corner of
+				the dialog window.&nbsp; Release the mouse button to drop the object.&nbsp; Use the OK
+				button to apply your changes.
+				<p>&nbsp;</p>
+		  <li>
+				Use the <FONT color="#000099">Edit-Write Page</FONT> command to set new initial
+				positions for these objects after they are properly positioned on the doll and
+				layered.
+				<p>&nbsp;</p>
+		  <li>
+				Use <FONT color="#000099">File-Save As</FONT> to save your work.&nbsp; Use a
+				new <FONT color="#cc6600">CNF4.cnf</FONT> file name.&nbsp; This new
+				configuration will now contain the new event code we added.
+				<p>&nbsp;</p>
+		  <li>
+				We are now going to use the Event Wizard to create a press event on the cat. This event will
+				change the doll clothes from the school uniform to the sailor uniform.<br>
+				<br>
+				You can use copy and replace to save some typing. Copy the text now, before you continue,
+				because the next action opens a modal dialog and you will be unable to copy this text while
+				the window is active. <font color="#cc6600">If you copy and paste these lines from the help
+				documentation you must ensure that the semicolon and at-sign combination appears at the beginning
+				of every line.&nbsp; You can copy the FKiSS text by selecting the text and pressing Ctrl-C to copy
+				the text to the clipboard, and paste the text into the Event Wizard with Ctrl-V.</font><br>
+				<br>
+				Right click on the cat and choose the <FONT color="#000099">Object Context - Event Wizard</FONT>.
+				The Event Wizard dialog will open and the event source should be Group&nbsp;9&nbsp;-&nbsp;cat.cel.
+				Select a Press event from the Event Type list. The wizard will display code for a simple press event
+				that will pop up a notify box. Replace only the ;@ notify(&quot;press Group 9 cat.gif&quot;) line
+				with the following code:<br>
+				<br>
+				<font face="Courier New">;@ letmapped(A,"fuku.cel")<br>
+					;@ ifequal(A,1)<br>
+					;@ unmap(#4) unmap(#5) unmap(#6) unmap(#7) unmap(#8)<br>
+					;@ map(#10) map(#11) map(#12) map(#13)<br>
+					;@ else()<br>
+					;@ unmap(#10) unmap(#11) unmap(#12) unmap(#13)<br>
+					;@ map(#4) map(#5) map(#6) map(#7) map(#8)<br>
+					;@ endif()<br>
+				</font>
+				<br>
+			<br>
+				The action statement
+				letmapped() checks the image "fuku.cel" to see if it is mapped, or
+				visible.&nbsp; If it is, variable A will have the value 1, otherwise it will be
+				0.&nbsp;&nbsp; If the "fuku.cel" was visible we unmap all sailor costume
+				objects so they cannot be seen and map all school uniform objects so they are
+				visible, otherwise we do the converse.&nbsp; Group numbers #4, #5, #6, #7, #8
+				are all sailor costume objects and #10, #11, #12, #13 are the numbers for the
+				shirt, skirt, leftshoe and rightshoe object groups.&nbsp; If the object numbers
+				for your objects are different then use the object numbers from your
+				file.
+				<p>&nbsp;</p>
+		  <li>
+				Press OK to apply the new event.&nbsp; This will apply your changes.&nbsp; If you made a typing mistake
+				you may see an error message dialog.&nbsp; If this happens, your event code will be displayed in the
+				UltraKiss Text Editor where you can correct any mistakes.&nbsp; Otherwise, the event should now be active.
+				<p>&nbsp;</p>
+		  <li> Click on the cat to test your changes. You should see the wardrobe change from the school uniform
+		  		to the sailor uniform and back.
+			  	<p>&nbsp;</p>
+	      <li>
+				Use <FONT color="#000099">File-Save</FONT> to save your work.
+				<p>&nbsp;</p>
+		  </li>
+		</ol>
+		<hr>
+		<p align="left">Next Document:&nbsp; <a href="lesson5.html">Sailor Moon Lesson 5<br>
+			</a>Prior Document:&nbsp; <a href="lesson3.html">Sailor Moon Lesson 3</a></p>
+		<p align="left">Copyright (c) 2002-2023 William Miles</p>
+
+		<p>
+			<br>
+			<br>
+		</p>
+		<p>&nbsp;</p>
+	</body>
+</html>

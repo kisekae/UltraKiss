@@ -1,0 +1,51 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>map</title>
+</head>
+
+<body>
+
+<h4><a name="next" id="next">next</a>()&nbsp;</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; next (control)</p>
+<p>This statement is the termination statement of an iteration loop. </p>
+<p>The <em>control</em> parameter must be a variable that matches to a previously executed 'for' statement. If there is no current 'for' statement for the control variable then the 'next' statement is ignored and execution continues with the statement immediately following the 'next' statement.. If a previous 'for' statement was executed for the specified control variable then code execution is returned to the previous 'for' statement for continuing execution. </p>
+<p>If the previous 'for' loop is satisfied such that loop termination occurs then code execution will continue with the statement immediately following the 'next' statement. </p>
+<p>Note that it is possible to have more than one 'next' statement with the same control variable within one 'for' loop. However, at loop termination execution will continue with statements immediately following the last processed 'next' statement. </p>
+<p>A 'for' loop can be terminated early by assigning the loop end value to the control variable.</p>
+<p>&nbsp;</p>
+<p>Related actions: <a href="for.html">for()</a>, <a href="while.html">while()</a>, <a href="repeat.html">repeat()</a></p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td>VariableCase</td>
+        <td>variable names are case sensitive</td>
+        <td>default value &quot;<font color="#0000FF">false</font>&quot; (Compatibility option)</td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>&nbsp;Example:&nbsp;<br>
+</b></font> </p>
+<p> <font face="Courier New">;@ for(I,1,5)<br>
+  ;@ &nbsp;debug(&quot;I is &quot;,I)&nbsp;<br>
+  ;@&nbsp;&nbsp;for(J,3,1)<br>
+  ;@&nbsp;&nbsp;&nbsp;mul(X,I,J)<br>
+  ;@&nbsp;&nbsp;&nbsp;debug(&quot;I is &quot;,I,&quot; J is &quot;,J)<br>
+  ;@&nbsp;&nbsp;&nbsp;ifgreaterthan(X,8) next(I) endif() </font><font face="Courier New"><br>
+  ;@&nbsp;&nbsp;&nbsp;debug(&quot; I*J is &quot;,X)<br>
+  ;@&nbsp;&nbsp;next(J)<br>
+  ;@&nbsp;next(I)</font></p>
+<p><font face="Courier New"><br>
+  </font><font face="Courier New">
+</font></p>
+</body>
+
+</html>

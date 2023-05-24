@@ -1,0 +1,550 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>KiSS Image Types</title>
+</head>
+
+<body>
+
+<h2 align="center"><font face="Arial" color="#FF0000">KiSS Image Types</font></h2>
+<p>The original KiSS specification defined one image format, known as CEL, to
+represent image pixel data. Perhaps the biggest problem with CEL images is that
+palette type encodings do not contain a color table as part of the image file,
+therefore a separate color file must be referenced in order to properly display
+the image. This is known as a KiSS Color File, or KCF file. Because the
+separation of colors from data introduced management difficulties for keeping
+track of pixel data and color data, CEL images have not become a widely
+recognized or useful image format.</p>
+<p>KiSS color files are capable of storing multiple color maps, or palette
+groups. With KCF files different colors can now be applied to the same pixel data, or different
+images can now refer to the same color file. Changes to image coloring can now
+be made by choosing a different color map from the file. Unfortunately, the change could
+potentially apply to a number of images. This could lead to confusion and
+application maintenance difficulties as some images could have a different
+number of color maps from other images.&nbsp;</p>
+<p>The ability to specify different color maps or palettes is a basic feature of
+a KiSS viewer. The original KiSS implementation limited the maximum number
+of color maps in a KCF file to 10, although this is not a necessary requirement. UltraKiss supports an unlimited number of color palettes. </p>
+<p>CEL images are uncompressed. Therefore, KiSS sets of images are typically
+packaged in LZH format archive files to minimize space requirements.&nbsp;</p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<p>CEL and KCF image file formats are not included in standard image processing
+tools. KiSS sets must be built from standard image formats or standard formats
+must be converted to CEL and KCF files.&nbsp; This conversion is complex and
+error prone. FKiSS 5 enables industry standard BMP, GIF, JPG, PNG, PPM, PBM, and
+PGM images formats for use as KiSS cels.&nbsp;</p>
+<p>LZH format archive files are uncommon. Support for ZIP file compression is
+now standard across all operating systems. FKiSS 5 allows KiSS sets to be
+packaged in standard ZIP format for ease of use.</p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">FKiSS 5 extensions:</font></b></p>
+<p>FKiSS 5 should allow for any type of image file. No restriction should exist
+on the maximum number of palettes in a KCF file.</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2><font color="#FF0000"><a name="CEL Format">CEL Format</a></font></h2>
+<p>Cel files have a 32-byte header. The following information is extracted from the KiSS specification and describes the internal structure of a CEL file. <br>
+<br>
+offset size contents<br>
++0 4B Identifier 'KiSS' ( 4Bh 69h 53h 53h )<br>
++4 B Cel file mark ( 20h )<br>
++5 B bits per pixel ( 4 or 8 )<br>
++6 W Reserved<br>
++8 W(L,H) Width ( 1 ... XMAX )<br>
++10 W(L,H) Height ( 1 ... YMAX )<br>
++12 W(L,H) x-offset ( 0 ... XMAX-1 )<br>
++14 W(L,H) y-offset ( 0 ... YMAX-1 )<br>
++16 16B Reserved<br>
+<br>
+Caution: the reserved field must be filled with 0.<br>
+<br>
+Cels of the same object are aligned at the top left corner.&nbsp;&nbsp;<br>
+X,Y-offsets are the offsets from this alignment point.<br>
+<br>
++32... Pixel data<br>
+<br>
+<br>
+* Pixel data order (4 bits/pixel)<br>
+<br>
+One raster:<br>
+<br>
+|&lt;- byte -&gt;| |&lt;- byte -&gt;| |&lt;- byte -&gt;|&nbsp;<br>
+MSB LSB MSB LSB MSB LSB<br>
+<br>
+| pix0 | pix1 | | pix2 | pix3 | | pix4 | pix5 | ......... | pixN |<br>
+<br>
+If the width is odd, add a padding pixel of color 0.<br>
+<br>
+The number of rasters is indicated in the height field.<br>
+<br>
+<br>
+<br>
+* Pixel data order (8 bits/pixel)<br>
+<br>
+One raster:<br>
+<br>
+|&lt;- byte -&gt;| |&lt;- byte -&gt;| |&lt;- byte -&gt;|&nbsp;<br>
+MSB LSB MSB LSB MSB LSB<br>
+<br>
+| pix0 | | pix1 | | pix2 | ... | pixN |<br>
+<br>
+The number of rasters is indicated in the height field.<br>
+<br>
+<br>
+If the top 4-byte identifier is not 'KiSS', the file format is as follows:<br>
+<br>
++0 W(L,H) Width<br>
++2 W(L,H) Height<br>
+<br>
++4... Pixel data<br>
+<br>
+4 bits/pixel.<br>
+X and y-offset are 0.<br>
+This is the conventional format.<br>
+</p>
+<p>&nbsp;</p>
+<h2><font color="#FF0000"><a name="KCF Format">KCF Format</a></font></h2>
+<p>Palette files have a 32-byte header. The following information is extracted from the KiSS specification and describes the internal structure of a KCF file. <br>
+<br>
+offset size contents<br>
++0 4B Identifier 'KiSS' ( 4Bh 69h 53h 53h )<br>
++4 B Palette file mark ( 10h )<br>
++5 B bits per color ( 12 or 24 )<br>
++6 W Reserved<br>
++8 W(L,H) number of colors in one palette group ( 1 ... 256 )<br>
++10 W(L,H) number of palette groups ( 1 ... 10 )<br>
++12 W Reserved<br>
++14 W Reserved<br>
++16 16B Reserved<br>
+<br>
+Caution: the reserved fields must be filled with 0.<br>
+<br>
++32... Palette data<br>
+<br>
+<br>
+* Palette data order (12 bits = 4096 colors)<br>
+<br>
+A color consists of 2 bytes. 4 bits each for red, green, blue.<br>
+<br>
+|&lt;- byte -&gt;| |&lt;- byte -&gt;|<br>
+MSB LSB MSB LSB<br>
+<br>
+| rrrr | bbbb | | 0000 | gggg | ....<br>
+<br>
+<br>
+<br>
+* Palette data order (24 bit = 16,777,216 colors)<br>
+<br>
+<br>
+A color consists of 3 bytes. 8 bits each for red, green, blue.<br>
+<br>
+|&lt;- byte -&gt;| |&lt;- byte -&gt;| |&lt;- byte -&gt;|&nbsp;<br>
+MSB LSB MSB LSB MSB LSB<br>
+<br>
+| rrrrrrrr | | gggggggg | | bbbbbbbb | ...<br>
+<br>
+<br>
+<br>
+If the number of palette groups is less than 10, colors of the remaining palette
+groups will be copied from Group 0.<br>
+<br>
+If the top 4-byte identifier is not 'KiSS', the file format is as follows:<br>
+<br>
++0... palette data<br>
+<br>
+12 bits/color, 16 colors in a palette group, 10 groups.<br>
+This is the conventional format.<br>
+<br>
+</p>
+<p>&nbsp;</p>
+<h2><font color="#FF0000"><a name="LZH Format">LZH Format</a></font></h2>
+<p>Every effort has been made to document LZH header formats as well as changes made for features not yet implemented. Corrections, additions and suggestions
+are always welcomed. Header fields in Italics are currently under development for Huffman Compression Engine only, and should be ignored (skipped) if not
+supported, as should any extended header. <br>
+<br>
+Table of Contents<br>
+Introduction *&nbsp;<br>
+LZH format *<br>
+level-0 *<br>
+level-1, level-2 *<br>
+Level 0 header structure *<br>
+Level 1 header structure *<br>
+Level 2 header structure *<br>
+Extended headers *<br>
+Handling of extended headers. *<br>
+Method ID *<br>
+Variances *<br>
+Huffman Compression Engine II *<br>
+Generic time stamp *<br>
+OS ID *<br>
+Links to other LHA utilities and compression references: *<br>
+0x39 Multi-disk field *<br>
+SPAN_COMPLETE. *<br>
+SPAN_MORE. *<br>
+SPAN_LAST *<br>
+size_of_run *<br>
+span_mode: *<br>
+Termination *<br>
+<br>
+<br>
+LZH format<br>
+Byte Order: Little-endian&nbsp;<br>
+There are 3 types of LZH headers, level-0, level-1, and level-2.&nbsp;<br>
+All .lzh and .lha files are null terminated. The last byte of the file should be&nbsp;<br>
+a 0, but if it's not, it will be interpreted as null terminated. The reason for&nbsp;<br>
+this termination is that it implies that the next header-size is zero. Huffman&nbsp;<br>
+Compression Engine adds the null but doesn't need it.<br>
+level-0<br>
+LZH header<br>
+Compressed file<br>
+LZH header<br>
+Compressed file&nbsp;<br>
+LZH header of size 0 (1 byte null)<br>
+level-1, level-2<br>
+LZH header&nbsp;<br>
+Extension header(s)<br>
+Compressed file<br>
+In all cases, read the first 21 bytes of the header. After determining the&nbsp;<br>
+header type, you will then have to handle the header as needed or suggested.<br>
+<br>
+Level 0 header structure<br>
+OffsetSize in bytesDescription<br>
+            01Size of archived file header (h)<br>
+            111 byte Header checksum<br>
+            25Method ID<br>
+            74Compressed file size Refered to as C in subsequent fields. As&nbsp;<br>
+            there are no extended headers in level 0 format archive headers,&nbsp;<br>
+            this value represents the size of the file data only.<br>
+            114Uncompressed file size<br>
+            154Original file date/time (Generic time stamp)<br>
+            191File or directory attribute<br>
+            201Level identifier (0x00) Programmers should only read the first 21&nbsp;<br>
+            bytes of the header before taking further action<br>
+            211Length of filename in bytes (Refered to as N in subsequent fields<br>
+            22NPath and Filename<br>
+            22+N216 bit CRC of the uncompressed file<br>
+            24+NCCompressed file data<br>
+<br>
+<br>
+Level 1 header structure<br>
+OffsetSize in bytesDescription<br>
+            01Size of archived file header (h)<br>
+            111 byte Header checksum<br>
+            25Method ID<br>
+            74Compressed file size Refered to as C in subsequent fields<br>
+            Note: Compressed size includes the size of all Extended headers for&nbsp;<br>
+            the file.<br>
+            114Uncompressed file size&nbsp;<br>
+            154Original file date/time (Generic time stamp)<br>
+            191File or directory attribute<br>
+            201Level identifier (0x00) Programmers should only read the first 21&nbsp;<br>
+            bytes of the header before taking further action<br>
+            211Length of filename in bytes (Refered to as N in subsequent fields<br>
+            22NPath and Filename<br>
+            22+N216 bit CRC of the uncompressed file<br>
+            24+N1Operating System identifier. See OS ID chart<br>
+            25+N2Next Header size&nbsp;<br>
+            27+N3 or more bytesExtended headers (<br>
+            Note: Extended headers are optional, and have no preset maximum. The&nbsp;<br>
+            first byte of an extended header identifies the type of header, and&nbsp;<br>
+            the last 2 bytes of the header identify whether or not more headers&nbsp;<br>
+            are defined. Huffman Compression Engine will use the extended header&nbsp;<br>
+            filename if both exist in level 1 archives.<br>
+             CCompressed file data<br>
+<br>
+<br>
+<br>
+Level 2 header structure<br>
+OffsetSize in bytesDescription<br>
+            12Total size of headers, including Extended headers for this entry.<br>
+            This field is unimportant as long as the extended headers are looped&nbsp;<br>
+            appropriately. For compatibility with other archivers however, a&nbsp;<br>
+            variable should be assigned to add up the size of each extended&nbsp;<br>
+            header.<br>
+            25Method ID<br>
+            74Compressed file size Referred to as C in subsequent fields<br>
+            This value excludes the size of all Extended headers and only refers&nbsp;<br>
+            to the actual compressed data. This is an improvement, and can be&nbsp;<br>
+            problematic if not handled properly.<br>
+            114Uncompressed file size&nbsp;<br>
+            154Original file date/time (Generic time stamp)<br>
+            191File or directory attribute. Not supported in all compression&nbsp;<br>
+            utilities.<br>
+            201Level identifier (0x00) Programmers should only read the first 21&nbsp;<br>
+            bytes of the header before taking further action<br>
+            21216 bit CRC of the uncompressed file<br>
+            231Operating System identifier. See OS ID chart<br>
+            242Next Header size&nbsp;<br>
+            263 or more bytesExtended headers (<br>
+            Note: Extended headers are not optional, and have no preset maximum.&nbsp;<br>
+            Minimum compatibility should include a type1 extended header.<br>
+            The first byte of an extended header identifies the type of header,&nbsp;<br>
+            and the last 2 bytes of the header identify whether or not more&nbsp;<br>
+            headers are defined. Huffman Compression Engine will use the&nbsp;<br>
+            extended header filename if both exist in level 1 archives. Your&nbsp;<br>
+            loop for reading of these headers should include offset 24 for the&nbsp;<br>
+            first assignment and loop until extended header size = 0.<br>
+             CCompressed file data<br>
+<br>
+<br>
+Extended headers<br>
+Unspecified size fields are intentionally left blank.<br>
+IDSizeDescription<br>
+            0x002CRC-16 of header and an optional information byte.<br>
+            0x01 Filename<br>
+            0x02 Directory name<br>
+            0x39 0x39 Multi-disk field<br>
+            0x3f Uncompressed file comment.<br>
+            0x48<br>
+            0x4f Reserved for Authenticity verification<br>
+<br>
+            0x5?2<br>
+            1UNIX related information.<br>
+            Optional information byte<br>
+            0x502UNIX file permission<br>
+            0x512<br>
+            2Group ID<br>
+            UserID<br>
+            0x52 Group Name<br>
+            0x53 User Name<br>
+            0x54 Last modified time in UNIX time<br>
+<br>
+            0xcn Under development:<br>
+            Compressed file comment. Method -lhn- is assumed<br>
+            Compressed comment cannot exceed 64K in size.<br>
+            Applicable range for Huffman Compression Engine (4..8)<br>
+            0xdx<br>
+            0xff Under development: Operating system specific header info. These&nbsp;<br>
+            fields may have different meanings for different platforms. If the&nbsp;<br>
+            file was not created on the same platform as your own these&nbsp;<br>
+            signatures should be ignored.<br>
+            0xd1 Under development<br>
+            Autodelete after autorun<br>
+<br>
+<br>
+Handling of extended headers.<br>
+Proper procedure for handling of extended headers can be summed up in virtual&nbsp;<br>
+code:<br>
+<br>
+    Read the first 21 bytes of the real header to determine the size of the&nbsp;<br>
+    first extended header. If the&nbsp;<br>
+    Use the first extended header in the loop that reads subsequent headers&nbsp;<br>
+    Assign this value to a variable which is used inside the extended header&nbsp;<br>
+    loop&nbsp;<br>
+    Repeat&nbsp;<br>
+    Allocate enough memory for the header&nbsp;<br>
+    Read the header into the array&nbsp;<br>
+    Assign headersize to a word variable at the last 2 bytes of the array&nbsp;<br>
+    Goto 3&nbsp;<br>
+    Handle compressed data if it exists.<br>
+Code has not been supplied intentionally. It is expected that the programmer&nbsp;<br>
+reading this document has enough knowledge of programming to perform the task of&nbsp;<br>
+writing real code.<br>
+<br>
+Method ID&nbsp;<br>
+SignatureDescription<br>
+            -lh0-No compression<br>
+            -lzs-2k sliding dictionary(max 17 bytes)&nbsp;<br>
+            -lz4-No compression&nbsp;<br>
+            -lh1-4k sliding dictionary(max 60 bytes) + dynamic Huffman + fixed&nbsp;<br>
+            encoding of position<br>
+            -lh2-8k sliding dictionary(max 256 bytes) + dynamic Huffman&nbsp;<br>
+            (Obsoleted)&nbsp;<br>
+            -lh3-8k sliding dictionary(max 256 bytes) + static Huffman&nbsp;<br>
+            (Obsoleted) This method is not supported by Huffman Compression&nbsp;<br>
+            Engine<br>
+            -lh4-4k sliding dictionary(max 256 bytes) + static Huffman +&nbsp;<br>
+            improved encoding of position and trees&nbsp;<br>
+            -lh5-8k sliding dictionary + static Huffman<br>
+            -lh6-32k sliding dictionary + static Huffman&nbsp;<br>
+            -lh7-<br>
+            -lh8-64k sliding dictionary + static Huffman&nbsp;<br>
+            Lh8 has yet to be discovered except in my own utility. It existed&nbsp;<br>
+            from 0.21d to 0.21M and was actually -lh7- per Harihiko's review of&nbsp;<br>
+            Yoshi's notes.<br>
+            "-lhd-"Directory (no compressed data). This signature may not&nbsp;<br>
+            contain any information at all. In some cases it only is used to&nbsp;<br>
+            signify that there are extended headers with important information.&nbsp;<br>
+            In level 0 archives it most likely contains the directory for the&nbsp;<br>
+            next header's file, but in level 1 and 2 headers, it most likely&nbsp;<br>
+            contains nothing except for possibly the size of the first extended&nbsp;<br>
+            header.<br>
+<br>
+Huffman Compression Engine II dynamically sets the method for compression based&nbsp;<br>
+on the file size. Reasoning: It makes little sense to use a 64KB buffer if the&nbsp;<br>
+file is 1K. The next section covers variances, which basically define what to do&nbsp;<br>
+in known cases where the file signature does not match the dictionary size.<br>
+<br>
+Variances<br>
+Huffman Compression Engine II<br>
+Versions after 0.21M now dynamically size the dictionary buffer according to the&nbsp;<br>
+size of the file to be compressed. It is not uncommon to have signatures of&nbsp;<br>
+-lh4- thru -lh7-. A future implementation will include -lh9- through -lhc- and&nbsp;<br>
+-lhe-, which represent dictionary sizes of 128KB through 2MB. -lhd- is skipped&nbsp;<br>
+due to the fact that it is a reserved signature. During 0.21, a misunderstanding&nbsp;<br>
+about the method identifier lead me to think that a 64KB buffer was -lh8-.&nbsp;<br>
+Although logic dictated that it should be, 16KB dictionaries were bypassed&nbsp;<br>
+entirely, which lead to this confusion. In order to simplify the problem, decode&nbsp;<br>
+should use 64KB for -lh6- through -lh8-.<br>
+<br>
+Generic time stamp<br>
+31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16<br>
+|&lt;-------- year ------->|&lt;- month ->|&lt;-- day -->|<br>
+15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0<br>
+|&lt;--- hour --->|&lt;---- minute --->|&lt;- second/2 ->|<br>
+Offset Length Contents<br>
+0 8 bits year years since 1980<br>
+8 4 bits month [1..12]<br>
+12 4 bits day [1..31]<br>
+16 5 bits hour [0..23]<br>
+21 6 bits minite [0..59]<br>
+27 5 bits second/2 [0..29]<br>
+<br>
+OS ID&nbsp;<br>
+'IDPlatform<br>
+            MMS-Dos<br>
+            '2'OS/2&nbsp;<br>
+            '9'OS9&nbsp;<br>
+            'K'OS/68K&nbsp;<br>
+            '3'OS/386&nbsp;<br>
+            'H'HUMAN&nbsp;<br>
+            'U'UNIX&nbsp;<br>
+            'C'CP/M&nbsp;<br>
+            'F'FLEX&nbsp;<br>
+            'm'Mac&nbsp;<br>
+            'w'Windows 95, 98<br>
+            'W'Windows NT<br>
+'R'Runser&nbsp;<br>
+<br>
+<br>
+0x39 Multi-disk field<br>
+<br>
+The following is a planned implementation. The original can be found at:<br>
+http://www.creative.net/~aeco/jp/lzhspc01.html<br>
+<br>
+struct MDF {<br>
+byte span_mode;<br>
+long beginning_offset;<br>
+long size_of_run;<br>
+}<br>
+<br>
+span_mode: This identifies the mode of this segment of file. The values are:<br>
+#define SPAN_COMPLETE 0<br>
+#define SPAN_MORE 1<br>
+#define SPAN_LAST 2<br>
+<br>
+SPAN_COMPLETE.&nbsp;<br>
+This specifies that the information following this header contains a complete&nbsp;<br>
+(optionally compressed) file. This is often unused because MDF is not needed in&nbsp;<br>
+these cases. In an unsplit file, the header information and format should follow&nbsp;<br>
+the standard LZH format.<br>
+<br>
+SPAN_MORE.&nbsp;<br>
+This specifies that the information following this header is incomplete. The&nbsp;<br>
+uncompressor needs to concatenate this segment with<br>
+information from the following volume. It should continue to do that until it&nbsp;<br>
+sees a volume with a header information that contains span_mode<br>
+SPAN_LAST<br>
+This specifies that the information following this header is the last segment of&nbsp;<br>
+the (optionally compressed) file.<br>
+beginning_offset:<br>
+This value specifies the location in bytes of where this segment (run) of&nbsp;<br>
+information will fit into.<br>
+<br>
+size_of_run<br>
+This is the size of this segment of information.<br>
+<br>
+span_mode:&nbsp;<br>
+This identifies the mode of this segment of file. The values are:<br>
+#define SPAN_COMPLETE 0<br>
+#define SPAN_MORE 1<br>
+#define SPAN_LAST 2<br>
+<br>
+SPAN_COMPLETE. This specifies that the information following this header&nbsp;<br>
+contains a complete (optionally compressed) file. This is often unused<br>
+because MDF is not needed in these cases. In an unsplit file, the header&nbsp;<br>
+information and format should follow the standard LZH format.<br>
+<br>
+SPAN_MORE. This specifies that the information following this header is&nbsp;<br>
+incomplete. The uncompressor needs to concatenate this segment with<br>
+information from the following volume. It should continue to do that until it&nbsp;<br>
+sees a volume with a header information that contains span_mode<br>
+SPAN_LAST.<br>
+<br>
+SPAN_LAST. This specifies that the information following this header is the last&nbsp;<br>
+segment of the (optionally compressed) file.<br>
+<br>
+<br>
+beginning_offset: This value specifies the location in bytes of where this&nbsp;<br>
+segment (run) of information will fit into.<br>
+<br>
+size_of_run: This is the size of this segment of information.<br>
+<br>
+<br>
+<br>
+The illustration below contain two volumes with two compressed files, one of&nbsp;<br>
+them split between the two volumes. "File 1" is compressed and fits<br>
+within the first volume. "File 2" is a file 100 bytes long compressed to 90&nbsp;<br>
+bytes. The first 50 bytes of which resides on the first volume and the<br>
+last 40 bytes on the next.<br>
+      Volume 1<br>
+      +--------------+<br>
+      | +----------+ |<br>
+      | |LZH header| | &lt;- MDF not needed<br>
+      | +----------+ | &lt;- header unchanged from non-spanned versions of LZH<br>
+      | | File 1   | |<br>
+      | |          | |<br>
+      | |          | |<br>
+      | +----------+ |<br>
+      |              |<br>
+      | +----------+ | &lt;- span_mode = SPAN_MORE<br>
+      | |LZH header| | &lt;- beginning_offset = 0<br>
+      | +----------+ | &lt;- size_of_run = 50<br>
+      | | File 2   | |<br>
+      | | split    | |<br>
+      | |          | |<br>
+      +--------------+<br>
+<br>
+      Volume 2<br>
+      +--------------+<br>
+      | +----------+ | &lt;- span_mode = SPAN_LAST<br>
+      | |LZH header| | &lt;- beginning_offset = 50<br>
+      | +----------+ | &lt;- size_of_run = 40<br>
+      | | File 2   | |<br>
+      | |          | |<br>
+      | |          | |<br>
+      | |          | |<br>
+      | +----------+ |<br>
+      | +----------+ |<br>
+      | | [0]      | | &lt;- end of volumes, a byte with value zero (0)<br>
+      | +----------+ |<br>
+      +--------------+<br>
+<br>
+Termination<br>
+-----------<br>
+In addition to the above changes, the compressor must before closing the file&nbsp;<br>
+after writing the last volume, write a null byte at the end of the file. This&nbsp;<br>
+byte serves to inform the decompressor that this is the last volume and no other&nbsp;<br>
+comes after it.<br>
+<br>
+This end of volume byte is needed to tell the decompressor when to stop&nbsp;<br>
+prompting for the next volume. This termination byte is optional, as the&nbsp;<br>
+decompressor may also stop when it has completed a file, i.e., see SPAN_LAST or&nbsp;<br>
+just a regular file with<br>
+MDF. However if the end of this completed file coincides with an end of volume,&nbsp;<br>
+there would be not way for the compressor detect that the following<br>
+volumes and prompt for them.<br>
+This termination byte is a way around this potential bug.<br>
+<br>
+Note that this null byte coincides with header_size in the LZH header.<br>
+</p>
+<p><br>
+</p>
+
+</body>
+
+</html>

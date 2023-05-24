@@ -1,0 +1,93 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>notify</title>
+</head>
+
+<body>
+
+<h4><a name="notify">notify</a>()&nbsp;</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; notify (literalstring)</p>
+<p>The notify() action is intended to display a message dialog on the screen.
+With FKiSS 1 through FKiSS 4 the string must be a literal value enclosed in
+double quotation marks.&nbsp;</p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">FKiSS 5 Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp;
+notify (string[,string,string,...] )</p>
+<p>FKiSS 5 supports string variables, type conversion, and string operations
+such as concatenation. With FKiSS 5 the argument can be in a variable and
+multiple arguments can be specified on the notify() statement. Each argument is
+converted to its string representation and concatenated with all other arguments
+in the order specified. The resulting string is displayed in a non-modal popup
+dialog window.</p>
+<p>Notify() dialogs do not suspend dynamic execution. Multiple notify windows
+can be concurrently displayed. For dialogs that must wait for a response, use
+the confirm() statement.</p>
+<p><br>
+Related actions: <a href="debug.html">debug()</a>, <a href="confirm.html">confirm()</a>,
+<a href="showstatus.html">showstatus()</a></p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td>FKiSS 1 to 4 only allows literal strings.</td>
+      <td>notify (&quot;This is a message&quot;)</td>
+      <td>Displays a debug message in a dialog window.</td>
+    </tr>
+    <tr>
+      <td>FKiSS 5 allows variables and concatenation of multiple strings</td>
+      <td>notify(&quot;Variable A is: &quot;,A)</td>
+      <td>Displays a composite message in a dialog window.</td>
+    </tr>
+  </table>
+  <p align="left">&nbsp;</p>
+  <p align="left"><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+  <div align="center">
+    <center>
+      <table border="1" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+          <td width="20%">VariableCase</td>
+          <td width="30%">variable names are case sensitive</td>
+          <td>default value &quot;<font color="#0000FF">false</font>&quot; (Compatibility option)</td>
+        </tr>
+      </table>
+    </center>
+  </div>
+  <p align="left">&nbsp;</p>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>&nbsp;FKiSS 1 Example:
+</b></font>
+</p>
+<p><font face="Courier New">#1.999 button.cel       : 0                              ;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+</font>
+<br>
+<font face="Courier New">;@press(#1)&nbsp;&nbsp; notify(&quot;Object #1
+pressed&quot;)&nbsp; ;&nbsp;<br>
+;@release(#1) notify(&quot;Object #1 released&quot;)&nbsp; ;&nbsp;
+<br>
+</font></p>
+
+<p><font color="#FF0000"><b>&nbsp;FKiSS 5 Example:
+</b></font>
+</p>
+<p><font face="Courier New">#1.999 button.cel       : 0                              ;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+</font>
+<br>
+<font face="Courier New">;@press(#1)&nbsp;&nbsp; let(S,&quot;Object #1
+pressed&quot;)&nbsp;notify(S) ;&nbsp;<br>
+;@release(#1) notify(S,&quot; and then released&quot;)&nbsp; ;&nbsp;
+<br>
+</font></p>
+
+<p>&nbsp;</p>
+
+</body>
+
+</html>

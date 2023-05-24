@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE map
+  PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Map Version 1.0//EN"
+         "http://java.sun.com/products/javahelp/map_1_0.dtd">
+
+<map version="1.0">
+	<mapID target="tutorials.index" url="product/tutorials.html" />
+	<mapID target="tutorials.sailormoon" url="product/tutorial/sailormoon/lesson1.html" />
+	<mapID target="tutorials.timeranim" url="product/tutorial/timeranim/lesson1.html" />
+
+	<mapID target="tutorials.sailormoon.lesson1" url="product/tutorial/sailormoon/lesson1.html" />
+	<mapID target="tutorials.sailormoon.lesson2" url="product/tutorial/sailormoon/lesson2.html" />
+	<mapID target="tutorials.sailormoon.lesson3" url="product/tutorial/sailormoon/lesson3.html" />
+	<mapID target="tutorials.sailormoon.lesson4" url="product/tutorial/sailormoon/lesson4.html" />
+	<mapID target="tutorials.sailormoon.lesson5" url="product/tutorial/sailormoon/lesson5.html" />
+	<mapID target="tutorials.sailormoon.lesson6" url="product/tutorial/sailormoon/lesson6.html" />
+	<mapID target="tutorials.editimage.lesson1" url="product/tutorial/editimage/lesson1.html" />
+	<mapID target="tutorials.editimage.lesson2" url="product/tutorial/editimage/lesson2.html" />
+	<mapID target="tutorials.editimage.lesson3" url="product/tutorial/editimage/lesson3.html" />
+	<mapID target="tutorials.editimage.lesson4" url="product/tutorial/editimage/lesson4.html" />
+	<mapID target="tutorials.fkissevents.lesson1" url="product/tutorial/fkissevents/lesson1.html" />
+	<mapID target="tutorials.fkissevents.lesson2" url="product/tutorial/fkissevents/lesson2.html" />
+	<mapID target="tutorials.fkissevents.lesson3" url="product/tutorial/fkissevents/lesson3.html" />
+	<mapID target="tutorials.timeranim.lesson1" url="product/tutorial/timeranim/lesson1.html" />
+	<mapID target="tutorials.timeranim.lesson2" url="product/tutorial/timeranim/lesson2.html" />
+	<mapID target="tutorials.timeranim.lesson3" url="product/tutorial/timeranim/lesson3.html" />
+	<mapID target="tutorials.timeranim.lesson4" url="product/tutorial/timeranim/lesson4.html" />
+	<mapID target="tutorials.fkissdebug.lesson1" url="product/tutorial/fkissdebug/lesson1.html" />
+	<mapID target="tutorials.fkissdebug.lesson2" url="product/tutorial/fkissdebug/lesson2.html" />
+	<mapID target="tutorials.fkissdebug.lesson3" url="product/tutorial/fkissdebug/lesson3.html" />
+</map>

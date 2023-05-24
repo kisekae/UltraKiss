@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='ISO-8859-1'  ?>
+<!DOCTYPE toc
+  PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp TOC Version 1.0//EN"
+         "http://java.sun.com/products/javahelp/toc_1_0.dtd">
+<toc version="1.0">
+  <tocitem text="">
+   <tocitem text="Tutorials">
+    <tocitem text="How to make a KiSS set">
+     <tocitem text="Lesson 1. Create a New KiSS Set" target="tutorials.sailormoon.lesson1"/>
+     <tocitem text="Lesson 2. Adding Images to a KiSS Set" target="tutorials.sailormoon.lesson2"/>
+     <tocitem text="Lesson 3. Copy Objects to New Pages" target="tutorials.sailormoon.lesson3"/>
+     <tocitem text="Lesson 4. Adding Events to the KiSS Set" target="tutorials.sailormoon.lesson4"/>
+     <tocitem text="Lesson 5. Correcting the Errors" target="tutorials.sailormoon.lesson5"/>
+     <tocitem text="Lesson 6. Adding Sound" target="tutorials.sailormoon.lesson6"/>
+    </tocitem>
+    <tocitem text="How to convert images">
+     <tocitem text="Lesson 1. Converting to CEL Images" target="tutorials.editimage.lesson1"/>
+     <tocitem text="Lesson 2. Making Color Variations" target="tutorials.editimage.lesson2"/>
+     <tocitem text="Lesson 3. Creating a Multi-Palette" target="tutorials.editimage.lesson3"/>
+     <tocitem text="Lesson 4. Adding Transparency Effects" target="tutorials.editimage.lesson4"/>
+    </tocitem>
+    <tocitem text="How to program FKiSS events">
+     <tocitem text="Lesson 1. Programming FKiSS events" target="tutorials.fkissevents.lesson1"/>
+     <tocitem text="Lesson 2. Editing FKiSS events" target="tutorials.fkissevents.lesson2"/>
+     <tocitem text="Lesson 3. Creating Snap-to events" target="tutorials.fkissevents.lesson3"/>
+    </tocitem>
+    <tocitem text="How to do simple Timer animation">
+     <tocitem text="Lesson 1. Create a New KiSS Set" target="tutorials.timeranim.lesson1"/>
+     <tocitem text="Lesson 2. Animating the Airplane" target="tutorials.timeranim.lesson2"/>
+     <tocitem text="Lesson 3. Adding Animation Control" target="tutorials.timeranim.lesson3"/>
+     <tocitem text="Lesson 4. Adding Animated GIFs" target="tutorials.timeranim.lesson4"/>
+    </tocitem>
+    <tocitem text="How to debug your FKiSS code">
+     <tocitem text="Lesson 1. The FKiSS Editor 1" target="tutorials.fkissdebug.lesson1"/>
+     <tocitem text="Lesson 2. The FKiSS Editor 2" target="tutorials.fkissdebug.lesson2"/>
+     <tocitem text="Lesson 3. The FKiSS Editor 3" target="tutorials.fkissdebug.lesson3"/>
+    </tocitem>
+   </tocitem>
+  </tocitem>
+</toc>
+
+

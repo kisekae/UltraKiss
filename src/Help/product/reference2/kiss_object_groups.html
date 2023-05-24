@@ -1,0 +1,191 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>FKiSS Data Types</title>
+</head>
+
+<body>
+
+<h2 align="center"><font face="Arial" color="#FF0000"> Groups</font></h2>
+<p>&nbsp;</p>
+<p>When KiSS was originally conceived an object was considered to be a collection of
+cel image files grouped together as a unit. In KiSS, the term <i>object</i> is
+an abstract term that relates a number of entities to a particular point on the
+screen.&nbsp; In practice, an object group is the realization of this
+abstraction and is a concrete implementation of a number of image cels in one
+movable group that is visible on the screen. An object can be dragged by
+the mouse and manipulated by the user as a single entity. Objects are identified
+in the configuration file by a number preceded with a '#'
+character. This notation distinguished an object identifier from an integer.&nbsp;</p>
+<p>Later, when FKiSS4 was developed, the notion of a more general <i>group</i>
+was defined. A group referred to a general collection of cel images, not all
+necessarily within the same entity. These groups were unrelated to traditional objects and provided new
+grouping capabilities that could be used to uniquely identify certain images or frames within the
+collection. These cel collections were called a <i>cel group</i>.</p>
+<p>It is easy to see that a KiSS object is a specialized cel group where all
+cels just happen to be in the same object. We call this specialized cel group an
+<i> object group</i>. Object groups can behave in exactly the same way&nbsp;as
+cel groups, however FKiSS 4 viewer implementations do not recognize this.&nbsp;</p>
+<p>&nbsp;</p>
+<h2><font color="#FF0000"><a name="Objects">Objects</a></font></h2>
+<p>An object is a collection of image files grouped together as a named unit. Objects
+are identified by number preceded with a '#'
+character to differentiate an object identifier from an integer. Most viewers
+are restrictive in not allowing literal object identifiers without the preceding
+'#' character, although this is not required as the semantic interpretation can
+be determined by the command.</p>
+<p>Example:</p>
+<p><font face="Courier New">#1.999&nbsp; body.cel&nbsp; :
+0&nbsp;&nbsp;&nbsp;&nbsp; ;&nbsp;<br>
+#12.100 face.cel&nbsp; : 0&nbsp;&nbsp;&nbsp;&nbsp; ;&nbsp;<br>
+</font></p>
+<p><font face="Courier New">;@
+press(#12)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; a press event on an object<br>
+;@ unmap(#12)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; unmap the object<br>
+;@ movebyX(#12,#1,5)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; move object #12 relative to
+#1<br>
+;@
+let(A,12)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; assign an integer to a variable&nbsp;<br>
+;@ let(A,#12)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;; assign an
+object to a variable&nbsp;<br>
+;@ map(A)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; map the object 12<br>
+;@
+map(#A)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; map the object 12<br>
+</font></p>
+<p>&nbsp;</p>
+<h2><font color="#FF0000"><a name="Cel Groups">Cel Groups</a></font></h2>
+<p>Cel groups were introduced with FKiSS 4 to enable the specification of a set
+of related image cels that were unrelated to objects. This feature provided new
+grouping capabilities that could be used to uniquely identify certain frames or
+images within the set, and assist with resolving the ambiguities associated with
+ambiguous cels. Cel group frames also facilitated animation control beyond the
+capabilities provided with groups.</p>
+<p>Cel groups have named identifiers and are specified on a cel group tag
+extension on the configuration file cel definition line. Cel group names are preceded with a '!'
+character. The identifier must start with a letter and cannot contain spaces.
+Image cels can participate in one or more different cel groups.</p>
+<p>With the introduction of cel groups it became useful to distinguish various images within the group. A subset of images within the cel group could be identified as a <em>frame</em>. Frames could be mapped or unmapped individually using the setframe() and letframe() commands. In the simplest form, where each image in the cel group was its own distinct frame, animation could be easily performed. </p>
+<p>Frame numbers
+  are not unique and more that one cel can be associated with the same frame
+  number. Therefore, FKiSS commands such as setframe() could be used to set the visibility for a
+  specified frame or set of cels. Note that when cels are not associated with a frame they
+  are given a default frame number of zero.</p>
+<p>An individual image cel can also be associated with many different frames. This provides a  many-to-many relationship between image cels and frames. </p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h4><a name="tagexclaim">! (the cel group tag)</a></h4>
+<p>Tag Syntax:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font face="Courier New">; !&lt;name&gt; [: n1 n2 n3]</font><br>
+<br>
+The celgroup tag is the cel group name starting with an exclamation mark, and
+optionally, a frame definition: a colon followed by frame numbers. As the
+example below shows, one cel instance can be assigned to many different cel groups, and cel
+group definitions can start on a new line, as long as they follow a semicolon.&nbsp;The
+examples show two equivalent representations for the specification of cels
+'three.cel' and 'four.cel' .</p>
+<p>Example:</p>
+<p><font face="Courier New">#10.100 three.cel : 0 ; !Number :3&nbsp;<br>
+;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+!Card :1&nbsp;<br>
+;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+!Queen<br>
+#10.100 four.cel&nbsp; : 0 ; !Number :4&nbsp;<br>
+;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+!Card :1&nbsp;<br>
+;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+!Jack<br>
+</font></p>
+<p>Example:</p>
+<p><font face="Courier New">#10.100   zero.cel&nbsp; : 0 ; !Number :0 !Card :0<br>
+#10.100 one.cel&nbsp;&nbsp; : 0 ; !Number :1 !Card :1 !Ace<br>
+#10.100 two.cel&nbsp;&nbsp; : 0 ; !Number :2 !Card :1 !King&nbsp;<br>
+#10.100 three.cel          : 0 ; !Number :3 !Card :1 !Queen<br>
+#10.100 four.cel&nbsp; : 0 ; !Number :4 !Card :1 !Jack<br>
+#10.100 five.cel&nbsp; : 0 ; !Number :5 !Card :2 !Ten<br>
+#10.100 six.cel&nbsp;&nbsp; : 0 ; !Number :6 !Card :3 !Nine<br>
+#10.100 seven.cel          : 0 ; !Number :7 !Card :4 !Eight<br>
+</font></p>
+<p><font face="Courier New">;@ press(!Card)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; a press event on any cel in a cel group<br>
+;@ unmap(!Card)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;
+unmap all images in a cel group<br>
+;@ setframe(!Card,5)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; map frame 5 in the cel
+group<br>
+;@ let(A,&quot;!Ace&quot;)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; assign a string to a variable&nbsp;<br>
+;@ map(A)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; map the cel group !Ace<br>
+;@ let(A,&quot;Number&quot;)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; assign
+a string to a variable&nbsp;<br>
+;@ map(!A)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; map the cel group !Number<br>
+</font></p>
+<p>&nbsp;</p>
+<h2><font color="#FF0000"><a name="Object Groups">Object Groups</a></font></h2>
+<p>Objects are also collections of cels and can be considered as a group. The
+original FKiSS 4 specification of cel groups did not consider this relation,
+however all cel group commands can equally apply to objects. Frames or images
+within objects can be selected to assist with resolving the ambiguities
+associated with ambiguous cels. Object group frames also facilitated animation
+control beyond the capabilities provided with simple object commands.</p>
+<p>Example:</p>
+<p><font face="Courier New">;@
+press(#10)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; a press event on object #10<br>
+;@ setframe(#10,5)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; map cel image 5
+in object #10<br>
+;@ let(A,&quot;#10&quot;)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; assign a string to a variable&nbsp;<br>
+;@ map(A)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; map the object #10<br>
+;@ let(A,#10)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; assign an object reference to A&nbsp;<br>
+;@ map(A)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; map the object #10<br>
+;@
+let(A,10)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; assign an integer to a variable&nbsp;<br>
+;@ unmap(A)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; unmap the object #10<br>
+</font></p>
+<p>With objects, frames are implicitly numbered beginning with 0 according to
+the sequence in which they are specified in the configuration file. To specify
+your own frame numbers you must associate a cel group
+name to the object and refer to the object through its cel group name.&nbsp;</p>
+<p>Example:</p>
+<p><font face="Courier New">#9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; another.cel&nbsp; : 0 ;&nbsp;<br>
+#10.100   zero.cel&nbsp;&nbsp;&nbsp;&nbsp; : 0 ; implicit frame 0&nbsp;<br>
+#10.100 one.cel&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : 0 ; implicit frame 1&nbsp;<br>
+#10.100 two.cel&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : 0 ; implicit frame 2&nbsp;<br>
+#10.100 three.cel&nbsp;&nbsp;&nbsp; : 0 ; implicit frame 3&nbsp;<br>
+#10.100 four.cel&nbsp;&nbsp;&nbsp;&nbsp; : 0 ; implicit frame 4&nbsp;<br>
+#10.100 five.cel&nbsp;&nbsp;&nbsp;&nbsp; : 0 ; implicit frame 5&nbsp;<br>
+#10.100 six.cel&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : 0 ; implicit frame 6&nbsp;<br>
+#10.100 seven.cel&nbsp;&nbsp;&nbsp; : 0 ; implicit frame 7&nbsp;<br>
+#11&nbsp;&nbsp;&nbsp;&nbsp; another.cel&nbsp; : 0 ;&nbsp;<br>
+</font></p>
+<p><font face="Courier New">;@
+press(#10)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; a press event on object #10<br>
+;@ setframe(#10,5)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; map cel image 5
+in object #10<br>
+;@ let(A,10)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+; assign an integer to a variable&nbsp;<br>
+;@ map(A)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; map the object #10, which shows frame 5<br>
+;@ letframe(B,#10)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;; get object
+#10 visible frame (5)<br>
+</font></p>
+<p>&nbsp;</p>
+
+</body>
+
+</html>

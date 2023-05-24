@@ -1,0 +1,100 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta name="generator" content="Bluefish 2.2.12" >
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>string</title>
+</head>
+
+<body>
+
+<h4><a name="letsibling" id="letsibling">letsibling</a>()</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp;
+letsibling (variable,object)</p>
+<p>
+The letsibling() statement returns the next object in the attachment chain for the specified object.
+The children of the parent of the specified object are identified.  Each child is an object with a unique object number.  The next object number
+greater than the specified object found in the set of children of the parent is returned in the variable.</p>
+<p>It is possible to iterate through all siblings by repeatedly issuing letsibling() commands on each returned object.
+<p>If no parent object exists or no remaining sibling objects exist the variable is set to -1.</p>
+<p>The <em>object</em> must be an object group specifier or a variable containing an object group identifier.</p>
+<p>&nbsp;</p>
+<p> Related actions: <a href="attach.html">attach()</a> <a href="detach.html">detach()</a> <a href="letparent.html">letparent()</a> <a href="letchild.html">letchild()</a></p>
+<p>&nbsp; </p>
+<p>&nbsp;  </p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+    <table border="1" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td width="20%">FKiSS 5 &nbsp;</td>
+        <td width="30%">letsibling(N,#3)&nbsp; </td>
+        <td>Variable N is set to the only parent of group object 3.  </td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+    <table border="1" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td width="20%">VariableCase</td>
+        <td width="30%">variable names are case sensitive</td>
+        <td>default value &quot;<font color="#0000FF">false</font>&quot; (Compatibility option)</td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<div align="center"></div>
+<p><font color="#FF0000"><b>&nbsp;Example:&nbsp;</b></font></p>
+<p>
+<font face="Courier New">
+;@letsibling(N,&quot;shirt.cel&quot;)&nbsp;;&nbsp;N contains the current height for the specified cel<br>
+;@letsibling(N,#3)&nbsp;;&nbsp;N contains the current height for object #3<br></font></p>
+<p>&nbsp; </p>
+<p><font color="#FF0000"><b>&nbsp;Example:&nbsp;</b></font></p>
+<font face="Courier New">
+;[Cel Section]<br>
+#5   button2.button      : 0                                ;%size[100,50] %offset[0,67] %attributes[text="letsibling"] <br>
+#5   button1.button      : 0                                ;%size[100,50] %attributes[text="letchild"] <br>
+#4   angelven.gif        : 0                                ;<br>
+#3   angelree.gif        : 0                                ;<br>
+#2   angelmer.gif        : 0                                ;<br>
+#1   angelmoo.gif        : 0                                ;<br>
+ <br>
+;[Page Set Section]<br>
+; Page 0<br>
+$0 * 283,87 134,307 324,286 548,291 2,-1<br>
+ <br>
+ <br>
+;[FKiSS Section]<br>
+;@EventHandler<br>
+ <br>
+;@initialize()                                              ; <br>
+;@ glue(#2,#1)                                              ; <br>
+;@ glue(#3,#1)                                              ; <br>
+;@ glue(#4,#1)                                              ; <br>
+<br>
+;@begin()                                                   ; <br>
+;@ debug("children are glued to sailormoon")                ; <br>
+<br>
+;@press("button1.button")                                   ; <br>
+;@ letchild(N,#1) letcel(Name,N)                            ; <br>
+;@ debug("first child is group ",N," ",Name)                ; <br>
+<br>
+;@press("button2.button")                                   ; <br>
+;@ ifequal(N,0)                                             ; undefined N<br>
+;@  debug("require letchild() before letsibling()")         ; <br>
+;@  exitevent() endif()                                     ; <br>
+;@ letsibling(N2,#N) letcel(Name,N2)                        ; <br>
+;@ iflessthan(N2,0) let(Name,"") endif()                    ; <br>
+;@ debug("next child is group ",N2," ",Name)                ; <br>
+;@ let(N,N2)                                                ; <br>
+<br>
+</body>
+</font>
+</html>

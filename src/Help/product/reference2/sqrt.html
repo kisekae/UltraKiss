@@ -1,0 +1,77 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>sqrt</title>
+</head>
+
+<body>
+
+<h4><a name="sqrt">sqrt</a>()</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; sqrt
+(result,operand1)</p>
+<p>This command computes the integer square root of a number. The result variable is is
+assigned the truncated value of the square root of a number..&nbsp; The result must be a variable. Operand1 can be numeric
+literal values or variables that represent numeric values.&nbsp;</p>
+<p> result = floor(sqrt(operand1)).&nbsp;</p>
+<p> UltraKiss FKiSS 5 provides support for
+floating point numbers and long integers that can range from
+-9223372036854775808 to 9223372036854775807, inclusive. With FKiSS5 implicit
+conversion between variables is automatically performed and all calculations
+maintain the appropriate precision.&nbsp;</p>
+<p>Numeric overflow may occur if the resulting difference cannot be accurately
+represented by the computer.&nbsp;Numeric overflow will occur on computation of
+the square root of a negative number.</p>
+<p>
+Related actions: <a href="add.html">add()</a>, <a href="sub.html">sub()</a>, <a href="mul.html">mul()</a>,
+<a href="div.html">div()</a>, <a href="mod.html">mod()</a>, <a href="math.html">math(),</a>
+<a href="random.html">random()</a><br>
+</p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+  <table border="1" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td width="20%">FKiSS 5</td>
+      <td width="30%">sqrt(MyVariable,3.145) or sqrt(X,999999999999)</td>
+      <td>integer, string, floating point subtraction, long variable names</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+  <table border="1" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td width="20%">VariableCase</td>
+      <td width="30%">variable names are case sensitive</td>
+      <td>default value &quot;<font color="#0000FF">false</font>&quot;
+        (Compatibility option)</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>Example Code (FKiSS5):&nbsp;
+</b></font>
+</p>
+<p><font face="Courier New">;@let(Apple,4) let(Pear,8) let(PI,3.1415927)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;<br>
+;@sqrt(X,Apple)&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;X = 2<br>
+;@sqrt(X,Pear)&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;X = 2<br>
+;@sqrt(X,PI)&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;X = 1<br>
+</font>
+</p>
+<p><font face="Courier New"><br>
+</font></p>
+
+</body>
+
+</html>

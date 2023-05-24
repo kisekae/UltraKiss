@@ -1,0 +1,37 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>map</title>
+</head>
+
+<body>
+
+<h4><a name="exitevent" id="exitevent">exitevent</a>()&nbsp;</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; exitevent ()</p>
+<p>The exitevent()statement will immediately terminate the execution of the current event module or label module. </p>
+<p>If the module had been invoked through a gosub() statement then the exitevent() statement causes a return to the calling module where statement execution continues after the gosub() statement. </p>
+<p>If the exitevent() statement is processed inside a label module that was called by a repeat() statement then the label module is exited and the repeat() statement continues with the next repetition of the label module. This differs from an exitloop() statement which both exits the current label module and terminates the repeat() loop. </p>
+<p>An exitevent() statement, if processed within a for() or while() loop, immediately exits the module and any remaining loop iterations are not completed. </p>
+<p>&nbsp;</p>
+<p>Related actions: <a href="gosub.html">gosub()</a>, <a href="goto.html">goto()</a>, <a href="event.html">event()</a>, <a href="repeat.html">repeat()</a>, <a href="while.html">while()</a>,  <a href="for.html">for()</a></p>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>&nbsp;Example:&nbsp;<br>
+</b></font> </p>
+<p><font face="Courier New">;@ repeat(label1,5,N) </font></p>
+<p><font face="Courier New">;@ label(label1)<br>
+  ;@ ifequal(N,1) debug(&quot;Iteration 1&quot;) endif()<br>
+  ;@ ifequal(N,2) debug(&quot;Iteration 2 &quot;) endif()<br>
+  ;@ ifequal(N,3) debug(&quot;Iteration 3 exitevent()&quot;) exitevent() endif()<br>
+  ;@ ifequal(N,4) debug(&quot;Iteration 4 &quot;) endif()<br>
+  ;@ ifequal(N,5) debug(&quot;Iteration 5 &quot;) endif() <br>
+  ;@ debug(&quot;label1 ends&quot;)<br>
+</font></p>
+<p><font face="Courier New"><br>
+  </font><font face="Courier New"><br>
+</font></p>
+</body>
+
+</html>

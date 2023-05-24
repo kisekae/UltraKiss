@@ -1,0 +1,154 @@
+<html>
+	<head>
+		<title>Animation Lesson 4</title>
+		<meta http-equiv="Content-Language" content="en-ca">
+		<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+		<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+		<meta name="ProgId" content="FrontPage.Editor.Document">
+	</head>
+	<body>
+		<h1 align="center">Animation Tutorial</h1>
+		<h1 align="center"><font color="#ff0000">Lesson 4. Adding Animated GIFs to the Set</font></h1>
+		<p>&nbsp;</p>
+		<ol>
+			<li>
+				Sometimes animation does not always require timer actions and alarm
+				events.&nbsp; For simple animations we can use animated GIF files.&nbsp; These
+				are image files that contain many frames that are automatically displayed in
+				sequence.&nbsp; We will add an animated GIF file to our data set.&nbsp; Ensure
+				that UltraKiss is showing the main logo screen.&nbsp; Close any existing data
+				set.
+				<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">File-Open</FONT> to load the configuration file <FONT color="#cc6600">
+					CNF3.cnf</FONT> from your directory.&nbsp; This will load the data set
+				created in exercise 3 and you should see the airplane begin to move across the
+				screen.
+				<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">Edit-Import Image to New Object</FONT>.&nbsp; Select
+				the <FONT color="#cc6600">bunny.gif</FONT> file from the Tutorial/Kisimi
+				directory.&nbsp; This is an animated gif file that contains 10 frames.&nbsp;
+				The image will be loaded and positioned near the upper left corner of the
+				playfield.&nbsp; Move the image to a suitable position in the bottom left part
+				of the playfield.
+				<p>&nbsp;</p>
+			<li>
+				The bunny is walking.&nbsp; It would be useful to show some type of moving
+				background that gives the perception of visible motion.&nbsp; Reload the data
+				set with a <FONT color="#000099">View-Restart</FONT> command.&nbsp; This will
+				commit your changes and set the initial position for the bunny.
+				<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">Edit-Import Image to Selection</FONT>.&nbsp; Select
+				the <FONT color="#cc6600">hill2.gif</FONT> file from the Tutorial/Kisimi
+				directory.&nbsp; This is a background image file.&nbsp; This image will be
+				loaded and positioned at the upper left corner of the playfield.&nbsp; Leave it
+				there.
+				<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">Edit-Import Image to Selection</FONT>.&nbsp; Select
+				the <FONT color="#cc6600">hill3.gif</FONT> file from the Tutorial/Kisimi
+				directory.&nbsp; This is another background image file that is paired with
+				hill2.gif.&nbsp; These files have been constructed so that they partially
+				overlap each other to give the impression of a continuous surface.&nbsp; This
+				image will be loaded and positioned at the upper left corner of the
+				playfield.&nbsp; Leave it there.
+				<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">Edit-Regroup</FONT> to consolidate the two background
+				images into the same object group.&nbsp; The <FONT color="#cc6600">hill2.gif</FONT>
+				image and <FONT color="#cc6600">hill3.gif</FONT> images should now be in object
+				group #4 and you can check this by right clicking with the mouse while over the
+				regrouped images.&nbsp; This will show a properties dialog for the new
+				object.&nbsp;&nbsp; For any following FKiSS work, use your object group number
+				as seen in this dialog.
+				<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">Edit-Adjust Layering</FONT> to move the background
+				images to the back of the scene.&nbsp; Select the <FONT color="#cc6600">hill2.gif</FONT>
+				and <FONT color="#cc6600">hill3.gif</FONT> entries and drag them to the bottom
+				of the list.&nbsp; Apply the changes.&nbsp; If the bunny and airplane cannot be
+				seen after the changes are applied, click on the background to force a repaint
+				of the screen.
+				<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">View-Active Configuration</FONT> to open the text
+				editor for the current configuration file.&nbsp; We need to add some FKiSS code
+				to move our background images across the screen.&nbsp; We do this with a timer
+				and alarm event.&nbsp; Add the following lines to the end of the configuration
+				file:
+				<br>
+				<br>
+				<font face="Courier New">;@alarm(4)<br>
+					;@ move(#4,-1,0,"unconstrain") ; move scene to the left<br>
+					;@ letobjectx(X,#4) ; get current location<br>
+					;@ iflessthan(X,-640) ; finished first section?<br>
+					;@ altmap(#4) ; yes, switch to next image<br>
+					;@ moveto(#4,0,0) ; reset position<br>
+					;@ endif()<br>
+					;@ timer(4,50)<br>
+				</font>
+				<BR>
+				<FONT color="#cc6600">Note:&nbsp; If you copy and paste these lines from the help
+					documentation into your configuration file you must ensure that the semicolon
+					and at-sign combination appears at the beginning of every line.<BR>
+				</FONT>
+				<br>
+				This sets up an alarm event to shift the background one pixel to the left every
+				50 milliseconds.&nbsp; The two images, hill2.gif and hill3.gif have been
+				constructed to overlap each other for continuous looping.&nbsp; We swap between
+				the two images half way through their movement using the altmap() action
+				command.&nbsp;<br>
+				<br>
+				To start the activity add the following two lines at the end of the begin()
+				event:<br>
+				<br>
+				<font face="Courier New">;@ unmap("hill3.gif") ; swap the background visibility<br>
+					;@ timer(4,20) ; start the background moving<br>
+				</font>&nbsp;
+				<p>&nbsp;</p>
+			<li>
+				Use the <FONT color="#000099">File-Exit</FONT> command in the text editor to
+				apply your changes.&nbsp; If you happened to have made a typing mistake you
+				will see an error when the changes are applied.&nbsp; If this occurs, re-edit
+				the configuration file to correct any mistakes.&nbsp; If there are no errors
+				the data set should reload and open to page 0.
+				<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">File-Save As</FONT> to save your work.&nbsp; Use a
+				new <FONT color="#cc6600">CNF4.cnf</FONT> file name.&nbsp; This new
+				configuration will contain the new event code.
+				<p>&nbsp;</p>
+			<li>
+				When you test your work you may see that the cursor shows as a hand pointer
+				while over the background images, indicating that the object can be
+				moved.&nbsp;&nbsp; The background should be fixed.&nbsp; To lock the background
+				in place one or both of the image lines for hill2gif and hill3.gif in the Cel
+				Section must be updated to set a fixed lock value for the image.&nbsp;&nbsp;<br>
+				<br>
+				<FONT color="#000099">Right click</FONT> while over the background and choose <FONT color="#000099">
+					Image Context - Properties</FONT>.&nbsp; A properties dialog for the image
+				will be shown.&nbsp; In the attributes section, press the little button beside
+				the <FONT color="#cc6600">Lock Value</FONT> field.&nbsp; Enter 99999 for a new
+				lock value and exit the dialog.&nbsp;&nbsp;&nbsp;This will set a fix value for
+				the image and its parent object.
+				<p>&nbsp;</p>
+			<li>
+				Observe that the background is now fixed in place and can no longer be dragged
+				with the mouse.
+				<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">File-Save</FONT> to save your work.
+				<p>&nbsp;</p>
+			</li>
+		</ol>
+		<hr>
+		<p align="left">Next Document:&nbsp; <a href="../../tutorials.html">UltraKiss Tutorials<br>
+			</a>Prior Document:&nbsp; <a href="lesson3.html">Animation Lesson 3</a></p>
+		<p align="left">Copyright (c) 2002-2023 William Miles</p>
+
+		<p>
+		<p>&nbsp;</p>
+	</body>
+</html>

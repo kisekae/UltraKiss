@@ -1,0 +1,147 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-ca">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>Text Editor Toolbar</title>
+</head>
+
+<body>
+
+<h1><font color="#FF0000">FKiSS Editor Toolbar</font></h1>
+<hr>
+
+<p><font face="Arial">The FKiSS Editor Toolbar is a menu at the top of the screen that
+displays icons for common functions.&nbsp; The toolbar icons and their
+functions are shown below.&nbsp;</font></p>
+
+<p>&nbsp;</p>
+
+<p><font face="Arial"><img border="0" src="../images/toolbar_new.gif" width="25" height="25">&nbsp;&nbsp;&nbsp; <a href="menu.html#FileNew">New</a> event.
+The New Event command creates one or more new event definitions within the
+current KiSS configuration.&nbsp; The New Event command opens an empty <a href="../texteditor/index.html">Text
+Editor</a> screen in which the new event code can be typed.&nbsp;&nbsp;</font></p>
+
+<p><font face="Arial"><img border="0" src="../images/toolbar_doc.gif" width="25" height="26">&nbsp;&nbsp;&nbsp; <a href="menu.html#FileNew">Edit</a> event.
+The Edit Event command is used to open a new <a href="../texteditor/index.html">Text
+Editor</a> window that contains the full event text for the selected
+event.&nbsp; To select an event highlight an event name or an event action
+command in the FKiSS Editor event list display.&nbsp; If an action command is
+selected the editor is invoked for the parent event of the action command.&nbsp;</font></p>
+
+<p><font face="Arial"><img border="0" src="../images/toolbar_undo.gif" width="25" height="25">&nbsp;&nbsp;&nbsp; <a href="menu.html#EditUndo">Undo</a>
+edit. The FKiSS Editor supports full undo and redo edit recovery for event editing
+operations and variable value changes.&nbsp; These types of editing changes are reversible.&nbsp;
+The Undo command will reverse the last edit change that was made to the current
+KiSS configuration file.</font></p>
+
+<p><font face="Arial"><img border="0" src="../images/toolbar_redo.gif" width="25" height="25">&nbsp;&nbsp;&nbsp; <a href="menu.html#EditRedo">Redo</a>
+edit. The FKiSS Editor supports full undo and redo edit recovery for event editing
+operations and variable value changes.&nbsp; These types of editing changes are reversible.&nbsp;
+The Redo command will re-apply the last edit change that was made to the current
+KiSS configuration file.</font></p>
+
+<p><font face="Arial"><img border="0" src="images/toolbar_03.gif" width="25" height="25">
+&nbsp;&nbsp; <a href="menu.html#RunProgramPause">Program Pause</a>. You may wish to pause execution at the next event processed without knowing
+the event that is being invoked.&nbsp; Or, you may wish to debug the executed event code
+based upon on a user action such as a mouse press.&nbsp; The Program Pause
+command can be used to stop FKiSS execution at the next event or
+action statement processed.&nbsp; When the pause breakpoint is recognized the
+FKiSS Editor will be automatically invoked to trace the event code.</font></p>
+
+<p><font face="Arial"><img border="0" src="images/toolbar_04.gif" width="25" height="25">
+&nbsp;&nbsp; <a href="menu.html#RunProgramResume">Program Resume</a>. The Program Resume command continues program execution from a breakpoint
+state.&nbsp; When execution is resumed the event handler is activated and the
+UltraKiss main screen will be brought to the foreground.&nbsp; The FKiSS Editor
+screen may continue to show&nbsp; in the background, however it will not be the
+active window.&nbsp;&nbsp;</font></p>
+
+<p><font face="Arial"><img border="0" src="images/toolbar_05.gif" width="25" height="25">
+&nbsp;&nbsp; <a href="menu.html#RunExecute">Execute Statement</a>. The Execute Statement command single steps through the FKiSS code and
+executes each action statement in sequence.&nbsp; This command fully executes
+any contained subroutine or gosub() action call before stopping at the next
+statement.&nbsp; If the current statement is a goto() action, the Execute
+Statement command will stop at the first statement of the new label event.&nbsp;</font></p>
+
+<p><font face="Arial"><img border="0" src="images/toolbar_06.gif" width="25" height="25">
+&nbsp;&nbsp; <a href="menu.html#RunStepInto">Step Into Statement</a>. The Step Into
+Statement will drill down into subroutine or gosub() action
+commands and breakpoint at the first action statement of the contained
+routine.&nbsp; This command is equivalent to an Execute Statement if the current
+action statement is not a subroutine call.&nbsp; If you trace into any action
+call that invokes an alarm event, an interim breakpoint is set on the alarm, the
+current traced event runs to completion, and the FKiSS Editor will open as soon
+as the specified breakpointed alarm is fired.</font></p>
+
+<p><font face="Arial"><img border="0" src="images/toolbar_07.gif" width="25" height="25">
+&nbsp;&nbsp; <a href="menu.html#RunToSelection">Run to Selection</a>. The Run To Selection command will resume action command processing.&nbsp; The
+process will stop when the currently selected line in the FKiSS Editor event
+list is reached or if the event terminates.&nbsp; Statements can be selected in
+the FKiSS Editor event list by clicking on a line or using the cursor control
+keys to position the selection to an alternate location.&nbsp; This command is
+frequently used to resume breakpointed tracing at a specific location without
+stepping though intervening action statements.</font></p>
+
+<p><font face="Arial"><img border="0" src="images/toolbar_08.gif" width="25" height="25">
+&nbsp;&nbsp; <a href="menu.html#RunToReturn">Run to Call Return</a>. The Run to Call Return command will resume action command processing.&nbsp;
+The process will stop when the current traced event completes.&nbsp; If this
+event was called from another event, continued tracing through an Execute
+Statement command will return to the next executable statement in the calling
+event.&nbsp; This command is typically used to stop tracing the current event,
+yet continue to trace execution within the parent event.</font></p>
+
+<p><font face="Arial"><img border="0" src="images/toolbar_11.gif" width="25" height="25">
+&nbsp;&nbsp; <a href="menu.html#RunSetBreakpoint">Set Breakpoint</a>. The Set Breakpoint command will place an execution breakpoint on the
+currently selected event declaration or action command statement.&nbsp;
+Statements can be selected in the FKiSS Editor event list by clicking on a line
+or using the cursor control keys to position the selection to an alternate
+location.&nbsp; Event breakpoints interrupt normal processing whenever the event
+is executed.&nbsp; Action statement breakpoints interrupt normal processing
+whenever the action statement is executed.&nbsp; Breakpoints can be set through
+this command or by right clicking while the mouse is positioned over an event or
+action statement.&nbsp; Breakpointed lines are shown in red.</font></p>
+
+<p><font face="Arial"><img border="0" src="images/toolbar_12.gif" width="25" height="25">
+&nbsp;&nbsp; <a href="menu.html#RunClearBreakpoint">Clear Breakpoint</a>. The Clear Breakpoint command clears a breakpoint from the currently selected
+event declaration or action command statement.&nbsp; Statements can be selected
+in the FKiSS Editor event list by clicking on a line or using the cursor control
+keys to position the selection to an alternate location.&nbsp; Breakpoints can
+be cleared through this command or by right clicking while the mouse is
+positioned over an event or action statement that has a breakpoint
+defined.&nbsp; Breakpointed lines are shown in red.</font></p>
+
+<p><font face="Arial"><img border="0" src="images/toolbar_13.gif" width="25" height="25">
+&nbsp;&nbsp; <a href="menu.html#RunDisableBreakpoint">Disable Breakpoint</a>. The FKiSS Editor can pause execution at the next statement or event processed
+if requested.&nbsp; The Disable Breakpoint command is used to exclude the
+currently selected event from automatic pause breakpoint processing.&nbsp; In
+certain cases you may not wish to pause execution on a specified event.&nbsp;
+The Disable Breakpoint command is used to eliminate these selected events from
+pause breakpoints.</font></p>
+
+<p><font face="Arial"><img border="0" src="images/toolbar_14.gif" width="25" height="25">
+&nbsp;&nbsp; <a href="menu.html#RunEnableBreakpoint">Enable Breakpoint</a>. The Enable Breakpoint command restores a disabled event to normal
+state.&nbsp; Disabled events are excluded from automatic pause breakpoint
+processing.&nbsp;&nbsp;</font></p>
+
+<p><font face="Arial"><img border="0" src="images/toolbar_15.gif" width="25" height="25">
+&nbsp;&nbsp; <a href="menu.html#RunClearAllBreakpoints">Clear All Breakpoints</a>.
+The Clear All Breakpoints command will remove all breakpoint settings from
+all event and action statements.&nbsp; This command is enabled if at least one
+breakpoint is set in the configuration.</font></p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<hr>
+
+<p align="left">Prior Document:&nbsp; <a href="menu.html">Menu Commands</a></p>
+
+<p align="left">Copyright (c) 2002-2023 William Miles</p>
+
+
+</body>
+
+</html>

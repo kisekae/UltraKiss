@@ -1,0 +1,354 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>ifstatements</title>
+</head>
+
+<body>
+
+<h4><a name="ifequal">ifequal</a>()</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; ifequal (operand,operand)</p>
+<p>
+The ifequal() statement begin a conditional if-else-end block. The actions under it are carried out if the first
+operand has the same value as the second. Each operand can be a literal value or
+a variable. With FKiSS5 all if-statement blocks should be terminated with an endif() statement and all if-statement logic can be nested</p>
+<p>
+Related actions: <a href="#ifnotequal">ifnotequal()</a>, <a href="#ifgreaterthan">ifgreaterthan()</a>,
+<a href="#iflessthan">ifflessthan()</a>, <a href="#else">else()</a>, <a href="#endif">endif()</a>,
+<a href="#elseifequal">elseifequal()</a>
+</p>
+<p>
+<font face="Courier New">
+;@ifequal(A,1)
+map(#1)&nbsp;endif()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+</font>
+<br>
+</p>
+<h4><a name="ifgreaterthan">ifgreaterthan</a>()</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp;
+ifgreaterthan (operand,operand)</p>
+<p>The ifgreaterthan() statement begin a conditional if-else-end block.The actions under it are carried out if the first
+operand has a higher value than the second. Each operand can be a literal value
+or a variable. With FKiSS5 all if-statement blocks should be terminated with an endif() statement and all if-statement logic can be nested<br>
+<br>
+Related actions: <a href="#ifequal">ifequal()</a>, <a href="#ifnotequal">ifnotequal()</a>,
+<a href="#iflessthan">iflessthan()</a>, <a href="#else">else()</a>, <a href="#endif">endif()</a>,
+<a href="#elseifgreaterthan">elseifgreaterthan()</a><br>
+<br>
+<font face="Courier New">;@ifgreaterthan(A,B)
+map(#1)&nbsp;endif()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;<br>
+</font>
+</p>
+<h4><a name="iflessthan">iflessthan</a>()</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp;
+iflessthan (operand,operand)</p>
+<p>
+The iflessthanl() statement begin a conditional if-else-end block.The actions under it are carried out if the first
+operand has a lower value than the second. Each operand can be a literal value
+or a variable. With FKiSS5 all if-statement blocks should be terminated with an endif() statement and all if-statement logic can be nested<br>
+<br>
+Related actions: <a href="#ifequal">ifequal()</a>, <a href="#ifnotequal">ifnotequal()</a>,
+<a href="#ifgreaterthan">ifgreaterthan()</a>, <a href="#else">else()</a>, <a href="#endif">endif()</a>,
+<a href="l#elseiflessthan">elseiflessthan()</a><br>
+<br>
+<font face="Courier New">;@iflessthan(B,C)
+map(#1)&nbsp;endif()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;
+;&nbsp;<br>
+</font>
+</p>
+<h4><a name="ifnotequal">ifnotequal</a>()</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp;
+ifnotequal (operand,operand)</p>
+<p>
+The ifnotequal() statement begin a conditional if-else-end block. The actions under it are carried out if the first
+operand has a different value from the second. Each operand can be a literal
+value or a variable. With FKiSS5 all if-statement blocks should be terminated with an endif() statement and all if-statement logic can be nested<br>
+<br>
+Related actions: <a href="#ifequal">ifequal()</a>, <a href="#ifgreaterthan">ifgreaterthan()</a>,
+<a href="#iflessthan">iflessthan()</a>, <a href="#else">else()</a>, <a href="#endif">endif()</a>,
+<a href="#elseifnotequal">elseifnotequal()</a>
+</p>
+<p>
+<font face="Courier New">;@ifnotequal(A,B)
+map(#1)&nbsp;endif()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;
+;&nbsp;<br>
+</font>
+</p>
+<h4><a name="else">else</a>()</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; else ()</p>
+<p>
+The else() statement is an optional part of the if-else-end block: the actions under it are carried out if the condition of the "if" statement is false.
+The else() statement requires a preceding "if" statement and
+a terminating endif() statement. With FKiSS5 all if-statement blocks should be terminated with an endif() statement and all if-statement logic can be nested<br>
+<br>
+Related actions: <a href="#elseifequal">elseifequal()</a>, <a href="#elseifnotequal">elseifnotequal()</a>,
+<a href="l#elseifgreaterthan">elseifgreaterthan()</a>, <a href="#elseiflessthan">elseiflessthan()</a>,
+<a href="#endif">endif()</a><br>
+<br>
+<font face="Courier New">;@ifequal(1,B)
+map(#1)&nbsp;else unmap(#1) endif()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+</font>
+</p>
+<h4><a name="elseifequal">elseifequal</a>()</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp;
+elseifequal (operand,operand)</p>
+<p>
+This is an extended else() statement introduced with FKiSS 4; the actions under it are carried out if the first and second
+operand values are the same. Each operand can be a literal value or a variable. Requires an "if" statement and
+a terminating endif() statement. With FKiSS5 all if-statement blocks should be terminated with an endif() statement and all if-statement logic can be nested<br>
+<br>
+Related actions: <a href="l#ifequal">ifequal()</a>, <a href="l#else">else()</a>,
+<a href="l#endif">endif()</a>, <a href="#elseifnotequal">elseifnotequal()</a>,
+<a href="#elseifgreaterthan">elseifgreaterthan()</a>, <a href="#elseiflessthan">elseiflessthan()</a><br>
+<br>
+<font face="Courier New">;@ifequal(A,B)
+map(#1)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+;@elseifequal(B,C) map(#2)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+;@endif()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+</font>
+</p>
+<h4><a name="elseifgreaterthan">elseifgreaterthan</a>()</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp;
+elseifgreaterthan (operand,operand)</p>
+<p>
+This is an extended else() statement introduced with FKiSS 4; the actions under it are carried out if the first
+operand value is higher than the second. Each operand can be a literal value or
+a variable. Requires an "if" statement and
+a terminating endif() statement. With FKiSS5 all if-statement blocks should be terminated with an endif() statement and all if-statement logic can be nested<br>
+<br>
+Related actions: <a href="#ifgreaterthan">ifgreaterthan()</a>, <a href="l#else">else()</a>, <a href="fkiss3.html#endif">endif()</a>,
+<a href="#elseifequal">elseifequal()</a>, <a href="#elseifnotequal">elseifnotequal()</a>,
+<a href="#elseiflessthan">elseiflessthan()</a><br>
+<br>
+<font face="Courier New">;@ifequal(A,B)
+map(#1)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+;@elseifgreaterthan(B,C) map(#2)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;<br>
+;@endif()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+</font>
+</p>
+<h4><a name="elseiflessthan">elseiflessthan</a>()</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp;
+elseiflessthan (operand,operand)</p>
+<p>
+This is an extended else() statement introduced with FKiSS 4; the actions under it are carried out if the first
+operand value is lower than the second. Each operand can be a literal value or a
+variable. Requires an "if" statement and
+a terminating endif() statement. With FKiSS5 all if-statement blocks should be terminated with an endif() statement and all if-statement logic can be nested<br>
+<br>
+Related actions: <a href="l#iflessthan">iflessthan()</a>, <a href="l#else">else()</a>,
+<a href="l#endif">endif()</a>,
+<a href="#elseifequal">elseifequal()</a>, <a href="#elseifnotequal">elseifnotequal()</a>,
+<a href="#elseifgreaterthan">elseifgreaterthan()</a><br>
+<br>
+<font face="Courier New">;@ifequal(A,B)
+map(#1)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+;@elseiflessthan(B,C) map(#2)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+;@endif()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+</font>
+</p>
+<h4><a name="elseifnotequal">elseifnotequal</a>()</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp;
+elseifnotequal (operand,operand)</p>
+<p>
+This is an extended else() statement introduced with FKiSS 4; the actions under it are carried out if the first and second
+operand values are not the same. Each operand can be a literal value or a
+variable. Requires an "if" statement and
+a terminating endif() statement. With FKiSS5 all if-statement blocks should be terminated with an endif() statement and all if-statement logic can be nested<br>
+<br>
+Related actions: <a href="l#ifnotequal">ifnotequal()</a>, <a href="#else">else()</a>,
+<a href="#endif">endif()</a>,
+<a href="#elseifequal">elseifequal()</a>, <a href="#elseifgreaterthan">elseifgreaterthan()</a>,
+<a href="#elseiflessthan">elseiflessthan()</a><br>
+<br>
+<font face="Courier New">;@ifequal(A,B)
+map(#1)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+;@elseifnotequal(B,C) map(#2)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+;@endif()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+</font>
+</p>
+<h4><a name="endif">endif</a>()</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; endif ()</p>
+<p>The endif() statement concludes an if-else-end block or an if-end block. An endif() statement requires a preceeding if-statement.
+Note that early viewers for FKiSS 3 did not enforce the requirement that all
+if-statements be terminated with an endif(). This oversight precluded the
+nesting of if-statements and restricted the utility of FKiSS as a functional
+language. Endif() statements are required with all variants of the else()
+statement and are now enforced for all if-statements with FKiSS 5.<br>
+<br>
+Related actions: <a href="#ifequal">ifequal()</a>, <a href="#ifnotequal">ifnotequal()</a>,
+<a href="#ifgreaterthan">ifgreaterthan()</a>, <a href="#iflessthan">iflessthan()</a><br>
+<br>
+<font face="Courier New">;@ifequal(A,B)
+map(#1)&nbsp;endif()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+</font>
+</p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+  <table border="1" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td width="20%">FKiSS 3</td>
+      <td width="30%">ifequal(A,B)</td>
+      <td>integer comparisons, single letter variable names, optional endif()</td>
+    </tr>
+    <tr>
+      <td width="20%">FKiSS 4&nbsp;</td>
+      <td width="30%">ifnotequal(3,C)</td>
+      <td>integer comparisons, extended else statements, long variable names,
+        optional endif()</td>
+    </tr>
+    <tr>
+      <td width="20%">FKiSS 5</td>
+      <td width="30%">ifgreaterthan(A,&quot;abc&quot;) ... endif()</td>
+      <td>integer, string, floating point comparisons, extended else statements,
+        long variable names, nested if statements, mandatory endif()</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+  <table border="1" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td width="20%">VariableCase</td>
+      <td width="30%">variable names are case sensitive</td>
+      <td>default value &quot;<font color="#0000FF">false</font>&quot;
+        (Compatibility option)</td>
+    </tr>
+    <tr>
+      <td width="20%">AutoEndIf</td>
+      <td width="30%">automatically generate endif() statements</td>
+      <td>default value &quot;<font color="#0000FF">false</font>&quot;
+        (Compatibility option)</td>
+    </tr>
+    <tr>
+      <td width="20%">StrictSyntax</td>
+      <td width="30%">enforce strict block syntax checks</td>
+      <td>default value &quot;<font color="#0000FF">true</font>&quot;
+        (Compatibility option)</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>Example Code (FKiSS3):&nbsp;
+</b></font>
+</p>
+<p><font face="Courier New">;@let(A,1) let(B,2) let(C,3)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+;@ifequal(A,1)
+map(#1)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;unterminated &quot;if&quot;<br>
+;@ifnotequal(2,B) map(#1) endif()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; terminated &quot;if&quot;<br>
+;@ifgreaterthan(A,B) map(#1) else() map(#2) endif()&nbsp; ; if-else-endif<br>
+</font>
+</p>
+<p><font color="#FF0000"><b>Example Code (FKiSS4):&nbsp;
+</b></font>
+</p>
+<p><font face="Courier New">;@let(ABC,1) let(BBC,2) let(CBC,3)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+;@ifequal(ABC,1)
+map(#1)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;unterminated &quot;if&quot;<br>
+;@ifnotequal(2,BBC) map(#1) endif()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; terminated &quot;if&quot;<br>
+;@ifgreaterthan(ABC,B)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;<br>
+;@
+map(#1)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;<br>
+;@elseifnotequal(BBC,CBC)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;<br>
+;@
+map(#2)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;<br>
+;@elseiflessthan(ABC,5)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;<br>
+;@
+map(#3)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;<br>
+;@else()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;<br>
+;@ debug(&quot;Ooops&quot;)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;<br>
+;@endif()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; if-else-endif<br>
+</font>
+</p>
+<p><font color="#FF0000"><b>Example Code (FKiSS5):&nbsp;
+</b></font>
+</p>
+<p><font face="Courier New">;@let(ABC,1) let(BBC,&quot;2&quot;) let(CBC,3.14)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+;@ifequal(&quot;X&quot;,BBC) map(#1) endif()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; terminated &quot;if&quot; mandatory<br>
+;@ifgreaterthan(ABC,BBC)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; nested &quot;if&quot; (level 1)<br>
+;@ iflessthan(BBC,CBC)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; nested &quot;if&quot; (level 2)<br>
+;@&nbsp;
+map(#1)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;<br>
+;@
+elseifequal(ABC,1)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;<br>
+;@&nbsp; ifnotequal(ABC,BBC)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; nested &quot;if&quot;&nbsp; (level 3)<br>
+;@&nbsp;&nbsp;
+map(#2)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;<br>
+;@&nbsp; endif()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; endif (level 3)<br>
+;@
+else()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;<br>
+;@&nbsp; debug(&quot;Ooops&quot;)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;<br>
+;@ endif()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; endif (level 2)<br>
+;@endif()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; endif (level 1)<br>
+</font>
+</p>
+<p><font face="Courier New"><br>
+</font></p>
+
+</body>
+
+</html>

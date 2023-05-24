@@ -1,0 +1,130 @@
+<?xml version='1.0' encoding='ISO-8859-1'  ?>
+<!DOCTYPE index
+  PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Index Version 1.0//EN"
+         "http://java.sun.com/products/javahelp/index_1_0.dtd">
+<index version="1.0">
+ <indexitem text="UltraKiss">
+  <indexitem text="Commands">
+    <indexitem text="File New" target="kisekae.menu.FileNew"/>
+    <indexitem text="File Open" target="kisekae.menu.FileOpen"/>
+    <indexitem text="File Add" target="kisekae.menu.FileAdd"/>
+    <indexitem text="File Select" target="kisekae.menu.FileSelect"/>
+    <indexitem text="File Close" target="kisekae.menu.FileClose"/>
+    <indexitem text="File Save" target="kisekae.menu.FileSave"/>
+    <indexitem text="File Save As" target="kisekae.menu.FileSaveAs"/>
+    <indexitem text="File Write As" target="kisekae.menu.FileWriteAs"/>
+    <indexitem text="File Open URL" target="kisekae.menu.FileURL"/>
+    <indexitem text="File Open Web" target="kisekae.menu.FileWeb"/>
+    <indexitem text="File Open FTP" target="kisekae.menu.FileFTP"/>
+    <indexitem text="File Page Setup" target="kisekae.menu.FilePageSetup"/>
+    <indexitem text="File Print Preview" target="kisekae.menu.FilePrintPreview"/>
+    <indexitem text="File Print" target="kisekae.menu.FilePrint"/>
+    <indexitem text="File Properties" target="kisekae.menu.FileProperties"/>
+    <indexitem text="File Exit" target="kisekae.menu.FileExit"/>
+    <indexitem text="Edit Undo" target="kisekae.menu.EditUndo"/>
+    <indexitem text="Edit Redo" target="kisekae.menu.EditRedo"/>
+    <indexitem text="Edit Cut" target="kisekae.menu.EditCut"/>
+    <indexitem text="Edit Copy" target="kisekae.menu.EditCopy"/>
+    <indexitem text="Edit Paste" target="kisekae.menu.EditPaste"/>
+    <indexitem text="Edit Ungroup" target="kisekae.menu.EditUngroup"/>
+    <indexitem text="Edit Regroup" target="kisekae.menu.EditRegroup"/>
+    <indexitem text="Edit New Group" target="kisekae.menu.EditNewGroup"/>
+    <indexitem text="Edit Select All" target="kisekae.menu.EditSelectAll"/>
+    <indexitem text="Edit Unselect All" target="kisekae.menu.EditUnselectAll"/>
+    <indexitem text="Edit Import Image" target="kisekae.menu.EditImportImage"/>
+    <indexitem text="Edit Edit Object" target="kisekae.menu.EditEditObject"/>
+    <indexitem text="Edit Delete Page" target="kisekae.menu.EditDeletePage"/>
+    <indexitem text="Edit Insert Page" target="kisekae.menu.EditInsertPage"/>
+    <indexitem text="Edit Add Page" target="kisekae.menu.EditAddPage"/>
+    <indexitem text="Edit Write Page" target="kisekae.menu.EditWritePage"/>
+    <indexitem text="View Toolbar" target="kisekae.menu.ViewToolbar"/>
+    <indexitem text="View Status Bar" target="kisekae.menu.ViewStatusbar"/>
+    <indexitem text="View Reset" target="kisekae.menu.ViewReset"/>
+    <indexitem text="View Restart" target="kisekae.menu.ViewRestart"/>
+    <indexitem text="View Page Set" target="kisekae.menu.ViewPageset"/>
+    <indexitem text="View Color Set" target="kisekae.menu.ViewColorset"/>
+    <indexitem text="View Magnify" target="kisekae.menu.ViewMagnify"/>
+    <indexitem text="View Reduce" target="kisekae.menu.ViewReduce"/>
+    <indexitem text="View Scale" target="kisekae.menu.ViewScale"/>
+    <indexitem text="View Scale To Fit" target="kisekae.menu.ViewScaleToFit"/>
+    <indexitem text="View Configuration Files" target="kisekae.menu.ViewConfigurationFiles"/>
+    <indexitem text="View Documentation Files" target="kisekae.menu.ViewDocumentationFiles"/>
+    <indexitem text="View Palette Files" target="kisekae.menu.ViewPaletteFiles"/>
+    <indexitem text="View Data Objects" target="kisekae.menu.ViewDataObjects"/>
+    <indexitem text="View Archive File" target="kisekae.menu.ViewArchiveFile"/>
+    <indexitem text="View Log File" target="kisekae.menu.ViewLogFile"/>
+    <indexitem text="Tools Options" target="kisekae.menu.ToolsOptions"/>
+    <indexitem text="Tools Memory" target="kisekae.menu.ToolsOptions"/>
+    <indexitem text="Tools Text Editor" target="kisekae.menu.ToolsTextEditor"/>
+    <indexitem text="Tools Color Editor" target="kisekae.menu.ToolsColorEditor"/>
+    <indexitem text="Tools Image Editor" target="kisekae.menu.ToolsImageEditor"/>
+    <indexitem text="Tools Archive Manager" target="kisekae.menu.ToolsArchiveManager"/>
+    <indexitem text="Tools Media Player" target="kisekae.menu.ToolsMediaPlayer"/>
+    <indexitem text="Tools Thread Manager" target="kisekae.menu.ToolsThreadManager"/>
+    <indexitem text="Help Contents" target="kisekae.menu.HelpContents"/>
+    <indexitem text="Help Registration" target="kisekae.menu.HelpRegistration"/>
+    <indexitem text="Help About" target="kisekae.menu.HelpAbout"/>
+  </indexitem>
+  <indexitem text="Options">
+    <indexitem text="Host System" target="kisekae.options.HostSystem"/>
+    <indexitem text="Cross Platform" target="kisekae.options.CrossPlatform"/>
+    <indexitem text="English" target="kisekae.options.English"/>
+    <indexitem text="Japanese" target="kisekae.options.Japanese"/>
+    <indexitem text="Keep Backup" target="kisekae.options.KeepBackup"/>
+    <indexitem text="Save From Source" target="kisekae.options.SaveSource"/>
+    <indexitem text="Show Status Bar" target="kisekae.options.ShowStatusbar"/>
+    <indexitem text="Show Toolbar" target="kisekae.options.ShowToolbar"/>
+    <indexitem text="Scale To Fit" target="kisekae.options.ScaleToFit"/>
+    <indexitem text="Size To Fit" target="kisekae.options.SizeToFit"/>
+    <indexitem text="Cache Images" target="kisekae.options.CacheImages"/>
+    <indexitem text="Cache Audio" target="kisekae.options.CacheAudio"/>
+    <indexitem text="Cache Video" target="kisekae.options.CacheVideo"/>
+    <indexitem text="Limit Moves" target="kisekae.options.LimitMoves"/>
+    <indexitem text="Auto Scroll" target="kisekae.options.AutoScroll"/>
+    <indexitem text="Page Sets" target="kisekae.options.PageSets"/>
+    <indexitem text="Color Sets" target="kisekae.options.ColorSets"/>
+    <indexitem text="Fixed Lock Value" target="kisekae.options.FixedLockValue"/>
+    <indexitem text="Sticky Flex Area" target="kisekae.options.StickyFlexArea"/>
+    <indexitem text="Enable Timer" target="kisekae.options.EnableTimer"/>
+    <indexitem text="Enable Events" target="kisekae.options.EnableEvents"/>
+    <indexitem text="Enable Sounds" target="kisekae.options.EnableSounds"/>
+    <indexitem text="EnableMovies" target="kisekae.options.EnableMovies"/>
+    <indexitem text="EnableAnimation" target="kisekae.options.EnableAnimation"/>
+    <indexitem text="Case Sensitive" target="kisekae.options.CaseSensitive"/>
+    <indexitem text="Key Case" target="kisekae.options.KeyEventCase"/>
+    <indexitem text="Java Sound" target="kisekae.options.UseJavaSound"/>
+    <indexitem text="Loop Playback" target="kisekae.options.LoopPlayback"/>
+    <indexitem text="Minimize Audio" target="kisekae.options.MinimizeAudio"/>
+    <indexitem text="Maximize Video" target="kisekae.options.MaximizeVideo"/>
+    <indexitem text="Center Frame" target="kisekae.options.CenterFrame"/>
+    <indexitem text="Aspect Ratio" target="kisekae.options.RetainAspectRatio"/>
+    <indexitem text="Stop Music" target="kisekae.options.StopMusic"/>
+    <indexitem text="Suspend Music" target="kisekae.options.SuspendMediaMusic"/>
+    <indexitem text="Resume Music" target="kisekae.options.ResumeMediaMusic"/>
+    <indexitem text="Show Selection" target="kisekae.options.ShowObjectSelection"/>
+    <indexitem text="Log Control" target="kisekae.options.LogControlMessages"/>
+    <indexitem text="Log Load" target="kisekae.options.LogLoadMessages"/>
+    <indexitem text="Log Edit" target="kisekae.options.LogEditMessages"/>
+    <indexitem text="Log Image" target="kisekae.options.LogImageTransforms"/>
+    <indexitem text="Log Media" target="kisekae.options.LogMediaEvents"/>
+    <indexitem text="Log Events" target="kisekae.options.LogEventSequences"/>
+    <indexitem text="Log Actions" target="kisekae.options.LogEventActions"/>
+    <indexitem text="Log Variables" target="kisekae.options.LogVariableAssignments"/>
+    <indexitem text="Log Sound" target="kisekae.options.LogSoundEvents"/>
+    <indexitem text="Log Movie" target="kisekae.options.LogMovieEvents"/>
+  </indexitem>
+  <indexitem text="Compatibility">
+    <indexitem text="Enable FKiSS Mouse" target="kisekae.compatibility.EnableFKiSSMovesMouse"/>
+    <indexitem text="Retain FKiSS Mouse" target="kisekae.compatibility.RetainMouseControl"/>
+    <indexitem text="Enable Catch Drop" target="kisekae.compatibility.EnableCatchDrop"/>
+    <indexitem text="Allow Fixdrop" target="kisekae.compatibility.AllowFixdropEvent"/>
+    <indexitem text="Active Keypress" target="kisekae.compatibility.ActiveKeypressRequired"/>
+    <indexitem text="Enforce Syntax" target="kisekae.compatibility.EnforceStrictSyntax"/>
+    <indexitem text="Invert Ghost" target="kisekae.compatibility.InvertGhostSetting"/>
+    <indexitem text="Visibile Collision" target="kisekae.compatibility.EnableCollisionOnVisibility"/>
+    <indexitem text="All Action Collision" target="kisekae.compatibility.CollisionOnAllActions"/>
+    <indexitem text="Retain Expansion" target="kisekae.compatibility.RetainExpansionEvents"/>
+  </indexitem>
+ </indexitem>
+</index>
+

@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='ISO-8859-1'  ?>
+<!DOCTYPE index
+  PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Index Version 1.0//EN"
+         "http://java.sun.com/products/javahelp/index_1_0.dtd">
+<index version="1.0">
+ <indexitem text="Media Player">
+  <indexitem text="Commands">
+    <indexitem text="File New" target="mediaplayer.menu.FileNew"/>
+    <indexitem text="File Open" target="mediaplayer.menu.FileOpen"/>
+    <indexitem text="File Close" target="mediaplayer.menu.FileClose"/>
+    <indexitem text="File Save" target="mediaplayer.menu.FileSave"/>
+    <indexitem text="File Save As" target="mediaplayer.menu.FileSaveAs"/>
+    <indexitem text="File Queue" target="mediaplayer.menu.FileQueue"/>
+    <indexitem text="File Delete" target="mediaplayer.menu.FileDelete"/>
+    <indexitem text="File Exit" target="mediaplayer.menu.FileExit"/>
+    <indexitem text="Options Center Frame" target="mediaplayer.menu.OptionsCenterFrame"/>
+    <indexitem text="Options Loop Playback" target="mediaplayer.menu.OptionsLoopPlayback"/>
+    <indexitem text="Options Minimize Audio" target="mediaplayer.menu.OptionsMinimizeAudio"/>
+    <indexitem text="Options Full Screen Video" target="mediaplayer.menu.OptionsFullScreenVideo"/>
+    <indexitem text="Options Retain Aspect Ratio" target="mediaplayer.menu.OptionsRetainAspectRatio"/>
+    <indexitem text="Help Contents" target="mediaplayer.menu.HelpContents"/>
+    <indexitem text="Help About" target="mediaplayer.menu.HelpAbout"/>
+  </indexitem>
+ </indexitem>
+</index>
+

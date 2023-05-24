@@ -1,0 +1,43 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="generator" content="Bluefish 2.2.12" >
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>map</title>
+</head>
+
+<body>
+
+<h4><a name="setpal" id="setpal">setpal</a>()&nbsp;</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; setpal (target,variable)</p>
+<p>This action sets the multipalette number, also known as a palette group in a cel palette file (KCF file) to be used for coloring a cel, group, or celgroup. Note that multipalette file numbers begin from 0. </p>
+<p>KiSS palette files can contain up to 10 different color palettes that are either 16 color or 256 colors in size. The optional palette group specification is an UltraKiss extension in the CNF file to identify the fixed palette group of colors that will be applied to the image. This fixed palette group will not change as color sets change and is related to the setpal() and letpal() FKiSS action commands.  If the new palette file does not have enough multipalettes or is not compatible then no color change will occur to the cel image.</p>
+<p>For group objects or cel groups the multipalette change is applied to all image cels within the object.</p>
+<p>The <em>target</em>  can be a cel name or an object group specifier or a cel group specifier. The <em>variable</em> must evaluate to be an integer value.</p>
+<p>Related actions: <a href="letpal.html">letpal()</a>, <a href="letkcf.html">letkcf()</a>, <a href="setkcf.html">setkcf()</a> </p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td width="20%">VariableCase</td>
+        <td width="30%">variable names are case sensitive</td>
+        <td>default value &quot;<font color="#0000FF">false</font>&quot; (Compatibility option)</td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>&nbsp;Example:&nbsp;<br>
+</b></font></p>
+<p><font face="Courier New">;@ setpal("256-col1.cel",N) &nbsp;&nbsp;&nbsp; ;<br>
+;@ notify(&quot;This cel now references multipalette &quot;,N,&quot; in the cel palette file &quot;)&nbsp;&nbsp;&nbsp; ;&nbsp;&nbsp;<br>
+
+<br>
+</font><br>
+</p>
+</body>
+
+</html>

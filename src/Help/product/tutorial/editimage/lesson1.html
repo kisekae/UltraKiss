@@ -1,0 +1,168 @@
+<html>
+	<head>
+		<title>Image Tutorial Lesson 1</title></head>
+	<body>
+		<h1 align="center"><font color="#000000">Image Tutorial</font></h1>
+		<h1 align="center"><font color="#ff0000">Lesson 1. Converting to CEL Images</font></h1>
+		<p>&nbsp;</p>
+		<ol>
+			<li>
+				This tutorial will show you how to convert and manipulate images for building
+				objects in a KiSS set.&nbsp;We assume that you have drawn your images in some
+				other tool and now wish to assemble the images into a KiSS set.&nbsp; Ensure that UltraKiss is
+				showing the main logo screen.&nbsp; Close any existing set.
+				This lesson requires editing of the KiSS set so ensure that the Edit Enable toggle button
+				on the toolbar is set.<img src="images/editenable.gif" width="16" height="16" hspace="5" align="absmiddle">
+				<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">File-New</FONT>.&nbsp; This will create a new KiSS
+				set at size (448,320) with a black border and one empty page.
+				<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">File-Properties</FONT> to change the new KiSS
+				configuration (CNF) file properties.&nbsp; The attributes section of the
+				Properties dialog will show a playfield size of (448,320).&nbsp; Press the
+				small button beside this attribute and change the screen size to
+				<FONT color="#cc6600">(800,600)</FONT>.&nbsp; Exit the configuration Properties dialog by
+				pressing the OK button.
+				<p>&nbsp;</p>
+		  <li>
+				This tutorial assumes that you need to convert your doll images to the CEL
+				format typically uses in KiSS sets. There are two ways to do this. The easiest, of course, is to simply import the images into your KiSS set and allow UltraKiss to automatically convert the images to CEL format. We will show you how to do this shortly. First, we want to show you how to use the Image Editor tool to
+				perform this conversion. Open the Image Editor with&nbsp;
+				<FONT color="#000099">Tools-Image Editor</FONT>. With the Image Editor use
+				<FONT color="#000099">File-Open</FONT> to load the <FONT color="#cc6600">body.gif</FONT> file
+				from the Tutorial/Edit Image directory.
+			    <p>&nbsp;</p>
+		  <li>
+				The Image Editor shows you the internal characteristics of the file.&nbsp; GIF
+				images&nbsp;have internal palettes that are&nbsp;specific to&nbsp;the
+				image.&nbsp; KiSS CELs are different.&nbsp;&nbsp;Cel images have palettes that
+				are external to the image and&nbsp;stored in a KCF file.<BR>
+				<BR>
+				To convert the&nbsp;GIF image to a KiSS type CEL, use <FONT color="#000099">File-Save As</FONT>
+				and overtype the file name '<FONT color="#cc6600">gif</FONT>' extension with
+				a '<FONT color="#cc6600">cel</FONT>' extension. Save the converted file into a directory
+				of your choice. Press the SAVE button. The Image Editor will write two files -
+				<FONT color="#cc6600">body.cel</FONT> and <FONT color="#cc6600">body.kcf</FONT>.
+				<p>&nbsp;</p>
+		  <li>
+				Repeat steps 4 and 5 to convert <FONT color="#cc6600">legs.gif</FONT> to a cel
+				file.
+				<p>&nbsp;</p>
+		  <li>
+				On the main UltraKiss screen use <FONT color="#000099">Edit-Import Image to
+				Selection</FONT>.&nbsp; Select the <FONT color="#cc6600">body.cel</FONT> and
+				the <FONT color="#cc6600">legs.cel</FONT> files from the directory that you stored
+				the files in.&nbsp; You can do separate imports for each image, or one combined
+				import for both images if you use the <FONT color="#cc6600">ctrl key</FONT> to perform a multiple
+				selection.&nbsp; On each subsequent dialog screen select the kcf file that
+				matches the cel.&nbsp; The images will be loaded and positioned at the upper
+				left corner of the playfield. Also, the background color of the set will change
+				to match the first color in the first kcf file loaded.
+				<p>&nbsp;</p>
+		  <li>
+				Each image will have a green marquee box around it. The green lines show that
+				the images are parts of a larger group, or a single object. In our case the body
+				and legs are separate images that together make up the whole body.<br>
+				<br>
+				Drag the legs to position them properly below the body image. This adjusts the
+				image offset relative to the body so that the whole object can be drawn
+				properly.<br>
+				<br>
+				Use <FONT color="#000099">Edit-Regroup</FONT> to consolidate the ungrouped
+				images into a whole object. The marquee box will now be blue and will encase
+				the complete body. You now have a consolidated KiSS object with its own object
+				number.&nbsp; Drag the doll body to the center of the screen.
+				<p>&nbsp;</p>
+		  <li>
+				Now, either set the <FONT color="#000099">Tools-Options-Import-Import all images as CEL files</FONT> option,
+				or press one of the viewer compatibility preset toggle buttons on the toolbar. The viewer presets automatically
+				set this option to convert files to CEL images during import.
+				<p>&nbsp;</p>
+		  <li>
+				On the main UltraKiss screen use <FONT color="#000099">Edit-Import Image to New
+				Object</FONT>.&nbsp; Use the <FONT color="#cc6600">ctrl</FONT> key to simultaneously
+				select <FONT color="#cc6600">shirt.gif</FONT>,
+				<FONT color="#cc6600">skirt.gif</FONT>, <FONT color="#cc6600">shoes.gif</FONT>,
+				<FONT color="#cc6600">bow.gif</FONT>, and <FONT color="#cc6600">thihighs.gif</FONT> files from the
+				Tutorial/Edit Image directory. The images will be loaded and positioned at the upper
+				left corner of the playfield.
+				<p>&nbsp;</p>
+		  <li>
+				Properly position the doll clothes on the doll body. You may find that some images go behind other
+				images. Just position them as best you can as we will correct the layering order in the next step.
+				When done, use<FONT color="#000099">Edit-Unselect All</FONT> or right-click anywhere on the backgound to
+				unselect all the cels.
+				<p>&nbsp;</p>
+		  <li>
+				You will find that the images do not overlay each other correctly.&nbsp; For
+				example, the bow may slide behind the shirt or the shoes may show behind the
+				stockings.&nbsp; Use <FONT color="#000099">Edit-Adjust Layering</FONT> to
+				correct the problems.&nbsp; This will show a list of cels and their current
+				draw levels.&nbsp; The drawing or layering order is always from top to bottom, in that the
+				upper entries in the list overlay the lower entries.
+				Click on any line that is out of position and drag the entry to the correct position.<BR>
+				<BR>
+				You can observe the layering effects in the preview window of the Layering
+				dialog.&nbsp; When you are satisfied, click OK.<br>
+			   <br>
+				If the images are not quite properly positioned, move them to their correct locations. When you are satisfied,
+				use <FONT color="#000099">Edit-Write Page</FONT> or	<FONT color="#000099">View-Restart</FONT> to commit your
+				changes and set the initial positions for all objects on the page.
+				<p>&nbsp;</p>
+		  <li>
+				On the main UltraKiss screen use <FONT color="#000099">Edit-Import Image to New
+					Object</FONT>.&nbsp; Import the <FONT color="#cc6600">back.cel</FONT> file from the
+				Tutorial/Edit Image directory. This image is
+				a photographic picture that does not have a palette.&nbsp;JPG files are always converted to Cherry KiSS cels.&nbsp;
+				However, the background cel is a full screen
+				image. It will obscure all the doll files after it is layered on top of
+				these images.&nbsp;&nbsp;Use <FONT color="#000099">Edit-Adjust Layering</FONT> and
+				drag the background cel line to the bottom of the list, so that it has the
+				lowest draw priority.
+				<p>&nbsp;</p>
+		  <li>
+				You will  want to make the background fixed, so it cannot be picked up and
+				moved.&nbsp; Place the mouse over any part of the background.&nbsp; Right click
+				with the mouse and a popup menu for the object will appear.&nbsp; Select
+				<FONT color="#000099">Image Context, Properties</FONT>.&nbsp; A dialog window for the background
+				image will be shown and a picture of the background will be in the preview area
+				of this window.<br>
+				<br>
+				Press the small button beside the <FONT color="#000099">Lock Value</FONT> setting
+				in the attributes section.&nbsp; Enter the value 99999.&nbsp; Press the OK
+				button to close the Properties dialog and then observe that the background can
+				no longer be picked up and moved with the mouse.&nbsp; The lock value has fixed
+				the image in place because the value 99999 exceeds the value set for a maximum
+				fixed object.<BR>
+				<BR>
+				You may also want to set the <FONT color="#000099">Ghost</FONT> property for this
+				image.&nbsp; This will make the background image completely non-responsive to
+				mouse clicks.&nbsp;&nbsp;You can now easily unselect&nbsp;previously selected
+				objects by right-clicking anywhere on the image.&nbsp;
+				<p>&nbsp;</p>
+		  <li>
+				Use <FONT color="#000099">File-Save As</FONT> to save your work.&nbsp; Save the
+				new KiSS set to the Tutorial/Edit Image directory or a directory of your
+				choice.&nbsp; The configuration element name should be <FONT color="#cc6600">CNF1.cnf</FONT>
+				if you began this tutorial after first starting UltraKiss.&nbsp; You can
+				overwrite any existing element of the same name.<BR>
+				<BR>
+				Note that when you save the configuration, all the cel and kcf files are saved,
+				too. This will permanently update the CEL image offsets. For example, the legs that you attached to
+				the body are offset from the upper left corner of the object. These offsets are written into the CEL
+				file if the <FONT color="#000099">Tools-Options-Export-Write Image Offsets to CEL files</FONT> option
+				is set. If you repeat this lesson without re-converting the GIF images to CELs you will discover
+				that your cel images are properly positioned when imported.
+				<p>&nbsp;</p>
+		  </li>
+		</ol>
+		<p align="left">&nbsp;</p>
+		<hr>
+		<p align="left">Next Document:&nbsp; <A href="lesson2.html">Image Tutorial Lesson 2<br>
+			</A>Prior Document:&nbsp; <A href="../../tutorials.html">UltraKiss Tutorials</A></p>
+        <p align="left">Copyright (c) 2002-2023 William Miles</p>
+
+	</body>
+</html>

@@ -1,0 +1,93 @@
+<html>
+	<head>
+		<title>Animation Lesson 1</title>
+	</head>
+	<body>
+		<h1 align="center">Animation Tutorial</h1>
+		<h1 align="center"><font color="#ff0000">Lesson 1. Create a New KiSS Set</font></h1>
+		<p>&nbsp;</p>
+		<ol>
+			<li>
+				We will create a brand new KiSS set that shows how to animate or move objects
+				on the screen.&nbsp; Ensure that UltraKiss is showing the main logo
+				screen.&nbsp; Close any existing data set.
+				<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">File-New</FONT> .&nbsp; This will create a new KiSS
+				set at size (448,320) with a black border and one empty page.
+				<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">View-Active Configuration</FONT> to edit the KiSS set
+				configuration (CNF) file.&nbsp; In the [Screen Section] of the file change the
+				screen size to <FONT color="#cc6600">(640,425)</FONT> and&nbsp; change the
+				border colour to <FONT color="#cc6600">[4</FONT> .&nbsp; Exit the text editor
+				and apply the changes.
+				<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">Edit-Import Image to Selection</FONT>.&nbsp; Select
+				the <FONT color="#cc6600">eagle.cel</FONT> file from the Tutorial/Kisimi
+				directory.&nbsp; When you import CEL images you may also have to identify a KiSS
+				palette file to be used with the image.&nbsp; If prompted, choose the file <FONT color="#cc6600">
+					sdkismi.kcf</FONT> .&nbsp; The image will be loaded and positioned near the
+				upper left corner of the playfield.&nbsp; Leave the image where it is.<br>
+				<br>
+				You will also see the background colour of the playfield change to a light
+				brown.&nbsp; This occurs because we just added the first palette file,
+				sdkismi.kcf, to the configuration.&nbsp; The playfield background colour is
+				derived from this palette and in this case it is the first colour from the
+				first palette.
+				<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">Edit-Import Image to Selection</FONT> and import the <FONT color="#cc6600">
+					smoke1.cel</FONT> file from the Tutorial/Kisimi directory, and choose the <FONT color="#cc6600">
+					sdkismi.kcf</FONT> palette.&nbsp; You will note that the smoke image is
+				properly positioned behind the airplane.&nbsp; This is because both the eagle
+				and the smoke cels have image offset values set in their image files.&nbsp;
+				These offset values are displacements from the origin.
+				<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">Edit-Import Image to Selection</FONT> and import the <FONT color="#cc6600">
+					smoke2.cel</FONT> file from Tutorial/Kisimi.
+				<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">Edit-Regroup</FONT> to group the three image cels
+				into one object group.&nbsp; A single blue selection box should now enclose the
+				complete object.
+				<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">View-Restart</FONT> to reload the data set.&nbsp;
+				This will establish the new palette so that the border colours work
+				properly.&nbsp; When the data set is reloaded you should see the border colour
+				change from black to a dark peach colour.&nbsp; This is the fourth colour in
+				the palette that we set in step3.
+				<p>&nbsp;</p>
+			<li>
+				Try to pick up the airplane and drag it.&nbsp; The airplane and the smoke
+				should move as one object.
+				<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">File-Save As</FONT> to save your work.&nbsp; Save the
+				new KiSS set to the Tutorial/Kisimi directory or a directory of your
+				choice.&nbsp; The configuration element name will be <FONT color="#cc6600">CNF1.cnf</FONT>
+				if you began this tutorial after first starting UltraKiss.&nbsp; You can
+				overwrite any existing element of the same name.
+				<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">File-Close</FONT> to close the data set.&nbsp;
+				UltraKiss will now show the main logo screen.
+				<p>&nbsp;</p>
+			<li>
+				To check your work use <FONT color="#000099">File-Open</FONT> to load the
+				configuration file <FONT color="#cc6600">CNF1.cnf</FONT> from your directory.
+				<p>&nbsp;</p>
+			</li>
+		</ol>
+		<p>&nbsp;</p>
+		<p align="left">&nbsp;</p>
+		<hr>
+		<p align="left">Next Document:&nbsp; <a href="lesson2.html">Animation Lesson 2<br>
+			</a>Prior Document:&nbsp; <a href="../../tutorials.html">UltraKiss Tutorials</a></p>
+		<p align="left">Copyright (c) 2002-2023 William Miles</p>
+
+	</body>
+</html>

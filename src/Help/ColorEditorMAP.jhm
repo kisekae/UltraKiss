@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE map
+  PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Map Version 1.0//EN"
+         "http://java.sun.com/products/javahelp/map_1_0.dtd">
+
+<map version="1.0">
+	<mapID target="coloreditor.index" url="product/coloreditor/index.html" />
+	<mapID target="coloreditor.menu" url="product/coloreditor/menu.html" />
+	<mapID target="coloreditor.toolbar" url="product/coloreditor/toolbar.html" />
+
+	<mapID target="coloreditor.menu.FileNew" url="product/coloreditor/menu.html#FileNew" />
+	<mapID target="coloreditor.menu.FileOpen" url="product/coloreditor/menu.html#FileOpen" />
+	<mapID target="coloreditor.menu.FileAdd" url="product/coloreditor/menu.html#FileAdd" />
+	<mapID target="coloreditor.menu.FileClose" url="product/coloreditor/menu.html#FileClose" />
+	<mapID target="coloreditor.menu.FileSave" url="product/coloreditor/menu.html#FileSave" />
+	<mapID target="coloreditor.menu.FileSaveAs" url="product/coloreditor/menu.html#FileSaveAs" />
+	<mapID target="coloreditor.menu.FileImport" url="product/coloreditor/menu.html#FileImport" />
+	<mapID target="coloreditor.menu.FileExport" url="product/coloreditor/menu.html#FileExport" />
+	<mapID target="coloreditor.menu.FileMerge" url="product/coloreditor/menu.html#FileMerge" />
+	<mapID target="coloreditor.menu.FilePageSetup" url="product/coloreditor/menu.html#FilePageSetup" />
+	<mapID target="coloreditor.menu.FilePrintPreview" url="product/coloreditor/menu.html#FilePrintPreview" />
+	<mapID target="coloreditor.menu.FilePrint" url="product/coloreditor/menu.html#FilePrint" />
+	<mapID target="coloreditor.menu.FileProperties" url="product/coloreditor/menu.html#FileProperties" />
+	<mapID target="coloreditor.menu.FileExit" url="product/coloreditor/menu.html#FileExit" />
+	<mapID target="coloreditor.menu.EditUndo" url="product/coloreditor/menu.html#EditUndo" />
+	<mapID target="coloreditor.menu.EditRedo" url="product/coloreditor/menu.html#EditRedo" />
+	<mapID target="coloreditor.menu.EditUndoAll" url="product/coloreditor/menu.html#EditUndoAll" />
+	<mapID target="coloreditor.menu.EditCut" url="product/coloreditor/menu.html#EditCut" />
+	<mapID target="coloreditor.menu.EditCopy" url="product/coloreditor/menu.html#EditCopy" />
+	<mapID target="coloreditor.menu.EditPaste" url="product/coloreditor/menu.html#EditPaste" />
+	<mapID target="coloreditor.menu.EditSelectAll" url="product/coloreditor/menu.html#EditSelectAll" />
+	<mapID target="coloreditor.menu.EditSelectCopy" url="product/coloreditor/menu.html#EditSelectCopy" />
+	<mapID target="coloreditor.menu.EditSimilarHSB" url="product/coloreditor/menu.html#EditSimilarHSB" />
+	<mapID target="coloreditor.menu.EditSimilarRGB" url="product/coloreditor/menu.html#EditSimilarRGB" />
+	<mapID target="coloreditor.menu.EditSetColorCount" url="product/coloreditor/menu.html#EditSetColorCount" />
+	<mapID target="coloreditor.menu.EditSetTransparent" url="product/coloreditor/menu.html#EditSetTransparent" />
+	<mapID target="coloreditor.menu.EditSetBackground" url="product/coloreditor/menu.html#EditSetBackground" />
+	<mapID target="coloreditor.menu.EditDeleteGroup" url="product/coloreditor/menu.html#EditDeleteGroup" />
+	<mapID target="coloreditor.menu.EditInsertGroup" url="product/coloreditor/menu.html#EditInsertGroup" />
+	<mapID target="coloreditor.menu.EditAddGroup" url="product/coloreditor/menu.html#EditAddGroup" />
+	<mapID target="coloreditor.menu.OptionsPalettePanel" url="product/coloreditor/menu.html#OptionsPalettePanel" />
+	<mapID target="coloreditor.menu.OptionsColorChooser" url="product/coloreditor/menu.html#OptionsColorChooser" />
+	<mapID target="coloreditor.menu.OptionsPreviewPane" url="product/coloreditor/menu.html#OptionsPreviewPane" />
+	<mapID target="coloreditor.menu.OptionsSelectionControl" url="product/coloreditor/menu.html#OptionsSelectionControl" />
+	<mapID target="coloreditor.menu.OptionsShowBackground" url="product/coloreditor/menu.html#OptionsShowBackground" />
+	<mapID target="coloreditor.menu.OptionsRelativeChanges" url="product/coloreditor/menu.html#OptionsRelativeChanges" />
+	<mapID target="coloreditor.menu.OptionsLinkHSB" url="product/coloreditor/menu.html#OptionsLinkHSB" />
+	<mapID target="coloreditor.menu.OptionsLinkRGB" url="product/coloreditor/menu.html#OptionsLinkRGB" />
+	<mapID target="coloreditor.menu.HelpContents" url="product/coloreditor/menu.html#HelpContents" />
+	<mapID target="coloreditor.menu.HelpAbout" url="product/coloreditor/menu.html#HelpAbout" />
+</map>

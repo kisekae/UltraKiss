@@ -1,0 +1,75 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>KiSS Video Types</title>
+</head>
+
+<body>
+
+<h2 align="center"><font face="Arial" color="#FF0000">KiSS Video Types</font></h2>
+<p>When KiSS was invented in the early 1990's, computer video did not exist. Some early
+KiSS artists did try to implement movie type capabilities by animating series of
+images, but techniques today would incorporate movie format cels or
+animated graphic images in KiSS sets. KiSS viewers have not progressed to this
+point and UltraKiss is the only viewer to provide
+the artist with ways to experiment with such capabilities.</p>
+<p>Movies are video cels defined with an AVI or MPG extension for a supported
+video file type. Such cels are essentially indistinguishable from standard image
+cels, except that they may include playback controls and other features to
+manage presentation.</p>
+<p>The ability to play movies is an experimental feature of a KiSS viewer.
+Music and sound and movies are all separate entities and playback of movie files is distinct
+from sound files.</p>
+<p>Movie files
+should be played concurrently. The movie(&quot;&quot;) command with no
+file name specified will stop all movie playback
+instantly.&nbsp;</p>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>Example:
+</b></font>
+</p>
+<p><font color="#FF0000"><b>&nbsp;<br>
+</b></font>
+<font face="Courier New">;[Cel Section]<br>
+#2.999   button2.button      : 0 ;%size[100,50]&nbsp; %attributes[text="Stop"]&nbsp;<br>
+#2.999   button1.button      : 0                            ;%size[100,50]&nbsp;
+%attributes[text="Play"]&nbsp;<br>
+#1       FOX.AVI&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+: 0                            ;%size[320,240] %attributes[repeat]&nbsp;<br>
+<br>
+;[FKiSS Section]<br>
+;@EventHandler<br>
+<br>
+;@initialize()                                              ;&nbsp;<br>
+;@ unmap("button2.button")                                  ;&nbsp;<br>
+<br>
+;@press("button2.button")                                   ;&nbsp;<br>
+;@ movie("")                                                ;&nbsp;<br>
+;@ altmap(#2)                                               ;&nbsp;<br>
+<br>
+;@press("button1.button")                                   ;&nbsp;<br>
+;@ movie("fox.avi",-1)                                      ;&nbsp;<br>
+;@ altmap(#2)                                               ;&nbsp;<br>
+</font>
+</p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<p>UltraKiss is the only viewer to experiment with video cels and animated
+graphic cels. </p>
+<p>UltraKiss introduced the <a href="movie.html">movie()</a> action
+command to allow for playback and control of video cels.</p>
+
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">FKiSS 5 extensions:</font></b></p>
+<p>FKiSS 5 introduces the <a href="mediastart.html">mediastart()</a> and <a href="movie.html">mediastop()
+</a> events to facilitate
+control of media playback, including movies. Basic FKiSS is deficient in that
+media playback can be initiated through the sound() or music() action command, but no process
+exists to recognize when such files stopped or started.</p>
+
+</body>
+
+</html>

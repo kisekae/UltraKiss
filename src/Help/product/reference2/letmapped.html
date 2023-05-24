@@ -1,0 +1,43 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="generator" content="Bluefish 2.2.12" >
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>map</title>
+</head>
+
+<body>
+
+<h4><a name="letmapped" id="letmapped">letmapped</a>()&nbsp;</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; letmapped (variable,object)</p>
+<p>This action command identifies the number of visible or mapped cels in the object.  The current page is the context 
+for counting visible cels.  Individual cels will return 1 if the specified cel is visible.  A group or cel group object 
+will return a number greater than 0 if any of the object cels are visible on the current page.</p> 
+<p>The <em>object</em> parameter of the command must be a cel, group object, or cel group identifier.</p>
+<p>Related actions: <a href="letcel.html">letcel()</a>, <a href="letcatch.html">letcatch()</a> </p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td width="20%">VariableCase</td>
+        <td width="30%">variable names are case sensitive</td>
+        <td>default value &quot;<font color="#0000FF">false</font>&quot; (Compatibility option)</td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>&nbsp;Example:&nbsp;<br>
+</b></font></p>
+<p><font face="Courier New">;@ letmapped(N,GroupName) &nbsp;&nbsp;&nbsp; ;<br>
+;@ notify(&quot;The group object &quot;,GroupName,&quot; has &quot;,N,&quot; cels visible.&quot;)&nbsp;&nbsp;&nbsp; ;&nbsp;&nbsp;<br>
+
+<br>
+</font><br>
+</p>
+</body>
+
+</html>

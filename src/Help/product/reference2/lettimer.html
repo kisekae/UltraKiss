@@ -1,0 +1,55 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>ifstatements</title>
+</head>
+
+<body>
+
+<h4><a name="lettimer" id="lettimer">lettimer</a>()</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; letttimer (variable,alarmname)</p>
+<p> The lettimer() statement sets the variable to the amount of time in milliseconds remaining on a scheduled alarm before the alarm is set to fire. If the alarm is not running and is not scheduled then lettimer() returns -1. If the alarm has been activated and is currently running lettimer() returns 0. </p>
+<p>Note that there can only be one instance of a specific alarm active at any instance in time. Different alarms can be active at the same time, but the same alarm cannot be active more than once. If an alarm is scheduled with a timer() command and a subsequent timer command is issued for the same alarm, then the new timer delay is applied to the alarm.</p>
+<p>Timer delay is specified in milliseconds. Viewers that use a periodic polling method to determine if alarms should be invoked may not be able to determine the exact time at which the alarm will fire. Therefore, time accuracy of lettimer() may not be perfectly precise.</p>
+<p>With FKiSS 5 the alarm name can also be specified through a variable that has a string value, providing that the variable name is not the same as an existing alarm name. </p>
+<p>&nbsp;</p>
+<p>Related actions: <a href="alarm.html">alarm()</a>, <a href="randomtimer.html">randomtimer()</a>, <a href="timer.html">timer()</a>, <a href="ifmapped.html">ifmapped()</a>, <a href="ifnotmapped.html">ifnotmapped()</a>, <a href="iffixed.html">iffixed()</a>, <a href="ifnotfixed.html">ifnotfixed()</a>, <a href="ifmoved.html">ifmoved()</a>, <a href="ifnotmoved.html">ifnotmoved()</a> </p>
+<p> <font face="Courier New"> </font></p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+    <table border="1" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td width="20%">TimerPeriod</td>
+        <td width="30%">the polling period in milliseconds for firing alarms</td>
+        <td>default value &quot;<font color="#0000FF">10</font>&quot; (FKiSS option)</td>
+      </tr>
+      <tr>
+        <td width="20%">EventQueues&nbsp;</td>
+        <td width="30%">the number of concurrent alarms that can run&nbsp;</td>
+        <td>default value &quot;<font color="#0000FF">1</font>&quot; (FKiSS option)</td>
+      </tr>
+      <tr>
+        <td width="20%">TimerOption</td>
+        <td width="30%">enables timer processing</td>
+        <td>default value &quot;<font color="#0000FF">true</font>&quot; (FKiSS option)</td>
+      </tr>
+      <tr>
+        <td width="20%">EventOption&nbsp;</td>
+        <td width="30%">enables alarm processing&nbsp;&nbsp;</td>
+        <td>default value &quot;<font color="#0000FF">true</font>&quot; (FKiSS option)</td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>&nbsp;Example:&nbsp;</b></font></p>
+<p><font face="Courier New">;@lettimer(N,MyAlarm)&nbsp;; Sets variable N to the time remaining on alarm 'MyAlarm'</font></p>
+<p><font face="Courier New"><br>
+</font></p>
+</body>
+
+</html>

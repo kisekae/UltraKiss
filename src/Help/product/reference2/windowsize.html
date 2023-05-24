@@ -1,0 +1,51 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>map</title>
+</head>
+
+<body>
+
+<h4><a name="windowsize" id="windowsize">windowsize</a>()&nbsp;</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; windowsize (width, height)</p>
+<p>A windowsize() command is used to create a window into the KiSS set that is smaller than the playfield size. Windows, then, are subsets of the playfield. Windows into the playfield are moved using viewport() commands. </p>
+<p>The windowsize <em>width</em> and <em>height</em> are integer parameters that are relative width and height adjustments, in pixels, from the current window size. Negative values make the window smaller and positive values make the window larger. Note that some viewers such as DirectKiss have mistakenly interpreted the width and height parameters as absolute dimensions, which is not correct. </p>
+<p>Whenever a windowsize() command is executed the viewport is centered on the new window. </p>
+<p>The window size cannot be increased beyond the playfield boundaries. The window size can be decreased to  nothing.</p>
+<p>&nbsp;</p>
+<p>Related actions: <a href="viewport.html">viewport()</a></p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td>FKiSS 1 allows literal names or objects.</td>
+        <td>windowsize (-100,-100)</td>
+        <td>Make a window 100 pixels smaller in width and height </td>
+      </tr>
+      <tr>
+        <td>FKiSS 3 allows variables for objects.&nbsp;&nbsp;</td>
+        <td>let(X,10) windowsize (X,0)&nbsp;</td>
+        <td>Make the window 10 pixels larger in width </td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>&nbsp;Example:&nbsp;
+</b></font></p>
+<p><font face="Courier New">;@windowsize(-100,-100)&nbsp;&nbsp;&nbsp; ;&nbsp;Make a window 100 pixels smaller in width and height<br>
+  </font><font face="Courier New">;@viewport(-10,22)&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;Move the window 10 pixels left and 22 pixels down <br>
+  <br>
+  </font><br>
+  <font face="Courier New"><br>
+</font></p>
+<p><font face="Courier New"><br>
+</font></p>
+</body>
+
+</html>

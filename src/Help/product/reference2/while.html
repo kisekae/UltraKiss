@@ -1,0 +1,55 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>map</title>
+</head>
+
+<body>
+
+<h4><a name="while" id="while">while</a>()&nbsp;</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; while(operand1[,operand2[,condition]])</p>
+<p>This statement specifies the beginning of a conditional loop. The 'while' statement operand1 parameter value is compared to the operand2 parameter value according to the specified condition. While the relation is true  the code statements following the 'while' statements up to the first following 'endwhile' statement are repeatedly processed.  The  code statements that follow are not executed if the relation is false.</p>
+<p>Operand1 must be specified as a variable. This variable is a control variable used to match the 'while' statement to  corresponding 'endwhile' statements. </p>
+<p>If the optional operand2 value is not specified then the operand1 value can be considered as a boolean switch, where a non-zero or &quot;true&quot; value for operand1 will cause the code following to be repeatedly processed, and a zero or any other value will terminate the loop and not execute the code. </p>
+<p>Operand2, if specified for comparisons, can be a literal value or a variable. </p>
+<p>If the optional operand3 value is  not specified then the condition for comparison defaults to equality. The code following will be repeatedly processed while the operand1 value equals the operand2 value. If operand3 is specified then it should be a string literal value or a variable with a  value of &quot;<font face="Courier New, Courier, mono">=</font>&quot;, &quot;<font face="Courier New, Courier, mono">&lt;</font>&quot;, &quot;<font face="Courier New, Courier, mono">&gt;</font>&quot;, &quot;<font face="Courier New, Courier, mono">&lt;=</font>&quot;, &quot;<font face="Courier New, Courier, mono">&gt;=</font>&quot;, &quot;<font face="Courier New, Courier, mono">&lt;&gt;</font>&quot;, &quot;<font face="Courier New, Courier, mono">!=</font>&quot;, which compare for equality, strictly greater than, strictly less than, greater than or equal to, less than or equal to, or not equal.</p>
+<p>Operand comprisons are made according to the data type of each operand. String comparisons are performed if either operand is of string type. Floating point numeric comparisons are performed if either operand is a floating point number. Long number comparisons are performed if either operand is of a long number data type.</p>
+<p>It is possible to nest 'while' loops  providing that each 'while' loop uses a unique control variable for operand1. </p>
+<p>&nbsp;</p>
+<p>Related actions: <a href="endwhile.html">endwhile()</a>,
+<a href="for.html">for()</a>, <a href="#endwhile"></a><a href="repeat.html">repeat()</a></p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td>VariableCase</td>
+      <td>variable names are case sensitive</td>
+      <td>default value &quot;<font color="#0000FF">false</font>&quot; (Compatibility option)</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>&nbsp;Example:&nbsp;</b></font></p>
+<p><font color="#FF0000"><b>  </b></font>
+  <font face="Courier New">;@ let(A,4) let(B,1)<br>
+  ;@ while(A,B,&quot;&gt;&quot;)<br>
+  ;@ &nbsp;debug(&quot;A is &quot;,A)&nbsp;<br>
+  ;@ &nbsp;debug(&quot;B is &quot;,B)&nbsp;<br>
+  ;@&nbsp;&nbsp;add(B,B,1)<br>
+  ;@&nbsp;&nbsp;let(N,2)<br>
+  ;@&nbsp;&nbsp;while(N)<br>
+  ;@&nbsp;&nbsp;&nbsp;debug(&quot;N is true (not 0) &quot;,N)<br>
+  ;@&nbsp;&nbsp;&nbsp;sub(N,N,1)<br>
+  ;@&nbsp;&nbsp;endwhile(N)<br>
+  ;@&nbsp;endwhile(A)<br>
+    </font></p>
+<p>&nbsp;</p>
+</body>
+
+</html>

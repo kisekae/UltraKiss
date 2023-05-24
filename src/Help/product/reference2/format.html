@@ -1,0 +1,60 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>unmap</title>
+</head>
+
+<body>
+
+<h4><a name="format" id="format">format</a>()&nbsp;</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; format
+(variable,number,maxfraction,minfraction,maxint,minint)</p>
+<p>This action command formats a number into a string variable with the specified number of digits  to the right and the left of the decimal point. </p>
+<p>The <em>number</em> parameter can specify any type of numeric value. This command is typically used to format real numbers for output.</p>
+<p>The <em>maxfraction</em> and <em>minfraction</em> parameters can be integer literal values or variables that specify the maximum and minimum number of digits that can appear in the fractional portion of the number. The maxfraction value must be greater than or equal to the minfraction value. </p>
+<p>The <em>maxint</em> and <em>minint</em> parameters specify the maximum and minimum number of digits that can appear in the integer portion of the number. The maxint value must be greater than or equal to the minint value. These parameter values can be integer literal values or variables that have integer values. </p>
+<p>&nbsp;</p>
+<p>Related actions: <a href="string.html#strlen">strlen()</a> , <a href="indexof.html">indexof()</a>, <a href="substr.html">substr(),</a> <a href="replacestr.html">replacestr()</a>, <a href="concat.html">concat()</a></p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+    <table border="1" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td width="20%">FKiSS 5 &nbsp;</td>
+        <td width="30%">format (S,3.14159,2,2,8,0)&nbsp; </td>
+        <td>Formats the value of PI to 3.14 as a string in S </td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+    <table border="1" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td width="20%">VariableCase</td>
+        <td width="30%">variable names are case sensitive</td>
+        <td>default value &quot;<font color="#0000FF">false</font>&quot; (Compatibility option)</td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<div align="center"></div>
+<p><font color="#FF0000"><b>&nbsp;Example:&nbsp;<br>
+</b></font>
+</p>
+<p><font face="Courier New">;@math(&quot;sin&quot;,X,0.5);&nbsp;<br>
+;@format(S,X,10,0,2,1)<br>
+;@notify(&quot;sin(0.5) = &quot;,S) </font><font face="Courier New"><br>
+  <br>
+</font><br>
+</p>
+</body>
+
+</html>

@@ -1,0 +1,54 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>map</title>
+</head>
+
+<body>
+
+<h4><a name="mouserelease" id="mouserelease">mouseRelease</a>()&nbsp;</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; mouseRelease()</p>
+<p>The mouseRelease() command forces a release of the mouse from user control. On a mouse release all release(), drop(), collision, and unfix() events  are  processed.</p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+    <table border="1" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td width="20%">UltraKiss Extension</td>
+        <td width="30%">mouseRelease() </td>
+        <td>forces a mouse release </td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<table width="80%"  border="1" align="center" cellpadding="5" cellspacing="5" bordercolor="#000000" bgcolor="#FFFF99">
+  <tr>
+    <td><div align="center">Note: The UltraKiss mouseRelease() command is viewer specific and not compatible with other viewers. </div></td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>&nbsp;Example:&nbsp;<br>
+</b></font></p>
+<p><font face="Courier New, Courier, mono">;@drop(#3) ; <br>
+  ;@ ifequal(Released,1) map(#4) endif() ; <br>
+;@ timer(Reset,1000) ; </font></p>
+<p><font face="Courier New, Courier, mono">;@press(#3) ; <br>
+  ;@ timer(Pressed,2000) ; <br>
+  ;@ let(Released,0) ; <br>
+  ;@ unmap(#4) ;<br>
+</font><font face="Courier New, Courier, mono"><br>
+  ;@alarm(Pressed) ; <br>
+  ;@ let(Released,1) ; <br>
+  ;@ mouseRelease() ; </font></p>
+<p><font face="Courier New, Courier, mono">;@alarm(Reset) ; <br>
+  ;@ unmap(#4) ; </font><br>
+</p>
+<p>&nbsp; </p>
+</body>
+
+</html>

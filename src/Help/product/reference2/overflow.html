@@ -1,0 +1,40 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>overflow</title>
+</head>
+
+<body>
+
+<h4><a name="overflow">overflow</a>()&nbsp;</h4>
+<p><font color="#FF0000"><b>Syntax:</b></font>&nbsp;&nbsp;&nbsp;&nbsp; overflow ()</p>
+<p>This event is triggered on numeric overflow that typically occurs on division
+by zero. It can be used as an exception handler for various abnormal conditions
+in your FKiSS code.</p>
+<p>The intention of overflow() was to recognize arithmetic error conditions.
+Most implementations will trap divide by zero fault, but not necessarily
+arithmetic overflow. This can occur when calculations exceed the capacity of the
+internal storage location that maintains the result number. </p>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>Example:&nbsp;</b></font></p>
+<p><font face="Courier New">;@overflow()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; only fired by OS<br>
+;@ notify(&quot;Divide by zero&quot;) ; show a warning </font> </p>
+<p>&nbsp;</p>
+<p>Event execution should stop on overflow faults. The following code should not
+display the Hello message. The division by zero fault should terminate
+execution.</p>
+
+<p><font face="Courier New">;@label(1)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; <br>
+;@ let(A,1) let(B,0)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; <br>
+;@ div(C,A,B)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;<br>
+;@ notify(&quot;Hello!&quot;)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; </font></p>
+
+</body>
+
+</html>

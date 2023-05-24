@@ -1,0 +1,104 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>map</title>
+</head>
+
+<body>
+
+<h4><a name="letmodal" id="letmodal">letmodal</a>()&nbsp;</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; letmodal (variable)</p>
+<p>This action returns the string name of the current modal object in the variable, or -1 if no modal object is currently set. </p>
+<p>A modal object is an UltraKiss component or other object in the KiSS set that is the only object that is allowed to respond to events. </p>
+<p>When an object is modal, other entities in the set are not allowed to respond to any press() or release() events or any other external action. Therefore, in order to remove a modal state, the modal object must have a way to respond to mouse or other external events so that event code will execute to clear the modal situation. Alternatively, an alarm and timer can also be used to remove modal state after a period of time. </p>
+<p>With UltraKiss, when a modal state is assigned to an object this object can respond to press() and release() events, catch() and fixcatch() events, unfix() events, collision events, and all other events in which it participates. </p>
+<p>Events without a source such as keyboard events or set initialization events or label events are always processed even if a modal object is set. All alarm events are also processed.</p>
+<p>If a group object is assigned a modal state then all cels within the group object are allowed to respond to events. If a cel is assigned a modal state then any group events in which the cel participates are allowed to respond. </p>
+<p>Modal state is particularly useful for components where a button must be pressed before processing can continue.</p>
+<p>&nbsp;</p>
+<p>Related actions: <a href="setmodal.html">setmodal()</a></p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+    <table border="1" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td width="20%">UltraKiss Extension</td>
+        <td width="30%">letmodal(X) </td>
+        <td>return current modal object name </td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<table width="80%"  border="1" align="center" cellpadding="5" cellspacing="5" bordercolor="#000000" bgcolor="#FFFF99">
+  <tr>
+    <td><div align="center">Note: The UltraKiss letmodal() command is viewer specific and not compatible with other viewers. </div></td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>&nbsp;Example:&nbsp;
+</b></font></p>
+<p><font face="Courier New">;[Cel Section]<br>
+#4 BALLR.GIF : 0 ;<br>
+#3.5 mariel.jpg : 0 ;<br>
+#2.9999 yuki.jpg : 0 ;<br>
+#5.9999 button2.button : 0 ;%size[160,50] %attributes[text=&quot;Set Ball Modal&quot;] <br>
+#1 button1.button : 0 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;%size[160,50] %attributes[text=&quot;Set Me Modal&quot;] <br>
+<br>
+;[Page Set Section]<br>
+; Page 0<br>
+$0 * 312,59 98,55 518,60 365,279 318,428<br>
+<br>
+<br>
+;[FKiSS Section]<br>
+;@EventHandler<br>
+<br>
+;@alarm(1) ; <br>
+;@ setmodal() ; <br>
+;@ notify(&quot;Modal Ball now clear&quot;) ; <br>
+<br>
+;@press(#5) ; <br>
+;@ getText(S,&quot;button2.button&quot;) ; <br>
+;@ ifequal(S,&quot;Set Ball Modal&quot;) ; <br>
+;@ setmodal(&quot;BALLR.GIF&quot;) setText(&quot;button2.button&quot;,&quot;Clear Modal&quot;) ; <br>
+;@ timer(1,30000) ; <br>
+;@ else() ; <br>
+;@ setmodal() setText(&quot;button2.button&quot;,&quot;Set Ball Modal&quot;) ; <br>
+;@ endif() ; <br>
+;@ letmodal(S) ; <br>
+;@ ifnotequal(S,-1) ; <br>
+;@ notify(&quot;Modal object is &quot;,S,'\n',&quot;Will clear automatically in 30 seconds&quot;) ; <br>
+;@ else() ; <br>
+;@ notify(&quot;Modal object is &quot;,S) ; <br>
+;@ endif() ; <br>
+<br>
+;@press(#1) ; <br>
+;@ getText(S,&quot;button1.button&quot;) ; <br>
+;@ ifequal(S,&quot;Set Me Modal&quot;) ; <br>
+;@ setmodal(#1) setText(&quot;button1.button&quot;,&quot;Clear Modal&quot;) ; <br>
+;@ else() ; <br>
+;@ setmodal() setText(&quot;button1.button&quot;,&quot;Set Me Modal&quot;) ; <br>
+;@ endif() ; <br>
+;@ letmodal(S) ; <br>
+;@ notify(&quot;Modal object is &quot;,S) ; </font></p>
+<p><font face="Courier New, Courier, mono">;@drop(#2) ; <br>
+  ;@ notify(&quot;drop Group 2 yuki.jpg&quot;) ; </font></p>
+<p><font face="Courier New, Courier, mono">;@collide(&quot;BALLR.GIF&quot;,#2) ; <br>
+  ;@ notify(&quot;collide GifCel 3 BALLR.GIF and Group 2 yuki.jpg&quot;) ; </font></p>
+<p><font face="Courier New, Courier, mono">;@collide(&quot;BALLR.GIF&quot;,#3) ; <br>
+  ;@ notify(&quot;collide GifCel 3 BALLR.GIF and Group 3 mariel.jpg&quot;) ; </font></p>
+<p><font face="Courier New, Courier, mono">;@catch(#3) ; <br>
+  ;@ notify(&quot;catch Group 3 mariel.jpg&quot;) ; </font></p>
+<p><font face="Courier New, Courier, mono">;@unfix(&quot;mariel.jpg&quot;) ; <br>
+  ;@ notify(&quot;unfix JpgCel 2 mariel.jpg&quot;) ; </font><font face="Arial, Helvetica, sans-serif"></font></p>
+<p><font face="Courier New"><br>
+  </font><font face="Courier New"><br>
+  </font></p>
+<p>&nbsp;</p>
+</body>
+
+</html>

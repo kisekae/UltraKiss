@@ -1,0 +1,99 @@
+FKiSS quick reference chart
+
+name (parm) C/E       FKiSSa FKiSSb FKiSS2 FKiSS2b FKiSS3
+
+add(v,I,I)         C                               x
+alarm (d)          E  x
+altmap (oc)        C  x
+apart (c,c)        E                       x 
+begin ()           E  x
+catch ()           E  x
+changecol(d)       C         x
+changeset(d)       C         x
+col (d)            E  x
+collide (c,c)      E                       x 
+debug (s)          C         x
+div(v,I,I)         C							   x
+drop (oc)          E  x
+else()             C                               x
+end ()             E  x
+endif()            C							   x
+exitevent()        C     						   x
+fixcatch (oc)      E  x
+fixdrop (oc)       E  x
+goto(I)            C							   x
+gotorandom(I,I,I)  C							   x
+gosub(I)           C							   x
+gosubrandom(I,I,I) C							   x
+ifequal(v,I)       C                               x
+iffixed (o,d,d)    C                       x
+ifgreaterthan(v,I) C                               x
+iflessthan(v,I)    C                               x
+ifmapped(c,d,d)    C                       x
+ifmoved (o,d,d)    C                       x
+ifnotequal(v,I)    C                               x
+ifnotfixed(o,d,d)  C                       x
+ifnotmapped(c,d,d) C                       x
+ifnotmoved(o,d,d)  C                       x
+in (o,o)           E                x
+initialize ()      E  x
+label (d)          E                               x
+let(v,I)		   C							   x
+letcatch(v)		   C							   x
+letcollide(v,c,c)  C							   x
+letfix(v,o)		   C							   x
+letinside(v,o,o)   C							   x
+letmapped(v,c)	   C							   x
+letmouse(v,v)	   C							   x
+letmousex(v)	   C							   x
+letmousey(v)	   C							   x
+letobject(v,v,o)   C							   x
+letobjectx(v,o)	   C							   x
+letobjecty(v,o)	   C							   x
+letpal(v)		   C							   x
+letset(v)		   C							   x
+lettransparent(v,c)C							   x
+map (oc)           C  x
+mod (v,I,I)        C                               x
+move (oc,I,I)      C  x
+movebyx(o,o,I)     C                x
+movebyy(o,o,I)     C                x
+moverandx(o,I,I)   C                       x
+moverandy(o,I,I)   C                       x
+moveto (o,I,I)     C                x
+movetorand(o)      C                       x
+mul (v,I,I)        C                               x
+music (f)          C                x
+never ()           E         x
+nop ()             C  x
+nothing ()         E                x
+notify (s)         C                x
+out (o,o)          E                x
+overflow()         E                               x
+press (oc)         E  x
+quit ()            C         x
+random(v,I,I)      C                               x
+randomtimer(d,I,I) C  x
+release (oc)       E  x
+set (d)            E  x
+setfix (o,I)       C                       x
+sound (f)          C  x
+stillin (o,o)      E                x
+stillout (o,o)     E                x
+sub (v,I,I)        C                               x
+timer (d,I)        C  x
+transparent(c,I)   C         x
+unfix (oc)         E  x
+unmap (oc)         C  x
+version (I)        E                x
+viewport(I,I)      C         x
+windowsize(I,I)    C         x
+
+c - cel; d - integer; f - filename; o - object; s - string; oc - object or cel
+v - variable; I - integer/variable (FKiSS3 only)
+E - event; C - command
+
+FKiSSa - WKiSS 16 bit, PlayFKiSS (Amiga)
+FKiSSb - WKiSS 32 bit, XKiSS
+FKiSS2 (FKiSS2 level 2) - PlayFKiSS alpha 6 (.60)
+FKiSS2b (FKiSS2 level 3)- PlayFKiSS alpha 7 (.70)

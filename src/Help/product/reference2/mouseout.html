@@ -1,0 +1,84 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>mouseout</title>
+</head>
+
+<body>
+
+<h4><a name="mouseout">mouseout</a>()&nbsp;</h4>
+<p><font color="#FF0000"><b>Syntax:</b></font>&nbsp;&nbsp;&nbsp;&nbsp; mouseout
+(target)</p>
+<p>This event is triggered when the mouse exits a visible image on the screen. The
+target may be a literal name of an image
+file or a cel group name or an object group identifier.</p>
+<p>The mouseout() event is only triggered once when the mouse leaves the object.
+It can be triggered again if the mouse enters the object and leaves again.</p>
+<p>The correct process is to trigger the event when the mouse no longer overlaps
+a visible pixel in the image.&nbsp; Other viewers may trigger this event when
+the mouse leaves the bounding box area for the image, but one problem with this
+approach is that the object bounding area may include other cels that are not visible in
+the object. This can provide a non-intuitive implementation as the mouseout()
+event may not fire when expected by the user.</p>
+<p>Note that visible pixels can include fully transparent pixels that are not
+the cel transparent color.&nbsp;&nbsp;&nbsp;</p>
+<p>More than one mouseout() event can be specified for a specific file. If sequential event processing is enforced each event will fire in
+the sequence in which it was defined, otherwise they are queued for concurrent
+processing.&nbsp;
+</p>
+<p>&nbsp;
+</p>
+<p>Related events:&nbsp; <a href="mousein.html">mousein()</a><br>
+Related actions: <a href="letmousex.html">letmousex()</a>, <a href="letmousey.html">letmousey()</a></p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+  <table border="1" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td width="20%">FKiSS 4 &nbsp;</td>
+      <td width="30%">mousout (&quot;picture.cel&quot;)&nbsp; or&nbsp; mouseout (#3) or
+        mouseout(!Cards)</td>
+      <td>Triggered when the mouse no longer overlaps a visible pixel in an
+        image</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+  <table border="1" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td width="20%">MouseInOutBox</td>
+      <td width="30%">recognize mouse in/out on visible object boundaries</td>
+      <td>default value &quot;<font color="#0000FF">false</font>&quot;
+        (Compatibility option)</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p>
+<br>
+<font color="#FF0000"><b>FKiSS 4 Example:&nbsp;</b></font></p>
+<p><font face="Courier New">;@mouseout(&quot;click.cel&quot;)                                ;&nbsp;<br>
+;@ notify(&quot;mouse not over cel&quot;)                    ;&nbsp;<br>
+<br>
+;@mouseout(#3)                                ;&nbsp;<br>
+;@ notify(&quot;mouse not over object group #3&quot;)                    ;&nbsp;<br>
+<br>
+;@mouseout(!Cards)                                ;&nbsp;<br>
+;@ notify(&quot;mouse not over a card in !Cards&quot;)                    ;&nbsp;<br>
+<br>
+</font></p>
+<p><font face="Courier New"><br>
+</font></p>
+
+</body>
+
+</html>

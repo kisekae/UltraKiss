@@ -1,0 +1,78 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>confirm</title>
+</head>
+
+<body>
+
+<h4><a name="confirm">confirm</a>()&nbsp;</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; confirm (result,string[,string,string,...])</p>
+<p>The confirm() action will display a modal message dialog on the screen. Modal
+confirmation dialogs require a Yes or No response. The result argument must be a
+variable that returns the user confirmation response to the dialog.. The
+remaining arguments specify the text to be displayed in the window and can be
+variable or literal strings. Each argument is converted to its string
+representation and concatenated with all other arguments in the order
+specified.&nbsp;</p>
+<p>The result variable is set to 1 if the dialog is closed with a Yes response,
+and 0 otherwise.</p>
+<p>Confirm() dialogs suspend dynamic execution. FKiSS events cannot proceed
+until the dialog is closed. For dialogs that do not require waiting for a
+response, use the notify() statement.</p>
+<p><br>
+Related actions: <a href="debug.html">debug()</a>, <a href="notify.html">notify()</a>,
+<a href="showstatus.html">showstatus()</a></p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td>UltraKiss extension</td>
+      <td>confirm(A,&quot;Variable X is: &quot;,X)</td>
+      <td>Displays a composite message in a modal dialog window.</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<table width="80%"  border="1" align="center" cellpadding="5" cellspacing="5" bordercolor="#000000" bgcolor="#FFFF99">
+  <tr>
+    <td><div align="center">Note: The UltraKiss confirm() command is viewer specific and not compatible with other viewers. </div></td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+    <table border="1" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td width="20%">VariableCase</td>
+        <td width="30%">variable names are case sensitive</td>
+        <td>default value &quot;<font color="#0000FF">false</font>&quot; (Compatibility option)</td>
+      </tr>
+    </table>
+  </center>
+  <p>&nbsp;</p>
+</div>
+<p><font color="#FF0000"><b>&nbsp;FKiSS 5 Example:
+</b></font>
+</p>
+<p><font face="Courier New">#1.999 button.cel       : 0                              ;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+</font>
+<br>
+<font face="Courier New">;@press(#1)&nbsp;&nbsp; let(S,&quot;Object #1
+pressed&quot;)&nbsp;confirm(Answer,S) ;&nbsp;<br>
+;@release(#1) confirm(Answer,S,&quot; and then released&quot;)&nbsp; ;&nbsp;
+<br>
+</font></p>
+
+<p><font face="Courier New"></font></p>
+
+</body>
+
+</html>

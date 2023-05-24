@@ -1,0 +1,8 @@
+[Welcome]
+This is the UltraKiss Notes demonstration system.
+
+Press 'New' to create a new note. 
+Press 'Done' to exit this system.
+Press 'Delete' to remove a note.
+[test1]
+this is a note

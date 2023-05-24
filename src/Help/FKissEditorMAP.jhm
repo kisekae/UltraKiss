@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE map
+  PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Map Version 1.0//EN"
+         "http://java.sun.com/products/javahelp/map_1_0.dtd">
+
+<map version="1.0">
+	<mapID target="fkisseditor.index" url="product/fkisseditor/index.html" />
+	<mapID target="fkisseditor.menu" url="product/fkisseditor/menu.html" />
+	<mapID target="fkisseditor.toolbar" url="product/fkisseditor/toolbar.html" />
+	<mapID target="fkisseditor.menu.FileNewEvent" url="product/fkisseditor/menu.html#FileNewEvent" />
+	<mapID target="fkisseditor.menu.FileEditEvent" url="product/fkisseditor/menu.html#FileEditEvent" />
+	<mapID target="fkisseditor.menu.FileDeleteEvent" url="product/fkisseditor/menu.html#FileDeleteEvent" />
+	<mapID target="fkisseditor.menu.FileConfiguration" url="product/fkisseditor/menu.html#FileConfiguration" />
+	<mapID target="fkisseditor.menu.FilePageSetup" url="product/fkisseditor/menu.html#FilePageSetup" />
+	<mapID target="fkisseditor.menu.FilePrintPreview" url="product/fkisseditor/menu.html#FilePrintPreview" />
+	<mapID target="fkisseditor.menu.FilePrint" url="product/fkisseditor/menu.html#FilePrint" />
+	<mapID target="fkisseditor.menu.FileProperties" url="product/fkisseditor/menu.html#FileProperties" />
+	<mapID target="fkisseditor.menu.FileExit" url="product/fkisseditor/menu.html#FileExit" />
+	<mapID target="fkisseditor.menu.EditUndo" url="product/fkisseditor/menu.html#EditUndo" />
+	<mapID target="fkisseditor.menu.EditRedo" url="product/fkisseditor/menu.html#EditRedo" />
+	<mapID target="fkisseditor.menu.EditUndoAll" url="product/fkisseditor/menu.html#EditUndoAll" />
+	<mapID target="fkisseditor.menu.RunExecute" url="product/fkisseditor/menu.html#RunExecute" />
+	<mapID target="fkisseditor.menu.RunStepInto" url="product/fkisseditor/menu.html#RunStepInto" />
+	<mapID target="fkisseditor.menu.RunToSelection" url="product/fkisseditor/menu.html#RunToSelection" />
+	<mapID target="fkisseditor.menu.RunToReturn" url="product/fkisseditor/menu.html#RunToReturn" />
+	<mapID target="fkisseditor.menu.RunSetBreakpoint" url="product/fkisseditor/menu.html#RunSetBreakpoint" />
+	<mapID target="fkisseditor.menu.RunClearBreakpoint" url="product/fkisseditor/menu.html#RunClearBreakpoint" />
+	<mapID target="fkisseditor.menu.RunDisableBreakpoint" url="product/fkisseditor/menu.html#RunDisableBreakpoint" />
+	<mapID target="fkisseditor.menu.RunEnableBreakpoint" url="product/fkisseditor/menu.html#RunEnableBreakpoint" />
+	<mapID target="fkisseditor.menu.RunClearAllBreakpoints" url="product/fkisseditor/menu.html#RunClearAllBreakpoints" />
+	<mapID target="fkisseditor.menu.RunProgramPause" url="product/fkisseditor/menu.html#RunProgramPause" />
+	<mapID target="fkisseditor.menu.RunProgramResume" url="product/fkisseditor/menu.html#RunProgramResume" />
+	<mapID target="fkisseditor.menu.RunProgramRestart" url="product/fkisseditor/menu.html#RunProgramRestart" />
+	<mapID target="fkisseditor.menu.OptionsPauseEvent" url="product/fkisseditor/menu.html#OptionsPauseEvent" />
+	<mapID target="fkisseditor.menu.OptionsPauseAction" url="product/fkisseditor/menu.html#OptionsPauseAction" />
+	<mapID target="fkisseditor.menu.HelpContents" url="product/fkisseditor/menu.html#HelpContents" />
+	<mapID target="fkisseditor.menu.HelpAbout" url="product/fkisseditor/menu.html#HelpAbout" />
+</map>

@@ -1,0 +1,94 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>unmap</title>
+</head>
+
+<body>
+
+<h4><a name="unmap">unmap</a>()&nbsp;</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; map
+(target)</p>
+<p>This action clears the mapping or visibility of the target. The target may be a literal name of an image
+file or a cel group name or an object group identifier.</p>
+<p>For object groups or cel groups, each image cel in the group is hidden.</p>
+<p>FKiSS adjustment of cel visibility through un map()
+commands can trigger collision events if the viewer supports visibility
+collisions.&nbsp;For example, an image collide() event could fire when the cel
+becomes visible, or an apart() event could fire when the cel was hidden.</p>
+<p><br>
+Related actions: <a href="altmap.html">altmap()</a>, <a href="map.html">map()</a>,
+<a href="setframe.html">setframe()</a>, <a href="letframe.html">letframe(),</a> <a href="ghost.html">ghost()</a></p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td>FKiSS 1 allows cel literal names or objects.</td>
+      <td>unmap (&quot;cel1.cel&quot;) or unmap(#1)</td>
+      <td>Clears the mapping of the specified cel, or all cels in the object
+        group.</td>
+    </tr>
+    <tr>
+      <td>FKiSS 3 allows variables for objects.&nbsp;&nbsp;</td>
+      <td>let(X,10) unmap (X)&nbsp;</td>
+      <td>Clears the mapping of the all cels in the object group specified by
+        variable X.</td>
+    </tr>
+    <tr>
+      <td>FKiSS 4 allows cel group names.&nbsp;&nbsp;</td>
+      <td>unmap (!Table)&nbsp;</td>
+      <td>Clears the mapping of all cels in the cel group.</td>
+    </tr>
+    <tr>
+      <td>FKiSS 5 allows variables for all names</td>
+      <td>let(Cel,&quot;a.cel&quot;) unmap (Cel)&nbsp;</td>
+      <td>Clears the mapping of the specified cel, or all cels in the object
+        group or cel group.</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td>AllAmbiguous</td>
+      <td>apply unmap to all ambiguous cels</td>
+      <td>default value &quot;<font color="#0000FF">false</font>&quot;
+        (Compatibility option)</td>
+    </tr>
+    <tr>
+      <td>MapCollide</td>
+      <td>apply collision events on visibility changes</td>
+      <td>default value &quot;<font color="#0000FF">false</font>&quot;
+        (Compatibility option)</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>&nbsp;Example:&nbsp;<br>
+</b></font>
+</p>
+<p><font face="Courier New">#1.999 button.cel       : 0                              ;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+#3.999    fk4b3a.cel       : 0                              ;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+normal image<br>
+</font>
+<br>
+<font face="Courier New">;@press(#1)&nbsp;&nbsp; map(#3)&nbsp; ;&nbsp;<br>
+;@release(#1) unmap(#3)                                               ;&nbsp;<br>
+<br>
+</font><br>
+<font face="Courier New"><br>
+</font></p>
+
+</body>
+
+</html>

@@ -1,0 +1,125 @@
+<html>
+	<head>
+		<title>Image Tutorial Lesson 1</title></head>
+	<body>
+		<h1 align="center"><font color="#000000">Debugging FKiSS Tutorial</font></h1>
+		<h1 align="center"><font color="#ff0000"> Lesson 1.&nbsp;The FKiSS Editor</font></h1>
+		<p>&nbsp;</p>
+		<ol>
+			<li>
+				This tutorial will show you how to use the FKiSS Editor tool to&nbsp;trace your
+				FKiSS event code for logic problems and other errors.&nbsp; Ensure that
+				UltraKiss is showing the main logo screen.&nbsp; Close any existing set.
+				<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">File-New</FONT>.&nbsp; This will create a new KiSS
+				set at size (448,320) with a black border and one empty page.
+				<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">File-Properties</FONT> to change the new KiSS
+				configuration (CNF) file properties.&nbsp; The attributes section of the
+				Properties dialog will show a playfield size of (448,320).&nbsp; Press the
+				small button beside this attribute and change the screen size to <FONT color="#cc6600">
+					(300,400)</FONT>.&nbsp; Exit the configuration Properties dialog by
+				pressing the OK button.
+				<p>&nbsp;</p>
+			<li>
+				We are going to build a simple calculator.&nbsp; This application will use some
+				of the new GUI components introduced through the UltraKiss specific FKiSS 5
+				extensions.&nbsp; We will use the FKiSS Editor to construct and debug
+				our&nbsp;logic.<BR>
+				<BR>
+				On the main UltraKiss screen use <FONT color="#000099">Edit-Add Component-Label</FONT>.&nbsp;
+				A green marquee box will show the new label object.&nbsp; Place the mouse in
+				this box and right-click. Select <FONT color="#cc6600">Label Attributes</FONT>.
+				<p>&nbsp;</p>
+			<li>
+				In the <FONT color="#cc6600">Text</FONT> area enter 'Calculator'.&nbsp; In the <FONT color="#cc6600">
+					Align</FONT> box choose 'center'.&nbsp; In the <FONT color="#cc6600">Font Name</FONT>
+				box choose Arial and enter 32 in the <FONT color="#cc6600">Font Size</FONT> box.&nbsp;
+				Click on the <FONT color="#cc6600">Fore Color</FONT> button and choose a red
+				color. Click OK and observe that the label now shows part of the text.<br>
+				<br>
+				Place your mouse on the right size of the label box and drag it to expand
+				the&nbsp;label size.&nbsp; Ensure that the label is big enough to show&nbsp;the
+				complete text.&nbsp;Then, drag the label to the top and center
+                of the screen.<BR>
+				<BR>
+				Use <FONT color="#000099">Edit-Unselect All <FONT color="#000000">to remove the
+						selection box </FONT></FONT><font color="#000000">from
+                the label, </font><FONT color="#000099"><FONT color="#000000">or </FONT><FONT color="#cc6600">right-click</FONT></FONT><FONT color="#000000">
+					anywhere on the background</FONT>.
+				<p>&nbsp;</p>
+			<li>
+				Next, use <FONT color="#000099"><FONT color="#000099">Edit-Add Component-Text Box </FONT>
+				</FONT>to create the numeric display area for our calculator. Position the text
+				box below the calculator title.&nbsp; Use your mouse to expand the width of the
+				box and size it properly so that it looks like a calculator display.<br>
+                <br>
+ Place your mouse over this box and right-click. Select <font color="#cc6600">Textbox
+                Attributes</font>.<BR>
+				<BR>
+				In the <FONT color="#cc6600">Text</FONT> area enter '0'.&nbsp; In the <FONT color="#cc6600">
+					Align</FONT> box choose 'right'.&nbsp; In the <FONT color="#cc6600">Font Name</FONT>
+				box choose Arial and enter 18 in the <FONT color="#cc6600">Font Size</FONT> box.
+                Select a line border and a <font color="#CC6600">Border Size</font>
+                of 1, and a white border color. Depending on the size of the
+                textbox, you might want to set the <font color="#CC6600">Insets</font>
+                (Top, Left, Bottom, Right) by 3 pixels to add some margin area
+                and center the text.<BR>
+				<BR>
+				Use <FONT color="#000099">Edit-Unselect All</FONT> to remove the selection box
+				or <FONT color="#cc6600">right-click</FONT> anywhere on the background.
+				<p>&nbsp;</p>
+			<li>
+				Next, use <FONT color="#000099">Edit-Add Component-Button</FONT> to
+				create&nbsp;our first&nbsp;button for our calculator. Position the button below
+				the calculator text box which is our display window.&nbsp;
+				<BR>
+				<BR>
+				<FONT color="#cc6600">Right-click</FONT> on the button, select the Button
+				Attributes, and enter the number 9 in the Text area.&nbsp; Select an Arial font
+				and a Font Size of 20.&nbsp; Click OK, and then use your mouse to size the
+				button appropriately.<BR>
+				<BR>
+				Use <FONT color="#000099">Edit-Unselect All<FONT color="#000000"> to remove the
+						selection box or </FONT><FONT color="#cc6600">right-click</FONT></FONT><FONT color="#000000">
+					anywhere on the background</FONT>.
+				<p>&nbsp;</p>
+			<li>
+				Now, hold the <FONT color="#cc6600">alt</FONT> key down and <FONT color="#cc6600">left
+					click</FONT> on the number 9 button, or hold the alt key
+                down and drag a selection box around the button to select it.&nbsp; This will select the button
+				object and a blue marquee box will be drawn around it.&nbsp; Use <FONT color="#000099">
+					Edit-Copy</FONT> or <FONT color="#000099">Ctrl-C</FONT> to copy this object
+				to the clipboard.<BR>
+				<br>
+				We will now create nine more copies of this button for the digits 8 to 0. Use
+                <font color="#000099">
+				Edit-Paste</font> or <font color="#000099">Ctrl-V</font> to create a new copy of the button.&nbsp; The new button
+				will be pasted exactly over top of the old button as a new KiSS
+                object.&nbsp; Drag the new button to
+				position it beside the old button.<BR>
+				<BR>
+				<FONT color="#cc6600">Right-click</FONT> on the new button, select the Button
+				Attributes, and enter the number&nbsp;8 in the Text area.<BR>
+				<BR>
+				Repeat this eight more times to create buttons for the numbers 7 through 0.
+				<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">File-Save As</FONT> to save your work.&nbsp; Save the
+				new KiSS set to the Tutorial/FKiSS directory or a directory of your
+				choice.&nbsp; The configuration element name should be <FONT color="#cc6600">CNF1.cnf</FONT>
+				if you began this tutorial after first starting UltraKiss.&nbsp; You can
+				overwrite any existing element of the same name.
+				<p>&nbsp;</p>
+			</li>
+		</ol>
+		<p align="left">&nbsp;</p>
+		<hr>
+		<p align="left">Next Document:&nbsp; <A href="lesson2.html">Event Tutorial Lesson 2<br>
+			</A>Prior Document:&nbsp; <A href="../../tutorials.html">UltraKiss Tutorials</A></p>
+		<p align="left">Copyright (c) 2002-2023 William Miles</p>
+
+	</body>
+</html>

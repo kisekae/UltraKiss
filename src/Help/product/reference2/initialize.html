@@ -1,0 +1,147 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>initialize</title>
+</head>
+
+<body>
+
+<h4><a name="initialize">initialize</a>()</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>  initialize()<br>
+<br>
+The initialize() event is the first event triggered after the set is loaded,
+before begin() and version(). This event is typically used to map and unmap
+image cels in preparation for FKiSS execution. Variables can also be initialized
+and initial component states can be set.
+</p>
+<p>The initialize() event is an immediate event and will complete execution
+before any other event starts.&nbsp;More than one initialize() event can be specified.
+Different initialize() events can be used to segregate initialization sections. If sequential event processing is enforced each event should fire in
+the sequence in which it was defined.&nbsp;
+</p>
+<p>All FKiSS action commands can be used during initialize(). Note that
+collision events are not recognized for move() commands executed during
+initialize(). This is the essential difference between initialize() and begin().
+</p>
+<p>Alarms scheduled in initialize() will become eligible for execution when the
+set is activated. Sounds specified in initialize() will play immediately.
+</p>
+<p>
+<br>
+Related events: <a href="begin.html">begin()</a>, <a href="end.html">end()</a>, <a href="version.html">version()</a></p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+  <table border="1" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td width="20%">ImmediateEvent&nbsp;</td>
+      <td width="30%">enforces sequential event processing&nbsp;&nbsp;</td>
+      <td>default value &quot;<font color="#0000FF">false</font>&quot;
+        (Compatibility option)</td>
+    </tr>
+    <tr>
+      <td width="20%">TimerPeriod</td>
+      <td width="30%">the polling period in milliseconds for firing alarms</td>
+      <td>default value &quot;<font color="#0000FF">10</font>&quot; (FKiSS
+        option)</td>
+    </tr>
+    <tr>
+      <td width="20%">EventQueues&nbsp;</td>
+      <td width="30%">the number of concurrent events that can run&nbsp;</td>
+      <td>default value &quot;<font color="#0000FF">1</font>&quot; (FKiSS
+        option)</td>
+    </tr>
+    <tr>
+      <td width="20%">TimerOption</td>
+      <td width="30%">enables timer processing</td>
+      <td>default value &quot;<font color="#0000FF">true</font>&quot; (FKiSS
+        option)</td>
+    </tr>
+    <tr>
+      <td width="20%">EventOption&nbsp;</td>
+      <td width="30%">enables alarm processing&nbsp;&nbsp;</td>
+      <td>default value &quot;<font color="#0000FF">true</font>&quot; (FKiSS
+        option)</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;
+
+</p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">FKiSS 1 Example:</font></b></p>
+<p><font face="Courier New">#9   button1.cel&nbsp; :0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; An overlay picture
+</font></p>
+<p><font face="Courier New">;@initialize()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;<br>
+;@ sound("smc181-2.wav")&nbsp;&nbsp; ;&nbsp;<br>
+;@
+timer(1,500)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;&nbsp;<br>
+;@ timer(2,4000)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;&nbsp;<br>
+<br>
+;@alarm(1)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; Fade the overlay<br>
+;@ transparent(#9,3)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;&nbsp;<br>
+;@ timer(1,40)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+<br>
+;@alarm(2)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; Erase the overlay<br>
+;@ unmap(#9)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+;@ timer(1,0)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+</font></p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">FKiSS 2 Example:</font></b></p>
+<p><font face="Courier New">#12 label4.cel :0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; apart messages<br>
+#12   label3.cel       :0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;<br>
+#4    rboot.cel&nbsp;&nbsp; :0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;<br>
+#4    lboot.cel&nbsp;&nbsp; :0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;<br>
+#1    smoon.cel&nbsp;&nbsp; :0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;<br>
+<br>
+
+;@initialize()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+;@ unmap(&quot;label4.cel&quot;)&nbsp;&nbsp;&nbsp;&nbsp; ;&nbsp;<br>
+;@ sound("smc181-2.wav")&nbsp;&nbsp; ; Begin sound<br>
+;@ timer(1,1)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+;@ timer(2,3500)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;&nbsp;<br>
+;@ movebyx(#4,#1,140)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;&nbsp;<br>
+<br>
+;@alarm(1)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; Fade the overlay<br>
+;@ transparent(#9,3)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;&nbsp;<br>
+;@ timer(1,40)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+<br>
+;@alarm(2)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; Stop the fade<br>
+;@ unmap(#9)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+;@ timer(1,0)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+<br>
+;@apart(&quot;lboot.cel&quot;,&quot;smoon.cel&quot;)                            ; movebyx apart<br>
+;@ unmap(&quot;label3.cel&quot;)&nbsp;&nbsp;&nbsp;&nbsp; ;&nbsp;this should not
+happen<br>
+;@ map("label4.cel")&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;&nbsp;<br>
+<br>
+</font></p>
+<p><br>
+<br>
+</p>
+
+</body>
+
+</html>

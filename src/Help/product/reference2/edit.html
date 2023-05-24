@@ -1,0 +1,129 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>map</title>
+</head>
+
+<body>
+
+<h4><a name="edit" id="edit">edit</a>()&nbsp;</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; edit(status,filename,command,argument1,argument2,...)</p>
+<p>UltraKiss file I/O is designed to support reading and writing of text files in a plain text or encrypted mode. The edit() statement accesses a previously opened file for various types of changes. The edit() system allows for appending, replacement or deletion of various strings of text in the file.</p>
+<p>The <em>status</em> parameter must be a variable in which the result of the command is returned . When the file size is returned, for single and double byte characters the byte count is dependent on the file encoding chosen in the UltraKiss options. If there is an error in processing the command then the returned status valued  will be -1.</p>
+<p>The <em>filename</em> parameter is a literal string or a variable that contains the name of the file that has been opened for reading or writing. The filename must be a relative name that refer to files in the same directory or archive file from which the set configuration was loaded. If the file has not been opened then the original status value and all other parameter values are unchanged. </p>
+<p>The <em>command</em> parameter must be a string literal value or a variable that contains a string. This specifies the edit command that is to be applied to the text file. </p>
+<p>The <em>argument</em> parameters specify the data for the edit command. The commands and arguments are as follows:</p>
+<p>&nbsp;</p>
+<div align="center">
+  <center>
+    <table border="1" cellpadding="5">
+      <tr>
+        <td>&quot;append&quot;</td>
+        <td>Appends the strings listed in argument 1 through argument n to the end of the file and returns the number of bytes in the file. </td>
+      </tr>
+      <tr>
+        <td>&quot;replace&quot;</td>
+        <td>Replaces the first occurrence in the file of the string in argument 1 with the value of argument 2 and returns the insertion point as the status value.</td>
+      </tr>
+      <tr>
+        <td>&quot;replaceall&quot;</td>
+        <td>Replaces all occurrences in the file of the string in argument 1 with the value of  argument 2 and returns the number of replacements made in the status value..</td>
+      </tr>
+      <tr>
+        <td>&quot;delete&quot;</td>
+        <td>Deletes the first occurrence in the file of the string in argument 1 and returns the deletion point as the status value. </td>
+      </tr>
+      <tr>
+        <td>&quot;gettext&quot;</td>
+        <td>Returns, in argument 1 , the complete text of the file and returns the number of characters in the string as the status value..</td>
+      </tr>
+      <tr>
+        <td>&quot;settext&quot;</td>
+        <td>Sets the contents of the file to the value of argument 1 and returns the number of bytes in the file as the status value.</td>
+      </tr>
+      <tr>
+        <td>&quot;getbody&quot;</td>
+        <td>Returns, in argument 1, the body text of the file.&nbsp; For HTML files this is all text between the &lt;body&gt; and &lt;/body&gt; tags. The status value is set to the number of characters in the returned string. </td>
+      </tr>
+      <tr>
+        <td>&quot;find&quot;</td>
+        <td>Locates the text given in argument 1 in the file and returns the location in the file as the status value. </td>
+      </tr>
+      <tr>
+        <td>&quot;findline&quot;</td>
+        <td>Locates the text given in argument 1 in the file and returns the line number in the file where the text was found as the status value. </td>
+      </tr>
+      <tr>
+        <td>&quot;getline&quot;</td>
+        <td>Converts the integer offset into the file, specified in argument 1, and returns the line number in the file that relates to this offset. </td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p> </p>
+<p>&nbsp; </p>
+<p>When reading a file data is actually read from a text buffer established when the file was first opened. The complete contents of the file were read into the text buffer and all subsequent read() and write() statements access the memory contents of the text buffer. </p>
+<p>&nbsp;</p>
+<p>Related actions: <a href="open.html">open()</a>, <a href="write.html">write(),</a> <a href="close.html">close()</a>, <a href="read.html">read()</a> </p>
+<p>&nbsp;</p>
+<table width="80%"  border="1" align="center" cellpadding="5" cellspacing="5" bordercolor="#000000" bgcolor="#FFFF99">
+  <tr>
+    <td height="31"><div align="center">Note: The UltraKiss edit() command is viewer specific and not compatible with other viewers. </div></td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+    <table border="1" cellpadding="5" cellspacing="0" width="100%">
+      <tr>
+        <td width="20%">UltraKiss Extension</td>
+        <td width="30%">edit(N,&quot;myfile.txt&quot;,&quot;replaceall&quot;,&quot;A&quot;,&quot;B&quot;) </td>
+        <td>replaces all A's in myfile.txt with B's. </td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+    <table border="1" cellpadding="5" cellspacing="0" width="100%">
+      <tr>
+        <td>Encoding&nbsp;</td>
+        <td>file encoding based upon language &nbsp;&nbsp;</td>
+        <td>default value &quot;<font color="#0000FF">cp1252</font>&quot; (Compatibility option)</td>
+      </tr>
+    </table>
+  </center>
+</div>
+<div align="center"></div>
+<div align="center"></div>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>&nbsp;Example:&nbsp;<br>
+</b></font></p>
+<p><font face="Courier New, Courier, mono">;@press(#8) ; <br>
+  ;@ let(S1,&quot;This is a new line&quot;) ; <br>
+  ;@ edit(N,&quot;test.txt&quot;,&quot;append&quot;,S1,'\n',S1) ; <br>
+  ;@ debug(&quot;Edit test.txt, append new line, status: &quot;,N,&quot; data appended was: &quot;,'\n',S1,'\n',S1) ; <br>
+  ;@ edit(N,&quot;test.txt&quot;,&quot;replace&quot;,&quot;line&quot;,&quot;edited line&quot;) ; <br>
+  ;@ debug(&quot;Edit test.txt, replace 'line' with 'edited line', replacement index was: &quot;,N) ; <br>
+  ;@ edit(M,&quot;test.txt&quot;,&quot;getline&quot;,N) ; <br>
+  ;@ debug(&quot;Edit test.txt, getline at index: &quot;,N,&quot; line number is: &quot;,M) ; <br>
+  ;@ read(N,S2,M,&quot;test.txt&quot;) ; <br>
+  ;@ debug(&quot;Edit test.txt, status: &quot;,N,&quot; replaced line is: &quot;,'\n',S2) ; <br>
+  ;@ edit(N,&quot;test.txt&quot;,&quot;replaceall&quot;,&quot;line&quot;,&quot;replace all line&quot;) ; <br>
+  ;@ debug(&quot;Edit test.txt, replaceall 'line' with 'replace all line', replacement count: &quot;,N) ; <br>
+  ;@ edit(N,&quot;test.txt&quot;,&quot;gettext&quot;,S3) ; <br>
+  ;@ debug(&quot;Edit test.txt, gettext, status: &quot;,N,&quot; text is: &quot;,'\n',S3) ; <br>
+</font></p>
+<p><font face="Courier New">
+</font></p>
+<p><font face="Courier New"></font></p>
+</body>
+
+</html>

@@ -1,0 +1,183 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>release</title>
+</head>
+
+<body>
+
+<h4><a name="release">release</a>()</h4>
+<p><font color="#FF0000"><b>Syntax:</b></font>&nbsp;&nbsp;&nbsp;&nbsp; release
+(target)</p>
+<p>
+Triggered when the user clicks on a cel or an object, regardless of fix value. The
+target may be a literal name of an image
+file or a cel group name or an object group identifier.
+</p>
+<p>The release() event is distinguished from the drop() event as release() is fired regardless
+of fix value. Drop() events fire only if the fix value is less than the maximal
+fix value. Some viewers fail to enforce this difference. This leads to inconsistent
+drop() and release() interpretation across viewers.</p>
+<p>Release() events are recognized when the mouse button is released. Although mouse
+presses occur before mouse releases, no
+assumptions should be made for the sequence in which events are processed. KiSS events
+are expected to be independent and instantaneous.
+Unfortunately, the early development of single threaded
+viewers introduced a sequential event order that was assumed by some KiSS
+developers. With FKiSS3 and variables, artists began to create works that
+became dependent on event sequences, contrary to the original
+expectations.&nbsp;For these viewers the release() event is typically processed before the drop() event and before
+fixdrop() events.&nbsp;
+</p>
+<p>Similarly, there is no restriction on the number of release() events that can be specified for a specific cel or object
+group, however many single threaded
+viewers cannot manage multiple events. For viewers that can handle multiple events, no
+assumptions should be made for the sequence in which they are processed,
+although if sequential event processing was enforced it may be valid to assume
+that each event will fire in the
+sequence in which it was defined in the KiSS configuration.
+</p>
+<p>With FKiSS4, other problems occur. For image cels that participate in
+more than one cel group there is no standard defined for the order in which cel
+group events are expected to fire. For example, if 'redball.cel' participates in the !BALL and
+!RED cel groups, and release() events are defined for both cel groups,
+no
+assumptions should be made on the order in which the events will fire. KiSS events are expected to be independent
+and instantaneous. This makes it
+difficult to determine if both cel groups fired and a red ball was released.
+Again, if sequential event processing was enforced one could assume that each event fires in in the
+sequence in which it was defined in the KiSS configuration and viewer dependent event code can be written that assumes this
+sequence.
+</p>
+<p>FKiSS, since inception, introduced the capability for multiple events to apply to the same target
+by allowing events that could accept a cel name or object identifier, or with
+FKiSS4 a cel group
+identifier.&nbsp;Release() events can apply to both an image cel and an object
+that contains the image. Most
+viewers will process object group events before cel events and before cel group events, but
+once again this is implementation dependent and can lead to inconsistent KiSS
+interpretation across viewers.&nbsp;
+</p>
+<p>
+<br>
+Related events: <a href="fixdrop.html">fixdrop()</a>, <a href="press.html">press()</a>,
+<a href="catch.html">catch()</a>, <a href="fixcatch.html">fixcatch(),</a> <a href="drop.html">drop()<br>
+</a>Related actions: <a href="letcatch.html">letcatch()</a>, <a href="letcel.html">letcel(),</a>
+<a href="setfix.html">setfix()</a>
+</p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+  <table border="1" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td width="20%">FKiSS 1 allows cel literal names or object groups.</td>
+      <td width="30%">release (&quot;cel1.cel&quot;) or release (#3)</td>
+      <td>Triggered when the cel or object group is released.</td>
+    </tr>
+    <tr>
+      <td width="20%">FKiSS 4 allows cel group names.&nbsp;&nbsp;</td>
+      <td width="30%">release (!Table)&nbsp;&nbsp;</td>
+      <td>Triggered when any cel in cel group !Table is released.</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+  <table border="1" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td width="20%">ImmediateEvent&nbsp;</td>
+      <td width="30%">enforces sequential event processing&nbsp;&nbsp;</td>
+      <td>default value &quot;<font color="#0000FF">false</font>&quot;
+        (Compatibility option)</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><br>
+<font color="#FF0000"><b>FKiSS 2 Example:
+</b></font>
+</p>
+<p><font face="Courier New">#3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SSMILE-4.cel&nbsp;
+:0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;<br>
+#3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SMILEY-5.cel&nbsp; :0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;<br>
+#2.999&nbsp;&nbsp; SSMILE.cel&nbsp;&nbsp;&nbsp; :0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;<br>
+#2.999&nbsp;&nbsp; SMILEY.cel&nbsp;&nbsp;&nbsp; :0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; ambiguous cel<br>
+#1.32768         SSMILE.cel&nbsp;&nbsp;&nbsp; :0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;<br>
+#1.32768   SMILEY.cel&nbsp;&nbsp;&nbsp; :0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;</font></p>
+<p><font face="Courier New">;@release(&quot;SMILEY-5.cel&quot;)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;<br>
+;@ notify(&quot;release SMILEY-5.cel")&nbsp;&nbsp; ;<br>
+<br>
+;@release(&quot;SMILEY.cel&quot;)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; ambiguous release<br>
+;@ notify(&quot;release SMILEY.cel&quot;)&nbsp;&nbsp;&nbsp;&nbsp; ;<br>
+<br>
+;@release(#3)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;<br>
+;@ notify(&quot;release Group 3&quot;)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;<br>
+</font></p>
+
+<p><br>
+<font color="#FF0000"><b>FKiSS 4 Example:
+</b></font>
+</p>
+<p><font face="Courier New">#4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SSMILE-6.cel&nbsp;
+: 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;<br>
+#4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SMILEY-7.cel&nbsp; : 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;<br>
+#3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SSMILE-4.cel&nbsp; : 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;!SmileySmile<br>
+#3.9&nbsp;&nbsp;&nbsp;&nbsp; SMILEY-5.cel&nbsp; : 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;!Smiley<br>
+#2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SSMILE.cel&nbsp;&nbsp;&nbsp; : 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;!GreenSmile !SmileySmile<br>
+#2.999&nbsp;&nbsp; SMILEY.cel&nbsp;&nbsp;&nbsp; : 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;!Green !Smiley<br>
+#1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SSMILE.cel&nbsp;&nbsp;&nbsp; : 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;!GreenSmile<br>
+#1.32768   SMILEY.cel&nbsp;&nbsp;&nbsp; : 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;!Green</font>
+</p>
+<p><font face="Courier New">;@release(&quot;SMILEY.cel&quot;)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+;@ unmap(&quot;SSMILE.cel&quot;)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+;@ notify(&quot;release KissCel 5 SMILEY.cel&quot;)                     ;&nbsp;<br>
+<br>
+;@release(#3)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+;@ unmap(&quot;SSMILE-4.cel&quot;)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+;@ notify(&quot;release Group 3 SSMILE-4.cel")                     ;&nbsp;<br>
+<br>
+;@release(!GREEN)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+;@ unmap(!GREENSMILE)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+;@ notify(&quot;release !GREEN&quot;)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;&nbsp;<br>
+<br>
+;@release(!SMILEY)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+;@ unmap(!SMILEYSMILE)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+;@ notify(&quot;release !SMILEY")&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;&nbsp;<br>
+</font>
+</p>
+<p><font face="Courier New"></font></p>
+
+</body>
+
+</html>

@@ -1,0 +1,132 @@
+<html>
+	<head>
+		<title>Animation Lesson 2</title>
+		<meta http-equiv="Content-Language" content="en-ca">
+		<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+		<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+		<meta name="ProgId" content="FrontPage.Editor.Document">
+	</head>
+	<body>
+		<h1 align="center">Animation Tutorial</h1>
+		<h1 align="center"><font color="#ff0000">Lesson 2. Animating the Airplane</font></h1>
+		<p>&nbsp;</p>
+		<ol>
+			<li>
+				We will now adjust the airplane and smoke images&nbsp;so that the plane moves
+				across the screen from left to right.&nbsp; Ensure that UltraKiss is showing
+				the main logo screen.&nbsp; Close any existing data set.
+				<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">File-Open</FONT>&nbsp; to load the configuration file <FONT color="#cc6600">
+					CNF1.cnf</FONT> from the Tutorial/Kisimi directory or the directory you
+				created in lesson 1.&nbsp; This will load the data set that you created.
+				<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">View-Active Configuration</FONT> to open the text
+				editor for the current configuration file.&nbsp; When the set loads we want to
+				set up our airplane object so the smoke images are initially invisible.&nbsp;
+				The only visible image in our airplane object group will be the actual
+				airplane. The initialize() event can be used for this purpose.
+				<p>&nbsp;</p>
+			<li>
+				Position the cursor at the end of the file and add the following lines:<br>
+				<br>
+				<font face="Courier New">;@EventHandler<br>
+					;@initialize()<br>
+					;@ unmap("smoke1.cel") unmap("smoke2.cel")<br>
+				</font>
+				<BR>
+				<FONT color="#cc6600">Note:&nbsp; If you copy and paste these lines from the help
+					documentation into your configuration file you must ensure that the semicolon
+					and at-sign combination appears at the beginning of every line.</FONT>
+				<BR>
+				<br>
+				The EventHandler statement begins the FKiSS event section.&nbsp; All commands
+				except EventHandler must be written with lower case letters.&nbsp; The
+				initialize() event is fired whenever a new data set is loaded.&nbsp; The
+				unmap() commands explicitly set the named smoke images as invisible.
+				<p>&nbsp;</p>
+			<li>
+				Animation is performed with a combination of timer() actions and alarm()
+				events.&nbsp; A timer fires at a predefined time and causes an alarm() event to
+				be executed.&nbsp; The alarm() code performs the animation work.&nbsp; We use
+				the begin() event to set our first timer.&nbsp; The begin() event happens after
+				initialize() and just before the loaded data set becomes visible on the
+				screen.&nbsp; Add the following lines at the end of the configuration file:<br>
+				<br>
+				<font face="Courier New">;@begin()<br>
+					;@ timer(1,1000)<br>
+				</font>
+				<br>
+				The timer action will cause alarm(1) to fire 1000 milliseconds after the data
+				set starts.
+				<p>&nbsp;</p>
+			<li>
+				We must now define alarm(1).&nbsp; Every time the alarm is executed we will
+				move the airplane object 9 pixels to the right and show the first puffing
+				smoke.&nbsp; Add the following lines to the end of the configuration file.<br>
+				<br>
+				<font face="Courier New">;@alarm(1)<br>
+					;@ map("smoke1.cel") move(#1,9,0) timer(2,100)<br>
+					<br>
+				</font>In 100 milliseconds we fire alarm(2).&nbsp; Alarm(2) turns off the first
+				puff of smoke and turns on the second.&nbsp; Add the following lines to the end
+				of the configuration file.<br>
+				<br>
+				<font face="Courier New">;@alarm(2)<br>
+					;@ unmap("smoke1.cel") map("smoke2.cel") timer(3,100)<br>
+					<br>
+				</font>In 100 milliseconds we fire alarm(3).&nbsp; Alarm(3) turns off the
+				second puff of smoke and repeats the animation sequence by rescheduling
+				alarm(1) to fire in 250 milliseconds.&nbsp; Add the following lines to the end
+				of the configuration file.<br>
+				<br>
+				<font face="Courier New">;@alarm(3)<br>
+					;@ unmap("smoke2.cel") timer(1,250)<br>
+					<br>
+				</font>The sequence of alarm(1), alarm(2) and alarm(3) repeats over and over
+				again.&nbsp; The repetition causes the airplane to move slowly across the
+				screen from left to right.
+				<p>&nbsp;</p>
+			<li>
+				Use the <FONT color="#000099">File-Exit</FONT> command in the text editor to
+				apply your changes.&nbsp; If you happened to have made a typing mistake you
+				will see an error when the changes are applied.&nbsp; If this occurs, re-edit
+				the configuration file to correct any mistakes.&nbsp; If there are no errors
+				the data set should reload and open to page 0 and the airplane should start to
+				move across the screen.
+				<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">File-Save As</FONT> to save your work.&nbsp; This
+				time change the name to <FONT color="#cc6600">CNF2.cnf</FONT> .&nbsp; The new
+				configuration file with the event code will be saved in the same directory as
+				the original CNF1.cnf file.
+				<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">View-Restart</FONT> command to commit your changes
+				and reload the data set.
+				<p>&nbsp;</p>
+			<li>
+				To check your work use <FONT color="#000099">File-Open</FONT> to load the
+				configuration file <FONT color="#cc6600">CNF2.cnf</FONT> from your
+				directory.&nbsp; If you want you can pick up and move the airplane around as
+				required.&nbsp; You may notice that the airplane tends to flit away from the
+				mouse as it moves.&nbsp; This happens because the animation movements are
+				conflicting with your mouse drags.&nbsp; You can prevent this from happening by
+				turning off FKiSS object moves on mouse controlled objects.&nbsp; This option
+				is found in the <FONT color="#000099">Tools-Options-Compatibility</FONT> tab.&nbsp;&nbsp;&nbsp;<br>
+				<br>
+				The <FONT color="#000099">View-Reset</FONT> command will restore the objects to
+				their original positions.
+				<p>&nbsp;</p>
+			</li>
+		</ol>
+		<p align="left">&nbsp;</p>
+		<hr>
+		<p align="left">Next Document:&nbsp; <a href="lesson3.html">Animation Lesson 3<br>
+			</a>Prior Document:&nbsp; <a href="lesson1.html">Animation Lesson 1</a></p>
+		<p align="left">Copyright (c) 2002-2023 William Miles</p>
+
+		<p>&nbsp;</p>
+	</body>
+</html>

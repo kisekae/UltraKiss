@@ -1,0 +1,18 @@
+; Kisekae UltraKiss configuration file created on Tue Jul 02 12:10:33 MDT 2002
+ 
+;[Screen Section]
+[16777215
+(600,400)
+ 
+;[Cel Section]
+#4	leftboot.gif	*0	:0 	;
+#5	fuku.gif	*0	:0 	;
+#6	leftglove.gif	*0	:0 	;
+#7	rightglove.gif	*0	:0 	;
+#8	bow.gif	*0	:0 	;
+#4	rightboot.gif	*0	:0 	;
+#1	sailormoon.gif	*0	:0 	;
+ 
+;[Page Set Section]
+; Kisekae UltraKiss Page 0
+$0 * 207,111 * * 219,232 233,146 216,170 295,131 245,156

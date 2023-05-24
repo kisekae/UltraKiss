@@ -1,0 +1,458 @@
+This document was last updated on Sunday, December 13, 1998
+Introduction
+Every effort has been made to document LZH header formats as well as changes 
+made for features not yet implemented. Corrections, additions and suggestions 
+are always welcomed. Header fields in Italics are currently under development 
+for Huffman Compression Engine only, and should be ignored (skipped) if not 
+supported, as should any extended header. If you are a developer of compression 
+utilities in .lzh file formats, please feel free to jump in and help. 
+ 
+Table of Contents
+Introduction * 
+LZH format *
+level-0 *
+level-1, level-2 *
+Level 0 header structure *
+Level 1 header structure *
+Level 2 header structure *
+Extended headers *
+Handling of extended headers. *
+Method ID *
+Variances *
+Huffman Compression Engine II *
+Generic time stamp *
+OS ID *
+Links to other LHA utilities and compression references: *
+0x39 Multi-disk field *
+SPAN_COMPLETE. *
+SPAN_MORE. *
+SPAN_LAST *
+size_of_run *
+span_mode: *
+Termination *
+ 
+ 
+LZH format
+Byte Order: Little-endian 
+There are 3 types of LZH headers, level-0, level-1, and level-2. 
+All .lzh and .lha files are null terminated. The last byte of the file should be 
+a 0, but if it's not, it will be interpreted as null terminated. The reason for 
+this termination is that it implies that the next header-size is zero. Huffman 
+Compression Engine adds the null but doesn't need it.
+level-0
+LZH header
+Compressed file
+LZH header
+Compressed file 
+LZH header of size 0 (1 byte null)
+level-1, level-2
+LZH header 
+Extension header(s)
+Compressed file
+In all cases, read the first 21 bytes of the header. After determining the 
+header type, you will then have to handle the header as needed or suggested.
+ 
+Level 0 header structure
+OffsetSize in bytesDescription
+            01Size of archived file header (h)
+            111 byte Header checksum
+            25Method ID
+            74Compressed file size Refered to as C in subsequent fields. As 
+            there are no extended headers in level 0 format archive headers, 
+            this value represents the size of the file data only.
+            114Uncompressed file size
+            154Original file date/time (Generic time stamp)
+            191File or directory attribute
+            201Level identifier (0x00) Programmers should only read the first 21 
+            bytes of the header before taking further action
+            211Length of filename in bytes (Refered to as N in subsequent fields
+            22NPath and Filename
+            22+N216 bit CRC of the uncompressed file
+            24+NCCompressed file data
+
+ 
+ 
+ 
+Level 1 header structure
+OffsetSize in bytesDescription
+            01Size of archived file header (h)
+            111 byte Header checksum
+            25Method ID
+            74Compressed file size Refered to as C in subsequent fields
+            Note: Compressed size includes the size of all Extended headers for 
+            the file.
+            114Uncompressed file size 
+            154Original file date/time (Generic time stamp)
+            191File or directory attribute
+            201Level identifier (0x00) Programmers should only read the first 21 
+            bytes of the header before taking further action
+            211Length of filename in bytes (Refered to as N in subsequent fields
+            22NPath and Filename
+            22+N216 bit CRC of the uncompressed file
+            24+N1Operating System identifier. See OS ID chart
+            25+N2Next Header size 
+            27+N3 or more bytesExtended headers (
+            Note: Extended headers are optional, and have no preset maximum. The 
+            first byte of an extended header identifies the type of header, and 
+            the last 2 bytes of the header identify whether or not more headers 
+            are defined. Huffman Compression Engine will use the extended header 
+            filename if both exist in level 1 archives.
+             CCompressed file data
+
+ 
+ 
+Level 2 header structure
+OffsetSize in bytesDescription
+            12Total size of headers, including Extended headers for this entry.
+            This field is unimportant as long as the extended headers are looped 
+            appropriately. For compatibility with other archivers however, a 
+            variable should be assigned to add up the size of each extended 
+            header.
+            25Method ID
+            74Compressed file size Referred to as C in subsequent fields
+            This value excludes the size of all Extended headers and only refers 
+            to the actual compressed data. This is an improvement, and can be 
+            problematic if not handled properly.
+            114Uncompressed file size 
+            154Original file date/time (Generic time stamp)
+            191File or directory attribute. Not supported in all compression 
+            utilities.
+            201Level identifier (0x00) Programmers should only read the first 21 
+            bytes of the header before taking further action
+            21216 bit CRC of the uncompressed file
+            231Operating System identifier. See OS ID chart
+            242Next Header size 
+            263 or more bytesExtended headers (
+            Note: Extended headers are not optional, and have no preset maximum. 
+            Minimum compatibility should include a type1 extended header.
+            The first byte of an extended header identifies the type of header, 
+            and the last 2 bytes of the header identify whether or not more 
+            headers are defined. Huffman Compression Engine will use the 
+            extended header filename if both exist in level 1 archives. Your 
+            loop for reading of these headers should include offset 24 for the 
+            first assignment and loop until extended header size = 0.
+             CCompressed file data
+
+ 
+Extended headers
+Unspecified size fields are intentionally left blank.
+IDSizeDescription
+            0x002CRC-16 of header and an optional information byte.
+            0x01 Filename
+            0x02 Directory name
+            0x39 0x39 Multi-disk field
+            0x3f Uncompressed file comment.
+            0x48
+            0x4f Reserved for Authenticity verification
+               
+               
+               
+               
+            0x5?2
+            1UNIX related information.
+            Optional information byte
+            0x502UNIX file permission
+            0x512
+            2Group ID
+            UserID
+            0x52 Group Name
+            0x53 User Name
+            0x54 Last modified time in UNIX time
+               
+            0xcn Under development:
+            Compressed file comment. Method -lhn- is assumed
+            Compressed comment cannot exceed 64K in size.
+            Applicable range for Huffman Compression Engine (4..8)
+            0xdx
+            0xff Under development: Operating system specific header info. These 
+            fields may have different meanings for different platforms. If the 
+            file was not created on the same platform as your own these 
+            signatures should be ignored.
+            0xd1 Under development
+            Autodelete after autorun
+
+ 
+Handling of extended headers.
+Proper procedure for handling of extended headers can be summed up in virtual 
+code:
+ 
+    Read the first 21 bytes of the real header to determine the size of the 
+    first extended header. If the 
+    Use the first extended header in the loop that reads subsequent headers 
+    Assign this value to a variable which is used inside the extended header 
+    loop 
+    Repeat 
+    Allocate enough memory for the header 
+    Read the header into the array 
+    Assign headersize to a word variable at the last 2 bytes of the array 
+    Goto 3 
+    Handle compressed data if it exists.
+Code has not been supplied intentionally. It is expected that the programmer 
+reading this document has enough knowledge of programming to perform the task of 
+writing real code.
+ 
+Method ID 
+SignatureDescription
+            -lh0-No compression
+            -lzs-2k sliding dictionary(max 17 bytes) 
+            -lz4-No compression 
+            -lh1-4k sliding dictionary(max 60 bytes) + dynamic Huffman + fixed 
+            encoding of position
+            -lh2-8k sliding dictionary(max 256 bytes) + dynamic Huffman 
+            (Obsoleted) 
+            -lh3-8k sliding dictionary(max 256 bytes) + static Huffman 
+            (Obsoleted) This method is not supported by Huffman Compression 
+            Engine
+            -lh4-4k sliding dictionary(max 256 bytes) + static Huffman + 
+            improved encoding of position and trees 
+            -lh5-8k sliding dictionary + static Huffman
+            -lh6-32k sliding dictionary + static Huffman 
+            -lh7-
+            -lh8-64k sliding dictionary + static Huffman 
+            Lh8 has yet to be discovered except in my own utility. It existed 
+            from 0.21d to 0.21M and was actually -lh7- per Harihiko's review of 
+            Yoshi's notes.
+            "-lhd-"Directory (no compressed data). This signature may not 
+            contain any information at all. In some cases it only is used to 
+            signify that there are extended headers with important information. 
+            In level 0 archives it most likely contains the directory for the 
+            next header's file, but in level 1 and 2 headers, it most likely 
+            contains nothing except for possibly the size of the first extended 
+            header.
+
+Huffman Compression Engine II dynamically sets the method for compression based 
+on the file size. Reasoning: It makes little sense to use a 64KB buffer if the 
+file is 1K. The next section covers variances, which basically define what to do 
+in known cases where the file signature does not match the dictionary size.
+ 
+Variances
+Huffman Compression Engine II
+Versions after 0.21M now dynamically size the dictionary buffer according to the 
+size of the file to be compressed. It is not uncommon to have signatures of 
+-lh4- thru -lh7-. A future implementation will include -lh9- through -lhc- and 
+-lhe-, which represent dictionary sizes of 128KB through 2MB. -lhd- is skipped 
+due to the fact that it is a reserved signature. During 0.21, a misunderstanding 
+about the method identifier lead me to think that a 64KB buffer was -lh8-. 
+Although logic dictated that it should be, 16KB dictionaries were bypassed 
+entirely, which lead to this confusion. In order to simplify the problem, decode 
+should use 64KB for -lh6- through -lh8-.
+ 
+Generic time stamp
+31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16
+|<-------- year ------->|<- month ->|<-- day -->|
+15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0
+|<--- hour --->|<---- minute --->|<- second/2 ->|
+Offset Length Contents
+0 8 bits year years since 1980
+8 4 bits month [1..12]
+12 4 bits day [1..31]
+16 5 bits hour [0..23]
+21 6 bits minite [0..59]
+27 5 bits second/2 [0..29]
+ 
+OS ID 
+'IDPlatform
+            MMS-Dos
+            '2'OS/2 
+            '9'OS9 
+            'K'OS/68K 
+            '3'OS/386 
+            'H'HUMAN 
+            'U'UNIX 
+            'C'CP/M 
+            'F'FLEX 
+            'm'Mac 
+            'w'Windows 95, 98
+            'W'Windows NT
+            'R'Runser 
+
+ 
+ 
+Links to other LHA utilities and compression references:
+The following hyperlinks are visible in word97. If you cannot see these links, 
+you may also jump on the internet to 
+http://www.webworldinc.com/joejared/lzhformat.htm to see them in your favorite 
+browser.
+LHA World by Dr. Haruyasu Yoshizaki
+LHA Page
+Dolphin's Home Page The author, Tsugio Okamoto, maintains "Lha for Unix."
+If you are interested in how LHA works, its source code is a very good place to 
+start.
+This site includes useful info like LHA header specs, in Japanese.
+Lha for UNIX patch by Yoshioka Tsuneo.
+MacLHA for Macintosh systems.
+Network Mahjong International (LHA in Java)
+Micco's HomePage (UNLHA32.DLL UNARJ32.DLL LHMelt)
+Haruhiko Okumura's Compression Pointers. Haruhiko Okumura is the original 
+designer of the lha compression algorithm.
+Compatibility with the above links can only be guessed at this point, as few lha 
+style compressors support anything above -lh5-. However, if your interest is in 
+maintaining compatibility with these other platforms, -K5 added to the command 
+line during compression will force compatibility with these compression 
+utilities. 
+ 
+ 
+ 
+0x39 Multi-disk field
+ 
+The following is a planned implementation. The original can be found at:
+http://www.creative.net/~aeco/jp/lzhspc01.html
+ 
+struct MDF {
+byte span_mode;
+long beginning_offset;
+long size_of_run;
+}
+ 
+span_mode: This identifies the mode of this segment of file. The values are:
+#define SPAN_COMPLETE 0
+#define SPAN_MORE 1
+#define SPAN_LAST 2
+ 
+SPAN_COMPLETE. 
+This specifies that the information following this header contains a complete 
+(optionally compressed) file. This is often unused because MDF is not needed in 
+these cases. In an unsplit file, the header information and format should follow 
+the standard LZH format.
+ 
+SPAN_MORE. 
+This specifies that the information following this header is incomplete. The 
+uncompressor needs to concatenate this segment with
+information from the following volume. It should continue to do that until it 
+sees a volume with a header information that contains span_mode
+SPAN_LAST
+This specifies that the information following this header is the last segment of 
+the (optionally compressed) file.
+beginning_offset:
+This value specifies the location in bytes of where this segment (run) of 
+information will fit into.
+ 
+size_of_run
+This is the size of this segment of information.
+ 
+span_mode: 
+This identifies the mode of this segment of file. The values are:
+#define SPAN_COMPLETE 0
+#define SPAN_MORE 1
+#define SPAN_LAST 2
+ 
+SPAN_COMPLETE. This specifies that the information following this header 
+contains a complete (optionally compressed) file. This is often unused
+because MDF is not needed in these cases. In an unsplit file, the header 
+information and format should follow the standard LZH format.
+ 
+SPAN_MORE. This specifies that the information following this header is 
+incomplete. The uncompressor needs to concatenate this segment with
+information from the following volume. It should continue to do that until it 
+sees a volume with a header information that contains span_mode
+SPAN_LAST.
+ 
+SPAN_LAST. This specifies that the information following this header is the last 
+segment of the (optionally compressed) file.
+ 
+ 
+beginning_offset: This value specifies the location in bytes of where this 
+segment (run) of information will fit into.
+ 
+size_of_run: This is the size of this segment of information.
+ 
+ 
+ 
+The illustration below contain two volumes with two compressed files, one of 
+them split between the two volumes. "File 1" is compressed and fits
+within the first volume. "File 2" is a file 100 bytes long compressed to 90 
+bytes. The first 50 bytes of which resides on the first volume and the
+last 40 bytes on the next.
+      Volume 1
+      +--------------+
+      | +----------+ |
+      | |LZH header| | <- MDF not needed
+      | +----------+ | <- header unchanged from non-spanned versions of LZH
+      | | File 1   | |
+      | |          | |
+      | |          | |
+      | +----------+ |
+      |              |
+      | +----------+ | <- span_mode = SPAN_MORE
+      | |LZH header| | <- beginning_offset = 0
+      | +----------+ | <- size_of_run = 50
+      | | File 2   | |
+      | | split    | |
+      | |          | |
+      +--------------+
+
+      Volume 2
+      +--------------+
+      | +----------+ | <- span_mode = SPAN_LAST
+      | |LZH header| | <- beginning_offset = 50
+      | +----------+ | <- size_of_run = 40
+      | | File 2   | |
+      | |          | |
+      | |          | |
+      | |          | |
+      | +----------+ |
+      | +----------+ |
+      | | [0]      | | <- end of volumes, a byte with value zero (0)
+      | +----------+ |
+      +--------------+
+
+Termination
+-----------
+In addition to the above changes, the compressor must before closing the file 
+after writing the last volume, write a null byte at the end of the file. This 
+byte serves to inform the decompressor that this is the last volume and no other 
+comes after it.
+ 
+This end of volume byte is needed to tell the decompressor when to stop 
+prompting for the next volume. This termination byte is optional, as the 
+decompressor may also stop when it has completed a file, i.e., see SPAN_LAST or 
+just a regular file with
+MDF. However if the end of this completed file coincides with an end of volume, 
+there would be not way for the compressor detect that the following
+volumes and prompt for them.
+This termination byte is a way around this potential bug.
+ 
+Note that this null byte coincides with header_size in the LZH header.
+ 
+Pseudo code for a sample implementation
+---------------------------------------
+ 
+boolean spanned = false;
+while(file_available()) {
+compress file();
+if(size_of_compressed_file > available_space()) {
+ 
+while(size_of_compressed_file) {
+size_to_write = available_space();
+ 
+construct_header_with_MDF(size_to_write);
+write_header();
+write_data(size_to_write);
+ 
+size_of_compressed_file -= size_to_write;
+ 
+prompt_for_next_volume();
+ 
+spanned = true;
+}
+}
+else {
+construct_header_without_MDF(size_of_compressed_file);
+write_header();
+write_data(size_of_compressed_file);
+}
+}
+if(spanned)
+write_null_byte();
+ 
+ 
+Author’s address:
+Aeco Systems
+826 28th Avenue
+San Francisco, CA 94121
+ 
+Phone: (415) 221-7806
+EMail: aeco@creative.net
+ 
+ 
+ 

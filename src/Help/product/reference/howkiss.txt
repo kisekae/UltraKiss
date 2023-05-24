@@ -1,0 +1,875 @@
+
+                            KISS Walk-through:
+                        How To Make KISS Data Sets
+
+                              by Dov Sherman
+                First Released on the Ides of March, 1996
+                         Updated June 11th, 1999
+
+
+Contents:
+    Some Definitions
+    Selecting Your Subject Matter
+    Everything You Wanted To Know About Colors
+    Drawing Your Base Doll
+    Breaking Things Up Into Levels
+    Viewing the Base Doll
+    Making Some Clothes
+    Positioning Objects
+    Locking Objects in Place
+    Restricting Objects to Specific Pages
+    Using Multi-Palettes
+    Gambatte!
+    Appendix
+
+
+Some Definitions:
+
+    Since KISS is designed to be portable to a wide variety of platforms,
+    KISS cel files are always 8 characters long followed by a three
+    character extension.
+
+    KISS data sets are made up of a configuration file (*.CNF) and a
+    series of palette (*.KCF) and cel (*.CEL) files.
+
+    The configuration file defines what cels and palettes are used by a
+    KISS data set.
+
+    An object is a group of one or more cels that act as a single entity
+    such that when the user moves one of them, all cels in the object move
+    together.  Usually, an object is something singular like a shirt, the
+    doll itself, or a hat.  Sometimes an object might be more than one
+    item which move together like a pair of shoes.
+
+    The cel files describe sections of dolls and clothing and other KISS
+    objects.  Each cel is an image which may show part of an object or the
+    whole object.
+
+    The palette files define the colors used by cels.
+
+    For the most part, most KISS artists draw the dolls and clothes as
+    picture files in other formats like PCX, PPM, or IFF.
+
+    If you are using an Amiga, Chad Randall's PlayFKISS archive includes
+    several conversion programs for making KISS sets.
+
+    PC users will be interested in Mian's KISS Utilities for converting
+    PCX files to CEL and KCF formats.  (This is what I use.)
+
+
+Selecting Your Subject Matter:
+
+    The first step in making a KISS data set is selecting your subject
+    matter.  The majority of KISS data sets are people and little clothes
+    to put on them.  Dolls.  While there are a few more unique KISS sets
+    like the Battleship Mogami, a Go board, and a map of Japan, for the
+    purposes of this walk-through, I'll assume we're making a doll.
+
+    It's very popular to choose a character from manga or anime. Three out
+    of my own four currently recently released KISS data sets are based on
+    anime/manga characters.  But not all KISS data sets have to be.  Be
+    creative.  You can make a data set based on anything you like from
+    celebrities to movie characters to mythological characters.  Invent
+    your own characters and have fun with it.
+
+    You may want to keep in mind what kind of clothing you'll be drawing
+    when you select your subject.  It might be good to select a character
+    for which you can draw a variety of max-and-match clothing pieces.  If
+    outfits are all a single piece, playing with the doll might not be as
+    much fun.  (For example, I considered drawing Kurenai Tsubasa from
+    Ranma 1/2 but how much fun is it to stick a one-piece mailbox disguise
+    on a character and then take it off again?  Fun for about five seconds
+    and then you look for something else to do.)
+
+    Once you have selected a character, the first step is to draw the base
+    doll.
+
+
+Everything You Wanted To Know About Colors:
+
+    Before you start drawing things, you need to understand how colors
+    work in a KiSS doll.
+
+    A KiSS doll is like a paint-by-numbers set.
+
+    CEL files are like the unpainted picture. It's a picture full of
+    numbers. But those numbers could mean anything. Is the eye supposed
+    to be blue or red? The CEL just calls it "color 5" and leaves it up
+    to KiSS to decide what color is "color 5". The KCF (KiSS Color File)
+    is the set of numbered paints. Without a KCF, KiSS won't know what
+    colors to use. With the wrong KCF, KiSS will color the CEL
+    incorrectly.
+
+    When you turn a source image into a CEL file, you'll also create a
+    KCF palette file at the same time. What a converter does is to take
+    the source image and split it into two parts: the shape of the image
+    (the CEL) and the colors it uses (the KCF). Since different images
+    may use different palettes, you'll need to be careful in matching up
+    the CELs and KCFs in your doll. It's a good idea to try to re-use
+    the same palette in as many of your source images as you can. If
+    you're using 256-color images, you'll need to use the same palette
+    in ALL of them since you'll only be allowed one KCF. But if you use
+    16-color images, you can use up to 17 different KCFs in a single
+    doll. Remember that it doesn't matter how many colors you actually
+    use in an image; it only matters how many colors are available in
+    the whole palette of the image. If you're in a 256-color palette
+    mode but on use 16 colors, it's still a 256-color image.
+
+    When you make your doll, you'll make lots of source images for all
+    the parts of your doll and clothing. These images, be they GIF, PCX,
+    or BMP, will need to use limited palette formats. I recommend using
+    GIF images because they're ALWAYS in limited palettes while PCX and
+    BMP can be in TrueColor which is unsuitable for KiSS.
+
+
+Drawing Your Base Doll:
+
+    Drawing the base doll can be difficult, even if you are a skilled
+    artist.  There are several approaches that may work well for you:
+
+    1) Direct Drawings
+
+        If you're really good with a mouse, you may choose to simply draw
+        the doll from scratch with your favorite paint program. This can
+        be difficult and I avoid it when possible.
+
+    2) Scanned Drawings
+
+        If you have access to scanning equipment, you can sketch your doll
+        on paper and then scan it in.  You'll probably need to retouch it
+        but it's easier than just drawing it from scratch.
+
+    3) Transparencies
+
+        If you don't have access to a scanner but you have a sketch you
+        want to use as your base, you might try tracing the sketch onto a
+        transparency.  You can then tape the transparency to your computer
+        screen and trace it with your paint program.  The results will
+        probably by blocky and will need to be retouched but it's still a
+        lot better than drawing from scratch.  For transparencies, I
+        usually use plastic sandwich bags which I draw on with a magic
+        marker.
+
+    4) Borrowed Drawings and Pictures
+
+        You may choose to use an existing image file as a resource. For
+        example, when I made my "Two Ranmas" KISS set, I used a scanned
+        image of character design sketches.  The originals were in black
+        and white and were drawn with clothing but they provided a good
+        base after I did some retouching to edit out the clothing and add
+        color.
+
+    Try any of these techniques or any combination of them.
+
+    Some Important Guidelines for Drawing:
+
+    * Your drawing needs to be in 16 color mode with the first color
+      (usually called palette number 0) as the background.  Be sure that
+      any part of the doll that is supposed to be transparent is that
+      color. You should probably set that color to whatever you want the
+      background of your data set to look like in operation.  (KISS does
+      support a 256-color palette mode but, for the purposes of this
+      walk-through, we'll stick with the simpler 16-color mode.)
+
+    * Don't make your doll too big.  A good range is somewhere from 100 to
+      500 pixels in height depending on how much detail you want to draw.
+      A larger doll can allow you more detail but that can take longer to
+      draw and will require more memory and disk space in the finished
+      data set.
+
+    * When you draw your base doll, keep in mind what sort of clothes
+      you'll be drawing on it and what restrictions that will put on the
+      way parts of your doll overlap with other parts.  If your doll is
+      going to wear a large, billowy shirt, you might not be able to draw
+      the doll with her hands on her hips.
+
+    * Crop the finished image down until the edges of the image come very
+      close to or even touch the doll.  Later, when we turn the doll into
+      a KISS object, the edges of even the transparent parts will define
+      how close to the edges of the screen we can place the doll.
+
+    * Save the image in a format for which you have a KISS conversion
+      program.  If you don't have a converter to turn TGA files into KISS
+      cels, svaing in TGA format won't do you much good.
+
+    * When you finish drawing the base doll, make a back-up copy of it in
+      a different directory.  You don't want to lose it when it took so
+      long to draw.
+
+
+Breaking Things Up Into Levels:
+
+    KISS objects like the doll and her clothing are made up of one or more
+    cels.  Each cel contains part of the image for the whole object.  Each
+    cel has a set height and any cel that is above that height will always
+    appear to be in front of it.  Many objects will be interwoven so that
+    cels in the first object appear above and behind certain cels in
+    another object.  This is why it's a good idea to know what sort of
+    clothing you'll be drawing on your doll.  Take some time to plan
+    ahead.
+
+    Let's look at an example...
+
+        Imagine we have a doll of Emi-chan from Sailor Moon.  We've drawn
+        this doll so that she's holding her right arm up in front of her
+        body so that it crosses in front of her.  We've also drawn her
+        legs so that her right leg crosses behind her to be hidden by her
+        left leg.
+
+        Now we want to choose the sections of her body to be split up into
+        levels.
+
+        We know that we'll want to draw a tiara that will appear on her
+        head but be hidden by her bangs.  So the bangs and her face will
+        need to be seperate levels.
+
+        We know that her shirt should appear to cover her body while being
+        hidden by her right arm as it crosses over the shirt so at least
+        part of her right arm will need to be a seperate level from her
+        body. Perhaps we've drawn her to that only her forearm crosses in
+        front so we can decide to make the break right at her elbow.
+
+        We want her left shoe to be hidden by her right leg since her left
+        leg appears behind he right leg.  So her left leg will have to be
+        a seperate cel from her right leg.  A good place to make this
+        break is right at the hip at the panty line.
+
+        We now know three places where the doll will have to be split up.
+        But we can choose to do it so that we end up with only three cels
+        in total.  Since the bangs and right forearm are both in front of
+        the body and face, we can make the bangs and forearm the same cel.
+        Then we can make the left leg another cel.  In the end, we want to
+        have three cels: one with her bangs and right forearm, one with
+        the parts of her left leg that are visible, and one with the rest
+        of her.
+
+        You can split the doll up into as many levels as you like but the
+        more levels you use, the more complex and time-consuming it will
+        be to finish your doll.
+
+    Once you have decided where to split your doll up, load up your
+    drawing of your base doll and edit out everything that is not part of
+    the first cel, the part that is most toward the front.  (In our above
+    example, we would want edit out everything except her bangs and right
+    forearm.)
+
+    Each cel has a different filename.  Choose a name that describes the
+    first cel and save your edited image under that name.
+
+    Now load up you base doll image again and edit out everything that is
+    not part of the second level.  You may choose to leave in things which
+    are hidden by the first level.  If you're not careful, you might
+    accidentally edit out the joints between levels incorrectly and wind
+    up with gaps.  (Personally, I like to edit out everything except what
+    is specifically part of a given level but that takes planning and is
+    often more trouble than it's worth.  The main benifit is that you'll
+    be able to get a higher compression ratio for your finished set since
+    you'll have larger blocks of single-color areas.)
+
+    Repeat this process for each level of the doll until you have seperate
+    image files for each section.
+
+    Remember, if you choose to change one of the palette colors in one
+    level of the object, you must change it for all levels.
+
+    Now you're ready to turn the image files in KISS cel files.  Let's go
+    back to our Emi-chan example...
+
+        I like to use my own GIF2CEL converter to make my data sets but
+        Mian's PCX2CEL converter is also good. Both are DOS command-line
+        programs. You should pick a CEL converter based on what type of
+        image format you like to work in and whether you prefer DOS or
+        Windows or whatever your OS is.
+
+        Let's go back to our Emi-chan example...
+
+        Suppose we saved Emi-chan's bangs and forearm in an GIF file
+        called "fore.gif".  We're going to want all three cels to use the
+        same palette so we've decided to call the palette "emi.kcf".  At
+        the DOS prompt, we type:
+
+            GIF2CEL fore.gif emi.kcf /t
+
+        The first argument is the name of the image file.  Our cel file
+        will have the same first 8 characters and a filename extension of
+        "cel" (fore.cel in this case).  The second argument is the name of
+        the palette file.  We'll use the same palette name for all cels
+        that we want to use the same colors.  By default, GIF2CEL clips
+        off any transparent blank space above and to the left of the
+        image.  Since we are working on an object that has several levels,
+        each with different amounts of blank space, we don't want it to
+        clip any extra blank space away and we use the "/t" option to turn
+        off the automatic trimmer.
+
+        KISS format GS/2 and above allows you save space that would be
+        trimmed by storing the amount of space trimmed as an offset value.
+        GIF2CEL can make GS/2 cel files.  GS/2 cel files take up less
+        space on disk and in memory.  To produce the same cel as above
+        in GS/2 format, we would type:
+
+            GIF2CEL fore.gif emi.kcf /g /t
+
+    The exact command and syntax will vary depending on what conversion
+    program you are using.  Just keep in mind these basic points:
+
+    * All cels which use the same colors, should have the same palette
+      name
+
+    * If several cels make up a single object, turn off clipping
+
+    * Use GS/2 format or higher when possible since it makes more
+      efficient files
+
+    * Don't delete your image files right away.  You might decide to go
+      back and make changes later.
+
+    * It may be useful to print up a hardcopy of your doll and make notes
+      on it about where you made the breaks between levels as a reference
+      to use when making the clothing.
+
+
+Viewing the Base Doll:
+
+    Now we've got the palette file and we've got some cel files and we
+    want to see if they turned out okay so we need a configuration file.
+    The configuration file will have 8 characters followed by a filename
+    extension of "cnf".  Pick something for the first 8 characters.
+    Usually, it's good to use the name of your doll or just "kiss.cnf".
+
+    Load up a straight ASCii editor.  Don't use a word processor that
+    allows special fonts and formatting since those will put special
+    formatting codes into the text.  You just want a very plain ASCii
+    editor.  PC users can use the built-in DOS program "edit" to create a
+    configuration file.
+
+    Decide how large you want the screen to be.  It needs to be big enough
+    to show the doll and her clothing.  Be sure to leave room around the
+    doll in which to put her clothing.  Keep in mind the size of the
+    screen your users will have.  It's generally safe to assume they will
+    have a screen larger than 640x480 but unwise to expect anything larger
+    than 800x600.  Keep in mind that we'll need to leave some space for
+    the control bar and edges of the window.  The largest I would
+    recommend to use would be a screen size of around 790x518 which comes
+    very close to maximum size.  Once you have chosen a size, enter a line
+    in your configuration file like this:
+
+        (width,height)
+
+    ...where "width" and "height" are the numeric width and height of your
+    screen.  If you want a 320x240 screen, the line would be...
+
+        (320,240)
+
+    Don't leave any spaces to the left of the line.
+
+    Next we need to tell the configuration file about the color palette we
+    made.  Enter a line like this:
+
+        %palette.kcf
+
+    ...where "palette.kcf" is the filename of our first palette file.  In
+    our Emi-chan example, it would be...
+
+        %emi.kcf
+
+    This is our first palette, palette zero.  It will be the default
+    palette for all cels in the data set but we can add more palettes
+    later.  Each additional palette we add should appear after this line
+    and be preceded by a % symbol.
+
+    Next we need to tell the configuration file about the cel files we
+    made.  Each object in a KISS data set has a different number to
+    identify it.  The numbers don't control the height of the object or
+    its importance but it's generally a good idea to start with object #0
+    and count up as you make more objects.
+
+    Since all the parts of our doll's body are the same object, we want to
+    give them all the same object number.  We list them in order from the
+    part that is closest to the fron to the part that is in the back.
+    In our Emi-chan example, this would look like:
+
+        #0 fore.cel
+        #0 body.cel
+        #0 back.cel
+
+    So our finished configuration file for Emi-chan would look like this:
+
+        (320,240)
+        %emi.kcf
+        #0 fore.cel
+        #0 body.cel
+        #0 back.cel
+
+    You can leave extra blank lines wherever you like for better
+    readability.  You can also add lines that start with a semi-colon (;)
+    for comment lines.  These comments can also come at the end of
+    non-comment lines.  For example:
+
+        ; Emi-chan
+
+        (320,240)
+
+        ; Palettes
+        %emi.kcf
+
+        ; Cels
+        #0 fore.cel ; Bangs and forearm
+        #0 body.cel ; Head, body, right leg
+        #0 back.cel ; Left leg
+
+    Note: KISS format is case-insensitive so capitalization of filenames
+    does not matter.  Also, when adding comments, be careful not to make
+    the lines too long.  No single line can be more than 255 characters in
+    length.
+
+    The configuration file should always have the declarations in this
+    basic order; screen size, then palettes, then cels.
+
+    Save your configuration file and load up KISS.  In KISS, load your
+    configuration file.  Click on the doll and try moving it around.  Do
+    all the parts move together?  Are there are gaps between parts where
+    you accidentally edited out too much?
+
+    If the colors look all messed up, you may have failed to create the
+    palette file correctly or else put the wrong filename in the
+    configuration file.
+
+    When you have it looking good in your KISS viewer, select `Save' in
+    KISS.  Load the configuration file in your ASCii editor and you'll see
+    that KISS has added some new lines to the bottom of your file which
+    look something like this:
+
+        $0 125,11
+        $0 *
+        $0 *
+        $0 *
+        $0 *
+        $0 *
+        $0 *
+        $0 *
+        $0 *
+        $0 *
+
+    This page information tells KISS where the various objects will be
+    positioned when the user loads the data set.  If you edit these lines,
+    be sure to keep them at the end of the configuration file.
+
+
+Making Some Clothes:
+
+    Now we have the base doll drawn and we're ready to make some clothes
+    for her.  The shape of the clothing will have to exactly match the
+    shape of the doll.  Think of an outfit to draw on your doll.
+
+    Load the picture of your base doll into your paint program again.  The
+    colors we used for the base doll probably won't be suitable for
+    drawing clothes so we'll want to change the palette.  Be sure to stay
+    in 16-color mode.
+
+    Think about what colors are in your doll's outfit.  I like to use
+    around three shade of each color for an outfit.  You may choose to use
+    a single color for outlining or use the Disney approach and use a
+    different, draker version of each color to outline those areas.  Be
+    sure to keep in mind that color zero is still the transparent color.
+    You can make color zero anything you want but it won't appear visually
+    in the KISS data set.
+
+    When you have the new palette set, you may wish to save a copy of the
+    base doll using the new palette.  Don't overwrite the old picture.  We
+    only want the new picture as a template to draw outfits using the new
+    palette.
+
+    Now we're ready to draw the outfit.  This is the method that I use but
+    you don't have to follow it.  It's just a good starting place which
+    you can feel free to expand upon:
+
+        * Use color substitution to get rid of all the darker colors in
+          your template, replacing them with similar, lighter colors.
+
+        * Select a dark color and sketch in the new outfit.  You may want
+          to use the old sandwich-bag overlay technique to help you get
+          the lines just right.  Go ahead and draw in some of the backs of
+          the outfit, as if the character were a translucent ghost wearing
+          solid clothing.
+
+        * Use color substition again to get rid of all the colors except
+          the one you used for outlining.
+
+        * Save the image in some temporary file.  You may wish to use a
+          name that refers to the outfit as a whole but it's still just a
+          template.
+
+        * Now concentrate on just one article of clothing out of the
+          outfit.  Edit out all the lines that don't apply to that article
+          and fill in lines of that article that would have been hidden by
+          other articles of clothing.  Be sure to draw the backs and
+          insides of the clothing.  It's fun to see the care label on the
+          back of a shirt when the character isn't wearing it.
+
+        * Clip your image so that the single item of clothing appears as
+          close to the upper-left corner as possible.
+
+        * Now fill in all the colors and details of the article of
+          clothing.
+
+        * When you have a single article of clothing finished, break it up
+          into levels.  Keep in mind the way that you broke you base doll
+          up into levels.  A good method is to consider each level as
+          distance from the viewer with the front as one piece and the
+          back as another piece.  It may take some experimentation to
+          decide just where to make the breaks.
+
+    Now we have a single article of clothing and we want to add it to our
+    data set.
+
+    Use your image to cel conversion programs to turn the different images
+    into cels.  We want to make a new palette this time so be sure to use
+    a new palette name.  For example, if we were making a skirt to go with
+    Emi-chan's sailor suit, we might type something like this:
+
+            GIF2CEL skirt1.gif sailor.kcf /g /t
+            GIF2CEL skirt2.gif sailor.kcf /g /t
+
+    Don't forget that objects that are made up of more than one cel need to
+    avoid having blank space to top and left of the images clipped away or
+    the cels won't line up together properly.
+
+    Now load you configuration file into your ASCii editor.
+
+    First, we need to tell the the configuration about our new palette.
+    Find the section where you told it about the first palette and add
+    another line with the new palette name *below* the old one.  In our
+    Emi-chan example, it might look like this:
+
+        %emi.kcf
+        %sailor.kcf
+
+    This new palette is palette number 1 because it is the second palette
+    listed in the configuration file.
+
+    Now we want to add the different cels for the clothing.  Look at the
+    list of cels the configuration file shows for the base doll.  Think
+    about where each cel of your clothing item fits between the cels of
+    the base doll.  In out Emi-chan example, the front of the skirt would
+    go in front of the body but behind the forearm and bangs.  We want the
+    new object to be a different object from the doll itself (so that it can
+    be moved around seperately.)  Let's use the next available number, #1.
+    Add the cel declarations to you configuration file.  In Emi-chan, this
+    might look something like:
+
+        #0 fore.cel   ; Bangs and forearm
+        #1 skirt1.cel ; Front of Skirt to Sailor Suit
+        #0 body.cel   ; Head, body, right leg
+        #0 back.cel   ; Left leg
+        #1 skirt2.cel ; Back of Skirt to Sailor Suit
+
+    It isn't necessary to put those comments at the end of the
+    declarations but it may be helpful later as you add more clothing and
+    makes the file easier to understand.
+
+    But wait!  How does KISS know to use the new palette for the skirt
+    instead of using the default palette (palette zero) that it used for
+    the body?  You have to put that in you cel declarations too.
+
+    Immediately after the filename for the cel, add an asterisk (*)
+    followed by the number of the palette.  Going back to our Emi-chan
+    exmaple, the declaration for skirt1.cel might look like this:
+
+        #1 skirt1.cel *1 ; Front of Skirt to Sailor Suit
+
+    If you want to, you can add a *0 to cel declarations for cels using
+    palette zero to make the file easier to read but it isn't always
+    necessary since KISS will use palette zero as the default palette when
+    no palette is specified.  It is possible to define different default
+    palettes for each page but palette zero is the default default
+    palette.  More detail on setting alternate default palettes later in
+    this document.
+
+    Our configuration file should now look something like this:
+
+        ; Emi-chan
+
+        (320,240)
+
+        ; Palettes
+        %emi.kcf    ; Palette 0 - The doll
+        %sailor.kcf ; Palette 1 - Sailor Suit (red, white, blue)
+
+        ; Cels
+        #0 fore.cel      ; Bangs and forearm
+        #1 skirt1.cel *1 ; Front of Skirt to Sailor Suit
+        #0 body.cel      ; Head, body, right leg
+        #0 back.cel      ; Left leg
+        #1 skirt2.cel *1 ; Back of Skirt to Sailor Suit
+
+        $0 125,11
+        $0 *
+        $0 *
+        $0 *
+        $0 *
+        $0 *
+        $0 *
+        $0 *
+        $0 *
+        $0 *
+
+    Next load your modified configuration file in KISS and test your
+    clothing item.  If there are problems with where you made the breaks
+    in the cels or the order of the cels in the configuration file, go
+    back and make the changes now.
+
+    Once you have the item just the way you want it, go back to your
+    template and make the other items of clothing.  Again, it may take
+    some experimentation to get the levels right.
+
+    As you make more outfits, you may find you need more colors.  Make new
+    palettes as needed and add them to the configuration file.  Try to
+    re-use old palettes when possible because you can only use up to 256
+    colors.  Palette zero counts as 16 colors and each additional palette
+    counts as 15 more (since the first color of palettes one and are
+    ignored).  This means a maximum of 17 palettes.
+
+
+Positioning Objects:
+
+    Unless you set the positions of your objects, they'll all start off
+    clustered up in the upper-left corner of the window.  After you design
+    the objects, load them in KISS, place them in the positions you want,
+    and select `Save'.  KISS will update your configuration file.
+
+    You can position everything on just the first page and then use your
+    ASCii editor to copy the position declarations at the end of your
+    configuration file.  KISS will use the first ten lines it find that
+    begin with the dollar-sign ($) as the declarations for the pages.
+
+    You may want some of the objects to stay where they are so that the
+    user cannot move them.  To fix an object in place, you use the lock
+    field of the cel declarations.
+
+
+Locking Objects in Place:
+
+    You can lock an object into place so that it can't be moved by the
+    user.  This is useful when you don't want the user to be able to move
+    the doll itself or if you use more than one object for the doll and
+    you don't want the user to pull the doll's arms off.
+
+    You can also make an object difficult to move but not permanently
+    locked in place.  This is useful when you want the user to only be
+    able to move a given object after repeated attempts.  (Some KISS
+    artists use this method to fix underwear in place so that you have to
+    yank on the underwear several times before it comes off.  A little
+    ecchi if you ask me. ^_-)
+
+    Let's suppose we want to lock the doll itself in place in our Emi-chan
+    example.  We would need to edit the declarations for the cels defining
+    Emi-chan's body.  For example...
+
+        #0.32767 fore.cel      ; Bangs and forearm
+
+    The number 32767 appearing after the period following the object
+    number is a lock value.  Since we have used a very high lock value,
+    the doll is permanently locked in place.  Any number over 100 is
+    permanently locked in place.  If we use a number lower than 100, the
+    object can be used after the used yanks on it several times.  The
+    higher the number, the more diificult it is to move.
+
+    Objects which are locked permanently in place will never even twitch
+    from their starting position.
+
+    Objects which are difficult to move but not permanently locked will
+    shift a short distance when yanked on but will snap back to their
+    starting position almost immediately.
+
+    If you give different lock values to different cels of the same
+    object, whichever lock value is highest will be used for that object.
+    Lock definitions are common to all cels of the given object.
+
+    If no lock value is given, the object is assumed to be freely
+    moveable.
+
+    Behavior for a specified lock value of 0 is undefined.  Don't do it.
+    Results will vary widely depending on the program.
+
+
+Restricting Objects to Specific Pages:
+
+    Suppose we want to organize our Emi-chan data set so that the objects
+    for her school uniform only appear on page zero (the starting page).
+    To do this, we set the page field of the cel declarations for those
+    objects.  For example...
+
+        #1 skirt1.cel *1 :0      ; Front of Skirt to Sailor Suit
+
+    The number following the colon tells KISS on which pages the objects
+    appear.  You can set the cel to appear on several pages.  For
+    example...
+
+        #1 skirt1.cel *1 :0 3 7    ; Front of Skirt to Sailor Suit
+
+    This would define the cel skirt1.cel as appearing only on pages zero,
+    three and seven.
+
+    You must always list the pages in numerical order from lowest to
+    highest and page definitions must appear after any palette definition
+    if one is used.
+
+    If no pages are specified, the cel is assumed to appear on all ten
+    pages.
+
+    If a page has no cels defined for it, the page can not be accessed and
+    will appear as a dimmed button in KISS.
+
+    If you specify some but not all of the cels for an object to be on a
+    given page, only the specified cels will appear on that page.  Page
+    definitions are specific to each individual cel.
+
+
+
+Using Multi-Palettes:
+
+    A somewhat advanced use of KCF palettes is multi-paletting. It
+    allows any palette to actually contain whole extra sets of colors. A
+    16-color KCF could have 32 colors, 64 colors, or more; but it would
+    only use 16 of them at a time. For example, maybe your doll looks
+    normal with one palette but then you change to another palette and
+    she has a tan. Making a multi-palette KCF is tricky. You can
+    find a tool in the little collection of KiSS tools I wrote
+    which can combine KCF palettes into a single KCF and there
+    are other tools you can use to do this as well.
+
+    Basically, you start by making two versions of the same source
+    image, each one having the same shape but using different colors.
+    Then you convert them into CELs but have them make seperate KCF
+    palettes. Then you dump one of the CELs and combine the two KCFs
+    into a single KCF.
+
+    When you view the doll in the viewer, you'll be able to click on the
+    little palette number buttons to switch between palettes.
+
+    Each page has its own starting palette. Normally a page will start
+    with palette set 0. But you can force them to start with whatever
+    palette set you want. To do this, we edit the page declarations.
+    Let's look at an example...
+
+        $0 125,11 20,45 145,40 * * *
+
+    All page declarations begin with a dollar-sign ($).  The number
+    immediately following the dollar-sign, with no seperating space, if
+    the number of the default palette for that page.  When there is no
+    declaration for a page, KISS will assume the default palette is
+    palette zero.  You can change that number to the number of a new
+    palette and any cels which do not have a specific palette given will
+    use that palette as the default on that page.
+
+
+Gambatte!
+
+    That's Japanese for "try your best."  You should now know the basics
+    of creating your KISS data set.  Don't be disappointed if you can't
+    turn out a new KISS data set overnight.  Making a good KISS data set
+    takes time and patience.  You may need to retouch cels many times
+    before getting them just right or you may even need to scrap all the
+    cels of an object and draw it again.  Just keep at it, give it your
+    best shot, and, above all, have fun doing it.  If you really put your
+    effort into making your KISS set, your users will enjoy it and that's
+    the best part of making KISS art.
+
+    Gambatte!
+
+
+
+Appendix:
+
+    Here's a recap on the syntax for those configuration lines.
+
+    Screen Size
+        Defines the size of the screen.  Appears once in the file.
+
+        Syntax:
+            (<width>, <height>)
+
+                <width>  - the width of the screen.  Required field.
+                <height> - the height of the screen.  Required field.
+
+                example:
+                    (400,200)
+
+    Palette Declarations
+        Defines palettes used by the KISS cels.  Up to 17 palettes may be
+        defined.  Palettes will be zero to seventeen in order encountered.
+
+        Syntax:
+            %<filename>
+
+                <filename> - the full filename of the palette.  Required
+                             field.
+
+                example:
+                    %base.kcf
+
+    Cel Declarations
+        Defines each cel used by the KISS set, its object number, its
+        palette, and the pages on which it appears.
+
+        Syntax:
+            #<object number>[.<lock value>] <filename> [*<palette number>]
+               [:<page> <page> <page> ...]
+
+                <object number>  - the number which identifies the object
+                                   to which the cel belongs.  Range is 0 to
+                                   255.  Required field.
+                <lock value>     - the `fixedness' of the object.  1 to 99
+                                   is difficult to move.  100 to 32767 is
+                                   permanently fixed.  If ommitted, object
+                                   is freely moveable.  Optional field.
+                <filename>       - the full filename of the cel file.
+                                   Required field.
+                <palette number> - the number of the palette used by the
+                                   cel.  Palettes are counted from 0 to 17
+                                   based on order of appearance.  If
+                                   omitted, the default palette is used
+                                   (palette zero unless specified
+                                   otherwise in the page declarations).
+                                   Optional field.
+                <page>           - the numbers of the pages on which the
+                                   cel appears.  Range is from 0 to 9.
+                                   More than one page may be specified but
+                                   multiple pages must be listed in order
+                                   from lowest to highest.  Optional
+                                   field.
+
+                example:
+                    #15.20 hat.cel *2 :0 1 7 8 ;this is the hat
+
+    Page Declarations
+        Defines the default palette for each page and the positions of
+        objects on those pages.  There should be 10 page declarations
+        appearing at the end of the configuration file.  Declarations will
+        be used for pages zero to nine in order encountered.  These
+        declarations can be generated by KISS if ommitted.
+
+        Syntax:
+            $<default palette> <position #0> <position #1> ...
+
+                <default palette> - the number of the palette to be used
+                                    as the default on a given page.  Range
+                                    is 0 to 17.  Required field.
+                <position #N> - an X,Y position for the Nth object.  Each
+                                page declaration will have an entry for
+                                every object from #0 to the highest
+                                numbered object.  If the object begins at
+                                the origin (0,0), a * will indicate
+                                default starting position.  If no cels are
+                                declared for an object, default position
+                                will be assumed.  Range depends on the
+                                size of the screen and the size of the
+                                objects.  It's best to use the KISS viewer
+                                to set these values.  Required fields.
+
+                example:
+                    $0 125,22 * 100,0 56,22 * * * 12,192
+
+
+    If you need more technical information about the format of cel and kcf
+    files, see the KISS/GS General Format Specifications.

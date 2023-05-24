@@ -1,0 +1,102 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>version</title>
+</head>
+
+<body>
+
+<h4><a name="version">version</a>()&nbsp;</h4>
+<p><font color="#FF0000"><b>Syntax:</b></font>&nbsp;&nbsp;&nbsp;&nbsp; version
+(integer)</p>
+<p>This event will fire if the viewer supports the FKiSS level specified by the
+Integer argument. The current FKiSS syntax has five levels: FKiSS, FKiSS2,
+FKiSS2.1, FKiSS3 and FKiSS4. The proposed FKiSS5 extensions are designed to
+correct some of the deficiencies in FKiSS coding introduced with FKiSS3 and FKiSS4.&nbsp;</p>
+<p>The level association is as follows:</p>
+<table border="0" cellpadding="5" cellspacing="0">
+  <tr>
+    <th><font face="Arial">FKiSS Version</font></th>
+    <th align="right" width="50"><font face="Arial">Level</font></th>
+  </tr>
+  <tr>
+    <td>FKiSS</td>
+    <td align="right" width="50">1</td>
+  </tr>
+  <tr>
+    <td>FKiSS 2</td>
+    <td align="right" width="50">2</td>
+  </tr>
+  <tr>
+    <td>FKiSS 2.1</td>
+    <td align="right" width="50">3</td>
+  </tr>
+  <tr>
+    <td>FKiSS 3</td>
+    <td align="right" width="50">4</td>
+  </tr>
+  <tr>
+    <td>FKiSS 4</td>
+    <td align="right" width="50">5</td>
+  </tr>
+  <tr>
+    <td>FKiSS 5</td>
+    <td align="right" width="50">6</td>
+  </tr>
+</table>
+<p>The version() event is frequently used to hide warning cels, initially visible
+if the viewer running the set does not support all of the FKiSS code required.</p>
+<p>Clearly, a viewer that supports FKiSS4 should respond to version(1),
+version(2), version(3), version(4), and version(5) events. However, some
+viewers are not capable of handling multiple occurrences of&nbsp; the same
+event. Thus, due to viewer deficiencies, use of version() can lead to viewer dependent code.&nbsp; </p>
+<p>The version() event is processed after initialize() and before begin(). The
+version() event is an immediate event and will complete execution
+before any other event starts.&nbsp;For viewers that can handle multiple events,
+more than one version() event can be
+specified for a particular version parameter. If sequential event processing is enforced each event should fire in
+the sequence in which it was defined.&nbsp;Cels that are mapped and moved within the
+version() event can fire collision
+events.&nbsp;</p>
+<p>
+Related events: <a href="initialize.html">initialize()</a>, <a href="end.html">end()</a>,
+<a href="begin.html">begin()</a></p>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>FKiSS 1 Example:
+</b></font>
+</p>
+<p><font face="Courier New">;@version(3)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; only fired if viewer can run FKiSS2.1 or later code<br>
+;@ notify(&quot;Variables not OK&quot;) ; show a warning <br>
+;@version(4)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; only fired if viewer can run FKiSS3 or later code<br>
+;@ notify(&quot;Variables OK&quot;)&nbsp;&nbsp;&nbsp;&nbsp; ; show a warning <br>
+</font> </p>
+
+<p>
+<font color="#FF0000"><b>FKiSS 2 Example:
+</b></font>
+</p>
+<p><font face="Courier New">;@initialize()                                              ;&nbsp;<br>
+;@ unmap(#4)                                                ;&nbsp;<br>
+<br>
+;@version(1) map("fk1r.cel")                                ;&nbsp;<br>
+;@version(2) map("fk2r.cel")                                ;&nbsp;<br>
+;@version(3) map("fk21r.cel")                               ;&nbsp;<br>
+;@version(4) map("fk3r.cel")                                ;&nbsp;<br>
+;@version(5) map("fk4r.cel")                                ;&nbsp;<br>
+;@version(6) map("fk5r.cel")                                ;&nbsp;<br>
+;@version(7) map("fk6r.cel")                                ;&nbsp;<br>
+<br>
+;@begin()                                                   ;&nbsp;<br>
+;@ notify("set begins")                                     ;&nbsp;<br>
+</font></p>
+<p><font face="Courier New"><br>
+</font></p>
+
+</body>
+
+</html>

@@ -1,0 +1,51 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>ifstatements</title>
+</head>
+
+<body>
+
+<h4><a name="letkeymap" id="letkeymap">letkeymap</a>()</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; letkeymap (variable,keyset)</p>
+<p> The letkeymap() statement sets the variable to the binary conjunction of character indexes in the keyset string of the last set of keys simultaneously pressed, or the value 0 if no key is not in the list. The letkeymap() statement is designed to detect simultaneous key combinations. </p>
+<p>The <em>keyset</em> parameter can be a string literal or a variable that contains a string. Each character in the string should represent one possible character on the keyboard that can be tested. For example, the string &quot;abcxyz&quot; is a set of six possible characters that are to be tested for keyboard input.</p>
+<p>The value returned in the variable is a bit string where the bit in position 'n', if set, represents that the character in the keyset at index 'n' was pressed. For example, if the keyset was &quot;abcdef&quot; and keys 'b' and 'd' were simultaneously pressed, then the bits 2 and 4 would be set resulting in the number 10 being returned in the variable. 10 = 2 + 8. </p>
+<p>The letkeymap() startement will also recognize the four cursor control keys 'up', 'down', 'left', and 'right' as special entries within the keyset. For example, the keyset &quot;abcrightleft&quot; recognizes the first three letters of the alphabet plus two cursor control keys, with index values 1, 2, 3, 4, and 9. </p>
+<p>The letkeymap() statement does not distinguish between upper and lower case characters unless the UltraKiss keyboard case option is set. The letkeymap() statement is also not capable of recognizing most special keys on the keyboard. </p>
+<p>Some viewers may only recognize keyboard entry while a key is actually being pressed. This can lead to viewer compatibility problems. If the letkeymap() statement is placed within keypress() events then many event executions may occur as each key in the multikey combination is pressed. This can lead to progressively increasing values being returned at the time that keys are concurrently pressed. </p>
+<p>This oddity with cursor keys illustrates the original design problems with FKiSS. </p>
+<p>&nbsp;</p>
+<p>Related events: <a href="keypress.html">keypress()</a>, <a href="keyrelease.html">keyrelease()</a>, <a href="keytype.html">keytype()</a><br>
+</a>Related actions: <a href="letkey.html">letkey()</a>, <a href="letkeychar.html">letkeychar()</a>, <a href="letkeycode.html">letkeycode()</a>, <a href="letkeystring.html">letkeystring()</a>, <a href="letkeymodifier.html">letkeymodifier()</a></p>
+<p>&nbsp;</p>
+<div align="center"></div>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+    <table border="1" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td width="20%">KeyCase</td>
+        <td width="30%">Enable keyboard upper/lower case key entry </td>
+        <td>default value &quot;<font color="#0000FF">false</font>&quot; (FKiSS option)</td>
+      </tr>
+      <tr>
+        <td>RetainKey</td>
+        <td>Remember last key set pressed </td>
+        <td>default value &quot;<font color="#0000FF">true</font>&quot; (Compatibility option)</td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>&nbsp;Example:&nbsp;</b></font></p>
+<p><font face="Courier New">;@letkeymap(N,&quot;a&quot;)&nbsp;; Sets variable N to 1 if the &quot;a&quot; key is pressed, 0 otherwise<br>
+;@letkeymap(N,&quot;012345xyzabcupdown&quot;)&nbsp;; Sets variable N to 1025 if the &quot;a0&quot; key is pressed</font></p>
+<p><font face="Courier New"><br>
+</font></p>
+</body>
+
+</html>

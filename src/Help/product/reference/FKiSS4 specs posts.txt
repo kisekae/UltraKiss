@@ -1,0 +1,388 @@
+From: calezane@xs4all.nl
+Sent: December 11, 2001 1:46 AM
+To: william.miles@kisekaeworld.com
+Cc: calezane@xs4all.nl
+Subject: As promised, the FKiSS4 specs posts
+
+Here are the posts that I cut & pasted from ML discussions.
+The questions about the restrict actions haven't really 
+been answered, as virtually no FKiSS4 dolls have been made
+yet, so the principle hasn't really been tested in practice.
+
+
+-------------------FKiSS implemented:
+Notation:
+
+<object>     A literal object reference. e.g. #1
+<cel>        A literal cel name. e.g. "a.cel"
+<group>      A celgroup name. e.g. !Uniform
+<key>        A string containing the name of a key (legal key names
+             are A-Z, 0-9, LEFT, RIGHT, UP, DOWN) e.g. "LEFT", "A"
+             
+             
+<var>        A variable name. e.g. Count, V1,...
+             (Case-insenstive, alphabetic char followed by
+              up to 31 additional alphanumerics).
+<varobject>  Either a literal object reference, or a
+             variable containing an object number.
+             e.g. #1, ThisObject
+<varconst>   Either a variable name or an integer constant.
+             e.g. Count, 5
+<keylist>    A string containing one or more key names.
+             e.g. "ABCD", "LEFTRIGHTUPDOWN".
+<celgrp>     <cel> or <group>.
+             e.g. "a.cel", !Uniform
+<celobjgrp>  Any <object>, <cel> or <group>
+             e.g. #1, "a.cel", !Uniform
+
+
+Original FK4 stuff (for completeness)
+
+1) Attached objects
+
+Event:
+
+@detached(<object>)
+   e.g. @detached(#1)
+   
+Actions:
+
+@attach(<varobject>,<varobject>)
+  e.g. @attach(#1,#2)
+       @attach(Obj,Parent)
+       
+@detach(<varobject>)
+  e.g. @detach(ChildObject)
+       @detach(#17)
+       
+@glue(<varobject>,<varobject>)
+  e.g. @glue(#1,#2)
+       @glue(Fred,Jim)
+
+@letchild(<var>,<varobject>)
+  e.g. @letchild(child,#1)
+       @letchild(child,ParentObj)
+       
+@letparent(<var>,<varobject>)
+  e.g. @letparent(p,#4)
+       @letparent(parent,thisObj)
+
+@letsibling(<var>,<varobject>)
+  e.g. @letsibling(s,#4)
+       @letsibling(nextSib,nextSib)
+
+
+2) Keyboard
+
+Events:
+
+@keypress(<key>)
+   e.g. @keypress("LEFT")
+        
+@keyrelease(<key>)
+   e.g. @keyrelease("UP")
+
+@letkey(<var>,<keylist>)
+  e.g. letkey(k,"LEFTRIGHTUPDOWN")
+  
+@letkeymap(<var>,<keylist>)
+  e.g. letkeymap(keys,"ABCDUPDOWN")
+
+
+
+New FK4 stuff.
+
+Events:
+
+@mousein(<celobjgrp>)
+   e.g. @mousein("a.cel")
+        @mousein(#1)
+        @mousein(!Body)
+        
+@mouseout(<celobjgrp>)
+   e.g. @mouseout("b.cel")
+        @mouseout(#2)
+        @mouseout(!Group)
+
+
+Actions :
+      
+1) Extra if/then/else stuff...
+
+@elseifequal(<varconst>,<varconst>)
+  e.g. elseifequal(Count,3)
+  
+@elseifgreaterthan(<varconst>,<varconst>)
+  e.g. elseifgreaterthan(V1,V2)
+  
+@elseiflessthan(<varconst>,<varconst>)
+  e.g. elseiflessthan(Count,Num)
+
+@elseifnotequal(<varconst>,<varconst>)
+  e.g. elseifnotequal(1,Count)
+
+
+2) Object position control
+
+@restrictx(<varobject>,<varconst>,<varconst>)
+@restricty(<varobject>,<varconst>,<varconst>)
+
+When dragging or being moved by FKISS commands, the object
+is restricted as given, and any restrictx/y values applying to
+attached objects are also respected.
+
+3) Cel groups
+
+Syntax of cel definition line modified. Line can now include
+
+;%tnnn%g!groupname: frame frame frame frame ...
+
+%t, %g and !group items must by in that order. If the cel is
+in no frames, the ':' after the group name is optional.
+
+e.g.
+
+#1.20 a.cel *1 : 0 1 2 3 ;%t128%g!group1: 1 2 5
+
+Additional comment lines may follow a cel definition to extend
+the group detils. e.g.
+
+#2 b.cel *1 : 0 1 2 3 ;!group1: 3 4
+;!group2 : 1 3 5
+;!group2 : 6 7 8
+;!group3
+;!group4 : 2
+
+All existing FKISS functions that allow cel references may now
+use groups instead [e.g. @collide(!group1,!group2), @map(!body)].
+
+
+@letframe(<var>,<group>)
+@setframe(<var>,<group>,<varconst>)
+
+
+4) Miscellaneous actions
+
+@letwidth(<var>,<varobject>)
+@letheight(<var>,<varobject>)
+@letinitx(<var>,<varobject>)
+@letinity(<var>,<varobject>)
+@lettimer(<var><varconst>)
+
+
+Other enhancements:
+
+Labels and timers may be given symbolic names. Names are as for
+variables. Overloading the names of labels, timers and variables
+is legal, but disrecommended.
+
+In actions (not events) any object reference (e.g. #1) can be
+replaced by a variable name [e.g. altmap(ThisObject)].
+
+
+Given all that...
+
+1) Have I missed anything?
+
+2) I'm not completely happy with the way I've implemented restrictx/y.
+Currently, there are no visual cues to the user when dragging - when
+the object hits the limit of its legal movement, the object stops
+moving but the pointer can continue to move. This means that if the
+user then moves the pointer back (without releasing the mouse button)
+the object is still moved despite the fact that it is separated from
+the mouse pointer.
+
+Would it be better to lock the pointer to the object, so the pointer
+doesn't drift away from the object even if the user continues to move
+the mouse?
+
+
+-------------------how the restrict actions should work:
+Re: FKiSS4: restrictx(), restricty()
+
+IP:
+On 3 May 2001, at 19:00, Nick Roberts wrote:
+> I rather like the restrict functions, but while Thinking Deep
+> Thought(tm) over lunch, I came up with a number of questions that
+> need to be answered:
+> 
+> 1) Can restrictx/y specify areas (partially) outside the playfield?
+
+Yes, absolutely.  If we're allowing the functionality, it's with the 
+understanding that it's needed to allow relaxing the playfield 
+restrictions in general.
+
+> 2) Do the restrict limits apply to the fkiss "move" functions? If the
+> answer to both 1 & 2 is "Yes", then IP's idea about allowing fkiss to
+> slide objects off the playfield is possible.
+
+Yes -- the limits apply to FKiSS and the viewer equally.  That should 
+always be the case.
+
+> 3) Do the restrictions apply to the /location/ of the object (i.e. it's
+> top left corner) or to the object as a whole (i.e. is the bottom right
+> of an object allowed to stray outside the box)?
+
+They'd have to be applied to the upper left corner (the "position" of 
+the object that's saved in the .cnf) to be consistent with everything 
+else and avoid pointless sizing problems.
+
+> 4) If the answer to 3 is "the whole object", what happens if the artist
+> specifies bounds too small for the object?
+
+It shouldn't be the whole object, Keep It Simple ^_^
+
+> 5) What happens if the object is completely or partially outside the
+> box when the "restrict" occurs - is the object supposed to jump to a
+> location that satisfies the restriction, or is the action ignored?
+
+I don't think we can ignore it without giving some indication and 
+options to the artist (who is expecting it to be in effect) which could 
+also get overly complicated ...  I think it's best to snap the object to 
+the nearest co-ordinate that matches the restriction.
+
+> 6) If an object is attached (or glued) to another, and both objects
+> are the subject of a restrict, when the user tries to drag the parent
+> object (which causes both objects to move) are /both/ sets of restricts
+> respected, or only that of the parent?
+
+I'd say both.  As an example, say the parent is a table.cel and the 
+child is a bowl.cel that can be placed on it -- if the table moves, the 
+bowl moves with it, but you can pick it up separately. Now if the 
+bounds on the table.cel correspond to the walls on the background 
+image, and the bounds on the bowl are something hanging down to 
+the level of the table (getting contrived now, but give me a break, it's 
+a *quick* example) ... the table can move to the walls, but the bowl 
+is shoved back and forth  by the hang down ... and if the table is 
+pulled from under it, then it falls off (detached() is called and it's 
+moved to the floor :-) ...
+
+> 7) When an attempt is made to drag an object past the limit of its
+> restriction box, is the object forcibly dropped (as in the natural
+> restriction box for a fixed object), or does it stay undropped until
+> the user releases the mouse?
+
+Either works for me, tho' I'd lean more to the former for consistency 
+... *shrug* majority opinions ?
+
+
+Dov:
+>1) Can restrictx/y specify areas (partially) outside the playfield?
+
+Yes. The restrict*() commands can take ANY numeric number that wouldn't 
+choke a let*() command. This could be a thousand pixels off either side of 
+the playfield, if the artist wishes.
+
+>2) Do the restrict limits apply to the fkiss "move" functions? If the
+>answer to both 1 & 2 is "Yes", then IP's idea about allowing fkiss to
+>slide objects off the playfield is possible.
+
+Yes. The restrict*() commands would apply to all FKISS functions and to 
+user drags. It would override the viewing program's bounding options while 
+in use.
+
+>3) Do the restrictions apply to the /location/ of the object (i.e. it's
+>top left corner) or to the object as a whole (i.e. is the bottom right
+>of an object allowed to stray outside the box)?
+
+The location of the object. The actual width of height of the object is 
+irrelevant to restrict*() commands.
+
+This is easier to calculate for everyone. The viewer programmers won't have 
+to take into account the size of CELs which are in the object when checking 
+restrict*() settings. And artists who are making an object constrained to 
+some little shoebox or closet in the doll can just use the visually 
+apparent width and height of their box to determine the restrict*() 
+settings to use instead of having to find that value and then subtract the 
+width and height of the object they want to restrict.
+
+>4) If the answer to 3 is "the whole object", what happens if the artist
+>specifies bounds too small for the object?
+
+Another reason why answer 3 is "the location of the object".
+
+>5) What happens if the object is completely or partially outside the
+>box when the "restrict" occurs - is the object supposed to jump to a
+>location that satisfies the restriction, or is the action ignored?
+
+I would suggest that the object should jump to the nearest location which 
+satisfies the restriction but that's open to debate.
+
+>6) If an object is attached (or glued) to another, and both objects
+>are the subject of a restrict, when the user tries to drag the parent
+>object (which causes both objects to move) are /both/ sets of restricts
+>respected, or only that of the parent?
+
+A good question! Offhand, I'd say just the parent restrict*() settings. If 
+that causes the child to be dragged beyond it's own restrict*() settings, 
+perhaps that means the child would only follow the parent until it reached 
+its limit, at which point the child stops and triggers detachment.
+
+>7) When an attempt is made to drag an object past the limit of its
+>restriction box, is the object forcibly dropped (as in the natural
+>restriction box for a fixed object), or does it stay undropped until
+>the user releases the mouse?
+
+It should stay undropped until the user releases the mouse, just like the 
+behavior of an object being dragged beyond the playfield in a viewing 
+program with bounding turned on.
+
+
+
+> > 6) If an object is attached (or glued) to another, and both objects
+> > are the subject of a restrict, when the user tries to drag the
+> > parent object (which causes both objects to move) are /both/ sets
+> > of restricts respected, or only that of the parent?
+> 
+> A good question! Offhand, I'd say just the parent restrict*()
+> settings. If  that causes the child to be dragged beyond it's own
+> restrict*() settings,  perhaps that means the child would only follow
+> the parent until it reached  its limit, at which point the child
+> stops and triggers detachment.
+> 
+> > 7) When an attempt is made to drag an object past the limit of its
+> > restriction box, is the object forcibly dropped (as in the natural
+> > restriction box for a fixed object), or does it stay undropped
+> > until the user releases the mouse?
+> 
+> It should stay undropped until the user releases the mouse, just like
+> the  behavior of an object being dragged beyond the playfield in a
+> viewing  program with bounding turned on.
+
+General agreement then, except for the above two where you and IP
+disagree. If the two, I think your answers are easier to implement than
+IP's 8-)
+
+As far as Q7 is concerned, there isn't a lot in it, actually - I can
+sort-of see how to get a handle on either approach.
+
+Q6 is the killer, though - it would be possible to (either accidentally
+or deliberately) set up parent/child relationships and restrict boxes
+that can simply not be satisfied. If the attachment is made and then
+the restrictions are imposed, they could easily conflict.
+
+Just to clarify a minor point: assuming an attachment is made, and then
+the parent is restricted. It is outside the restriction zone, so it
+jumps to the nearest position - I assume the attachment should be
+respected, so the child object also moves by the same deltax/deltay as
+the parent (even if this moves the child outside any restrict box of
+its own)?
+
+Hint: The correct answer to this is "yes" 8-) (much simpler to
+implement in !PlayKISS).
+
+-- 
+Nick Roberts
+
+
+IP
+True.  I feel that unless there's a *superb* reason for some other 
+behaviour movement done by FKiSS commands should have the 
+same consequences as movement caused by a user drag (no 
+catch/drop/etc. since they aren't selected with the mouse and if that 
+was needed it could be emulated with a gosub() or such) ... *so* if 
+the bounds conflicted the parent would move to where it was 
+constrained, and then the child would move to where *it* needed to 
+be if necessary (if "attach()" was used originally this would trigger a 
+detached() event, if "glue()" then it just moves there and stays 
+attached as you'd expect) ...

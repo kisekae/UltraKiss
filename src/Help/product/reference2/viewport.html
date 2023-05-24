@@ -1,0 +1,49 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>map</title>
+</head>
+
+<body>
+
+<h4><a name="viewport" id="viewport">viewport</a>()&nbsp;</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; viewport
+(X-offset, Y-offset)</p>
+<p>A viewport() command is used to move the window that has been set to constrain the display the KiSS set. The window size is defined throug a windowsize() command and this creates a window which is smaller than the playfield size set the the KiSS configuration file.</p>
+<p>The viewport <em>X-offset</em> and<em>Y-offset</em> are integer parameters that specify relative horizontal and vertical movement offsets, in pixels, for the current window. Negative values move the window to the left and up. Positive values move the window to the right and down.</p>
+<p>Attempts to move the window beyond the playfield boundaries will fail silently. </p>
+<p>&nbsp;</p>
+<p>Related actions: <a href="windowsize.html">windowsize()</a></p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td>FKiSS 1 allows  literal names or objects.</td>
+      <td>viewport (-10,0)</td>
+      <td>Moves the window 10 pixels to the left </td>
+    </tr>
+    <tr>
+      <td>FKiSS 3 allows variables for objects.&nbsp;&nbsp;</td>
+      <td>let(X,10) viewport (X,0)&nbsp;</td>
+      <td>Moves the window 10 pixels to the right </td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>&nbsp;Example:&nbsp;
+</b></font></p>
+<p><font face="Courier New">;@windowsize(-100,-100)&nbsp;&nbsp;&nbsp; ;&nbsp;Make a window 100 pixels smaller in width and height<br>
+</font><font face="Courier New">;@viewport(-10,22)&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;Move the window 10 pixels left and 22 pixels down <br>
+
+  <br>
+</font><br>
+<font face="Courier New"></font></p>
+</body>
+
+</html>

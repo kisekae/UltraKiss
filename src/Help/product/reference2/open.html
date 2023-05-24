@@ -1,0 +1,72 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>map</title>
+</head>
+
+<body>
+
+<h4><a name="open" id="open">open</a>()&nbsp;</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; open(status,filename,mode[,decode])</p>
+<p>UltraKiss file I/O is designed to support reading and writing of text files in a plain text or encrypted mode. The open() command is used to open a named text file for reading or writing. </p>
+<p>The <em>status</em> parameter must be a variable in which the number of bytes in the file is returned. For single and double byte characters the byte count is dependent on the file encoding chosen in the UltraKiss options. If there is an error opening the file then the status returned is -1. </p>
+<p>The <em>filename</em> parameter is a literal string or a variable that contains the name of the file to be opened. The filename must be a relative name that refer to files in the same directory or archive file from which the set configuration was loaded. </p>
+<p>The <em>mode</em> parameter is a string literal or variable that determies whether the file is opened for reading or writing, or both. The mode parameter must be specified as &quot;w&quot; for writing, &quot;r&quot; for reading, or &quot;rw&quot; for reading and writing. If a file is opened for reading then the file will be referenced from the set source directory or archive file depending on how the set was loaded. For example, if the KiSS set is packaged in an archive file then the file to be opened must also exist in the archive. If a file is opened for writing then the file will always be written to the local directory from which the configuration was loaded. If the file is opened for read-write mode then the file is first referenced from the local directory and if this file does not exist then the file will be referenced from the set archive file and written to the local directory when closed.</p>
+<p>The optional <em>decode</em> parameter is used to specify that MD5 decription is required for the file contents. If the decode parameter is non-zero then the file will be decrypted on open such that the contents can be read.</p>
+<p>Files open in write mode will erase the current contents of any existing file. A file opened in read-write mode will retain the contents of any existing file. </p>
+<p>A file open command reads the complete file contents into a text buffer. Subsequent reads and writes to the file update the text buffer contents. The buffer may be written to its final destination when the file is closed. </p>
+<p>&nbsp;</p>
+<p>Related actions: <a href="read.html">read()</a>, <a href="write.html">write(),</a> <a href="close.html">close()</a>, <a href="edit.html">edit()</a> </p>
+<p>&nbsp;</p>
+<table width="80%"  border="1" align="center" cellpadding="5" cellspacing="5" bordercolor="#000000" bgcolor="#FFFF99">
+  <tr>
+    <td height="31"><div align="center">Note: The UltraKiss open() command is viewer specific and not compatible with other viewers. </div></td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+    <table border="1" cellpadding="5" cellspacing="0" width="100%">
+      <tr>
+        <td width="20%">UltraKiss Extension</td>
+        <td width="30%">open(N,&quot;myfile.txt&quot;,&quot;r&quot;) </td>
+        <td>open file &quot;myfile.txt&quot; for reading </td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+    <table border="1" cellpadding="5" cellspacing="0" width="100%">
+      <tr>
+        <td>Encoding&nbsp;</td>
+        <td>file encoding based upon language &nbsp;&nbsp;</td>
+        <td>default value &quot;<font color="#0000FF">cp1252</font>&quot; (Compatibility option)</td>
+      </tr>
+    </table>
+  </center>
+</div>
+<div align="center"></div>
+<div align="center"></div>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>&nbsp;Example:&nbsp;<br>
+</b></font></p>
+<p><font face="Courier New, Courier, mono">;@press(#1) ; <br>
+  ;@ open(N,&quot;test.txt&quot;,&quot;w&quot;) ; <br>
+  ;@ notify(&quot;File test.txt opened for write, status &quot;,N) ; <br>
+  <br>
+  ;@press(#4) ; <br>
+  ;@ open(N,&quot;test.txt&quot;,&quot;r&quot;) ; <br>
+  ;@ notify(&quot;File test.txt opened for read, status &quot;,N) ; <br>
+</font></p>
+<p>&nbsp;</p>
+</body>
+
+</html>

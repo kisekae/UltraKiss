@@ -1,0 +1,236 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-ca">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>Color Editor Index</title>
+</head>
+
+<body>
+
+<h1><font color="#FF0000"> Color Editor Help Topics</font></h1>
+<hr>
+
+<p><font face="Arial">Welcome to the UltraKiss Color Editor documentation.&nbsp; To open an online book, choose a book from the Contents page in the upper
+left of the Help Viewer. Click the book icon to expand the book topics. Then, click a topic to
+view it.</font></p>
+
+<p>&nbsp;</p>
+<h2><b><a name="Introduction"><font face="Arial">Introduction</font></a></b></h2>
+
+<p><font face="Arial">The Color Editor is a full featured palette editing program designed to manipulate KiSS data palettes
+or graphical image file palettes for images used in KiSS data sets.  This online Help document provides
+reference material for the various commands and options available within the Color Editor program.&nbsp;</font></p>
+
+<p>&nbsp;</p>
+
+<p>
+&nbsp;
+</p>
+
+<h2><b><a name="Color Editor Main Screen"><font face="Arial">Color Editor Main Screen</font></a></b></h2>
+
+<p><font face="Arial">The Color Editor main program screen is shown in Figure
+1.&nbsp; The Color Editor program uses standard menu commands to load files, set program
+options, select integrated tools, and display online help. We assume that the reader
+is familiar with the use and operation of basic computer graphical user interfaces.</font> </p>
+
+<p><font face="Arial">The Color Editor is used to adjust individual palette colors.&nbsp; The Color
+Editor loads and saves image palette files.&nbsp;&nbsp;</font> </p>
+
+<p>
+&nbsp;
+</p>
+
+<p align="center"><font face="Arial"><img border="0" src="images/coloredit1.jpg" width="500" height="293"></font></p>
+<p align="center"><font face="Arial">Figure 1.</font></p>
+<p align="left">&nbsp;</p>
+<p align="left"><font face="Arial">The color editor screen is divided into four sections.&nbsp; The upper left section contains a color chooser panel
+to choose a color from a predefined set of color swatches.&nbsp; Colors may also
+be selected by hue, saturation, or brightness, or by individually setting the red, green and blue color components.&nbsp; The selected color
+becomes the current active color.&nbsp; The active color is shown on the menu bar and highlighted in
+the palette panel.</font></p>
+<p align="left"><font face="Arial">The lower left section of the screen is the palette panel.&nbsp;
+The palette panel displays color buttons for all colors defined in the palette.&nbsp;
+Palettes can contain up to 256 colors.&nbsp; All palette colors selected for editing are highlighted with
+red selection boxes around the color buttons.&nbsp; More than one color can be
+selected at one time.&nbsp; All selected colors are referred to as the selection
+set.&nbsp; New colors can be added to the selection set by clicking on a button
+when the Ctrl key is down.&nbsp;&nbsp; Colors can be removed from the selection
+set by right clicking on a selected color.&nbsp; Consecutive colors
+can be selected by clicking on a button while holding the Shift key down.</font></p>
+<p align="left"><font face="Arial">Only one color is the active color.&nbsp; The active
+color is normally the first color chosen when a selection set&nbsp; is created.&nbsp; If a
+selection set exists
+the active color can be changed by holding the Ctrl key down while clicking on a selected color.&nbsp; The active color is important.&nbsp;
+It is used when relative color difference changes are made to a set of selected
+colors.&nbsp; For example, to change the hue or tint of all palette colors in
+shades of blue, the various shades of blue must be selected within the
+palette.&nbsp; One of these colors will be the primary active color.&nbsp;
+When the color chooser is used to adjust the active color then all selected palette blue
+colors will be changed using the relative color difference between the new color and the
+current active color.</font></p>
+<p align="left"><font face="Arial">The upper right section of the color editor screen is the
+palette and image selection panel.&nbsp; The palette drop down selection box
+list all possible palette files within the currently accessed archive file or
+directory.&nbsp; The image drop down selection box lists all images that can use
+this palette.&nbsp; Palette files may be KiSS KCF palette files or GIF or BMP
+images that contain internal palettes.&nbsp; If a KiSS palette file is being
+edited the image drop down box will list all KiSS cel type images for this
+palette.&nbsp; If an internal GIF or BMP palette is being edited the image drop
+down box will list only the specific GIF or BMP image that defines this palette.</font></p>
+<p align="left"><font face="Arial">The palette group selection box is used to choose a specific
+group within the palette file.&nbsp;&nbsp; KiSS KCF files can contain
+multiple palettes.&nbsp; GIF and BMP images contain only one palette.&nbsp; If a
+new palette group is selected the palette panel and preview image will be
+adjusted to show the new palette colors.</font></p>
+<p align="left"><font face="Arial">The lower right section of the color editor screen is the image
+preview panel.&nbsp; The preview panel can be used to select a particular color
+from the preview image.&nbsp; Selection tools are provided to select a region of
+interest, magnify the image, pick up a color, or move the preview image in the
+panel.&nbsp; The eyedropper tool is used to select an image color.&nbsp; Any
+color selected with the eyedropper is highlighted in the palette panel and
+becomes the new active color.</font></p>
+<p align="left">&nbsp;</p>
+
+<h2><b><a name="The Color Chooser"><font face="Arial">The Color Chooser</font></a></b></h2>
+
+<p><font face="Arial">Color is measured in one of two different systems.&nbsp; The HSB system
+assigns a hue, saturation, and brightness measure to every color.&nbsp;
+The RGB system assigns a red, green, and blue color component to every
+color.&nbsp; These systems are sufficient to represent most colors that
+can be reasonably displayed on a computer.</font> </p>
+
+<p><font face="Arial">The Color Chooser is a tabbed panel that enables individual selection of
+almost any color.&nbsp; The first pane is the swatch pane and allows color
+selection from a predefined set of color swatches.&nbsp; A color swatch can be chosen by clicking on the appropriate
+color and the
+selected color will be applied to any existing palette selection set.&nbsp; The preview
+image will be adjusted to use the new color.&nbsp; This color is saved in the
+recently used table for reuse.</font> </p>
+
+<p><font face="Arial">Figure 2 shows how colors can be chosen based upon hue, saturation, and
+brightness controls.&nbsp; Hue is one measure of color and represents an angle
+around a 360 degree color circle.&nbsp; Hue values range from 0 to 360
+degrees.&nbsp; Different hues are different colors.</font> </p>
+
+<p align="left"><font face="Arial">The vertical bar shows all the colors of the rainbow and the
+slider control beside the bar can be used to adjust hue values.&nbsp; If the slider
+is moved the hue component of the color will change without adjusting the color
+saturation or brightness components.&nbsp; Conversely, if the small white circle in the
+color chooser panel is moved variations in color saturation and
+brightness will occur without changing the hue.</font></p>
+<p align="left"><font face="Arial">The hue control is very useful for adjusting image colors.&nbsp;
+The shade of blue in the sailor top preview image in Figure 2 has
+been adjusted from the original color as seen in Figure 1.</font></p>
+
+<p>&nbsp; </p>
+
+<p align="center"><font face="Arial"><img border="0" src="images/coloredit2.jpg" width="500" height="293"></font></p>
+<p align="center"><font face="Arial">Figure 2.</font></p>
+<p align="left">&nbsp;</p>
+<p align="left"><font face="Arial">Figure 3 shows how the color chooser can be used to change color
+saturation.&nbsp; Saturation measures how much color is applied, or the strength
+of the color.&nbsp; Saturation is specified as a percentage from 0 to 100.&nbsp; If the
+saturation is low the color will appear weak, or light.&nbsp; If saturation is
+high the color will appear strong, or dark.</font></p>
+<p align="left"><font face="Arial">If the small white circle is moved within the saturation color
+pane the hue and brightness of the color can be changed without adjusting the
+saturation component..</font></p>
+<p align="left">&nbsp;</p>
+<p align="center"><font face="Arial"><img border="0" src="images/coloredit3.jpg" width="500" height="293"></font></p>
+<p align="center"><font face="Arial">Figure 3.</font></p>
+<p align="left">&nbsp;</p>
+<p align="left"><font face="Arial">Figure 4 shows how color brightness can be adjusted.&nbsp;
+Brightness is the third attribute of color in the HSB system.&nbsp; Brightness is
+specified as a percentage from 0 to 100.&nbsp; Colors with low brightness are
+dark.&nbsp; Colors with a high brightness are light.</font></p>
+<p align="left"><font face="Arial">If the small white circle is moved within the brightness color
+pane the hue and saturation of the color can be changed without adjusting the
+brightness component.</font></p>
+<p align="left">&nbsp;</p>
+<p align="center"><font face="Arial"><img border="0" src="images/coloredit4.jpg" width="500" height="293"></font></p>
+<p align="center"><font face="Arial">Figure 4.</font></p>
+<p align="center">&nbsp;</p>
+<p align="left"><font face="Arial">The last color chooser tab can be used to set color RGB
+values.&nbsp; Individual color values can be entered into the text boxes or
+control sliders can be dragged to adjust the color component as seen in Figure
+5.</font></p>
+
+<p align="left">&nbsp;</p>
+
+<p align="center"><font face="Arial"><img border="0" src="images/coloredit5.jpg" width="500" height="293"></font></p>
+
+<p align="center"><font face="Arial">Figure 5.</font></p>
+
+<p align="left">&nbsp;</p>
+
+<h2>&nbsp;</h2>
+
+<h2><b><a name="The Palette Panel"><font face="Arial">The Palette Panel</font></a></b></h2>
+
+<p><font face="Arial">The palette panel identifies all colors in the palette file.&nbsp; Not all images
+have palettes and if a non-palette image or truecolor image is loaded into the
+Color Editor the palette panel will not be shown.</font></p>
+
+<p><font face="Arial">Figure 6 shows a new, default 256 color palette.&nbsp; This palette was
+created through the File - New command.&nbsp; The default color palette provides
+a set of standard grey colors, predefined colors, and a generic span of many hues
+in the rainbow.&nbsp;&nbsp;</font></p>
+
+<p><font face="Arial">New colors can be added to the selection set by clicking on a button with the
+Ctrl key down.&nbsp;&nbsp; Colors can be removed from the selection set by
+right clicking on a selected color.&nbsp; A series of consecutive colors can be
+selected by clicking on a button while holding the Shift key down.</font></p>
+
+<p>&nbsp;</p>
+
+<p align="center"><font face="Arial"><img border="0" src="images/coloredit6.jpg" width="500" height="293"></font></p>
+
+<p align="center"><font face="Arial">Figure 6.</font></p>
+
+<p align="left">&nbsp;</p>
+
+<p align="left">&nbsp;</p>
+
+<h2><b><a name="The Image Preview Pane"><font face="Arial">The Image Preview Pane</font></a></b></h2>
+
+<p><font face="Arial">The image preview pane provides direct visual feedback on the effect of color
+changes on the image of interest.&nbsp; Four control buttons or icons can be
+used to manipulate the preview image.&nbsp; The image in the preview pane can be
+magnified, examined through a region of interest, or moved as required.&nbsp; A
+specific color from the image can be picked up as the active color and
+subsequently changed.</font></p>
+
+<p><font face="Arial">KiSS palette files can apply to one or more KiSS cels.&nbsp; If one
+specific KiSS cel has been selected for color editing, changes to the
+palette file can affect other cels in the data set.&nbsp; To minimize palette editing errors, if a KiSS palette file is loaded
+into the color editor an image viewing option to view All Cels can be used to
+preview all images concurrently in the preview pane.&nbsp; Figure 6 shows all cels
+previewed for a KiSS palette file.&nbsp; It also
+illustrates how a rectangular region of interest can be selected for
+previewing a portion of the total image.</font></p>
+
+<p>&nbsp;</p>
+
+<p align="center"><font face="Arial"><img border="0" src="images/coloredit7.jpg" width="500" height="293"></font></p>
+
+<p align="center"><font face="Arial">Figure 7.</font></p>
+
+<p align="left">&nbsp;</p>
+
+<p align="left">&nbsp;</p>
+
+<p align="left">&nbsp;</p>
+<hr>
+<p align="left">Next Document:&nbsp; <a href="menu.html">Menu Commands</a></p>
+
+<p align="left">Copyright (c) 2002-2023 William Miles</p>
+
+<p align="left">&nbsp;</p>
+
+</body>
+
+</html>

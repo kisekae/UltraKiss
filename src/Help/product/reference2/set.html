@@ -1,0 +1,135 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>set</title>
+</head>
+
+<body>
+
+<h4><a name="set">set</a>()&nbsp;</h4>
+<p><font color="#FF0000"><b>Syntax:</b></font>&nbsp;&nbsp;&nbsp;&nbsp; set (integer)</p>
+<p>This event is triggered when the active viewer page changes to the
+specified page. All KiSS pages are numbered and the first page begins
+from zero.
+</p>
+<p>The maximum number of pages in a KiSS set is established from the number of $
+page configuration lines in the set configuration file. Note that the first page
+displayed may not always be page 0. The first page displayed is the first page
+with a visible cel, and this may not always be page 0.&nbsp;
+</p>
+<p>Many viewers will not support more that 10 pages although
+there is no restriction as to the number of pages in a set.
+</p>
+<p>The set() event is recognized when the active page on display changes through a mouse
+menu selection or through FKiSS changeset() commands. KiSS pages are also
+associated with a default palette group and a page change can also trigger a col()
+event.
+</p>
+<p>A generic set(*) event is defined to fire on any page change. Note that you
+can specify both a generic set(*) event and specific set() events. Specific
+set()
+events will always supercede a generic set(*) event. If a specific set() event
+exists then the generic event will not fire on a change to the specified page.&nbsp;
+</p>
+<p>More than one set() event can be specified for a specific page and
+each event will fire in the sequence in which it was defined. Set() events are
+immediate and are not queued for later processing. These events fire before
+color change col() events.
+</p>
+<p>Set() events will fire on changeset() action commands used in initialize()
+events.
+</p>
+<p>
+<br>
+Related events:&nbsp;<a href="col.html"> col()</a><br>
+Related actions:<a href="changecol.html"> changecol()</a>, <a href="letmaxcolor.html">letmaxcolor()</a>,
+<a href="changeset.html">changeset()</a>, <a href="letmaxpage.html">letmaxpage()</a>
+</p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+  <table border="1" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td width="20%">FKiSS 1 allows integer page numbers.</td>
+      <td width="30%">set (4)</td>
+      <td>Triggered when page 4 becomes active</td>
+    </tr>
+    <tr>
+      <td width="20%">FKiSS 4 allows generic set(*) events.&nbsp;&nbsp;</td>
+      <td width="30%">set (*)&nbsp;&nbsp;</td>
+      <td>Triggered when any page becomes active</td>
+    </tr>
+    <tr>
+      <td width="20%">FKiSS 5 allows an unlimited number of pages&nbsp;</td>
+      <td width="30%">set (99)&nbsp;&nbsp;</td>
+      <td>Triggered when page 99 becomes active</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+  <table border="1" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td width="20%">MaxPageSet</td>
+      <td width="30%">maximum pages displayed on the toolbar</td>
+      <td>default value <font color="#0000FF">10</font> (KiSS option)</td>
+    </tr>
+    <tr>
+      <td width="20%"> Page Up</td>
+      <td width="30%">keyboard command to show prior page</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td width="20%"> Page Dn</td>
+      <td width="30%">keyboard command to show next page</td>
+      <td></td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;
+</p>
+<p><br>
+<font color="#FF0000"><b>FKiSS 3 Example:
+</b></font>
+</p>
+<p><font face="Courier New">;[Palette Section]<br>
+%smoon02.kcf&nbsp;<br>
+%smoon04a.kcf&nbsp;<br>
+%smoon07.kcf&nbsp;<br>
+%smoon08.kcf&nbsp;<br>
+<br>
+;[Cel Section]<br>
+#19        smoon08.cel    *3   : 5                          ;<br>
+#18        smoon07.cel    *2   : 3                          ;<br>
+#17        smoon04.cel    *1   : 2                          ;<br>
+#16        smoon02.cel    *0   : 1                          ;<br>
+</font></p>
+<p><font face="Courier New">;@set(4)                                                    ; page 4 is empty<br>
+;@ notify("Your viewer allows changeset() to empty pages.") ;&nbsp;<br>
+<br>
+;@set(5)                                                    ;&nbsp;<br>
+;@ sound("smc383-2.wav")                                    ;&nbsp;<br>
+<br>
+;@set(6)                                                    ; page 6 is undefined<br>
+;@ notify("Your viewer allows changeset() to undefined pages.") ;&nbsp;<br>
+<br>
+;@set(*)                                                    ; generic set (pages 1,2,3)<br>
+;@ letset(P)                                                ;&nbsp;<br>
+;@ ifequal(P,3) map(#15) endif()                            ;&nbsp;<br>
+</font></p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+</body>
+
+</html>

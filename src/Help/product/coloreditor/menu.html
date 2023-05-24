@@ -1,0 +1,931 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-ca">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>Color Editor Menu</title>
+</head>
+
+<body>
+
+<h1><font color="#FF0000">Color Editor Menu Commands</font></h1>
+<hr>
+
+<p><font face="Arial">Welcome to the Kisekae Color Editor program documentation. The Color Editor
+menu provides a
+standard drop down list of commands for all palette editing functions.&nbsp;</font></p>
+
+
+
+<p>&nbsp;</p>
+
+
+
+<h2 align="left"> <font color="#000080" face="Arial"> File Menu</font></h2>
+<font face="Arial">
+The File menu has commands to load, save, and print KiSS palette files.&nbsp; The File menu also contains commands to display current
+palette file properties.</font><p><font face="Arial">The Kisekae Color Editor can load any KiSS image file
+or palette file, including non-palette files such as truecolor or Cherry Kiss files.&nbsp;
+Truecolor files do not
+have palettes, however these images can still be previewed and some
+transparency settings can be changed.</font></p>
+
+<p>&nbsp;</p>
+<h3><a name="FileNew"><font color="#800000" face="Arial">New</font></a></h3>
+<font face="Arial">
+The New command has two variants.  New palettes can be created or new palette
+groups within a palette can be created.</font>
+<p>&nbsp;</p>
+<p><b><font face="Arial">New Palette</font></b>
+
+<p><font face="Arial">New palettes are created from the New menu on the Color Editor main program
+screen.&nbsp; 16 color or 256 color palettes can be created.&nbsp; New palettes
+are initialized to a standard set of colors.&nbsp; 16 color palettes are
+initialized to 8 variants of grey and 8 standard colors.&nbsp; 256 color
+palettes are initialized to the default colors of a 16 color palette, followed
+by 240 new colors that span the color circle.</font></p>
+<p><font face="Arial">New palette files can be saved to a named file directory
+through the <a href="#FileSaveAs">File-Save As</a> command.&nbsp; Palette files can
+be saved as KiSS KCF files or PAL files.&nbsp; If a palette is saved a new file
+is written to the named file directory.</font></p>
+<p>&nbsp;</p>
+<b><font face="Arial">New Palette Group</font></b>
+
+<p><font face="Arial">New palette groups are created from the New menu after a palette file has
+been
+loaded or created within the Color Editor program.&nbsp; A new palette group has
+the same number of colors as currently exist in the palette.&nbsp; It is not
+possible to create a 16 color palette group within a 256 color palette, or vice
+versa.&nbsp;</font></p>
+<p><font face="Arial">New palette groups are initialized to the standard set of colors as described
+for a new palette.&nbsp; The new palette group is assigned the next consecutive
+palette group number within the palette.</font></p>
+
+<p>&nbsp;</p>
+<h3><a name="FileOpen"><font color="#800000" face="Arial">Open...</font></a></h3>
+<p><font face="Arial">The Open command is used to open an existing KiSS palette file or any other
+type of image file recognized by the Kisekae
+UltraKiss program.&nbsp;</font></p>
+
+<p><font face="Arial">Figure 1 shows a standard Microsoft Windows file Open dialog.&nbsp;
+The file Open dialog can be used to select any file.&nbsp; If the selected file is of a
+palette or image type recognized by the Kisekae program then the file will be
+opened.&nbsp;
+If the file is a compressed archive file the archive is searched for KiSS
+palette files or image files.&nbsp;
+If the file is not of a type recognized by the program then an error message
+will be displayed.</font></p>
+
+<p>&nbsp;</p>
+<p align="center">
+<font face="Arial">
+<img border="0" src="images/menu_01.gif" width="425" height="263"></font></p>
+<p align="center"> <font face="Arial"> Figure 1. Open Dialog</font></p>
+
+<p>&nbsp;</p>
+<p><font face="Arial">The example in Figure 1 selected the archive file TESTSET.LZH.&nbsp; When
+opening archive files, the Color Editor will display a selection list of
+suitable archive elements.&nbsp;These elements will be palette files or image
+files.&nbsp; If a palette file or an image file that contains an internal
+palette is selected then this element will be
+automatically loaded.&nbsp;
+If a KiSS cel file is selected then a second selection list will be shown to
+choose the appropriate KiSS KCF or PAL file.&nbsp;&nbsp; Figure 2 shows a
+palette selection dialog for the TESTSET.LZH file and a palette selection dialog
+for the cel 0-BEGIN.CEL.&nbsp;&nbsp;</font>
+</p>
+
+<p>&nbsp;</p>
+<p align="center">
+<font face="Arial">
+<img border="0" src="images/menu_02a.gif" width="209" height="276">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<img border="0" src="images/menu_02b.gif" width="209" height="276"></font></p>
+<p align="center"> <font face="Arial"> Figure 2. Palette Selection</font></p>
+
+<p>&nbsp;</p>
+<p><font face="Arial">Once the palette file and the associated image cel is selected the files are opened and processed.&nbsp; Figure 3 shows a
+the Color Editor with a KiSS cel and palette file loaded.&nbsp;</font></p>
+
+<p>&nbsp;</p>
+<p align="center">
+<font face="Arial">
+<img border="0" src="images/menu_03.jpg" width="500" height="293"></font></p>
+<p align="center"> <font face="Arial"> Figure 3. Color Editor Window</font></p>
+
+<p>&nbsp;</p>
+
+<p><font face="Arial">The active palette file name is shown in the Palette drop down box.&nbsp; The
+active image is shown in the Image Cel drop down box.&nbsp; The palette group in
+use is shown in the Palette Group drop down box.&nbsp; If a truecolor image has
+been loaded&nbsp; the Palette drop down box will be
+blank.</font></p>
+
+<p>&nbsp;</p>
+<h3><a name="FileClose"><font color="#800000" face="Arial">Close</font></a></h3>
+
+<p><font face="Arial">The Close command is used to close the currently active palette or image
+file.&nbsp;If the palette has been updated or
+modified the user will be prompted to save the current palette file or image cel.&nbsp; Figure 4
+is an example of a close prompt dialog.&nbsp; Cancelling the save will cancel the
+close request.&nbsp; If the palette file is to be saved&nbsp; the <a href="#FileSaveAs">File-Save As</a> command
+is invoked.&nbsp; If not, the close operation will continue and all changes are
+lost.&nbsp;</font></p>
+
+<p>&nbsp;</p>
+<p align="center">
+<font face="Arial">
+<img border="0" src="images/menu_04.gif" width="269" height="116"></font></p>
+<p align="center"> <font face="Arial"> Figure 4. Close Prompt Dialog</font></p>
+
+<p>&nbsp;</p>
+
+<p><font face="Arial">Files loaded from a compressed archive are written to the original archive
+file from which they were loaded.</font></p>
+
+<p>&nbsp;</p>
+<h3><a name="FileSave"><font color="#800000" face="Arial">Save...</font></a></h3>
+
+<p><font face="Arial">KiSS data sets are, by default, saved to the file directory or compressed archive file
+from which they were loaded.&nbsp; For example, if a palette file or image cel was loaded from
+an archive file then any updated elements will be written to this archive
+file.&nbsp; If the files were loaded from a file
+directory then the Save operation writes all updated elements into this
+directory.&nbsp; For data sets loaded from
+a compressed archive file the complete archive file is completely
+rewritten, replacing all updated elements in the archive.&nbsp; For data sets
+loaded from a directory only the updated element files are written.&nbsp;&nbsp;</font></p>
+
+<p><font face="Arial">The Save operation is performed in the background.&nbsp; Figure 5 shows the file save window that
+tracks the progress of the write operation.&nbsp; The save operation may be
+cancelled at any time.&nbsp; If an error occurs an appropriate
+message will be displayed and the save operation will be cancelled.&nbsp; If the
+save operation is successful the dialog window will be automatically closed.</font></p>
+
+<p>&nbsp;</p>
+<p align="center">
+<font face="Arial">
+<img border="0" src="images/menu_06.gif" width="400" height="200"></font></p>
+<p align="center"> <font face="Arial"> Figure 5. File Save Window</font></p>
+
+<p>&nbsp;</p>
+
+<p><font face="Arial">Note that files are written to temporary files on disk and then renamed to the permanent
+file name if the save operation is successful.&nbsp; This ensures that backup
+file copies exist in the event of a program error.&nbsp; The backup file is
+normally deleted upon completion of a successful save. Backups can be retained
+permanently if the UltraKiss <a href="../kisekae/options.html#KeepFileBackup">Keep File Backup</a> program option has been set.</font></p>
+
+<p>&nbsp;</p>
+<h3><a name="FileSaveAs"><font color="#800000" face="Arial">Save As...</font></a></h3>
+
+<p><font face="Arial">The Save As operation provides a means to save the currently loaded palette
+file to a new file.&nbsp; If the file was loaded from a compressed
+archive file then the Save As function will save the complete data set&nbsp; to a new compressed archive
+file name.&nbsp; If the file was loaded from a file
+directory then the Save As function can specify a new name for the palette element.&nbsp;&nbsp;</font></p>
+
+<p><font face="Arial">Figure 6 shows a standard Microsoft Windows file Save
+As dialog.  The Color Editor Save As dialog will only accept element file names.&nbsp;
+You cannot change the name of the archive file from which the palette element
+was loaded.&nbsp; To change archive file names, use the <a href="../archivemanager/index.html"> Archive Manager</a> tool.</font></p>
+
+<p><font face="Arial">The Save operation proceeds as described in the <a href="#FileSave">File-Save</a>
+command.</font></p>
+
+<p>&nbsp;</p>
+<p align="center">
+<font face="Arial">
+<img border="0" src="images/menu_07.gif" width="424" height="262"></font></p>
+<p align="center"> <font face="Arial"> Figure 6. Save As Dialog</font></p>
+
+<p>&nbsp;</p>
+
+<h3><a name="FileImport"><font color="#800000" face="Arial">Import...</font></a></h3>
+
+<p><font face="Arial">The Import command is used to initialize the palette to the contents of
+another KiSS palette file.&nbsp;&nbsp; Importing colors from an external palette
+file replaces all palette groups within the current palette.&nbsp; This
+operation can be used to quickly and easily set palette values to the same
+values as some other palette.&nbsp;</font></p>
+
+<p><font face="Arial">Palettes are imported from external KiSS KCF files or PAL files.&nbsp; You cannot import palettes from
+image files such as GIF or BMP images.&nbsp; The File Open dialog as shown
+in Figure 1 is used to select the file to be imported.&nbsp; You can choose to
+import palette files from archive files or directory files.&nbsp;&nbsp;If you open a compressed archive you must select a palette file from a
+selection dialog as shown in Figure 2.</font></p>
+
+<p><font face="Arial">When the file is imported all palette groups in the current palette will be
+replaced and the preview image will be adjusted to show the colors from the new
+active palette group.&nbsp;&nbsp;</font></p>
+
+<p><font face="Arial">The Import command is undoable.&nbsp; The Edit-Undo function can be used to
+reverse the file import and restore the active palette to its previous state.</font></p>
+
+<p>&nbsp;</p>
+
+<h3><a name="FileExport"><font color="#800000" face="Arial">Export...</font></a></h3>
+
+<p><font face="Arial">The Export command is used to write the active palette contents to an
+external KiSS PAL file.&nbsp;&nbsp; A PAL file is a text form of the
+KiSS palette.&nbsp; This text representation shows the numeric RGB values for
+all colors in each palette group of a KiSS palette.&nbsp; PAL files are
+useful for manual editing of color values.&nbsp; The edited values can be
+imported back into a KiSS palette file.&nbsp; Figure 7 shows an extract of a PAL
+file.</font></p>
+
+<p>&nbsp;</p>
+
+<p align="center"><font face="Arial"><img border="0" src="images/menu_05.gif" width="535" height="339"></font></p>
+
+<p align="center"> <font face="Arial"> Figure 7. UltraKiss PAL File</font></p>
+
+<p align="center">&nbsp;</p>
+
+<h3><a name="FileMerge"><font color="#800000" face="Arial">Merge...</font></a></h3>
+
+<p><font face="Arial">The Merge command is used to append the contents of another KiSS palette file
+to the current palette.&nbsp;&nbsp; Merged palettes have traditionally been used
+in KiSS data sets to create one palette file that contains all the colors for
+many different image cels.&nbsp; An image cel would refer to a different palette
+group within the merged palette on its configuration line.&nbsp;</font></p>
+
+<p><font face="Arial">Palettes are merged from external KiSS KCF files or PAL files.&nbsp; You cannot merge palettes from image
+files such as GIF or BMP images.&nbsp; The File Open dialog as shown
+in Figure 1 is used to select the file to be merged.&nbsp; You can choose to
+merge palette files from archive files or directory files.&nbsp;&nbsp;If you open a compressed archive you must select a palette file from a
+selection dialog as shown in Figure 2.</font></p>
+
+<p><font face="Arial">When the file is merged a new set of palette groups will be added to the
+current palette.&nbsp; These palette groups will show in the Palette Group drop
+down box.&nbsp;&nbsp;</font></p>
+
+<p><font face="Arial">The Merge command is undoable.&nbsp; The Edit-Undo function can be used to
+reverse the file merge and restore the active palette to its previous state.</font></p>
+
+<p>&nbsp;</p>
+<h3><a name="FilePageSetup"><font color="#800000" face="Arial">Page Setup...</font></a></h3>
+
+<p><font face="Arial">The Page Setup dialog is an operating system dependent interface into the
+print control subsystem to size and orient the print page in preparation for
+printing.&nbsp; Figure 8 shows the
+Page Setup dialog for a Microsoft Windows operating environment.&nbsp; Not all
+systems will support all features for page control.</font></p>
+
+<p>&nbsp;</p>
+
+<p align="center"><font face="Arial"><img border="0" src="../images/pagesetup.gif" width="365" height="414"></font></p>
+<p align="center"> <font face="Arial"> Figure 8. Page Setup Dialog</font></p>
+
+<p align="left">&nbsp;</p>
+<h3><a name="FilePrintPreview"><font color="#800000" face="Arial">Print Preview...</font></a></h3>
+
+<p><font face="Arial">The Print Preview command is used to preview all print pages before
+printing.&nbsp; Figure 9 shows an
+example of the Color Editor Print Preview screen.&nbsp; The Color Editor will center
+and scale the current page image on the print page.&nbsp; The preview image
+of the print page can be scaled to any size required by changing the percentage
+value in the preview control field.&nbsp; Preset values of 10%, 25%, 50% and
+100% are provided for convenience.</font></p>
+
+<p><font face="Arial">The <a href="#FilePageSetup">Page Setup</a> can be changed from this dialog
+and <a href="#FilePrint">Printing</a> can be initiated directly.&nbsp;&nbsp;</font></p>
+
+<p>&nbsp;</p>
+
+<p align="center"><font face="Arial"><img border="0" src="../images/printpreview.gif" width="402" height="274"></font></p>
+<p align="center"> <font face="Arial"> Figure 9. Print
+Preview Dialog</font></p>
+
+<p align="left">&nbsp;</p>
+
+<p align="left">&nbsp;</p>
+<h3><a name="FilePrint"><font color="#800000" face="Arial">Print...</font></a></h3>
+
+<p><font face="Arial">The Print dialog is an operating system dependent interface into the print
+control subsystem to initiate printing of a print page.&nbsp; Figure 10 shows the Print dialog for a Microsoft Windows operating
+environment.&nbsp; Not all systems will support all features for print control.</font></p>
+
+<p>&nbsp;</p>
+
+<p align="center"><font face="Arial"><img border="0" src="../images/print.gif" width="438" height="325"></font></p>
+<p align="center"> <font face="Arial"> Figure 10. Print Dialog</font></p>
+
+<p align="center">&nbsp;</p>
+
+<p align="center">&nbsp;</p>
+<h3><a name="FileProperties"><font color="#800000" face="Arial">Properties...</font></a></h3>
+
+<p><font face="Arial">The Properties command shows a standard dialog window to display attributes
+of the currently loaded KiSS palette file.&nbsp; Figure 11 is an example of a KiSS
+palette properties dialog.&nbsp; This
+dialog provides detailed information on the technical aspects of the active
+palette file and provides control buttons to view additional information about
+associated data objects.</font></p>
+
+<p><font face="Arial">The properties command will show palette properties for KiSS palette
+files loaded into the Color Editor.&nbsp; The properties command will show an
+image properties dialog for GIF or BMP or truecolor images that were loaded into the Color Editor.&nbsp;&nbsp;&nbsp;</font></p>
+
+<p>&nbsp;</p>
+
+<p align="center"><font face="Arial"><img border="0" src="images/menu_11.gif" width="474" height="436"></font></p>
+
+<p align="center"> <font face="Arial"> Figure 11. Palette Properties Dialog</font></p>
+
+<p>&nbsp;</p>
+<p><font face="Arial">This dialog window is a entry into the complete Kisekae UltraKiss subsystem to display
+the attributes and properties of all objects associated with an active KiSS data
+set.&nbsp; Refer to the UltraKiss <a href="../kisekae/objects.html">Object Properties</a>
+subsystem for a comprehensive description of all subsystem features, dialogs,
+and operation control.&nbsp;</font></p>
+
+<p>&nbsp;</p>
+<h3><a name="FileUpdate"><font color="#800000" face="Arial">Update</font></a></h3>
+
+
+
+<p><font face="Arial">The Update command is used to apply palette editing changes to the currently
+loaded UltraKiss configuration.&nbsp; The Update command is only available if
+the Color Editor is editing an active palette or image file that was referenced
+from within UltraKiss.&nbsp; Updating the UltraKiss configuration does not
+terminate the Color Editor.&nbsp;&nbsp;&nbsp;&nbsp;</font></p>
+
+
+
+<p><font face="Arial">You would use the Update command to test your color changes within UltraKiss.
+These color updates are undoable, so if the results are not satisfactory you can
+undo the change within UltraKiss and continue with your Color Editor session.</font></p>
+
+
+
+<p><font face="Arial">Updated files reside in memory.&nbsp; The changes are not permanently until
+the active configuration is saved.&nbsp; To permanently save the updated file, use the <a href="#FileSave">File-Save</a>
+command.</font></p>
+
+
+
+<p>&nbsp;</p>
+
+
+
+<h3><a name="FileExit"><font color="#800000" face="Arial">Exit</font></a></h3>
+
+
+
+<p><font face="Arial">The Exit command closes any currently active data set and terminates the
+Color Editor program execution.</font></p>
+
+
+
+<p><font face="Arial">If the palette or image file in the Color Editor has been updated or
+modified the user will be prompted to either save the current data set or update
+the currently active configuration depending on the source of the palette or
+image file.&nbsp; Source files that were loaded through an UltraKiss session can
+be directly updated in memory.&nbsp; Files that were explicitly opened from a
+different archive file or directory can be saved to disk.&nbsp; Figure 4
+is an example of a close prompt dialog.&nbsp; Cancelling the save will cancel the
+exit request.&nbsp; If the current file is saved&nbsp; then the <a href="#FileSaveAs">File-Save As</a> command
+is invoked and the Color Editor program will terminate upon completion of the save.&nbsp; If
+changes are not saved they will be
+lost.&nbsp;</font></p>
+
+
+
+<p><font face="Arial">If the Color Editor program is terminated by closing the window the
+Exit command will be automatically invoked.&nbsp; The option
+to cancel the Exit request will not be available.</font></p>
+
+<p>&nbsp;</p>
+
+
+
+<p>&nbsp;</p>
+
+
+
+<h2 align="left"> <font color="#000080" face="Arial"> Edit Menu</font></h2>
+<font face="Arial">
+The Kisekae Color Editor provides for full undo and redo recovery of all editing operations applied to the current
+palette file.  Standard Edit functions to Cut, Copy, and Paste selected colors within and between
+palette groups are available. Transparent and background colors can be
+changed.&nbsp; New palette groups can be created or deleted, and external
+palette files can be imported and merged.&nbsp;</font>
+<p><font face="Arial">Many edit commands operate with a selected set of colors.&nbsp; Colors are
+selected through the <a href="#EditSelectAll">Edit-Select All</a> command or
+graphically with a mouse selection operation.&nbsp; A mouse selection operation
+is performed by positioning the mouse over a color in the palette and pressing the left mouse
+button.&nbsp;&nbsp;</font></p>
+<p><font face="Arial">Selected colors are visually identifiable.&nbsp; Each selected color shows a
+red border around the palette entry.&nbsp;&nbsp;</font></p>
+<p><font face="Arial">If a selection set exists new colors can be added to the selection set by
+placing the mouse over the new object and pressing the left mouse button while
+holding the Ctrl key down.&nbsp;</font></p>
+<p><font face="Arial">Colors can be removed from an existing selection set by placing the mouse
+over the requested object and pressing the right mouse button.&nbsp; Figure 12 shows an example of
+multiple selected colors.</font></p>
+
+<p><font face="Arial">The active color in a selection set can be changed by placing the mouse over
+a selected color and holding the Ctrl key down while left
+clicking.&nbsp;&nbsp;&nbsp;</font></p>
+
+<p>&nbsp;</p>
+
+<p align="center"><font face="Arial"><img border="0" src="images/menu_12.jpg" width="500" height="293"></font></p>
+
+<p align="center"> <font face="Arial"> Figure 12. Selected Colors</font></p>
+
+<p>&nbsp;</p>
+<h3><a name="EditUndo"><font color="#800000" face="Arial">Undo</font></a></h3>
+
+<p><font face="Arial">The Color Editor supports full undo and redo edit recovery.&nbsp; Most editing changes
+made to a KiSS palette file are reversible.&nbsp; Undo support is available for Edit
+Cut, Copy, and Paste operations.&nbsp; Transparency and background color changes
+can be undone.&nbsp; Palette group additions and deletions
+can be undone.&nbsp; Color selections can be undone.&nbsp; Every undo operation
+reverts the palette to its prior state.</font></p>
+
+<p>&nbsp;</p>
+<h3><a name="EditRedo"><font color="#800000" face="Arial">Redo</font></a></h3>
+
+<p><font face="Arial">The Color Editor supports full undo and redo edit recovery.&nbsp; Most editing changes
+made to a KiSS palette file are reversible.&nbsp; Redo support is available for Edit
+Cut, Copy, and Paste operations.&nbsp; Transparency and background color changes can be
+redone.&nbsp; Palette group additions and deletions
+can be redone.&nbsp; Color selections can be redone.&nbsp; Every redo operation
+applies the previously undone edit to restore the palette to its former state.</font></p>
+
+<p>&nbsp;</p>
+<h3><a name="EditUndoAll"><font color="#800000" face="Arial">Undo All</font></a></h3>
+
+<p><font face="Arial">The Undo All command restores the palette contents to its initial state as of
+load or last save.&nbsp; All edit changes are lost.&nbsp;&nbsp;</font></p>
+
+<p>&nbsp;</p>
+<h3><a name="EditCut"><font color="#800000" face="Arial">Cut</font></a></h3>
+
+<p><font face="Arial">The Cut operation will remove selected colors from the current palette.&nbsp;
+Colors, when cut, are placed in the clipboard and can be referenced through a
+subsequent <a href="#EditPaste">Edit-Paste</a> command.&nbsp; Cut colors are replaced
+with a black color.&nbsp;&nbsp;</font></p>
+
+<p>&nbsp;</p>
+<h3><a name="EditCopy"><font color="#800000" face="Arial">Copy</font></a></h3>
+
+<p><font face="Arial">The Copy operation copies selected colors to the clipboard.&nbsp; The colors
+in the clipboard can be referenced through a subsequent <a href="#EditPaste">Edit-Paste</a>
+command.&nbsp; Copied colors retain their order in the palette but are not
+associated with a fixed color index.&nbsp; If colors are pasted into a palette
+they will be placed into the current palette in the order of the current color selection set.</font></p>
+
+<p>&nbsp;</p>
+<h3><a name="EditPaste"><font color="#800000" face="Arial">Paste</font></a></h3>
+
+<p><font face="Arial">The Paste operation transfers colors from the clipboard into the current
+palette.&nbsp; Colors, when pasted, are inserted into the currently selected
+color set of the palette.&nbsp; If the current selection set does not contain
+the same number of colors as exist in the clipboard, then a warning message will
+be displayed.&nbsp; If the paste operation is accepted the clipboard colors will
+be copied in order into the selection set.&nbsp;&nbsp;&nbsp;</font></p>
+
+<p><font face="Arial">If the clipboard contains fewer colors than exist the selection set, only the
+necessary colors in the selection set will be changed.&nbsp; If the clipboard
+contains more colors than exist in the selection set, only sufficient colors
+from the clipboard will be transferred.</font></p>
+
+<p>&nbsp;</p>
+<h3><a name="EditSelectAll"><font color="#800000" face="Arial">Select All</font></a></h3>
+
+<p><font face="Arial">The Select All command is used to select all colors in the current
+palette.&nbsp;&nbsp;</font></p>
+
+<p>&nbsp;</p>
+<h3><a name="EditSelectCopy"><font color="#800000" face="Arial">Select Copy</font></a></h3>
+
+<p><font face="Arial">The Select Copy command is used to automatically select the specific color
+indexes in the current palette as exist for all colors copied to the
+clipboard.&nbsp; This command can be used to ensure that the actual copied color
+indexes are retained for a subsequent paste
+operation.&nbsp;&nbsp;&nbsp;</font></p>
+
+<p>&nbsp;</p>
+<h3><a name="EditSimilarHSB"><font color="#800000" face="Arial">Select Similar HSB</font></a></h3>
+
+<p><font face="Arial">The Select Similar HSB command is the menu command equivalent to pressing the
+Hue, Saturation, or Brightness buttons on the Color Editor toolbar.&nbsp; This
+command automatically selects similar colors in the palette that match, within
+the defined sensitivity ranges, the HSB values of the current active
+color.&nbsp;&nbsp;&nbsp;</font></p>
+
+<p><font face="Arial">Selecting similar colors is one of the key functions of the Color
+Editor.&nbsp; This function lets you choose related palette colors so that relative or
+absolute color adjustments can be made to change color in a restricted
+way.&nbsp; If you choose an active color and all related colors, then it is
+possible to change these colors to new variants with the color
+chooser.&nbsp;&nbsp;</font></p>
+
+<p><font face="Arial">The best way to change the color of an image cel is to first select a pixel
+in the preview image with the eyedropper, then select all 'similar' colors using
+the Hue button. The sensitivity of the Hue or Saturation or Brightness button is
+controlled with the little up-down arrows in the corner of the button. As you
+increase the sensitivity value more and more colors from the palette will be
+chosen.</font></p>
+
+<p><font face="Arial">Once you have the colors selected, switch to the HSB panel of the color
+chooser and drag the slider to a new hue. The preview image will change to show
+the new colors. Pixel hues are adjusted based upon their relative differences
+from the first, or active color that you selected with the eye dropper. Dark
+colors remain dark and light colors remain light.</font></p>
+
+<p><font face="Arial">When new colors or tints are applied to the image relative adjustments are
+made to color hue, brightness and saturation. If you use the color chooser and
+significantly darken or lighten differences from the active color then some
+related colors in the selection set may become 'saturated', or reach their limit
+of change. If necessary, you can turn off relative brightness, saturation or hue
+changes by right clicking on the appropriate button to disable it.</font></p>
+
+<p><font face="Arial">If the results in the preview window are not what you want then simply undo
+the color change. If you missed selecting all the necessary colors, simply
+increase the sensitivity on the Hue selection button and try again, or pick up a
+different colored pixel from the preview image and use the Hue button to select
+a different set of 'similar' colors. Best results occur if you initially select
+a middle-of-the-road color for the active color.</font></p>
+
+<p><font face="Arial">For further information refer to the <a href="index.html">Color Editor
+Introduction</a> or the <a href="../tutorials.html">UltraKiss Tutorial</a>
+documents.</font></p>
+
+<p>&nbsp;</p>
+<h3><a name="EditSimilarRGB"><font color="#800000" face="Arial">Select Similar RGB</font></a></h3>
+
+<p><font face="Arial">The Select Similar RGB command is the menu command equivalent to pressing the
+Red, Green, or Blue buttons on the Color Editor toolbar.&nbsp; This
+command automatically selects similar colors in the palette that match, within
+the defined sensitivity ranges, the RGB values of the current active
+color.&nbsp;&nbsp;&nbsp;</font></p>
+
+<p><font face="Arial">Selecting similar colors is one of the key functions of the Color
+Editor.&nbsp; This function lets you choose related palette colors so that relative or
+absolute color adjustments can be made to change color in a restricted
+way.&nbsp; If you choose an active color and all related colors, then it is
+possible to change these colors to new variants with the color
+chooser.&nbsp;&nbsp;</font></p>
+
+<p><font face="Arial">See the discussion for <a href="#EditSimilarHSB">Select Similar HSB</a> for
+further details.</font></p>
+
+<p>&nbsp;</p>
+<h3><a name="EditSetColorCount"><font color="#800000" face="Arial">Set Color Count...</font></a></h3>
+
+<p><font face="Arial">The Set Color Count function sets the maximum number of colors for the
+palette file.&nbsp; Each palette group within the file will have the same number
+of colors.&nbsp; The minimum number of colors is 1 and the maximum number of
+colors is 256. Figure 13 shows the color count dialog.</font></p>
+
+<p align="center"><font face="Arial"><img border="0" src="images/menu_13.gif" width="224" height="125"></font></p>
+
+<p align="center"><font face="Arial">Figure 13.</font></p>
+
+<p align="left">&nbsp;</p>
+
+<p><font face="Arial">If the number of colors in a palette is increased the new, appended colors
+will all be initialized to black.&nbsp; If the number of colors is reduced all
+extraneous colors are dropped.&nbsp; Reducing the color count truncates the
+palette.</font></p>
+
+<p><font face="Arial">Setting the color count is an undoable operation.&nbsp; The original number
+of colors can be restored through an Edit-Undo operation.</font></p>
+
+<p>&nbsp;</p>
+<h3><a name="EditSetTransparent"><font color="#800000" face="Arial">Set Transparent Color...</font></a></h3>
+
+<p><font face="Arial">The transparent color can be set or changed for any image loaded into the
+Color Editor.&nbsp; For palette type images the transparent color will be one of
+the colors in the palette.&nbsp; For truecolor images the transparent color can
+be any color RGB value within the image.</font></p>
+
+<p><font face="Arial">The Set Transparent command will show a color selection menu as seen in
+Figure 14.&nbsp; This menu will show all palette colors for palette images, or
+just the active color for truecolor images.&nbsp; The current transparent color
+is highlighted in red.&nbsp; To select a new transparent color left click the
+mouse while over one of the color swatches.&nbsp; To clear the transparent
+color, right click the mouse.&nbsp;</font></p>
+
+<p align="center"><font face="Arial"><img border="0" src="images/menu_14.jpg" width="500" height="293"></font></p>
+
+<p align="center"><font face="Arial">Figure 14.</font></p>
+
+<p align="left">&nbsp;</p>
+
+<p align="left"><font face="Arial">Only one color in an image can be the transparent color.&nbsp;
+By definition, KiSS cel palette images use color index 0 from the KiSS KCF
+palette file as their transparent color.&nbsp; Although the Color Editor will
+let you change the transparent color for KiSS cels, this new setting will not be
+retained if the file is saved.&nbsp; GIF images allow any palette color to be
+the transparent color and this setting will be retained if the GIF file is
+saved.&nbsp; BMP images do not maintain transparency information.&nbsp;
+UltraKiss will retain transparency settings for BMP files within the KiSS data
+set configuration file when the configuration is saved.&nbsp; Truecolor images
+such as Cherry Kiss cels maintain the transparent color within the image
+data.&nbsp; 24 bit truecolor files such as PPM files and raw BMP files will
+maintain the transparent color within the KiSS data set configuration
+file.&nbsp; JPG files do not support transparency and, although you can set a
+transparent color, this color may not remain transparent if the file is saved.</font></p>
+
+<p align="left"><font face="Arial">The Set Transparent command is undoable.&nbsp;&nbsp;</font></p>
+
+<p>&nbsp;</p>
+
+<h3><a name="EditSetBackground"><font color="#800000" face="Arial">Set Background Color...</font></a></h3>
+
+<p><font face="Arial">The background color can be set or changed for any image loaded into the
+Color Editor.&nbsp; For palette type images the background color will be one of
+the colors in the palette.&nbsp; For truecolor images the background color can
+be any color RGB value within the image.</font></p>
+
+<p><font face="Arial">The Set Background command will show a color selection menu as seen in Figure
+15.&nbsp; This menu will show all palette colors for palette images, or just the
+active color for truecolor images.&nbsp; The current background color is
+highlighted in red.&nbsp; To select a new background color left click the mouse
+while over one of the color swatches.&nbsp; To clear the background color, right
+click the mouse.&nbsp;</font></p>
+
+<p align="center"><font face="Arial"><img border="0" src="images/menu_15.jpg" width="500" height="293"></font></p>
+
+<p align="center"><font face="Arial">Figure 15.</font></p>
+
+<p align="left">&nbsp;</p>
+
+<p align="left"><font face="Arial">Only one color in an image can be the background color.&nbsp; By
+definition, KiSS cel palette images use color index 0 from the KiSS KCF palette
+file as their background color.&nbsp; Although the Color Editor will let you
+change the background color for KiSS cels, this new setting will not be retained
+if the file is saved.&nbsp; GIF images allow any palette color to be the
+background color and this setting will be retained if the GIF file is
+saved.&nbsp; Background settings are not maintained for other image files.&nbsp;
+UltraKiss does not maintain background settings for files within the KiSS data
+set configuration file.</font></p>
+
+<p align="left"><font face="Arial">The Set Background command is undoable.&nbsp;&nbsp;</font></p>
+
+<p>&nbsp;</p>
+<h3><a name="EditDeleteGroup"><font color="#800000" face="Arial">Delete Palette Group</font></a></h3>
+
+<p><font face="Arial">The Delete Palette Group command removes all active palette group from the
+palette file.&nbsp; All remaining palette groups in the file are
+renumbered.&nbsp; &nbsp;The next palette group in the palette will become the
+new active palette.&nbsp; If the last palette group in the palette is deleted,
+then the first palette group in the file will become the new active palette.</font></p>
+
+<p align="left"><font face="Arial">The Delete Palette Group command can be undone.&nbsp;&nbsp;</font></p>
+
+<h4>&nbsp;</h4>
+
+<h3><a name="EditInsertGroup"><font color="#800000" face="Arial">Insert Palette Group</font></a></h3>
+
+<p><font face="Arial">The Insert Palette Group command creates a new, empty palette with the same
+group number as the currently active palette group.&nbsp; The active palette
+group and all remaining palettes in the file are renumbered.&nbsp;</font></p>
+
+<p align="left"><font face="Arial">The Insert Palette Group command can be undone.&nbsp;&nbsp;</font></p>
+
+<p>&nbsp;</p>
+<h3><a name="EditAddGroup"><font color="#800000" face="Arial">Add Palette Group</font></a></h3>
+
+<p><font face="Arial">The Add Palette Group command inserts a new, empty palette into the palette
+file at
+the end of the existing set of palettes.&nbsp;</font></p>
+
+<p><font face="Arial">The Add Palette Group operation can be
+undone.&nbsp;&nbsp;</font></p>
+
+
+
+
+
+
+
+<p>&nbsp;</p>
+
+
+
+
+
+
+
+<p>&nbsp;</p>
+<h2 align="left"><font color="#000080" face="Arial">Options Menu</font></h2>
+<font face="Arial">
+The Color Editor Options menu is used to set various control options and
+settings for custom operation of the Color Editor.</font>
+
+<p>&nbsp;</p>
+<h3><a name="OptionsPalettePanel"><font color="#800000" face="Arial"> Palette Panel</font></a></h3>
+
+<p><font face="Arial">The Palette Panel switch turns the palette panel on and off.&nbsp; If this
+switch is off the palette will not be shown.&nbsp;</font></p>
+
+<p>&nbsp;</p>
+
+<h3><a name="OptionsColorChooser"><font color="#800000" face="Arial">Color Chooser</font></a></h3>
+
+<p><font face="Arial">The Color Chooser switch turns the color chooser panel on and off.&nbsp; If
+this switch is off the color chooser will not be shown.&nbsp;</font></p>
+
+<p>&nbsp;</p>
+
+<h3><a name="OptionsPreviewPane"><font color="#800000" face="Arial">Preview Pane</font></a></h3>
+
+<p><font face="Arial">The Preview Pane switch turns the preview image panel on and off.&nbsp; If
+this switch is off the preview image will not be shown.&nbsp;</font></p>
+
+<p>&nbsp;</p>
+
+<h3><a name="OptionsSelectionControl"><font color="#800000" face="Arial">Selection Control</font></a></h3>
+
+<p><font face="Arial">The Selection Control switch turns the palette, image cel and palette group
+drop down boxes on and off.&nbsp; If this switch is off the selection boxes will
+not be shown.&nbsp;</font></p>
+
+<p>&nbsp;</p>
+
+<h3><a name="OptionsShowBackground"><font color="#800000" face="Arial">Show Background</font></a></h3>
+
+<p><font face="Arial">The Show Background switch, if on, will paint all transparent colors in the
+preview image with the background color.&nbsp; This switch is useful to see the
+effects of background color changes.</font></p>
+
+<p>&nbsp;</p>
+
+<h3><a name="OptionsRelativeChanges"><font color="#800000" face="Arial">Relative Changes</font></a></h3>
+
+<p><font face="Arial">The Relative Changes switch, if on, enables relative color adjustments to all
+selected palette colors whenever a new color is selected.&nbsp; Relative color
+adjustments apply the relative difference between the active color and the new
+color to all selected colors in the palette.&nbsp; Relative color changes ensure
+that hue, saturation and brightness differences are applied on an individual
+basis to each selected color.</font></p>
+
+<p><font face="Arial">If this setting is off then absolute color changes are made.&nbsp; Every
+selected color is set to the new color.&nbsp;&nbsp;</font></p>
+
+<p>&nbsp;</p>
+
+<h3><a name="OptionsLinkHSB"><font color="#800000" face="Arial">Link HSB Sensitivity</font></a></h3>
+
+<p><font face="Arial">The Hue, Saturation, and Brightness controls on the toolbar can each have
+individual sensitivity values for relative color changes.&nbsp; If the Link HSB
+Sensitivity switch is on then the same sensitivity value is used for Hue,
+Saturation, and Brightness.&nbsp; Any change to one control sensitivity value
+will be applied to all controls.&nbsp;&nbsp;&nbsp;</font></p>
+
+<p><font face="Arial">If the Link HSB Sensitivity switch is off then sensitivity values can be
+individually adjusted for each of the Hue, Saturation, and Brightness color
+component controls.</font></p>
+
+<p>&nbsp;</p>
+
+<h3><a name="OptionsLinkRGB"><font color="#800000" face="Arial">Link RGB Sensitivity</font></a></h3>
+
+<p><font face="Arial">The Red, Green, and Blue controls on the toolbar can each have individual
+sensitivity values for relative color changes.&nbsp; If the Link RGB Sensitivity
+switch is on then the same sensitivity value is used for Red, Green, and
+Blue.&nbsp; Any change to one control sensitivity value will be applied to all
+controls.&nbsp;&nbsp;&nbsp;</font></p>
+
+<p><font face="Arial">If the Link RGB Sensitivity switch is off then sensitivity values can be
+individually adjusted for each of the Red, Green, and Blue color component
+controls.</font></p>
+
+
+
+
+
+
+
+<p>&nbsp;</p>
+
+
+
+
+
+
+
+<p>&nbsp;</p>
+<h2 align="left"><font color="#000080" face="Arial">Help Menu</font></h2>
+<font face="Arial">
+The Color Editor Help menu is used to display the online program documentation and
+product license information.</font>
+<p>&nbsp;</p>
+<h3><a name="HelpContents"><font color="#800000" face="Arial">Contents</font></a></h3>
+
+
+
+
+
+
+
+<p><font face="Arial">The Contents command invokes the Color Editor online help system.&nbsp; Access to
+all product documentation is available.&nbsp; The online help system provides a
+complete index and navigation system to various topics of interest.</font></p>
+
+
+
+
+
+
+
+<p><font face="Arial">The help system is organized into various areas for each program
+tool.&nbsp;&nbsp;</font></p>
+
+
+
+
+
+
+
+<p>&nbsp;</p>
+
+
+
+
+
+
+
+<h3><a name="HelpAbout"><font color="#800000" face="Arial">About</font></a></h3>
+
+
+
+
+
+
+
+<p><font face="Arial">The About command shows a standard program information dialog that provides
+copyright and program version information.&nbsp; Figure 16 show an example of the Kisekae UltraKiss program About dialog.&nbsp;
+The program icon is the Kanji character for clothing and the
+Japanese characters show the Kanji word for paper dolls.</font></p>
+
+
+
+
+
+
+
+<p>&nbsp;</p>
+
+
+
+
+
+
+
+<p align="center"><font face="Arial"><img border="0" src="../images/about.jpg" width="546" height="413"></font></p>
+
+
+
+
+
+
+
+<p align="center"> <font face="Arial"> Figure 16. About Dialog</font></p>
+
+
+
+
+
+
+
+<p>&nbsp;</p>
+
+
+
+
+
+
+
+<p>&nbsp;</p>
+
+
+
+
+
+
+
+<hr>
+<p align="left">Next Document:&nbsp; <a href="toolbar.html">Toolbar
+Commands<br>
+</a>Prior Document:&nbsp; <a href="index.html">Color Editor Introduction</a></p>
+
+<p align="left">Copyright (c) 2002-2023 William Miles</p>
+
+
+
+
+
+
+
+
+</body>
+
+</html>

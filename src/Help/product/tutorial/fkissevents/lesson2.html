@@ -1,0 +1,96 @@
+<html>
+	<head>
+		<title>Image Edit Lesson 2</title></head>
+	<body>
+		<h1 align="center"><font color="#000000">EventTutorial</font></h1>
+		<h1 align="center"><font color="#ff0000">Lesson 2. Editing FKiSS Events</font></h1>
+		<p>&nbsp;</p>
+		<OL>
+			<li>
+				We are now going to edit the behavior of the simple button events we created in
+				lesson 1.&nbsp; If you are continuing from lesson 1 you can skip to step
+				3.&nbsp; Otherwise, ensure that UltraKiss is showing the main logo
+				screen.&nbsp; Close any existing data set.
+				<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">File-Open</FONT>&nbsp; to load the configuration file <FONT color="#cc6600">
+					CNF1.cnf</FONT> from the Tutorial/FKiSS directory or the directory you used
+				in lesson 1.&nbsp; This will load the button set that you created in lesson 1.
+				<p>&nbsp;</p>
+			<li>
+				Our buttons will switch the set to new pages.&nbsp; Use <FONT color="#000099">Edit-Add
+					Page</FONT> to create new page 1.&nbsp; UltraKiss will automatically switch
+				to view this empty page.&nbsp; Next, use <FONT color="#000099">Edit-Import Image to
+					New Object</FONT> and select <FONT color="#cc6600">rei.jpg</FONT> from the
+				Tutorial/FKiSS directory.&nbsp; This JPG image will be automatically converted to a cherry KiSS CEL. Position the image in the center of the screen.
+				<p>&nbsp;</p>
+			<li>
+				Repeat step 3 to create new page 2.&nbsp; This time, import <FONT color="#cc6600">ruri.jpg</FONT>
+				as the image file.&nbsp;
+				<p>&nbsp;</p>
+			<li>
+				Next, use <FONT color="#000099">View-Page Set 0</FONT> or use the toolbar
+				button to display page 0 with the buttons.&nbsp;&nbsp;Right-click on the first
+				button to display the context menu.&nbsp; Choose either <FONT color="#000099">Image
+					Context</FONT> or <FONT color="#000099">Object Context</FONT>, then <FONT color="#000099">
+					Edit Events</FONT>.&nbsp; This will activate the FKiSS Editor tool.&nbsp;
+				You could also have used <FONT color="#000099">Tools-FKiSS Editor</FONT> to do
+				this.
+				<p>&nbsp;</p>
+			<li>
+				Click on the <FONT color="#cc6600">'press(#1)'</FONT> event to highlight
+				it.&nbsp; Next, use <FONT color="#000099">File-Edit Event</FONT> to open the
+				Text Editor for the currently selected event.&nbsp; You will see the event code
+				from lesson 1.
+				<p>&nbsp;</p>
+			<li>
+				Overtype or replace the <FONT face="Courier New">;@notify</FONT> action
+				statement&nbsp;with <FONT face="Courier New">;@ changeset(1)</FONT> statement.&nbsp;
+				This statement causes a switch to page set 1.&nbsp; If your button is object 1,
+				your new event code should look as shown below:<BR>
+				<BR>
+				<FONT face="Courier New">;@press(#1)<BR>
+					;@ changeset(1)<BR>
+				</FONT>
+				<p>&nbsp;</p>
+			<li>
+				Exit the Text Editor and apply your changes.&nbsp; If you wish you can exit the
+				FKiSS Editor and test your changes.&nbsp; Press the first button on page 0 and
+				your set should automatically switch to page 1.
+				<p>&nbsp;</p>
+			<li>
+				Repeat steps 5 through 9 to edit the event code for the second button.&nbsp;
+				This time, replace the <FONT face="Courier New">;@notify</FONT> action
+				statement&nbsp;with <FONT face="Courier New">;@ changeset(2)</FONT> statement
+				to cause a switch to page set 2.&nbsp;&nbsp;For button 2, your new event code
+				should look as shown below:<BR>
+				<BR>
+				<FONT face="Courier New">;@catch("button2.cel")<BR>
+					;@ changeset(2)</FONT>&nbsp;
+				<p>&nbsp;</p>
+			<li>
+				Exit the Text Editor and apply your changes.&nbsp; If you wish you can exit the
+				FKiSS Editor and test your changes.&nbsp; Press the second button on page 0 and
+				your set should automatically switch to page 2.
+				<p>&nbsp;</p>
+			<li>
+				If you like, you can also define new press events on each of the images to
+				easily return to page 0.&nbsp; This is left as an exercise for you.&nbsp;
+				<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">File-Save As</FONT> to save your work.&nbsp; Save the
+				new KiSS set to the Tutorial/FKiSS directory or a directory of your
+				choice.&nbsp; Change the name to <FONT color="#cc6600">CNF2.cnf</FONT>.&nbsp;
+				You can overwrite any existing element of the same name.
+				<p>&nbsp;</p>
+			</li>
+		</OL>
+		<p align="left">&nbsp;</p>
+		<hr>
+		<p align="left">Next Document:&nbsp; <A href="lesson3.html">Event Tutorial Lesson 3</A><BR>
+			Prior Document:&nbsp;&nbsp;<A href="lesson1.html">Event Tutorial Lesson 1</A></p>
+		<p align="left">Copyright (c) 2002-2023 William Miles</p>
+
+		<p>&nbsp;</p>
+	</body>
+</html>

@@ -1,0 +1,53 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>map</title>
+</head>
+
+<body>
+
+<h4><a name="repeat" id="repeat">repeat</a>()&nbsp;</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; repeat(labelname,count,iterator)</p>
+<p>This statement repeats a label module for the specified number of times, incrementing the iterator variable each time. The 'repeat' statement was implemented with FKiSS 4.</p>
+<p>The <em>count</em> parameter specifies the maximum repetition count and must be specified as an integer literal value or a variable. The repetition count is evaluated prior to first execution of the repeat() statement. Changes to the count variable value during execution will not affect the repetition count.</p>
+<p>The <em>iterator</em> parameter must be a variable. The first repetition intializes this variable to the value 1 and each succeeding repetition increments the iterator by 1. On termination of the repeat() command the iterator variable will have the last iteration value used if the repeat() was terminated with an exitloop() command. Otherwise, the iterator variable will be set to the count value plus 1, unless  DirectKiss compatibility mode is set. If in DirectKiss compatiblity the iterator will be set to the count value on loop termination. </p>
+<p>Repeat statements can be nested.  A repeat loop can be terminated early with the 'exitloop()' command. </p>
+<p>The UltraKiss implementation of the repeat() statement is not reentrant.</p>
+<p>&nbsp;</p>
+<p>Related actions: <a href="exitloop.html">exitloop()</a>,
+<a href="for.html">for()</a>, <a href="repeat.html">repeat()</a>, <a href="while.html">while()</a> </p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td>VariableCase</td>
+      <td>variable names are case sensitive</td>
+      <td>default value &quot;<font color="#0000FF">false</font>&quot; (Compatibility option)</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>&nbsp;Example:&nbsp;<br>
+</b></font>
+</p>
+<p>
+<font face="Courier New">;@ let(I,5) <br>
+;@ repeat(label1,I,N) </font></p>
+<p><font face="Courier New">;@ label(label1)<br>
+  ;@ ifequal(N,1) debug(&quot;Iteration 1&quot;) endif()<br> 
+  ;@ ifequal(N,2) debug(&quot;Iteration 2 &quot;) endif()<br>
+  ;@ ifequal(N,3) debug(&quot;Iteration 3 exitloop()&quot;) exitloop() endif()<br>
+  ;@ ifequal(N,4) debug(&quot;Iteration 4 &quot;) endif()<br>
+  ;@ ifequal(N,5) debug(&quot;Iteration 5 &quot;) endif()  <br>
+  <br>
+</font></p>
+<p><font face="Courier New"></font></p>
+</body>
+
+</html>

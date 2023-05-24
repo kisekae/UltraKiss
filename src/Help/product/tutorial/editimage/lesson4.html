@@ -1,0 +1,157 @@
+<html>
+	<head>
+		<title>Image Edit Lesson 3</title></head>
+	<body>
+		<h1 align="center"><font color="#000000">Image Tutorial</font></h1>
+		<h1 align="center"><font color="#ff0000">Lesson 4. Adding Transparency Effects</font></h1>
+		<p>&nbsp;</p>
+		<OL>
+			<li>
+				We are now going to create transparency effects on the stockings for the doll set
+				created in lesson 3.&nbsp; If you are continuing from lesson&nbsp;3 you can
+				skip to step 3.&nbsp; Otherwise, ensure that UltraKiss is showing the main logo
+				screen.&nbsp; Close any existing data set.
+This	lesson	requires	editing	of the KiSS set so ensure that the Edit Enable toggle button on the toolbar is set.<img src="images/editenable.gif" width="16" height="16" hspace="5" align="absmiddle">
+<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">File-Open</FONT>&nbsp; to load the configuration file <FONT color="#cc6600">
+					CNF3.cnf</FONT> from the Tutorial/Edit Image directory or the directory you
+				used in the previous lesson.&nbsp; This will load the doll set that you created
+				in lesson 3.
+				<p>&nbsp;</p>
+			<li>
+				Switch to page 1 of the set with <FONT color="#000099">View-Page Set 1</FONT> or
+				press the page 1 toolbar button. You should see two dolls, one with a blue
+				shirt and one with a green shirt.&nbsp; We
+				would like to make the doll stockings slightly transparent as stocking should be.
+				<p>&nbsp;</p>
+			<li>Position your mouse pointer over one set of stockings and
+				<FONT color="#cc6600">right-click</FONT>. Select <FONT color="#000099">Image Context-Properties</FONT>.
+				Press the small button for the transparency attribute. A slider control will appear that enables image
+				transparency adjustment.<br>
+				<br>
+			  	Drag the slider to the value 128. You should see the image transparency change in the properties preview window.
+			  	When you are satisfied, press OK and the transparency change will be applied. You can see the final effect in the
+				main UltraKiss window.
+			  <p>&nbsp;</p>
+			<li>
+				Play with the stockings. Pick them up and drag them. Observe that the underlying objects show through the
+				semi-transparent stockings. If you are not satisfied with the transparency change you can use
+				<FONT color="#000099">Edit-Undo</FONT> to undo the change.
+		    <p>&nbsp;</p>
+			<li>
+				Next, we will create an action event that will dynamically cause an article of clothing to fade into nothingness over
+				a few seconds. To begin, we will create a button object from which we can initiate the transition. If you have set one of the viewer compatibility preset buttons
+				on the toolbar  <img src="images/playfkiss.gif" width="16" height="16" hspace="5" align="absmiddle"> <img src="images/directkiss.gif" width="16" height="16" hspace="5" align="absmiddle"> <img src="images/gnomekiss.gif" width="16" height="16" hspace="5" align="absmiddle"> or if you have the <FONT color="#000099">Tools-Options-Import-Import GUI Components as CEL</FONT> option set, then this button will be created as a KiSS cel that is compatible with other viewers. <br>
+				<br>
+				Use <FONT color="#000099">Edit-Add Component</FONT> and select a Button. Drag the button to an appropriate
+				location on the screen. You will also want to make this button fixed, so <FONT color="#cc6600">right-click</FONT> on the button and select <FONT color="#000099">Image Context-Properties</FONT>. Press the little button beside the lock value attribute and set a lock value of 100. <br>
+				<br>
+				Then, <FONT color="#cc6600">right-click</FONT> on the button and select <FONT color="#000099">Button Attributes</FONT>.
+				Change the button text attribute to &quot;Fade&quot;. Apply the change and note that the button text is updated.
+				<p>&nbsp;</p>
+			<li>
+				Next, <FONT color="#cc6600">right-click</FONT> on the button and select
+				<FONT color="#000099">Object Context-Event Wizard</FONT>. When the wizard dialog shows choose
+				a press event from the Event Type selection list.
+				When the skeleton event code is displayed, replace the ;@ notify(&quot;press Group 15 button1.cel&quot;)
+				line the following:<br>
+				<br>
+				<font face="Courier New, Courier, mono">;@timer(1,100)</font><br>
+				<br>
+				This will initiate an alarm event 100 milliseconds after the button is pressed.
+				<p>&nbsp;</p>
+		  <li>
+				Now, we will create the alarm event. Use <FONT color="#000099">Tools-FKiSS Editor</FONT> and then choose
+				<FONT color="#000099">File-New Event</FONT>. An empty text editor window will appear. Position the
+				cursor at the end of the file and add the following lines:<br>
+                <br>
+                <font face="Courier New">;@alarm(1)<br>
+				;@ transparent(&quot;skirt.cel&quot;,10)<br>
+				;@ timer(1,100)<br>
+                </font> <br>
+                <FONT color="#cc6600">Note:&nbsp; If you copy and paste these lines from the help documentation into
+				your configuration file you must ensure that the semicolon and at-sign combination appears at the beginning
+				of every line.&nbsp; You can copy the help text by selecting the text and pressing Ctrl-C to copy the text
+				to the clipboard. Use Ctrl-V to paste the text into the configuration file.</FONT><BR>
+                    <BR>
+				The transparent() command increases the transparency on the skirt each time it is executed.
+				Transparency values range from 0 to 255, where 255 is fully transparent. This code should make
+				the skirt fully transparent after about 2.5 seconds.<br>
+				<br>
+				Exit the text editor and apply the changes. If you have a typing error or a syntax warning appears, correct
+				the mistake.
+				<p>&nbsp;</p>
+		  <li>
+				Test the code. <FONT color="#cc6600">Right-click</FONT> anywhere on the background to remove any object
+				selections or use <FONT color="#000099">Edit-Unselect All</FONT>, then press the Fade button.<BR>
+				<BR>
+				Observe that one of the skirts fades to nothingness. If this does not work, use
+				<FONT color="#000099">View-Active Configuration</FONT> to check that press() event
+				and alarm() event code is correct.<br>
+				<br>
+				Only one skirt faded and this is primarily because the FKiSS specifications are ambiguous and incomplete.
+				 The problem is that we have two
+				references to &quot;skirt.cel&quot; in the configuration and it is not clear which skirt the transparent command applies to. You may see different behaviour if you try this set on different viewers.
+				<p>&nbsp;</p>
+		  <li>
+				Use <FONT color="#000099">File-Save As</FONT> to save your work.&nbsp; Save the
+				new KiSS set to the Tutorial/Edit Image directory or a directory of your
+				choice.&nbsp; Change the name to <FONT color="#cc6600">CNF4.cnf</FONT>.&nbsp;
+				You can overwrite any existing element of the same name.
+				<p>&nbsp;</p>
+		  <li>
+				It is fun to make the skirt transparent, but we need a way to restore it once it is gone.&nbsp;
+				<FONT color="#cc6600">Right-click</FONT> on the button and select it. Then,
+				<FONT color="#000099">Edit-Copy</FONT> the button object or press <FONT color="#cc6600">Ctrl-c</FONT>.
+				Next, use <FONT color="#000099">Edit-Paste</FONT> to create a new copy of the button object.
+				You should see the marquee box flash when the new object is pasted over top of the old object. Drag the new button to a different location on the screen. <br>
+				<br>
+				<FONT color="#cc6600">Right-click</FONT> anywhere on the new object and select
+				<FONT color="#000099">Image Context-Properties</FONT>. Change the lock value to 100 to fix this new
+				button in place. Then, <FONT color="#cc6600">right-click</FONT> on the button and select
+				<FONT color="#000099">Button Attributes</FONT> and change the button text to &quot;Show&quot;.
+				<p>&nbsp;</p>
+			<li>
+				Next, <FONT color="#cc6600">right-click</FONT> on the &quot;Show&quot; button and select
+				<FONT color="#000099">Object Context-Event Wizard</FONT>. When the wizard dialog shows choose
+				a press event from the Event Type selection list.
+				When the skeleton event code is displayed, replace the ;@ notify(&quot;press Group 16 button2.cel&quot;)
+				line the following:<br>
+				<br>
+				<font face="Courier New, Courier, mono">;@transparent(</font><font face="Courier New">&quot;skirt.cel&quot;,-255)</font><br>
+				<br>
+				This will return the skirt to a completely opaque state.
+				<p>&nbsp;</p>
+		  <li>
+				<FONT color="#cc6600">Right-click</FONT> anywhere on the background to remove any object selections or
+				use <FONT color="#000099">Edit-Unselect All</FONT>, then press the &quot;Show&quot; button. You should
+				see the skirt appear again and then magically fade away once more. The fade action occurs because the
+				alarm is still running from the previous press of the &quot;Fade&quot; button.<br>
+				<br>
+				If you want to stop the alarm when you press the &quot;Show&quot; button we need to correct our code.
+			    <FONT color="#cc6600">Right-click</FONT> on the &quot;Show&quot; button and select
+				<FONT color="#000099">Object Properties-Edit Events</FONT>. This will launch the FKiSS Editor tool.
+				Highlight the press(#16) event in the event panel and select <FONT color="#000099">File-Edit Event</FONT>.
+				When the text editor window opens, add the following line to the event code:<br>
+			    <br>
+			    <font face="Courier New, Courier, mono">;@timer(</font><font face="Courier New">1,0)</font><br>
+			    <br>
+		    	This will stop the alarm when the button is pressed. Exit the editor and apply your changes.
+				<p>&nbsp;</p>
+		  <li>
+			    If everything
+		works properly, use <FONT color="#000099">File-Save</FONT> to save your work. This completes the tutorial on color changes and image conversion. You should now be able to import
+				images into KiSS sets, perform color palette edits, and have a better understanding of image transparency.
+				<p>&nbsp;</p>
+		  </li>
+		</OL>
+		<p align="left">&nbsp;</p>
+		<hr>
+	<p align="left">Next Document:&nbsp; <A href="../../tutorials.html">UltraKiss Tutorials</A><br>
+		Prior Document:&nbsp; <A href="lesson3.html">Image&nbsp;Tutorial Lesson 3 </A></p>
+		<p align="left">Copyright (c) 2002-2023 William Miles</p>
+
+		<p>&nbsp;</p>
+	</body>
+</html>

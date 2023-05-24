@@ -1,0 +1,355 @@
+
+FKISS Specifications
+
+Last updated 3-1-97
+
+This document explains the syntax for FKISS extension format.
+This document written by Dov Sherman with a lot of help from Yav.
+
+FKISS extension format is an extension to the existing KISS configuration
+format.  FKISS code appears as comment lines at the end of KISS .CNF
+file.  Usually, the code appears at the end of the file but this is
+not a requirement.
+
+
+
+
+
+General format
+   All lines containing FKISS statements must begin with ;@ but more than one
+   statement can appear on a line.  For example:
+
+                 ;@map(#1) unmap("hat.cel")
+                 ...and...
+                 ;@map(#1)
+                 ;@unmap("hat.cel")
+                 ...would have the same effect
+
+   After the ;@ any amount of spaces or tabs may appear before statements:
+
+                 ;@map(#1)
+                 ...and...
+                 ;@            map(#1)
+                 ...are equivalent
+
+   FKISS Code is made up by an Identifier followed by a series of Events which
+   each control series of Actions.
+
+
+
+
+
+Identifier
+
+   ;@EventHandler
+      This is the first line of the FKISS animation/sound code.  It alerts
+      FKISS that following lines should be read as FKISS commands.  Only lines
+      appearing after this statement are treated as FKISS code.
+
+
+
+Actions
+   An Action is a command which is immediately executed. The sequence of
+   actions in a given event is not defined.  In an ideal implementation, all
+   actions defined for a given event would have parallel execution (occur at
+   the exact same time).  Usual implementation executes action in listed order.
+
+
+
+
+   ;@map(item or cel)
+      This event takes one argument as an item number defining a group of
+      cels or a filename defining a single cel.
+      It causes the relevant cel or cels to become visible on any pages
+      they are defined on.
+
+
+
+
+   ;@unmap(item or cel)
+      This event takes one argument as an item number defining a group of
+      cels or a filename defining a single cel.
+      It causes the relevant cel or cels to become invisible on any pages
+      they are defined on.
+
+
+
+
+   ;@altmap(item or cel)
+      This event takes one argument as an item number defining a group of
+      cels or a filename defining a single cel.
+      It causes the relevant cel or cels to become visible if currently
+      invisible and invisible if currently visible.
+
+
+
+
+   ;@sound(WAV or AU file)
+      This event takes one argument as the filename for a WAV or AU format
+      sound sample.
+      It causes the given sound sample to be played.  It is recommended
+      that alternate CNF files using each format be available since
+      different viewers may be capable of only one format or the other.
+
+
+
+
+   ;@move(item, x, y)
+      This event takes three arguments.
+      The first argument is an item number for a group of cels.
+      The second and third arguments are x and y offsets.
+      This action causes the given item to move relative to its current
+      position.
+      Example:
+         ;@move(#5, 10, -3) ; Causes item #5 to move 10 pixels to the
+                              right and 3 pixels up
+
+
+
+   ;@changeset(number)
+      This event takes one argument as a set/page number.
+      It causes the viewer to switch to the given set/page as long as the
+      given set/page is defined.
+
+
+
+
+   ;@changecol(number)
+      This event takes one argument as a palette number.
+      It causes the viewer to switch to the given palette.  Only relevant
+      if the KISS data set is of the customizable palette style.
+
+
+
+
+   ;@timer(alarm, delay)
+      This event takes two arguments.
+      The first argument is an alarm number.
+      The second argument is a delay time in milli-seconds.
+      It causes the given alarm to be activated after the given delay
+      time. If a timer is already active for the given alarm, the new
+      delay value take precedence.
+      Setting the delay time to zero will cancel any timers for that
+      alarm.
+
+
+
+
+   ;@randomtimer(alarm, delay, variance)
+      This event takes three arguments.
+      The first argument is an alarm number.
+      The second argument is a delay time in milli-seconds.
+      The third argument is a variance range.
+      It causes the given alarm to be activated after the given delay time
+      plus a random amount of time less than or equal to the variance
+      range. If a timer is already active for the given alarm, the new
+      delay value take precedence.
+
+
+
+
+   ;@nop()
+      Perform no action.
+
+
+
+
+   ;@quit()
+      Exits the KISS viewer entirely.
+
+
+
+
+Events
+   An Event is an Event command followed by a series of Actions which are
+   executed when the given Event is called.  All Actions listed after an Event
+   command are considered part of the Event until another Event commands is
+   encountered.
+
+
+
+
+   ;@initialize()
+      This event signifies that the following actions should be executed
+      immediately when the data set is loaded.  This is useful for unmapping
+      cels or items that should be invisible at start up or for starting timers
+      which begin from start up.
+      Initialization takes place before the data set becomes visible.
+      Example:
+                 ;@initialize()
+                 ;@  unmap(#5)
+                 ;@  sound("welcome.wav")
+
+
+
+   ;@begin()
+      This event signifies that the following actions should be executed
+      immediately after the data set first becomes visible.
+      Example:
+                 ;@begin()
+                 ;@  timer(15,3000)
+
+
+
+   ;@end()
+      This event signifies that the following actions should be executed
+      immediately when the data set is being unloaded at the end of use.
+      Example:
+                 ;@end()
+                 ;@  sound("byebye.wav")
+      This would cause the sound file "byebye.wav" to be played when the
+      user stops using the data set by loading a new set or quitting KISS.        
+
+
+
+
+   ;@alarm(number)
+      This event takes one argument identifying it as a given alarm number.
+      Alarm number need not be listed in numerical order and there may be gaps
+      between alarm numbers.  (In other words, if the only alarms defined are
+      6, 3, 17, and 54, that's okay.)  Alarm numbers must range from 0 to 63.
+      This event should be followed by a series of actions to be executed
+      when the alarm is called.  Alarms can only be called by timer() commands.
+      Example:
+                 ;@alarm(15) map(#5) unmap(#6) timer(16, 6000)
+                 ;@alarm(16)
+                 ;@  map(#6) unmap(#5)
+                 ;@  timer(15, 6000)
+      In our begin() example, alarm 15 was called at start up to begin
+      after three seconds.  Here we define alarm 15 as making item 5 visible
+      again, making item 6 invisible, and starting a timer for alarm 16 after 6
+      second.
+      Alarm 16 we defined as putting item 6 back on-screen, clearing item 5
+      again, and starting a timer for alarm 15.  In this way, you can create
+      endlessly looping cycles for things like eyes that blink every 10 seconds
+      or a neon sign that flickers on the backdrop.
+
+
+
+
+   ;@press(item or cel)
+      This event takes one argument as an item number defining a group of
+      cels or a filename defining a single cel.
+      It causes any following actions to be executed when the user clicks on
+      the given item or cel.
+      This applies whether the item is moveable or not.
+
+
+
+
+   ;@catch(item or cel)
+      This event takes one argument as an item number defining a group of
+      cels or a filename defining a single cel.
+      It causes any following actions to be executed when the user clicks on
+      the given item or cel.
+      This applies only to moveable items.
+
+
+
+
+   ;@fixcatch(item or cel)
+      This event takes one argument as an item number defining a group of
+      cels or a filename defining a single cel.
+      It causes any following actions to be executed when the user clicks on
+      the given item or cel.
+      This applies only to non-moveable items but not maximum non-moveable
+      items.
+
+
+
+
+
+   ;@release(item or cel)
+      This event takes one argument as an item number defining a group of
+      cels or a filename defining a single cel.
+      It causes any following actions to be executed when the user has clicked
+      on the given item or cel and now releases it.
+      You can use this in tandem with the catch() event to have an item of
+      clothing change shape as if being opened to put over the doll and then go
+      back to normal when the user releases it, presumably on the doll.
+      This applies whether the item is moveable or not.
+
+
+
+
+   ;@drop(item or cel)
+      This event takes one argument as an item number defining a group of
+      cels or a filename defining a single cel.
+      It causes any following actions to be executed when the user has clicked
+      on the given item or cel and now releases it.
+      You can use this in tandem with the catch() event to have an item of
+      clothing change shape as if being opened to put over the doll and then go
+      back to normal when the user releases it, presumably on the doll.
+      This can only be used on moveable items.
+
+
+
+
+
+   ;@fixdrop(item or cel)
+      This event takes one argument as an item number defining a group of
+      cels or a filename defining a single cel.
+      It causes any following actions to be executed when the user has clicked
+      on the given item or cel and it now snaps back to starting position.
+      You can use this in tandem with the fixcatch() event to have an item of
+      clothing change shape as if being opened to put over the doll and then go
+      back to normal when the user releases it, presumably on the doll.
+      This applies only to non-moveable items but not maximum non-moveable
+      items.
+
+
+
+
+   ;@unfix(item or cel)
+      This event takes one argument as an item number defining a group of
+      cels or a filename defining a single cel.
+      It causes any following actions to be executed when the user has clicked
+      on the item or cel enough times that the item's fixedness has counted
+      down.  This can only be used once from start up.
+      Example:
+                 #12.20 hat.cel  ; Defining an object with fixedness of 20
+                 [...intervening stuff omitted...]
+                 ;@unfix(#12) sound("hatsoff.wav")
+                 In this example, when the user has clicked on the hat 20 times
+                 so that it now becomes moveable, the sound "hatsoff.wav" will
+                 be played.
+
+
+
+
+   ;@set(page number)
+      This event takes one argument as a page number defined in the data set.
+      It causes any following events to be executed when the user switches to
+      that page.
+
+
+
+   ;@col(x)
+      This event takes one argument as a palette number defined in the data
+      set.  It causes any following events to be executed when the user
+      switches to that palette.
+
+
+   ;@never()
+      This event never happens and following actions are not processed.  This
+      is mainly useful for hiding actions while debugging FKISS code.
+
+
+
+Future Additions?
+   Here are a few events that might added at some time in the future.
+
+   ;@in(cel, cel)
+      This event takes two arguments as a filenames defining cels.
+      It causes any following actions to be executed when one or more
+      non-transparent pixels in the first cel touch non-transparent pixels in
+      the second cel.
+      This event is not yet supported.
+
+
+   ;@out(cel, cel)
+      This event takes two arguments as a filenames defining cels.
+      It causes any following actions to be executed when pixels in
+      the first cel stop touching pixels in the second cel.
+      This event is not yet supported.
+

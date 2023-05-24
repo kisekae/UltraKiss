@@ -1,0 +1,105 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>label</title>
+</head>
+
+<body>
+
+<h4><a name="mediaplayer" id="mediaplayer">mediaplayer</a>()</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; mediaplayer (filename[,repeat])<br>
+<br>
+The mediaplayer() command integrates with the UltraKiss Media Player tool used for playback and control of background audio files. The media player is also the preferred method to control display and playback of video files associated with a KiSS set. </p>
+<p>For background audio the media player can automatically suspend itself and resume playback if the KiSS set initiates a music() or sound() file. This behaviour is controlled by  UltraKiss media options. </p>
+<p>Only one  mediaplayer() command can be concurrently active. A mediaplayer(&quot;&quot;) command with an empty filename will terminate all currently playing media files.</p>
+<p>The optional <em>repeat</em> parameter is an integer repeat count for playback of the file. A negative repeat count results in continuous looping of the media file. </p>
+<p>Sound files, movie files, or media player playlists can be specified. UltraKiss will accept WAV, AU, RMF,  AIFF, MP3, and AVI file encodings for the mediaplayer() command. UltraKiss will also process playback lists which contain entries for many media files. A playlist which is a text file with a &quot;<font face="Courier New, Courier, mono">.lst</font>&quot; or &quot;<font face="Courier New, Courier, mono">.m3u</font>&quot; extension. A playlist contains one line with the path name of each file to be played, as shown below. Note that in this case the media file locations are relative to the same directory that contains the playlist file. </p>
+<p><font face="Courier New, Courier, mono">Era.mp3<br>
+  Ameno (remix).mp3<br>
+  Cathar Rhythm.mp3<br>
+  Mother.mp3<br>
+  Avemano.mp3<br>
+  Enae Volare Mezzo.mp3<br>
+  Mirror.mp3<br>
+  Ameno.mp3<br>
+  Sempire d'Amor.mp3<br>
+  After Time.mp3<br>
+Impera.mp3</font></p>
+<p>A relative  filename is assumed to be relative to the location of the set configuration file. An absolute filename can be specified if desired. The path specifiers for a filename can be '/' or '\'.</p>
+<p>If the specified file does not exist then the command fails silently. </p>
+<p>A mediaplayer() command is independent from a music() command and a sound() command.  </p>
+<p>The FKiSS5 mediastart() and mediastop() events can also be used to control  playback. These events fire on sound initiation and sound termination for the specified mediaplayer file. </p>
+<p>&nbsp;</p>
+<p>Related events: <a href="mediastart.html">mediastart(),</a> <a href="mediastop.html">mediastop()</a> <br>
+  Related actions: <a href="sound.html">sound(),</a> <a href="music.html">music()</a> <br>
+</p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+    <table border="1" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td width="20%">UltraKiss Extension</td>
+        <td width="30%">mediaplayer(&quot;HappySong.mid&quot;) </td>
+        <td>invokes the mediaplayer tool</td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<table width="80%"  border="1" align="center" cellpadding="5" cellspacing="5" bordercolor="#000000" bgcolor="#FFFF99">
+  <tr>
+    <td><div align="center">Note: The UltraKiss mediaplayer() command is viewer specific and not compatible with other viewers. </div></td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+  <table border="1" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td>CacheAudio</td>
+      <td>cache audio files in memory </td>
+      <td>default value &quot;<font color="#0000FF">false</font>&quot; (General option)</td>
+    </tr>
+    <tr>
+      <td>DebugMedia</td>
+      <td>write audio debug traces to log file </td>
+      <td>default value &quot;<font color="#0000FF">false</font>&quot; (Debug option)</td>
+    </tr>
+    <tr>
+      <td>StopMusic</td>
+      <td>stops active sound on page change </td>
+      <td>default value &quot;<font color="#0000FF">false</font>&quot; (Media option)</td>
+    </tr>
+    <tr>
+      <td width="20%">VariableCase</td>
+      <td width="30%">variable names are case sensitive</td>
+      <td>default value &quot;<font color="#0000FF">false</font>&quot; (FKiSS
+        option)</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;
+
+</p>
+<p><font color="#FF0000"><b>FKiSS 5 Example:</b></font></p>
+<p><font face="Courier New">;@begin()&nbsp;<br>
+;@ mediaplayer(&quot;happymusic.mp3&quot;) &nbsp;; play the music <br>
+<br>
+;@mediastart(&quot;happymusic.mp3&quot;)&nbsp;&nbsp;&nbsp; ; event triggered when music starts <br>
+;@ notify(&quot;happymusic started&quot;) &nbsp;<br>
+<br>
+;@mediastop(&quot;happymusic.mp3&quot;)&nbsp;&nbsp;&nbsp; &nbsp;; event triggered when music stops <br>
+;@ notify(&quot;happymusic stopped&quot;) &nbsp; <br>
+</font></p>
+<p>&nbsp; </p>
+<p>&nbsp;</p>
+
+</body>
+
+</html>

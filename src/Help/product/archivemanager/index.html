@@ -1,0 +1,184 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-ca">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>Archive Manager Index</title>
+</head>
+
+<body>
+
+<h1><font color="#FF0000"> Archive Manager Help Topics</font></h1>
+<hr>
+
+<p><font face="Arial">Welcome to the UltraKiss Archive Manager documentation.&nbsp; To open an online book, choose a book from the Contents page in the upper
+left of the Help Viewer. Click the book icon to expand the book topics. Then, click a topic to
+view it.</font></p>
+
+<p>&nbsp;</p>
+
+<h2><b><a name="Introduction"><font face="Arial">Introduction</font></a></b></h2>
+
+<p><font face="Arial">The Archive Manager is a full featured data compression and extraction program designed to manipulate KiSS data
+sets stored in LHA, ZIP, or JAR format archive files.  This online Help document provides reference material for
+the various commands and options available within the Archive Manager program.</font> </p>
+
+<p><font face="Arial">Archive files are compressed files.&nbsp; The information in an archive file
+is encoded using data compression algorithms that are designed to reduce the
+amount of space required to store the data.&nbsp; To compress data you use the
+Archive Manager to create a new compressed file and add data elements to this
+file.&nbsp; To uncompress data you use the Archive Manager to read a compressed
+file and extract the compressed data to a file directory.</font></p>
+
+<p><font face="Arial">Archive files are like file directories.&nbsp; Each archive file contains
+many file elements.&nbsp; Archive files are ideal for KiSS data sets because
+these sets are composed of many different elements
+including configuration files, palette files, image files and so on.&nbsp;Compressed
+file archives are a simple and easy way to encapsulate a KiSS data set for packaging and
+distribution to other users.&nbsp;</font></p>
+
+<p>
+<font face="Arial">
+However, archive files differ from file directories in that archive files must
+be completely rewritten whenever any element of the archive is changed.&nbsp;&nbsp;UltraKiss
+knows how to read archive files and will
+automatically uncompress KiSS data sets in LZH, ZIP or JAR format when they are
+loaded.&nbsp;&nbsp; UltraKiss will also compress file elements and
+add them to the KiSS archive file when they are saved, however for large archive
+files this file updating can take time.&nbsp; It can be more effective to
+uncompress a KiSS archive before using UltraKiss particularly if many edit changes are planned.&nbsp;
+UltraKiss can read data sets from standard file directories.&nbsp; If a file is
+referenced from a standard directory then only the changed element need be
+written.</font></p>
+
+<p><font face="Arial">Note that compressing files is not always useful.&nbsp; Many
+standard image formats are already compressed as part of their representation
+and recompressing compressed files is not effective.</font></p>
+
+<p>&nbsp;</p>
+
+<h2><a name="Archive Manager Main Screen"><font face="Arial">Archive Manager Main Screen</font></a></h2>
+
+<p><font face="Arial">The main Archive Manager screen is shown in Figure 1.&nbsp; The Archive
+Manager contains a standard menu bar of functions to manipulate an archive file and
+a toolbar for easy access to common menu functions.&nbsp; The elements contained
+within an open archive file are listed in the main area of the screen.&nbsp;
+These elements have names, dates, uncompressed sizes, compression ratios,
+compressed sizes, and internal directory path information useful for
+reconstructing a directory hierarchy when the archive file is uncompressed.</font> </p>
+
+<p>&nbsp;</p>
+
+<p align="center"><font face="Arial"><img border="0" src="images/intro_01.jpg" width="508" height="286"></font></p>
+
+<p align="center"><font face="Arial">Figure 1.</font></p>
+
+<p align="left">&nbsp;</p>
+
+<p align="left"><font face="Arial">Figure 2 shows the Archive Manager after a compressed file has
+been opened with the <a href="menu.html#FileOpen">File-Open</a> command.&nbsp; The
+status line at the bottom of the window provides overall compression information
+for the file.&nbsp; The file TESTSET.LZH has been compressed to about 20% of its
+original size.&nbsp; This is a significant savings in space for distribution of the file to other users.</font></p>
+
+<p align="left">&nbsp;</p>
+
+<p align="center"><font face="Arial"><img border="0" src="images/intro_02.jpg" width="508" height="286"></font></p>
+
+<p align="center"><font face="Arial">Figure 2.</font></p>
+
+<p align="center">&nbsp;</p>
+
+<p align="left"><font face="Arial">The Archive Manager supports archive files that contain both
+absolute and relative path names.&nbsp; If file elements within the archive were
+saved with path names then these elements can be restored to the appropriate
+file directories on extraction.&nbsp; For further information see the <a href="add.html">Add
+Functions</a> document and the <a href="extract.html">Extract Functions</a> document.</font></p>
+
+<p align="left">&nbsp;</p>
+
+<h2 align="left"><a name="Archive Manager Add Screen"><font face="Arial">Archive Manager Add Screen</font></a></h2>
+
+<p align="left"><font face="Arial">To add new file elements to the archive file you use the <a href="menu.html#EditAdd">Edit-Add</a>
+command.&nbsp; Figure 3 shows the Add dialog for selecting the new file element
+to be added to the archive.&nbsp; Under normal circumstances you would simply
+select a file element and add this to the archive file, replacing any existing
+element of the same name within the archive.&nbsp; For further information and a
+detailed description of the Add screen options, see the <a href="add.html">Add
+Functions</a> document.</font></p>
+
+<p align="left">&nbsp;</p>
+
+<p align="center"><font face="Arial"><img border="0" src="images/intro_03.gif" width="449" height="415"></font></p>
+
+<p align="center"><font face="Arial">Figure 3.</font></p>
+
+<p align="left">&nbsp;</p>
+
+<p align="left">&nbsp;</p>
+
+<h2 align="left"><a name="Archive Manager Extract Screen"><font face="Arial">Archive Manager
+Extract Screen</font></a></h2>
+
+<p align="left"><font face="Arial">To extract file elements from the archive file you use the <a href="menu.html#EditExtract">Edit-Extract</a>
+command.&nbsp; Figure 4 shows the Extract dialog.&nbsp; This is used to select
+the archive file element to be extracted from the archive.&nbsp; Under normal
+circumstances you would simply extract all file elements from the archive and
+write them into a file directory, replacing any existing element of the same
+name.&nbsp; For further information and a detailed description of the Extract
+screen options, see the <a href="extract.html">Extract Functions</a> document.</font></p>
+
+<p align="left">&nbsp;</p>
+
+<p align="center"><font face="Arial"><img border="0" src="images/intro_04.jpg" width="553" height="314"></font></p>
+
+<p align="center"><font face="Arial">Figure 4.</font></p>
+
+<p align="left">&nbsp;</p>
+
+<p align="left">&nbsp;</p>
+
+<h2 align="left"><a name="Archive Manager Find Screen"><font face="Arial">Archive Manager Find
+Screen</font></a></h2>
+
+<p align="left"><font face="Arial">There are times when you will seek to find a particular element
+or set of elements within the archive file.&nbsp; The <a href="menu.html#EditFind">Edit-Find</a>
+command can be used to show a selection dialog in which you can enter the name
+of a file element, or partial name of an element.&nbsp; Figure 5 is an example
+of a Find dialog.</font></p>
+
+<p align="left">&nbsp;</p>
+
+<p align="center"><font face="Arial"><img border="0" src="images/intro_05.gif" width="325" height="178"></font></p>
+
+<p align="center"><font face="Arial">Figure 5.</font></p>
+
+<p align="left">&nbsp;</p>
+
+<p align="left"><font face="Arial">This example has chosen to find all element files in the archive
+file TESTSET.LZH beginning with the characters 'set' and containing any file
+extension.&nbsp; The results of the Find operation are shown in Figure 6.&nbsp;
+All elements satisfying the search criteria have been selected, as shown.&nbsp; These selected elements
+can now be individually extracted or
+deleted from the archive file.</font></p>
+
+<p align="left">&nbsp;</p>
+
+<p align="center"><font face="Arial"><img border="0" src="images/intro_06.jpg" width="508" height="286"></font></p>
+
+<p align="center"><font face="Arial">Figure 6.</font></p>
+
+<p align="left">&nbsp;</p>
+
+<hr>
+<p align="left">Next Document:&nbsp; <a href="menu.html">Menu Commands</a></p>
+
+<p align="left">Copyright (c) 2002-2023 William Miles</p>
+
+<p align="left">&nbsp;</p>
+
+</body>
+
+</html>

@@ -1,0 +1,48 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="generator" content="Bluefish 2.2.12" >
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>map</title>
+</head>
+
+<body>
+
+<h4><a name="setlevel" id="setlevel">setlevel</a>()&nbsp;</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; setlevel (object,variable)</p>
+<p>This action sets the drawing level of the specified KiSS object.  This object can be a cel or group object.  
+The drawing level of an object is initially set by the order in which the cel declaration appears in the CNF file.
+Cels that appear first are drawn on top of cels that appear lower in the order.  The top order is number 0.  
+The draw level of a group object is the minimum overlay level that needs to be considered when the group object is drawn. 
+In other words it is the draw level with the largest number or the lowest most cel in the group.</p>
+<p>The draw level can be used to move objects forwards and backwards in the draw hierarchy.  This is another way to hide 
+cels behind another background cel.  Setting the draw level to 0 draws the cel on the top.  Setting the draw level to a 
+large number draws the cel on the bottom.</p>  
+<p>The <em>object</em> of the command must be a cel name specifier or a group object identifier. The <em>variable</em> is an integer value.</p>
+<p>Related actions: <a href="letlevel.html">letlevel()</a>, <a href="letmapped.html">letmapped()</a> </p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td width="20%">VariableCase</td>
+        <td width="30%">variable names are case sensitive</td>
+        <td>default value &quot;<font color="#0000FF">false</font>&quot; (Compatibility option)</td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>&nbsp;Example:&nbsp;<br>
+</b></font></p>
+<p><font face="Courier New">;@ setlevel(N,"superman.cel") &nbsp;&nbsp;&nbsp; ;<br>
+;@ notify(&quot;This cel is drawn at level &quot;,N,&quot; in the draw hierarchy &quot;)&nbsp;&nbsp;&nbsp; ;&nbsp;&nbsp;<br>
+
+<br>
+</font><br>
+</p>
+</body>
+
+</html>

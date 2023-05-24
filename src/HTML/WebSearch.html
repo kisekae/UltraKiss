@@ -1,0 +1,66 @@
+
+<html>
+
+<head>
+<title>UltraKiss Web Access</title>
+</head>
+
+<body>
+<p align="center"><img border="0" src="Images/ultrakiss.gif" width="375" height="125"></p>
+<p align="center"><font face="Arial"><br>
+  </font></p>
+<p align="center"><font face="Arial">This Search tool will locate and catalogue
+KiSS sets stored on a Web Site or on your local file system.<br>
+Search options can be set through the Options menu item.</font></p>
+<p align="center">&nbsp;</p>
+<p align="center"><font face="Arial">To search a Web Site, enter a URL in the address line of this window.
+</font></p>
+<p align="center"><font face="Arial">To search your local file system use the File-Open menu item to select the top-level directory to search.</font></p>
+<p align="center">&nbsp;</p>
+<hr>
+<p align="center">&nbsp;</p>
+<p align="left"><b>Step 1</b>.  Given a top level URL to a website or a file
+directory, the reference page is examined to identify all hyperlinks to archive
+files. To ensure that all archive files are located within the site hierarchy,
+every HTML page in a web site and every subdirectory in a top-level directory is
+scanned.  This search is a breadth first top down recursive scan of the complete
+target system. The scan terminates when all links in the site hierarchy have been
+processed.<br>
+<br>
+<b>Step 2</b>. Every archive file identified in Step 1 is loaded in
+UltraKiss. The file load is a batch process and requires no user interaction.  If the file loads successfully
+then this validates the file as a KiSS archive.<br>
+<br>
+<b>Step 3</b>. If an archive file is validated as a KiSS set then a thumbnail image
+can be produced from the UltraKiss screen image.  The set can also be saved to local file
+storage or retained as a remote hyperlink depending on the specified Search
+options. Set statistics are also
+identified.&nbsp;<br>
+<br>
+<b>Step 4</b>. When all sets are validated an HTML index into the directory or
+web site is constructed.  This is a table of all validated sets, sorted by name,
+with thumbnail images and hyperlinks to the actual KiSS archive files. The
+hyperlinks can
+be links to remote URLs on a web site or to locally stored files. This
+dynamically built HTML index
+file is written to the directory specified in the Search options and named according
+to the site URL or top level directory originally specified in Step 1.<br>
+<br>
+<b>Step 5</b>. The new HTML index is now added to the primary master index maintained
+for all scanned hosts.  Each primary site or top level directory becomes one line item in the
+master search index. Thus, each time you scan a new web site that contains KiSS
+files, a new entry for that web site is created. Once built, the master index
+can be directly accessed using the menu and toolbar of the UltraKiss Portal. </p>
+<p align="left">&nbsp;</p>
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+  <tr>
+    <td><p align="center"><font face="Arial" size="2" color="#800000">Kisekae UltraKiss and UltraKiss are trademarks of William Miles.&nbsp;<br>
+        Copyright &#169; 2002-2018 William Miles. All rights reserved..</font></p></td>
+  </tr>
+  <!--msnavigation-->
+</table>
+<p align="center">&nbsp;</p>
+<p align="center">&nbsp;</p>
+</body>
+
+</html>

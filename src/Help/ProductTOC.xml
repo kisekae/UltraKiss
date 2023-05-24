@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE toc
+  PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp TOC Version 1.0//EN"
+         "http://java.sun.com/products/javahelp/toc_1_0.dtd">
+
+<toc version="1.0">
+  <tocitem text="Product">
+    <tocitem text="Quick Index" target="product.index" />
+    <tocitem text="What's New?" target="product.whatsnew" />
+    <tocitem text="What is UltraKiss?" target="product.kisekae" />
+    <tocitem text="Frequent Questions" target="product.questions" />
+    <tocitem text="Helpful Tutorials" target="product.tutorials" />
+    <tocitem text="UltraKiss Features" target="product.features" />
+    <tocitem text="Registration Notes" target="product.registration" />
+    <tocitem text="Release Notes" target="product.release_notes" />
+    <tocitem text="Installation Notes" target="product.installation" />
+    <tocitem text="Legal Notes" target="product.legal_notes" />
+  </tocitem>
+</toc>
+
+

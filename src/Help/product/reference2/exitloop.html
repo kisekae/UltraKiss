@@ -1,0 +1,33 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>map</title>
+</head>
+
+<body>
+
+<h4><a name="exitloop" id="exitloop">exitloop</a>()&nbsp;</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; exitloop ()</p>
+<p>The exitloop()statement will terminate any repetition of a label module invoked through a repeat() statement.  If the label module has not been invoked through a repeat() statement then the exitloop() command has no effect. </p>
+<p>&nbsp;</p>
+<p>Related actions: <a href="repeat.html">repeat()</a>, <a href="while.html">while()</a>,  <a href="for.html">for()</a></p>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>&nbsp;Example:&nbsp;<br>
+</b></font> </p>
+<p>  <font face="Courier New">;@ let(I,5) <br>
+;@ repeat(label1,I,N) </font></p>
+<p><font face="Courier New">;@ label(label1)<br>
+  ;@ ifequal(N,1) debug(&quot;Iteration 1&quot;) endif()<br>
+  ;@ ifequal(N,2) debug(&quot;Iteration 2 &quot;) endif()<br>
+  ;@ ifequal(N,3) debug(&quot;Iteration 3 exitloop()&quot;) exitloop() endif()<br>
+  ;@ ifequal(N,4) debug(&quot;Iteration 4 &quot;) endif()<br>
+  ;@ ifequal(N,5) debug(&quot;Iteration 5 &quot;) endif() <br>
+</font></p>
+<p><font face="Courier New"><br>
+</font></p>
+</body>
+
+</html>

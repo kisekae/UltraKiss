@@ -1,0 +1,111 @@
+<html>
+	<head>
+		<title>Image Edit Lesson 3</title></head>
+	<body>
+		<h1 align="center"><font color="#000000">Event Tutorial</font></h1>
+		<h1 align="center"><font color="#ff0000">Lesson 3. Creating Snap-To Events</font></h1>
+		<p>&nbsp;</p>
+		<OL>
+			<li>
+				We are now going to create collision or Snap-To events that help position
+				clothes on a doll.&nbsp; If you are continuing from lesson&nbsp;2 you can skip
+				to step 3.&nbsp; Otherwise, ensure that UltraKiss is showing the main logo
+				screen.&nbsp; Close any existing data set.
+				<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">File-Open</FONT>&nbsp; to load the configuration file <FONT color="#cc6600">
+					CNF2.cnf</FONT> from the Tutorial/FKiSS directory or the directory you used
+				in the previous lesson.&nbsp; This will load the doll set that you created in
+				lesson 2.
+				<p>&nbsp;</p>
+			<li>
+				Add a new page to the set.&nbsp; Use <FONT color="#000099">Edit-Add Page</FONT>
+				to create page 3.&nbsp; <br>
+			<br>
+			<li> Our set has a black background but we are going to
+				import an image that is meant to be shown on a light background. To fix this
+				problem we will use a palette file for the set.&nbsp; Use <FONT color="#000099">Edit-Import Palette</FONT> and import the palette file <FONT color="#cc6600">'background.kcf'</FONT> from
+				the Tutorial/FKiSS/Bearman directory.&nbsp; &nbsp;The background color should change to a dark green and you will see two  multipalette buttons appear on the toolbar..
+				<p>&nbsp;</p>
+			<li>
+				Next, use <FONT color="#000099">Edit-Import Image to New Object</FONT> and import the file <FONT color="#cc6600">'human.gif'</FONT> from the Tutorial/FKiSS/Bearman directory.&nbsp; &nbsp;This image will be automatically converted to a CEL file with an associated KCF palette. Drag the image to the center of the screen. <BR>
+				<BR>
+
+				Next, <FONT color="#cc6600">right-click</FONT> on the page set 3 toolbar button
+				or use <FONT color="#000099">View-Active Objects</FONT> and expand the Page
+				Sets line to select Page Set 3.&nbsp; Press the little button beside the
+				Palette Group attribute and change the default group from 0 to 1.&nbsp; Page 3
+				will now be associated with palette group 1 in the background.kcf file and the
+				background color will change to a light yellow.
+				<p>&nbsp;</p>
+		  <li>
+				We will now import some clothes for our doll. <FONT color="#cc6600">Right-click</FONT> anywhere on the
+				background or use <FONT color="#000099">Edit-Unselect All</FONT> to remove any current image selections.
+			Use <FONT color="#000099">Edit-Import Image to Selection</FONT> and import the files <FONT color="#cc6600">
+					'chestplate.gif'</FONT> and <FONT color="#cc6600">'chestplateback.gif'</FONT>.&nbsp;
+				You can select both files concurrently by using the <FONT color="#cc6600">ctrl</FONT>
+				key for multiple selections.&nbsp; The images will be imported to the upper
+				left corner of the screen and should have green marquee selection boxes around
+				them.&nbsp; Green selection boxes indicate that the images are&nbsp;parts of a
+				larger&nbsp;object group.
+				<p>&nbsp;</p>
+		  <li>
+				Drag the chestplate back image&nbsp;to position it properly within the
+				object.&nbsp; If necessary, use <FONT color="#000099">View-Magnify</FONT> to increase the magnification
+				of the playfield for mor accurate positioning. Then, use <FONT color="#000099">Edit-Regroup</FONT> to group the
+				two chestplate images into one combined object.&nbsp; The marquee box should
+				turn blue and encase the complete object.
+				<p>&nbsp;</p>
+		  <li>
+				Right-click anywhere on the background or use&nbsp;<FONT color="#000099">Edit-Unselect
+					All</FONT> to unselect&nbsp;the chestplate.&nbsp; Drag the chestplate to
+				position it properly on the human.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<p>&nbsp;</p>
+		  <li>
+				As you drag you should note that the back of the chestplate does not properly
+				slide behind the human.&nbsp; Use <FONT color="#000099">Edit-Adjust Layering</FONT>
+				to fix this. Select the <FONT color="#cc6600">chestplateback.gif</FONT>
+				image line and drag it below the<FONT color="#cc6600"> human.gif</FONT> image
+				line.&nbsp; This adjusts the drawing level so that the chestplate now appears
+				correct on the human.
+				<p>&nbsp;</p>
+		  <li>
+				We will now define a Snap-To event on the chestplate.&nbsp; <FONT color="#cc6600">Right-click</FONT>
+				on the chestplate when it is properly positioned on the doll.&nbsp; Select <FONT color="#000099">
+					Image Context</FONT> and choose the <FONT color="#000099">Event Wizard</FONT>.
+				    <p>&nbsp;</p>
+		  <li>
+				Select the <FONT color="#000099">Snap To</FONT> event in the Event
+				Wizard.&nbsp; A popup dialog will ask you to choose the parent object for the
+				chestplate.&nbsp; This is the human doll, so select the group object associated
+				with <FONT color="#cc6600">human.gif</FONT>.<BR>
+				<BR>
+				You will see the event code that is automatically generated for you.&nbsp;
+				Press the OK button and the snap-to event will be defined.&nbsp; Test it.&nbsp;
+				Drag the chestplate completely off the doll and release it.&nbsp; Pick it up
+				again and place it anywhere on the doll, and it should snap to its proper
+				position when you release the mouse.
+				<p>&nbsp;</p>
+		  <li>
+				You can repeat Steps&nbsp;5 through 10 to import the remaining pieces of
+				clothing or armour for the human, an attach Snap-To events on these items. Note
+				that the underwear also has front and back similar to the chestplate.&nbsp; We
+				leave this for you to do as an exercise.
+				<p>&nbsp;</p>
+		  <li>
+				Use <FONT color="#000099">File-Save As</FONT> to save your work.&nbsp; Save the
+				new KiSS set to the Tutorial/FKiSS directory or a directory of your
+				choice.&nbsp; Change the name to <FONT color="#cc6600">CNF3.cnf</FONT>.&nbsp;
+				You can overwrite any existing element of the same name.
+				<p>&nbsp;</p>
+		  </li>
+		</OL>
+		<p align="left">&nbsp;</p>
+		<hr>
+		<p align="left">Next Document:&nbsp; <A href="../../tutorials.html">UltraKiss Tutorials</A><br>
+			Prior Document:&nbsp;&nbsp; <A href="lesson2.html">Event&nbsp;Tutorial Lesson 2</A></p>
+		<p align="left">Copyright (c) 2002-2023 William Miles</p>
+
+		<p>&nbsp;</p>
+	</body>
+</html>
