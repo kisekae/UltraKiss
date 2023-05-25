@@ -17,7 +17,8 @@ text-based code.
 
 UltraKiss was developed to help artists build their KiSS sets. UltraKiss reads and interprets KiSS data files.  
 These files contain computer graphics images, color palettes and data control files.  Objects, such as the doll figure, 
-costumes, and other items are constructed from layered image components that usually show only parts of the complete image.  
+costumes, and other items are constructed from layered image components that usually show only parts of the complete image. 
+
 Objects could be manipulated through user actions or through  a simple event processing model that enables timed animations 
 or other actions if objects are touched or dragged across the screen.  Color variations, enabled through palette changes in 
 UltraKiss, could also be used to produce different results.  
