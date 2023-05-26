@@ -120,6 +120,7 @@ class WebDloadDialog extends KissDialog
   		OK.addActionListener(this);
   		CANCEL.addActionListener(this);
   		addWindowListener(this);
+      setValues() ;
   	}
 
    // User interface initialization.
@@ -134,7 +135,9 @@ class WebDloadDialog extends KissDialog
 
   		jLabel1.setText(Kisekae.getCaptions().getString("DownloadFileText1"));
       jLabel1.setHorizontalAlignment(JLabel.CENTER) ;
-      jLabel2.setText(url.toString()) ;
+      String name = url.toString() ;
+      name = name.replaceFirst("[\\#\\?].*$","") ;  // no query or ref
+      jLabel2.setText(name) ;
       jLabel2.setHorizontalAlignment(JLabel.CENTER) ;
       jLabel3.setText(Kisekae.getCaptions().getString("DownloadFileText2"));
       jLabel3.setHorizontalAlignment(SwingConstants.CENTER);
@@ -171,9 +174,15 @@ class WebDloadDialog extends KissDialog
       panel1.add(jPanel1, BorderLayout.SOUTH) ;
    }
 
-   // Empty method to satisfy KissDialog.
+   // Copy protected if URL has a fragment #nocopy 
 
-   void setValues() { }
+   void setValues() 
+   { 
+      String ref = "" ;
+      if (url != null) ref = url.getRef() ;
+      if ("nocopy".equals(ref))
+         save.setEnabled(false) ;
+   }
 
    // Return the dialog show switch.
 

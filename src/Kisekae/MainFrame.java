@@ -65,6 +65,7 @@ import java.util.Scanner ;
 import java.util.prefs.* ;
 import java.net.URL ;
 import java.io.* ;
+import java.nio.file.Paths;
 import javax.swing.* ;
 import javax.swing.undo.* ;
 
@@ -2222,10 +2223,12 @@ final public class MainFrame extends KissFrame
                URL reference = Kisekae.getResource(s1+"_reference.txt") ;
                if (reference != null)
                {
-                  File f = new File(reference.toURI()) ;
-                  s1 = (f != null) ? f.getName() : "" ;
+                  s1 = reference.getPath() ;
+                  s1 = s1.replaceAll("^.*[\\/\\\\]", "/") ;
+                  s1 = s1.substring(s1.lastIndexOf("/")+1) ;         
                   s1 = s1.replace("_reference.txt","") + (imagenum+1) ;
-                  Scanner scanner = new Scanner(f) ;
+                  InputStream input = reference.openStream();
+                  Scanner scanner = new Scanner(input) ;
                   while (scanner.hasNextLine())
                   {
                      String line = scanner.nextLine() ;
@@ -2317,7 +2320,7 @@ final public class MainFrame extends KissFrame
             g.drawString(copyright,x4,y4) ;
          if (releaselevel != null)
             g.drawString(releaselevel,x5,y5) ;
-         if (description != "")
+         if (!description.isEmpty())
          {
             g.setColor(new Color(180,160,140,128)) ;
             g.drawString(description,x6,y6) ;

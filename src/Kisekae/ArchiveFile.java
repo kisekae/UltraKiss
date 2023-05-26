@@ -217,6 +217,7 @@ abstract class ArchiveFile
    static boolean isArchive(String name)
    {
    	if (name == null) return false ;
+      name = name.replaceFirst("[\\#\\?].*$","") ;  // no query or ref
 		int n = name.lastIndexOf('.') ;
 		String ext = (n < 0) ? "" : name.substring(n).toLowerCase() ;
 		if (".gzip".equals(ext)) return true ;

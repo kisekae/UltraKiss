@@ -7,21 +7,11 @@
 		<P><FONT color="#0000ff" size="3" face="Arial, Helvetica, sans-serif">UltraKiss is a Java application that is bound to the maximum
 				memory pool size assigned to your Java Virtual Machine.</FONT><font size="3" face="Arial, Helvetica, sans-serif"><BR>
 			    <BR>
-			The default pool size is 64MB which is sufficient for many KiSS sets but not
-			sufficient for large, complex sets. To request a 200MB memory buffer
+			The default pool size is half half of the physical memory up to a physical memory size of 192 megabytes (MB) 
+                        which is sufficient for many KiSS sets.  To request a larger memory buffer
         pool you must modify the Java configuration. Failure to do so can result in poor performance or Out of Memory faults.&nbsp;</font></P>
-        <P><font face="Arial, Helvetica, sans-serif" size="3" color="#0000FF">Note:
-        UltraKiss Version 3.0c and later automatically configures a large memory
-        configuration when installed with InstallAnywhere.<BR>
-        </font><font size="3" face="Arial, Helvetica, sans-serif"><br>
-			If you install UltraKiss V3.0b or earlier using the standard installer you should edit the program control 
-		  file to increase the available memory pool size.&nbsp;On Windows or
-        Linux systems. edit the <b>UltraKiss.lax</b> file in your 
-		  program installation directory with any text editor. Add the following line to the end of the file:</font></P>
-	    <p align="center"><font size="3" face="Arial, Helvetica, sans-serif"><b>lax.nl.java.option.additional = -Xmx200M</b></font></p>
-	    <p><font size="3" face="Arial, Helvetica, sans-serif"> If you start Java
-        manually, use:&nbsp;</font></p>
-	    <p align="center"> <font size="3" face="Arial, Helvetica, sans-serif"><b>java -Xmx200M -jar ultrakiss1.jar</b></font></p>
+	    <p><font size="3" face="Arial, Helvetica, sans-serif"> If you start Java manually, use:&nbsp;</font>
+	    <p align="center"> <font size="3" face="Arial, Helvetica, sans-serif"><b>java -Xmx200M -jar kisekae.jar</b></font></p>
 	    <p>&nbsp;</p>
 	</body>
 </html>

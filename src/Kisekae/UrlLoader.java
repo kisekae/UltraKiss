@@ -131,7 +131,7 @@ class UrlLoader extends KissFrame
          url = Variable.getStringLiteralValue(url) ;      
       }
     
-      urlname = url ;
+      urlname = url.replaceFirst("[\\#\\?].*$","") ;  // no query or ref
       setIconImage(parent.getIconImage());
 
 		// Set the frame characteristics.
@@ -176,8 +176,8 @@ class UrlLoader extends KissFrame
 		Status.setPreferredSize(new Dimension(200, 20));
 		FileName.setBorder(BorderFactory.createEmptyBorder(0,0,10,10));
 		FileName.setPreferredSize(new Dimension(300, 20));
-		FileName.setHorizontalAlignment(SwingConstants.CENTER);
-		ErrorMsg.setPreferredSize(new Dimension(500, 20));
+		FileName.setHorizontalAlignment(SwingConstants.CENTER);		
+      ErrorMsg.setPreferredSize(new Dimension(500, 20));
 		CANCEL.setText(Kisekae.getCaptions().getString("CancelMessage"));
 		LOAD.setText(Kisekae.getCaptions().getString("LoadMessage"));
 		Progress.setPreferredSize(new Dimension(300, 16));
@@ -540,7 +540,9 @@ class UrlLoader extends KissFrame
 
 	void showFile(String s)
 	{
-		if (s != null) FileName.setText(s) ;
+      if (s == null) return ;
+      s = s.replaceFirst("[\\#\\?].*$","") ;  // remove query and ref from url
+		FileName.setText(s) ;
 		if (OptionsDialog.getDebugLoad()) System.out.println("URL Load: " + s) ;
 	}
 
