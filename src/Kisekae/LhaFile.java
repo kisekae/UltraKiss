@@ -236,6 +236,13 @@ final class LhaFile extends ArchiveFile
 		if (memfile != null) memfile.close() ;
 		file = null ;
       memfile = null ;
+	}
+
+
+	// Release the LHA contents reference.
+
+	void flush() 
+	{
       contents = null ;
 	}
 

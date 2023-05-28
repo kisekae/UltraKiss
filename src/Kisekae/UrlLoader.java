@@ -130,7 +130,7 @@ class UrlLoader extends KissFrame
          }
          url = Variable.getStringLiteralValue(url) ;      
       }
-    
+   
       urlname = url.replaceFirst("[\\#\\?].*$","") ;  // no query or ref
       setIconImage(parent.getIconImage());
 
@@ -245,7 +245,7 @@ class UrlLoader extends KissFrame
    		openurl = new URL(urlname) ;
          System.out.println("Open URL " + openurl.toExternalForm()) ;
 
-			// Establish a temporary file of the correct type.
+         // Establish a temporary file of the correct type.
 
          String file = openurl.getFile() ;
          File f = new File(file) ;
@@ -338,7 +338,7 @@ class UrlLoader extends KissFrame
 
          // Close the connection.
 
-          updateProgress(completed) ;
+         updateProgress(completed) ;
          showStatus(Kisekae.getCaptions().getString("CloseConnectionStatus")) ;
          is.close() ;
          os.close() ;

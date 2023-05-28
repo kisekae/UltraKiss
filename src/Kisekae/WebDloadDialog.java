@@ -81,6 +81,7 @@ class WebDloadDialog extends KissDialog
    private GridBagLayout gridBagLayout1 = new GridBagLayout();
    private GridLayout gridLayout1 = new GridLayout();
    private JPanel jPanel3 = new JPanel();
+   private JLabel warnstw = new JLabel();
    private JCheckBox showdialog = new JCheckBox();
    private Border eb1 = BorderFactory.createEmptyBorder(10,10,10,10) ;
    private Border eb2 = BorderFactory.createEmptyBorder(10,10,10,10) ;
@@ -147,6 +148,8 @@ class WebDloadDialog extends KissDialog
       gridLayout1.setColumns(1);
       gridLayout1.setRows(2);
       showdialog.setText(Kisekae.getCaptions().getString("DownloadFileNoShow"));
+      warnstw.setText(Kisekae.getCaptions().getString("DownloadWarning"));
+      warnstw.setForeground(Color.RED) ;
       bGroup1.add(open) ;
       bGroup1.add(save) ;
       open.setSelected(true) ;
@@ -163,7 +166,9 @@ class WebDloadDialog extends KissDialog
             ,GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
       jPanel3.add(save, null);
       jPanel3.add(open, null);
-      jPanel2.add(showdialog, new GridBagConstraints(0, 4, 1, 1, 0.0, 0.0
+      jPanel2.add(warnstw, new GridBagConstraints(0, 4, 1, 1, 0.0, 0.0
+            ,GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(10, 0, 0, 0), 0, 0));
+      jPanel2.add(showdialog, new GridBagConstraints(0, 5, 1, 1, 0.0, 0.0
             ,GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(10, 0, 0, 0), 0, 0));
   		panel1.add(jPanel2, BorderLayout.CENTER);
   	   jPanel1.add(Box.createGlue()) ;

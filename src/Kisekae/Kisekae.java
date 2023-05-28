@@ -91,7 +91,7 @@ public class Kisekae extends Applet
 
    // Run time variables
 
-   private static String website = "https://github.com/kisekae/UltraKiss" ; // Web site
+   private static String website = "https://github.com/kisekae/UltraKiss/" ; // Web site
    private static String splashname = "Images/splash.gif" ; // Splash image
    private static String webstart = "HTML/KissWeb.html" ; // Portal page
    private static String splashdir = "Splash/hubble.jpg" ; // Splash dir

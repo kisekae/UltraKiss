@@ -159,6 +159,13 @@ final class DirFile extends ArchiveFile
 		if (OptionsDialog.getDebugControl() && pathname != null)
       	System.out.println("Close file " + pathname + ", Open count " + --opencount) ;
 		file = null ;
+	}
+
+
+	// Release the directory contents reference.
+
+	void flush() 
+	{
       contents = null ;
 	}
 

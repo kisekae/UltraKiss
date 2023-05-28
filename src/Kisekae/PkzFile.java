@@ -212,6 +212,13 @@ final class PkzFile extends ArchiveFile
 		if (memfile != null) memfile.close() ;
 		zipfile = null ;
       memfile = null ;
+	}
+
+
+	// Release the zip contents reference.
+
+	void flush() 
+	{
       contents = null ;
 	}
 

@@ -76,7 +76,7 @@ final class GifCel extends Cel
 
    private int frame = 0 ;						// Index of current frame
    private int framedelay = 0 ;				// Time delay until next frame
-   private int frametime = 0 ;				// Time elapsed for next frame
+   private long frametime = 0 ;				// Time elapsed for next frame
    private int framedispose = 0 ;			// Frame disposal setting
 
 	// Global palette storage common to all frames.  This contains RGB
@@ -262,7 +262,7 @@ final class GifCel extends Cel
 
    long getTime() { return frametime ; }
 
-   void setTime(int t) { frametime = t ; }
+   void setTime(long t) { frametime = t ; }
 
    int getDisposal() { return framedispose ; }
 

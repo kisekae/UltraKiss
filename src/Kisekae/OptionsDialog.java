@@ -188,6 +188,7 @@ final public class OptionsDialog extends KissDialog
    private static boolean directkiss = false ;
    private static boolean gnomekiss = false ;
    private static boolean kissld = false ;
+   private static boolean defaultplayfkiss = true ;
    private static String eventqueues = "1" ;
    private static String timerperiod = "10" ;
    private static String gifperiod = "100" ;
@@ -340,6 +341,7 @@ final public class OptionsDialog extends KissDialog
 	private static boolean initapplemac = applemac ;
 	private static boolean initlinux = linux ;
    private static boolean initplayfkiss = playfkiss ;
+   private static boolean initdefaultplayfkiss = defaultplayfkiss ;
    private static boolean initdirectkiss = directkiss ;
    private static boolean initgnomekiss = gnomekiss ;
    private static boolean initkissld = kissld ;
@@ -630,6 +632,7 @@ final public class OptionsDialog extends KissDialog
 	private JCheckBox EditEnable = new JCheckBox();
 	private JCheckBox SecurityEnable = new JCheckBox();
 	private JCheckBox InitEdit = new JCheckBox();
+	private JCheckBox DefaultPlayFKiss = new JCheckBox();
 	private JRadioButton AltEditDrag = new JRadioButton();
 	private JRadioButton ShiftEditDrag = new JRadioButton();
 	private JCheckBox ImportRelative = new JCheckBox();
@@ -1506,6 +1509,9 @@ final public class OptionsDialog extends KissDialog
 		jLabel20.setText(Kisekae.getCaptions().getString("MaxLruFilesText"));
       ClearLruBtn.setText(Kisekae.getCaptions().getString("LruClearMessage")) ;
 		ClearLruBtn.addActionListener(this);
+		DefaultPlayFKiss.setText(Kisekae.getCaptions().getString("OptionsDefaultPlayFKiss"));
+      DefaultPlayFKiss.setToolTipText(Kisekae.getCaptions().getString("ToolTipDefaultPlayFKiss"));
+		DefaultPlayFKiss.setSelected(defaultplayfkiss);
       
 		getContentPane().add(panel1);
 		panel1.add(jTabbedPane1, new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0
@@ -1711,6 +1717,7 @@ final public class OptionsDialog extends KissDialog
 		jPanel43.add(ShowUndefs, null);
 		jPanel43.add(ExpandEvents, null);
 		jPanel43.add(AutoEndif, null);
+		jPanel43.add(DefaultPlayFKiss, null);
 
 		jPanel23.add(jPanel40, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0
             ,GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 10, 0, 0), 0, 0));
@@ -2146,7 +2153,8 @@ final public class OptionsDialog extends KissDialog
 	static public boolean getSystemLF() { return systemlf ; }
 	static public boolean getAppleMac() { return applemac ; }
 	static public boolean getLinux() { return linux ; }
-   
+   static public boolean getDefaultPlayFKiss() { return defaultplayfkiss ; }
+
    static public boolean getPlayFKissCompatibility() { return playfkiss ; }
    static public boolean getDirectKissCompatibility() { return directkiss ; }
    static public boolean getGnomeKissCompatibility() { return gnomekiss ; }
@@ -2449,7 +2457,8 @@ final public class OptionsDialog extends KissDialog
    static public void setLruFiles(Vector v) { lrufiles = v ; }
 	static public void setAppleMac(boolean b) { applemac = b ; }
 	static public void setLinux(boolean b) { linux = b ; }
-   
+   static public void setDefaultPlayFKiss(boolean b) { defaultplayfkiss = b ; }
+
    static public void setLruFile(String s) 
    { 
       if (lrufiles == null) lrufiles = new Vector() ;
@@ -2771,6 +2780,7 @@ final public class OptionsDialog extends KissDialog
       else if ("directkiss".equalsIgnoreCase(option)) setDirectKissCompatibility(value) ;
       else if ("gnomekiss".equalsIgnoreCase(option)) setGnomeKissCompatibility(value) ;
       else if ("kissld".equalsIgnoreCase(option)) setKissLDCompatibility(value) ;
+      else if ("defaultplayfkiss".equalsIgnoreCase(option)) setDefaultPlayFKiss(b) ;
    }
 
 
@@ -2911,6 +2921,7 @@ final public class OptionsDialog extends KissDialog
       else if ("directkiss".equalsIgnoreCase(option)) s += getDirectKissCompatibility() ;
       else if ("gnomekiss".equalsIgnoreCase(option)) s += getGnomeKissCompatibility() ;
       else if ("kissld".equalsIgnoreCase(option)) s += getKissLDCompatibility() ;
+      else if ("defaultplayfkiss".equalsIgnoreCase(option)) s += getDefaultPlayFKiss() ;
       return s ;
    }
 
@@ -2958,6 +2969,7 @@ final public class OptionsDialog extends KissDialog
       DirectKissBtn.setSelected(directkiss);
       GnomeKissBtn.setSelected(gnomekiss);
       KissLDBtn.setSelected(kissld);
+      DefaultPlayFKiss.setSelected(defaultplayfkiss);
       Backup.setSelected(backup);
       SaveSource.setSelected(savesource);
       ShowDLPrompt.setSelected(showdlprompt);
@@ -3159,6 +3171,7 @@ final public class OptionsDialog extends KissDialog
       directkiss = DirectKissBtn.isSelected() ;
       gnomekiss = GnomeKissBtn.isSelected() ;
       kissld = KissLDBtn.isSelected() ;
+      defaultplayfkiss = DefaultPlayFKiss.isSelected() ;
       backup = Backup.isSelected() ;
       savesource = SaveSource.isSelected() ;
       showdlprompt = ShowDLPrompt.isSelected() ;
@@ -3368,6 +3381,7 @@ final public class OptionsDialog extends KissDialog
 //		kissld = initkissld ;
 //    showdlprompt = initshowdlprompt ;
 //    showtips = initshowtips ;
+		defaultplayfkiss = initdefaultplayfkiss ;
 		timer = inittimer ;
 		event = initevent ;
 		animate = initanimate ;
@@ -3621,6 +3635,7 @@ final public class OptionsDialog extends KissDialog
       initgnomekiss = gnomekiss ;
       initkissld = kissld ;
       tempeditenable = initedit ;
+      initdefaultplayfkiss = defaultplayfkiss ;
    }
    
    // Set initial factory option values.
@@ -3735,6 +3750,7 @@ final public class OptionsDialog extends KissDialog
       directkiss = false ;
       gnomekiss = false ;
       kissld = false ;
+      defaultplayfkiss = true ;
       compatapply = false ;
       eventqueues = "1" ;
       timerperiod = "10" ;
@@ -3780,6 +3796,7 @@ final public class OptionsDialog extends KissDialog
 //	   if (initevent != EventOption.isSelected()) return true ;
 //	   if (initanimate != AnimateOption.isSelected()) return true ;
 //    if (initinitedit != InitEdit.isSelected()) return true ;
+      if (initdefaultplayfkiss != DefaultPlayFKiss.isSelected()) return true ;
       if (initeditenable != EditEnable.isSelected()) return true ;
       if (initsecurityenable != SecurityEnable.isSelected()) return true ;
 	   if (initdebugmouse != MouseDebug.isSelected()) return true ;
@@ -3983,6 +4000,7 @@ final public class OptionsDialog extends KissDialog
 	   mapcount = toBoolean1(p.getProperty("mapcount"),mapcount) ;
 	   allambiguous = toBoolean1(p.getProperty("allambiguous"),allambiguous) ;
 	   playfkiss = toBoolean1(p.getProperty("playfkiss"),playfkiss) ;
+	   defaultplayfkiss = toBoolean1(p.getProperty("defaultplayfkiss"),defaultplayfkiss) ;
 	   directkiss = toBoolean1(p.getProperty("directkiss"),directkiss) ;
 	   gnomekiss = toBoolean1(p.getProperty("gnomekiss"),gnomekiss) ;
 	   kissld = toBoolean1(p.getProperty("kissld"),kissld) ;
@@ -4174,6 +4192,7 @@ final public class OptionsDialog extends KissDialog
       p.put("applemac",toString2(applemac)) ;
       p.put("linux",toString2(linux)) ;
       p.put("playfkiss",toString2(playfkiss)) ;
+      p.put("defaultplayfkiss",toString2(defaultplayfkiss)) ;
       p.put("directkiss",toString2(directkiss)) ;
       p.put("gnomekiss",toString2(gnomekiss)) ;
       p.put("kissld",toString2(kissld)) ;
@@ -5612,7 +5631,7 @@ final public class OptionsDialog extends KissDialog
 //	   if (!userdir.equals(inituserdir)) writeLine(out,"; userdir = \"" + userdir + "\"") ;
 //	   if (!onlinehelp.equals(initonlinehelp)) writeLine(out,"; onlinehelp = \"" + onlinehelp + "\"") ;
 //	   if (!website.equals(initwebsite)) writeLine(out,"; website = \"" + website + "\"") ;
-	   if (!splashdir.equals(initsplashdir)) writeLine(out,"; splashdir = \"" + splashdir + "\"") ;
+//	   if (!splashdir.equals(initsplashdir)) writeLine(out,"; splashdir = \"" + splashdir + "\"") ;
 //	   if (!icondir.equals(initicondir)) writeLine(out,"; icondir = \"" + icondir + "\"") ;
 //    if (applemac != initapplemac) writeLine(out,"; applemac = \"" + applemac + "\"") ;
 //    if (linux != initlinux) writeLine(out,"; linux = \"" + linux + "\"") ;
@@ -5620,6 +5639,7 @@ final public class OptionsDialog extends KissDialog
       else if (directkiss) writeLine(out,"; directkiss = \"" + directkiss + "\"") ;
       else if (gnomekiss) writeLine(out,"; gnomekiss = \"" + gnomekiss + "\"") ;
       else if (kissld) writeLine(out,"; kissld = \"" + kissld + "\"") ;
+//    if (defaultplayfkiss) writeLine(out,"; defaultplayfkiss = \"" + defaultplayfkiss + "\"") ;
 //	   if (backup != initbackup) writeLine(out,"; backup = " + backup) ;
 //	   if (savesource != initsavesource) writeLine(out,"; savesource = " + savesource) ;
 //	   if (loadclose != initloadclose) writeLine(out,"; loadclose = " + loadclose) ;
@@ -5637,7 +5657,7 @@ final public class OptionsDialog extends KissDialog
 	   if (cacheimage != initcacheimage) writeLine(out,"; cacheimage = " + cacheimage) ;
 	   if (suspendmedia != initsuspendmedia) writeLine(out,"; suspendmedia = " + suspendmedia) ;
 	   if (stopmusic != initstopmusic) writeLine(out,"; stopmusic = " + stopmusic) ;
-	   if (soundsingle != initsoundsingle) writeLine(out,"; soundsingle = " + soundsingle) ;
+//	   if (soundsingle != initsoundsingle) writeLine(out,"; soundsingle = " + soundsingle) ;
 	   if (scaletofit != initscaletofit) writeLine(out,"; scaletofit = " + scaletofit) ;
 	   if (sizetofit != initsizetofit) writeLine(out,"; sizetofit = " + sizetofit) ;
 	   if (retainwindowsize != initretainwindowsize) writeLine(out,"; retainwindowsize = " + retainwindowsize) ;

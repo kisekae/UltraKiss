@@ -2759,7 +2759,10 @@ final class Configuration extends KissObject
 
 		if (zip != null)
 		{
-			try { zip.close() ; }
+			try { 
+            zip.close() ; 
+            zip.flush() ;
+         }
 			catch (IOException e) { }
 		}
       zip = null ;
@@ -4510,7 +4513,8 @@ final class Configuration extends KissObject
            	System.out.println("PlayFKiss compatibility set.") ;
             OptionsDialog.setPlayFKissCompatibility("true") ;
          }
-         else if (!ultrakiss && compatibility == null && !mf.isRestart())
+         else if (!ultrakiss && compatibility == null && 
+            !mf.isRestart() && OptionsDialog.getDefaultPlayFKiss())
          {
             loader.showText(" ") ;
             loader.showText("PlayFKiss compatibility assumed.") ;

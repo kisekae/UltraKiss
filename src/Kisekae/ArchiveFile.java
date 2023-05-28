@@ -759,10 +759,13 @@ abstract class ArchiveFile
 
 	abstract OutputStream getOutputStream(ArchiveEntry e) throws IOException ;
 
-
 	// Close the archive file contents.
 
 	abstract void close() throws IOException ;
+
+   // Flush the archive file contents.
+
+	abstract void flush() ;
 
 	// Open the archive file contents.
 
