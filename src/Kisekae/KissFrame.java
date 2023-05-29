@@ -193,4 +193,10 @@ public abstract class KissFrame extends JFrame
    // These should be overloaded if an implementation is required.
    
    void applyTransformedImage(Image img) { }
+   
+   
+   // Method to transfer a nocopy indicator from a URL download
+   // to a frame menu.  To be overloaded by the frame.
+   
+   void setNoCopy(boolean b) { }
 }

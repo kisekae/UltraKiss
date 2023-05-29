@@ -2585,7 +2585,7 @@ final class PanelFrame extends JPanel
 
    // Initialization.  We are given a KiSS configuration object and
    // we must construct a panel frame environment to properly display
-   // this data set.
+   // this KiSS set.
 
    void init(Configuration c)
    {
@@ -2616,7 +2616,7 @@ final class PanelFrame extends JPanel
       windowOffset = new Point(0,0) ;
 
       // Access the configuration information to customize the parent
-      // window for our specific data set.
+      // window for our specific KiSS set.
 
       if (config != null)
       {
@@ -6239,7 +6239,7 @@ final class PanelFrame extends JPanel
          // Travel up the attachment chain to locate a detachable object.
 
          Group primary = getGroup() ;
-         Point flex = primary.getFlex() ;
+         Point flex = (primary != null) ? primary.getFlex() : null ;
          boolean nostrongfix = !OptionsDialog.getDetachFix() ;
          nostrongfix = nostrongfix && (flex != null && flex.y > 0) ;
          if (!selected && !nostrongfix)

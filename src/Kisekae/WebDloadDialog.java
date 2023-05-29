@@ -60,7 +60,7 @@ import java.io.* ;
 class WebDloadDialog extends KissDialog
  	implements ActionListener, WindowListener
 {
-   private JFrame parent = null ;				// Reference to our parent dialog
+   private KissFrame parent = null ;			// Reference to our parent dialog
    protected boolean cancel = true ;			// True if dialog cancelled
    private URL url = null ;                  // URL to download
 
@@ -91,7 +91,7 @@ class WebDloadDialog extends KissDialog
 
   	// Constructor
 
-  	public WebDloadDialog(JFrame frame, URL url)
+  	public WebDloadDialog(KissFrame frame, URL url)
   	{
   		super(frame,Kisekae.getCaptions().getString("DownloadFileTitle"),true);
       parent = frame ;
@@ -184,9 +184,13 @@ class WebDloadDialog extends KissDialog
    void setValues() 
    { 
       String ref = "" ;
+      parent.setNoCopy(false) ;
       if (url != null) ref = url.getRef() ;
       if ("nocopy".equals(ref))
+      {
          save.setEnabled(false) ;
+         parent.setNoCopy(true) ;
+      }
    }
 
    // Return the dialog show switch.

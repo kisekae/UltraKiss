@@ -1926,7 +1926,7 @@ final class FKissAction extends KissObject
             
             // If the object happens to be the one dragged by the mouse 
             // return the bounding box coordinate corrected for the offset.
-            
+           
             o1 = panel.getDragObject() ;
             if (!(o1 == kiss)) break ;
             Rectangle box1 = kiss.getBoundingBox() ;

@@ -501,18 +501,19 @@ final public class MainFrame extends KissFrame
 			config.activate(panel) ;
 			callback.doClick() ;
          
-         // Add this configuration to the LRU list.
+         // Add this configuration to the LRU list.  Downloaded files  
+         // with a NoCopy reference are not added to the list.
 
          ArchiveFile zip = config.getZipFile() ;
          String zipname = (zip != null) ? zip.getName() : null ;
-         if (zipname != null)
+         if (zipname != null && !mainmenu.getNoCopy())
          {
             String lruname = zipname + File.pathSeparator ;
             mainmenu.setLruFile(lruname + config.getPath()) ;
          }
          else
             mainmenu.setLruFile(null) ;
-
+               
 			// Activate the animation threads.
 
          AlarmTimer timer = config.getTimer() ;
@@ -540,7 +541,7 @@ final public class MainFrame extends KissFrame
          Object o = (p != null) ? p.getIdentifier() : null ;
          int n = (o instanceof Integer) ? ((Integer) o).intValue() : 0 ;
 			panel.initpage(n) ;
-
+         
          // Make the panel visible.
 
    		setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
@@ -625,6 +626,10 @@ final public class MainFrame extends KissFrame
       Kisekae.setLoaded(config != null) ;
       KissObject.setLoader(null) ;
       loader = null ;
+      
+      // Reset our NoCopy indicator for future loads.
+      
+      mainmenu.setNoCopy(false) ;
 	}
    
    

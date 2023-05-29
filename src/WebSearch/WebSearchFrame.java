@@ -277,7 +277,10 @@ final public class WebSearchFrame extends KissFrame
 
       try { jbInit() ; }
       catch(Exception ex)
-      { ex.printStackTrace() ; }
+      { 
+         System.out.println("WebSearchFrame: jbInit constructor " + ex.toString()) ;
+         ex.printStackTrace() ; 
+      }
 
       // Set up the menu bar.
 
@@ -960,7 +963,10 @@ final public class WebSearchFrame extends KissFrame
          this.parent = parent ;
          try { jbInit() ; }
          catch(Exception e)
-         { e.printStackTrace() ; }
+         { 
+            System.out.println("WebSearchFrame: jbInit StatusBar constructor " + e.toString()) ;
+            e.printStackTrace() ; 
+         }
       }
 
 

@@ -5151,7 +5151,7 @@ final public class OptionsDialog extends KissDialog
       KissLDBtn.setSelected(false) ;
       if (PlayFKissBtn.isSelected() != b) PlayFKissBtn.setSelected(b) ;
       DragMove.setSelected((b) ? false : false);
-      ReleaseMove.setSelected((b) ? false : true);
+      ReleaseMove.setSelected((b) ? true : true);
       DropFixdrop.setSelected((b) ? false : true);
       CatchFixdrop.setSelected((b) ? true : true);
       VisibleUnfix.setSelected((b) ? false : true);
@@ -5195,7 +5195,7 @@ final public class OptionsDialog extends KissDialog
    {
       compatapply = true ;
       setDragMove(false);
-      setReleaseMove(false);
+      setReleaseMove(true);
       setDropFixdrop(false);
       setCatchFixdrop(true);
       setVisibleUnfix(false);

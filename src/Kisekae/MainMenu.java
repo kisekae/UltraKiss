@@ -72,6 +72,7 @@ final public class MainMenu extends KissMenu
 {
    private FileOpen fd = null ;							// Our file open list
    private UrlLoader urlloader = null ;	 			// Our active url load
+   private boolean nocopy = false ;                // Our URL nocopy indicator
 
    private static final int NEWFILE = 0 ;
    private static final int NEWPAGE = 1 ;
@@ -484,6 +485,15 @@ final public class MainMenu extends KissMenu
    // for load complete callbacks.
 
    void setUrlLoader(UrlLoader loader) { urlloader = loader ; }
+   
+   // Retain the nocopy indicator from a URL load. This is used to disable
+   // the menu Save and Save As menu items.
+   
+   void setNoCopy(boolean b) { nocopy = b ; }
+   
+   // Return the nocopy indicator from a URL load. 
+
+   boolean getNoCopy() { return nocopy ; }
 
    // Implementation of required KissMenu abstract method.
 

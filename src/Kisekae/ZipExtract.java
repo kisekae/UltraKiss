@@ -161,6 +161,7 @@ final class ZipExtract extends KissDialog
 		try { jbInit(); pack(); }
       catch(Exception ex)
       {
+         System.out.println("ZipExtract: jbInit constructor " + ex.toString()) ;
          ex.printStackTrace();
          JOptionPane.showMessageDialog(null,
             Kisekae.getCaptions().getString("InternalError") +

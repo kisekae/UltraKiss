@@ -138,7 +138,10 @@ class UrlLoader extends KissFrame
 
 		try { jbInit(); }
 		catch(Exception e)
-		{ e.printStackTrace(); }
+		{
+         System.out.println("UrlLoader: jbInit constructor " + e.toString()) ;
+         e.printStackTrace(); 
+      }
 
       // Get the connection icon image.
 

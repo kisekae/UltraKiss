@@ -379,7 +379,10 @@ public class ZipManager extends KissFrame
 
 		try { jbInit() ; pack() ; }
 		catch(Exception ex)
-		{ ex.printStackTrace(); }
+		{ 
+         System.out.println("ZipManager: jbInit constructor " + ex.toString()) ;
+         ex.printStackTrace(); 
+      }
 
 		// Find the HelpSet file and create the HelpSet broker.
 

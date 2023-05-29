@@ -244,7 +244,7 @@ final class PanelMenu extends KissMenu
       save.setEnabled(false) ;
       m[0].add((saveas = new JMenuItem(Kisekae.getCaptions().getString("MenuFileSaveAs")))) ;
       saveas.addActionListener(this) ;
-      saveas.setEnabled(!Kisekae.isSecure() && !Kisekae.isExpired()) ;
+      saveas.setEnabled(!Kisekae.isSecure() && !Kisekae.isExpired() && !menu.getNoCopy()) ;
       if (!applemac) saveas.setMnemonic(KeyEvent.VK_A) ;
       m[0].add((saveasarchive = new JMenuItem(Kisekae.getCaptions().getString("MenuFileSaveAsArchive")))) ;
       saveasarchive.addActionListener(this) ;
@@ -535,7 +535,7 @@ final class PanelMenu extends KissMenu
       {
          PageSet pageset = config.getPage(0) ;
          ArchiveFile zip = config.getZipFile() ;
-         save.setEnabled(zip != null && zip.getDirectoryName() != null  && !Kisekae.isSecure()) ;
+         save.setEnabled(zip != null && zip.getDirectoryName() != null  && !Kisekae.isSecure() && !menu.getNoCopy()) ;
          archive.setEnabled(zip != null && zip.isArchive()) ;
          selectall.setEnabled(pageset != null && pageset.getGroupCount() > 0) ;
          selectfind.setEnabled(pageset != null && pageset.getGroupCount() > 0) ;
@@ -633,12 +633,12 @@ final class PanelMenu extends KissMenu
       boolean b = OptionsDialog.getEditEnable() ;
       ArchiveFile zip = config.getZipFile() ;
       String directory = (zip != null) ? zip.getDirectoryName() : null ;
-      save.setEnabled(directory != null && !Kisekae.isSecure()) ;
-      saveas.setEnabled(!Kisekae.isSecure()) ;
+      save.setEnabled(directory != null && !Kisekae.isSecure() && !menu.getNoCopy()) ;
+      saveas.setEnabled(!Kisekae.isSecure() && !menu.getNoCopy()) ;
       saveasarchive.setVisible(zip != null && zip instanceof DirFile && !Kisekae.isSecure()) ;
-      saveasarchive.setEnabled(!config.isUpdated()) ;
+      saveasarchive.setEnabled(!config.isUpdated() && !menu.getNoCopy()) ;
       saveasfiles.setVisible(zip != null && !(zip instanceof DirFile) && !Kisekae.isSecure()) ;
-      saveasfiles.setEnabled(!config.isUpdated() && !config.hasIncludeFiles()) ;
+      saveasfiles.setEnabled(!config.isUpdated() && !config.hasIncludeFiles() && !menu.getNoCopy()) ;
       undoall.setEnabled(b && undo.canUndo()) ;
       cut.setEnabled(b && panel.isEditOn()) ;
       copy.setEnabled(b && panel.isEditOn()) ;
@@ -706,12 +706,12 @@ final class PanelMenu extends KissMenu
    // FileOpen object.
 
    FileOpen getFileOpen() { return (menu == null) ? null : menu.getFileOpen() ; }
-
+   
    // Implementation of the required FileOpen method to restore the menu
    // reference.  Restoration can occur if a configuration load fails.
 
    void setFileOpen(FileOpen f) { if (menu != null) menu.setFileOpen(f) ; }
-
+   
    // Implementation of required KissMenu method to return our help menu.
 
    JMenu getHelpMenu() { return m[4] ; }

@@ -84,6 +84,7 @@ final public class WebFrame extends KissFrame
    private Vector localhistory = null ;            // Local URL History list
    private int locallocation = 0 ;                 // Local history index
    private boolean connecting = false ;            // If true, connecting
+   private boolean nocopy = false ;                // If true, no save of file
 
 	// HelpSet interface objects.
 
@@ -250,7 +251,10 @@ final public class WebFrame extends KissFrame
 
 		try { jbInit() ; pack() ; }
 		catch(Exception ex)
-		{ ex.printStackTrace() ; }
+		{ 
+         System.out.println("WebFrame: jbInit constructor " + ex.toString()) ;
+         ex.printStackTrace() ; 
+      }
 
 		// Find the HelpSet file and create the HelpSet broker.
 
@@ -476,11 +480,18 @@ final public class WebFrame extends KissFrame
 
    public void setPage(String location)
    {
-   if (runner == null || runner.isAlive()) return ;
+      if (runner == null || runner.isAlive()) return ;
       runner = new WebConnect() ;
       this.location = location ;
       runner.start() ;
    }
+
+
+   // Set a nocopy indicator that was referenced on the URL for download.
+   // Pass this to the mainmenu when we load the URL file to disable menu 
+   // Save and Save As functions.
+
+   public void setNoCopy(boolean b) { nocopy = b ; }
 
 
    // Menu items for browser forward and back control.
@@ -975,7 +986,10 @@ final public class WebFrame extends KissFrame
             MainFrame mf = Kisekae.getMainFrame() ;
             MainMenu menu = (mf != null) ? mf.getMainMenu() : null ;
    	      if (menu != null)
+            {
+               menu.setNoCopy(nocopy);
                menu.openContext(fdnew,ze) ;
+            }
             else
                fdnew.close() ;
          }
