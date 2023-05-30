@@ -401,7 +401,7 @@ Contact me through [GitHub](https://github.com/kisekae) or my personal website [
 
 ####       **How does object collision detection work in UltraKiss?**    
 
-​      Objects collide when they touch. The FKiSS events in(), out(), stillin(), stillout(), apart(), collide() and their related action commands all examine whether or not the objects touch.    
+​      Objects collide when they touch. A touch occurs when two visible pixels overlap. The FKiSS events in(), out(), stillin(), stillout(), apart(), collide() and their related action commands all examine whether or not the objects touch.    
 
 ​      Collision events can occur whenever objects are moved, either through dragging with the mouse or any related FKiSS move action command. Collision events are fired when the object stops moving. This happens on a mouse release if the object is being dragged, or upon completion of the move command if the object is being moved through an FKiSS action. The event is not fired during the move, so transitory inter-object collision events are not recognized if the object happens to pass over or through some other object.    
 
