@@ -3,21 +3,16 @@ In 2002 I developed a computer program that implements the Kisekae Set system, K
 
 Kisekae is short for "kisekae ningyou", a Japanese term meaning "dress-up dolls". Unlike "computer art" which creates or displays traditional art via a computer, KiSS uses the computer as the medium, allowing the art to be not only animated, but also interactive. 
 
-UltraKiss is not restricted to dress-up dolls but is an integrated development system to create visual applications.  This is an artistic process that uses images and other related elements. It allows the artist to think in terms of visual objects and actions rather than text-based code.
+UltraKiss is not restricted to dress-up dolls but rather is an integrated development environment to create visual applications.  This is an artistic process that uses images and other related elements to create new visual applications. It allows the artist to think in terms of visual objects and actions rather than text-based code.
 
-<p align="center" width="100%">
+
+
 
 ![Sailor Moon](https://github.com/kisekae/UltraKiss/blob/master/src/Images/intro_03.jpg)
 
-</br>
-
-![](https://github.com/kisekae/UltraKiss/blob/master/src/Images/UltraKiss.jpg)
-
-</p>
 
 
-
-UltraKiss was developed to help artists build their KiSS sets. UltraKiss reads and interprets KiSS data files.  These files contain computer graphics images, color palettes and data control files.  Objects, such as the doll figure, costumes, and other items are constructed from layered image components that usually show only parts of the complete image. 
+UltraKiss was developed to help artists build their KiSS sets. UltraKiss reads and interprets KiSS data files.  These files contain computer graphics images, color palettes and data control files.  Objects, in the original KiSS model such as the doll figure, costumes, and other items are constructed from layered image components that usually show only parts of the complete image. 
 
 Objects can be manipulated through user actions or through  a simple event processing model that enables timed animations or other actions if objects are touched or dragged across the screen.  Color variations, enabled through palette changes in UltraKiss, can also be used to produce different results.  
 
@@ -45,14 +40,16 @@ In 2023, prompted by new KiSS work from [The Owl](http://followtheowl.com/) with
 
    
 
+   ![](https://github.com/kisekae/UltraKiss/blob/master/src/Images/UltraKiss.jpg)
+
+   
+
 2. Use **Help-Contents** to access the UltraKiss program documentation. See **Help-Contents-What is UltraKiss** for a brief description of the Kisekae Set system.
 
    Use **Help-Demo Sets** to access the KiSS demonstration sets that are packaged with UltraKiss. Click on any of the listed sets to load the set in UltraKiss. To see the FKiSS code behind any KiSS set press F11 or use the **View-Active Configuration** menu command.
    
-
 3. To learn how to make KiSS sets of your own explore the tutorials provided with UltraKiss. See **Help-Tutorials**.  In particular, look at the FKiSS tutorial to learn how to use the UltraKiss FKiSS Editor debugging tool to breakpoint and step through your code execution.
    
-
 4. Explore the reference documentation provided with UltraKiss.  Examine the **UltraKiss Introduction** section and the **FKiSS** section.
 
    The FKiSS event and action statement documentation describes the FKiSS language and provides illustrative examples to help you develop your own interactive KiSS sets.
@@ -68,10 +65,10 @@ Contact me through [GitHub](https://github.com/kisekae) or my personal website [
 
 ### Basic KiSS Features
 
--  Layered objects, so the front and back of doll clothes can slide over the doll in a realistic way.             
--  Different page sets or scenes, where each page can show new sets of clothes or background pictures.                    
--  Multiple color sets, so that you can view your doll clothes and scenes in different shades of color.                    
--  'Sticky' objects, so that some items may have to be tugged before they will move freely.                  
+- Layered objects, so the front and back of doll clothes can slide over the doll in a realistic way.             
+- Different page sets or scenes, where each page can show new sets of clothes or background pictures.                    
+- Multiple color sets, so that you can view your doll clothes and scenes in different shades of color.                    
+- 'Sticky' objects, so that some items may have to be tugged before they will move freely.                  
 - Object events, so that doll features, hairstyles, or clothes can change when touched.                    
 - Semi-transparent images, so you can see through them to the objects below.                                    
 
@@ -110,19 +107,19 @@ Contact me through [GitHub](https://github.com/kisekae) or my personal website [
 ### FKiSS Specification Support
 
 - FKiSS 1, FKiSS 2, FKiSS 2.1, FKiSS 3 and FKiSS 4 specifications.      
-- Unrestricted length alphanumeric variable names can be used.         
-- String and integer variable types are supported.   
-- Variable names can be used to reference KiSS objects.      
-- Indirect references to variable values is supported.         
-- Indexed variables can be used for loop control.               
-- For statements and while loops can be used for iteration  control.   
-- Nested if-else-endif logic can be coded for complex algorithms.                   
-- Local variable scope for label events supports recursive  operation.         
-- Label parameters and return values enable function calls.                                    
+- Unrestricted length alphanumeric variable names can be used.  (FKiSS 5)       
+- String and integer variable types are supported.  (FKiSS 5)
+- Variable names can be used to reference KiSS objects.  (FKiSS 5)   
+- Indirect references to variable values is supported.  (FKiSS 5)      
+- Indexed variables can be used for loop control.  (FKiSS 5)           
+- For statements and while loops can be used for iteration control.  (FKiSS 5)  
+- Nested if-else-endif logic can be coded for complex algorithms.  (FKiSS 5)               
+- Local variable scope for label events supports recursive operation.  (FKiSS 5)      
+- Label parameters and return values enable function calls.  (FKiSS 5)                                
 
 ​                                                                         
 
-### New UltraKiss Programming Extensions
+### New UltraKiss Programming Extensions (FKiSS 5)
 
 - "letcel" command to identify the currently selected image cel.    
 - "letcomment" command to obtain the cel comment text.          
@@ -145,14 +142,16 @@ Contact me through [GitHub](https://github.com/kisekae) or my personal website [
 - "setmodal" and "letmodal" commands to restrict user events to a specific object.    
 - "read", "write", "open" and "close" commands for external file access.       
 - "viewer" command to access viewer specific control features.       
-- "environment" command to access external information and objects.                                     
+- "environment" command to access external information and objects.    
+- "signal", "wait", and "sleep" commands for multiple activity synchronization control. 
+- "paint" command to force a redraw of the current screen.                                
 
 
 
-### GUI Components
+### GUI Components (UltraKiss Extension)
 
 - Support for basic Graphical User Interface components for simplified user input.     
--  Labels, Buttons, Check Boxes, Lists, Text Fields, Text Areas, Radio Buttons.        
+- Labels, Buttons, Check Boxes, Lists, Text Fields, Text Areas, Radio Buttons.        
 - Individual component attributes to control font characteristics, color, scrolling, and state.        
 - Integration with the FKiSS event model to recognize user component events.            
 - Ability to replace the viewer menu bar with application defined menu items.   
@@ -200,6 +199,10 @@ Contact me through [GitHub](https://github.com/kisekae) or my personal website [
 
 
 
+![](https://github.com/kisekae/UltraKiss/blob/master/src/Help/product/fkisseditor/images/intro_02.jpg)
+
+
+
 ### Questions and Answers
 
 ​           
@@ -208,9 +211,9 @@ Contact me through [GitHub](https://github.com/kisekae) or my personal website [
 
 ​      Close any loaded set to ensure that UltraKiss displays the main logo screen. Use the **File-New** command to create a new KiSS set. This will automatically create a new configuration file (CNF file) in the KiSS set and the new configuration will be assigned a new sequential name. One new empty page set will be created for you.    
 
-​      You must now import images into this page using the **Edit-Import** command. You can also edit the configuration file manually to construct your KiSS set. You can use the UltraKiss edit       functions to position images on the page, adjust their layering order, or otherwise develop your KiSS set. For further information see the tutorial document that provides hints and advice on constructing KiSS sets.    
+​      You must now import images into this page using the **Edit-Import** command. You can also edit the configuration file manually to construct your KiSS set. You can use the UltraKiss edit functions to position images on the page, adjust their layering order, or otherwise develop your KiSS set. For further information see the tutorial document that provides hints and advice on constructing KiSS sets.    
 
-​      Remember to save your new KiSS set. All new KiSS set files will be written to the file directory selected for saving the configuration element. You may rename the configuration element when it is saved.    
+​      Remember to save your new KiSS set. You may rename the configuration element when it is saved.    
 
 ​           
 
@@ -226,9 +229,7 @@ Contact me through [GitHub](https://github.com/kisekae) or my personal website [
 
 ​      Load your original or base KiSS configuration file into UltraKiss with the **File-Open** command. Then, load your expansion set with the **File-Add** command.     
 
-​      Expansion sets are loaded on top of the currently loaded base set. Any image cel or palette or audio object referenced in the expansion set but not found within the expansion directory or       archive is referenced from the base set. Once the expansion set is loaded the base set is dropped. The new expansion set and all objects referenced in the expansion configuration file become the new base set.       If multiple expansion sets are loaded in sequence each builds upon the last. It would be problematic if the original base set contained a line item for 'shirt.cel', the first expansion did not contain this line, and the second expansion did. The second expansion load would fail as 'shirt.cel' would have been dropped as a result of the first expansion set load.    
-
-​      Similarly, if multiple configuration files exist in an expansion set and each configuration file references different sets of objects from the base file, then any attempt to select a new       expansion configuration after the load will fail. The base objects referenced in the second expansion configuration file will have beendropped when the first configuration file was opened.    
+​      Expansion sets are loaded on top of the currently loaded base set. They add new images and other objects to the base set.  Any image cel or palette or audio object referenced in the expansion set CNF file but not found within the expansion set itself is referenced from the base set. Once the expansion set is loaded the base set is dropped. The new expansion set and all objects referenced in the expansion configuration file become the new base set.  If multiple expansion sets are loaded each builds upon the last. 
 
 ​      UltraKiss does not know that a set is an expansion set. If an expansion is loaded on the wrong base set many errors will occur. This is why the 'cancel' option exists. If the expansion load is cancelled the original base set should still be available.    
 
@@ -236,7 +237,7 @@ Contact me through [GitHub](https://github.com/kisekae) or my personal website [
 
 ####       **How do I package my KiSS set into an LZH file?**    
 
-​      If your KiSS set elements are all contained within a standard file directory you can use the Archive Manager tool create a new LZH file or ZIP file and then add all your KiSS data set elements from your directory into this file. If you have segregated your data set into       subdirectories remember to set the 'recurse folders' and 'save relative path' options to add all the subordinate files, too.    
+​      If your KiSS set elements are all contained within a standard file directory you can use the Archive Manager tool create a new LZH file or ZIP file and add all your KiSS data set elements from your directory into this file. If you have segregated your data set into subdirectories remember to set the 'recurse folders' and 'save relative path' options to add all the subordinate files, too.    
 
 ​      You can also load your set from its directory and use the **File-Save As Archive** command to save all set KiSS elements in a new archive file.     
 
@@ -246,21 +247,21 @@ Contact me through [GitHub](https://github.com/kisekae) or my personal website [
 
 ####       **What is the difference between a grouped object and an ungrouped object?**    
 
-​      Grouped objects and ungrouped objects are terms applied to selection sets when using the UltraKiss editing features. In KiSS, the term 'object' is an abstract term that relates a number of       entities to a particular point on the screen. In practice, an 'object group' is the realization of this abstraction and is a concrete implementation of a number of image cels in one movable group that is visible on the screen.    
+​      Grouped objects and ungrouped objects are terms applied to selection sets when using the UltraKiss editing features. In KiSS, the term 'object' is an abstract term that relates a number of entities to a particular point on the screen.  In practice, an 'object group' is the realization of this abstraction and is a concrete implementation of a number of image cels in one movable group that is visible on the screen.    
 
-​      When visually editing your KiSS set you will sometimes work with the object groups and you will sometimes work with the individual image cels. If you are editing an object group, then       this group is a collection of entities such as cels. The selected object group is called a 'grouped object'. This group must be broken up into its individual components if you want to work with the actual image cels. When the group is broken up it is called an 'ungrouped object'.    
+​      When visually editing your KiSS set you will sometimes work with the object groups and you will sometimes work with the individual image cels. If you are editing an object group, then this group is a collection of entities such as cels. The selected object group is called a 'grouped object'. This group must be broken up into its individual components if you want to work with the actual image cels. When the group is broken up it is called an 'ungrouped object'.    
 
-​      The **Edit-Ungroup Object** command breaks all selected object groups apart. You will then have a number of individual image cels that can be separately positioned or cut or copied or pasted as required. These individual image cels can be regrouped back into their original object groups or combined into a new object group by using the appropriate edit command.    
+​      The **Edit-Ungroup Object** command breaks all selected object groups apart.  You will then have a number of individual image cels that can be separately positioned or cut or copied or pasted as required. These individual image cels can be regrouped back into their original object groups or combined into a new object group by using the appropriate edit command.    
 
 ​           
 
 ####       **What is the image offset and how is it used?**    
 
-​      The image offset is an attribute of every image in the KiSS data set. The image offset is a displacement from the image location. This offset is used to calculate the bounding box that       describes the area of the screen that needs to be repainted when the image is drawn.    
+​      The image offset is an attribute of every image in the KiSS data set. The image offset is a displacement from the image location. This offset is used to calculate the bounding box that describes the area of the screen that needs to be repainted when the image is drawn.    
 
 ​      Image offsets are used to position image cels within object groups. Every object group has a location on the screen and each image cel within the group is initially located at this object group location. The image offset is used as the displacement from the object group location to identify where the image cel must be drawn within the object group.    
 
-​      Image offset values are stored as internal attributes of CEL files and GIF files. Offset values are not stored internally for JPG, BMP, or PPM files. Thus, if you save an updated KiSS set and write the images to new files, the actual offset values in use will be written inside GIF and CEL image files, and written as UltraKiss %offset flags on the configuration object lines for all other image types. If you replace a GIF or CEL file outside of UltraKiss with an old copy of the       image you can lose all positioning offset changes that UltraKiss has made for you through your previous editing operations.    
+​      Image offset values are stored as internal attributes of CEL files and GIF files. Offset values are not stored internally for JPG, BMP, or PPM files. Thus, if you save an updated KiSS set and write the images to new files, the actual offset values in use will be written inside GIF and CEL image files, and written as UltraKiss %offset flags on the configuration object lines for all other image types. If you replace a GIF or CEL file outside of UltraKiss with an old copy of the  image you can lose all positioning offset changes that UltraKiss has made for you through your previous editing operations.    
 
 ​           
 
@@ -272,21 +273,21 @@ Contact me through [GitHub](https://github.com/kisekae) or my personal website [
 
 ​      The 'gosub' and 'goto' actions refer to label events. A label event is an event that contains a new set of action commands. 'Gosub' and 'goto' actions directly fire a label event without queuing it, thus the label event runs under the current event handler thread. A 'gosub' action recursively fires a label event so that it will return to the correct call point and a 'goto' action jumps to the beginning of the label event as no return is required.  All actions within a label event are treated as a separate block.    
 
-​      All loop control statements must be consistent within the same event block. A 'for' statement in one block cannot match with a 'next' statement in a different label block.  An 'if-else-endif '       sequence must be fully contained within one label block.    
+​      All loop control statements must be consistent within the same event block. A 'for' statement in one block cannot match with a 'next' statement in a different label block.  An 'if-else-endif ' sequence must be fully contained within one label block.    
 
 ​           
 
 ####       **How does the UltraKiss timer action work?**    
 
-​      Timer actions set alarm event states. An alarm is an event that can contain a series of action statements. A separate activity monitors all alarms and will queue an alarm event when the       alarm time period has expired.     
+​      Timer actions set alarm event states. An alarm is an event that can contain a series of action statements. A separate activity monitors all alarms and will queue an alarm event when the alarm time period has expired.     
 
-​      With multiple event handlers, if a short timer period was set the alarm could fire immediately and the alarm event could run concurrently with the scheduling event. This behaviour seemed incompatible with coding practices that assumed timer actions were not       immediate, as would occur with a single threaded viewer implementation. To maintain compatibility with other KiSS viewers UltraKiss disabled firing alarms referenced by the event timer actions until the primary scheduling event terminates.    
+​      With multiple event handlers, if a short timer period was set the alarm could fire immediately and the alarm event could run concurrently with the scheduling event. This behaviour seemed incompatible with coding practices that assumed timer actions were not immediate, as would occur with a single threaded viewer implementation. To maintain compatibility with other KiSS viewers UltraKiss disabled firing alarms referenced by the event timer actions until the primary scheduling event terminates.    
 
 ​           
 
 ####       **Timer action statements do not seem to be completely time accurate. Why is this?**    
 
-​      The UltraKiss timer is a polled timing implementation. The alarm queue is polled on a periodic basis looking for alarms whose time has expired. For UltraKiss timing to be accurate       a timer action command period must be an exact multiple of the timer period seen in the **Options-FKiSS-Timer** setting. If the timer action command programmed delay is not a multiple of the timer period then the timer must wait for the next cycle to fire.     
+​      The UltraKiss timer is a polled timing implementation. The alarm queue is polled on a periodic basis looking for alarms whose time has expired. For UltraKiss timing to be accurate a timer action command period must be an exact multiple of the timer period seen in the **Options-FKiSS-Timer** setting. If the timer action command programmed delay is not a multiple of the timer period then the timer must wait for the next cycle to fire.     
 
 ​      The default timer period is 10 milliseconds. It is not constructive or possible to set a smaller value.    
 
@@ -314,7 +315,7 @@ Contact me through [GitHub](https://github.com/kisekae) or my personal website [
 
 ####       **What happens when colors are changed in the Color Editor? Some colors change in unexpected ways.**    
 
-​      When new colors or tints are applied to the image relative adjustments are made to color hue, brightness and saturation.    If you use the color chooser and significantly darken or lighten       differences from the active color then some related colors in the selection set may become 'saturated', or reach their limit of change. If necessary, you can turn off relative brightness, saturation or hue changes by right clicking on the appropriate toolbar button to disable it. You can also turn off relative color adjustments through the Options menu. If this is done all selected colors will be set to the specific active color.    
+​      When new colors or tints are applied to the image relative adjustments are made to color hue, brightness and saturation.   If you use the color chooser and significantly darken or lighten differences from the active color then some related colors in the selection set may become 'saturated', or reach their limit of change. If necessary, you can turn off relative brightness, saturation or hue changes by right clicking on the appropriate toolbar button to disable it. You can also turn off relative color adjustments through the Options menu. If this is done all selected colors will be set to the specific active color.    
 
 ​      The color editor is designed to change hue. The  identical techniques will work to change the brightness, saturation, red, green, or blue color components of the image.     
 
@@ -324,23 +325,23 @@ Contact me through [GitHub](https://github.com/kisekae) or my personal website [
 
 ​      More than one KiSS cel can use the same KCF palette files for colors. If you edit a KCF file then all cels that use this KCF will change.     
 
-​      There is an 'All Cels' option in the image cel drop-down box that can be used to concurrently draw all images in the preview window for an active KiSS data set. If a color change is made to       one specific cel then this option is helpful to see the impact on all other cels that use the same KCF file.     
+​      There is an 'All Cels' option in the image cel drop-down box that can be used to concurrently draw all images in the preview window for an active KiSS data set. If a color change is made to one specific cel then this option is helpful to see the impact on all other cels that use the same KCF file.     
 
 ​      This option does not exist for external palette files loaded with the color editor **File-Open** command.    
 
-​      If you are editing an active configuration and are satisfied with the color edit changes, then the changes can be applied to the active KiSS data set when you exit from the color editor. If the       color changes are now seen to be unsatisfactory, you can easily undo the KiSS data set changes with the **Edit-Undo** function, and try again.    
+​      If you are editing an active configuration and are satisfied with the color edit changes, then the changes can be applied to the active KiSS data set when you exit from the color editor. If the color changes are now seen to be unsatisfactory, you can easily undo the KiSS data set changes with the **Edit-Undo** function, and try again.    
 
 ​           
 
 ####       **How do I save a GIF (or BMP or JPG or PPM) file as a CEL file?**    
 
-​      GIF or BMP or JPG or PPM files can be loaded into either the color editor or the image editor tool using the **File-Open** command. They can be saved with the **File-Save As** command as a CEL file by changing the file name extension. You can also load recognized image files using the UltraKiss **File-Open** command. This will automatically load the file into the image editor, and then the file can be saved. Remember, you must change the file name and specify the CEL file       extension on the **Save As** dialog to write a CEL file.    
+​      GIF or BMP or JPG or PPM files can be loaded into either the color editor or the image editor tool using the **File-Open** command. They can be saved with the **File-Save As** command as a CEL file by changing the file name extension. You can also load recognized image files using the UltraKiss **File-Open** command. This will automatically load the file into the image editor, and then the file can be saved. Remember, you must change the file name and specify the CEL file extension on the **Save As** dialog to write a CEL file.    
 
 ​      If a palette type image is converted to a CEL then an associated KCF file will also be saved. The KCF file will have the same name as the CEL file. GIF or BMP palette type images are saved in this way. JPG, PPM and BMP images that are truecolor images will be saved to Cherry Kiss type CEL files. These files do not have an associated KCF palette file.    
 
 ​           
 
-​      **How do I save a CEL file as a GIF or BMP or JPG or PPM file?**    
+####       **How do I save a CEL file as a GIF or BMP or JPG or PPM file?**    
 
 ​      If a standard palette type CEL file has been loaded into the image editor or color editor, then you can save this file as a GIF or BMP or JPG or PPM file with the **File-Save As** command. You must change the file name and specify the required file extension on the **Save As** dialog. Palette type CEL files can be saved as any type of supported file.     
 
@@ -366,7 +367,7 @@ Contact me through [GitHub](https://github.com/kisekae) or my personal website [
 
 ​      You cannot save multiple palette groups to anything other than a KCF file. Other image files such as GIF files do not directly support multiple palettes.     
 
-​      The color editor will let you create new palette groups for any loaded palette, but currently cannot save these to anything other than KCF files. The feature to support multiple palettes       for other image files may be added in a later release.      
+​      The color editor will let you create new palette groups for any loaded palette, but currently cannot save these to anything other than KCF files. The feature to support multiple palettes for other image files may be added in a later release.      
 
 ​           
 
@@ -388,10 +389,10 @@ Contact me through [GitHub](https://github.com/kisekae) or my personal website [
 
 ​      Movies are image cels. They are very similar to GIF animated cels. You define a movie cel in the KiSS configuration file as you would any other image cel.     
 
-​      Because movies are cels, they can be used in the same way as other image cels. They can be picked up, moved, mapped, unmapped, and so on. Movies differ from normal image cels in the       following ways.    
+​      Because movies are cels, they can be used in the same way as other image cels. They can be picked up, moved, mapped, unmapped, and so on. Movies differ from normal image cels in the following ways.    
 
 - Movie cels are not visible unless they are playing. Visible movies are always displayed on top of all image cels. It is not possible to overlay a movie with another image. You start and stop a movie with the FKiSS movie() action command. This will make the movie visible.
-        
+  
 - Movie cels cannot be made transparent.       
 
 ​      Movie cels do not begin playing when the cel is mapped, or made visible. However, this behaviour may be implemented in a future release.    
@@ -404,7 +405,7 @@ Contact me through [GitHub](https://github.com/kisekae) or my personal website [
 
 ​      Collision events can occur whenever objects are moved, either through dragging with the mouse or any related FKiSS move action command. Collision events are fired when the object stops moving. This happens on a mouse release if the object is being dragged, or upon completion of the move command if the object is being moved through an FKiSS action. The event is not fired during the move, so transitory inter-object collision events are not recognized if the object happens to pass over or through some other object.    
 
-​      If a sticky object group is moved collision events are not detected. Sticky objects snap back to their original position. They are considered not moved. Any movement event that has a       zero displacement from the object start position does not fire collision events.     
+​      If a sticky object group is moved collision events are not detected. Sticky objects snap back to their original position. They are considered not moved. Any movement event that has a zero displacement from the object start position does not fire collision events.     
 
 ​      Collision events happen when objects are moved with an FKiSS action command or manipulated with the mouse. Collision events can also occur when object visibility is changed, as could happen if a previously unmapped object was made visible over top of another object.     
 
@@ -416,7 +417,7 @@ Contact me through [GitHub](https://github.com/kisekae) or my personal website [
 
 ​      The same image cel can exist in more than one object group. Thus, it is quite possible to specify an FKiSS event that specifies the same image name for each argument, such as       collide("image.cel","image.cel"). In this case the collision checks for image overlap between different copies of the image cel in different object groups.    
 
-​      Collision events are symmetric. An event such as in(#1,#2) is equivalent to in(#2,#1). A collision between object 1 and object 2 is the same as a collision between object 2 and object 1.       UltraKiss ensures that the symmetric event is always recognized so it does not need to be coded.    
+​      Collision events are symmetric. An event such as in(#1,#2) is equivalent to in(#2,#1). A collision between object 1 and object 2 is the same as a collision between object 2 and object 1.   UltraKiss ensures that the symmetric event is always recognized so it does not need to be coded.    
 
 ​           
 
@@ -424,12 +425,16 @@ Contact me through [GitHub](https://github.com/kisekae) or my personal website [
 
 ​      UltraKiss uses a multi-activity asynchronous event processing model. Events are queued when recognized and can begin execution immediately on a multi-activity system if resources are available. There is no guarantee of a specific event execution order.     
 
-​      For user initiated actions the mouse down signal will occur first, followed by a series of mouse drag events, and then the mouse up signal. UltraKiss queues FKiSS press(), catch(), and       fixcatch() events on a mouse down signal. FKiSS drop([)](reference/fkiss4.html#drop), fixdrop() and unfix() events can be queued at any time on mouse drag actions. The FKiSS collision events in(), out(), stillin(), stillout([)](reference/fkiss2.html#stillout),       apart([)](reference/fkiss2.html#apart) and collide() are queued on a mouse up signal, followed by necessary drop(), fixdrop(),       release() and unfix() events.     
+​      For user initiated actions the mouse down signal will occur first, followed by a series of mouse drag events, and then the mouse up signal. UltraKiss queues FKiSS press(), catch(), and fixcatch() events on a mouse down signal. FKiSS drop([)](reference/fkiss4.html#drop), fixdrop() and unfix() events can be queued at any time on mouse drag actions. The FKiSS collision events in(), out(), stillin(), stillout([)](reference/fkiss2.html#stillout), apart([)](reference/fkiss2.html#apart) and collide() are queued on a mouse up signal, followed by necessary drop(), fixdrop(), release() and unfix() events.     
 
-​      When a KiSS data set is initialized UltraKiss processes, in sequential order, any initialize() events, any version() events, then any begin() events. During initialize() and version() no       action command related events are recognized or queued. For example, a changeset() command in initialize() will not initiate set() events for the page.     
+​      When a KiSS data set is initialized UltraKiss processes, in sequential order, any initialize() events, any version() events, then any begin() events. During initialize() and version() no action command related events are recognized or queued. For example, a changeset() command in initialize() will not initiate set() events for the page.     
 
 ​      Event handler activities are started before the begin() event.  During begin(), action command related events and alarms are recognized and queued for execution.     
 
 ​      When the begin() event terminates UltraKiss will open the last page set referenced through a changeset() command, or page set 0 if the starting page was not set. When a page set is opened or a changeset() action command is executed UltraKiss will process any set() events defined for the page. When a page set is opened an associated color set can automatically open, too. When a color set is opened or a changecol() action command is executed UltraKiss will process any col() events defined for the palette group.    
 
 ​      On a multi-activity system the FKiSS programmer cannot assume that events will always execute sequentially in the order in which they are queued. Sequential execution is possible only if a single FKiSS event handler is configured. See **Options-FKiSS-Event Handlers**.        
+
+
+
+![](https://github.com/kisekae/UltraKiss/blob/master/src/Help/product/kisekae/images/menu_37.gif)
