@@ -188,7 +188,7 @@ final public class OptionsDialog extends KissDialog
    private static boolean directkiss = false ;
    private static boolean gnomekiss = false ;
    private static boolean kissld = false ;
-   private static boolean defaultplayfkiss = true ;
+   private static boolean defaultplayfkiss = false ;
    private static String eventqueues = "1" ;
    private static String timerperiod = "10" ;
    private static String gifperiod = "100" ;
@@ -3750,7 +3750,7 @@ final public class OptionsDialog extends KissDialog
       directkiss = false ;
       gnomekiss = false ;
       kissld = false ;
-      defaultplayfkiss = true ;
+      defaultplayfkiss = false ;
       compatapply = false ;
       eventqueues = "1" ;
       timerperiod = "10" ;
