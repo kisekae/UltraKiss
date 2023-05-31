@@ -193,6 +193,7 @@ final class PanelMenu extends KissMenu
       edit = new JMenuItem[3] ;
       int n = OptionsDialog.getUndoLimit() ;
       if (n > 0) undo.setLimit(n) ;
+      if (menu.getNoCopy()) OptionsDialog.setSecurityEnable(true) ;
       createMenu() ;
    }
 

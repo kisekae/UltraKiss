@@ -5334,6 +5334,11 @@ final class PanelFrame extends JPanel
 
 
    // Reset the mouse press coordinates if we FKiSS moved a mouse object.
+   // This positions the mouse in the middle of the object after the move 
+   // so the mouse is not hovering in space.  But this causes the object to
+   // jump on drag because we are not doing it correctly.  Also needs to 
+   // use the visible bounding box.
+   // Disabled in FKissAction 20230530.
 
    void resetDrag(KissObject kiss)
    {

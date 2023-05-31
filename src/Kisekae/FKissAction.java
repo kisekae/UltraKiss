@@ -1192,7 +1192,7 @@ final class FKissAction extends KissObject
 
             kiss.setPlacement(m.x,m.y) ;
             kiss.drop() ;
-            panel.resetDrag(kiss) ;
+//          panel.resetDrag(kiss) ;
          
             // If we have any restricted placements these must be cleared.
 

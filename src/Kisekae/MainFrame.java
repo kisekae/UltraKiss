@@ -630,6 +630,7 @@ final public class MainFrame extends KissFrame
       // Reset our NoCopy indicator for future loads.
       
       mainmenu.setNoCopy(false) ;
+      OptionsDialog.setSecurityEnable(false);
 	}
    
    

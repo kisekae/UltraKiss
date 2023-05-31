@@ -3,7 +3,7 @@ In 2002 I developed a computer program that implements the Kisekae Set system, K
 
 Kisekae is short for "kisekae ningyou", a Japanese term meaning "dress-up dolls". Unlike "computer art" which creates or displays traditional art via a computer, KiSS uses the computer as the medium, allowing the art to be not only animated, but also interactive. 
 
-UltraKiss is not restricted to dress-up dolls but rather is an integrated development environment to create visual applications.  This is an artistic process that uses images and other related elements to create new visual applications. It allows the artist to think in terms of visual objects and actions rather than text-based code.
+UltraKiss is not restricted to dress-up dolls but is rather an integrated development environment to create visual applications.  This is an artistic process that uses images and other related elements to create new interactive entertainment. It allows the artist to think in terms of visual objects and related actions rather than text-based code.
 
 
 
@@ -12,7 +12,7 @@ UltraKiss is not restricted to dress-up dolls but rather is an integrated develo
 
 
 
-UltraKiss was developed to help artists build their KiSS sets. UltraKiss reads and interprets KiSS data files.  These files contain computer graphics images, color palettes and data control files.  Objects, in the original KiSS model such as the doll figure, costumes, and other items are constructed from layered image components that usually show only parts of the complete image. 
+UltraKiss was developed to help artists build KiSS sets. UltraKiss reads and interprets KiSS data files.  These files contain computer graphics images, color palettes and data control files.  Objects, in the original KiSS model such as the doll figure, costumes, and other items are constructed from layered image components that usually show only parts of the complete image. 
 
 Objects can be manipulated through user actions or through  a simple event processing model that enables timed animations or other actions if objects are touched or dragged across the screen.  Color variations, enabled through palette changes in UltraKiss, can also be used to produce different results.  
 
@@ -28,7 +28,7 @@ In 2023, prompted by new KiSS work from [The Owl](http://followtheowl.com/) with
 
 
 
-1. Download the current UltraKiss release from GitHub.  For all systems, extract the files from the **UltraKiss_3.5.zip** (or later) download. This extract will create a folder named **ultrakiss**.
+1. Download the current UltraKiss release from [GitHub](https://github.com/kisekae/UltraKiss).  For all systems, extract the files from the **UltraKiss_3.5.zip** (or later) download. This extract will create a folder named **ultrakiss**.
 
    For local execution on a Windows system with or without Java installed, run **UltraKiss_3.5.exe** found in the **ultrakiss** folder. This program is a fully self-contained bundled application created with [Launch4j](https://launch4j.sourceforge.net/).
 

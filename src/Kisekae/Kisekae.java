@@ -81,7 +81,7 @@ public class Kisekae extends Applet
    // Security variables
 
    private static String copyright = 
-      "Kisekae UltraKiss V3.5 (c) 2002-2023 William Miles" ;
+      "Kisekae UltraKiss V3.5.1 (c) 2002-2023 William Miles" ;
    private static Object authorize = null ;        // Seigen module
    private static Calendar warningdate = null ;    // Secure warning
    private static Calendar expiredate = null ;     // Licence expire
