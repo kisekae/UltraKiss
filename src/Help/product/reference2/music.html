@@ -19,7 +19,7 @@ The music() command will initiate the playback of an audio stream file. The file
 <p>If the filename does not exist then the music() command fails silently. </p>
 <p>A music() command is independent from a sound() command.  </p>
 <p>&nbsp;</p>
-<p><font color="#FF0000"><b>FKiSS 5 Syntax:</b></font>&nbsp;&nbsp;&nbsp;&nbsp; sound (filename[,repeat])</p>
+<p><font color="#FF0000"><b>FKiSS 5 Syntax:</b></font>&nbsp;&nbsp;&nbsp;&nbsp; music (filename[,repeat])</p>
 <p>FKiSS 5 introduced an optional <em>repeat</em> parameter for audio playback. This parameter specifies the number of times that the sound is to be repeated. Note that the repeat value specifies the number of sound repetitions, thus a value of 1 repeats the sound once, resulting in the original playback being heard plus one repetition of the sound. A negative repeat value will result in the sound being repeated indefinately.</p>
 <p>FKiSS provided no easy way to control or manage sound playback. There was no way to determine when a sound file terminated such that it could be repeated. </p>
 <p>The FKiSS5 mediastart() and mediastop() events can  be used to recognize sound playback events. These events fire on sound initiation and sound termination for the specified sound file. These events fire on completion of the command and not on completion of the sound. Thus, if repetition was specified, one mediastart event fires at the beginning of the command and one mediastop event fires when all repetitions are complete. </p>
@@ -34,13 +34,13 @@ The music() command will initiate the playback of an audio stream file. The file
   <table border="1" cellpadding="0" cellspacing="0" width="100%">
     <tr>
       <td width="26%">FKiSS 1 requires literal filenames.</td>
-      <td width="24%">sound(&quot;happysound.wav&quot;)</td>
+      <td width="24%">music(&quot;happysound.wav&quot;)</td>
       <td width="50%"></td>
     </tr>
     <tr>
       <td width="26%">FKiSS 5 allows string variables </td>
       <td width="24%">let(S,&quot;happysound.wav&quot;)<br>
-        sound(S)</td>
+        music(S)</td>
       <td>&nbsp;</td>
     </tr>
   </table>

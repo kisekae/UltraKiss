@@ -506,7 +506,7 @@ final class Variable
 
       // Check for local variable names.
 
-      if (v.charAt(0) == '@' && event != null)
+      if (v.length() > 0 && v.charAt(0) == '@' && event != null)
       {
          event.setTemporary(true) ;
          variable = event.getVariableTable() ;

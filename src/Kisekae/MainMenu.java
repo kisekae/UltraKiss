@@ -855,8 +855,11 @@ final public class MainMenu extends KissMenu
                KissFrame f = (KissFrame) windows.elementAt(i) ;
                if (s.equals(f.getTitle()))
                {
-                  if (f.getState() == Frame.ICONIFIED) 
-                     f.setState(Frame.NORMAL) ;
+                  if (f instanceof MediaFrame)
+                  {
+                     ((MediaFrame) f).setMinimized(false) ;
+                     ((MediaFrame) f).setVisible(true) ;
+                  }
                   f.toFront() ;
                   break ;
                }

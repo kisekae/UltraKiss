@@ -401,7 +401,10 @@ class UrlLoader extends KissFrame
       	fatal = true ;
          pathname = null ;
          memfile = null ;
-  			showStatus(Kisekae.getCaptions().getString("LoadTerminatedStatus")) ;
+         String msg = Kisekae.getCaptions().getString("LoadTerminatedStatus") ;
+         if (e instanceof FileNotFoundException)
+            msg += " " + Kisekae.getCaptions().getString("FileNotFound") ;
+  			showStatus(msg) ;
          showMsg(e.toString()) ;
          if (!stop) 
          {

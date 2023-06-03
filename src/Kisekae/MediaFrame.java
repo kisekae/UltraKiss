@@ -303,11 +303,6 @@ final class MediaFrame extends KissFrame
 		aspectratio.setState(OptionsDialog.getKeepAspect());
 		aspectratio.addItemListener(this) ;
 		mb.add(optionMenu) ;
-      
-		windowMenu = new JMenu(Kisekae.getCaptions().getString("MenuWindow")) ;
-		windowMenu.setMargin(insets) ;
-      if (!applemac) windowMenu.setMnemonic(KeyEvent.VK_W) ;
-		mb.add(windowMenu) ;
 
 		// Create the Help menu and About dialog.
 
@@ -762,25 +757,28 @@ final class MediaFrame extends KissFrame
 			return ;
 		}
 
-		else if (source == fullscreen)
+		if (source == fullscreen)
 		{
 			OptionsDialog.setAutoFullScreen(fullscreen.getState()) ;
 			return ;
 		}
 
-		else if (source == minimize)
+		if (source == minimize)
 		{
-			OptionsDialog.setMediaMinimize(minimize.getState()) ;
+         boolean b = minimize.getState() ;
+			OptionsDialog.setMediaMinimize(b) ;
+         setMinimized(b) ;
+         setVisible(!b) ;
 			return ;
 		}
 
-		else if (source == centerframe)
+		if (source == centerframe)
 		{
 			OptionsDialog.setMediaCenter(centerframe.getState()) ;
 			return ;
 		}
 
-		else if (source == aspectratio)
+		if (source == aspectratio)
 		{
 			OptionsDialog.setKeepAspect(aspectratio.getState()) ;
 			return ;
@@ -811,24 +809,13 @@ final class MediaFrame extends KissFrame
 
    // Implementation of the menu item update of our state when we become
    // visible.  We remove all prior entries and rebuild the Window menu. 
-   
+  
    void updateRunState()
    {
-      for (int j = windowMenu.getItemCount()-1 ; j >= 0 ; j--)
-         windowMenu.remove(j) ;
-
-      // Add new dialog entries
-
-      int n = 0 ;
-      Vector v = KissFrame.getWindowFrames() ;
-      for (int i = 0 ; i < v.size() ; i++)
-      {
-         KissFrame w = (KissFrame) v.elementAt(i) ;
-         String s = w.getTitle() ;
-         JMenuItem mi = new JMenuItem(++n + ". " + s) ;
-         mi.addActionListener(this) ;
-         windowMenu.add(mi) ;
-      }
+      MainMenu mainmenu = null ;
+      MainFrame mainframe = Kisekae.getMainFrame() ;
+      if (mainframe != null) mainmenu = mainframe.getMainMenu() ;
+      if (mainmenu != null) mainmenu.updateRunState() ;                   
    }
 
 
@@ -849,8 +836,8 @@ final class MediaFrame extends KissFrame
 	private void setValues()
 	{
 		String title = Kisekae.getCaptions().getString("MediaPlayerTitle") ;
-		if (audio != null) title = audio.toString() ;
-		if (video != null) title = video.toString() ;
+		if (audio != null) title += " - " + audio.toString() ;
+		if (video != null) title += " - " + video.toString() ;
 		setTitle(title) ;
       select.setEnabled(fd != null) ;
       saveas.setEnabled(playlist != null && !Kisekae.isSecure()) ;
@@ -1012,9 +999,10 @@ final class MediaFrame extends KissFrame
 				int state = player.getState() ;
 				realized = (state >= Player.Realized) ;
          }
-			updateLayout() ;
-         setValues() ;
-		}
+      }
+		updateLayout() ;
+      setValues() ;
+      updateRunState() ;
 
 		// Start playing the media file.
 
@@ -1108,6 +1096,8 @@ final class MediaFrame extends KissFrame
      	save.setEnabled(false) ;
 		fd = ze.getFileOpen() ;
 		if (fd != null) { fd.open(ze.getPath()) ; ze = fd.getZipEntry() ; }
+      if (ze == null) return ;
+      
 		if (ze.isAudioSound())
          ko = new AudioSound(ze.getZipFile(),ze.getPath()) ;
 		if (ze.isAudioMedia())

@@ -125,15 +125,21 @@ final class StatusBar extends JPanel
 	}
 
 
-	// Method to update our memory display.
+	// Method to update our memory display.  This must run on thw AWT thread.
 
-	private int showMem()
+	private void showMem()
 	{
-      if (!statusBarOn) return -1 ;
+      if (!SwingUtilities.isEventDispatchThread())
+		{
+			Runnable runner = new Runnable()
+			{ public void run() { showMem() ; } } ;
+			javax.swing.SwingUtilities.invokeLater(runner) ;
+         return ;
+      }
+
       long mem = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory() ;
 		memlabel.setText("Mem: " + (int) (mem/1024) + "K") ;
 		repaint() ;
-      return (int) (mem/1024) ;
 	}
 
 
@@ -143,7 +149,7 @@ final class StatusBar extends JPanel
    void setStatusBar(boolean state)
    {
       statusBarOn = state ;
-      if (state)
+      if (state && thread == null)
       {
          thread = new Thread()
          {
@@ -154,7 +160,8 @@ final class StatusBar extends JPanel
                {
                   try
                   {
-                     if (showMem() < 0 && thread != null) thread.interrupt() ;
+                     showMem() ;
+                     if (!statusBarOn && thread != null) thread.interrupt() ;
                      sleep(period) ;
                   }
                   catch (InterruptedException e) { break ; }

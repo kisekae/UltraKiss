@@ -55,6 +55,7 @@ final public class LogFile extends PrintStream
    private static boolean tracewrite = false ;
    private static int byteswritten = 0 ;
    private static boolean error = false ;
+   private static int maxbytes = 10000000 ;     // 10 MB max file size
 
 	static OutputStream logfile ;
 	static PrintStream oldStdout ;
@@ -220,7 +221,7 @@ final public class LogFile extends PrintStream
 		if (logfile == null) return ;
 		try
 		{
-         if (byteswritten <= 10000000)       // 10 MB limit
+         if (byteswritten <= maxbytes)       
          {
    			logfile.write(b) ;
             if (!Kisekae.inApplet()) super.write(b);
@@ -284,7 +285,7 @@ final public class LogFile extends PrintStream
       if (trace != null && !tracewrite && !OptionsDialog.getDebugDisabled()) return ;
 		try
 		{
-         if (byteswritten <= 10000000)       // 10 MB limit
+         if (byteswritten <= maxbytes)       
          {
             logfile.write(buf, off, len) ;
             if (!Kisekae.inApplet()) super.write(buf, off, len) ;
@@ -292,7 +293,7 @@ final public class LogFile extends PrintStream
          }
          else
          {
-   			if (!error) System.out.println("LogFile: Exceed 10 MB log file size " + logfilename) ;
+   			if (!error) System.out.println("LogFile: Exceed maximum log file size " + logfilename) ;
    			setError();
             error = true ;
          }         

@@ -2020,10 +2020,32 @@ public class Kisekae extends Applet
       System.out.println("Application restarted.") ;
       mainframe = new MainFrame(kisekae,file,true) ;
       if (mainframe1 != null) mainframe1.dispose() ;
-  }
+   }
+  
+   
+   // Set global uncaught exception handler for Event Dispatch Thread.
+   // We can occasionally see a NullPointerException in Swing code.
+   // The exception writes a full stack trace which shows in the log file.
+   // The EDT is automatically restarted in this case so no visible problem.
+   
+   public static void setupGlobalExceptionHandling() 
+   {
+      Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() 
+      {
+        @Override
+        public void uncaughtException(Thread t, Throwable e) 
+        {
+            String message = e.getMessage();
+            if (message == null || message.length() == 0) 
+               message = "Java Runtime Environment: " + e.getClass();
+            if (t != null) message += " on thread " + t.getName() ;
+            System.out.println("Kisekae: Uncaught Exception " + message);
+//          e.printStackTrace();
+        }
+      });
+   }
 
-
-
+   
    // Application Main program.
    // -------------------------
 
@@ -2046,8 +2068,9 @@ public class Kisekae extends Applet
          System.out.println("Application start file is " + file) ;
       if (language != null && language.length() > 0)
          setLanguage(language) ;
-
-    
+      
+      setupGlobalExceptionHandling() ;
+      
       // Initialize the application frame.
 
       try

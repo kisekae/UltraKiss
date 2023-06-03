@@ -2785,10 +2785,10 @@ final class FKissAction extends KissObject
 
             // Get the repeat and minimize options.
 
-            n1 = 0 ;
-            n2 = 1 ;
-            n3 = 0 ;
-            n4 = 0 ;
+            n1 = 0 ;     // repeat
+            n2 = 1 ;     // minimized
+            n3 = 0 ;     // x position
+            n4 = 0 ;     // y position
             if (parameters.size() > 1)
                n1 = variable.getIntValue((String) parameters.elementAt(1),event) ;
             if (parameters.size() > 2)
@@ -2821,6 +2821,13 @@ final class FKissAction extends KissObject
                mf.setVisible(true) ;
                MainFrame mainframe = Kisekae.getMainFrame() ;
                if (mainframe != null) mainframe.toFront() ;
+            }
+            else
+            {
+               MainMenu mainmenu = null ;
+               MainFrame mainframe = Kisekae.getMainFrame() ;
+               if (mainframe != null) mainmenu = mainframe.getMainMenu() ;
+               if (mainmenu != null) mainmenu.updateRunState() ;                   
             }
             break ;
 
