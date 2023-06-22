@@ -146,7 +146,12 @@ final class ColorSizePanel extends JPanel implements ActionListener
 		if (source == OK)
       {
          int m = getColorSize() ;
-         if (parent != null) parent.changeColorCount(m,getQuick()) ;
+         if (parent == null) return ;
+         
+         parent.changeColorCount(m,getQuick()) ;
+         parent.setChanged(true) ;
+         parent.updateTransformedImage() ;
+         parent.applyTransformedImage() ;
          return ;
       }
 

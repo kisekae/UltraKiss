@@ -319,7 +319,6 @@ final class JpgCel extends Cel
          String s = e.getMessage() ;
          if (s == null) s = e.toString() ;
 			showError("I/O Exception, Cel " + file + ", " + s) ;
-			System.out.println(e.toString()) ;
 		}
 
 		// Watch for general Kiss exceptions.
@@ -587,7 +586,7 @@ final class JpgCel extends Cel
 	{
    	errormessage = s ;
    	int line = getLine() ;
-		if (line > 0) s = "Line [" + line + "] " + s ;
+		if (line > 0) s = "[Line " + line + "] " + s ;
 		if (loader != null) loader.showError(s) ;
 		else System.out.println(s) ;
 	}

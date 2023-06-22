@@ -100,6 +100,7 @@ abstract class Audio extends KissObject
 	protected boolean restart = false ;			// True if restart play after stop
 	protected boolean hascallback = false ;	// True if callback listener set
 	protected boolean format = false ;	      // True if unknown media format
+   protected boolean converted = false ;     // True if converted to JMF
 
 	// Our end of media callback button that other components can attach
 	// listeners to.
@@ -564,10 +565,9 @@ abstract class Audio extends KissObject
 	{
    	errormessage = s ;
       MainFrame frame = Kisekae.getMainFrame() ;
-		if (line > 0) s = "Line [" + line + "] " + s ;
+		if (line > 0) s = "[Line " + line + "] " + s ;
 		if (loader != null) loader.showError(s) ;
       else frame.showStatus(errormessage) ;
-		System.out.println(s) ;
 	}
 
 

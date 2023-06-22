@@ -173,7 +173,7 @@ final class KissCel extends Cel
       if (name != null) name = name.toUpperCase() ;
       scaledimage = null ;
       filteredimage = null ;
-
+      
 		// Load the file if another copy of the cel has not already been
 		// loaded.  If we have previously read the file use the prior
 		// image.  Set the archive entry to reference an object copy.
@@ -235,10 +235,12 @@ final class KissCel extends Cel
                }
 
       			// Load an unloaded copy if it exists in the reference file.
+               // Try pathnames first and then just filenames.
 
               	ArchiveFile refzip = ref.getZipFile() ;
                if (refzip != null && !refzip.isOpen()) refzip.open() ;
                ze = (refzip != null) ? refzip.getEntry(getPath()) : null ;
+               if (refzip != null && ze == null ) ze = refzip.getEntry(getPath(),true) ;
 				}
 			}
 
@@ -478,7 +480,6 @@ final class KissCel extends Cel
 			String s = e.getMessage() ;
 			if (s == null) s = e.toString() ;
 			showError("I/O Exception, Cel " + file + ", " + s) ;
-			System.out.println(e.toString()) ;
 		}
 
 		// Watch for file size errors.
@@ -845,7 +846,7 @@ final class KissCel extends Cel
 	{
    	errormessage = s ;
    	int line = getLine() ;
-		if (line > 0) s = "Line [" + line + "] " + s ;
+		if (line > 0) s = "[Line " + line + "] " + s ;
 		if (loader != null) loader.showError(s) ;
 		else if (!nopalette) System.out.println(s) ;
 	}

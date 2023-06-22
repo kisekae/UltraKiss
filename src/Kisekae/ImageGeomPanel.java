@@ -480,7 +480,12 @@ final class ImageGeomPanel extends JPanel implements ActionListener
       if (parent == null) return ;
       
       ImageFrame saveparent = parent ;
-      if (updated) parent.applyTransformedImage() ;
+      if (updated) 
+      {
+         parent.setChanged(true) ;
+         parent.updateTransformedImage() ;
+         parent.applyTransformedImage() ;
+      }
       parent = null ;
       int n = tabpane.getSelectedIndex() ;
       tabpane.removeAll() ;

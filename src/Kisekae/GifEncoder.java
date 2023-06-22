@@ -120,11 +120,11 @@ public class GifEncoder extends ImageEncoder
 
    // Constructor for an animated GIF frame.
 
-   public GifEncoder(FileWriter fw, GifFrame frame, OutputStream out) throws IOException
+   public GifEncoder(FileWriter fw, Image img, OutputStream out, GifFrame frame) throws IOException
    {
-      super(fw, frame.getImage(), out) ;
+      super(fw, img, out) ;
       this.frame = frame ;
-      frameindex = frame.getFrame() ;
+      this.frameindex = frame.getFrame() ;
    }
 
 
@@ -279,7 +279,7 @@ public class GifEncoder extends ImageEncoder
 	            EncoderHashitem item = (EncoderHashitem) colorHash.get(rgb);
 	            if (item == null)
 	            {
-	               if (index >= 256)
+	               if (index > 256)
 							throw new KissException("Too many colors for a GIF image") ;
 
 	               // If we have a frame with a palette this pixel should exist.
@@ -290,10 +290,16 @@ public class GifEncoder extends ImageEncoder
 	               	int r = (rgb & 0xff0000) >> 16 ;
 	               	int g = (rgb & 0xff00) >> 8 ;
 	               	int b = (rgb & 0xff) ;
-                     if (!Kisekae.isBatch()) throw new KissException(
+	               	int r1 = (red[transparentIndex] & 0xff) ;
+	               	int g1 = (green[transparentIndex] & 0xff) ;
+	               	int b1 = (blue[transparentIndex] & 0xff) ;
+                     if ((r != r1) || (g != g1) || (b != b1))
+                     {
+                        if (!Kisekae.isBatch()) throw new KissException(
                         "frame " + frameindex + " at [" + row + "," + col + 
                         "] image color (" + r + "," + g + "," + b + 
-                        ") not in palette") ;
+                      ") not in palette") ;
+                     }
 	               }
 
 	               // If we do not have a frame then remember this color.

@@ -581,10 +581,11 @@ abstract class ArchiveFile
 
 	// Returns the archive file entry for the specified name, or null.
 	// The archive file entry represents one element in the archive file
-	// or the file directory.
+	// or the file directory.  We can search on the filename only in case
+   // the archive file had directory entries and the pathname search fails.
 
-
-	ArchiveEntry getEntry(String pathname)
+	ArchiveEntry getEntry(String pathname) { return getEntry(pathname,false) ; }
+	ArchiveEntry getEntry(String pathname ,boolean nameonly)
 	{
 		if (pathname == null) return null ;
       if (contents == null) return null ;
@@ -611,14 +612,24 @@ abstract class ArchiveFile
       s = s.replace('\\',File.separatorChar) ;
 
       // Find the file in the archive contents.  If the entry exists in our
-      // hash table, return it.  Otherwise search the contents vector.
+      // hash table, return it.  Otherwise search the contents vector.  
+      // Our archive entry can have path information.  An expansion set may not.
+      // We allow for a search on filename only.
 
       Object o = key.get(s.toLowerCase()) ;
       if (o instanceof ArchiveEntry) return (ArchiveEntry) o ;
  		for (int i = 0 ; i < contents.size() ; i++)
  		{
  			ArchiveEntry h = (ArchiveEntry) contents.elementAt(i) ;
-			if (s.equalsIgnoreCase(h.getPath())) return (h) ;
+         String path = h.getPath() ;
+         if (nameonly) 
+         {
+            int n = path.lastIndexOf(File.separatorChar) ;
+            if (n >= 0) path = path.substring(n+1) ;
+            n = s.lastIndexOf(File.separatorChar) ;
+            if (n >= 0) s = s.substring(n+1) ;
+         }
+			if (s.equalsIgnoreCase(path)) return (h) ;
 		}
 
       // If we were searching in an archive file, return a no find result.

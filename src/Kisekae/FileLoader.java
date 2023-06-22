@@ -86,6 +86,7 @@ final class FileLoader extends KissFrame
 
 	private boolean active = true ;			// True if frame has focus
 	private boolean reload = false ;			// True if reload configuration
+	private boolean expansion = false ;		// True if loading expansion set
    private boolean interrupted = false ;	// True if load is interrupted
    private boolean fatal = false ;			// True if fatal error
 	private int errors = 0 ;					// Count of showError calls
@@ -149,6 +150,7 @@ final class FileLoader extends KissFrame
 	{
 		this(frame,zip,ze) ;
 		config = c ;
+      expansion = true ;
 		if (OptionsDialog.getDebugControl() && config != null)
 			System.out.println("Expanding configuration " + config) ;
 	}
@@ -320,7 +322,8 @@ final class FileLoader extends KissFrame
             if (stop) return ;
             MainFrame mf = Kisekae.getMainFrame() ;
             OptionsDialog options = mf.getOptionsDialog() ;
-            if (!reload && options != null) options.resetOptions() ;
+            if (!reload && !expansion && options != null) 
+               options.resetOptions() ;
 				config.setLoader(this) ;
 				showStatus(Kisekae.getCaptions().getString("ReadConfigStatus")) ;
 				config.read() ;
@@ -862,8 +865,8 @@ final class FileLoader extends KissFrame
 	void showError(String s, String highlite)
 	{
 		errors = errors + 1 ;
-      if (errors == 26) showText("More than 25 errors, errors are suppressed.") ;
-      if (errors >= 26) return ;
+      if (errors == 101) showText("More than 100 errors, errors are suppressed.") ;
+      if (errors >= 101) return ;
       StyledDocument doc = TextWindow.getStyledDocument() ;
       Position pos = doc.getEndPosition() ;
       if (errorpos < 0) errorpos = pos.getOffset() - 1 ;

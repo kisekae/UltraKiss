@@ -68,12 +68,13 @@ import java.net.MalformedURLException ;
 
 
 class ImagePreview extends JPanel
-	implements ActionListener, MouseListener, MouseMotionListener
+	implements ActionListener, MouseListener, MouseMotionListener, ComponentListener
 {
    static private Component component = new Component() { } ;
 
-	protected Image image = null ;				// The base image to preview
-	private Image scaledimage = null ;     // The scaled image to paint
+   private KissFrame parent = null ;      // The parent frame
+	protected Image image = null ;			// The base image to preview
+	protected Image scaledimage = null ;   // The scaled image to paint
 	private Point pixel = null ;				// The selected pixel location
    private ImageScaleThread lazy = null ;	// Our lazy scaling thread
    private Dimension panelsize = null ;   // The panel display size
@@ -174,6 +175,9 @@ class ImagePreview extends JPanel
    	createToolBar() ;
 		addMouseListener(this) ;
 		addMouseMotionListener(this) ;
+      addComponentListener(this) ;
+      doLayout() ;
+		validate() ;
 	}
 
 	public ImagePreview(Image i)
@@ -189,10 +193,9 @@ class ImagePreview extends JPanel
 
       // Establish the new image parameters.
 
-		multiple = 1 ;
 		image = img ;
-   	scaledimage = null ;
-      if (image == null) { repaint() ; return ; }
+    	scaledimage = img ;
+      if (img == null) { repaint() ; return ; }
 		iw = image.getWidth(null) ;
 		ih = image.getHeight(null) ;
 		clip = new Rectangle(0,0,iw,ih) ;
@@ -203,6 +206,7 @@ class ImagePreview extends JPanel
       // reduced if necessary.  The scale value is the factor that the
       // base image must be scaled by to fit within the panel area.
 
+		multiple = 1 ;
 		Dimension d = panelsize ;
 		if (d == null) d = getSize() ;
       d = new Dimension(d) ;
@@ -218,15 +222,27 @@ class ImagePreview extends JPanel
 		sh = (int) (ih * scale) ;
 
 		// Scale the image as a new lazy thread.
-
+      
 		loading = true ;
-		drawImage() ;
+      showstate = true ;
+ 		drawImage() ;
 	}
 
 
 	// Get the base preview image.
 
-	Image getImage() { return image ; }
+	Image getImage() 
+   { 
+      if (image == null) return null ; 
+      if (image instanceof BufferedImage) return image ;
+      int w = image.getWidth(null) ;
+      int h = image.getHeight(null) ;
+      BufferedImage img = new BufferedImage(w,h,BufferedImage.TYPE_INT_ARGB) ;
+      Graphics gc = img.getGraphics() ;
+      gc.drawImage(image,0,0,null) ;
+      gc.dispose() ;
+      return img ;     
+   }
 
 
 	// Update the scaled preview image.  This method is used to replace
@@ -459,7 +475,7 @@ class ImagePreview extends JPanel
 			if (x < insets.left) x = insets.left ;
 			if (y < insets.top) y = insets.top ;
 			if (scaledimage != null)
-				g.drawImage(scaledimage,x,y,null) ;
+      		g.drawImage(scaledimage,x,y,null) ;
 
 			// Draw the selection box.
 
@@ -517,7 +533,6 @@ class ImagePreview extends JPanel
 			System.out.println("ImagePreview: Out of memory.") ;
          nomemory = true ;
          showstate = true ;
-         repaint() ;
 		}
 
       // Watch for general exceptions.
@@ -532,24 +547,22 @@ class ImagePreview extends JPanel
          System.out.println("ImagePreview: Exception " + e.toString()) ;
          e.printStackTrace() ;
          showstate = true ;
-         repaint() ;
       }
 	}
 
 
    // Image drawing.  Start a new lazy scale thread if necessary.
    // The repaint shows any status messages.  The lazy thread will
-   // update the preview image when it completes.
+   // do a repaint() when it completes.
 
    void drawImage()
    {
    	if (lazy != null && lazy.isAlive()) lazy.restart() ;
    	if (lazy == null || !lazy.isAlive())
       {
-      	lazy = new ImageScaleThread() ;
+      	lazy = new ImageScaleThread(image) ;
          lazy.start() ;
       }
-		if (showstate) repaint() ;
 	}
    
    
@@ -947,6 +960,8 @@ class ImagePreview extends JPanel
 
       // Calculate the bounds of the magnified image area rectangle.
 
+      if (centerX == 0) centerX = d.width / 2 ;
+      if (centerY == 0) centerY = d.height / 2 ;      
 		clip.width = (int) (iw * scalew) ;
 		clip.height = (int) (ih * scaleh) ;
 		clip.x = centerX - (clip.width / 2) ;
@@ -973,6 +988,15 @@ class ImagePreview extends JPanel
 	public void mouseEntered(MouseEvent e) { }
 	public void mouseClicked(MouseEvent e) { }
 	public void mouseMoved(MouseEvent e) { }
+   
+   
+   // Component listener events for resizing
+   
+   public void componentResized(ComponentEvent e) { setImage(image) ; }
+   public void componentHidden(ComponentEvent e) {}
+   public void componentMoved(ComponentEvent e) {}
+   public void componentShown(ComponentEvent e) {}
+
 
 
    // Inner class to define the lazy image scaling thread.
@@ -980,7 +1004,13 @@ class ImagePreview extends JPanel
 	class ImageScaleThread extends Thread
    {
    	private boolean restart = true ;
-      private ImageProducer ip = null ;
+      protected Object lock = new Object() ;
+      private Image sourceimage = null ;
+      
+      public ImageScaleThread(Image image)
+      {
+         sourceimage = image ;
+      }
 
       // Thread run code
 
@@ -991,44 +1021,73 @@ class ImagePreview extends JPanel
          // Repeat the scaling if we are told to restart at any time during
          // this execution.
 
-         try
+         while (restart)
          {
-            while (restart)
-            {
-               restart = false ;
-               if (clip == null) break ;
-               if (image == null) break ;
-               if (sw == 0 || sh == 0) break ;
-               
-               ip = image.getSource() ;
-               ImageFilter filter = new CropImageFilter(clip.x,clip.y,clip.width,clip.height) ;
-               ip = new FilteredImageSource(ip,filter) ;
-               Image cropimage = Toolkit.getDefaultToolkit().createImage(ip) ;
-               scaledimage = createResizedCopy(cropimage,sw,sh,true) ;
-//             scaledimage = cropimage.getScaledInstance(sw,sh,Image.SCALE_AREA_AVERAGING) ;
+            restart = false ;
+            if (clip == null) break ;
+            if (image == null) break ;
+            if (sw == 0 || sh == 0) break ;               
 
-               // Not sure why the mediatracker is required, but without this the
-               // image does not always display.
+            // Do the scaling on the AWT thread.  
+            
+            Runnable awt = new Runnable()
+            { public void run() { doScaling(sourceimage) ; } } ;
+            SwingUtilities.invokeLater(awt) ;
+         }               
 
-//               MediaTracker mt = new MediaTracker(component) ;
-//               mt.addImage(scaledimage,0) ;
-//               mt.waitForAll(500) ; 
-            }
+         synchronized (lock)
+         {
+           try { lock.wait(); }
+            catch (Exception e) { }
          }
-     		catch (Exception e) { }
-
+         
          loading = false ;
          scaling = false ;
-			repaint() ;
+         Runnable awt = new Runnable()
+         { public void run() { repaint() ; } } ;
+         SwingUtilities.invokeLater(awt) ;
       }
 
+      
       // Method to set the restart flag.
 
-      void restart()
-      {
-      	restart = true ;
-      }
+      void restart() { restart = true ; }
 
+      
+      // Function to do the image scaling.  This must run on the AWT thread.
+
+      private void doScaling(Image image)
+      {
+        try
+         {
+            ImageProducer ip = image.getSource() ;
+            ImageFilter filter = new CropImageFilter(clip.x,clip.y,clip.width,clip.height) ;
+            ip = new FilteredImageSource(ip,filter) ;
+            Image cropimage = Toolkit.getDefaultToolkit().createImage(ip) ;
+            scaledimage = createResizedCopy(cropimage,sw,sh,true) ;
+//          scaledimage = cropimage.getScaledInstance(sw,sh,Image.SCALE_AREA_AVERAGING) ;
+
+         // Not sure why the mediatracker is required, but without this the
+         // image does not always display.
+
+//          MediaTracker mt = new MediaTracker(component) ;
+//          mt.addImage(scaledimage,0) ;
+//          mt.waitForAll(500) ; 
+         }
+     		catch (Exception e) 
+         { 
+            System.out.println("ImagePreview: lazy thread failure") ;
+            e.printStackTrace();
+         }
+         
+         synchronized (lock)
+         {
+            try { lock.notify(); }
+            catch (Exception e) { }
+         }
+      }            
+      
+      
       // Create a BufferedImage of the desired size and draw the original 
       // image into it, scaling on the fly. Note that depending on whether 
       // your original image is opaque or non-opaque (that is, if it's 
@@ -1040,16 +1099,16 @@ class ImagePreview extends JPanel
 
       BufferedImage createResizedCopy(Image originalImage, int scaledWidth, int scaledHeight, boolean preserveAlpha)
       {
-          int imageType = preserveAlpha ? BufferedImage.TYPE_INT_ARGB : BufferedImage.TYPE_INT_RGB;
-          BufferedImage scaledBI = new BufferedImage(scaledWidth, scaledHeight, imageType);
-          Graphics2D g = scaledBI.createGraphics();
-          if (preserveAlpha) 
-          {
-              g.setComposite(AlphaComposite.Src);
-          }
-          g.drawImage(originalImage, 0, 0, scaledWidth, scaledHeight, null); 
-          g.dispose();
-          return scaledBI;
+         int imageType = preserveAlpha ? BufferedImage.TYPE_INT_ARGB : BufferedImage.TYPE_INT_RGB;
+         BufferedImage scaledBI = new BufferedImage(scaledWidth, scaledHeight, imageType);
+         Graphics2D g = scaledBI.createGraphics();
+         if (preserveAlpha) 
+         {
+            g.setComposite(AlphaComposite.Src);
+         }
+         g.drawImage(originalImage, 0, 0, scaledWidth, scaledHeight, null); 
+         g.dispose();
+         return scaledBI;
       }
    }
 }

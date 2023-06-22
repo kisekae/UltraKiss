@@ -2745,7 +2745,9 @@ final class Configuration extends KissObject
 		audioCount = 0 ;
 		videoCount = 0 ;
 
-      // Reset initial options.
+      // Reset initial options.  If we are not resetting options then the
+      // configuration may be reused.  We retain the zip file reference on 
+      // reuse so that cels and other objects can be reloaded.
 
 		if (resetoptions)
 		{
@@ -2753,20 +2755,20 @@ final class Configuration extends KissObject
          OptionsDialog options = (mf != null) ? mf.getOptionsDialog() : null ;
          if (options != null) options.resetOptions() ;
          if (mf != null) mf.updateMenuOptions() ;
+
+   		// Close the parent archive file.
+
+   		if (zip != null)
+   		{
+   			try { 
+               zip.close() ; 
+               zip.flush() ;
+            }
+   			catch (IOException e) { }
+   		}
+         zip = null ;
+         ze = null ;
       }
-
-		// Close the parent archive file.
-
-		if (zip != null)
-		{
-			try { 
-            zip.close() ; 
-            zip.flush() ;
-         }
-			catch (IOException e) { }
-		}
-      zip = null ;
-      ze = null ;
 
 		// Invoke the garbage collector.
 

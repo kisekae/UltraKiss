@@ -116,7 +116,7 @@ abstract class Cel extends KissObject
    protected int multipalette = 0 ;  			// The cel multipalette in use
    protected int transparency = 0 ;				// The cel transparency
    protected int inittransparency = 0 ;		// The cel initial transparency
-   protected int transparentindex = -1 ;	  			// The cel transparent index
+   protected int transparentindex = -1 ;	  	// The cel transparent index
    protected int background = -1 ;	  			// The cel background index
    protected int maxloop = 0 ;					// The cel maximum loop count
    protected int loop = 0 ;						// The cel animation loop count
@@ -471,6 +471,7 @@ abstract class Cel extends KissObject
    {
       palette = p ;
       truecolor = (palette == null) ;
+      if (p != null) setTransparentIndex(p.getTransparentIndex()) ;
    }
 
    // Set the cel palette identifier value.
@@ -2146,7 +2147,8 @@ abstract class Cel extends KissObject
          palette = new Palette(zip,file) ;
          int [] back = new int[1] ;
          int [] trans = new int[1] ;
-         back[0] = backgroundIndex ;
+//         back[0] = backgroundIndex ;
+         back[0] = transparentIndex ;
          trans[0] = transparentIndex ;
          palette.setPalette(a,r,g,b,1,colors,back,trans) ;
          palette.setIdentifier(new Integer(-1));

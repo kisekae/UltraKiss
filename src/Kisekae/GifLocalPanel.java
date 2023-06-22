@@ -271,7 +271,7 @@ final class GifLocalPanel extends JPanel
          xoffsetfield.setText("" + gif.getOffset().x) ;
          yoffsetfield.setText("" + gif.getOffset().y) ;
          localcheck.setText("(" + gif.getColorsUsed() + ")" );
-         editpalette.setEnabled(gif.hasPalette());
+         editpalette.setEnabled(localcheck.isSelected()) ;
          settransparent.setEnabled(gif.hasPalette());
          int t = gif.getTransparentIndex() ;
          trindexfield.setText("" + t);
@@ -294,6 +294,7 @@ final class GifLocalPanel extends JPanel
          if (source == editpalette)
          {
 				if (gif == null) return ;
+            parent.setChanged(false) ;
 				parent.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
 				ColorFrame cf = new ColorFrame(config,gif,new Integer(gif.getMultiPalette()),framenumber) ;
             if (parent instanceof ActionListener)
@@ -489,6 +490,7 @@ final class GifLocalPanel extends JPanel
 			if (settransparent != null)
 				settransparent.setSelectedIndex(palette.getTransparentIndex()) ;
 		}
+      validate() ;
 	}
 
 

@@ -1313,7 +1313,7 @@ final class FKissAction extends KissObject
                   Enumeration enum1 = a.getEvents() ;
                   while (enum1 != null && enum1.hasMoreElements())
                      a1.addEvent((Vector) enum1.nextElement()) ;
-                  a.close() ;
+//                  a.close() ;  // problematic if expansion set load for JMF
                   Vector sounds = (config != null) ? config.getSounds() : null ;
                   int n = (sounds != null) ? sounds.indexOf(a) : -1 ;
                   if (n >= 0) sounds.setElementAt(a1,n) ;

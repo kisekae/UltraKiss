@@ -238,11 +238,28 @@ final class GifCel extends Cel
          Point offset = encoder.getOffset() ;
          for (int i = 0 ; i < frames.size() ; i++)
          {
-            GifFrame cf = (GifFrame) frames.elementAt(i) ;
-            encoder = new GifEncoder(fw,cf,out) ;
-            if (i == 0) encoder.setOffset(offset) ;
-            encoder.encode() ;
-            bytes += encoder.getBytesWritten() ;
+            try
+            {
+               GifFrame cf = (GifFrame) frames.elementAt(i) ;
+               Image img = cf.getImage() ;
+               encoder = new GifEncoder(fw,img,out,cf) ;
+               if (i == 0) encoder.setOffset(offset) ;
+               encoder.encode() ;
+               bytes += encoder.getBytesWritten() ;
+            }
+            catch (IOException e)
+            {
+               if ("Too many colors for a GIF image".equals(e.getMessage()))
+               {
+                  Object [] reduced = this.dither(256) ;
+                  Image img = (Image) reduced[0] ;
+                  encoder = new GifEncoder(fw,img,null,0,null,
+                     transparentcolor,backgroundcolor,transparency,out) ;
+                  encoder.encode() ;
+                  bytes += encoder.getBytesWritten() ;
+               }
+               else throw e ;
+            }
          }
       }
 
@@ -314,6 +331,28 @@ final class GifCel extends Cel
       cf.setImage(img);
    }
 
+   // Set the palette.  Establishes the global palette arrays.
+
+   void setPalette(Palette p)
+   {
+      super.setPalette(p) ;
+      if (p == null) return ;
+      Object [] palettedata = p.getPaletteData() ;
+      globalpalette[0] = palettedata[1] ;  // red
+      globalpalette[1] = palettedata[2] ;  // green
+      globalpalette[2] = palettedata[3] ;  // blue
+      if (frames == null) return ;
+      
+      // Propagate to all frames using the global palette.
+      
+      for (int i = 0 ; i < frames.size() ; i++)
+      {
+         GifFrame cf = (GifFrame) frames.elementAt(i) ;
+         if (!cf.isLocalColorTable()) 
+            cf.setLocalPalette(false) ;
+      }
+   }
+
 	// Set the cel loop count.
 
    void setLoopLimit(int n)
@@ -358,7 +397,8 @@ final class GifCel extends Cel
          for (int i = 0 ; i < frames.size() ; i++)
          {
             cf = (GifFrame) frames.elementAt(i) ;
-            cf.setTransparentIndex(n) ;
+            if (!cf.isLocalColorTable())
+               cf.setTransparentIndex(n) ;
          }
       }
 	}
@@ -768,7 +808,7 @@ final class GifCel extends Cel
 				error = true ;
 	         String s = e.getMessage() ;
 	         if (s == null) s = e.toString() ;
-   			showError("I/O Exception: " + s + "\n" + file) ;
+   			showError("I/O Exception: " + s + "," + file) ;
 				e.printStackTrace() ;
 			}
 			if (error) image = null ;
@@ -1157,8 +1197,28 @@ final class GifCel extends Cel
 	{
    	errormessage = s ;
    	int line = getLine() ;
-		if (line > 0) s = "Line [" + line + "] " + s ;
+		if (line > 0) s = "[Line " + line + "] " + s ;
 		if (loader != null) loader.showError(s) ;
 		else System.out.println(s) ;
-	}
+	} 
+   
+   
+	// GifCel clone.  We need to clone the frames as the cel clone
+   // is a shallow clone.  Each frame can be modified in the cloned
+   // copy and we don't want to modify the original frame.
+
+   public Object clone()
+   {
+       Cel c = (Cel) super.clone() ;
+       if (frames == null) return c ;
+       Vector clonedframes = new Vector() ;
+       for (int i= 0; i< frames.size(); i++)
+       {
+          GifFrame cf = (GifFrame) frames.elementAt(i) ;
+          clonedframes.addElement(cf.clone()) ;
+       }
+       frames = clonedframes ;
+       return c ;
+   }
+
 }

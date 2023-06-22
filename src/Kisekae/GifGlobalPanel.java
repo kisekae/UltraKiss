@@ -258,8 +258,9 @@ final class GifGlobalPanel extends JPanel
          if (source == editpalette)
          {
 				if (gif == null) return ;
+            parent.setChanged(false) ;
 				parent.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
-            Object o = (gif.isLocalPalette())
+            Object o = (!gif.isLocalPalette())
                ? (Object) gif.getGlobalPalette() : (Object) gif ;
 				ColorFrame cf = new ColorFrame(config,o,new Integer(gif.getMultiPalette())) ;
             if (parent instanceof ActionListener)
@@ -437,6 +438,7 @@ final class GifGlobalPanel extends JPanel
 			if (setbackground != null)
 				setbackground.setSelectedIndex(palette.getBackgroundIndex()) ;
 		}
+      validate() ;
 	}
 
 

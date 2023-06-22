@@ -101,6 +101,7 @@ final class ImageFrame extends KissFrame
 	private final int GREEN = 18 ;
 	private final int BLUE = 19 ;
 	private final int EDGEDETECT = 20 ;
+	private final int ALPHA = 21 ;
 
 	private static String helpset = "Help/ImageEditor.hs" ;
 	private static String helpsection = "imageeditor.index" ;
@@ -115,6 +116,7 @@ final class ImageFrame extends KissFrame
 	private Cel writecel = null ;						// Graphic cel written
 	private Group group = null ;						// Graphic group loaded
 	private Palette palette = null ;					// Palette being adjusted
+	private Palette fwpalette = null ;				// Palette being written
 	private Object configobject = null ;			// Configuration object
 	private ArchiveEntry ze = null ;					// Zip entry for palette
 	private Configuration config = null ;  		// Active configuration
@@ -187,6 +189,7 @@ final class ImageFrame extends KissFrame
 	private JMenuItem red ;
 	private JMenuItem green ;
 	private JMenuItem blue ;
+	private JMenuItem alpha ;
 
 	private JMenu colorhistogram ;
 	private JMenuItem countcolors ;
@@ -220,7 +223,7 @@ final class ImageFrame extends KissFrame
 	private JMenuItem cut ;
 	private JMenuItem copy ;
 	private JMenuItem paste ;
-	private JMenuItem reload ;
+	private JMenuItem undoall ;
 	private JMenuItem print ;
    private JMenuItem printpreview ;
    private JMenuItem pagesetup ;
@@ -563,6 +566,8 @@ final class ImageFrame extends KissFrame
       green.addActionListener(this) ;
 		coloradjust.add((blue = new JMenuItem("Blue..."))) ;
       blue.addActionListener(this) ;
+		coloradjust.add((alpha = new JMenuItem("Alpha..."))) ;
+      alpha.addActionListener(this) ;
 		colorMenu.add((colorhistogram = new JMenu("Histogram"))) ;
 		colorhistogram.setEnabled(false) ;
 		colorhistogram.add((countcolors = new JMenuItem("Count Colors..."))) ;
@@ -905,9 +910,9 @@ final class ImageFrame extends KissFrame
 		menu.add(undoAction) ;
 		redoAction = new RedoAction() ;
 		menu.add(redoAction) ;
-		menu.add((reload = new JMenuItem(Kisekae.getCaptions().getString("MenuEditUndoAll")))) ;
-		reload.setEnabled(false) ;
-		reload.addActionListener(this);
+		menu.add((undoall = new JMenuItem(Kisekae.getCaptions().getString("MenuEditUndoAll")))) ;
+		undoall.setEnabled(false) ;
+		undoall.addActionListener(this);
 		menu.addSeparator() ;
 
 		// These actions come from the default editor kit, but we renamed
@@ -1026,7 +1031,7 @@ final class ImageFrame extends KissFrame
          scrollpane.setHorizontalScrollBarPolicy(hspolicy) ;			
          panel6.add(scrollpane,BorderLayout.CENTER) ;
          panel6.setVisible(framewindow.getState()) ;
-         validate() ;
+         revalidate() ;
       }
 
       // Construct the GIF frame edit panel.
@@ -1055,8 +1060,12 @@ final class ImageFrame extends KissFrame
          framelist.addListSelectionListener(gifFrameListener) ;
          JScrollPane scrollpane = new JScrollPane(framelist) ;
          panel6.add(scrollpane,BorderLayout.CENTER) ;
+         lastchange = "Color Adjust" ;
+         southpanel = colorpanel ;
+         colorpanel.setPane(3) ;
+         panel6.add(southpanel,BorderLayout.SOUTH) ;
          panel6.setVisible(framewindow.getState()) ;
-         validate() ;
+         revalidate() ;
       }
 
       // Construct the cel frame edit panel.
@@ -1065,12 +1074,12 @@ final class ImageFrame extends KissFrame
       {
          northpanel = new CelLocalPanel(this,config,cel) ;
          panel6.add(northpanel,BorderLayout.NORTH) ;
-         panel6.setVisible(framewindow.getState()) ;
          lastchange = "Color Adjust" ;
          southpanel = colorpanel ;
          colorpanel.setPane(3) ;
          panel6.add(southpanel,BorderLayout.SOUTH) ;
-         validate() ;
+         panel6.setVisible(framewindow.getState()) ;
+         revalidate() ;
       }
 	}
 
@@ -1102,6 +1111,11 @@ final class ImageFrame extends KissFrame
       panel3.remove(panel5) ;
       panel3.add(cfeditpane,BorderLayout.CENTER) ;
    }
+   
+   
+   // Set the changed indicator for any palette type change.
+   
+   void setChanged(boolean b) { changed = b ; }
 
 
    // A utility function to establish a new cel and palette object given
@@ -1211,6 +1225,7 @@ final class ImageFrame extends KissFrame
       group = null ;
 		config = null ;
 		changed = false ;
+      updated = false ;
 		memorysource = false ;
 		multipalette = new Integer(0) ;
 		if (palette != null) palette.startEdits() ;
@@ -1239,7 +1254,9 @@ final class ImageFrame extends KissFrame
 
    // A function to set the base image for edit changes.
 
-   void setBaseImage() { baseimage = preview.getImage() ; }
+   void setBaseImage() { 
+      baseimage = preview.getImage() ; 
+   }
 
 
    // A function to restore the image for edit changes.
@@ -1269,7 +1286,7 @@ final class ImageFrame extends KissFrame
 
       int w = (img != null) ? img.getWidth(null) : 0 ;
       int h = (img != null) ? img.getHeight(null) : 0 ;
-      source = makeBufferedImage(img,w,h,BufferedImage.TYPE_INT_ARGB) ;
+      source = makeBufferedImage(img,w,h,BufferedImage.TYPE_INT_ARGB,0) ;
       
       if (statusbar != null) statusbar.showStatus("Performing image crop ...") ;
       clip = (preview != null) ? preview.getSelection() : null ;
@@ -1350,9 +1367,7 @@ final class ImageFrame extends KissFrame
 
       // Ensure our source is a buffered image.
 
-      int w = (img != null) ? img.getWidth(null) : 0 ;
-      int h = (img != null) ? img.getHeight(null) : 0 ;
-      source = makeBufferedImage(img,w,h,BufferedImage.TYPE_INT_ARGB) ;
+      source = makeBufferedImage(img,BufferedImage.TYPE_INT_ARGB) ;
 
       // Create our convolution kernel.
 
@@ -1419,6 +1434,7 @@ final class ImageFrame extends KissFrame
          ConvolveOp op = new ConvolveOp(kernel,ConvolveOp.EDGE_NO_OP,hints) ;
          image = op.createCompatibleDestImage(source,source.getColorModel()) ;
          image = op.filter(source,image) ;
+         changed = true ;
       }
       return image ;
    }
@@ -1439,9 +1455,7 @@ final class ImageFrame extends KissFrame
 
       // Ensure our source is a buffered image.
 
-      int w = (img != null) ? img.getWidth(null) : 0 ;
-      int h = (img != null) ? img.getHeight(null) : 0 ;
-      source = makeBufferedImage(img,w,h,BufferedImage.TYPE_INT_ARGB) ;
+      source = makeBufferedImage(img,BufferedImage.TYPE_INT_ARGB) ;
       if (source == null) return null ;
 
       // Create our convolution kernel.
@@ -1470,6 +1484,7 @@ final class ImageFrame extends KissFrame
          ? new ByteLookupTable(0,bandadjust) : new ByteLookupTable(0,lut) ;
       LookupOp op = new LookupOp(blt,hints) ;
       image = op.filter(source,image) ;
+      changed = true ;
       return image ;
    }
 
@@ -1485,7 +1500,7 @@ final class ImageFrame extends KissFrame
 
       int w = (img != null) ? img.getWidth(null) : 0 ;
       int h = (img != null) ? img.getHeight(null) : 0 ;
-      source = makeBufferedImage(null,w,h,BufferedImage.TYPE_INT_RGB) ;
+      source = makeBufferedImage(null,w,h,BufferedImage.TYPE_INT_RGB,0) ;
       if (source == null) return null ;
       Graphics gc = source.getGraphics() ;
       gc.drawImage(img,0,0,null) ;
@@ -1498,18 +1513,33 @@ final class ImageFrame extends KissFrame
       ColorConvertOp op = new ColorConvertOp(graySpace,hints) ;
       image = op.createCompatibleDestImage(source,source.getColorModel()) ;
       image = op.filter(source,image) ;
+      changed = true ;
       return image ;
    }
 
 
    // Utility function to ensure that an AWT image is ARGB or RGB.  If we
-   // already have a buffered image then it is not changed.  To create a new
-   // buffered image, ensure that the source img parameter is null.
+   // already have a buffered image then it is not changed.  If the copy
+   // argument is non-zero an image copy is returned of the specified type.
 
-   private BufferedImage makeBufferedImage(Image img, int w, int h, int type)
+   private BufferedImage makeBufferedImage(Image img)
+   { return makeBufferedImage(img, BufferedImage.TYPE_INT_ARGB, 1) ; }
+
+   private BufferedImage makeBufferedImage(Image img, int type)
+   { return makeBufferedImage(img, type, 0) ; }
+   
+   private BufferedImage makeBufferedImage(Image img, int type, int copy)
+   { 
+      if (img == null) return null ;
+      int w = img.getWidth(null) ;
+      int h = img.getHeight(null) ;
+      return makeBufferedImage(img, w, h, type, copy) ; 
+   }
+   
+   private BufferedImage makeBufferedImage(Image img, int w, int h, int type, int copy)
    {
-      if (w <= 0 || h <=0) return null ;
-      if (img instanceof BufferedImage) return (BufferedImage) img ;
+      if (w <= 0 || h <= 0) return null ;
+      if (copy == 0 && img instanceof BufferedImage) return (BufferedImage) img ;
       BufferedImage image = new BufferedImage(w,h,type) ;
 
       // Set the background as transparent.
@@ -1698,6 +1728,8 @@ final class ImageFrame extends KissFrame
 		if (cel != null) cel.setLoader(null) ;
 		if (palette != null) palette.setLoader(null) ;
 		if (undo != null)	undo.discardAllEdits() ;
+      if (undoAction != null)	undoAction.updateUndoState() ;
+      if (redoAction != null)	redoAction.updateRedoState() ;
       if (preview != null) preview.stopAnimation() ;
 		if (preview != null) preview.setImage(null) ;
 		if (ze != null)
@@ -1720,7 +1752,7 @@ final class ImageFrame extends KissFrame
          window = (WindowImageItem) windows.elementAt(n-1) ;
          cel = window.cel ;
          palette = window.palette ;
-         changed = window.changed ;
+         updated = window.changed ;
       }
 	}
 
@@ -1758,7 +1790,7 @@ final class ImageFrame extends KissFrame
                int j1 = s.indexOf(']') ;
                if (i1 >= 0 && j1 > i1)
                   s = s.substring(0,i1+1) + name.toUpperCase() + s.substring(j1) ;
-               JOptionPane.showMessageDialog(this,
+               JOptionPane.showMessageDialog(me,
                   s + "\n" +
                   Kisekae.getCaptions().getString("SaveAsImageText"),
                   Kisekae.getCaptions().getString("FileOpenException"),
@@ -1780,7 +1812,7 @@ final class ImageFrame extends KissFrame
 					: (cel != null) ? cel.getPalette() : null ;
 				if (cel == null) return ;
             ze = zenew ;
-            if (window != null) window.setChanged(changed) ;
+            if (window != null) window.setChanged(updated) ;
             window = null ;
 				initimage() ;
 				return ;
@@ -1805,7 +1837,7 @@ final class ImageFrame extends KissFrame
 			if (source == exit)
 			{
 				if (!closecheck(true)) return ;
-				close(true) ;
+				closeimage() ;
 				return ;
 			}
 
@@ -1826,8 +1858,8 @@ final class ImageFrame extends KissFrame
 				originalzepath = (ze == null) ? null : ze.getPath() ;
 				originalcelname = (cel == null) ? null : cel.getName() ;
 				originalpalettename = (palette == null) ? null : palette.getName() ;
-            if (colorpanel.isChanged()) colorpanel.apply() ;
-            if (geompanel.isChanged()) geompanel.apply() ;
+//            if (colorpanel.isChanged()) colorpanel.apply() ;
+//            if (geompanel.isChanged()) geompanel.apply() ;
 				saveimage((source == saveas)) ;
 				return ;
 			}
@@ -1849,6 +1881,27 @@ final class ImageFrame extends KissFrame
 				redoAction.actionPerformed(evt) ;
 				return ;
 			}
+
+         // An Undo All request rolls back all edit changes.
+
+         if (undoall == source)
+         {
+            if (!undo.canUndo()) return ;
+            int n = JOptionPane.showConfirmDialog(null,
+               Kisekae.getCaptions().getString("UndoAllConfirmText"),
+               Kisekae.getCaptions().getString("MenuEditUndoAll"),
+               JOptionPane.YES_NO_OPTION) ;
+            if (n != JOptionPane.YES_OPTION) return ;
+
+            // Undo everything.  Reset to initial state.
+
+            this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
+            while (undo.canUndo()) undo.undo() ;
+            this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
+            undo.discardAllEdits() ;
+            undoAction.updateUndoState() ;
+            redoAction.updateRedoState() ;
+         }
 
          // A flip command.
 
@@ -1987,6 +2040,7 @@ final class ImageFrame extends KissFrame
             lastchange = "Color Adjust" ;
             if (southpanel != null) panel6.remove(southpanel) ;
             southpanel = colorpanel ;
+            colorpanel.setImage(preview.getImage()) ;
             colorpanel.setPane(0) ;
             panel6.add(southpanel,BorderLayout.SOUTH) ;
             validate() ;
@@ -2002,6 +2056,7 @@ final class ImageFrame extends KissFrame
             lastchange = "Color Adjust" ;
             if (southpanel != null) panel6.remove(southpanel) ;
             southpanel = colorpanel ;
+            colorpanel.setImage(preview.getImage()) ;
             colorpanel.setPane(1) ;
             panel6.add(southpanel,BorderLayout.SOUTH) ;
             validate() ;
@@ -2017,6 +2072,7 @@ final class ImageFrame extends KissFrame
             lastchange = "Color Adjust" ;
             if (southpanel != null) panel6.remove(southpanel) ;
             southpanel = colorpanel ;
+            colorpanel.setImage(preview.getImage()) ;
             colorpanel.setPane(2) ;
             panel6.add(southpanel,BorderLayout.SOUTH) ;
             validate() ;
@@ -2032,6 +2088,7 @@ final class ImageFrame extends KissFrame
             lastchange = "Color Adjust" ;
             if (southpanel != null) panel6.remove(southpanel) ;
             southpanel = colorpanel ;
+            colorpanel.setImage(preview.getImage()) ;
             colorpanel.setPane(3) ;
             panel6.add(southpanel,BorderLayout.SOUTH) ;
             validate() ;
@@ -2047,6 +2104,7 @@ final class ImageFrame extends KissFrame
             lastchange = "Color Adjust" ;
             if (southpanel != null) panel6.remove(southpanel) ;
             southpanel = colorpanel ;
+            colorpanel.setImage(preview.getImage()) ;
             colorpanel.setPane(4) ;
             panel6.add(southpanel,BorderLayout.SOUTH) ;
             validate() ;
@@ -2062,7 +2120,24 @@ final class ImageFrame extends KissFrame
             lastchange = "Color Adjust" ;
             if (southpanel != null) panel6.remove(southpanel) ;
             southpanel = colorpanel ;
+            colorpanel.setImage(preview.getImage()) ;
             colorpanel.setPane(5) ;
+            panel6.add(southpanel,BorderLayout.SOUTH) ;
+            validate() ;
+            panel6.repaint() ;
+         }
+
+         // An alpha command.
+
+         if (source == alpha)
+         {
+            oldimage = baseimage ;
+            oldpalette = palette ;
+            lastchange = "Color Adjust" ;
+            if (southpanel != null) panel6.remove(southpanel) ;
+            southpanel = colorpanel ;
+            colorpanel.setImage(preview.getImage()) ;
+            colorpanel.setPane(6) ;
             panel6.add(southpanel,BorderLayout.SOUTH) ;
             validate() ;
             panel6.repaint() ;
@@ -2139,7 +2214,7 @@ final class ImageFrame extends KissFrame
 					{
 						System.err.println("Printing error: " + ex.toString()) ;
 						ex.printStackTrace() ;
-						JOptionPane.showMessageDialog(this,
+						JOptionPane.showMessageDialog(null,
 							"Printer exception.  Printing terminated." + "\n" + ex.toString(),
 							"Printer Fault",  JOptionPane.ERROR_MESSAGE) ;
 					}
@@ -2179,6 +2254,7 @@ final class ImageFrame extends KissFrame
 
 			if (properties == source)
 			{
+            changed = false ;
          	if (cel != null) 
             {
                CelDialog cd = new CelDialog(this,cel,null,config) ;
@@ -2230,27 +2306,29 @@ final class ImageFrame extends KissFrame
 					ze.setPath(originalzepath) ;
 				if (originalcelname != null && writecel != null)
 					writecel.setName(originalcelname) ;
-				if (originalpalettename != null && palette != null)
-					palette.setName(originalpalettename) ;
+				if (originalpalettename != null && fwpalette != null)
+					fwpalette.setName(originalpalettename) ;
 
 				// If we saved a cel file then save the associated palette.
 
 				if (ArchiveFile.isCel(newname))
 				{
-   				savepalette(writecel,palette,newname) ;
+   				savepalette(writecel,fwpalette,newname) ;
 				}
 
 				// If we saved a palette file then make sure that any preset 
             // encoding is dropped.
 
-				if (writecel == null && palette != null)
+				if (writecel == null && fwpalette != null)
 				{
-   				palette.setEncodeArrays(null,null,null) ;
+   				fwpalette.setEncodeArrays(null,null,null) ;
 				}
 
             changed = false ;
+            updated = false ;
             if (cel != null) cel.setUpdated(false) ;
             writecel = null ;
+            fwpalette = null ;
 				return ;
 			}
 
@@ -2267,10 +2345,8 @@ final class ImageFrame extends KissFrame
             lastchange = "Color Edit" ;
             palette = (cel != null) ? cel.getPalette() : null ;
             Image img = (cel != null) ? cel.getImage() : null ;
-            int w = (img != null) ? img.getWidth(null) : 0 ;
-            int h = (img != null) ? img.getHeight(null) : 0 ;
-            image = makeBufferedImage(img,w,h,BufferedImage.TYPE_INT_ARGB) ;
-            createUndoColor() ;
+            image = makeBufferedImage(img,BufferedImage.TYPE_INT_ARGB) ;
+            createUndoColor(oldimage,image,oldpalette,palette,lastchange) ;
             updateInterface(cel,currentframe) ;
             updatePreview() ;
          }
@@ -2295,7 +2371,7 @@ final class ImageFrame extends KissFrame
 			catch (InterruptedException ex) { }
 			System.out.println("ImageFrame: Out of memory.") ;
          setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
-         JOptionPane.showMessageDialog(this,
+         JOptionPane.showMessageDialog(null,
             Kisekae.getCaptions().getString("LowMemoryFault") + " - " +
             Kisekae.getCaptions().getString("ActionNotCompleted"),
             Kisekae.getCaptions().getString("LowMemoryFault"),
@@ -2309,7 +2385,7 @@ final class ImageFrame extends KissFrame
          setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
 			System.out.println("ImageFrame: Internal fault, action " + evt.getActionCommand()) ;
 			e.printStackTrace() ;
-         JOptionPane.showMessageDialog(this,
+         JOptionPane.showMessageDialog(null,
             Kisekae.getCaptions().getString("InternalError") + " - " +
             Kisekae.getCaptions().getString("ActionNotCompleted") + "\n" + e.toString(),
             Kisekae.getCaptions().getString("InternalError"),
@@ -2318,17 +2394,18 @@ final class ImageFrame extends KissFrame
 	}
 
 
-   // A function to update the preview image with a transformed copy.
-
-   void applyTransformedImage()
-   {
-      applyTransformedImage(image) ;
-   }
+   // A function to update the working image with the preview copy.
 
    void updateTransformedImage()
    {
-      applyTransformedImage(image,false) ;
+      workimage = (BufferedImage) preview.getImage() ;
    }
+   
+   // A function to apply the working image to the reference object.
+   // If permanent change an undoable edit is created.
+
+   void applyTransformedImage()
+   {  applyTransformedImage(workimage) ; }
    
    void applyTransformedImage(Image image)
    { applyTransformedImage(image,true) ; }
@@ -2338,10 +2415,11 @@ final class ImageFrame extends KissFrame
       setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
       if (statusbar != null) statusbar.showStatus("") ;
       if (image == null) return ;
+
       if (perm) baseimage = image ;
       workimage = image ;
-      changed = true ;
-
+      image = baseimage ;
+      
       // If we have a cel, update the cel size and image.
 
       if (cel != null)
@@ -2359,8 +2437,9 @@ final class ImageFrame extends KissFrame
          // If we have a palette, reconstruct the palette.
          // Image transforms may adjust the number of colors.
 
+         oldpalette = palette ;
          palette = cel.getPalette() ;
-         if (palette != null)
+         if (palette != null && changed)
          {
             Palette p = cel.makePalette(palette.getColorCount()) ;
             if (p != null)
@@ -2385,17 +2464,24 @@ final class ImageFrame extends KissFrame
          preview.setShowState(true) ;
       }
 
+      // Update the colorpanel image reference for the next edit.
+      
+      colorpanel.setImage(image);     
+
       // Update the frame panel to reflect any palette changes.
 
-      createUndoColor() ;
+      if (!perm) return ;
+      createUndoColor(oldimage,image,oldpalette,palette,lastchange) ;
       updateFramePanel(image) ;
+      oldimage = workimage ;
+      updated = true ;
    }
 
 
 
    // Capture the change for undo/redo processing.
 
-   private void createUndoColor()
+   private void createUndoColor(Image oldimage, Image image, Palette oldpalette, Palette palette, String lastchange)
    {
       UndoableEdit ce = new UndoableColor(oldimage,image,oldpalette,palette,lastchange) ;
       UndoableEditEvent evt = new UndoableEditEvent(this,ce) ;
@@ -2463,11 +2549,11 @@ final class ImageFrame extends KissFrame
 
       if (source instanceof WindowImageItem)
       {
-         if (window != null) window.changed = changed ;
+         if (window != null) window.changed = updated ;
          window = (WindowImageItem) source ;
          cel = window.cel ;
          palette = window.palette ;
-         changed = window.changed ;
+         updated = window.changed ;
          initimage() ;
          return ;
       }
@@ -2481,12 +2567,12 @@ final class ImageFrame extends KissFrame
 	private boolean closecheck(boolean cancel)
 	{
 		boolean restorestate = changed ;
-      if (colorpanel.isChanged()) colorpanel.apply() ;
-      if (geompanel.isChanged()) geompanel.apply() ;
+//      if (colorpanel.isChanged()) colorpanel.apply() ;
+//      if (geompanel.isChanged()) geompanel.apply() ;
 
 		// Check for a file save if changes are pending.
 
-		if (changed)
+		if (changed || updated)
       {
       	int opt = JOptionPane.YES_NO_OPTION ;
          if (cancel) opt = JOptionPane.YES_NO_CANCEL_OPTION ;
@@ -2502,7 +2588,7 @@ final class ImageFrame extends KissFrame
             int j1 = s1.indexOf(']') ;
             if (i1 >= 0 && j1 > i1)
                s1 = s1.substring(0,i1) + s + s1.substring(j1+1) ;
-            int i = JOptionPane.showConfirmDialog(this, s1,
+            int i = JOptionPane.showConfirmDialog(null, s1,
                Kisekae.getCaptions().getString("ApplyChangeTitle"),
                opt, JOptionPane.QUESTION_MESSAGE) ;
 
@@ -2537,12 +2623,14 @@ final class ImageFrame extends KissFrame
                      // cel.  This is difficult as the image size and type may 
                      // have changed.  
 
-                     c.setPalette(null) ;
-                     c.setPaletteID(null) ;
+                     c.setPalette(cel.getPalette()) ;
+                     c.setPaletteID(cel.getPaletteID()) ;
+                     c.setColorsUsed(cel.getColorsUsed()) ;
+                     c.setBackgroundIndex(cel.getBackgroundIndex()) ;
                      c.setTransparentIndex(cel.getTransparentIndex()) ;
                      c.changeTransparency(0) ;
                      c.setLoopLimit(cel.getLoopLimit()) ;
-                     c.setImage(cel.getImage(),Palette.getDirectColorModel()) ;
+                     c.setImage(cel.getImage(),cel.getColorModel()) ;
                      c.setUpdated(true) ;
                      
                      // Rebuild the group if the cel size changed.
@@ -2598,7 +2686,7 @@ final class ImageFrame extends KissFrame
                      s2 = s2.substring(0,i1) + f.getName() + s2.substring(j1+1) ;
                }
             }
-            int i = JOptionPane.showConfirmDialog(this, s1, s2,
+            int i = JOptionPane.showConfirmDialog(null, s1, s2,
                opt, JOptionPane.QUESTION_MESSAGE) ;
 
 				// Save the text contents if necessary.
@@ -2718,9 +2806,12 @@ final class ImageFrame extends KissFrame
       if (c.getName() == null) saveas = true ;
 
       // We clone the cel because we destructively update its contents 
-      // and we do not want to alter the original object.
+      // and we do not want to alter the original object.  For KissCels
+      // the FileWriter will write the associate palette file when the
+      // image file write returns.  
       
       writecel = (Cel) c.clone() ;
+      fwpalette = palette ;
       ArchiveEntry cze = writecel.getZipEntry() ;
       if (cze != null) writecel.setZipEntry((ArchiveEntry) cze.clone()) ;
       if (saveas) writecel.setZipFile(null) ;
@@ -2807,7 +2898,13 @@ final class ImageFrame extends KissFrame
 
       // Update the frame as colors may have changed.
 
-      gif.setFrame(n) ;
+      baseimage = preview.getImage() ;
+      applyTransformedImage(image,false) ;
+      if (frame instanceof GifFrame) 
+         ((GifFrame) frame).setImage(baseimage);
+      else
+         gif.setImage(baseimage);
+      preview.init(config,group,gif,palette,multipalette) ;
 
       // Assign the correct north panel.
 
@@ -2818,9 +2915,15 @@ final class ImageFrame extends KissFrame
       if (northpanel instanceof GifGlobalPanel)
          ((GifGlobalPanel) northpanel).hidePopup() ;
       if (frame instanceof GifFrame)
+      {
          northpanel = new GifLocalPanel(this,config,gif,(GifFrame) frame,n) ;
+         ((GifLocalPanel) northpanel).update(image) ;
+      }
       else
+      {
          northpanel = new GifGlobalPanel(this,config,gif) ;
+         ((GifGlobalPanel) northpanel).update(image) ;
+      }
       panel6.add(northpanel,BorderLayout.NORTH) ;
       validate() ;
       return n ;
@@ -2885,6 +2988,14 @@ final class ImageFrame extends KissFrame
       validate() ;
    }
 
+   
+   // Fuctions to update our images after an undo/redo
+   
+   private void updateOldImage(Image img) 
+   { oldimage = img ; image = (BufferedImage) oldimage ; }
+   private void updateOldPalette(Palette p) 
+   { oldpalette = p ; palette = oldpalette ; }
+   
 
 	// A utility function to return our current page format for printing.
 
@@ -3106,7 +3217,7 @@ final class ImageFrame extends KissFrame
    		if (height < 1) height = 1 ;
    		if (width > 2000) width = 2000 ;
    		if (height > 2000) height = 2000 ;
-         Image image = makeBufferedImage(null,width,height,BufferedImage.TYPE_INT_ARGB) ;
+         Image image = makeBufferedImage(null,width,height,BufferedImage.TYPE_INT_ARGB,0) ;
 			return image ;
 		}
 
@@ -3352,7 +3463,7 @@ final class ImageFrame extends KissFrame
 			{
 				System.out.println("ImageFrame: Unable to undo edit") ;
 				ex.printStackTrace();
-            JOptionPane.showMessageDialog(me,
+            JOptionPane.showMessageDialog(null,
                Kisekae.getCaptions().getString("EditUndoError") + " - " +
                Kisekae.getCaptions().getString("ActionNotCompleted") +
                "\n" + ex.toString(),
@@ -3374,14 +3485,14 @@ final class ImageFrame extends KissFrame
 			if (undo.canUndo())
 			{
 				setEnabled(true) ;
-				reload.setEnabled(true) ;
+				undoall.setEnabled(true) ;
             UNDO.setEnabled(true);
 				putValue(Action.NAME, undo.getUndoPresentationName()) ;
 			}
 			else
 			{
 				setEnabled(false) ;
-				reload.setEnabled(false) ;
+				undoall.setEnabled(false) ;
 				UNDO.setEnabled(false);
 				putValue(Action.NAME, Kisekae.getCaptions().getString("MenuEditUndo")) ;
 			}
@@ -3408,7 +3519,7 @@ final class ImageFrame extends KissFrame
 			{
 				System.out.println("ImageFrame: Unable to redo edit") ;
 				ex.printStackTrace() ;
-            JOptionPane.showMessageDialog(me,
+            JOptionPane.showMessageDialog(null,
                Kisekae.getCaptions().getString("EditUndoError") + " - " +
                Kisekae.getCaptions().getString("ActionNotCompleted") +
                "\n" + ex.toString(),
@@ -3463,7 +3574,7 @@ final class ImageFrame extends KissFrame
          this.oldpalette = oldpalette ;
          this.newpalette = newpalette ;
          this.editname = name ;
-      }
+     }
 
       // Return the undo/redo menu name
 
@@ -3475,25 +3586,29 @@ final class ImageFrame extends KissFrame
       public void undo()
       {
          super.undo() ;
-         palette = oldpalette ;
          if (cel != null)
          {
             cel.setImage(oldimage) ;
             cel.setPalette(oldpalette) ;
             cel.setPaletteID((oldpalette != null) ? oldpalette.getIdentifier() : null) ;
             cel.setTransparentIndex((oldpalette != null) ? oldpalette.getTransparentIndex() : -1) ;
+            cel.setBackgroundIndex((oldpalette != null) ? oldpalette.getBackgroundIndex() : -1) ;
             cel.setColorsUsed((oldpalette != null) ? oldpalette.getColorCount() : 0) ;
-         }
+            cel.changePalette(new Integer(0));
+//            oldimage = cel.getImage() ;
+         }   
          if (preview != null)
          {
-            preview.setPalette(palette) ;
+            preview.setPalette(oldpalette) ;
             preview.setImage(oldimage) ;
-            baseimage = oldimage ;
          }
+         colorpanel.setImage(oldimage);
+         workimage = oldimage ;
+         baseimage = oldimage ;
+         updateOldImage(oldimage) ;
+         updateOldPalette(oldpalette) ;
          updateFramePanel(oldimage) ;
-         
-         if (southpanel instanceof ImageColorPanel)
-            ((ImageColorPanel) southpanel).reset() ;
+         changed = false ;
       }
 
       // Redo a color change.
@@ -3501,22 +3616,29 @@ final class ImageFrame extends KissFrame
       public void redo()
       {
          super.redo() ;
-         palette = newpalette ;
          if (cel != null)
          {
             cel.setImage(newimage) ;
             cel.setPalette(newpalette) ;
             cel.setPaletteID((newpalette != null) ? newpalette.getIdentifier() : null) ;
             cel.setTransparentIndex((newpalette != null) ? newpalette.getTransparentIndex() : -1) ;
+            cel.setBackgroundIndex((newpalette != null) ? newpalette.getBackgroundIndex() : -1) ;
             cel.setColorsUsed((newpalette != null) ? newpalette.getColorCount() : 0) ;
+            cel.changePalette(new Integer(0));
+//            newimage = cel.getImage() ;
          }
          if (preview != null)
          {
-            preview.setPalette(palette) ;
+            preview.setPalette(newpalette) ;
             preview.setImage(newimage) ;
-            baseimage = newimage ;
          }
+         colorpanel.setImage(newimage);
+         workimage = newimage ;
+         baseimage = newimage ;
+         updateOldImage(newimage) ;
+         updateOldPalette(newpalette) ;
          updateFramePanel(newimage) ;
+         changed = false ;
       }
    }
    

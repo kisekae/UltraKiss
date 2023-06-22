@@ -839,6 +839,8 @@ final class ImageColorPanel extends JPanel implements ActionListener
 
    int getBlue() { return blue ; }
 
+   int getAlpha() { return alpha ; }
+
    
    // Ensure our source is a 4 channel buffered image.
 
@@ -1259,10 +1261,14 @@ final class ImageColorPanel extends JPanel implements ActionListener
    {
       updated = false ;
       baseimage = image ;
-      if (parent != null) parent.applyTransformedImage(image) ;
+      if (parent instanceof ImageFrame)
+      {
+         ((ImageFrame) parent).setChanged(true) ;
+         ((ImageFrame) parent).applyTransformedImage(image) ;
+      }
       reset() ;
-  }
-   
+   }
+
    
    // Flush references.
    

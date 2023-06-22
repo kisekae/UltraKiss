@@ -1003,6 +1003,7 @@ final class MediaFrame extends KissFrame
 		updateLayout() ;
       setValues() ;
       updateRunState() ;
+      toFront() ;
 
 		// Start playing the media file.
 

@@ -147,7 +147,12 @@ final class GifFrame
 	// Object state reference methods
 	// ------------------------------
 
-	// Return a reference to the frame image.
+
+	// Return a reference to the parent cel.
+
+	GifCel getCel() { return cel ; }
+
+   // Return a reference to the frame image.
 
  	Image getImage()
    {
@@ -292,6 +297,8 @@ final class GifFrame
       scaledimage = null ;
       screenwidth = width = (image == null) ? 0 : image.getWidth(null) ;
       screenheight = height = (image == null) ? 0 : image.getHeight(null) ;
+		size.width = width ;
+		size.height = height ;
    }
 
    // Set the frame base color model.
@@ -312,7 +319,7 @@ final class GifFrame
 	void setTransparentIndex(int n)
    {
       transflag = (n < 0) ? 0 : 1 ;
-      if (transparent == null) transparent = new int[1] ;
+      transparent = new int[1] ;
       transparent[0] = n ;
    }
 
@@ -324,7 +331,7 @@ final class GifFrame
 
 	void setBackgroundIndex(int n)
    {
-      if (bgcolor == null) bgcolor = new int[1] ;
+      bgcolor = new int[1] ;
       bgcolor[0] = n ;
    }
 
