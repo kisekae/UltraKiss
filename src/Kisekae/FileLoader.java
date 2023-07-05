@@ -150,9 +150,12 @@ final class FileLoader extends KissFrame
 	{
 		this(frame,zip,ze) ;
 		config = c ;
-      expansion = true ;
-		if (OptionsDialog.getDebugControl() && config != null)
-			System.out.println("Expanding configuration " + config) ;
+      if (config != null) 
+      {
+         expansion = true ;
+         if (OptionsDialog.getDebugControl())
+            System.out.println("Expanding configuration " + config) ;
+      }
 	}
 
 	// Constructor to load a new configuration.
@@ -756,7 +759,7 @@ final class FileLoader extends KissFrame
             // we can lose references to imported images if we release cels.
             
 //          config.close() ;
-            config.close(true,true) ;
+//          config.close(true,true) ;
 
 	         // Open our zip file as it can be necessary for the reload. On
             // new configurations we do not have a zip name yet.

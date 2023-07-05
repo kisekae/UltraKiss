@@ -45,41 +45,47 @@ package Kisekae ;
 
 
 /**
-* AlarmDeclarationOrder class
+* EventHandlerOrder class
 *
 * Purpose:
 *
-* This class compares Alarm objects to determine their declaration order
-* in the CNF.  Apparently PlayFKiSS fires identical time alarms in this
-* order, probably because it scanned the alarm list to find alarms that
-* needed to be fired.
-*
-* This comparator is used by FKissEvent to properly sequence event initiated
-* alarms before they are put on the AlarmTimer queue.
-*
+* This class compares objects on the EventHandler queue to determine their 
+* firing order.  All alarm objects on the queue have met their delay times
+* and are eligible for processing but the proper sequence for processing
+* has not been established.  
+* 
 */
 
 
 import java.util.* ;
 
-final class AlarmDeclarationOrder implements Comparator
+final class EventHandlerOrder implements Comparator
 {
    private boolean ascending ;
    private Vector alarmlist = null ;
 
-   public AlarmDeclarationOrder() { this(true) ; }
-   public AlarmDeclarationOrder(boolean ascending)
+   public EventHandlerOrder() { this(true) ; }
+   public EventHandlerOrder(boolean ascending)
    {
       this.ascending = ascending ;
       MainFrame mf = Kisekae.getMainFrame() ;
       Configuration config = (mf != null) ? mf.getConfig() : null ;
       alarmlist = (config !=  null) ? config.getAlarms() : null ;
    }
- 
+
    public int compare(Object o1, Object o2)
    {
       // compare trigger times based on the event firing time and delays
-   
+
+      Object [] qentry = new Object[3]  ;      
+      if (!(o1 instanceof Object [])) return 0 ;
+      if (!(o2 instanceof Object [])) return 0 ;
+      o1 = ((Object []) o1)[0]  ;
+      o2 = ((Object []) o2)[0]  ;
+      if (!(o1 instanceof FKissEvent)) return 0 ;
+      if (!(o2 instanceof FKissEvent)) return 0 ;
+      o1 = ((FKissEvent) o1).getParentObject() ;
+      o2 = ((FKissEvent) o2).getParentObject() ;
       if (!(o1 instanceof Alarm)) return 0 ;
       if (!(o2 instanceof Alarm)) return 0 ;
       long n1 = ((Alarm) o1).getTriggeredTime() ;
@@ -87,7 +93,7 @@ final class AlarmDeclarationOrder implements Comparator
       if (n1 < n2) return (ascending) ? -1 : 1 ;
       if (n1 > n2) return (ascending) ? 1 : -1 ;
       
-      // for equivalent delays in the same event compare on the alarm
+      // for events in the queue process based on the alarm
       // declaration order in the CNF.  
       
       if (alarmlist == null) return 0 ;

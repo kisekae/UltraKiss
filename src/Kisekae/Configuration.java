@@ -70,6 +70,7 @@ import java.util.Collections ;
 import java.util.Hashtable ;
 import java.util.Date ;
 import java.util.Properties ;
+import javax.swing.Timer ;
 
 
 final class Configuration extends KissObject
@@ -895,13 +896,20 @@ final class Configuration extends KissObject
       // Get the reference configuration fileopen zip file and zip entry. On
       // new data sets these will be null as no valid fileopen object exists.
 
-      zip = fileopen.getZipFile() ;
-		ze = fileopen.getZipEntry() ;
-      if (zip == null && ze == null)
+      ArchiveFile newzip = fileopen.getZipFile() ;
+		ArchiveEntry newze = fileopen.getZipEntry() ;
+      if (newzip == null && newze == null)
       {
-         zip = ref.getZipFile() ;
-      	ze = ref.getZipEntry() ;
+         newzip = ref.getZipFile() ;
+      	newze = ref.getZipEntry() ;
       }
+      
+      // On a restart we created a new zip file.  The old one should be
+      // flushed to discard the old content entries.
+      
+      if (zip != null) zip.flush() ;
+      zip = newzip ;
+      ze = newze ;
 
       // Set the new reloaded configuration object state attributes to be
       // the same as the reference configuration.  The new configuration
@@ -910,7 +918,8 @@ final class Configuration extends KissObject
       setLastModified(ref.lastModified()) ;
 		setUpdated(ref.isUpdated()) ;
 		setInternal(ref.isInternal()) ;
-      setRestartable(true) ;
+      setOptionsChanged(ref.isOptionChanged()) ;
+      setRestartable(ref.isRestartable()) ;
 		file = ref.getPath() ;
 		bytes = ref.getBytes() ;
 		System.out.println("Open configuration " + file) ;
@@ -1323,6 +1332,7 @@ final class Configuration extends KissObject
          while (enum1 != null && enum1.hasMoreElements())
             handler.addNamedEvent((Vector) enum1.nextElement()) ;
       }
+      if (refhandler != null) refhandler.flush() ;
 
       // If we use include files we must cache images as we can reference
       // cels that are not in the base archive file.
@@ -2573,7 +2583,7 @@ final class Configuration extends KissObject
 
       if (activated)
       {
-			if (timer != null) { timer.stopTimer() ; timer.resetQueue() ; }
+         stopTimer() ;
 			if (animator != null) animator.stopTimer() ;
 			EventHandler.stopEventHandler() ;
          EventHandler.clearEventQueue() ;
@@ -2775,6 +2785,31 @@ final class Configuration extends KissObject
 		System.out.println("Close configuration " + s) ;
 		Runtime.getRuntime().gc() ;
 	}
+   
+   
+   // A function to stop the timer.  
+   
+   private void stopTimer()
+   {
+		if (timer != null) 
+      { 
+         timer.stopTimer() ; 
+         timer.resetQueue() ; 
+      }
+      if (!OptionsDialog.getTimerOn())
+      {
+         if (alarms != null)
+         {
+            for (int i = 0; i < alarms.size(); i++)
+            {
+               Alarm a = (Alarm) alarms.elementAt(i) ;
+               Timer t = a.getTimer() ;
+               if (t != null) t.stop() ;
+            }
+         }
+      }
+      
+   }
 
 
    // A function to remove internal objects from a configuration.
@@ -4607,6 +4642,8 @@ final class Configuration extends KissObject
             if (a == null)
             {
    			   a = new Alarm(cid,event.getFirstParameter()) ;
+               a.setLine(event.getLine());
+               event.setParent(a) ;
    			   alarms.addElement(a) ;
             }
          }

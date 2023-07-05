@@ -89,16 +89,20 @@ class TextFindDialog extends KissDialog
 	private JTabbedPane jTabbedPane = new JTabbedPane();
 	private JPanel jPanel1 = new JPanel();
 	private JPanel jPanel2 = new JPanel();
+	private JPanel jPanel2a = new JPanel();
 	private JPanel jPanel3 = new JPanel();
 	private JPanel jPanel4 = new JPanel();
 	private JPanel jPanel5 = new JPanel();
 	private JPanel jPanel6 = new JPanel();
+	private JPanel jPanel6a = new JPanel();
 	private GridBagLayout gridBagLayout1 = new GridBagLayout();
 	private GridBagLayout gridBagLayout2 = new GridBagLayout();
 	private GridBagLayout gridBagLayout3 = new GridBagLayout();
 	private GridBagLayout gridBagLayout4 = new GridBagLayout();
 	private GridLayout gridLayout1 = new GridLayout();
 	private GridLayout gridLayout2 = new GridLayout();
+	private BorderLayout borderLayout3 = new BorderLayout();
+	private BorderLayout borderLayout4 = new BorderLayout();
 	private BorderLayout borderLayout1 = new BorderLayout();
    private Border eb1 = BorderFactory.createEmptyBorder(10,10,10,10) ;
    private Border eb2 = BorderFactory.createEmptyBorder(0,5,0,5) ;
@@ -111,6 +115,8 @@ class TextFindDialog extends KissDialog
 	private JLabel findlabel = new JLabel();
 	private JLabel findlabel1 = new JLabel();
 	private JLabel replacelabel = new JLabel();
+	private JLabel statuslabel = new JLabel();
+	private JLabel statuslabel1 = new JLabel();
    private JTextField findtext = new JTextField() ;
    private JTextField findtext1 = new JTextField() ;
    private JTextField replacetext = new JTextField() ;
@@ -133,6 +139,8 @@ class TextFindDialog extends KissDialog
 	{
 		public void stateChanged(ChangeEvent e)
 		{
+         statuslabel.setText("") ;
+         statuslabel1.setText("") ;
 			if (jTabbedPane == null) return ;
 			int n = jTabbedPane.getSelectedIndex() ;
 			JRootPane rootpane = getRootPane()  ;
@@ -153,7 +161,7 @@ class TextFindDialog extends KissDialog
 
 		// Construct the user interface.
 
-		try { jbInit() ; pack() ; }
+ 		try { jbInit() ; pack() ; }
       catch(Exception ex)
       {
          ex.printStackTrace();
@@ -191,6 +199,7 @@ class TextFindDialog extends KissDialog
 			public void actionPerformed(ActionEvent e)
 			{
             owner.setFocus() ;
+            statuslabel.setText("") ;
             int n = findNext(false) ;
             if (n == 0 && !searchUp) 
             {
@@ -229,6 +238,7 @@ class TextFindDialog extends KissDialog
 			public void actionPerformed(ActionEvent e)
 			{
             owner.setFocus() ;
+            statuslabel1.setText("") ;
             int n = findNext(true) ;
             if (n == 0 && !searchUp) 
             {
@@ -251,6 +261,7 @@ class TextFindDialog extends KissDialog
 		{
 			public void actionPerformed(ActionEvent e)
 			{
+            statuslabel1.setText("") ;
 				int result = replaceAll() ;
 				if (result < 0) return;
             String s1 = Kisekae.getCaptions().getString("ReplaceResultText") ;
@@ -258,9 +269,7 @@ class TextFindDialog extends KissDialog
             int j1 = s1.indexOf(']') ;
             if (i1 >= 0 && j1 > i1)
                s1 = s1.substring(0,i1) + result + s1.substring(j1+1) ;
-				JOptionPane.showMessageDialog(owner, s1,
-               Kisekae.getCaptions().getString("OptionsDialogInfoTitle"),
-					JOptionPane.INFORMATION_MESSAGE) ;
+            warning(s1,true) ;
 			}
 		} ;
 		REPLACEALL.addActionListener(replaceAllAction) ;
@@ -274,22 +283,30 @@ class TextFindDialog extends KissDialog
 
 			public void windowActivated(WindowEvent e)
          {
+            validate() ;
 				searchIndex = -1 ;
 				if (jTabbedPane.getSelectedIndex() == 0)
-					findtext.requestFocus() ;
+					findtext.requestFocusInWindow() ;
 				else
-					findtext1.requestFocus() ;
+					findtext1.requestFocusInWindow() ;
 			}
 
 			public void windowDeactivated(WindowEvent e)
 			{ searchData = null ; }
+         
+         public void windowGainedFocus(WindowEvent e) 
+         { windowActivated(e) ; }
+
 		} ;
 		addWindowListener(flst) ;
+      
 
       // Initialize and show dialog. A request to show a negative
       // index disables replacement and shows a find only dialog.
 
- 		jTabbedPane.addChangeListener(tablistener) ;
+      statuslabel.setHorizontalAlignment(SwingConstants.CENTER);
+      statuslabel1.setHorizontalAlignment(SwingConstants.CENTER);
+		jTabbedPane.addChangeListener(tablistener) ;
 		setSelectedIndex(index) ;
 	}
 
@@ -299,6 +316,7 @@ class TextFindDialog extends KissDialog
 	private void jbInit() throws Exception
 	{
 		panel1.setLayout(borderLayout1) ;
+      panel1.setPreferredSize(new Dimension(400,400));
  		jTabbedPane.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
       Border cb1 = new CompoundBorder(BorderFactory.createEtchedBorder(),eb1) ;
       String s = Kisekae.getCaptions().getString("OptionsBoxTitle") ;
@@ -310,16 +328,20 @@ class TextFindDialog extends KissDialog
 		gridLayout2.setRows(2) ;
 		jPanel1.setBorder(eb1) ;
 		jPanel2.setBorder(cb2) ;
+		jPanel2a.setBorder(eb1) ;
 		jPanel3.setBorder(eb1) ;
 		jPanel4.setBorder(eb1) ;
 		jPanel5.setBorder(eb1) ;
 		jPanel6.setBorder(cb3) ;
+		jPanel6a.setBorder(eb1) ;
 		jPanel1.setLayout(gridBagLayout1) ;
 		jPanel2.setLayout(gridLayout1) ;
+		jPanel2a.setLayout(borderLayout3) ;
 		jPanel3.setLayout(new BoxLayout(jPanel3,BoxLayout.X_AXIS)) ;
 		jPanel4.setLayout(gridBagLayout2) ;
 		jPanel5.setLayout(new BoxLayout(jPanel5,BoxLayout.X_AXIS)) ;
 		jPanel6.setLayout(gridLayout2) ;
+		jPanel6a.setLayout(borderLayout4) ;
 		findlabel.setText(Kisekae.getCaptions().getString("TextToFindText")) ;
 		findlabel1.setText(Kisekae.getCaptions().getString("TextToFindText")) ;
 		replacelabel.setText(Kisekae.getCaptions().getString("ReplaceWithText")) ;
@@ -357,7 +379,10 @@ class TextFindDialog extends KissDialog
 		jPanel2.add(searchup, null) ;
 		jPanel2.add(matchcase, null) ;
 		jPanel2.add(searchdown, null) ;
-		jPanel1.add(jPanel3, new GridBagConstraints(0, 2, 3, 1, 1.0, 1.0
+		jPanel1.add(jPanel2a, new GridBagConstraints(0, 2, 3, 1, 1.0, 1.0
+            ,GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(5, 0, 0, 0), 0, 0)) ;
+		jPanel2a.add(statuslabel, BorderLayout.CENTER) ;
+		jPanel1.add(jPanel3, new GridBagConstraints(0, 3, 3, 1, 1.0, 1.0
             ,GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(5, 0, 0, 0), 0, 0)) ;
 		jPanel3.add(Box.createGlue()) ;
 		jPanel3.add(FINDNEXT, null) ;
@@ -381,7 +406,10 @@ class TextFindDialog extends KissDialog
       jPanel6.add(searchup1,null) ;
       jPanel6.add(matchcase1,null) ;
       jPanel6.add(searchdown1,null) ;
-		jPanel4.add(jPanel5, new GridBagConstraints(0, 3, 2, 1, 1.0, 1.0
+		jPanel4.add(jPanel6a, new GridBagConstraints(0, 3, 3, 1, 1.0, 1.0
+            ,GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(5, 0, 0, 0), 0, 0)) ;
+		jPanel6a.add(statuslabel1, BorderLayout.CENTER) ;
+		jPanel4.add(jPanel5, new GridBagConstraints(0, 4, 2, 1, 1.0, 1.0
             ,GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(5, 0, 0, 0), 0, 0)) ;
 		jPanel5.add(Box.createGlue()) ;
 		jPanel5.add(REPLACE, null) ;
@@ -472,7 +500,7 @@ class TextFindDialog extends KissDialog
 		catch (BadLocationException ex) {}
 		if (key.length() == 0)
       {
-			warning(Kisekae.getCaptions().getString("FindQueryText")) ;
+			warning(Kisekae.getCaptions().getString("FindQueryText"),true) ;
 			return -1 ;
 		}
 
@@ -508,7 +536,7 @@ class TextFindDialog extends KissDialog
 				xStart = searchData.indexOf(key, pos) ;
 			if (xStart < 0)
          {
-				warning(Kisekae.getCaptions().getString("NoFindResultText")) ;
+				warning(Kisekae.getCaptions().getString("NoFindResultText"),true) ;
             textlocation = new Point(-1,-1) ;
 				return 0 ;
 			}
@@ -562,7 +590,7 @@ class TextFindDialog extends KissDialog
 
 					// Found, but not a whole word, and we cannot continue.
 
-					warning(Kisekae.getCaptions().getString("NoFindResultText")) ;
+					warning(Kisekae.getCaptions().getString("NoFindResultText"),true) ;
                textlocation = new Point(-1,-1) ;
 					return 0 ;
 				}
@@ -644,7 +672,7 @@ class TextFindDialog extends KissDialog
 		catch (BadLocationException ex) {}
 		if (key.length() == 0)
       {
-			warning(Kisekae.getCaptions().getString("FindQueryText")) ;
+			warning(Kisekae.getCaptions().getString("FindQueryText"),true) ;
 			return -1 ;
 		}
 
@@ -742,10 +770,23 @@ class TextFindDialog extends KissDialog
    // A utility function to display a message dialog.
 
 	private void warning(String message)
+   { warning(message, false) ; }
+   
+	private void warning(String message, boolean status)
    {
-		JOptionPane.showMessageDialog(owner, message,
-         Kisekae.getCaptions().getString("OptionsDialogWarningTitle"),
-         JOptionPane.INFORMATION_MESSAGE);
+      if (status)
+      {
+         if (jTabbedPane.getSelectedIndex() == 0)
+            statuslabel.setText(message) ;
+			else
+            statuslabel1.setText(message) ;
+      }
+      else
+      {
+   		JOptionPane.showMessageDialog(null, message,
+            Kisekae.getCaptions().getString("OptionsDialogWarningTitle"),
+            JOptionPane.INFORMATION_MESSAGE);
+      }
 	}
    
    void setValues() { }

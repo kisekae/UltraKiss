@@ -13,6 +13,7 @@
 <p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; paint[(integer])</p>
 <p>The paint() command forces a redraw of the current screen after the specified delay. The optional delay value specifies the number of milliseconds that the activity should wait before continuing execution and refreshing the screen. The delay value can be specified as a literal integer number or a variable that contains an integer value. </p>
 <p>UltraKiss repaints the screen and activates any alarms scheduled through timer() commands on termination of current activities. Thus, if an activity is suspended through a sleep() command it is recommended that a paint() command precede the sleep() statement to ensure that any prior cel mapping is displayed. </p>
+<p>A paint() command should also be placed in a begin() event if UltraKiss component cels were set up in an initialize() event.</p>
 <p>&nbsp;</p>
 <p>Related actions: <a href="wait.html">wait()</a>, <a href="sleep.html">sleep(),</a> <a href="signal.html">signal()</a> </p>
 <p>&nbsp;</p>

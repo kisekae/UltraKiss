@@ -4687,7 +4687,7 @@ final class PanelFrame extends JPanel
       if (!(o instanceof KissObject)) return ;
       KissObject g = (KissObject) o ;
       Point location = g.getLocation() ;
-      
+
       // Save the collision state for all events associated with this object.
 
       if ((evt = g.getEvent("apart")) != null)
@@ -4714,7 +4714,7 @@ final class PanelFrame extends JPanel
                ((Object []) collisionstate)[3] = Boolean.TRUE ; 
          }
       }
-
+      
       if ((evt = g.getEvent("collide")) != null)
       {
          for (int i = 0 ; i < evt.size() ; i++)

@@ -1128,6 +1128,7 @@ final public class OptionsDialog extends KissDialog
 		TimerOption.setText(Kisekae.getCaptions().getString("OptionsEnableTimer"));
 		TimerOption.setToolTipText(Kisekae.getCaptions().getString("ToolTipTimerOption"));
 		TimerOption.setSelected(timer);
+		TimerOption.addActionListener(this);
 		jLabel1.setText(Kisekae.getCaptions().getString("FixedLockValueText"));
 		jLabel1.setToolTipText(Kisekae.getCaptions().getString("ToolTipFixedLock"));
 		MaxFlex.setPreferredSize(new Dimension(50, 21));
@@ -3819,9 +3820,9 @@ final public class OptionsDialog extends KissDialog
 //    if (initshowdlprompt != ShowDLPrompt.isSelected()) return true ;
 //    if (initshowtips != ShowTips.isSelected()) return true ;
 //    if (initloadclose != LoadClose.isSelected()) return true ;
-//	   if (!(initeventqueues.equals(EventQueues.getText()))) return true ;
-//    if (!(inittimerperiod.equals(TimerPeriod.getText()))) return true ;
-//    if (!(initgifperiod.equals(GifPeriod.getText()))) return true ;
+	   if (!(initeventqueues.equals(EventQueues.getText()))) return true ;
+      if (!(inittimerperiod.equals(TimerPeriod.getText()))) return true ;
+      if (!(initgifperiod.equals(GifPeriod.getText()))) return true ;
       if (!(initstickyflex.equals(StickyFlex.getText()))) return true ;
       if (!(initmaxflex.equals(MaxFlex.getText()))) return true ;
       if (!(initmaxlock.equals(MaxLock.getText()))) return true ;
@@ -4676,6 +4677,7 @@ final public class OptionsDialog extends KissDialog
                      EncodingBox.setSelectedItem(newencoding) ;
                      setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
                   }
+                  config.setOptionsChanged(true) ;
                   setOptions() ;
                   mf.restart() ;
                   closeWindow() ;
@@ -4716,6 +4718,7 @@ final public class OptionsDialog extends KissDialog
 
          if (source == CacheAudio || source == CacheVideo ||
              source == CacheAudio1 || source == CacheVideo1 ||
+             source == TimerOption ||
              source == SizeToFit || source == ScaleToFit ||
              source == JavaSoundDebug || source == AppleMac ||
              source == PlayFKissBtn || source == DirectKissBtn ||
@@ -4737,6 +4740,7 @@ final public class OptionsDialog extends KissDialog
                   JOptionPane.INFORMATION_MESSAGE) ;
                if (i == JOptionPane.YES_OPTION)
                {
+                  config.setOptionsChanged(true) ;
                   config.setRestartable(false) ;
                   setOptions() ;
                   setInitOptions() ;
@@ -5233,7 +5237,7 @@ final public class OptionsDialog extends KissDialog
       setSoundSingle(true) ;
       setMaxLock("32768") ;
       setMaxPageSet("10") ;
-      setTimerPeriod("10") ;
+//      setTimerPeriod("10") ;
  }
    
    
@@ -5327,7 +5331,7 @@ final public class OptionsDialog extends KissDialog
       setWriteCelOffset(true) ;
       setMaxLock("32767") ;
       setMaxPageSet("10") ;
-      setTimerPeriod("10") ;
+//      setTimerPeriod("10") ;
    }
    
    
@@ -5421,7 +5425,7 @@ final public class OptionsDialog extends KissDialog
       setWriteCelOffset(true) ;
       setMaxLock("32767") ;
       setMaxPageSet("10") ;
-      setTimerPeriod("1") ;
+//      setTimerPeriod("1") ;
    }
    
    
@@ -5515,7 +5519,7 @@ final public class OptionsDialog extends KissDialog
       setWriteCelOffset(true) ;
       setMaxLock("32767") ;
       setMaxPageSet("10") ;
-      setTimerPeriod("10") ;
+//      setTimerPeriod("10") ;
   }
    
    

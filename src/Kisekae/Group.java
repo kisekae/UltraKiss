@@ -1264,12 +1264,12 @@ final class Group extends KissObject
 
 	Vector getEvent(Object o) 
    { 
-      Vector cv = null ;
+      Vector cv = new Vector() ;
       Vector gv = super.getEvent(o) ; 
       if (cels == null) return gv ;
 		if (!("apart".equals(o) || "collide".equals(o))) return gv ;
       
-      // Group events should inclide cel collisions so that they are recognized
+      // Group events should include cel collisions so that they are recognized
       // during group moves.
       
       for (int i = 0 ; i < cels.size() ; i++)
@@ -1278,12 +1278,10 @@ final class Group extends KissObject
          if (!c.isVisible()) continue ;
          Vector v = c.getEvent(o) ;
          if (v == null) continue ;
-         if (cv == null) cv = new Vector() ;
          cv.addAll(v) ;
       }
-      if (gv == null) return cv ;
-      if (cv == null) cv = new Vector() ;
-      cv.addAll(gv) ;
+      if (gv != null) cv.addAll(gv) ;
+      if (cv.isEmpty()) return null ;
       return cv ;
    }
 

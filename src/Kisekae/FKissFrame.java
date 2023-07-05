@@ -171,6 +171,7 @@ final class FKissFrame extends KissFrame
 	private JMenuItem stepinto ;
 	private JMenuItem runtosel ;
 	private JMenuItem runtoend ;
+	private JMenuItem runtocall ;
 	private JMenuItem setbreak ;
 	private JMenuItem clearbreak ;
 	private JMenuItem setnobreak ;
@@ -200,6 +201,7 @@ final class FKissFrame extends KissFrame
 	private JButton STEPINTO = null ;
 	private JButton RUNTOSEL = null ;
 	private JButton RUNTOEND = null ;
+	private JButton RUNTOCALL = null ;
 	private JButton SETBREAK = null ;
 	private JButton CLEARBREAK = null ;
 	private JButton SETNOBREAK = null ;
@@ -619,6 +621,11 @@ final class FKissFrame extends KissFrame
 		runtoend.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F6,0)) ;
 		runtoend.addActionListener(this) ;
 		runtoend.setEnabled(false) ;
+		runMenu.add((runtocall = new JMenuItem(Kisekae.getCaptions().getString("MenuRunToCall")))) ;
+      if (!applemac) runtoend.setMnemonic(KeyEvent.VK_C) ;
+		runtocall.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F6,0)) ;
+		runtocall.addActionListener(this) ;
+		runtocall.setEnabled(false) ;
 		runMenu.addSeparator() ;
 		runMenu.add((setbreak = new JMenuItem(Kisekae.getCaptions().getString("MenuRunSetBreak")))) ;
 		setbreak.addActionListener(this) ;
@@ -744,25 +751,6 @@ final class FKissFrame extends KissFrame
 
 		// Create the run operations.
 
-		PAUSE = new JButton() ;
-		iconfile = Kisekae.getResource("Images/pause" + ext) ;
-		if (iconfile != null) PAUSE.setIcon(new ImageIcon(iconfile)) ;
-		PAUSE.setMargin(new Insets(1,1,1,1)) ;
-		PAUSE.setAlignmentY(0.5f) ;
-		PAUSE.addActionListener(this) ;
-		PAUSE.setEnabled(false) ;
-		PAUSE.setToolTipText(Kisekae.getCaptions().getString("ToolTipPause"));
-		RESUME = new JButton() ;
-		iconfile = Kisekae.getResource("Images/resume" + ext) ;
-		if (iconfile != null) RESUME.setIcon(new ImageIcon(iconfile)) ;
-		RESUME.setMargin(new Insets(1,1,1,1)) ;
-		RESUME.setAlignmentY(0.5f) ;
-		RESUME.addActionListener(this) ;
-		RESUME.setEnabled(false) ;
-		RESUME.setToolTipText(Kisekae.getCaptions().getString("ToolTipResume"));
-		toolbar.addSeparator() ;
-		toolbar.add(PAUSE, null);
-		toolbar.add(RESUME, null);
 		EXECUTE = new JButton() ;
 		iconfile = Kisekae.getResource("Images/execute" + ext) ;
 		if (iconfile != null) EXECUTE.setIcon(new ImageIcon(iconfile)) ;
@@ -795,11 +783,20 @@ final class FKissFrame extends KissFrame
 		RUNTOEND.addActionListener(this) ;
 		RUNTOEND.setEnabled(false) ;
 		RUNTOEND.setToolTipText(Kisekae.getCaptions().getString("ToolTipRunToEnd"));
+		RUNTOCALL = new JButton() ;
+		iconfile = Kisekae.getResource("Images/runtocall" + ext) ;
+		if (iconfile != null) RUNTOCALL.setIcon(new ImageIcon(iconfile)) ;
+		RUNTOCALL.setMargin(new Insets(1,1,1,1)) ;
+		RUNTOCALL.setAlignmentY(0.5f) ;
+		RUNTOCALL.addActionListener(this) ;
+		RUNTOCALL.setEnabled(false) ;
+		RUNTOCALL.setToolTipText(Kisekae.getCaptions().getString("ToolTipRunToCall"));
 		toolbar.addSeparator() ;
 		toolbar.add(EXECUTE,null);
 		toolbar.add(STEPINTO,null);
 		toolbar.add(RUNTOSEL,null);
 		toolbar.add(RUNTOEND,null);
+		toolbar.add(RUNTOCALL,null);
 		SETBREAK = new JButton() ;
 		iconfile = Kisekae.getResource("Images/setbreak" + ext) ;
 		if (iconfile != null) SETBREAK.setIcon(new ImageIcon(iconfile)) ;
@@ -860,6 +857,28 @@ final class FKissFrame extends KissFrame
 		SHOWALL.setToolTipText(Kisekae.getCaptions().getString("ToolTipShowAll"));
 		toolbar.addSeparator() ;
 		toolbar.add(SHOWALL,null);
+      
+      // Create the pause and resume buttons.
+      
+		PAUSE = new JButton() ;
+		iconfile = Kisekae.getResource("Images/pause" + ext) ;
+		if (iconfile != null) PAUSE.setIcon(new ImageIcon(iconfile)) ;
+		PAUSE.setMargin(new Insets(1,1,1,1)) ;
+		PAUSE.setAlignmentY(0.5f) ;
+		PAUSE.addActionListener(this) ;
+		PAUSE.setEnabled(false) ;
+		PAUSE.setToolTipText(Kisekae.getCaptions().getString("ToolTipPause"));
+		RESUME = new JButton() ;
+		iconfile = Kisekae.getResource("Images/resume" + ext) ;
+		if (iconfile != null) RESUME.setIcon(new ImageIcon(iconfile)) ;
+		RESUME.setMargin(new Insets(1,1,1,1)) ;
+		RESUME.setAlignmentY(0.5f) ;
+		RESUME.addActionListener(this) ;
+		RESUME.setEnabled(false) ;
+		RESUME.setToolTipText(Kisekae.getCaptions().getString("ToolTipResume"));
+		toolbar.addSeparator() ;
+		toolbar.add(PAUSE, null);
+		toolbar.add(RESUME, null);
 
       // Create the run state indicator.
 
@@ -1128,6 +1147,8 @@ final class FKissFrame extends KissFrame
       STEPINTO.setEnabled(event != null) ;
       runtoend.setEnabled(event != null) ;
       RUNTOEND.setEnabled(event != null) ;
+      runtocall.setEnabled(event != null) ;
+      RUNTOCALL.setEnabled(event != null) ;
 
       // Update the active object name.
 
@@ -1586,11 +1607,12 @@ final class FKissFrame extends KissFrame
 			{
             public void run()
             {
+               JCheckBox doNotShow = new JCheckBox(Kisekae.getCaptions().getString("DoNotShowAgain")) ;
+               JCheckBox pausenext = new JCheckBox(Kisekae.getCaptions().getString("PauseNextEvent")) ;
                if (OptionsDialog.getShowBreakPointEnd())
                {
-                  JCheckBox doNotShow = new JCheckBox(Kisekae.getCaptions().getString("DoNotShowAgain")) ;
                   String msg = Kisekae.getCaptions().getString("BreakpointTerminatedText") ;
-                  Object [] msgContent = {msg, doNotShow} ;
+                  Object [] msgContent = {msg, pausenext, doNotShow} ;
                   JOptionPane.showMessageDialog(me,
                      msgContent, Kisekae.getCaptions().getString("FKissEditorTitle"),
                      JOptionPane.INFORMATION_MESSAGE) ;
@@ -1605,10 +1627,13 @@ final class FKissFrame extends KissFrame
                RUNTOSEL.setEnabled(false) ;
                runtoend.setEnabled(false) ;
                RUNTOEND.setEnabled(false) ;
+               runtocall.setEnabled(false) ;
+               RUNTOCALL.setEnabled(false) ;
                
                // Resume processing
-               
-//               FKissEvent.setBreakPause(me,true) ;
+
+               if (pause.isSelected() || PAUSE.isSelected() || pausenext.isSelected())
+                  FKissEvent.setBreakPause(me,true) ;
                if (event != null) event.setCurrentBreak(false) ;
                if (action != null) action.setCurrentBreak(false) ;
                TREE.setSelectionPath(null) ;
@@ -2050,6 +2075,14 @@ final class FKissFrame extends KissFrame
 			// A run to end request executes until the end of the code module.
 
 			if (runtoend == source || RUNTOEND == source)
+			{
+            if (invoker != null) invoker.returnProcessing() ;
+				return ;
+			}
+
+			// A run to call request returns to the next statement in the calling module.
+
+			if (runtocall == source || RUNTOCALL == source)
 			{
             if (invoker != null) invoker.returnProcessing() ;
 				return ;

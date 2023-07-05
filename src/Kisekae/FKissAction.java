@@ -93,7 +93,6 @@ final class FKissAction extends KissObject
    private boolean currentbreak = false ; // Set if current breakpoint
    private boolean initializefor = true ;	// For statement to be initialized
    private boolean initializerepeat = true ;	// Repeat statement to be initialized
-   private int line = 0 ;						// Configuration source line
    private int code = -1 ;						// Code value for this action
    private int sequence = -1 ;            // Our action sequence number
    private int loopentry = -1 ;           // Sequence number of loop call
@@ -316,7 +315,7 @@ final class FKissAction extends KissObject
       int repeatcount = 0 ;
       String repeatvbl = "" ;
       boolean directkiss = OptionsDialog.getDirectKissCompatibility() ;
-		starttime = System.nanoTime() ;  // Java 1.5
+		starttime = System.currentTimeMillis() ; // Java 1.5
 
       // Process event actions unless we are skipping code due to
       // a logical condition failure or loop termination.
@@ -352,7 +351,7 @@ final class FKissAction extends KissObject
       // lines are not forwarded to the trace dialog although they can 
       // appear in the log file if the DebugDisabled option is set.
       
-      if (OptionsDialog.getDebugAction())
+      if (OptionsDialog.getDebugAction()  && (!getNoBreakpoint() || OptionsDialog.getDebugDisabled()))
       {
          String bp = (nobreakpoint) ? "*" : " " ;
          System.out.println(" >"+bp+"[" + currentthread.getName() + "] Event action " + toString()) ;
@@ -547,6 +546,7 @@ final class FKissAction extends KissObject
             if (alarm != null) alarm.setInterval(delay,activator) ;
             event.setAlarmEnable(alarm) ;
             setAlarmArguments(alarm,parameters,3) ;
+            if (alarm != null) alarm.setSource(getName());
             break ;
 
 
@@ -568,6 +568,7 @@ final class FKissAction extends KissObject
             if (alarm != null) alarm.setInterval(delay,activator) ;
             event.setAlarmEnable(alarm) ;
             setAlarmArguments(alarm,parameters,3) ;
+            if (alarm != null) alarm.setSource(getName());
             break ;
 
 
@@ -591,6 +592,7 @@ final class FKissAction extends KissObject
             if (alarm != null) alarm.setInterval(delay,activator) ;
             event.setAlarmEnable(alarm) ;
             setAlarmArguments(alarm,parameters,3) ;
+            if (alarm != null) alarm.setSource(getName());
             break ;
 
 
@@ -1369,6 +1371,7 @@ final class FKissAction extends KissObject
             alarm.setInterval(delay,activator) ;
             event.setAlarmEnable(kiss) ;
             setAlarmArguments(alarm,parameters,3) ;
+            if (alarm != null) alarm.setSource(getName());
             break ;
 
 
@@ -1528,6 +1531,7 @@ final class FKissAction extends KissObject
             alarm.setInterval(delay,activator) ;
             event.setAlarmEnable(kiss) ;
             setAlarmArguments(alarm,parameters,2) ;
+            alarm.setSource(getName());
             break ;
 
 
@@ -4502,7 +4506,7 @@ final class FKissAction extends KissObject
       result[1] = exception ;
       result[2] = exceptionitem ;
       result[3] = new Long(actionsprocessed + 1) ;
-      runtime += (System.nanoTime() - starttime) ;  // Java 1.5
+      runtime += (System.currentTimeMillis() - starttime) ;  // Java 1.5
       invocations++ ;
 //      Thread.currentThread().yield() ;
       return result ;

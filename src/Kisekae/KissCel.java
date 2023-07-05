@@ -599,6 +599,7 @@ final class KissCel extends Cel
 		if (pid != null && pid.equals(c.getPaletteID()) &&
 			transparency == c.getTransparency() &&
          mpid == c.getPaletteGroupID()) return ;
+      if (pid == null && transparency == c.getInitTransparency()) return ;
 
 		// Palette cels require a new color model.  Truecolor cels use the
       // same color model with a new transparency.

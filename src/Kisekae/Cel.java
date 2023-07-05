@@ -137,7 +137,6 @@ abstract class Cel extends KissObject
    private Vector celgroups = null ;			// The cel groups list
    private Vector pageleadspace = null ;		// The page format leading space
    private int commentleadspace = 0 ;			// The comment leading space
-   private int line = 0 ;							// The configuration file line
 
    // Cel state attributes inherited by cel instances
 
@@ -560,7 +559,7 @@ abstract class Cel extends KissObject
    // The configuration file line number showing where this object was
    // first declared.  This is used for diagnostic output messages.
 
-   void setLine(int l) { if (line == 0) line = l ; }
+   void setLine(int n) { if (line == 0) line = n ; }
 
    // Set the cel frame image.  For ambiguous cels this maps the specified
    // cel in the ambiguity order and unmaps all others.

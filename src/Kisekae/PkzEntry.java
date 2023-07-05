@@ -119,9 +119,16 @@ final class PkzEntry extends ArchiveEntry
       if (memin == null && !archive.isOpen()) return null ;
 		if (zip != null)
       {
-         InputStream is = zip.getInputStream(ze) ;
-         if (is == null) return null ;
-         return new BufferedInputStream(is,4096) ;
+         try 
+         {
+            InputStream is = zip.getInputStream(ze) ;
+            if (is == null) return null ;
+            return new BufferedInputStream(is,4096) ;
+         }
+         catch (IllegalStateException e)
+         {
+            throw new IOException(e.getMessage()) ;
+         }
       }
 
       // If we are using a memory file then we scan the file to find

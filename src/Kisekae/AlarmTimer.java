@@ -252,6 +252,17 @@ final class AlarmTimer extends Thread
          if (alarm == null) return ;
          if (alarms == null) return ;
          if (!alarms.contains(alarm)) alarms.add(alarm) ;
+   		Vector v = alarm.getEvent("alarm") ;
+         for (int i = 0 ; i < v.size() ; i++)
+         {
+            FKissEvent evt = (FKissEvent) v.elementAt(i) ;
+            if (OptionsDialog.getDebugEvent() && (!evt.getNoBreakpoint() || OptionsDialog.getDebugDisabled()))
+            {
+               long time = System.currentTimeMillis() - Configuration.getTimestamp() ;
+               long triggertime = alarm.getTriggerTime() - Configuration.getTimestamp() ;
+               System.out.println("[" + time + "] [" + Thread.currentThread().getName() + "] AlarmTimer schedule " + evt.getName() + " trigger time " + triggertime + " delay " + alarm.getInterval()) ;
+            }
+         }      
       }
 	}
 
@@ -265,14 +276,6 @@ final class AlarmTimer extends Thread
          if (alarms == null) return ;
          for (int i = 0 ; i < v.size() ; i++)
             queueAlarm((Alarm) v.elementAt(i)) ;
-         
-         // In general we want to retain the same sequence in which alarms
-         // were queued as sequential processing can be dependent on this
-         // sequence. But PlayFKiSS fires alarms in the CNF alarm order 
-         // for identical firing times? 
-         
-         if ("PlayFKiss".equals(OptionsDialog.getCompatibilityMode()))
-            Collections.sort(alarms,new AlarmDeclarationOrder()) ;
       }
 	}
 
@@ -358,6 +361,13 @@ final class AlarmTimer extends Thread
             {
                active = true ;
                if (alarms == null) break ;
+         
+               // In general we want to retain the same sequence in which alarms
+               // were queued as sequential processing can be dependent on this
+               // sequence. But PlayFKiSS fires alarms in the CNF alarm order 
+               // for identical firing times? 
+         
+               Collections.sort(alarms,new AlarmDeclarationOrder()) ;
                for (int i = 0 ; i < alarms.size() ; i++)
                {
       				Alarm alarm = (Alarm) alarms.elementAt(i) ;
@@ -393,7 +403,8 @@ final class AlarmTimer extends Thread
       						alarm.setInterval(Integer.MAX_VALUE,activator) ;
       						Vector v = alarm.getEvent("alarm") ;
                         // Do this only if alarms are not scheduled by a Timer 
-      						EventHandler.queueEvents(v,activator,alarm) ;
+                        if (OptionsDialog.getTimerOn())
+         						EventHandler.queueEvents(v,activator,alarm.getSource()) ;
                         count++ ;
       					}
                   }

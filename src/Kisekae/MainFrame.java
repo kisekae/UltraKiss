@@ -396,8 +396,6 @@ final public class MainFrame extends KissFrame
 	{
 		try
 		{
-			if (fileopen != null) fileopen.close() ;
-
          // Close any reference file if it was opened.
 
          if (config != null)
@@ -418,6 +416,7 @@ final public class MainFrame extends KissFrame
             Kisekae.setLoaded(false) ;
             loader = null ;
             closeframe(); // cancel on syntax error CNF reload
+      		if (fileopen != null) fileopen.close() ;
 				return ;
 			}
          
@@ -621,12 +620,13 @@ final public class MainFrame extends KissFrame
 
 		// Initialization is now complete.
 
+		if (fileopen != null) fileopen.close() ;
       fitScreen(getFitScreen(),false) ;
 		showStatus(null) ;
       Kisekae.setLoaded(config != null) ;
       KissObject.setLoader(null) ;
       loader = null ;
-      
+     
       // Reset our NoCopy indicator for future loads.
       
       mainmenu.setNoCopy(false) ;
@@ -1806,7 +1806,7 @@ final public class MainFrame extends KissFrame
 
 	void restart()
 	{
-		if (config != null && config.isUpdated())
+		if (config != null && (config.isUpdated() || config.isOptionChanged()))
 		{
       	if (config.isChanged())
          {
@@ -1850,10 +1850,14 @@ final public class MainFrame extends KissFrame
       // current values.
 
       restart = true ;
-		if (config != null && !config.isRestartable())
-		   init(config) ;
-      else
-         initframe(config) ;
+      if (config != null)
+      {
+         showStatus("Restart " + config.getName() + " ...") ;
+         if (!config.isRestartable())
+            init(config) ;
+         else
+            initframe(config) ;
+      }
 		setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
 	}
 

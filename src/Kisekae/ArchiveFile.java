@@ -732,7 +732,7 @@ abstract class ArchiveFile
    void addEntry(ArchiveEntry ze)
    {
    	if (ze == null) return ;
-   	if (contents == null) contents = new Vector() ;
+   	if (contents == null) init() ;
       if (contents.contains(ze)) return ;
       if (this instanceof DirFile) ze.setDirectory(getDirectoryName()) ;
       contents.addElement(ze) ;

@@ -1642,9 +1642,9 @@ final class FileWriter extends KissFrame
 				JavaCel cel = (JavaCel) comps.elementAt(i++) ;
 				if (cel.isCopy()) continue ;
 				if (!cel.isWritable()) continue ;
-            if (mode == SAVE && !cel.isUpdated()) continue ;
+            if (mode == SAVE && !OptionsDialog.getComponentCel()) continue ;
             if (mode == COPY && zip != null && zip.isDirectory() && directory != null &&
-               directory.equals(zip.getDirectoryName()) && !cel.isUpdated()) continue ;
+               directory.equals(zip.getDirectoryName()) && !OptionsDialog.getComponentCel()) continue ;
             String name = cel.getName() ;
             int n = name.lastIndexOf('.') ;
             if (n >= 0) name = name.substring(0,n) + ".cel" ;

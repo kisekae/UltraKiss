@@ -1043,6 +1043,7 @@ final class PanelMenu extends KissMenu
             if (config == null) return ;
             ArchiveEntry ze = text.getZipEntry() ;
             config.setMemoryFile(out.toByteArray(),ze) ;
+            config.setUpdated(true);
             parent.init(config) ;
             return ;
          }

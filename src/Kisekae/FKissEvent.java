@@ -67,6 +67,7 @@ import java.awt.Graphics ;
 import java.util.Vector ;
 import java.util.Hashtable ;
 import java.util.Enumeration ;
+import java.util.Collections ;
 import java.util.NoSuchElementException ;
 import javax.swing.SwingUtilities ;
 
@@ -120,6 +121,7 @@ final class FKissEvent extends KissObject
 	private boolean temporary = false ; 	// Set if temporary variables exist
 	private boolean confirmwait = false ;  // Set if confirm dialog shown
 	private boolean repeating = false ;    // Set if event is repeat() target
+	private boolean busy = false ;         // Set if event is being fired
 	private long createtime = 0 ;			   // Configuration activation time
 	private long starttime = 0 ;			   // Event start time
 	private long runtime = 0 ;				   // Event cummulative run time
@@ -128,7 +130,6 @@ final class FKissEvent extends KissObject
 	private long totalactions = 0 ;	 	   // Total action statements processed
 	private long actionsprocessed = 0 ;	 	// Action statements processed
 	private int repeatlimit = 0 ;	   	   // Count for repeat() statement
-	private int line = 0 ;					   // Configuration source line
 	private int iflevel = 0 ;				   // Current nest level for skip
 	private int elseiflevel = 0 ;				// Current elseif nest level for skip
 
@@ -317,7 +318,7 @@ final class FKissEvent extends KissObject
 	// The line number is the configuration file line number where this
 	// event was declared.  It is used for diagnostic output messages.
 
-	void setLine(int line) { this.line = line ; }
+	void setLine(int n) { line = n ; }
    
 	// The parent object to which this event is associated.
 
@@ -536,6 +537,10 @@ final class FKissEvent extends KissObject
 	// this event as a target of a repeat() action this value is true.
 
 	boolean isRepeating() { return repeating ; }
+
+	// Return the busy indicator.  This is set while the event is fired.
+
+	boolean isBusy() { return busy ; }
 
 	// Return the current parameter visibility for collision processing.  
    
@@ -758,6 +763,7 @@ final class FKissEvent extends KissObject
       // or label events are processed.  Alarm events are also processed.
       // A modal group object accepts events from any contained cel.
 
+      busy = true ;
       Object modal = EventHandler.getModal() ;
       if (modal != null && source != null && !(source instanceof Alarm))
       {
@@ -767,6 +773,7 @@ final class FKissEvent extends KissObject
          if (modal != o)
          {
             Toolkit.getDefaultToolkit().beep() ;
+            busy = false ;
             return null ;
          }
       }
@@ -781,6 +788,7 @@ final class FKissEvent extends KissObject
          Object o = evaluateParam((String) getFirstParameter()) ;
          if (o instanceof String) o = ((String) o).toUpperCase() ;
          Alarm alarm = (Alarm) Alarm.getByKey(Alarm.getKeyTable(),cid,o) ;
+         if (alarm != null) alarm.setTriggerTime(0) ;
          if (alarm == null || alarm.getInterval() <= 0) return null ; 
          if (alarm.getInterval() != Integer.MAX_VALUE) return null ; 
  			alarm.setInterval(-1,thread) ;
@@ -793,7 +801,12 @@ final class FKissEvent extends KissObject
       // thread.  Break processing requires that we do not suspend the AWT
       // thread.  Note that sequential event processing is sometimes assumed
       // under the ATW thread and this is not possible while breakpointing.
-
+      //
+      // Note: this caused problems with missed collisions when the FKissEditor
+      // was not terminated (paused) and we were performing immediate events and  
+      // a press() changed visibility on another thread and this was too late 
+      // for the collision on the new visible cel to be recognized.
+/*
 		if (SwingUtilities.isEventDispatchThread())
       {
          if ((breakframe != null || breakpause) ||
@@ -805,17 +818,17 @@ final class FKissEvent extends KissObject
             return null ;
          }
 		}
-
+*/
 		int i ;
       this.box = null ;
   		Rectangle box = null ;
       boolean loop = true ;
-		if (!enabled) return null ;
+		if (!enabled) { busy = false ; return null ; }
 
 		FKissEvent event = this ;
 		createtime = Configuration.getTimestamp() ;
-//		starttime = System.currentTimeMillis() ;
-		starttime = System.nanoTime() ;  // Java 1.5
+		starttime = System.currentTimeMillis() ;
+//		starttime = System.nanoTime() ;  // Java 1.5
       currentthread = Thread.currentThread() ;
       actionsprocessed = 0 ;
       iflevel = 0 ;
@@ -837,17 +850,20 @@ final class FKissEvent extends KissObject
             // lines are not forwarded to the trace dialog although they will 
             // appear in the log file.
       
-   			if (OptionsDialog.getDebugEvent())
+   			if (OptionsDialog.getDebugEvent() && (!getNoBreakpoint() || OptionsDialog.getDebugDisabled()))
    			{
                String bp = (event.getNoBreakpoint()) ? "*" : " " ;
    				long time = System.currentTimeMillis() - createtime ;
-   				System.out.println("[" + time + "]"+bp+"[" + currentthread.getName() + "] Fire event " + event.toString()) ;
+               if (!("label".equals(identifier)))
+                  System.out.println("[" + time + "]"+bp+"[" + currentthread.getName() + "] FKissEvent begin event " + event.getName()) ;
    			}
 
             // If we have a breakpoint set on this event suspend processing
-            // and invoke the FKiSS Editor.
+            // and invoke the FKiSS Editor.  Note, label events (gosub) will 
+            // not have pause breakpoints unless an explicit breakpoint is set  
+            // for the label event.
 
-            if (event.getBreakpoint() || (breakpause && OptionsDialog.getEventPause()))
+            if (event.getBreakpoint() || (breakpause && OptionsDialog.getEventPause()) && !("label".equals(getIdentifier())))
                if (!event.getNoBreakpoint())
                   doBreakpoint(event,panel,box,false) ;
             if (terminate) break ;
@@ -969,8 +985,8 @@ final class FKissEvent extends KissObject
   						event = (FKissEvent) result[2] ;
                   if (event != null)
                   {
-//   						event.setStartTime(System.currentTimeMillis()) ;
-     						event.setStartTime(System.nanoTime()) ;  // Java 1.5
+   						event.setStartTime(System.currentTimeMillis()) ;
+//   						event.setStartTime(System.nanoTime()) ;  // Java 1.5
      						event.setIfLevel(0) ;
                      event.setElseIfLevel(0) ;
                      loop = true ;
@@ -1066,6 +1082,7 @@ final class FKissEvent extends KissObject
          if (terminate)
          {
             terminate = false ;
+            busy = false ;
             return null ; 
          }
       }
@@ -1135,6 +1152,8 @@ final class FKissEvent extends KissObject
          }
          if (breakenabled && topbreak == event)
             doBreakpoint(action,panel,box,true) ;
+         Dimension d = (panel != null) ? panel.getSize() : null ;
+         if (d != null) box = new Rectangle(d) ;
          this.box = box ;
          return box ;
       }
@@ -1184,11 +1203,14 @@ final class FKissEvent extends KissObject
       if (event != null)
       {
          alarmlist = event.getAlarmList() ;
+         Collections.sort(alarmlist,new AlarmDeclarationOrder()) ;
          for (i = 0 ; i < alarmlist.size() ; i++)
          {
             if (alarmlist.elementAt(i) instanceof Alarm)
             {
                Alarm a = (Alarm) alarmlist.elementAt(i) ;
+               a.setStartTime(event.getStartTime());
+               a.setTriggerTime() ;
                a.enableAlarm() ;
             }
          }
@@ -1210,8 +1232,8 @@ final class FKissEvent extends KissObject
 
       // Accumulate the event performance statistics.
 
-//    runtime += (System.currentTimeMillis() - starttime) ;
-      runtime += (System.nanoTime() - starttime) ;  // Java 1.5
+      runtime += (System.currentTimeMillis() - starttime) ;
+//    runtime = (System.nanoTime() - starttime) ;  // Java 1.5
       totalactions += actionsprocessed ;
       invocations++ ;
 
@@ -1219,11 +1241,20 @@ final class FKissEvent extends KissObject
 
       if (breakenabled)
          doBreakpoint(action,panel,box,true) ;
+      
+   	if (OptionsDialog.getDebugEvent() && (!getNoBreakpoint() || OptionsDialog.getDebugDisabled()))
+   	{
+         String bp = (event.getNoBreakpoint()) ? "*" : " " ;
+   		long time = System.currentTimeMillis() - createtime ;
+   		System.out.println("[" + time + "]"+bp+"[" + currentthread.getName() + "] FKissEvent end event " + event.getName() + " processing time " + runtime + " ms") ;
+      }
       if (terminate) 
       {
          terminate = false ;
+         busy = false ;
          return null ;
       }
+      busy = false ;
       this.box = box ;
       return box ;
 	}

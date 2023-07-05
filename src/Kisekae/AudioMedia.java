@@ -89,6 +89,8 @@ import java.util.Hashtable ;
 import java.util.Vector ;
 import java.util.Enumeration ;
 import java.net.URL ;
+import java.util.Collections;
+import java.util.concurrent.locks.ReentrantLock ;
 import javax.media.* ;
 import javax.media.protocol.* ;
 
@@ -398,67 +400,74 @@ final class AudioMedia extends Audio
 
 	static void stop(Configuration c, Audio a, String type)
 	{
-		for (int i = players.size()-1 ; i >= 0 ; i--)
-		{
-			Audio audio = (Audio) players.elementAt(i) ;
-			if (a != null && a != audio) continue ;
-         if (!(audio instanceof AudioMedia)) continue ;
-
-			// Check for configuration archive file agreement.  If the object
-         // configuration reference equals the specified configuration
-         // reference the the audio object was established at configuration
-         // load time.  This would exclude media player objects.
-
-			if (c != null)
-			{
-				ArchiveFile configzip = c.getZipFile() ;
-				ArchiveFile audiozip = audio.getZipFile() ;
-				if (!(configzip == audiozip)) continue ;
-			}
-
-         // Check for audio type agreement.
-
-         if (type != null)
+      ReentrantLock lock = new ReentrantLock() ;
+      lock.lock() ;
+      try
+      {
+         Vector removeplayer = new Vector() ;
+         for (int i = 0; i < players.size(); i++)
          {
-            String audiotype = audio.getType() ;
-            if (audiotype != null && !type.equals(audiotype)) continue ;
-         }
+            Object o = players.elementAt(i) ;
+            if (!(o instanceof AudioMedia)) continue ;
+            Audio audio = (Audio) o ;
 
-			// Get the player and/or midi sequencer.
+            // Check for configuration archive file agreement.  If the object
+            // configuration reference equals the specified configuration
+            // reference the the audio object was established at configuration
+            // load time.  This would exclude media player objects.
 
-			if (OptionsDialog.getDebugSound())
-				System.out.println("AudioMedia: " + audio.getName() + " Stop request.") ;
-         Object currentsound = audio.getPlayer() ;
+            if (c != null)
+            {
+               ArchiveFile configzip = c.getZipFile() ;
+               ArchiveFile audiozip = audio.getZipFile() ;
+               if (!(configzip == audiozip)) continue ;
+            }
 
-			// Shut the player down.
+            // Check for audio type agreement.
 
-			if (currentsound instanceof Player)
-			{
-				Player p = (Player) currentsound ;
-				try
-				{
-					if (p.getState() >= Player.Started)
+            if (type != null)
+            {
+               String audiotype = audio.getType() ;
+               if (audiotype != null && !type.equals(audiotype)) continue ;
+            }
+
+            // Get the player and/or midi sequencer.
+
+            if (OptionsDialog.getDebugSound())
+               System.out.println("AudioMedia: " + audio.getName() + " Stop request.") ;
+            Object currentsound = audio.getPlayer() ;
+
+            // Shut the player down.
+
+            if (currentsound instanceof Player)
+            {
+               Player p = (Player) currentsound ;
+               try
                {
-						if (OptionsDialog.getDebugSound())
-							System.out.println("AudioMedia: " + audio.getName() + " Player stopped") ;
-						p.stop() ;
+                  if (p.getState() >= Player.Started)
+                  {
+                     if (OptionsDialog.getDebugSound())
+                        System.out.println("AudioMedia: " + audio.getName() + " Player stopped") ;
+                     p.stop() ;
+                  }
                }
-				}
-				catch (Exception e)
-				{
-					System.out.println("Audio player stop fault.");
-					if (!(e instanceof KissException)) e.printStackTrace();
-				}
-			}
+               catch (Exception e)
+               {
+                  System.out.println("Audio player stop fault.");
+                  if (!(e instanceof KissException)) e.printStackTrace();
+               }
+            }
 
+            // Remove the player from our active list.
 
-			// Remove the player from our active list.
-
-//			if (a != null) a.doCallback() ;
-         audio.setRepeat(0) ;
-         audio.setType(null) ;
-			players.removeElementAt(i) ;
-		}
+//          if (a != null) a.doCallback() ;
+            audio.setRepeat(0) ;
+            audio.setType(null) ;
+            removeplayer.add(audio) ;
+         }
+         players.removeAll(removeplayer) ;
+      }
+      finally {lock.unlock(); }
 	}
 
 

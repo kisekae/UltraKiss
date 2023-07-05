@@ -65,7 +65,7 @@ import java.io.IOException ;
 import java.io.OutputStream ;
 import javax.swing.Timer ;
 
-final class Alarm extends KissObject
+final class Alarm extends KissObject implements Comparable
 {
 	// Class attributes.  Sized for 512 alarm objects.
 
@@ -75,8 +75,11 @@ final class Alarm extends KissObject
 
 	private int delay = -1 ;				// The timer interval
 	private long time = 0 ;					// The elapsed time
+	private long starttime = 0 ;			// The time when the alarm is created
+	private long triggertime = 0 ;		// The time to trigger the alarm 
    private Thread activator = null ;	// The user activation thread
    private boolean enabled = true ;		// The alarm enable flag
+   private String source = null ;      // The scheduling FKiSS timer action
    private Timer timer = null ;        // The scheduling timer
    
 	// Create an action listener for timer scheduling.  This is an alternate
@@ -92,7 +95,7 @@ final class Alarm extends KissObject
             activator = alarmactivator ;
 			setInterval(Integer.MAX_VALUE,activator) ;
 			Vector v = getEvent("alarm") ;
-			EventHandler.queueEvents(v,activator,this) ;
+			EventHandler.queueEvents(v,activator,getSource()) ;
          timer = null ;
       }
    } ;
@@ -216,7 +219,31 @@ final class Alarm extends KissObject
    // the delay.  The alarm timer takes the alarm event associated with
    // this KissObject and queues it to the event handler for processing.
 
-	void setTime(long t) { time = t ; }
+	void setTime(long t) 
+   { 
+      time = t ; 
+      if (time == 0) setStartTime(0) ;
+   }
+
+
+	// Set the time when the alarm is created.  This time is used to compute
+   // the actual time at which the alarm is to be triggered.  This sequences
+   // the alarms for proper order.
+
+	void setStartTime(long t) { starttime = t ; }
+
+
+	// Set the minimum time when the alarm is to be triggered.  This is the 
+   // start time plus the delay time.  
+
+	void setTriggerTime() { triggertime = starttime + delay ; }
+	void setTriggerTime(long t) { triggertime = t ; }
+
+
+	// Set the alarm activation source.  This is the FKiSS action command
+   // string that scheduled this alarm.
+
+	void setSource(String s) { source = s ; }
 
 
    // Enable the alarm.   When a timer event action is processed the alarms
@@ -231,19 +258,21 @@ final class Alarm extends KissObject
       // alternate method to scheduling alarms instead of using the polled 
       // AlarmTimer.  When using this method the AlarmTimer must be modified 
       // to not put the alarm on the EventHandler queue.
-/*      
-      if (timer != null) timer.stop() ;
-      timer = null ;
-      
-      // Only one alarm instance should be active.
-      
-      if (delay > 0 && delay != Integer.MAX_VALUE)
+
+      if (!OptionsDialog.getTimerOn())
       {
-         timer = new Timer(delay,task) ;
-         timer.setRepeats(false) ;
-         timer.start() ;
+         if (timer != null) timer.stop() ;
+         timer = null ;
+      
+         // Only one alarm instance should be active.
+      
+         if (delay > 0 && delay != Integer.MAX_VALUE)
+         {
+            timer = new Timer(delay,task) ;
+            timer.setRepeats(false) ;
+            timer.start() ;
+         }
       }
-*/
    }
 
 
@@ -257,10 +286,23 @@ final class Alarm extends KissObject
 	// Return the alarm timer time.
 
 	long getTime() { return time ; }
+   
+	// Return the time the alarm was created.  This is the event start time.
+
+	long getStartTime() { return starttime ; }
+   
+	// Return the time at which the alarm was triggered.
+
+	long getTriggerTime() { return triggertime ; }
+	long getTriggeredTime() { return triggertime - time ; }
 
 	// Return the forced timer activation setting.
 
 	Thread getActivator() { return activator ; }
+
+	// Return the Java Timer.
+
+	Timer getTimer() { return timer ; }
 
 	// Return the alarm delay value.
 
@@ -269,6 +311,10 @@ final class Alarm extends KissObject
 	// Return the alarm enable flag.
 
 	boolean isEnabled() { return enabled ; }
+
+	// Return the alarm scheduling source command.
+
+	String getSource() { return source ; }
 
 
 	// Object state retention methods
@@ -300,4 +346,14 @@ final class Alarm extends KissObject
 
 	int write(FileWriter fw, OutputStream out, String type) throws IOException
 	{ return -1 ; }
+ 
+   
+   // Comparable interface to sort alarms on their timer delay value.
+   // This is used by the EventHandler to schedule alarms in proper
+   // sequence within the timer period setting.  
+   
+   public int compareTo(Alarm a)
+   {
+      return (getTriggeredTime() > a.getTriggeredTime()) ? 1 : -1 ;
+   }
 }

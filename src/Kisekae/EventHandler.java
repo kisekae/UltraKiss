@@ -60,8 +60,10 @@ import java.awt.Cursor ;
 import java.util.Vector ;
 import java.util.Enumeration ;
 import java.util.Hashtable ;
+import java.util.Comparator ;
 import javax.swing.JOptionPane ;
 import java.io.* ;
+import java.util.Collections;
 
 final class EventHandler extends KissObject
 	implements Runnable
@@ -670,7 +672,7 @@ final class EventHandler extends KissObject
 	private boolean active = false ;	         	   // True if handler is active
    private boolean wait = false ;						// True if waiting
 	private static long createtime = 0 ;			   // EventHandler creation time
-   private static Hashtable stats = new Hashtable(1000) ;
+   private static Hashtable stats = new Hashtable(1000) ; // Queue wait time stats
 
 
 	// Constructor
@@ -884,7 +886,8 @@ final class EventHandler extends KissObject
 
 	// Place a list of events on the event handler queue.  This method must
 	// be synchronized to notify the thread activity.  Each event has an
-   // associated execution thread and a source object.
+   // associated execution thread and a source object.  Alarms are placed
+   // through this list process.
 
 	static void queueEvents(Vector v, Thread t, Object source)
 	{
@@ -900,11 +903,20 @@ final class EventHandler extends KissObject
             qentry[1] = t ;
             qentry[2] = source ;
 			   queue.addElement(qentry) ;
-      		if (OptionsDialog.getDebugControl())
+      		if (OptionsDialog.getDebugEvent())
             {
-               long time = System.nanoTime() ;  // Java 1.5
-      			System.out.println("EventHandler: queue " + qentry[0] + " source " + qentry[2] + " time=" + time) ;
-               stats.put(qentry[0],new Long(time)) ; 
+               Object o = qentry[0] ;
+               if (o instanceof FKissEvent && !((FKissEvent) o).getNoBreakpoint())
+               {
+                  long time = System.currentTimeMillis() - Configuration.getTimestamp() ;  
+                  FKissEvent evt = (FKissEvent) qentry[0] ;
+                  o = evt.getParent() ;
+                  Long n = (o instanceof Alarm) ? ((Alarm) o).getTriggeredTime() : 0 ;
+                  if (n > 0) n -= Configuration.getTimestamp() ;
+                  String s = (n != 0) ? " triggered time " + n.toString() : "" ;
+                  System.out.println("[" + time + "] [" + Thread.currentThread().getName() + "] EventHandler queue " + evt.getName() + " source " + qentry[2] + " queue size " + queue.size() + s) ;
+                  stats.put(qentry[0],new Long(System.currentTimeMillis())) ;  // Java 1.5
+               }
             }
          }
    		eventlock.notify() ;
@@ -926,13 +938,21 @@ final class EventHandler extends KissObject
          qentry[1] = t ;
          qentry[2] = source ;
 		   queue.addElement(qentry) ;
-     		if (OptionsDialog.getDebugControl())
+     		if (OptionsDialog.getDebugEvent())
          {
-            long time = System.nanoTime() ;  // Java 1.5
-     			System.out.println("EventHandler: queue " + qentry[0] + " source " + qentry[2] + " time=" + time) ;
-            stats.put(qentry[0],new Long(time)) ; 
+            Object o = qentry[0] ;
+            if (o instanceof FKissEvent && !((FKissEvent) o).getNoBreakpoint())
+            {
+               long time = System.currentTimeMillis() - Configuration.getTimestamp() ;  
+               FKissEvent evt = (FKissEvent) qentry[0] ;
+               o = evt.getParent() ;
+               Long n = (o instanceof Alarm) ? ((Alarm) o).getTriggeredTime() : 0 ;
+               if (n > 0) n -= Configuration.getTimestamp() ;
+               String s = (n != 0) ? " triggered time " + n.toString() : "" ;
+               System.out.println("[" + time + "] [" + Thread.currentThread().getName() + "] EventHandler queue single" + evt.getName() + " source " + qentry[2] + " queue size " + queue.size() + s) ;
+               stats.put(qentry[0],new Long(System.currentTimeMillis())) ; // Java 1.5
+            }
          }
-   		eventlock.notify() ;
       }
 	}
 
@@ -946,6 +966,7 @@ final class EventHandler extends KissObject
       synchronized (eventlock)
       {
 	   	if (queue.size() == 0) return null ;
+         Collections.sort(queue, new EventHandlerOrder());
 	   	Object o = queue.elementAt(0) ;
 	   	queue.removeElement(o) ;
 	   	return o ;
@@ -1525,12 +1546,16 @@ final class EventHandler extends KissObject
 						event = (FKissEvent) queueobject[0] ;
 						thread = (Thread) queueobject[1] ;
 						source = (Object) queueobject[2] ;
-                  if (OptionsDialog.getDebugControl())
+                  if (OptionsDialog.getDebugEvent())
                   {
-                     long time = System.nanoTime() ;  // Java 1.5
-                     Object o = stats.get(event) ;
-                     long diff = (o instanceof Long) ? (time - ((Long) o).longValue()) : 0 ;
-                     System.out.println("EventHandler: fire " + event + " source " + source + " wait=" + diff) ;
+                     if (event != null && !event.getNoBreakpoint())
+                     {
+                        long time = System.currentTimeMillis() - Configuration.getTimestamp() ;  
+                        Object o = stats.get(event) ;
+                        long diff = (o instanceof Long) ? (System.currentTimeMillis() - ((Long) o).longValue()) : 0 ; // Java 1.5
+                        System.out.println("[" + time + "] [" + Thread.currentThread().getName() + "] EventHandler fire " + event.getName() + " wait on queue " + diff + " ms") ;
+                        stats.remove(event) ;
+                     }
                   }
 						if (event != null) event.fireEvent(panel,thread,source) ;
 	               firecount++ ;

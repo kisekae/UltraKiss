@@ -113,7 +113,7 @@ final class PkzFile extends ArchiveFile
 
    public void open() throws IOException
    {
-      init() ;
+      if (contents == null) init() ;
       if (pathname == null) return ;
 		if (OptionsDialog.getDebugControl())
       	System.out.println("Open file " + pathname + ", Open count " + ++opencount) ;
@@ -136,9 +136,11 @@ final class PkzFile extends ArchiveFile
       }
 
 		// Construct an index of the elements in the file.
+      // Flush the old contents as we have created a new zip file.
 
 		if (zipfile != null)
       {
+         flush() ;
    		Enumeration enum1 = zipfile.entries() ;
    		while (enum1 != null && enum1.hasMoreElements())
    		{
@@ -219,7 +221,8 @@ final class PkzFile extends ArchiveFile
 
 	void flush() 
 	{
-      contents = null ;
+      if (contents != null) contents.clear() ;
+      if (key != null) key.clear() ;
 	}
 
 

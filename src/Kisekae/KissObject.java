@@ -86,7 +86,7 @@ abstract class KissObject
 	private Object identifier = null ;		// The object identifier
    private Object clone = null ;		      // The original clone source
 	private Hashtable evtkey = null ;		// Event locator index
-	private int eventcount = 0 ;				// Event count for this object
+	private int eventcount = 0 ;     		// Event count for this object
 	private boolean actionEvent = false ;	// True if event runs on user action
 	private boolean internal = false ;		// True if object generated internal
 	private boolean pasted = false ;       // True if object was edit pasted
@@ -111,6 +111,7 @@ abstract class KissObject
    protected String errormessage = null ;	// The error message
 	protected long updatetime = 0 ;        // The time/date of last update
 	protected boolean error = false ;		// True, the object is in error
+	protected int line = 0 ;               // The CNF line number of this object
 
 	// Inherited attributes for the object parent/child relation
 
@@ -419,6 +420,17 @@ abstract class KissObject
 	void load(Vector includefiles) { } ;
 
 
+   // Method to release object storage.
+
+   void flush() 
+   { 
+      evtkey.clear() ;
+      ref = null ;
+      zip = null ;
+      ze = null ;
+   }
+
+
    // Search for an element entry in a set of INCLUDE files.  The include
    // list will either contain File objects for unreferenced entries or
    // ArchiveFiles for referenced entries.  If an include file does not
@@ -680,7 +692,7 @@ abstract class KissObject
 
 	// Return the object configuration line number.
 
-	int getLine() { return 0 ; }
+	int getLine() { return line ; }
 
    // Get a contained cel indicator.
 
@@ -1138,6 +1150,10 @@ abstract class KissObject
 	// Set the object draw level.
 
 	void setLevel(Integer n) { }
+
+	// Set the line number where it was declared in the CNF.
+
+	void setLine(int n) { line = n ; }
 
 	// Invert the object visibility.
 

@@ -697,7 +697,7 @@ final class EventDialog extends KissDialog
          activations = event.getRunCount() ;
          totalactions = event.getTotalActionCount() ;
          runtime = event.getRunTime() ;
-         runtime = (activations == 0) ? 0 : (runtime / activations) / 1000000000. ;
+         runtime = (activations == 0) ? 0 : (runtime / activations) / 1000. ;  // Java 1.5
          totalactions = (activations == 0) ? 0 : (totalactions / activations) ;
          actioncount = event.getActionCount() ;
          actionlabel.setVisible(true);
@@ -761,7 +761,7 @@ final class EventDialog extends KissDialog
          nf.setMinimumIntegerDigits(1) ;
          activations = action.getRunCount() ;
          runtime = action.getRunTime() ;
-         runtime = (activations == 0) ? 0 : (runtime / activations) / 1000000000. ;
+         runtime = (activations == 0) ? 0 : (runtime / activations) / 1000. ; // Java 1.5
 			countlabel.setText(Kisekae.getCaptions().getString("ActivationsText") + " " + activations) ;
 			timelabel.setText(Kisekae.getCaptions().getString("AverageTimeText") + " " + nf.format(runtime)) ;
 			totalactionlabel.setText(Kisekae.getCaptions().getString("ParametersText") + " " + paramcount) ;
