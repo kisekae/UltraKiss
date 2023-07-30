@@ -939,6 +939,7 @@ final class FKissFrame extends KissFrame
 
             // Remove duplicate parameter names.
 
+            Object source = o ;
             Vector unique = new Vector() ;
             for (int i = 0 ; i < params.size() ; i++)
             {
@@ -965,6 +966,18 @@ final class FKissFrame extends KissFrame
                sb.append(pv) ;
                sb.append(" ") ;
             }
+            
+            // Get the source invoker description for alarm events
+            
+            if (source instanceof FKissEvent)
+            {
+               source = ((FKissEvent) source).getParentObject() ;
+               if (source instanceof Alarm)
+               {
+                  source = ((Alarm) source).getSource() ;
+                  sb.append("source=" + source) ;
+               }
+            }
             return sb.toString() ;
          }
       } ;
@@ -974,6 +987,7 @@ final class FKissFrame extends KissFrame
       ToolTipManager.sharedInstance().registerComponent(TREE) ;
 		treescroll.getViewport().add(TREE,null) ;
       buildEventTree(config,kiss) ;
+      setDisableAll(disableall.isSelected(),top) ;
 
       // Create the variable table.
 
@@ -1264,6 +1278,7 @@ final class FKissFrame extends KissFrame
          mi.addActionListener(this) ;
          windowMenu.add(mi) ;
       }
+      repaint() ;
    }
 
 

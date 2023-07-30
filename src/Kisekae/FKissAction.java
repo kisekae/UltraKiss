@@ -351,7 +351,7 @@ final class FKissAction extends KissObject
       // lines are not forwarded to the trace dialog although they can 
       // appear in the log file if the DebugDisabled option is set.
       
-      if (OptionsDialog.getDebugAction()  && (!getNoBreakpoint() || OptionsDialog.getDebugDisabled()))
+      if (OptionsDialog.getDebugAction() && (!getNoBreakpoint() || OptionsDialog.getDebugDisabled()))
       {
          String bp = (nobreakpoint) ? "*" : " " ;
          System.out.println(" >"+bp+"[" + currentthread.getName() + "] Event action " + toString()) ;
@@ -546,7 +546,7 @@ final class FKissAction extends KissObject
             if (alarm != null) alarm.setInterval(delay,activator) ;
             event.setAlarmEnable(alarm) ;
             setAlarmArguments(alarm,parameters,3) ;
-            if (alarm != null) alarm.setSource(getName());
+            if (alarm != null) alarm.setSource(getName() + " in " + event.getName());
             break ;
 
 
@@ -568,7 +568,7 @@ final class FKissAction extends KissObject
             if (alarm != null) alarm.setInterval(delay,activator) ;
             event.setAlarmEnable(alarm) ;
             setAlarmArguments(alarm,parameters,3) ;
-            if (alarm != null) alarm.setSource(getName());
+            if (alarm != null) alarm.setSource(getName() + " in " + event.getName());
             break ;
 
 
@@ -592,7 +592,7 @@ final class FKissAction extends KissObject
             if (alarm != null) alarm.setInterval(delay,activator) ;
             event.setAlarmEnable(alarm) ;
             setAlarmArguments(alarm,parameters,3) ;
-            if (alarm != null) alarm.setSource(getName());
+            if (alarm != null) alarm.setSource(getName() + " in " + event.getName());
             break ;
 
 
@@ -1371,7 +1371,7 @@ final class FKissAction extends KissObject
             alarm.setInterval(delay,activator) ;
             event.setAlarmEnable(kiss) ;
             setAlarmArguments(alarm,parameters,3) ;
-            if (alarm != null) alarm.setSource(getName());
+            if (alarm != null) alarm.setSource(getName() + " in " + event.getName());
             break ;
 
 
@@ -1528,10 +1528,24 @@ final class FKissAction extends KissObject
             if (!(kiss instanceof Alarm)) break ;
             alarm = (Alarm) kiss ;
             delay = variable.getIntValue((String) parameters.elementAt(1),event) ;
+            
+            // Kludge for NoGodsLand timing problems
+            s = config.getName() ;
+            if (s.contains("NoGodsLand"))
+            {
+               o = alarm.getIdentifier() ;
+               // problem in Official Meeting Hall with alarm(4057) running before alarm(128)
+               if ("4057".equals(o) && "alarm(4042)".equals(event.getName())) 
+                  delay = delay + 200 ;
+               // problem in Hidden Hermatage with alarm(1001) running before alarm(257)
+               if ("257".equals(o) && "alarm(2887)".equals(event.getName())) 
+                  delay = delay + 200 ;
+            }
+            
             alarm.setInterval(delay,activator) ;
             event.setAlarmEnable(kiss) ;
             setAlarmArguments(alarm,parameters,2) ;
-            alarm.setSource(getName());
+            alarm.setSource(getName() + " in " + event.getName());
             break ;
 
 
@@ -1805,7 +1819,7 @@ final class FKissAction extends KissObject
                Vector alarmlist = labelevent.getAlarmList() ;
                event.setAlarmEnable(alarmlist) ;
 
-               if (OptionsDialog.getDebugAction())
+               if (OptionsDialog.getDebugAction() && (!getNoBreakpoint() || OptionsDialog.getDebugDisabled()))
                {
                    String bp = (nobreakpoint) ? "*" : " " ;
                    System.out.println(" >"+bp+"gosub(" + kiss.getIdentifier() + ") returns") ;

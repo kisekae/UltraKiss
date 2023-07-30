@@ -91,6 +91,7 @@ final class FileLoader extends KissFrame
    private boolean fatal = false ;			// True if fatal error
 	private int errors = 0 ;					// Count of showError calls
 	private int warnings = 0 ;					// Count of showWarning calls
+	private int faults = 0 ;					// Errors plus Warnings
 	private int progress = 0 ;					// Progress bar value
 	private long time = 0 ;						// Duration of load
    
@@ -457,7 +458,7 @@ final class FileLoader extends KissFrame
 			// callback function under the AWT eventhandler thread to
 			// eliminate potential thread problems.
 
-         int faults = errors ;
+         faults = errors ;
          if (OptionsDialog.getStrictSyntax()) faults += warnings ;
 			if (faults == 0) showText(Kisekae.getCaptions().getString("NoErrorsText")) ;
 			if (faults > 0) showText(errors + " Errors, " + warnings + " Warnings") ;
@@ -473,16 +474,27 @@ final class FileLoader extends KissFrame
 			}
 
 			// Signal completion to the user.  Bring load window into focus.
+         // Do this on the AWT thread.  We were receiving NullPointerException
+         // on javax.swing.text.FlowView$FlowStrategy.layoutRow(FlowView.java:546)
 
-			jLabel1.setVisible(true);
-			if (faults != 0 && !fatal) EDIT.setVisible(true) ;
-			if (config != null) PLAY.setEnabled(true) ;
-         if (errorpos >= 0) TextWindow.setCaretPosition(errorpos) ;
-	      KissObject.setLoader(null) ;
-	      validate() ;
-			requestFocus() ;
+			Runnable complete = new Runnable()
+			{ public void run() { signalComplete() ; } } ;
+			javax.swing.SwingUtilities.invokeLater(complete) ;
+			return ;
       }
 	}
+   
+   
+   private void signalComplete()
+   {
+		jLabel1.setVisible(true);
+		if (faults != 0 && !fatal) EDIT.setVisible(true) ;
+   	if (config != null) PLAY.setEnabled(true) ;
+      if (errorpos >= 0) TextWindow.setCaretPosition(errorpos) ;
+	   KissObject.setLoader(null) ;
+	   validate() ;
+      requestFocus() ;     
+   }
 
 
    // A function to download an INCLUDE file from the web.  We return the
@@ -760,6 +772,7 @@ final class FileLoader extends KissFrame
             
 //          config.close() ;
 //          config.close(true,true) ;
+            config.setRestartable(false) ;
 
 	         // Open our zip file as it can be necessary for the reload. On
             // new configurations we do not have a zip name yet.

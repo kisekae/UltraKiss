@@ -219,6 +219,7 @@ final public class LogFile extends PrintStream
 	public void write(int b) 
 	{
 		if (logfile == null) return ;
+      
 		try
 		{
          if (byteswritten <= maxbytes)       
@@ -238,7 +239,7 @@ final public class LogFile extends PrintStream
 		{
 			System.out.println("LogFile: Exception writing log file " + logfilename) ;
 			e.printStackTrace() ;
-			setError();
+  			setError();
 		}
 
       // Write to trace dialog if visible.
@@ -283,6 +284,7 @@ final public class LogFile extends PrintStream
       
 		if (logfile == null) return ;
       if (trace != null && !tracewrite && !OptionsDialog.getDebugDisabled()) return ;
+      
 		try
 		{
          if (byteswritten <= maxbytes)       
@@ -302,7 +304,7 @@ final public class LogFile extends PrintStream
 		{
 			System.out.println("LogFile: Exception writing log file " + logfilename) ;
 			e.printStackTrace() ;
-			setError();
+  			setError();
 		}
 	}
 }

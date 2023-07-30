@@ -81,7 +81,7 @@ public class Kisekae extends Applet
    // Security variables
 
    private static String copyright = 
-      "Kisekae UltraKiss V3.5.2a (c) 2002-2023 William Miles" ;
+      "Kisekae UltraKiss V3.6 (c) 2002-2023 William Miles" ;
    private static Object authorize = null ;        // Seigen module
    private static Calendar warningdate = null ;    // Secure warning
    private static Calendar expiredate = null ;     // Licence expire
@@ -172,7 +172,7 @@ public class Kisekae extends Applet
 
       LogFile.start() ;
       builddate = Calendar.getInstance() ;
-      builddate.set(2023,7-1,4) ;
+      builddate.set(2023,7-1,30) ;
       
       // Restore the properties.
       
@@ -2040,14 +2040,6 @@ public class Kisekae extends Applet
                message = "Java Runtime Environment: " + e.getClass();
             if (t != null) message += " on thread " + t.getName() ;
             System.out.println("Kisekae: Uncaught Exception " + message);
-            StringWriter sw = new StringWriter();
-            PrintWriter pw = new PrintWriter(sw);
-            e.printStackTrace(pw);
-            String s = sw.toString() ;
-            int n1 = s.indexOf('\n') ;
-            int n2 = s.indexOf('\n',n1+1) ;
-            if (n1 > 0 && n2 > n1) s = s.substring(n1,n2) ;
-            System.out.println(s);
             e.printStackTrace();
         }
       });

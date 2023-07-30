@@ -134,6 +134,10 @@ final class DirEntry extends ArchiveEntry
 	// Set the required compression method.
 
 	void setMethod(int m) {method = m ; }
+
+	// Set the file size for edited memory type CNF files.
+
+	void setFileSize(long n) {filesize = n ; }
    
    // Set the uncompressed CRC32 for the entry.
    

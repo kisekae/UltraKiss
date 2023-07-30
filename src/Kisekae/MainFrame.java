@@ -626,11 +626,6 @@ final public class MainFrame extends KissFrame
       Kisekae.setLoaded(config != null) ;
       KissObject.setLoader(null) ;
       loader = null ;
-     
-      // Reset our NoCopy indicator for future loads.
-      
-      mainmenu.setNoCopy(false) ;
-      OptionsDialog.setSecurityEnable(false);
 	}
    
    

@@ -21,17 +21,24 @@
 	web. I will also place notices here regarding product updates, scheduled 
 	releases, or problems and work-arounds that may affect you.&nbsp;</p>
                                         <p>&nbsp;</p>
-					<p><B>July 15, 2023</B></p>
-					<P>UltraKiss V3.5.3 is released. </P>
+					<p><B>July 30, 2023</B></p>
+					<P>UltraKiss V3.6 is released. This release fully supports the PlayFkiss compatibility for the Scarecrow sets.</P>
 					<h3><FONT face=Arial>Updates to V3.5.3&nbsp; </FONT></h3>
 					<BLOCKQUOTE>
                       <p><font face="Arial">1. Numerous corrections are made to ensure valid restart processing when expansion sets are loaded or options are changed that require a set reload.</font></p>
-                      <p><font face="Arial">2. Collision recognition could fail if the FKissEditor was used and a user event sequence that changing cel visibility was required for collision state recognition.</font></p>
+                      <p><font face="Arial">2. Collision recognition could fail if the FKissEditor was used and a user event sequence that changed cel visibility was missed for collision state recognition.</font></p>
                       <p><font face="Arial">3. Exporting GUI components as CEL files failed to work if components were not updated. These components will now be converted if the appropriate export option is set.</font></p>
                       <p><font face="Arial">4. Closing a set where the CNF configuration file was edited with the TextEditor failed to issue a prompt to save the file.  This is corrected.</font></p>
                       <p><font face="Arial">5. The TextEditor find and replace dialog did not allow cursor focus into the search text field if the text was not found.  This is corrected.</font></p>
                       <p><font face="Arial">6. The FKissEditor will no longer pause breakpoint on label events.  These events are not top level events but are rather gosub or goto calls within another event.</font></p>
                       <p><font face="Arial">7. Alarm sequencing in the AlarmTimer and EventHandler is refined to use the alarm trigger time as well as CNF order for similar delay timer actions.</font></p>
+                      <p><font face="Arial">8. An intermittent NullPointerException that occurred after set load in the Swing Java library code is resolved.</font></p>
+                      <p><font face="Arial">9. An event timing window that would prevent some alarms from being queued and processed has been corrected.</font></p>
+                      <p><font face="Arial">10. A new compatibility option is defined to enable multiple event declarations for the same object.  PlayFKiss does not support this behavior.</font></p>
+                      <p><font face="Arial">11. The FKissEditor, when breakpointed and the cursor hovers over the event, will now display the source event from where the event was invoked.</font></p>
+                      <p><font face="Arial">12. The Scarecrow sets are now recognized on load and the appropriate PlayFKiss compatibility mode options are now automatically set.</font></p>
+                      <p><font face="Arial">13. Border color specifications in PlayFKiss compatibility mode now use the default PlayFKiss color palette when no palette file is specified.</font></p>
+                      <p><font face="Arial">14. Set loading now reports missing mandatory FKiSS event and action parameters. Previously, if parameters were not delimited properly these errors could be missed.</font></p>
         				</BLOCKQUOTE>
                                         <p>&nbsp;</p>
 					<p><B>June 21, 2023</B></p>

@@ -960,6 +960,7 @@ final class FileWriter extends KissFrame
                ArchiveEntry ce = ((ContentEntry) o).ze ;
 					if (ko == null || ce == null) continue ;
 					next = new DirEntry(ko.getDirectory(),ce.getName(),null) ;
+               ((DirEntry) next).setFileSize(ce.getSize()) ;
 					if (ko.getName() == null) next.setPath(destination) ;
 					element = next.getPath() ;
 				}
@@ -969,8 +970,6 @@ final class FileWriter extends KissFrame
 				// the output file.  Otherwise, we establish an input stream to
 				// copy the archive source to the new output file.
 
-            if (element.equalsIgnoreCase("9_g_1.cel"))   /* lhhuf encode bug momo_sxs.lzh  9_g_1.cel*/
-               element = element ;
 				if (ko != null && !ko.isWritable())
 					if (!(ko instanceof JavaCel) || saveset) ko = null ;
 				if (OptionsDialog.getSaveSourceOn())

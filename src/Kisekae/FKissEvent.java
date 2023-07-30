@@ -116,6 +116,8 @@ final class FKissEvent extends KissObject
    private Object [] collide = null ;     // Actual collision objects
    private Object [] collision1 = null ;  // Collision cel packet 1
    private Object [] collision2 = null ;  // Collision cel packet 2
+   private Thread firethread = null ;     // Thread from fireEvent call
+   private Object firesource = null ;     // Source from fireEvent call
 	private boolean state = false ;		   // Action state for the event
 	private boolean terminate = false ; 	// Execution termination flag
 	private boolean temporary = false ; 	// Set if temporary variables exist
@@ -764,6 +766,8 @@ final class FKissEvent extends KissObject
       // A modal group object accepts events from any contained cel.
 
       busy = true ;
+      firethread = thread ;
+      firesource = source ;
       Object modal = EventHandler.getModal() ;
       if (modal != null && source != null && !(source instanceof Alarm))
       {
@@ -788,37 +792,21 @@ final class FKissEvent extends KissObject
          Object o = evaluateParam((String) getFirstParameter()) ;
          if (o instanceof String) o = ((String) o).toUpperCase() ;
          Alarm alarm = (Alarm) Alarm.getByKey(Alarm.getKeyTable(),cid,o) ;
-         if (alarm != null) alarm.setTriggerTime(0) ;
-         if (alarm == null || alarm.getInterval() <= 0) return null ; 
-         if (alarm.getInterval() != Integer.MAX_VALUE) return null ; 
+         if (alarm == null) return null ;
+         alarm.setTriggerTime(0) ;
+//    This allows only 1 alarm event to fire on a single alarm.
+         if (!OptionsDialog.getMultipleEvents() || alarm.getInterval() == 0) 
+         {
+            if (alarm.getInterval() != Integer.MAX_VALUE) 
+               return null ; 
+         }
  			alarm.setInterval(-1,thread) ;
          AlarmTimer timer = config.getTimer() ;
          if (timer != null) timer.removeAlarm(alarm) ;
       }
 
-      // If we are breakpointing and running on the AWT thread we terminate to
-      // release control and perform all future processing on a new internal
-      // thread.  Break processing requires that we do not suspend the AWT
-      // thread.  Note that sequential event processing is sometimes assumed
-      // under the ATW thread and this is not possible while breakpointing.
-      //
-      // Note: this caused problems with missed collisions when the FKissEditor
-      // was not terminated (paused) and we were performing immediate events and  
-      // a press() changed visibility on another thread and this was too late 
-      // for the collision on the new visible cel to be recognized.
-/*
-		if (SwingUtilities.isEventDispatchThread())
-      {
-         if ((breakframe != null || breakpause) ||
-             (this.getBreakpoint() && !this.getNoBreakpoint()))
-         {
-            Thread t = new Thread()
-            { public void run() { fireEvent(panel,thread,source) ; } } ;
-            t.start() ;
-            return null ;
-         }
-		}
-*/
+      // Initialize for processing the event.
+      
 		int i ;
       this.box = null ;
   		Rectangle box = null ;
@@ -1266,7 +1254,20 @@ final class FKissEvent extends KissObject
 
    void doBreakpoint(Object o, PanelFrame panel, Rectangle box, boolean end)
    {
-      if (SwingUtilities.isEventDispatchThread()) return ;
+      // If we are breakpointing and running on the AWT thread we terminate to
+      // release control and perform all future processing on a new internal
+      // thread.  Break processing requires that we do not suspend the AWT
+      // thread.  Note that sequential event processing is sometimes assumed
+      // under the ATW thread and this is not possible while breakpointing.
+      
+		if (SwingUtilities.isEventDispatchThread())
+      {
+         Thread t = new Thread()
+         { public void run() { fireEvent(panel,firethread,firesource) ; } } ;
+         t.start() ;
+         terminate = true ;
+         return ;
+		}
 
     	try
       {

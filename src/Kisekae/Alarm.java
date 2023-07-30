@@ -184,9 +184,13 @@ final class Alarm extends KissObject implements Comparable
       // scheduled and queued on the EventHandler. This is a timing
       // window that can occur if independent events try to schedule
       // the same alarm. Only one alarm instance should be active.
-      
-      if (delay == Integer.MAX_VALUE && t > 0) return ;
-
+/*      
+      if (delay == Integer.MAX_VALUE && t > 0) 
+      { 
+         System.out.println("Alarm: setInterval for "+toString()+" to " + t + " but delay = " + delay) ;
+         return ;
+      }
+*/
       // If we are setting this alarm we must disable it.  For the alarm
       // to fire it must be enabled.  It is the responsibility of the
       // initiating FKiSS event to enable the alarm when event processing
@@ -209,7 +213,7 @@ final class Alarm extends KissObject implements Comparable
 
       // Set the new timer delay.
 
- 		delay = t ;
+      delay = t ;
 		time = 0 ;
 	}
 
@@ -234,10 +238,22 @@ final class Alarm extends KissObject implements Comparable
 
 
 	// Set the minimum time when the alarm is to be triggered.  This is the 
-   // start time plus the delay time.  
+   // start time plus the delay time.  Synchronize updates with the AlarmTimer
+   // to ensure no conflics when sorting the alarm list.
 
-	void setTriggerTime() { triggertime = starttime + delay ; }
-	void setTriggerTime(long t) { triggertime = t ; }
+	void setTriggerTime() 
+   { 
+      Object queuelock = AlarmTimer.getQueueLock() ;
+      synchronized (queuelock)
+      { triggertime = starttime + delay ; }
+   }
+   
+	void setTriggerTime(long t) 
+   { 
+      Object queuelock = AlarmTimer.getQueueLock() ;
+      synchronized (queuelock)
+      { triggertime = t ; }
+   }
 
 
 	// Set the alarm activation source.  This is the FKiSS action command
@@ -294,7 +310,7 @@ final class Alarm extends KissObject implements Comparable
 	// Return the time at which the alarm was triggered.
 
 	long getTriggerTime() { return triggertime ; }
-	long getTriggeredTime() { return triggertime - time ; }
+	long getTriggeredTime() { return triggertime ; }
 
 	// Return the forced timer activation setting.
 

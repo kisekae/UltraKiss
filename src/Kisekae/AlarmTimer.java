@@ -53,6 +53,11 @@ package Kisekae ;
 * the alarm delay time expires.  The timer activity polls the alarms
 * once each period.  The overall event sensitivity depends on the
 * period delay value.
+* 
+* Alternatively, alarms can be scheduled by Java Timer objects.  See the
+* "EnableTimer" option in the FKiSS section.  If this AlarmTimer is disabled
+* then Alarms are fired by the system.  In this case no throttling of speed is 
+* possible using the Timer period. PlayFKiss compatibility cannot be maintained.  
 *
 */
 
@@ -229,6 +234,11 @@ final class AlarmTimer extends Thread
       }
       return n ;
    }
+   
+   
+   // Return the queuelock so Alarms can synchronize on trigger time updates
+   
+   static Object getQueueLock() { return queuelock ; }
 
 
    // Method to reset all elements in the alarm queue.
@@ -251,6 +261,7 @@ final class AlarmTimer extends Thread
       {
          if (alarm == null) return ;
          if (alarms == null) return ;
+         alarm.setTime(0) ;
          if (!alarms.contains(alarm)) alarms.add(alarm) ;
    		Vector v = alarm.getEvent("alarm") ;
          for (int i = 0 ; i < v.size() ; i++)
@@ -260,7 +271,7 @@ final class AlarmTimer extends Thread
             {
                long time = System.currentTimeMillis() - Configuration.getTimestamp() ;
                long triggertime = alarm.getTriggerTime() - Configuration.getTimestamp() ;
-               System.out.println("[" + time + "] [" + Thread.currentThread().getName() + "] AlarmTimer schedule " + evt.getName() + " trigger time " + triggertime + " delay " + alarm.getInterval()) ;
+               System.out.println("[" + time + "] [" + Thread.currentThread().getName() + "] schedule " + evt.getName() + " in AlarmTimer, trigger time " + triggertime + " delay " + alarm.getInterval()) ;
             }
          }      
       }
@@ -320,9 +331,9 @@ final class AlarmTimer extends Thread
 		thread.setName("AlarmTimer-" + id) ;
 		if (OptionsDialog.getDebugControl())
 			System.out.println(thread.getName() + " started.") ;
-//      thread.setPriority(Thread.MAX_PRIORITY) ;
+//    thread.setPriority(Thread.MAX_PRIORITY) ;
       long period = OptionsDialog.getTimerPeriod() ;
-      if (period < 0) period = defaultperiod ;
+      if (period <= 0) period = defaultperiod ;
       defaultperiod = period ;
 
 		// Run the timer loop until this activity is terminated.
@@ -353,7 +364,13 @@ final class AlarmTimer extends Thread
 
             // Do nothing if the timer is disabled.
 
-            if (!OptionsDialog.getTimerOn()) continue ;
+            if (!OptionsDialog.getTimerOn()) 
+            {
+               wait = true ;
+               sleep(period) ;
+               wait = false ;
+               continue ;
+            }
 
    			// Lock the alarm to stop simultaneous updates.
 

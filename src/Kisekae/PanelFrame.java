@@ -3414,10 +3414,21 @@ final class PanelFrame extends JPanel
 
    void changewindow(int w, int h)
    {
+      int width ;
+      int height ;
+      if (OptionsDialog.getAbsoluteWindow())
+      {
+         width = w ;
+         height = h ;         
+      }
+      else
+      {
+         width = w + windowSize.width;
+         height = h + windowSize.height ;         
+      }
+
       int xb = x - ((panelSize.width - windowSize.width) / 2) ;
       int yb = y - ((panelSize.height - windowSize.height) / 2) ;
-      int width = w + windowSize.width;
-      int height = h + windowSize.height ;
       int maxwidth = panelSize.width ;
       int maxheight = panelSize.height ;
       if (width > maxwidth) width = maxwidth ;
@@ -5889,7 +5900,7 @@ final class PanelFrame extends JPanel
          // size edit.
 
          Cursor cursor = source.getCursor() ;
-         if (selected && !cursor.equals(dragcursor))
+         if (selected && !cursor.equals(dragcursor) && cel != null)
          {
             Dimension s = cel.getSize() ;
             if (s.width != celbasesize.width || s.height != celbasesize.height)

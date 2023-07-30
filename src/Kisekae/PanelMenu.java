@@ -688,7 +688,7 @@ final class PanelMenu extends KissMenu
 
       // Adjust the state of our tools menu.
       
-      menu.options.setEnabled(!Kisekae.isExpired()) ;
+      menu.options.setEnabled(!Kisekae.isExpired() && !OptionsDialog.getSecurityEnable()) ;
       menu.coloreditor.setEnabled(b) ;
       menu.imageeditor.setEnabled(b) ;
       menu.texteditor.setEnabled(b) ;

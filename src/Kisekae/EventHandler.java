@@ -369,8 +369,39 @@ final class EventHandler extends KissObject
       5,5,5,5,5,
       5,5,5,5,5,5,5,5,5,5,5,
       4,4,4,4,4,4,
-      5,5,5,5,
+      5,5,5,5,5,
       5 } ;
+
+   // FKiSS event mandatory number of parameters.
+
+   private static int [] eventmandatoryparams = {
+      0,1,0,1,1,1,0,1,1,0,0,0,1,1,1,1,
+      2,2,2,2,1,
+      2,2,
+      1,0,
+      1,1,1,1,1,
+      1,1,1,
+      0 } ;
+
+   // FKiSS action mandatory number of parameters.
+
+   private static int [] actionmandatoryparams = {
+      1,1,1,1,3,3,3,3,3,3,1,3,3,3,3,3,3,1,1,0,1,0,3,2,1,1,2,2,1,2,2,
+      1,1,3,3,0,2,3,3,3,3,3,3,2,2,2,2,1,1,1,1,1,3,3,2,2,2,2,2,0,0,1,
+      2,2,1,1,1,1,1,2,3,2,3,1,1,
+      2,2,2,2,2,2,2,1,2,2,2,2,2,2,
+      1,1,1,1,1,
+      2,2,2,2,
+      2,1,2,2,3,4,
+      3,3,
+      2,2,2,2,
+      1,2,
+      2,2,2,2,3,3,2,2,2,2,2,2,2,2,3,1,2,2,2,2,2,
+      3,4,3,2,3,
+      1,2,0,1,1,0,1,1,1,0,2,
+      3,1,2,2,1,0,
+      1,1,2,2,6,
+      2 } ;
 
    // FKiSS event valid parameter types by parameter position.
    // These are according to the fuzzy FKiSS specifications.
@@ -914,10 +945,11 @@ final class EventHandler extends KissObject
                   Long n = (o instanceof Alarm) ? ((Alarm) o).getTriggeredTime() : 0 ;
                   if (n > 0) n -= Configuration.getTimestamp() ;
                   String s = (n != 0) ? " triggered time " + n.toString() : "" ;
-                  System.out.println("[" + time + "] [" + Thread.currentThread().getName() + "] EventHandler queue " + evt.getName() + " source " + qentry[2] + " queue size " + queue.size() + s) ;
+                  System.out.println("[" + time + "] [" + Thread.currentThread().getName() + "] queue " + evt.getName() + " on EventHandler, source " + qentry[2] + " queue size " + queue.size() + s) ;
                   stats.put(qentry[0],new Long(System.currentTimeMillis())) ;  // Java 1.5
                }
             }
+            if (!OptionsDialog.getMultipleEvents()) break ;
          }
    		eventlock.notify() ;
       }
@@ -949,7 +981,7 @@ final class EventHandler extends KissObject
                Long n = (o instanceof Alarm) ? ((Alarm) o).getTriggeredTime() : 0 ;
                if (n > 0) n -= Configuration.getTimestamp() ;
                String s = (n != 0) ? " triggered time " + n.toString() : "" ;
-               System.out.println("[" + time + "] [" + Thread.currentThread().getName() + "] EventHandler queue single" + evt.getName() + " source " + qentry[2] + " queue size " + queue.size() + s) ;
+               System.out.println("[" + time + "] [" + Thread.currentThread().getName() + "] queue single " + evt.getName() + " on EventHandler, source " + qentry[2] + " queue size " + queue.size() + s) ;
                stats.put(qentry[0],new Long(System.currentTimeMillis())) ; // Java 1.5
             }
          }
@@ -997,7 +1029,6 @@ final class EventHandler extends KissObject
 		return -1 ;
 	}
 
-
 	// Static method to determine if a string is a valid action name.
 
 	static int getActionNameKey(String s)
@@ -1021,6 +1052,22 @@ final class EventHandler extends KissObject
 	{
       if (n < 0 || n >= actionfkisslevel.length) return -1 ;
       return (int) actionfkisslevel[n] ;
+	}
+
+	// Static method to determine manditory number of event parameters.
+
+	static int getMandatoryEventParams(int n)
+	{
+      if (n < 0 || n >= eventmandatoryparams.length) return -1 ;
+      return (int) eventmandatoryparams[n] ;
+	}
+
+	// Static method to determine manditory number of action parameters.
+
+	static int getMandatoryActionParams(int n)
+	{
+      if (n < 0 || n >= actionmandatoryparams.length) return -1 ;
+      return (int) actionmandatoryparams[n] ;
 	}
 
 	// Static method to determine an event valid parameter type.
@@ -1206,6 +1253,7 @@ final class EventHandler extends KissObject
          {
          	event = (FKissEvent) v.elementAt(i) ;
 				event.fireEvent(f,t,source) ;
+            if (!OptionsDialog.getMultipleEvents()) break ;            
          }
       }
 
@@ -1553,7 +1601,7 @@ final class EventHandler extends KissObject
                         long time = System.currentTimeMillis() - Configuration.getTimestamp() ;  
                         Object o = stats.get(event) ;
                         long diff = (o instanceof Long) ? (System.currentTimeMillis() - ((Long) o).longValue()) : 0 ; // Java 1.5
-                        System.out.println("[" + time + "] [" + Thread.currentThread().getName() + "] EventHandler fire " + event.getName() + " wait on queue " + diff + " ms") ;
+                        System.out.println("[" + time + "] [" + Thread.currentThread().getName() + "] fire " + event.getName() + " for FKissEvent processing, wait on queue " + diff + " ms") ;
                         stats.remove(event) ;
                      }
                   }

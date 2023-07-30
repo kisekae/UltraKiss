@@ -1041,6 +1041,11 @@ final public class MainMenu extends KissMenu
                   archive = s.substring(0,i) ;
                }
                
+               // Clear our URL NoCopy indicator for loads from the menu.
+      
+               setNoCopy(false) ;
+               OptionsDialog.setSecurityEnable(OptionsDialog.getInitSecurityEnable());  
+               
                // Load the LRU file.  If the load fails disable the 
                // entry on the menu list. 
                
@@ -1317,7 +1322,11 @@ final public class MainMenu extends KissMenu
            return ;
          }
       }
-
+     
+      // Clear our URL NoCopy indicator for loads from the menu.
+      
+      setNoCopy(false) ;
+      OptionsDialog.setSecurityEnable(OptionsDialog.getInitSecurityEnable());
       fd = fdnew ;
       openContext(fd, ze) ;
    }

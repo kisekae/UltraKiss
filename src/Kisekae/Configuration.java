@@ -484,7 +484,7 @@ final class Configuration extends KissObject
 
 	// Method to return the configuration border color.  This color
 	// is taken from the first palette defined in the first
-	// configuration file.  If no palette exists, then we heve a
+	// configuration file.  If no palette exists, then we have a
 	// truetype data set and the border value is a direct RGB color.
    // If the first configuration palette was imported then the importborder
    // index is used as the background index of the imported palette.
@@ -492,7 +492,15 @@ final class Configuration extends KissObject
 	Color getBorderColor()
 	{
 		Palette p = getPalette(0) ;
-		if (p == null || rgbborder) return new Color(border) ;
+		if (p == null || rgbborder) 
+      {
+         if (!OptionsDialog.getPlayFKissCompatibility())
+            return new Color(border) ;
+         int r = (((border % 1024) / 32) * 36) % 256 ;
+         int g = (((border % 32) / 4) * 36) % 256 ;
+         int b = (((border % 4)) * 85) % 256 ;
+         return new Color(r,g,b) ;
+      }
       if (importborder >= 0) return (p.getColor(0,importborder)) ;
 		return (p.getColor(0,border)) ;
 	}
@@ -1025,14 +1033,27 @@ final class Configuration extends KissObject
 
                   // Identify UltraKiss configuration files.
 
-                  if (s1.startsWith("Kisekae UltraKiss"))
-                     ultrakiss = true ;
+                  if (line < 10)
+                  {
+                     if (s1.startsWith("Kisekae UltraKiss"))
+                        ultrakiss = true ;
                   
-                  if (s1.indexOf("This CNF file was written by Direct KiSS") >= 0)
-                     directkiss = true ;
+                     if (s1.indexOf("This CNF file was written by Direct KiSS") >= 0)
+                        directkiss = true ;
                   
-                  if (s1.indexOf("This .cnf file was written by PlayFKiSS") >= 0)
-                     playfkiss = true ;
+                     if (s1.indexOf("This .cnf file was written by PlayFKiSS") >= 0)
+                        playfkiss = true ;
+                  
+                     String s1lc = s1.toLowerCase() ;
+                     if (s1lc.indexOf("the owl") >= 0)
+                        playfkiss = true ;
+                     if (s1lc.indexOf("the scarecrow") >= 0)
+                        playfkiss = true ;
+                     if (s1lc.indexOf("living pictures") >= 0)
+                        playfkiss = true ;
+                     if (s1lc.indexOf("samodiva") >= 0)
+                        playfkiss = true ;
+                  }
 
                   // Parse UltraKiss options.
 
@@ -2262,6 +2283,7 @@ final class Configuration extends KissObject
       {
          int valid = 0 ;
          int code = -1 ;
+         int mandatory = -1 ;
          int line = kiss.getLine() ;
          String name = kiss.getName() ;
          Object id = kiss.getIdentifier() ;
@@ -2271,11 +2293,13 @@ final class Configuration extends KissObject
          {
             code = EventHandler.getEventNameKey(s) ;
             valid = EventHandler.getEventParamType(code,n) ;
+            mandatory = EventHandler.getMandatoryEventParams(code) ;
          }
          if (kiss instanceof FKissAction) 
          {
             code = EventHandler.getActionNameKey(s) ;
             valid = EventHandler.getActionParamType(code,n) ;
+            mandatory = EventHandler.getMandatoryActionParams(code) ;
          }
          
          if (code < 0) break ;
@@ -2292,6 +2316,13 @@ final class Configuration extends KissObject
          {
             showWarning("[Line " + line + "] " + name 
                + " parameter " + (n+1) + " should not be specified.",p) ;
+            continue ;
+         }
+
+         if (n == params.size()-1 && mandatory > n+1)
+         {
+            showWarning("[Line " + line + "] " + name 
+               + " requires additional parameters.",name) ;
             continue ;
          }
          
@@ -2981,7 +3012,7 @@ final class Configuration extends KissObject
 	      enum1 = leadtext.elements() ;
 	      while (enum1.hasMoreElements()) writeLine(out,(String) enum1.nextElement()) ;
          StringBuffer sb = new StringBuffer() ;
-         if (rgbborder)
+         if (rgbborder && !OptionsDialog.getPlayFKissCompatibility())
 	         sb.append("[" + ((border&0xFF0000) >> 16) + "," + ((border&0xFF00) >> 8) + "," + (border & 0xFF)) ;
          else
             sb.append("[" + border) ;
@@ -4643,9 +4674,9 @@ final class Configuration extends KissObject
             {
    			   a = new Alarm(cid,event.getFirstParameter()) ;
                a.setLine(event.getLine());
-               event.setParent(a) ;
    			   alarms.addElement(a) ;
             }
+            event.setParent(a) ;
          }
 		}
 
@@ -5176,7 +5207,19 @@ final class Configuration extends KissObject
             if (endstring > 0) fromindex = endstring ;
          }
          
-			i = value.indexOf(',',fromindex) ;
+         // PlayFKiss delimits parameter lists on commas, periods, and other 
+         // non-alphanumeric characters. The regular expression splits on 
+         // anything that is a comma or a period.
+         
+         if (OptionsDialog.getPlayFKissCompatibility())
+         {
+            String valuefrom = value.substring(fromindex) ;
+            String [] parts = valuefrom.split("[\\,\\.]",2) ;
+            i = (parts.length == 1) ? -1 : parts[0].length() + fromindex ;
+         }
+         else
+            i = value.indexOf(',',fromindex) ;
+         
 			if (i < 0)
 			{
 				token = value ;

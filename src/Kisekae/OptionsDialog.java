@@ -189,6 +189,7 @@ final public class OptionsDialog extends KissDialog
    private static boolean gnomekiss = false ;
    private static boolean kissld = false ;
    private static boolean defaultplayfkiss = false ;
+   private static boolean multipleevents = true ;
    private static String eventqueues = "1" ;
    private static String timerperiod = "10" ;
    private static String gifperiod = "100" ;
@@ -342,6 +343,7 @@ final public class OptionsDialog extends KissDialog
 	private static boolean initlinux = linux ;
    private static boolean initplayfkiss = playfkiss ;
    private static boolean initdefaultplayfkiss = defaultplayfkiss ;
+   private static boolean initmultipleevents = multipleevents ;
    private static boolean initdirectkiss = directkiss ;
    private static boolean initgnomekiss = gnomekiss ;
    private static boolean initkissld = kissld ;
@@ -633,6 +635,7 @@ final public class OptionsDialog extends KissDialog
 	private JCheckBox SecurityEnable = new JCheckBox();
 	private JCheckBox InitEdit = new JCheckBox();
 	private JCheckBox DefaultPlayFKiss = new JCheckBox();
+	private JCheckBox MultipleEvents = new JCheckBox();
 	private JRadioButton AltEditDrag = new JRadioButton();
 	private JRadioButton ShiftEditDrag = new JRadioButton();
 	private JCheckBox ImportRelative = new JCheckBox();
@@ -1513,6 +1516,9 @@ final public class OptionsDialog extends KissDialog
 		DefaultPlayFKiss.setText(Kisekae.getCaptions().getString("OptionsDefaultPlayFKiss"));
       DefaultPlayFKiss.setToolTipText(Kisekae.getCaptions().getString("ToolTipDefaultPlayFKiss"));
 		DefaultPlayFKiss.setSelected(defaultplayfkiss);
+		MultipleEvents.setText(Kisekae.getCaptions().getString("OptionsMultipleEvents"));
+      MultipleEvents.setToolTipText(Kisekae.getCaptions().getString("ToolTipMultipleEvents"));
+		MultipleEvents.setSelected(multipleevents);
       
 		getContentPane().add(panel1);
 		panel1.add(jTabbedPane1, new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0
@@ -1695,6 +1701,7 @@ final public class OptionsDialog extends KissDialog
 		jPanel24.add(DetachRestricted, null);
 		jPanel24.add(DetachMove, null);
 		jPanel24.add(DetachFix, null);
+		jPanel24.add(MultipleEvents, null);
 		jTabbedPane2.add(jPanel42, Kisekae.getCaptions().getString("InterfaceSettingsBoxText"));
 		jPanel42.add(ContextMap, null);
 		jPanel42.add(MapCount, null);
@@ -2155,6 +2162,7 @@ final public class OptionsDialog extends KissDialog
 	static public boolean getAppleMac() { return applemac ; }
 	static public boolean getLinux() { return linux ; }
    static public boolean getDefaultPlayFKiss() { return defaultplayfkiss ; }
+   static public boolean getMultipleEvents() { return multipleevents ; }
 
    static public boolean getPlayFKissCompatibility() { return playfkiss ; }
    static public boolean getDirectKissCompatibility() { return directkiss ; }
@@ -2295,6 +2303,7 @@ final public class OptionsDialog extends KissDialog
    static public Object getInitEncoding() { return initencoding ; }
    static public Object getInitExportType() { return initexporttype ; }
    static public Object getInitBrowser() { return initbrowser ; }
+   static public boolean getInitSecurityEnable() { return initsecurityenable ; }
    static public Vector getLruFiles() { return lrufiles ; }
 
    
@@ -2459,6 +2468,7 @@ final public class OptionsDialog extends KissDialog
 	static public void setAppleMac(boolean b) { applemac = b ; }
 	static public void setLinux(boolean b) { linux = b ; }
    static public void setDefaultPlayFKiss(boolean b) { defaultplayfkiss = b ; }
+   static public void setMultipleEvents(boolean b) { multipleevents = b ; }
 
    static public void setLruFile(String s) 
    { 
@@ -2782,6 +2792,7 @@ final public class OptionsDialog extends KissDialog
       else if ("gnomekiss".equalsIgnoreCase(option)) setGnomeKissCompatibility(value) ;
       else if ("kissld".equalsIgnoreCase(option)) setKissLDCompatibility(value) ;
       else if ("defaultplayfkiss".equalsIgnoreCase(option)) setDefaultPlayFKiss(b) ;
+      else if ("multipleevents".equalsIgnoreCase(option)) setMultipleEvents(b) ;
    }
 
 
@@ -2922,7 +2933,7 @@ final public class OptionsDialog extends KissDialog
       else if ("directkiss".equalsIgnoreCase(option)) s += getDirectKissCompatibility() ;
       else if ("gnomekiss".equalsIgnoreCase(option)) s += getGnomeKissCompatibility() ;
       else if ("kissld".equalsIgnoreCase(option)) s += getKissLDCompatibility() ;
-      else if ("defaultplayfkiss".equalsIgnoreCase(option)) s += getDefaultPlayFKiss() ;
+      else if ("multipleevents".equalsIgnoreCase(option)) s += getMultipleEvents() ;
       return s ;
    }
 
@@ -2971,6 +2982,7 @@ final public class OptionsDialog extends KissDialog
       GnomeKissBtn.setSelected(gnomekiss);
       KissLDBtn.setSelected(kissld);
       DefaultPlayFKiss.setSelected(defaultplayfkiss);
+      MultipleEvents.setSelected(multipleevents);
       Backup.setSelected(backup);
       SaveSource.setSelected(savesource);
       ShowDLPrompt.setSelected(showdlprompt);
@@ -3173,6 +3185,7 @@ final public class OptionsDialog extends KissDialog
       gnomekiss = GnomeKissBtn.isSelected() ;
       kissld = KissLDBtn.isSelected() ;
       defaultplayfkiss = DefaultPlayFKiss.isSelected() ;
+      multipleevents = MultipleEvents.isSelected() ;
       backup = Backup.isSelected() ;
       savesource = SaveSource.isSelected() ;
       showdlprompt = ShowDLPrompt.isSelected() ;
@@ -3383,6 +3396,7 @@ final public class OptionsDialog extends KissDialog
 //    showdlprompt = initshowdlprompt ;
 //    showtips = initshowtips ;
 		defaultplayfkiss = initdefaultplayfkiss ;
+		multipleevents = initmultipleevents ;
 		timer = inittimer ;
 		event = initevent ;
 		animate = initanimate ;
@@ -3637,6 +3651,7 @@ final public class OptionsDialog extends KissDialog
       initkissld = kissld ;
       tempeditenable = initedit ;
       initdefaultplayfkiss = defaultplayfkiss ;
+      initmultipleevents = multipleevents ;
    }
    
    // Set initial factory option values.
@@ -3752,6 +3767,7 @@ final public class OptionsDialog extends KissDialog
       gnomekiss = false ;
       kissld = false ;
       defaultplayfkiss = false ;
+      multipleevents = true ;
       compatapply = false ;
       eventqueues = "1" ;
       timerperiod = "10" ;
@@ -3798,6 +3814,7 @@ final public class OptionsDialog extends KissDialog
 //	   if (initanimate != AnimateOption.isSelected()) return true ;
 //    if (initinitedit != InitEdit.isSelected()) return true ;
       if (initdefaultplayfkiss != DefaultPlayFKiss.isSelected()) return true ;
+      if (initmultipleevents != MultipleEvents.isSelected()) return true ;
       if (initeditenable != EditEnable.isSelected()) return true ;
       if (initsecurityenable != SecurityEnable.isSelected()) return true ;
 	   if (initdebugmouse != MouseDebug.isSelected()) return true ;
@@ -3907,6 +3924,130 @@ final public class OptionsDialog extends KissDialog
 //	   if (initdisableall != DisableAll.isSelected()) return true ;
       return false ;
    }
+   
+   // Check current options for any change.   
+   
+   boolean changedCurrentOptions()
+   {
+//    if (playfkiss != PlayFKissBtn.isSelected()) return true ;
+//    if (directkiss != DirectKissBtn.isSelected()) return true ;
+//    if (gnomekiss != GnomeKissBtn.isSelected()) return true ;
+//    if (kissld != KissLDBtn.isSelected()) return true ;
+//	   if (timer != TimerOption.isSelected()) return true ;
+//	   if (event != EventOption.isSelected()) return true ;
+//	   if (animate != AnimateOption.isSelected()) return true ;
+//    if (initedit != InitEdit.isSelected()) return true ;
+      if (defaultplayfkiss != DefaultPlayFKiss.isSelected()) return true ;
+      if (multipleevents != MultipleEvents.isSelected()) return true ;
+      if (editenable != EditEnable.isSelected()) return true ;
+      if (securityenable != SecurityEnable.isSelected()) return true ;
+	   if (debugmouse != MouseDebug.isSelected()) return true ;
+	   if (debugcontrol != ControlDebug.isSelected()) return true ;
+	   if (debugload != LoadDebug.isSelected()) return true ;
+	   if (debugedit != EditDebug.isSelected()) return true ;
+	   if (debugimage != ImageDebug.isSelected()) return true ;
+	   if (debugevent != EventDebug.isSelected()) return true ;
+	   if (debugaction != ActionDebug.isSelected()) return true ;
+	   if (debugvariable != VariableDebug.isSelected()) return true ;
+	   if (debugfkiss != FKissDebug.isSelected()) return true ;
+	   if (debugsound != SoundDebug.isSelected()) return true ;
+	   if (debugmovie != MovieDebug.isSelected()) return true ;
+	   if (debugmedia != MediaDebug.isSelected()) return true ;
+	   if (debugsearch != SearchDebug.isSelected()) return true ;
+	   if (debugdisabled != DisabledDebug.isSelected()) return true ;
+	   if (javasound != JavaSoundDebug.isSelected()) return true ;
+//    if (backup != Backup.isSelected()) return true ;
+//    if (savesource != SaveSource.isSelected()) return true ;
+//    if (showdlprompt != ShowDLPrompt.isSelected()) return true ;
+//    if (showtips != ShowTips.isSelected()) return true ;
+//    if (loadclose != LoadClose.isSelected()) return true ;
+	   if (!(eventqueues.equals(EventQueues.getText()))) return true ;
+      if (!(timerperiod.equals(TimerPeriod.getText()))) return true ;
+      if (!(gifperiod.equals(GifPeriod.getText()))) return true ;
+      if (!(stickyflex.equals(StickyFlex.getText()))) return true ;
+      if (!(maxflex.equals(MaxFlex.getText()))) return true ;
+      if (!(maxlock.equals(MaxLock.getText()))) return true ;
+      if (!(maxpageset.equals(MaxPageSet.getText()))) return true ;
+      if (!(maxcolorset.equals(MaxColorSet.getText()))) return true ;
+//    if (!(maxlrufiles.equals(MaxLruFiles.getText()))) return true ;
+//	   if (cacheaudio != CacheAudio.isSelected()) return true ;
+//	   if (cachevideo != CacheVideo.isSelected()) return true ;
+//	   if (cacheimage != CacheImage.isSelected()) return true ;
+//	   if (scaletofit != ScaleToFit.isSelected()) return true ;
+//	   if (sizetofit != SizeToFit.isSelected()) return true ;
+//	   if (retainwindowsize != RetainWindowSize.isSelected()) return true ;
+//	   if (maximizewindow != MaximizeWindow.isSelected()) return true ;
+//	   if (randomsplash != RandomSplash.isSelected()) return true ;
+//	   if (showborder != ShowBorder.isSelected()) return true ;
+//	   if (inittoolbar != InitToolBar.isSelected()) return true ;
+//	   if (tbtools != TbTools.isSelected()) return true ;
+//	   if (tbcolors != TbColors.isSelected()) return true ;
+//	   if (tbpages != TbPages.isSelected()) return true ;
+//	   if (tbedits != TbEdits.isSelected()) return true ;
+//	   if (tbcompat != TbCompat.isSelected()) return true ;
+//	   if (initstatusbar != InitStatusBar.isSelected()) return true ;
+//	   if (importcel != ImportCel.isSelected()) return true ;
+//	   if (exportcel != ExportCel.isSelected()) return true ;
+//	   if (componentcel != ComponentCel.isSelected()) return true ;
+//	   if (importcomponent != ImportComponent.isSelected()) return true ;
+//	   if (expandevents != ExpandEvents.isSelected()) return true ;
+	   if (constrainmoves != ConstrainMoves.isSelected()) return true ;
+	   if (constrainvisible != ConstrainVisible.isSelected()) return true ;
+	   if (constrainfkiss != ConstrainFKiss.isSelected()) return true ;
+	   if (autoscroll != AutoScroll.isSelected()) return true ;
+	   if (dragmove != DragMove.isSelected()) return true ;
+	   if (releasemove != ReleaseMove.isSelected()) return true ;
+	   if (dropfixdrop != DropFixdrop.isSelected()) return true ;
+	   if (catchfixdrop != CatchFixdrop.isSelected()) return true ;
+	   if (visibleunfix != VisibleUnfix.isSelected()) return true ;
+	   if (earlyfix != EarlyFix.isSelected()) return true ;
+	   if (detachrestricted != DetachRestricted.isSelected()) return true ;
+	   if (detachmove != DetachMove.isSelected()) return true ;
+	   if (detachfix != DetachFix.isSelected()) return true ;
+	   if (invertghost != InvertGhost.isSelected()) return true ;
+	   if (transparentgroup != TransparentGroup.isSelected()) return true ;
+	   if (mapcollide != MapCollide.isSelected()) return true ;
+	   if (movexycollide != MoveXYCollide.isSelected()) return true ;
+	   if (retainkey != RetainKey.isSelected()) return true ;
+	   if (strictsyntax != StrictSyntax.isSelected()) return true ;
+	   if (showundefs != ShowUndefs.isSelected()) return true ;
+	   if (autoendif != AutoEndif.isSelected()) return true ;
+	   if (immediatecollide != ImmediateCollide.isSelected()) return true ;
+	   if (immediateunfix != ImmediateUnfix.isSelected()) return true ;
+	   if (immediateevent != ImmediateEvent.isSelected()) return true ;
+	   if (enableshell != EnableShell.isSelected()) return true ;
+	   if (xyoffsets != XYOffsets.isSelected()) return true ;
+	   if (absolutewindow != AbsoluteWindow.isSelected()) return true ;
+	   if (panelvisible != PanelVisible.isSelected()) return true ;
+	   if (mouseinoutbox != MouseInOutBox.isSelected()) return true ;
+	   if (contextmap != ContextMap.isSelected()) return true ;
+	   if (mapcount != MapCount.isSelected()) return true ;
+	   if (allambiguous != AllAmbiguous.isSelected()) return true ;
+	   if (keepaspect != KeepAspect.isSelected()) return true ;
+	   if (keycase != KeyCase.isSelected()) return true ;
+	   if (variablecase != VariableCase.isSelected()) return true ;
+//	   if (autoloop != AutoLoop.isSelected()) return true ;
+//	   if (autofullscreen != AutoFullScreen.isSelected()) return true ;
+//	   if (suspendmedia != SuspendMedia.isSelected()) return true ;
+//	   if (stopmusic != StopMusic.isSelected()) return true ;
+//	   if (soundsingle != SoundSingle.isSelected()) return true ;
+//	   if (mediaminimize != MediaMinimize.isSelected()) return true ;
+//	   if (mediacenter != MediaCenter.isSelected()) return true ;
+//	   if (mediamusicresume != MediaMusicResume.isSelected()) return true ;
+//	   if (alteditdrag != AltEditDrag.isSelected()) return true ;
+//	   if (shifteditdrag != ShiftEditDrag.isSelected()) return true ;
+//	   if (importrelative != ImportRelative.isSelected()) return true ;
+//	   if (writeceloffset != WriteCelOffset.isSelected()) return true ;
+//	   if (showbreakpointend != ShowBreakPointEnd.isSelected()) return true ;
+//	   if (showstepintoend != ShowStepIntoEnd.isSelected()) return true ;
+//	   if (writecomment != WriteComment.isSelected()) return true ;
+//	   if (!(commentcol.equals(CommentCol.getText()))) return true ;
+//	   if (!(indentspace.equals(IndentSpace.getText()))) return true ;
+//	   if (eventpause != EventPause.isSelected()) return true ;
+//	   if (actionpause != ActionPause.isSelected()) return true ;
+//	   if (disableall != DisableAll.isSelected()) return true ;
+      return false ;
+   }
 
 
    // Set options from property values.   
@@ -4002,6 +4143,7 @@ final public class OptionsDialog extends KissDialog
 	   allambiguous = toBoolean1(p.getProperty("allambiguous"),allambiguous) ;
 	   playfkiss = toBoolean1(p.getProperty("playfkiss"),playfkiss) ;
 	   defaultplayfkiss = toBoolean1(p.getProperty("defaultplayfkiss"),defaultplayfkiss) ;
+	   multipleevents = toBoolean1(p.getProperty("multipleevents"),multipleevents) ;
 	   directkiss = toBoolean1(p.getProperty("directkiss"),directkiss) ;
 	   gnomekiss = toBoolean1(p.getProperty("gnomekiss"),gnomekiss) ;
 	   kissld = toBoolean1(p.getProperty("kissld"),kissld) ;
@@ -4194,6 +4336,7 @@ final public class OptionsDialog extends KissDialog
       p.put("linux",toString2(linux)) ;
       p.put("playfkiss",toString2(playfkiss)) ;
       p.put("defaultplayfkiss",toString2(defaultplayfkiss)) ;
+      p.put("multipleevents",toString2(multipleevents)) ;
       p.put("directkiss",toString2(directkiss)) ;
       p.put("gnomekiss",toString2(gnomekiss)) ;
       p.put("kissld",toString2(kissld)) ;
@@ -4516,22 +4659,26 @@ final public class OptionsDialog extends KissDialog
          
          if (source == PlayFKissBtn)
          {
-            setPlayFKissControls(PlayFKissBtn.isSelected()) ;
+            setPlayFKissCompatibility(PlayFKissBtn.isSelected(),false) ;
+            setCompatibilityControls(PlayFKissBtn.isSelected()) ;
          }
          
          if (source == DirectKissBtn)
          {
-            setDirectKissControls(DirectKissBtn.isSelected()) ;
+            setDirectKissCompatibility(DirectKissBtn.isSelected(),false) ;
+            setCompatibilityControls(DirectKissBtn.isSelected()) ;
          }
          
          if (source == GnomeKissBtn)
          {
-            setGnomeKissControls(GnomeKissBtn.isSelected()) ;
+            setGnomeKissCompatibility(GnomeKissBtn.isSelected(),false) ;
+            setCompatibilityControls(GnomeKissBtn.isSelected()) ;
          }
          
          if (source == KissLDBtn)
          {
-            setKissLDControls(KissLDBtn.isSelected()) ;
+            setKissLDCompatibility(KissLDBtn.isSelected(),false) ;
+            setCompatibilityControls(KissLDBtn.isSelected()) ;
          }
  
    		// Actions on duplicated checkboxes must be propagated to their peers.
@@ -4644,6 +4791,43 @@ final public class OptionsDialog extends KissDialog
             BrowserControl.reset() ;
          }
 
+         // Certain options require a set reload.
+
+         if (source == CacheAudio || source == CacheVideo ||
+             source == CacheAudio1 || source == CacheVideo1 ||
+             source == TimerOption ||
+             source == SizeToFit || source == ScaleToFit ||
+             source == JavaSoundDebug || source == AppleMac ||
+             source == PlayFKissBtn || source == DirectKissBtn ||
+             source == GnomeKissBtn || source == KissLDBtn)
+         {
+            MainFrame mf = Kisekae.getMainFrame() ;
+            Configuration config = (mf != null) ? mf.getConfig() : null ;
+            if (config != null)
+            {
+               String s = Kisekae.getCaptions().getString("OptionsDialogReloadText2") ;
+               int i1 = s.indexOf('[') ;
+               int j1 = s.indexOf(']') ;
+               if (i1 >= 0 && j1 > i1)
+                  s = s.substring(0,i1+1) + config.getName() + s.substring(j1) ;
+      			int i = JOptionPane.showConfirmDialog(this,
+                  Kisekae.getCaptions().getString("OptionsDialogReloadText1") + "\n" + s,
+                  Kisekae.getCaptions().getString("OptionsDialogWarningTitle"),
+                  JOptionPane.YES_NO_OPTION,
+                  JOptionPane.INFORMATION_MESSAGE) ;
+               if (i == JOptionPane.YES_OPTION)
+               {
+                  config.setOptionsChanged(true) ;
+                  config.setRestartable(false) ;
+                  setOptions() ;
+                  setInitOptions() ;
+                  mf.restart() ;
+                  closeWindow() ;
+                  return ;
+               }
+            }
+   		}
+
          // Certain options require a set restart.
 
          if (source == InvertGhost || source == CacheImage ||
@@ -4678,6 +4862,7 @@ final public class OptionsDialog extends KissDialog
                      setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
                   }
                   config.setOptionsChanged(true) ;
+                  config.setRestartable(false) ;
                   setOptions() ;
                   mf.restart() ;
                   closeWindow() ;
@@ -4710,43 +4895,6 @@ final public class OptionsDialog extends KissDialog
                {
                   languagerestart = false ;
                   EncodingBox.setSelectedItem(newencoding) ;
-               }
-            }
-   		}
-
-         // Certain options require a set reload.
-
-         if (source == CacheAudio || source == CacheVideo ||
-             source == CacheAudio1 || source == CacheVideo1 ||
-             source == TimerOption ||
-             source == SizeToFit || source == ScaleToFit ||
-             source == JavaSoundDebug || source == AppleMac ||
-             source == PlayFKissBtn || source == DirectKissBtn ||
-             source == GnomeKissBtn || source == KissLDBtn)
-         {
-            MainFrame mf = Kisekae.getMainFrame() ;
-            Configuration config = (mf != null) ? mf.getConfig() : null ;
-            if (config != null)
-            {
-               String s = Kisekae.getCaptions().getString("OptionsDialogReloadText2") ;
-               int i1 = s.indexOf('[') ;
-               int j1 = s.indexOf(']') ;
-               if (i1 >= 0 && j1 > i1)
-                  s = s.substring(0,i1+1) + config.getName() + s.substring(j1) ;
-      			int i = JOptionPane.showConfirmDialog(this,
-                  Kisekae.getCaptions().getString("OptionsDialogReloadText1") + "\n" + s,
-                  Kisekae.getCaptions().getString("OptionsDialogWarningTitle"),
-                  JOptionPane.YES_NO_OPTION,
-                  JOptionPane.INFORMATION_MESSAGE) ;
-               if (i == JOptionPane.YES_OPTION)
-               {
-                  config.setOptionsChanged(true) ;
-                  config.setRestartable(false) ;
-                  setOptions() ;
-                  setInitOptions() ;
-                  mf.restart() ;
-                  closeWindow() ;
-                  return ;
                }
             }
    		}
@@ -4966,7 +5114,7 @@ final public class OptionsDialog extends KissDialog
       ToolBar toolbar = (mf != null) ? mf.getToolBar() : null ;
       KissMenu menu = (mf != null) ? mf.getMenu() : null ;
       
-      if (o != null && config != null && changedOptions())
+      if (o != null && config != null && changedCurrentOptions())
       {
          String s = Kisekae.getCaptions().getString("OptionsDialogChangedText1") ;
          int i1 = s.indexOf('[') ;
@@ -5119,6 +5267,7 @@ final public class OptionsDialog extends KissDialog
       setComponentCel(false) ;
       setWriteCelOffset(true) ;
       setSoundSingle(false) ;
+      setMultipleEvents(true) ;
       setMaxLock("32767") ;
       setMaxPageSet("10") ;
       setTimerPeriod("10") ;
@@ -5190,6 +5339,8 @@ final public class OptionsDialog extends KissDialog
       ComponentCel.setSelected((b) ? true : false) ;
       WriteCelOffset.setSelected((b) ? true : true) ;
       SoundSingle.setSelected((b) ? true : false) ;
+      MultipleEvents.setSelected((b) ? false : true) ;
+      TimerPeriod.setText((b) ? "60" : "10") ;
   }
    
    
@@ -5235,9 +5386,10 @@ final public class OptionsDialog extends KissDialog
       setComponentCel(true) ;
       setWriteCelOffset(true) ;
       setSoundSingle(true) ;
+      setMultipleEvents(false) ;
       setMaxLock("32768") ;
       setMaxPageSet("10") ;
-//      setTimerPeriod("10") ;
+      setTimerPeriod("60") ;
  }
    
    
@@ -5285,6 +5437,7 @@ final public class OptionsDialog extends KissDialog
       ImportComponent.setSelected((b) ? false : false) ;
       ComponentCel.setSelected((b) ? true : false) ;
       WriteCelOffset.setSelected((b) ? true : true) ;
+      MultipleEvents.setSelected((b) ? false : true) ;
  }
    
    
@@ -5329,9 +5482,10 @@ final public class OptionsDialog extends KissDialog
       setImportComponent(false) ;
       setComponentCel(true) ;
       setWriteCelOffset(true) ;
+      setMultipleEvents(false) ;
       setMaxLock("32767") ;
       setMaxPageSet("10") ;
-//      setTimerPeriod("10") ;
+//    setTimerPeriod("60") ;
    }
    
    
@@ -5379,6 +5533,7 @@ final public class OptionsDialog extends KissDialog
       ImportComponent.setSelected((b) ? false : false) ;
       ComponentCel.setSelected((b) ? true : false) ;
       WriteCelOffset.setSelected((b) ? true : true) ;
+      MultipleEvents.setSelected((b) ? false : true) ;
  }
    
    
@@ -5423,9 +5578,10 @@ final public class OptionsDialog extends KissDialog
       setImportComponent(false) ;
       setComponentCel(true) ;
       setWriteCelOffset(true) ;
+      setMultipleEvents(false) ;
       setMaxLock("32767") ;
       setMaxPageSet("10") ;
-//      setTimerPeriod("1") ;
+//    setTimerPeriod("60") ;
    }
    
    
@@ -5473,6 +5629,7 @@ final public class OptionsDialog extends KissDialog
       ImportComponent.setSelected((b) ? false : false) ;
       ComponentCel.setSelected((b) ? true : false) ;
       WriteCelOffset.setSelected((b) ? true : true) ;
+      MultipleEvents.setSelected((b) ? false : true) ;
   }
    
    
@@ -5517,9 +5674,10 @@ final public class OptionsDialog extends KissDialog
       setImportComponent(false) ;
       setComponentCel(true) ;
       setWriteCelOffset(true) ;
+      setMultipleEvents(false) ;
       setMaxLock("32767") ;
       setMaxPageSet("10") ;
-//      setTimerPeriod("10") ;
+//    setTimerPeriod("60") ;
   }
    
    
@@ -5608,7 +5766,7 @@ final public class OptionsDialog extends KissDialog
 
    
    // A function to format and write option values that differ from
-   // the initial option settings.  These are set specific options
+   // the initial factory option settings.  These are set specific options
    // that are saved in the configuration file.
 
    static void writeOptions(OutputStream out) throws IOException
@@ -5644,6 +5802,7 @@ final public class OptionsDialog extends KissDialog
       else if (gnomekiss) writeLine(out,"; gnomekiss = \"" + gnomekiss + "\"") ;
       else if (kissld) writeLine(out,"; kissld = \"" + kissld + "\"") ;
 //    if (defaultplayfkiss) writeLine(out,"; defaultplayfkiss = \"" + defaultplayfkiss + "\"") ;
+      if (multipleevents != initmultipleevents && !b) writeLine(out,"; multipleevents = \"" + multipleevents + "\"") ;
 //	   if (backup != initbackup) writeLine(out,"; backup = " + backup) ;
 //	   if (savesource != initsavesource) writeLine(out,"; savesource = " + savesource) ;
 //	   if (loadclose != initloadclose) writeLine(out,"; loadclose = " + loadclose) ;
@@ -5661,7 +5820,7 @@ final public class OptionsDialog extends KissDialog
 	   if (cacheimage != initcacheimage) writeLine(out,"; cacheimage = " + cacheimage) ;
 	   if (suspendmedia != initsuspendmedia) writeLine(out,"; suspendmedia = " + suspendmedia) ;
 	   if (stopmusic != initstopmusic) writeLine(out,"; stopmusic = " + stopmusic) ;
-//	   if (soundsingle != initsoundsingle) writeLine(out,"; soundsingle = " + soundsingle) ;
+	   if (soundsingle != initsoundsingle && !b) writeLine(out,"; soundsingle = " + soundsingle) ;
 	   if (scaletofit != initscaletofit) writeLine(out,"; scaletofit = " + scaletofit) ;
 	   if (sizetofit != initsizetofit) writeLine(out,"; sizetofit = " + sizetofit) ;
 	   if (retainwindowsize != initretainwindowsize) writeLine(out,"; retainwindowsize = " + retainwindowsize) ;
@@ -5730,7 +5889,7 @@ final public class OptionsDialog extends KissDialog
 	   if (immediateunfix != initimmediateunfix && !b) writeLine(out,"; immediateunfix = " + immediateunfix) ;
 	   if (immediateevent != initimmediateevent && !b) writeLine(out,"; immediateevent = " + immediateevent) ;
 	   if (!eventqueues.equals(initeventqueues)) writeLine(out,"; eventqueues = \"" + eventqueues + "\"") ;
-	   if (!timerperiod.equals(inittimerperiod)) writeLine(out,"; timerperiod = \"" + timerperiod + "\"") ;
+	   if (!timerperiod.equals(inittimerperiod)  && !b) writeLine(out,"; timerperiod = \"" + timerperiod + "\"") ;
 	   if (!gifperiod.equals(initgifperiod)) writeLine(out,"; gifperiod = \"" + gifperiod + "\"") ;
 	   if (!stickyflex.equals(initstickyflex)) writeLine(out,"; stickyflex = \"" + stickyflex + "\"") ;
 	   if (!maxflex.equals(initmaxflex)) writeLine(out,"; maxflex = \"" + maxflex + "\"") ;
