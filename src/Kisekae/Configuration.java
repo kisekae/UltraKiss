@@ -2137,8 +2137,12 @@ final class Configuration extends KissObject
 				if ("changeset".equals(action))
 					a.setObject(PageSet.getByKey(PageSet.getKeyTable(),cid,target)) ;
 
-				if ("timer".equals(action) || "randomtimer".equals(action))
-					a.setObject(Alarm.getByKey(Alarm.getKeyTable(),cid,target)) ;
+            // Duplicate PlayFKiss bug that schedules Alarm(201) for Alarm(0201)
+            if (!OptionsDialog.getPlayFKissCompatibility())
+            {
+   				if ("timer".equals(action) || "randomtimer".equals(action))
+   					a.setObject(Alarm.getByKey(Alarm.getKeyTable(),cid,target)) ;
+            }
 
 				if ("goto".equals(action) || "gosub".equals(action) ||
 					 "gotorandom".equals(action) || "gosubrandom".equals(action))
@@ -3983,7 +3987,7 @@ final class Configuration extends KissObject
                   else
                   {
          	         remainder = (st.hasMoreTokens()) ? st.nextToken("") : "" ;
-      					i = remainder.indexOf(']') ;
+      					i = remainder.lastIndexOf(']') ;
                      if (i < 0) i = remainder.length() ;
       					attributes = value + remainder.substring(0,i) ;
                      comment += remainder.substring(0,i) ;
