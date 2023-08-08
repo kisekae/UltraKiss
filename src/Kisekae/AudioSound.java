@@ -204,16 +204,35 @@ final class AudioSound extends Audio
 	int getDuration()
 	{
 		int duration = super.getDuration() ;
-		if (isSequencer())
+		if (currentsound instanceof Sequencer)
 		{
 			Sequencer p = (Sequencer) currentsound ;
 			duration = (int) (p.getMicrosecondLength() / 1000000.0) ;
 		}
-		if (isClip())
+		if (currentsound instanceof Clip)
 		{
 			Clip p = (Clip) currentsound ;
 			duration = (int) (p.getMicrosecondLength() / 1000000.0) ;
 		}
+      if (duration == 0 && (framesize == 0 || framerate == 0))
+      {
+        	InputStream is = getInputStream() ;
+         if (is != null) 
+         {
+            try 
+            {
+               AudioInputStream ais = AudioSystem.getAudioInputStream(is) ;
+               audiofmt = (ais != null) ? ais.getFormat() : null ;
+               framesize = (audiofmt != null) ? audiofmt.getFrameSize() : 0 ;
+               framerate = (audiofmt != null) ? audiofmt.getFrameRate() : 0 ;
+            }
+            catch (Exception e) { }   
+         }      
+      }
+      if (duration == 0 && framesize > 0 && framerate > 0)
+      {
+         duration = (int) (getBytes() / (framesize * framerate)) ;         
+      }
 		return duration ;
 	}
 
@@ -246,6 +265,8 @@ final class AudioSound extends Audio
 		if (!OptionsDialog.getJavaSound()) return ;
 		if (OptionsDialog.getDebugSound())
 			System.out.println("AudioSound: " + getName() + " Open request.") ;
+      if ("flute2.wav".equals(getName()))
+         currentsound = currentsound ;
 
 		// Midi files do not play properly using JMF when the application is
 		// loaded from a jar file.  We use Java Sound for playback if the Java
@@ -303,6 +324,8 @@ final class AudioSound extends Audio
             {
 					AudioInputStream stream = (AudioInputStream) currentsound;
 					AudioFormat format = stream.getFormat() ;
+               framesize = format.getFrameSize() ;
+               framerate = format.getFrameRate() ;
 
 					// we can't yet open the device for ALAW/ULAW playback,
 					// convert ALAW/ULAW to PCM

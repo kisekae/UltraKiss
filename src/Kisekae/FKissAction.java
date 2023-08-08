@@ -389,8 +389,45 @@ final class FKissAction extends KissObject
             return result ;
          }
       }
+            
+      // Kludge for NoGodsLand background sound playback through mediaplayer
 
+      if (OptionsDialog.getSoundSingle() && code == 25)
+      {
+         o1 = variable.getValue((String) parameters.elementAt(0),event) ;
+         if (!"".equals(o1)) 
+         {
+            // Identify the action object.
+            if (o1 instanceof String)
+            {
+               s1 = ((String) o1).toUpperCase() ;
+               kiss = (Audio) Audio.getByKey(Audio.getKeyTable(),cid,s1) ;
+               if (kiss instanceof Audio) 
+               {
+                  Audio a = (Audio) kiss ;
+                  int n = a.getDuration() ;
+                  if (n >= 8) // assume more than 8 seconds is background
+                  {
+                     code = 93 ;
+                     if (OptionsDialog.getDebugSound())
+                        System.out.println("FKissAction: " + getName() + " converted to MediaPlayer, duration " + n + " seconds");
+                  }
+               }
+            }
+         }
+               
+         // Stop the media player if requested.  
 
+         mf = (config == null) ? null : config.getMediaFrame() ;
+         if (mf != null && ("".equals(o1) || "silence.wav".equals(o1)))
+         {
+            Runnable runner = new Runnable()
+            { public void run() { mf.closeMedia() ; } } ;
+            Thread runthread = new Thread(runner) ;
+            runthread.start() ;
+         }
+      }
+     
       // Watch for syntax errors in the parameter specifications.
       // These errors are caught at execution time and are ignored.
 
@@ -513,6 +550,7 @@ final class FKissAction extends KissObject
                   NotifyDialog nd = new NotifyDialog(Kisekae.getMainFrame(),
                      "Notify",notifymsg,image,false) ;
                   nd.setVisible(true) ;
+                  if (panel != null) panel.releaseMouse(true) ;
                }
             } ;
             if (!Kisekae.isBatch())
@@ -1212,7 +1250,7 @@ final class FKissAction extends KissObject
             kiss.updateMoveRestrictions(kiss.getChildren()) ;
             if (parent != null) parent.updateMoveRestrictions(parent.getChildren()) ;
             box = r.union(kiss.getBoundingBox()) ;
-
+            
             // Fire any object overlap or collision events if the object has
             // been moved.  We cannot queue these events as they might be
             // recursive.  Note that immediate collisions are not fired for

@@ -85,7 +85,7 @@ class CelGroup extends KissObject
    private boolean allframes = false ;       // If true, all frames are valid
    private boolean animate = false ;         // True, object can animate
    private int framedelay = 0 ;				   // Time delay until next frame
-   private int frametime = 0 ;				   // Time elapsed for next frame
+   private long frametime = 0 ;				   // Time elapsed for next frame
 
 
 
@@ -430,8 +430,8 @@ class CelGroup extends KissObject
 
    long getTime() { return frametime ; }
 
-   void setTime(int t) { frametime = t ; }
-
+   void setTime(long t) { frametime = t ; }
+   
    // Cel group transparency is -1 if not all cels in the group have
    // the same transparency.  Otherwise, it is the common transparency
    // of all cels in the group.

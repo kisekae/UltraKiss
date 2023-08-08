@@ -382,8 +382,8 @@ final class GifTimer extends Thread
                active = true ;
                if (!enabled) continue ;
                Object o = gifs.elementAt(i) ;
-               if (!(o instanceof GifCel)) continue ;
-					GifCel c = (GifCel) o ;
+               if (!(o instanceof KissObject)) continue ;
+					KissObject c = (KissObject) o ;
                if (!c.getAnimate()) continue ;
 					if (c.getFrameCount() <= 1) continue ;
 		         if (!c.isVisible()) continue ;

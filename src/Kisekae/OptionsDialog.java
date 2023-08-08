@@ -5389,7 +5389,8 @@ final public class OptionsDialog extends KissDialog
       setMultipleEvents(false) ;
       setMaxLock("32768") ;
       setMaxPageSet("10") ;
-      setTimerPeriod("60") ;
+      MainFrame mf = Kisekae.getMainFrame() ;
+      if (!mf.isRestart()) setTimerPeriod("60") ;
  }
    
    
@@ -5889,7 +5890,7 @@ final public class OptionsDialog extends KissDialog
 	   if (immediateunfix != initimmediateunfix && !b) writeLine(out,"; immediateunfix = " + immediateunfix) ;
 	   if (immediateevent != initimmediateevent && !b) writeLine(out,"; immediateevent = " + immediateevent) ;
 	   if (!eventqueues.equals(initeventqueues)) writeLine(out,"; eventqueues = \"" + eventqueues + "\"") ;
-	   if (!timerperiod.equals(inittimerperiod)  && !b) writeLine(out,"; timerperiod = \"" + timerperiod + "\"") ;
+	   if (!timerperiod.equals(inittimerperiod) && !b) writeLine(out,"; timerperiod = \"" + timerperiod + "\"") ;
 	   if (!gifperiod.equals(initgifperiod)) writeLine(out,"; gifperiod = \"" + gifperiod + "\"") ;
 	   if (!stickyflex.equals(initstickyflex)) writeLine(out,"; stickyflex = \"" + stickyflex + "\"") ;
 	   if (!maxflex.equals(initmaxflex)) writeLine(out,"; maxflex = \"" + maxflex + "\"") ;
@@ -5905,7 +5906,15 @@ final public class OptionsDialog extends KissDialog
       if (!encoding.equals(initencoding)) writeLine(out,"; encoding = \"" + encoding + "\"") ;
 //    if (!exporttype.equals(initexporttype)) writeLine(out,"; exporttype = \"" + exporttype + "\"") ;
 //    if (!browser.equals(initbrowser)) writeLine(out,"; browser = \"" + browser + "\"") ;
-  }
+
+      // Allow some option changes in PlayFKiss compatibility mode
+
+      if (playfkiss)
+      {
+         if (!timerperiod.equals("60") && b) writeLine(out,"; timerperiod = \"" + timerperiod + "\"") ;
+         if (releasemove != true && b) writeLine(out,"; releasemove = " + releasemove) ;  
+      }
+   }
 
    
 	// A function to write a line to our output stream.

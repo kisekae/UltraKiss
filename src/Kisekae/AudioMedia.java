@@ -190,7 +190,7 @@ final class AudioMedia extends Audio
 		int duration = super.getDuration() ;
 		if (!(currentsound instanceof Player)) return duration ;
 		if (((Player) currentsound).getState() < Player.Realized) return duration ;
-		duration = (int) (((Player) currentsound).getDuration().getSeconds() * 100) ;
+		duration = (int) (((Player) currentsound).getDuration().getSeconds()) ;
 		return duration ;
 	}
 

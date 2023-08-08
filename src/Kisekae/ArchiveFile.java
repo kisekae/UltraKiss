@@ -733,11 +733,13 @@ abstract class ArchiveFile
    {
    	if (ze == null) return ;
    	if (contents == null) init() ;
-      if (contents.contains(ze)) return ;
-      if (this instanceof DirFile) ze.setDirectory(getDirectoryName()) ;
-      contents.addElement(ze) ;
       String s = ze.getPath() ;
       if (s == null) return ;
+      if (contents.contains(ze)) return ;
+      Object o = key.get(s.toLowerCase()) ;
+      if (o != null) return ;
+      if (this instanceof DirFile) ze.setDirectory(getDirectoryName()) ;
+      contents.addElement(ze) ;
       key.put(s.toLowerCase(),ze) ;
    }
 

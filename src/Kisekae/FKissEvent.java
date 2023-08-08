@@ -1213,10 +1213,16 @@ final class FKissEvent extends KissObject
  			alarmlist.removeAllElements() ;
       }
 
-      // Redraw the screen.
+      // Redraw the screen.   Perform the redraw on the AWT thread.
 
       objectfired = new Vector() ;
-		if (panel != null) panel.redraw(box) ;
+		if (panel != null) 
+      {
+         final Rectangle box1 = box ;
+         Runnable runner = new Runnable()
+         { public void run() { panel.redraw(box1) ; } } ;
+         javax.swing.SwingUtilities.invokeLater(runner) ;
+      }
 
       // Accumulate the event performance statistics.
 

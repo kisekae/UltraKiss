@@ -1430,6 +1430,7 @@ final class ToolBar extends JPanel
        
             if (config != null) 
             {
+               config.setOptionsChanged(true) ;
                config.setRestartable(false) ;
                String s = Kisekae.getCaptions().getString("OptionsDialogRestartText2") ;
                int i1 = s.indexOf('[') ;

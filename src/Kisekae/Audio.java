@@ -69,6 +69,7 @@ import java.util.Vector ;
 import java.util.Enumeration ;
 import java.net.URL ;
 import javax.swing.JButton ;
+import javax.sound.sampled.* ;
 
 
 abstract class Audio extends KissObject
@@ -87,6 +88,9 @@ abstract class Audio extends KissObject
 	protected int repeatcount = 0 ;				// The repetition count
    protected String copyright = null ;       // Midi file copyright
    protected String type = null ;            // Audio play type (sound, music)
+   protected AudioFormat audiofmt = null ;   // Audio format from inputstream
+   protected int framesize = 0 ;             // Audio frame size from format
+   protected float framerate = 0 ;           // Audio frame rate from format
 
 	// State attributes
 

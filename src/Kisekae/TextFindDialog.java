@@ -286,9 +286,9 @@ class TextFindDialog extends KissDialog
             validate() ;
 				searchIndex = -1 ;
 				if (jTabbedPane.getSelectedIndex() == 0)
-					findtext.requestFocusInWindow() ;
+					findtext.grabFocus(); 
 				else
-					findtext1.requestFocusInWindow() ;
+					findtext1.grabFocus();
 			}
 
 			public void windowDeactivated(WindowEvent e)

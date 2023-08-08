@@ -1051,7 +1051,7 @@ final class Configuration extends KissObject
                         playfkiss = true ;
                      if (s1lc.indexOf("living pictures") >= 0)
                         playfkiss = true ;
-                     if (s1lc.indexOf("samodiva") >= 0)
+                     if (s1lc.indexOf("s a m o d i v a") >= 0)
                         playfkiss = true ;
                   }
 

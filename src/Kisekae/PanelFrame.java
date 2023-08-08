@@ -554,7 +554,7 @@ final class PanelFrame extends JPanel
 
    void setRedraw(boolean b) { redrawimage = b ; }
 
-
+   
    // Method to return our panel offset.  This is the (x,y) point
    // where the panel is centered for drawing in its parent window
    // frame, adjusted by the current window size.
@@ -3459,7 +3459,7 @@ final class PanelFrame extends JPanel
    
    
    // A resizepanel request changes the image buffer sizes to the 
-   // spexified size.  The set is redrawn in the buffers.
+   // specified size.  The set is redrawn in the buffers.
 
    void resizepanel(Dimension d)
    {
@@ -3777,9 +3777,15 @@ final class PanelFrame extends JPanel
       {
          Integer level = (group != null) ? group.getLevel() : null ;
          // Draw where the image once was into the full buffer.
-         copy(fullgc,priorbox,baseImage) ;
+//       copy(fullgc,priorbox,baseImage) ;
          // Draw where the image now is into the full buffer.
-         draw(fullgc,box,celList,level) ;
+//       draw(fullgc,box,celList,level) ;
+         
+      // Don't know why this is required?  Problem with attachments and 
+      // when a saucer with attached teacup is moved on a press() event the
+      // image clips on painting?  2023/08/07
+         copy(fullgc,new Rectangle(imageArea),baseImage) ;
+         draw(fullgc,new Rectangle(imageArea),celList,level) ;
 
          // Retain the current box coordinates.
 
@@ -5666,7 +5672,7 @@ final class PanelFrame extends JPanel
                movable = sticky = fixed = locked = false ;
                if (flexvalue.y < OptionsDialog.getMaxFlex())
                   flexvalue.y = flexvalue.y - 1 ;
-               // The following appears to be a PlayKiss bug where setfix()
+               // The following appears to be a PlayFKiss bug where setfix()
                // on mouse fixed objects are ignored, except for setfix(#n,1).
                if (OptionsDialog.getImmediateUnfix())
                   if (newflex != 0) flexvalue.y = newflex ;
@@ -6588,7 +6594,9 @@ final class PanelFrame extends JPanel
          int bh = (int) Math.ceil(drawbox.height * sf) + 1 ;
          if (bx < 0) bx = 0 ;
          if (by < 0) by = 0 ;
-         repaint(bx+x-windowOffset.x,by+y-windowOffset.y,bw,bh) ;
+         // Full repaint required with attached objects when moved with FKiss
+//       repaint(bx+x-windowOffset.x,by+y-windowOffset.y,bw,bh) ;
+         repaint() ;
       }
 
       // Watch for internal faults.
