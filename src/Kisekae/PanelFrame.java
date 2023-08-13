@@ -5491,7 +5491,7 @@ final class PanelFrame extends JPanel
          if (!selected && group.isAttached() && !nostrongfix)
          {
             Group ag = group ;
-            while (ag.getFlex() != null && ag.getFlex().y > 0 &&
+            while (ag.getFlex() != null && ag.getFlex().y > 1 &&
                    ag.hasParent() && ag.isVisible())
                ag = (Group) ag.getParent() ;
             groupset = new Group() ;
@@ -6594,7 +6594,8 @@ final class PanelFrame extends JPanel
          int bh = (int) Math.ceil(drawbox.height * sf) + 1 ;
          if (bx < 0) bx = 0 ;
          if (by < 0) by = 0 ;
-         // Full repaint required with attached objects when moved with FKiss
+         // Full repaint required with attached objects when moved with FKiSS
+         // See paintComponent() drag causes window paint artifacts
 //       repaint(bx+x-windowOffset.x,by+y-windowOffset.y,bw,bh) ;
          repaint() ;
       }

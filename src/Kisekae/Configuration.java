@@ -4009,6 +4009,7 @@ final class Configuration extends KissObject
                remainder = (st.hasMoreTokens()) ? st.nextToken(";") : "" ;
                parseCelGroup(token + remainder,celgroups) ;
                comment += token + remainder ;
+               comment = comment.trim() ;
                token = "" ;
             }
             
@@ -4019,7 +4020,7 @@ final class Configuration extends KissObject
 
 			// Pick up the remaining comment text if it exists.  Remove the
 			// leading semicolon.
-
+         
 			String endcomment = "" ;
 			try { endcomment = st.nextToken("\n") ; }
 			catch (NoSuchElementException e) { endcomment = "" ; }

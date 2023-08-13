@@ -68,6 +68,7 @@ final class DirEntry extends ArchiveEntry
    private int method = 0 ;					// Compression method
 	private long crc32 = -1 ;				  	// 32 bit CRC of uncompressed file
    private long filesize = -1 ;           // uncompressed size of file
+   private long lastmodified = 0 ;        // last modified time of file
 
 	// Constructor
 
@@ -145,11 +146,20 @@ final class DirEntry extends ArchiveEntry
 
 	// Return the time of the file creation.
 
-	long getTime() { return (file == null) ? 0 : file.lastModified() ; }
+	long getTime() 
+   { 
+      long t = (file == null) ? 0 : file.lastModified() ; 
+      if (t == 0) t = lastmodified ;
+      return t ;
+   }
 
 	// Set the time of the file creation.
 
-	void setTime(long time) { if (file != null) file.setLastModified(time) ; }
+	void setTime(long time) 
+   { 
+      lastmodified = time ;
+      if (file != null) file.setLastModified(time) ; 
+   }
 
 	// Method to determine if the element is compressed.
 

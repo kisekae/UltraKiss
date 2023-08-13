@@ -555,7 +555,7 @@ class ImagePreview extends JPanel
    // The repaint shows any status messages.  The lazy thread will
    // do a repaint() when it completes.
 
-   void drawImage()
+   synchronized void drawImage()
    {
    	if (lazy != null && lazy.isAlive()) lazy.restart() ;
    	if (lazy == null || !lazy.isAlive())

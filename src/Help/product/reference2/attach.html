@@ -20,7 +20,7 @@ for the parent.  If a child is restricted and the parent object with an attached
 between the parent and the child is broken.</p>
 <p>It is possible to create an attachment chain.  A child object can be attached to a parent object.  This child object can also be a parent to another object.  When an atachment chain exists movement of the top parent object moves all attached children.  Movement of a child breaks the attachment to its parent but all the children of the child remain attached to the child.</p>
 
-<p>Attached objects which have a positive fix value have strong attachments.
+<p>Attached objects which have a positive fix value greater than 1 have strong attachments.
 Attaching an object with a positive fix value to another object is similar to
 tightly gluing the objects together, except that the fix count can change through normal
 mouse actions and allow the object to eventually detach when the fix count
@@ -34,8 +34,9 @@ However, if the parent is attached to another parent itself, then only if this
 new parent object is mobile can the combined set move. To summarize, if the top
 level parent and all direct children in the chain are fixed, then the chain
 cannot move, but if any parent is mobile then the fixed chain can be broken at
-the unfixed object and the resultant chain dragged by
-its children.
+the unfixed object and the resultant chain dragged by its children.  For the
+purpose of strong attachments an object with a fix value of 1 is not considered
+as fixed when moving a chain through FKiSS commands or with the mouse.
 </p>
 <p>When movement restrictions are in place, object detachment can occur both
 under mouse movement and FKiSS movement.

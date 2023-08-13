@@ -204,12 +204,12 @@ final class AudioSound extends Audio
 	int getDuration()
 	{
 		int duration = super.getDuration() ;
-		if (currentsound instanceof Sequencer)
+		if (isSequencer())
 		{
 			Sequencer p = (Sequencer) currentsound ;
 			duration = (int) (p.getMicrosecondLength() / 1000000.0) ;
 		}
-		if (currentsound instanceof Clip)
+		if (isClip())
 		{
 			Clip p = (Clip) currentsound ;
 			duration = (int) (p.getMicrosecondLength() / 1000000.0) ;
@@ -265,8 +265,6 @@ final class AudioSound extends Audio
 		if (!OptionsDialog.getJavaSound()) return ;
 		if (OptionsDialog.getDebugSound())
 			System.out.println("AudioSound: " + getName() + " Open request.") ;
-      if ("flute2.wav".equals(getName()))
-         currentsound = currentsound ;
 
 		// Midi files do not play properly using JMF when the application is
 		// loaded from a jar file.  We use Java Sound for playback if the Java
@@ -546,6 +544,7 @@ final class AudioSound extends Audio
 		catch (Exception e)
 		{
 			showError("Audio " + getName() + " start fault " + e.getMessage()) ;
+         System.out.println("AudioSound: " + getName() + " start fault " + e.getMessage()) ;
 			if (!(e instanceof KissException)) e.printStackTrace();
 		}
 	}

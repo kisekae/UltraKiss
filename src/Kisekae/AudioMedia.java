@@ -387,6 +387,7 @@ final class AudioMedia extends Audio
 		catch (Exception e)
 		{
 			showError("Audio " + getName() + " start fault " + e.getMessage()) ;
+         System.out.println("AudioMedia: " + getName() + " start fault " + e.getMessage()) ;
 			if (!(e instanceof KissException)) e.printStackTrace();
 		}
 	}

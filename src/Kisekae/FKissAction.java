@@ -390,9 +390,10 @@ final class FKissAction extends KissObject
          }
       }
             
-      // Kludge for NoGodsLand background sound playback through mediaplayer
+      // Feature to play sound() background sound playback through mediaplayer.
+      // Useful for PlayFKiss compatibility which implements single sound only.
 
-      if (OptionsDialog.getSoundSingle() && code == 25)
+      if (code == 25 && OptionsDialog.getLongSoundMedia())
       {
          o1 = variable.getValue((String) parameters.elementAt(0),event) ;
          if (!"".equals(o1)) 
@@ -409,6 +410,7 @@ final class FKissAction extends KissObject
                   if (n >= 8) // assume more than 8 seconds is background
                   {
                      code = 93 ;
+                     a.setBackground(true) ;
                      if (OptionsDialog.getDebugSound())
                         System.out.println("FKissAction: " + getName() + " converted to MediaPlayer, duration " + n + " seconds");
                   }
@@ -850,12 +852,14 @@ final class FKissAction extends KissObject
 
             // If we are moving an attached group then create a group set for
             // the consolidated object.  If the group is fixed then we actually
-            // move the parent.
+            // move the parent.  This is a strong attachment where the fixed 
+            // chain is moved.  Groups with attachment 1 are not considered
+            // fixed for strong attachments.
 
             if (kiss instanceof Group && kiss.isAttached())
             {
                Group ag = (Group) kiss ;
-               while (ag.getFlex() != null && ag.getFlex().y > 0 &&
+               while (ag.getFlex() != null && ag.getFlex().y > 1 &&
                       ag.hasParent() && ag.isVisible())
                   ag = (Group) ag.getParent() ;
                groupset = allocateGroupset() ;
@@ -1286,8 +1290,8 @@ final class FKissAction extends KissObject
 
             o1 = variable.getValue((String) parameters.elementAt(0),event) ;
             if ("".equals(o1)) { Audio.stop(config,audiotype) ;  break ; }
-            if (OptionsDialog.getSoundSingle() && audiotype == "sound") 
-               Audio.stop(config,audiotype) ;  
+            if (OptionsDialog.getSoundSingle() && !OptionsDialog.getLongSoundMedia())
+               if ("sound".equals(audiotype)) Audio.stop(config,audiotype) ;  
 
             // Identify the action object.
 

@@ -387,7 +387,7 @@ final class EventHandler extends KissObject
 
    private static int [] actionmandatoryparams = {
       1,1,1,1,3,3,3,3,3,3,1,3,3,3,3,3,3,1,1,0,1,0,3,2,1,1,2,2,1,2,2,
-      1,1,3,3,0,2,3,3,3,3,3,3,2,2,2,2,1,1,1,1,1,3,3,2,2,2,2,2,0,0,1,
+      1,1,3,3,0,1,3,3,3,3,3,3,2,2,2,2,1,1,1,1,1,3,3,2,2,2,2,2,0,0,1,
       2,2,1,1,1,1,1,2,3,2,3,1,1,
       2,2,2,2,2,2,2,1,2,2,2,2,2,2,
       1,1,1,1,1,
@@ -1054,7 +1054,7 @@ final class EventHandler extends KissObject
       return (int) actionfkisslevel[n] ;
 	}
 
-	// Static method to determine manditory number of event parameters.
+	// Static method to determine mandatory number of event parameters.
 
 	static int getMandatoryEventParams(int n)
 	{
@@ -1062,7 +1062,7 @@ final class EventHandler extends KissObject
       return (int) eventmandatoryparams[n] ;
 	}
 
-	// Static method to determine manditory number of action parameters.
+	// Static method to determine mandatory number of action parameters.
 
 	static int getMandatoryActionParams(int n)
 	{

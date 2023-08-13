@@ -668,7 +668,7 @@ final class PanelMenu extends KissMenu
       activities.setEnabled(b) ;
       debugger.setEnabled(b) ;
       edit[0].setEnabled(b && zip != null && zip.containsFileType(ArchiveFile.getConfigurationExt())) ;
-      edit[1].setEnabled(b && zip != null && zip.containsFileType(ArchiveFile.getDocExt())) ;
+      edit[1].setEnabled(zip != null && zip.containsFileType(ArchiveFile.getDocExt())) ;
       edit[2].setEnabled(b && zip != null && zip.containsFileType(ArchiveFile.getPaletteExt())) ;
       archive.setEnabled(b && zip != null && zip.isArchive() && !Kisekae.isSecure()) ;
       undoAction.updateUndoState() ;

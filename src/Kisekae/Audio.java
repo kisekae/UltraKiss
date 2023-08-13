@@ -105,6 +105,7 @@ abstract class Audio extends KissObject
 	protected boolean hascallback = false ;	// True if callback listener set
 	protected boolean format = false ;	      // True if unknown media format
    protected boolean converted = false ;     // True if converted to JMF
+   protected boolean background = false ;    // True if media player background
 
 	// Our end of media callback button that other components can attach
 	// listeners to.
@@ -263,6 +264,10 @@ abstract class Audio extends KissObject
 
 	int getDuration() { return 0 ; }
 
+	// Return the background media player indicator.
+
+	boolean getBackground() { return background ; }
+
 	// Return the object latency.
 
 	int getLatency() { return 0 ; }
@@ -295,6 +300,10 @@ abstract class Audio extends KissObject
 	// Set the copy indicator.
 
 	void setCopy(boolean b) { copy = b ; }
+
+	// Set the background media player indicator.
+
+	void setBackground(boolean b) { background = b ; }
 
 	// Set the media stop callback listener.
 

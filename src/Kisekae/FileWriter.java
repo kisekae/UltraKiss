@@ -985,10 +985,26 @@ final class FileWriter extends KissFrame
 				if (ko != null && ko.isUpdated())
 					next.setTime(ko.lastModified()) ;
 
-				// Verify that we found a valid file.
+				// Verify that we found a valid file.  We have a situation where
+            // after loading an expansion set the CNF is updated.  When saving 
+            // the archive the enumeration can include original elements. 
+            // These elements can be ignored.
 
 				if (ko == null && in == null)
 		  		{
+               if (zipfile != null && next != null)
+               {
+                  ArchiveFile af = next.getZipFile() ;
+                  if (af != null)
+                  {
+                     String name1 = af.getName() ;
+                     String name2 = zipfile.getName() ;
+                     if (name1 != null && !(name1.equals(name2))) continue ;
+                  }                 
+               }
+               
+               // We have a file error on the original zip file.
+               
                int i = JOptionPane.NO_OPTION ;
 					System.out.println("Save: Unable to read file " + element) ;
                if (!Kisekae.isBatch())
