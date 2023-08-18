@@ -261,12 +261,22 @@ final class FileLoader extends KissFrame
 		EDIT.setVisible(false);
 		PLAY.setEnabled(false);
 		TextWindow.setText("") ;
+		TextWindow.setCaretPosition(0);
 		if (OptionsDialog.getDebugControl())
 			System.out.println("Configuration Loader active.") ;
-		me.toFront() ;
-      me.requestFocus();
-		TextWindow.setCaretPosition(0);
       errormsgs = null ;
+      
+      // Bring the load window to the front on the AWT thread
+      
+      Runnable tofront = new Runnable()
+		{ 
+         public void run() 
+         { 
+            me.toFront() ;
+            me.requestFocus();
+         }	
+      } ;
+		javax.swing.SwingUtilities.invokeLater(tofront) ;
 
 		// Initialization.  We are given a KiSS configuration file name
 		// and we construct the window panel environment to properly
@@ -462,7 +472,7 @@ final class FileLoader extends KissFrame
          if (OptionsDialog.getStrictSyntax()) faults += warnings ;
 			if (faults == 0) showText(Kisekae.getCaptions().getString("NoErrorsText")) ;
 			if (faults > 0) showText(errors + " Errors, " + warnings + " Warnings") ;
-			if ((active && (faults == 0 || Kisekae.isAccept())) || Kisekae.isBatch())
+			if (active && (faults == 0 || OptionsDialog.getAcceptCnfErrors() || Kisekae.isBatch()))
 			{
 	         try { thread.sleep(1000) ; }
 	         catch (InterruptedException e) { }

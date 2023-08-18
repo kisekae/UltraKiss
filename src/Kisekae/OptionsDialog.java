@@ -128,6 +128,7 @@ final public class OptionsDialog extends KissDialog
 	private static boolean tbedits = true ;      
 	private static boolean tbcompat = true ;		
 	private static boolean initstatusbar = true ;
+	private static boolean initmenubar = true ;
 	private static boolean importcel = false ;
 	private static boolean exportcel = false ;
 	private static boolean componentcel = false ;
@@ -190,6 +191,7 @@ final public class OptionsDialog extends KissDialog
    private static boolean gnomekiss = false ;
    private static boolean kissld = false ;
    private static boolean defaultplayfkiss = false ;
+   private static boolean acceptcnferrors = false ;
    private static boolean multipleevents = true ;
    private static String eventqueues = "1" ;
    private static String timerperiod = "10" ;
@@ -286,6 +288,7 @@ final public class OptionsDialog extends KissDialog
 	private static boolean inittbedits = tbedits ;      
 	private static boolean inittbcompat = tbcompat ;		
 	private static boolean initinitstatusbar = initstatusbar ;
+	private static boolean initinitmenubar = initmenubar ;
 	private static boolean initimportcel = importcel ;
 	private static boolean initexportcel = exportcel ;
 	private static boolean initcomponentcel = componentcel ;
@@ -345,6 +348,7 @@ final public class OptionsDialog extends KissDialog
 	private static boolean initlinux = linux ;
    private static boolean initplayfkiss = playfkiss ;
    private static boolean initdefaultplayfkiss = defaultplayfkiss ;
+   private static boolean initacceptcnferrors = acceptcnferrors ;
    private static boolean initmultipleevents = multipleevents ;
    private static boolean initdirectkiss = directkiss ;
    private static boolean initgnomekiss = gnomekiss ;
@@ -580,6 +584,7 @@ final public class OptionsDialog extends KissDialog
 	private JCheckBox TbEdits = new JCheckBox() ;      
 	private JCheckBox TbCompat = new JCheckBox() ;		
 	private JCheckBox InitStatusBar = new JCheckBox();
+	private JCheckBox InitMenuBar = new JCheckBox();
 	private JCheckBox ImportCel = new JCheckBox();
 	private JCheckBox ExportCel = new JCheckBox();
 	private JCheckBox ComponentCel = new JCheckBox();
@@ -638,6 +643,7 @@ final public class OptionsDialog extends KissDialog
 	private JCheckBox SecurityEnable = new JCheckBox();
 	private JCheckBox InitEdit = new JCheckBox();
 	private JCheckBox DefaultPlayFKiss = new JCheckBox();
+	private JCheckBox AcceptCnfErrors = new JCheckBox();
 	private JCheckBox MultipleEvents = new JCheckBox();
 	private JRadioButton AltEditDrag = new JRadioButton();
 	private JRadioButton ShiftEditDrag = new JRadioButton();
@@ -878,7 +884,7 @@ final public class OptionsDialog extends KissDialog
 		gridLayout3.setColumns(1);
 		gridLayout3.setRows(3);
 		gridLayout4.setColumns(1);
-		gridLayout4.setRows(3);
+		gridLayout4.setRows(4);
 		gridLayout5.setColumns(2);
 		gridLayout5.setRows(7);
 		gridLayout6.setRows(3);
@@ -1262,6 +1268,9 @@ final public class OptionsDialog extends KissDialog
 		InitStatusBar.setText(Kisekae.getCaptions().getString("MenuViewStatusBar"));
       InitStatusBar.setToolTipText(Kisekae.getCaptions().getString("ToolTipShowStatusBar"));
 		InitStatusBar.setSelected(initstatusbar);
+		InitMenuBar.setText(Kisekae.getCaptions().getString("MenuViewMenuBar"));
+      InitMenuBar.setToolTipText(Kisekae.getCaptions().getString("ToolTipShowMenuBar"));
+		InitMenuBar.setSelected(initmenubar);
 		ImportCel.setText(Kisekae.getCaptions().getString("MenuViewImportCel"));
       ImportCel.setToolTipText(Kisekae.getCaptions().getString("ToolTipImportCel"));
 		ImportCel.setSelected(importcel);
@@ -1522,6 +1531,9 @@ final public class OptionsDialog extends KissDialog
 		DefaultPlayFKiss.setText(Kisekae.getCaptions().getString("OptionsDefaultPlayFKiss"));
       DefaultPlayFKiss.setToolTipText(Kisekae.getCaptions().getString("ToolTipDefaultPlayFKiss"));
 		DefaultPlayFKiss.setSelected(defaultplayfkiss);
+		AcceptCnfErrors.setText(Kisekae.getCaptions().getString("OptionsAcceptCnfErrors"));
+      AcceptCnfErrors.setToolTipText(Kisekae.getCaptions().getString("ToolTipAcceptCnfErrors"));
+		AcceptCnfErrors.setSelected(acceptcnferrors);
 		MultipleEvents.setText(Kisekae.getCaptions().getString("OptionsMultipleEvents"));
       MultipleEvents.setToolTipText(Kisekae.getCaptions().getString("ToolTipMultipleEvents"));
 		MultipleEvents.setSelected(multipleevents);
@@ -1551,6 +1563,7 @@ final public class OptionsDialog extends KissDialog
       jPanel15.add(EncodingBox, null);
 		jPanel1.add(jPanel16, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0
             ,GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(5, 5, 5, 5), 0, 0));
+		jPanel16.add(InitMenuBar, null);
 		jPanel16.add(InitToolBar, null);
 		jPanel16.add(InitStatusBar, null);
 		jPanel16.add(ShowTips, null);
@@ -1732,6 +1745,7 @@ final public class OptionsDialog extends KissDialog
 		jPanel43.add(ExpandEvents, null);
 		jPanel43.add(AutoEndif, null);
 		jPanel43.add(DefaultPlayFKiss, null);
+		jPanel43.add(AcceptCnfErrors, null);
 
 		jPanel23.add(jPanel40, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0
             ,GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 10, 0, 0), 0, 0));
@@ -2107,6 +2121,7 @@ final public class OptionsDialog extends KissDialog
 	static public boolean getTbEdits() { return tbedits ; }
 	static public boolean getTbCompat() { return tbcompat ; }
 	static public boolean getInitStatusbar() { return initstatusbar ; }
+	static public boolean getInitMenubar() { return initmenubar ; }
 	static public boolean getImportCel() { return importcel ; }
 	static public boolean getExportCel() { return exportcel ; }
 	static public boolean getComponentCel() { return componentcel ; }
@@ -2170,6 +2185,7 @@ final public class OptionsDialog extends KissDialog
 	static public boolean getAppleMac() { return applemac ; }
 	static public boolean getLinux() { return linux ; }
    static public boolean getDefaultPlayFKiss() { return defaultplayfkiss ; }
+   static public boolean getAcceptCnfErrors() { return acceptcnferrors ; }
    static public boolean getMultipleEvents() { return multipleevents ; }
 
    static public boolean getPlayFKissCompatibility() { return playfkiss ; }
@@ -2411,6 +2427,7 @@ final public class OptionsDialog extends KissDialog
 	static public void setTbEdits(boolean b) { tbedits = b ; }
 	static public void setTbCompat(boolean b) { tbcompat = b ; }
 	static public void setInitStatusbar(boolean b) { initstatusbar = b ; }
+	static public void setInitMenubar(boolean b) { initmenubar = b ; }
 	static public void setImportCel(boolean b) { importcel = b ; }
 	static public void setExportCel(boolean b) { exportcel = b ; }
 	static public void setComponentCel(boolean b) { componentcel = b ; }
@@ -2477,6 +2494,7 @@ final public class OptionsDialog extends KissDialog
 	static public void setAppleMac(boolean b) { applemac = b ; }
 	static public void setLinux(boolean b) { linux = b ; }
    static public void setDefaultPlayFKiss(boolean b) { defaultplayfkiss = b ; }
+   static public void setAcceptCnfErrors(boolean b) { acceptcnferrors = b ; }
    static public void setMultipleEvents(boolean b) { multipleevents = b ; }
 
    static public void setLruFile(String s) 
@@ -2719,6 +2737,7 @@ final public class OptionsDialog extends KissDialog
       else if ("tbedits".equalsIgnoreCase(option)) setTbEdits(b) ;
       else if ("tbcompat".equalsIgnoreCase(option)) setTbCompat(b) ;
       else if ("initstatusbar".equalsIgnoreCase(option)) setInitStatusbar(b) ;
+      else if ("initmenubar".equalsIgnoreCase(option)) setInitMenubar(b) ;
       else if ("importcel".equalsIgnoreCase(option)) setImportCel(b) ;
       else if ("exportcel".equalsIgnoreCase(option)) setExportCel(b) ;
       else if ("componentcel".equalsIgnoreCase(option)) setComponentCel(b) ;
@@ -2802,6 +2821,7 @@ final public class OptionsDialog extends KissDialog
       else if ("gnomekiss".equalsIgnoreCase(option)) setGnomeKissCompatibility(value) ;
       else if ("kissld".equalsIgnoreCase(option)) setKissLDCompatibility(value) ;
       else if ("defaultplayfkiss".equalsIgnoreCase(option)) setDefaultPlayFKiss(b) ;
+      else if ("acceptcnferrors".equalsIgnoreCase(option)) setAcceptCnfErrors(b) ;
       else if ("multipleevents".equalsIgnoreCase(option)) setMultipleEvents(b) ;
    }
 
@@ -2862,6 +2882,7 @@ final public class OptionsDialog extends KissDialog
       else if ("tbedits".equalsIgnoreCase(option)) s += getTbEdits() ;
       else if ("tbcompat".equalsIgnoreCase(option)) s += getTbCompat() ;
       else if ("initstatusbar".equalsIgnoreCase(option)) s += getInitStatusbar() ;
+      else if ("initmenubar".equalsIgnoreCase(option)) s += getInitMenubar() ;
       else if ("importcel".equalsIgnoreCase(option)) s += getImportCel() ;
       else if ("exportcel".equalsIgnoreCase(option)) s += getExportCel() ;
       else if ("componentcel".equalsIgnoreCase(option)) s += getComponentCel() ;
@@ -2993,6 +3014,7 @@ final public class OptionsDialog extends KissDialog
       GnomeKissBtn.setSelected(gnomekiss);
       KissLDBtn.setSelected(kissld);
       DefaultPlayFKiss.setSelected(defaultplayfkiss);
+      AcceptCnfErrors.setSelected(acceptcnferrors);
       MultipleEvents.setSelected(multipleevents);
       Backup.setSelected(backup);
       SaveSource.setSelected(savesource);
@@ -3026,6 +3048,7 @@ final public class OptionsDialog extends KissDialog
 		TbEdits.setSelected(tbedits);
 		TbCompat.setSelected(tbcompat);
 		InitStatusBar.setSelected(initstatusbar);
+		InitMenuBar.setSelected(initmenubar);
 		ImportCel.setSelected(importcel);
 		ExportCel.setSelected(exportcel);
 		ComponentCel.setSelected(componentcel);
@@ -3197,6 +3220,7 @@ final public class OptionsDialog extends KissDialog
       gnomekiss = GnomeKissBtn.isSelected() ;
       kissld = KissLDBtn.isSelected() ;
       defaultplayfkiss = DefaultPlayFKiss.isSelected() ;
+      acceptcnferrors = AcceptCnfErrors.isSelected() ;
       multipleevents = MultipleEvents.isSelected() ;
       backup = Backup.isSelected() ;
       savesource = SaveSource.isSelected() ;
@@ -3228,6 +3252,7 @@ final public class OptionsDialog extends KissDialog
 		tbedits = TbEdits.isSelected() ;
 		tbcompat = TbCompat.isSelected() ;
 		initstatusbar = InitStatusBar.isSelected() ;
+		initmenubar = InitMenuBar.isSelected() ;
 		importcel = ImportCel.isSelected() ;
 		exportcel = ExportCel.isSelected() ;
 		componentcel = ComponentCel.isSelected() ;
@@ -3408,6 +3433,7 @@ final public class OptionsDialog extends KissDialog
 //    showdlprompt = initshowdlprompt ;
 //    showtips = initshowtips ;
 		defaultplayfkiss = initdefaultplayfkiss ;
+		acceptcnferrors = initacceptcnferrors ;
 		multipleevents = initmultipleevents ;
 		timer = inittimer ;
 		event = initevent ;
@@ -3458,6 +3484,7 @@ final public class OptionsDialog extends KissDialog
 //		tbedits = inittbedits ;
 //		tbcompat = inittbcompat ;
 		initstatusbar = initinitstatusbar ;
+		initmenubar = initinitmenubar ;
 		importcel = initimportcel ;
 		exportcel = initexportcel ;
 		componentcel = initcomponentcel ;
@@ -3592,6 +3619,7 @@ final public class OptionsDialog extends KissDialog
 	   inittbedits = tbedits ;
 	   inittbcompat = tbcompat ;
 	   initinitstatusbar = initstatusbar ;
+	   initinitmenubar = initmenubar ;
 	   initimportcel = importcel ;
 	   initexportcel = exportcel ;
 	   initcomponentcel = componentcel ;
@@ -3665,6 +3693,7 @@ final public class OptionsDialog extends KissDialog
       initkissld = kissld ;
       tempeditenable = initedit ;
       initdefaultplayfkiss = defaultplayfkiss ;
+      initacceptcnferrors = acceptcnferrors ;
       initmultipleevents = multipleevents ;
    }
    
@@ -3722,6 +3751,7 @@ final public class OptionsDialog extends KissDialog
       tbedits = true ;
       tbcompat = true ;
       initstatusbar = true ;
+      initmenubar = true ;
       importcel = false ;
       exportcel = false ;
       componentcel = false ;
@@ -3782,6 +3812,7 @@ final public class OptionsDialog extends KissDialog
       gnomekiss = false ;
       kissld = false ;
       defaultplayfkiss = false ;
+      acceptcnferrors = false ;
       multipleevents = true ;
       compatapply = false ;
       eventqueues = "1" ;
@@ -3829,6 +3860,7 @@ final public class OptionsDialog extends KissDialog
 //	   if (initanimate != AnimateOption.isSelected()) return true ;
 //    if (initinitedit != InitEdit.isSelected()) return true ;
       if (initdefaultplayfkiss != DefaultPlayFKiss.isSelected()) return true ;
+      if (initacceptcnferrors != AcceptCnfErrors.isSelected()) return true ;
       if (initmultipleevents != MultipleEvents.isSelected()) return true ;
       if (initeditenable != EditEnable.isSelected()) return true ;
       if (initsecurityenable != SecurityEnable.isSelected()) return true ;
@@ -3877,6 +3909,7 @@ final public class OptionsDialog extends KissDialog
 //	   if (inittbedits != TbEdits.isSelected()) return true ;
 //	   if (inittbcompat != TbCompat.isSelected()) return true ;
 //	   if (initinitstatusbar != InitStatusBar.isSelected()) return true ;
+//	   if (initinitmenubar != InitMenuBar.isSelected()) return true ;
 //	   if (initimportcel != ImportCel.isSelected()) return true ;
 //	   if (initexportcel != ExportCel.isSelected()) return true ;
 //	   if (initcomponentcel != ComponentCel.isSelected()) return true ;
@@ -3954,6 +3987,7 @@ final public class OptionsDialog extends KissDialog
 //	   if (animate != AnimateOption.isSelected()) return true ;
 //    if (initedit != InitEdit.isSelected()) return true ;
       if (defaultplayfkiss != DefaultPlayFKiss.isSelected()) return true ;
+      if (acceptcnferrors != AcceptCnfErrors.isSelected()) return true ;
       if (multipleevents != MultipleEvents.isSelected()) return true ;
       if (editenable != EditEnable.isSelected()) return true ;
       if (securityenable != SecurityEnable.isSelected()) return true ;
@@ -4002,6 +4036,7 @@ final public class OptionsDialog extends KissDialog
 //	   if (tbedits != TbEdits.isSelected()) return true ;
 //	   if (tbcompat != TbCompat.isSelected()) return true ;
 //	   if (initstatusbar != InitStatusBar.isSelected()) return true ;
+//	   if (initmenubar != InitMenuBar.isSelected()) return true ;
 //	   if (importcel != ImportCel.isSelected()) return true ;
 //	   if (exportcel != ExportCel.isSelected()) return true ;
 //	   if (componentcel != ComponentCel.isSelected()) return true ;
@@ -4110,6 +4145,7 @@ final public class OptionsDialog extends KissDialog
 	   tbedits = toBoolean1(p.getProperty("tbedits"),tbedits) ;
 	   tbcompat = toBoolean1(p.getProperty("tbcompat"),tbcompat) ;
 	   initstatusbar = toBoolean1(p.getProperty("initstatusbar"),initstatusbar) ;
+	   initmenubar = toBoolean1(p.getProperty("initmenubar"),initmenubar) ;
 	   importcel = toBoolean1(p.getProperty("importcel"),importcel) ;
 	   exportcel = toBoolean1(p.getProperty("exportcel"),exportcel) ;
 	   componentcel = toBoolean1(p.getProperty("componentcel"),componentcel) ;
@@ -4161,6 +4197,7 @@ final public class OptionsDialog extends KissDialog
 	   allambiguous = toBoolean1(p.getProperty("allambiguous"),allambiguous) ;
 	   playfkiss = toBoolean1(p.getProperty("playfkiss"),playfkiss) ;
 	   defaultplayfkiss = toBoolean1(p.getProperty("defaultplayfkiss"),defaultplayfkiss) ;
+	   acceptcnferrors = toBoolean1(p.getProperty("acceptcnferrors"),acceptcnferrors) ;
 	   multipleevents = toBoolean1(p.getProperty("multipleevents"),multipleevents) ;
 	   directkiss = toBoolean1(p.getProperty("directkiss"),directkiss) ;
 	   gnomekiss = toBoolean1(p.getProperty("gnomekiss"),gnomekiss) ;
@@ -4286,6 +4323,7 @@ final public class OptionsDialog extends KissDialog
       p.put("tbedits",toString2(tbedits)) ;
       p.put("tbcompat",toString2(tbcompat)) ;
       p.put("initstatusbar",toString2(initstatusbar)) ;
+      p.put("initmenubar",toString2(initmenubar)) ;
       p.put("importcel",toString2(importcel)) ;
       p.put("exportcel",toString2(exportcel)) ;
       p.put("componentcel",toString2(componentcel)) ;
@@ -4355,6 +4393,7 @@ final public class OptionsDialog extends KissDialog
       p.put("linux",toString2(linux)) ;
       p.put("playfkiss",toString2(playfkiss)) ;
       p.put("defaultplayfkiss",toString2(defaultplayfkiss)) ;
+      p.put("acceptcnferrors",toString2(acceptcnferrors)) ;
       p.put("multipleevents",toString2(multipleevents)) ;
       p.put("directkiss",toString2(directkiss)) ;
       p.put("gnomekiss",toString2(gnomekiss)) ;
@@ -5218,6 +5257,20 @@ final public class OptionsDialog extends KissDialog
       if (mf != null) mf.updateMenuOptions() ;
       if (menu != null) menu.update() ;
       
+      if (mf != null)
+      {
+         if (!getInitMenubar())
+            mf.setMenu(null);
+         else
+         {
+            if (mf.getMenu() == null)
+            {
+               if (mf.getPanelMenu() != null) mf.setMenu(mf.getPanelMenu()) ;
+               else mf.setMenu(mf.getMainMenu()) ; 
+            }                  
+         }
+      }
+      
       // Watch for icon changes.
       
       if (iconrestart)
@@ -5823,8 +5876,9 @@ final public class OptionsDialog extends KissDialog
       else if (directkiss) writeLine(out,"; directkiss = \"" + directkiss + "\"") ;
       else if (gnomekiss) writeLine(out,"; gnomekiss = \"" + gnomekiss + "\"") ;
       else if (kissld) writeLine(out,"; kissld = \"" + kissld + "\"") ;
-//    if (defaultplayfkiss) writeLine(out,"; defaultplayfkiss = \"" + defaultplayfkiss + "\"") ;
-      if (multipleevents != initmultipleevents && !b) writeLine(out,"; multipleevents = \"" + multipleevents + "\"") ;
+//    if (defaultplayfkiss) writeLine(out,"; defaultplayfkiss = " + defaultplayfkiss) ;
+      if (acceptcnferrors != initacceptcnferrors) writeLine(out,"; acceptcnferrors = " + acceptcnferrors) ;
+      if (multipleevents != initmultipleevents && !b) writeLine(out,"; multipleevents = " + multipleevents) ;
 //	   if (backup != initbackup) writeLine(out,"; backup = " + backup) ;
 //	   if (savesource != initsavesource) writeLine(out,"; savesource = " + savesource) ;
 //	   if (loadclose != initloadclose) writeLine(out,"; loadclose = " + loadclose) ;
@@ -5857,6 +5911,7 @@ final public class OptionsDialog extends KissDialog
 //	   if (tbedits != inittbedits) writeLine(out,"; tbedits = " + tbedits) ;
 //	   if (tbcompat != inittbcompat) writeLine(out,"; tbcompat = " + tbcompat) ;
 	   if (initstatusbar != initinitstatusbar) writeLine(out,"; initstatusbar = " + initstatusbar) ;
+	   if (initmenubar != initinitmenubar) writeLine(out,"; initmenubar = " + initmenubar) ;
 	   if (constrainmoves != initconstrainmoves && !b) writeLine(out,"; constrainmoves = " + constrainmoves) ;
 	   if (constrainvisible != initconstrainvisible && !b) writeLine(out,"; constrainvisible = " + constrainvisible) ;
 	   if (constrainfkiss != initconstrainfkiss) writeLine(out,"; constrainfkiss = " + constrainfkiss) ;
@@ -5937,6 +5992,7 @@ final public class OptionsDialog extends KissDialog
          if (releasemove != true && b) writeLine(out,"; releasemove = " + releasemove) ;  
          if (longsoundmedia != true && b) writeLine(out,"; longsoundmedia = " + longsoundmedia) ;  
          if (strictsyntax != true && b) writeLine(out,"; strictsyntax = " + strictsyntax) ;  
+         if (multipleevents != false && b) writeLine(out,"; multipleevents = " + multipleevents) ;
       }
    }
 

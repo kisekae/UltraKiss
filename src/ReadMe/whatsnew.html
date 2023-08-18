@@ -29,8 +29,13 @@
  	              <p><font face="Arial">2. A problem where animated cel group frames were not being animated through the animate() command is corrected.</font></p>
  	              <p><font face="Arial">3. Sound files with durations over 8 seconds are now processed by the MediaPlayer when the new LongSoundMedia compatibility option is set.</font></p>
  	              <p><font face="Arial">4. Attached objects moved on a mouse press event now properly display the image when the mouse is depressed.  Previously, the image was clipped.</font></p>
- 	              <p><font face="Arial">5. Corrected the last modified time and date stamp for updated elements written to an archive file.  Previously this timestamp could be 0.</font></p>
- 	              <p><font face="Arial">6. Strong attachment chains now treat object fix values of 1 as if the object is not fixed.  The strong attachment is broken.</font></p>
+ 	              <p><font face="Arial">5. The last modified time and date stamp for updated elements written to an archive file is corrected.  Previously this timestamp could be 0.</font></p>
+ 	              <p><font face="Arial">6. Strong attachment chains now treat object fix values of 1 as if the object is not fixed.  The attachment is not strong as the object will be unfixed.</font></p>
+ 	              <p><font face="Arial">7. Corrected a problem with INCLUDE file elements not being referenced if the included archive file maintained path directories.</font></p>
+ 	              <p><font face="Arial">8. Introduced a new general option to enable the display the main menu bar.  The ESC key will restore the main menu if it is not visible.</font></p>
+ 	              <p><font face="Arial">9. The user menu specification failed to correctly process a viewer("open","document.txt) command.  This is corrected.</font></p>
+ 	              <p><font face="Arial">10. INCLUDE file specifications in the CNF file failed to properly parse a list of quoted file names delimited by commas.</font></p>
+ 	              <p><font face="Arial">11. Linux can report a NoLineAvailableException on sound playback.  The sudio sound clip is now closed when stopped to release resources.</font></p>
         				</BLOCKQUOTE>
                                         <p>&nbsp;</p>
 					<p><B>July 30, 2023</B></p>

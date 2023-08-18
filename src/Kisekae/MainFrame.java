@@ -71,7 +71,7 @@ import javax.swing.undo.* ;
 
 
 final public class MainFrame extends KissFrame
-	implements ActionListener, WindowListener, ComponentListener
+	implements ActionListener, WindowListener, KeyListener, ComponentListener
 {
 	private static final int NEWFILE = 0 ;
 	private static final int NEWPAGE = 1 ;
@@ -167,11 +167,13 @@ final public class MainFrame extends KissFrame
 
 		// Set up to catch window events in this frame.
 
+      addKeyListener(this) ;
 		addWindowListener(this) ;
 		addComponentListener(this) ;
       if (Kisekae.isBatch()) setState(Frame.ICONIFIED) ;
  		setIconImage(Kisekae.getIconImage()) ;
 		setVisible(true) ;
+      setFocus() ;
 
       // Initiate a file load on a separate thread.  We have seen
       // intermittent execeptions with the fileopen reference being
@@ -808,15 +810,19 @@ final public class MainFrame extends KissFrame
          loadtext = null ;
 			menu = mainmenu ;
          setTitle("UltraKiss") ;
-   		setJMenuBar(menu.getMenuBar()) ;
-         updateMenuOptions() ;
-         menu.updateRunState() ;
+         if (OptionsDialog.getInitMenubar())
+         {
+            setJMenuBar(menu.getMenuBar()) ;
+            updateMenuOptions() ;
+            menu.updateRunState() ;
+         }
 			if (toolBar != null) toolBar.updateButtons(null,0,0) ;
 
 			// Reclaim memory.
 
          validate() ;
 			Runtime.getRuntime().gc() ;
+         setFocus() ;
 		}
 		else
 		{
@@ -1117,7 +1123,23 @@ final public class MainFrame extends KissFrame
 	public void windowClosed(WindowEvent evt) { kisekae.showHomePage() ; }
 	public void windowClosing(WindowEvent evt) { exit() ; }
 
-
+   // Key Events
+   
+   public void keyReleased(KeyEvent e) 
+   {
+      if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
+      {
+         if (getMenu() == null)
+         {
+            if (getPanelMenu() != null) setMenu(getPanelMenu()) ;
+            else setMenu(getMainMenu()) ; 
+            OptionsDialog.setInitMenubar(true);
+         }                  
+      }
+   }
+   public void keyPressed(KeyEvent e) { }
+   public void keyTyped(KeyEvent e) { }
+  
 	// Component Events
 
 	public void componentMoved(ComponentEvent evt) { }
@@ -1351,6 +1373,17 @@ final public class MainFrame extends KissFrame
          mainmenu.fitscreen.setSelected(OptionsDialog.getScaleToFit()) ;
          mainmenu.showborder.setSelected(OptionsDialog.getShowBorder()) ;
       }
+      
+      if (!OptionsDialog.getInitMenubar())
+         setMenu(null);
+      else
+      {
+         if (getMenu() == null)
+         {
+            if (getPanelMenu() != null) setMenu(getPanelMenu()) ;
+            else setMenu(getMainMenu()) ; 
+         }
+      }
    }
 
 
@@ -1376,6 +1409,7 @@ final public class MainFrame extends KissFrame
       setFitScreen(options.getScaleToFit()) ;
       setFitPanel(options.getSizeToFit()) ;
       menu = mainmenu ;
+      if (!options.getInitMenubar()) setMenu(null) ;
    }
 
 

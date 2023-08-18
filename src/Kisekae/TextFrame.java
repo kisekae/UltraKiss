@@ -2855,11 +2855,11 @@ final class TextFrame extends KissFrame
 
 		public Insets getBorderInsets(Component c)
 		{
-			if (!showline) return new Insets(0,0,0,0);
-			if (!(c instanceof JTextArea)) return new Insets(0,0,0,0);
+			if (!showline) return new Insets(0,5,0,5);
+			if (!(c instanceof JTextArea)) return new Insets(0,5,0,5);
 			FontMetrics fm = c.getFontMetrics(c.getFont());
 			int margin = fm.stringWidth("WWWWWW");
-			return new Insets(0,margin,0,0);
+			return new Insets(0,margin,0,5);
 		}
 
 		/**

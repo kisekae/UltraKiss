@@ -4290,6 +4290,12 @@ final class Configuration extends KissObject
                showError("INCLUDE file name missing terminating quote " + s) ;
                break ;
             }
+            st = new StringTokenizer(s,",") ;
+            if (st.hasMoreTokens())
+            {
+              s = st.nextToken() ;
+              s = trim(s) ;
+            }
             st = new StringTokenizer(s," \t,") ;
          }
          else

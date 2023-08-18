@@ -40,7 +40,7 @@
      <tocitem text="version" target="reference2.index.events"/>
     </tocitem>
     <tocitem text="Actions">
-     <tocitem text="all" target="reference2.index.actions.arithmetic"/>
+     <tocitem text="all" target="reference2.index.actions.all"/>
      <tocitem text="arithmetic" target="reference2.index.actions.arithmetic"/>
      <tocitem text="alarms" target="reference2.index.actions.alarms"/>
      <tocitem text="attachment" target="reference2.index.actions.attachment"/>

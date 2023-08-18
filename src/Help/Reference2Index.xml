@@ -42,6 +42,7 @@
     <indexitem text="version" target="reference2.version"/>
   </indexitem>
   <indexitem text="Actions">
+    <indexitem text="all" target="reference2.all"/>
     <indexitem text="add" target="reference2.add"/>
     <indexitem text="addItem" target="reference2.addItem"/>
     <indexitem text="altmap" target="reference2.altmap"/>

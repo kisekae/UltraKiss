@@ -6,7 +6,7 @@
 <map version="1.0">
 	<mapID target="reference2.index" url="product/reference2/index.html" />
 	<mapID target="reference2.index.events" url="product/reference2/index.html#events" />
-	<mapID target="reference2.index.actions.all" url="product/reference2/index.html#actions" />
+	<mapID target="reference2.index.actions.all" url="product/reference2/indexall.html" />
 	<mapID target="reference2.index.actions.arithmetic" url="product/reference2/index.html#actions.arithmetic" />
 	<mapID target="reference2.index.actions.alarms" url="product/reference2/index.html#actions.alarms" />
 	<mapID target="reference2.index.actions.attachment" url="product/reference2/index.html#actions.attachment" />
@@ -61,6 +61,7 @@
 	<mapID target="reference2.upside" url="product/reference2/upside.html" />
 	<mapID target="reference2.version" url="product/reference2/version.html" />
 
+	<mapID target="reference2.all" url="product/reference2/indexall.html" />
 	<mapID target="reference2.add" url="product/reference2/add.html" />
 	<mapID target="reference2.addItem" url="product/reference2/addItem.html" />
 	<mapID target="reference2.altmap" url="product/reference2/altmap.html" />

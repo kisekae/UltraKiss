@@ -897,7 +897,8 @@ final class MediaFrame extends KissFrame
 	{
 		if (ko instanceof Audio) audio = (Audio) ko ;
 		if (ko instanceof Video) video = (Video) ko ;
-      if (OptionsDialog.getDebugControl() && ko != null)
+      if (OptionsDialog.getDebugSound() && ko != null)
+	      System.out.println("MediaPlayer: play " + ko) ;
 
       // Check for errors.
 
@@ -974,7 +975,7 @@ final class MediaFrame extends KissFrame
       	currentmedia = audio.getPlayer() ;
 		if (video != null && OptionsDialog.getMovieOn())
 			currentmedia = video.getPlayer() ;
-
+      
       // Add listeners.
 
      	if (audio != null && currentmedia instanceof Sequencer)
@@ -1211,7 +1212,7 @@ final class MediaFrame extends KissFrame
             else
             {
             	errors++ ;
-               s = "MediaFrame: Playlist element not found, " + token ;
+               s = "MediaPlayer: Playlist element not found, " + token ;
                if (OptionsDialog.getDebugMedia()) System.out.println(s) ;
                s = Kisekae.getCaptions().getString("FileOpenFileOpenMessage1") ;
                int i1 = s.indexOf('[') ;
@@ -1227,7 +1228,7 @@ final class MediaFrame extends KissFrame
 
       catch (IOException e)
       {
-      	System.out.println("MediaFrame: playlist exception, " + ze.getName()) ;
+      	System.out.println("MediaPlayer: playlist exception, " + ze.getName()) ;
          System.out.println(e.getMessage()) ;
          JOptionPane.showMessageDialog(me, ze.getName() + "\n" + e.getMessage(),
             Kisekae.getCaptions().getString("MediaPlayerFault"),

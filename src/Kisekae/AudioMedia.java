@@ -258,7 +258,7 @@ final class AudioMedia extends Audio
 		{
 			ds = null ;
 			error = true ;
-			showError("Unable to establish data source for " + file) ;
+			showError("AudioMedia: Unable to establish data source for " + file) ;
 			if (!(e instanceof KissException)) e.printStackTrace();
 		}
 
@@ -272,7 +272,7 @@ final class AudioMedia extends Audio
 			{
 				ds = null ;
 				error = true ;
-				showError("Unable to create media player for " + file) ;
+				showError("AudioMedia: Unable to create media player for " + file) ;
 				e.printStackTrace();
 			}
 		}
@@ -386,8 +386,7 @@ final class AudioMedia extends Audio
 
 		catch (Exception e)
 		{
-			showError("Audio " + getName() + " start fault " + e.getMessage()) ;
-         System.out.println("AudioMedia: " + getName() + " start fault " + e.getMessage()) ;
+			showError("AudioMedia: " + getName() + " start fault " + e.getMessage()) ;
 			if (!(e instanceof KissException)) e.printStackTrace();
 		}
 	}
@@ -521,7 +520,7 @@ final class AudioMedia extends Audio
 		}
 		catch (Exception e)
 		{
-			showError("Audio " + getPath() + " close fault.") ;
+			showError("AudioMedia: " + getPath() + " close fault.") ;
 			if (!(e instanceof KissException)) e.printStackTrace();
 	  }
 
@@ -641,7 +640,7 @@ final class AudioMedia extends Audio
 			{
 				System.out.println("AudioMedia: " + getName() + " ControllerErrorEvent") ;
 				System.out.println(ce.toString()) ;
-				showError("Unable to play media file " + file) ;
+				showError("AudioMedia: Unable to play media file " + file) ;
 				players.removeElement(me) ;
 				error = true ;
 			}

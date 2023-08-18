@@ -1295,7 +1295,10 @@ final class ToolBar extends JPanel
 	{
 		if (parent == null) return ;
 		menu = parent.getMenu() ;
-      if (menu instanceof UserMenu) menu = parent.getPanelMenu() ;
+      if (menu == null && !OptionsDialog.getInitMenubar())
+         menu = (parent.getPanel() != null) ? parent.getPanelMenu() : parent.getMainMenu() ;
+      if (menu instanceof UserMenu) 
+         menu = parent.getPanelMenu() ;
 		if (menu == null) return ;
 		Object source = evt.getSource() ;
       parent.showStatus(null) ;

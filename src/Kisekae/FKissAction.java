@@ -3327,6 +3327,7 @@ final class FKissAction extends KissObject
                         if ("statusbar".equalsIgnoreCase(vs2)) mm.statusbar.doClick() ;
                         if ("toolbar".equalsIgnoreCase(vs2)) mm.toolbar.doClick() ;
                         if ("openweb".equalsIgnoreCase(vs2)) mm.openweb.doClick() ;
+                        if ("submitbug".equalsIgnoreCase(vs2)) mm.bugreport.doClick() ;
                         if ("openkiss".equalsIgnoreCase(vs2)) mm.openkiss.doClick() ;
                         if ("activecnf".equalsIgnoreCase(vs2)) pm.cnffile.doClick() ;
                      }
@@ -3414,7 +3415,7 @@ final class FKissAction extends KissObject
                   else if ("restoremenu".equalsIgnoreCase(vs1))
                   {
                      if (mf == null) return ;
-                     mf.setMenu(mm);
+                     mf.setMenu((pm != null) ? pm : mm);
                   }
                   else if ("seticon".equalsIgnoreCase(vs1))
                   {

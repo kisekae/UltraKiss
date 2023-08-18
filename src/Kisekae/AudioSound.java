@@ -361,6 +361,16 @@ final class AudioSound extends Audio
                opened = true ;
                return ;
 				}
+            
+            // LineUnavailableException occurs when the sound cannot play.
+            // This can happen on Linux or others if issues with the audio.
+            
+            catch (LineUnavailableException e)
+            {
+               currentsound = null ;
+				   if (OptionsDialog.getDebugSound())
+                  System.out.println("AudioSound: " + getName() + " " + e) ;
+            }
             catch (Exception ex)
             {
               	error = true ;
@@ -537,15 +547,19 @@ final class AudioSound extends Audio
                AudioFormat fmt = clip.getFormat() ;
                if (fmt != null) cd = fmt.toString() ;
             }
+            if (clip.isRunning()) started = true ;
             return ;
 			}
 		}
 
+      catch (KissException e) 
+      { 
+      // Do not report these format exceptions for the time being.         
+      }
 		catch (Exception e)
 		{
-			showError("Audio " + getName() + " start fault " + e.getMessage()) ;
-         System.out.println("AudioSound: " + getName() + " start fault " + e.getMessage()) ;
-			if (!(e instanceof KissException)) e.printStackTrace();
+ 			showError("AudioSound: " + getName() + " start fault " + e.getMessage()) ;
+         e.printStackTrace();
 		}
 	}
 
@@ -601,16 +615,14 @@ final class AudioSound extends Audio
 					if (OptionsDialog.getDebugSound())
 						System.out.println("AudioSound: " + audio.getName() + " Sequencer stopped") ;
 					Sequencer sequencer = (Sequencer) currentsound ;
-               if (sequencer.isRunning())
-               {
-                  sequencer.stop() ;
-                  audio.doCallback() ;
-                  audio.started = false ;
-               }
+               if (sequencer.isRunning()) sequencer.stop() ;
+               if (sequencer.isOpen()) sequencer.close() ;
+               audio.doCallback() ;
+               audio.started = false ;
             }
 				catch (Exception e)
 				{
-					System.out.println("Audio sequencer stop fault.");
+					System.out.println("AudioSound: " + audio.getName() +  "Audio sequencer stop fault.");
 					if (!(e instanceof KissException)) e.printStackTrace();
 				}
          }
@@ -626,10 +638,12 @@ final class AudioSound extends Audio
 						System.out.println("AudioSound: " + audio.getName() + " Sound clip stopped") ;
 					Clip clip = (Clip) currentsound;
 	         	if (clip.isRunning()) clip.stop() ;
+               if (clip.isOpen()) clip.close() ;  // Linux reports NoLineAvailableException at times
+               audio.started = false ;
             }
 				catch (Exception e)
 				{
-					System.out.println("Audio clip stop fault.");
+					System.out.println("AudioSound: " + audio.getName() + "Audio clip stop fault.");
 					if (!(e instanceof KissException)) e.printStackTrace();
 				}
          }
@@ -659,7 +673,6 @@ final class AudioSound extends Audio
       	System.out.println("AudioSound: " + getName() + " call zip.disconnect()") ;
          zip.disconnect() ;
       }
-//		if (currentsound == null) return ;
 
 		// Look for our player in the active play list.  If we find it,
 		// remove it and close the player down.
@@ -690,15 +703,16 @@ final class AudioSound extends Audio
 					System.out.println("AudioSound: " + getName() + " Sound clip closed") ;
 				Clip clip = (Clip) currentsound ;
          	if (clip.isRunning()) clip.stop() ;
-				if (clip.isOpen()) clip.close() ;
+            if (clip.isOpen()) clip.close() ;  // Linux reports NoLineAvailableException at times
          }
 		}
 		catch (Exception e)
 		{
-			showError("Audio " + getPath() + " close fault.") ;
+			showError("AudioSound: " + getPath() + " close fault.") ;
 			if (!(e instanceof KissException)) e.printStackTrace();
 	   }
-      
+
+      started = false ;
       currentsound = null ;
       metalistener = null ;
       linelistener = null ;
@@ -714,6 +728,7 @@ final class AudioSound extends Audio
 		ds = null ;
 		loaded = false ;
       opened = false ;
+      started = false ;
       hascallback = false ;
       callback = null ;
       listener = null ;
@@ -787,6 +802,7 @@ final class AudioSound extends Audio
 
 			else if (event.getType() == LineEvent.Type.CLOSE)
 			{
+				opened = false ;
 				if (OptionsDialog.getDebugSound())
 					System.out.println("AudioSound: " + getName() + " ClipCloseEvent") ;
 			}
@@ -801,6 +817,7 @@ final class AudioSound extends Audio
 
 			else if (event.getType() == LineEvent.Type.OPEN)
 			{
+				opened = true ;
 				if (OptionsDialog.getDebugSound())
 					System.out.println("AudioSound: " + getName() + " ClipOpenEvent") ;
 	      }

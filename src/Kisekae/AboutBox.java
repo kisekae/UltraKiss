@@ -156,6 +156,7 @@ final public class AboutBox extends KissDialog
       contrib.addElement("Bruce Grubb (USA)") ;
       contrib.addElement("Laurent Sebilleau (France)") ;
       contrib.addElement("Dominatrix (Spain)") ;
+      contrib.addElement("The Owl (Romania)") ;
       jList1 = new JList(contrib) ;
 
       // Construct the user interface.

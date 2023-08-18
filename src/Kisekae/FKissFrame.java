@@ -2029,7 +2029,7 @@ final class FKissFrame extends KissFrame
                Object cid = (config != null) ? config.getID() : null ;
      				Alarm alarm = (Alarm) Alarm.getByKey(Alarm.getKeyTable(),cid,alarmid) ;
 
-               if (OptionsDialog.getShowStepIntoEnd())
+               if (alarm != null && OptionsDialog.getShowStepIntoEnd())
                {
                   JCheckBox doNotShow = new JCheckBox(Kisekae.getCaptions().getString("DoNotShowAgain")) ;
                   String msg1 = Kisekae.getCaptions().getString("StepIntoAlarmMessage1") ;

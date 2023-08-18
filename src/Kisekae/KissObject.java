@@ -537,7 +537,7 @@ abstract class KissObject
 
          if (include instanceof ArchiveFile)
          {
-            ArchiveEntry ze = ((ArchiveFile) include).getEntry(name) ;
+            ArchiveEntry ze = ((ArchiveFile) include).getEntry(name,true) ;
             if (ze != null) return ze ;
          }
       }

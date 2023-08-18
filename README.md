@@ -28,9 +28,9 @@ In 2023, prompted by new KiSS work from [The Owl](http://followtheowl.com/) with
 
 
 
-1. Download the current UltraKiss release from [GitHub](https://github.com/kisekae/UltraKiss).  For all systems, extract the files from the **UltraKiss_3.5.zip** (or later) download. This extract will create a folder named **ultrakiss**.
+1. Download the current UltraKiss release from [GitHub](https://github.com/kisekae/UltraKiss).  For all systems, extract the files from the **UltraKiss_3.6.zip** (or later) download. This extract will create a folder named **ultrakiss**.
 
-   For local execution on a Windows system with or without Java installed, run **UltraKiss_3.5.exe** found in the **ultrakiss** folder. This program is a fully self-contained bundled application created with [Launch4j](https://launch4j.sourceforge.net/).
+   For local execution on a Windows system with or without Java installed, run **UltraKiss_3.6.exe** found in the **ultrakiss** folder. This program is a fully self-contained bundled application created with [Launch4j](https://launch4j.sourceforge.net/).
 
    For local execution on a Linux or Apple system with Java already installed, run the **kisekae.jar** file from the **ultrakiss** folder using the **java -jar kisekae.jar** command.
 

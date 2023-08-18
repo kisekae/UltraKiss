@@ -190,6 +190,18 @@ final class UserMenu extends KissMenu
 		}
    }
 
+   // A utility function to open a loaded file according to its context.
+   // Configuration elements initialize the main frame.
+
+   void openContext(FileOpen fd, ArchiveEntry ze)
+   {
+      MainFrame mf = Kisekae.getMainFrame() ;
+      if (mf == null) return ;
+      MainMenu menu = mf.getMainMenu() ;
+      if (menu == null) return ;
+      menu.openContext(fd,ze);
+   }
+
 
 
 	// The action method is used to process control menu events.

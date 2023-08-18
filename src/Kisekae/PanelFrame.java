@@ -6869,7 +6869,7 @@ final class PanelFrame extends JPanel
       b = b || (n == KeyEvent.VK_PAGE_DOWN) || (n == KeyEvent.VK_PAGE_UP) ; 
       b = b || (n == KeyEvent.VK_ESCAPE) || (n == KeyEvent.VK_SCROLL_LOCK) ; 
       b = b || (n == KeyEvent.VK_PAUSE) || (n == KeyEvent.VK_PRINTSCREEN) ; 
-
+      
       // Retain key types for keypressed events only.
 
       if ("keypress".equals(type))
@@ -6998,6 +6998,13 @@ final class PanelFrame extends JPanel
          case KeyEvent.VK_SUBTRACT:                // Numpad -
             if (!applemac) break ;
             if (e.isShiftDown()) break ;
+         case KeyEvent.VK_ESCAPE:                  // Show menu bar
+            if (parent != null && parent.getMenu() == null)
+            {
+               if (parent.getPanelMenu() != null) parent.setMenu(parent.getPanelMenu()) ;
+               else parent.setMenu(parent.getMainMenu()) ; 
+               OptionsDialog.setInitMenubar(true);
+            }                  
          default:
             return false ;
       }

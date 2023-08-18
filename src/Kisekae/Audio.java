@@ -577,10 +577,14 @@ abstract class Audio extends KissObject
 	void showError(String s)
 	{
    	errormessage = s ;
-      MainFrame frame = Kisekae.getMainFrame() ;
 		if (line > 0) s = "[Line " + line + "] " + s ;
 		if (loader != null) loader.showError(s) ;
-      else frame.showStatus(errormessage) ;
+      else 
+      {
+         MainFrame frame = Kisekae.getMainFrame() ;
+         frame.showStatus(errormessage) ;
+         System.out.println(errormessage) ;
+      }
 	}
 
 

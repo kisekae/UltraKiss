@@ -10,274 +10,7 @@
 
 <body>
 
-<h1><font color="#FF0000">FKiSS Key Topics</font></h1>
-<hr>
-
-<p>Welcome to the UltraKiss reference documentation. To open an online book, choose a book from the Contents page in the upper
-left of the Help Viewer. Click the book icon to expand the book topics. Then, click a topic to
-view it.</p>
-
-<p>&nbsp;</p>
-
-<h2>Introduction</h2>
-
-<p>KiSS (Kisekae Set System) is an image processing system used to create
-computer representations of two-dimensional virtual dolls. FKiSS is an event
-language that facilitates the
-programming of automated actions and system interaction with the user. This
-document describes the KiSS configuration file format and the syntax and
-semantics of the FKiSS programming language.</p>
-<p>UltraKiss  extended and standardized many aspects of the FKiSS language. The standardization,  refered to as FKiSS version 5, was designed to correct many of the FKiSS language deficiencies. Each UltraKiss FKiSS command is either a backward compatible extension to previous versions of FKiSS (<font color="#800000">FKiSS5</font>), or is a new  command implemented for completeness or new capabilities (<font color="#800000">FKiSS5 Extension</font>), or is an UltraKiss viewer specific command (<font color="#800000">UltraKiss Extension</font>). </p>
-<p>&nbsp;</p>
-<p><b><a name="FKiSS_Language">The FKiSS Language</a></b></p>
-<div align="center">
-  <center>
-  <table border="0" cellpadding="0" cellspacing="0" width="100%">
-  <tr>
-    <td width="35%"><a href="kiss_data_types.html">Data Types</a></td>
-    <td width="65%" rowspan="10" valign="top"><p>The FKiSS programming language allows  programmed  capabilities when developing KiSS sets. The language was originally conceived as a non-procedural language that would respond to various events, but with the development of FKiSS 3 a procedural structure was imposed that introduced program variables and control logic.</p><br>
-      <p>With FKiSS 5, the FKiSS programming language provides integer and real number arithmetic, string and character manipulation, nested if-statements for logic control, subroutines and function capable label blocks, with local and global variables to manage state information. </p>
-      </td>
-  </tr>
-  <tr>
-    <td><a href="kiss_image_types.html">Image Types</a></td>
-    </tr>
-  <tr>
-    <td><a href="kiss_audio_types.html">Audio Types</a></td>
-    </tr>
-  <tr>
-    <td><a href="kiss_video_types.html">Video Types</a></td>
-    </tr>
-  <tr>
-    <td><a href="kiss_object_groups.html">Object Groups</a></td>
-    </tr>
-  <tr>
-    <td><a href="kiss_object_groups.html">Cel Groups</a></td>
-    </tr>
-  <tr>
-    <td><a href="components.html"> Components</a></td>
-    </tr>
-  <tr>
-    <td><a href="kiss_variables.html"> Variables</a></td>
-    </tr>
-  <tr>
-    <td><a href="kiss_subroutines.html">Subroutines</a></td>
-    </tr>
-  <tr>
-    <td><a href="kiss_subroutines.html">Functions</a></td>
-    </tr>
-</table>
-  </center>
-</div>
-
-<p>&nbsp;</p>
-
-<p><b><a name="CNF_File">The KiSS Configuration (CNF) File</a></b></p>
-<div align="center">
-  <center>
-  <table border="0" cellpadding="0" cellspacing="0" width="100%">
-  <tr>
-    <td width="35%"><a href="kiss_cnf_file.html">Titles and Comments</a></td>
-    <td width="65%" rowspan="9" valign="top"><p>The KiSS set configuration file is the control file that identifies the images and objects that compose a KiSS set. This file must exist in every KiSS set. </p><br>
-      <p>UltraKiss automatically maintains and generates the CNF file  to eliminate much of the manual efforts previously required by KiSS artists.</p><br>
-      <p>Edit changes to the CNF file are automatically applied to the current KiSS set. This edit-test process is an improved  development cycle from earlier KiSS viewers. </p></td>
-  </tr>
-  <tr>
-    <td><a href="kiss_cnf_file.html#includesection">Include Files</a></td>
-    </tr>
-  <tr>
-    <td><a href="kiss_cnf_file.html#optionsection">Option Section</a></td>
-    </tr>
-  <tr>
-    <td><a href="kiss_cnf_file.html#screensection">Screen Section</a></td>
-    </tr>
-  <tr>
-    <td><a href="kiss_cnf_file.html#palettesection">Palette Section</a></td>
-    </tr>
-  <tr>
-    <td><a href="kiss_cnf_file.html#celsection">Cel Section</a></td>
-    </tr>
-  <tr>
-    <td><a href="kiss_cnf_file.html#tags">Cel Tags</a></td>
-    </tr>
-  <tr>
-    <td><a href="kiss_cnf_file.html#pagesetsection">Page Set Section</a></td>
-    </tr>
-  <tr>
-    <td><a href="kiss_cnf_file.html#fkisssection">FKiSS Section</a></td>
-    </tr>
-</table>
-  </center>
-</div>
-
-<p>&nbsp;</p>
-
-<p><b><a name="events">FKiSS Events</a></b></p>
-<div align="center">
-  <center>
-  <table border="0" cellpadding="0" cellspacing="0" width="100%">
-    <tr>
-      <td width="150"><a href="alarm.html">alarm</a></td>
-      <td> Activates when an alarm fires</td>
-      <td width="20%"><font color="#800000">FKiSS5 </font></td>
-    </tr>
-    <tr>
-      <td width="150"><a href="apart.html">apart</a></td>
-      <td> Triggers when touching cels come apart</td>
-      <td width="20%"> </td>
-    </tr>
-    <tr>
-      <td width="150"><a href="begin.html">begin</a></td>
-      <td> Triggers when data set is first viewed</td>
-      <td width="20%">  </td>
-    </tr>
-    <tr>
-      <td width="150"><a href="catch.html">catch</a></td>
-      <td> Triggers on mouse down if object is not maximum fixed</td>
-      <td width="20%">  </td>
-    </tr>
-    <tr>
-      <td width="150"><a href="col.html">col</a></td>
-      <td>  Activates when the palette group is changed</td>
-      <td width="20%">  </td>
-    </tr>
-    <tr>
-      <td width="150"><a href="collide.html">collide</a></td>
-      <td> Triggers when non-touching cels touch</td>
-      <td width="20%"> </td>
-    </tr>
-    <tr>
-      <td width="150"><a href="detached.html">detached</a></td>
-      <td> Signals object no longer attached to parent</td>
-      <td width="20%"> </td>
-    </tr>
-    <tr>
-      <td width="150"><a href="drop.html">drop</a></td>
-      <td>Triggers on mouse up if object is is not maximum fixed</td>
-      <td width="20%"></td>
-    </tr>
-    <tr>
-      <td width="150"><a href="end.html">end</a></td>
-      <td>  Activates when a data set is closed</td>
-      <td width="20%">  </td>
-    </tr>
-    <tr>
-      <td width="150"><a href="fixcatch.html">fixcatch</a></td>
-      <td>  Triggers on mouse down if object is fixed</td>
-      <td width="20%">  </td>
-    </tr>
-    <tr>
-      <td width="150"><a href="fixdrop.html">fixdrop</a></td>
-      <td>  Triggers on mouse up if object is fixed</td>
-      <td width="20%">  </td>
-    </tr>
-    <tr>
-      <td width="150"><a href="in.html">in</a></td>
-      <td> Triggers when object bounding boxes overlap</td>
-      <td width="20%"> </td>
-    </tr>
-    <tr>
-      <td width="150"><a href="initialize.html">initialize</a></td>
-      <td>  Triggers when a data set is initialized</td>
-      <td width="20%">  </td>
-    </tr>
-    <tr>
-      <td width="150"><a href="keypress.html">keypress</a></td>
-      <td> Activates when the user presses a key</td>
-      <td width="20%"><font color="#800000">FKiSS5 </font> </td>
-    </tr>
-    <tr>
-      <td width="150"><a href="keyrelease.html">keyrelease</a></td>
-      <td> Activates when the user releases a key</td>
-      <td width="20%"><font color="#800000">FKiSS5 </font> </td>
-    </tr>
-    <tr>
-      <td width="150"><a href="keytype.html">keytype</a></td>
-      <td> Activates when the user types a key</td>
-      <td width="20%"> <font color="#800000">FKiSS5 Extension</font></td>
-    </tr>
-    <tr>
-      <td width="150"><a href="label.html">label</a></td>
-      <td> Program module grouping</td>
-      <td width="20%"><font color="#800000">FKiSS5 </font></td>
-    </tr>
-    <tr>
-      <td width="150"><a href="mediastart.html">mediastart</a></td>
-      <td> Triggers when a media file starts playing</td>
-      <td width="20%"> <font color="#800000">FKiSS5 Extension</font></td>
-    </tr>
-    <tr>
-      <td width="150"><a href="mediastop.html">mediastop</a></td>
-      <td> Triggers when a media file stops playing</td>
-      <td width="20%"> <font color="#800000">FKiSS5 Extension</font></td>
-    </tr>
-    <tr>
-      <td width="150"><a href="mousein.html">mousein</a></td>
-      <td> Triggers when mouse enters cel or group</td>
-      <td width="20%"> </td>
-    </tr>
-    <tr>
-      <td width="150"><a href="mouseout.html">mouseout</a></td>
-      <td> Triggers when mouse leaves cel or group</td>
-      <td width="20%"> </td>
-    </tr>
-    <tr>
-      <td width="150"><a href="never.html">never</a></td>
-      <td> This event is never triggered</td>
-      <td width="20%"> </td>
-    </tr>
-    <tr>
-      <td width="150"><a href="out.html">out</a></td>
-      <td> Triggers when object bounding boxes no longer overlap</td>
-      <td width="20%"> </td>
-    </tr>
-    <tr>
-      <td width="150"><a href="overflow.html">overflow</a></td>
-      <td> Exception handler for errors</td>
-      <td width="20%"> </td>
-    </tr>
-    <tr>
-      <td width="150"><a href="press.html">press</a></td>
-      <td> Triggers on mouse down regardless of fix</td>
-      <td width="20%"> </td>
-    </tr>
-    <tr>
-      <td width="150"><a href="release.html">release</a></td>
-      <td> Triggers on mouse up regardless of fix</td>
-      <td width="20%"> </td>
-    </tr>
-    <tr>
-      <td width="150"><a href="set.html">set</a></td>
-      <td> Activates when the page set is changed</td>
-      <td width="20%"> </td>
-    </tr>
-    <tr>
-      <td width="150"><a href="stillin.html">stillin</a></td>
-      <td> Triggers when object bounding boxes still overlap</td>
-      <td width="20%"> </td>
-    </tr>
-    <tr>
-      <td width="150"><a href="stillout.html">stillout</a></td>
-      <td> Triggers when object bounding boxes still do not overlap</td>
-      <td width="20%"> </td>
-    </tr>
-    <tr>
-      <td width="150"><a href="unfix.html">unfix</a></td>
-      <td> Triggers when object fix value becomes zero</td>
-      <td width="20%"> </td>
-    </tr>
-    <tr>
-      <td width="150"><a href="version.html">version</a></td>
-      <td> Triggers when the viewer version is greater than command version</td>
-      <td width="20%"> </td>
-    </tr>
-  </table>
-  </center>
-</div>
-
-<p>&nbsp;</p>
-
-<p><b><a name="actions.arithmetic">FKiSS Actions - Arithmetic</a></b></p>
+<p><b><a name="actions.all">FKiSS Actions - All</a></b></p>
 <div align="center">
   <center>
   <table border="0" cellpadding="0" cellspacing="0" width="100%">
@@ -321,16 +54,6 @@ semantics of the FKiSS programming language.</p>
       <td> Mathematical functions (sin, cos, log, exp, and so on)</td>
       <td width="20%"> <font color="#800000">FKiSS5 Extension</font></td>
     </tr>
-  </table>
-  </center>
-</div>
-
-<p>&nbsp;</p>
-
-<p><b><a name="actions.alarms">FKiSS Actions - Alarms</a></b></p>
-<div align="center">
-  <center>
-  <table border="0" cellpadding="0" cellspacing="0" width="100%">
     <tr>
       <td width="150"><a href="timer.html">timer</a></td>
       <td> Sets a timer to fire an alarm after a specified delay</td>
@@ -376,16 +99,6 @@ semantics of the FKiSS programming language.</p>
       <td>  Sets a timer if an object or cel has not moved</td>
       <td width="20%"><font color="#800000">FKiSS5 </font> </td>
     </tr>
-  </table>
-  </center>
-</div>
-
-<p>&nbsp;</p>
-
-<p><b><a name="actions.components">FKiSS Actions - Components</a></b></p>
-<div align="center">
-  <center>
-  <table border="0" cellpadding="0" cellspacing="0" width="100%">
     <tr>
       <td width="150"><a href="additem.html">addItem</a></td>
       <td> Add an item to a list or combobox </td>
@@ -496,16 +209,6 @@ semantics of the FKiSS programming language.</p>
       <td> Get all component attributes or a specific attribute</td>
       <td width="20%"> <font color="#800000">UltraKiss Extension</font></td>
     </tr>
-  </table>
-  </center>
-</div>
-
-<p>&nbsp;</p>
-
-<p><b><a name="actions.conditional">FKiSS Actions - Conditional Control</a></b></p>
-<div align="center">
-  <center>
-  <table border="0" cellpadding="0" cellspacing="0" width="100%">
     <tr>
       <td width="150"><a href="ifequal.html">ifequal</a></td>
       <td> Logical if statement</td>
@@ -586,16 +289,6 @@ semantics of the FKiSS programming language.</p>
       <td>  Sets a timer if an object or cel has not moved</td>
       <td width="20%"><font color="#800000">FKiSS5 </font> </td>
     </tr>
-  </table>
-  </center>
-</div>
-
-<p>&nbsp;</p>
-
-<p><b><a name="actions.environmental">FKiSS Actions - Environment Control</a></b></p>
-<div align="center">
-  <center>
-  <table border="0" cellpadding="0" cellspacing="0" width="100%">
     <tr>
       <td width="150"><a href="changecol.html">changecol</a></td>
       <td>  Switches to a new color palette</td>
@@ -681,16 +374,6 @@ semantics of the FKiSS programming language.</p>
       <td> Force a mouse release</td>
       <td width="20%"> <font color="#800000">UltraKiss Extension</font></td>
     </tr>
-  </table>
-  </center>
-</div>
-
-<p>&nbsp;</p>
-
-<p><b><a name="actions.io">FKiSS Actions - I/O Control</a></b></p>
-<div align="center">
-  <center>
-  <table border="0" cellpadding="0" cellspacing="0" width="100%">
     <tr>
       <td width="150"><a href="open.html">open</a></td>
       <td> Open a file</td>
@@ -736,16 +419,6 @@ semantics of the FKiSS programming language.</p>
       <td> Set a property variable</td>
       <td width="20%"> <font color="#800000">DirectKiss Extension</font></td>
     </tr>
-  </table>
-  </center>
-</div>
-
-<p>&nbsp;</p>
-
-<p><b><a name="actions.key">FKiSS Actions - Key Processing</a></b></p>
-<div align="center">
-  <center>
-  <table border="0" cellpadding="0" cellspacing="0" width="100%">
     <tr>
       <td width="150"><a href="letkey.html">letkey</a></td>
       <td> Returns index of first key pressed in list</td>
@@ -776,17 +449,6 @@ semantics of the FKiSS programming language.</p>
       <td> Returns the last typed line as a string&nbsp;</td>
       <td width="20%"><font color="#800000">FKiSS5 Extension</font></td>
     </tr>
-  </table>
-  </center>
-</div>
-
-<p>&nbsp;</p>
-
-<p><b><a name="actions.label">FKiSS Actions - Label Modules</a></b>
-</p>
-<div align="center">
-  <center>
-  <table border="0" cellpadding="0" cellspacing="0" width="100%">
     <tr>
       <td width="150"><a href="gosub.html">gosub</a></td>
       <td> Subroutine call to label module</td>
@@ -812,16 +474,6 @@ semantics of the FKiSS programming language.</p>
       <td> Exit a label module or event module </td>
       <td width="20%"> </td>
     </tr>
-  </table>
-  </center>
-</div>
-
-<p>&nbsp;</p>
-
-<p><b><a name="actions.loop">FKiSS Actions - Loop Control</a></b></p>
-<div align="center">
-  <center>
-  <table border="0" cellpadding="0" cellspacing="0" width="100%">
     <tr>
       <td width="150"><a href="for.html">for</a></td>
       <td> Loop statement</td>
@@ -852,16 +504,6 @@ semantics of the FKiSS programming language.</p>
       <td> While statement end</td>
       <td width="20%"> <font color="#800000">FKiSS5 Extension</font></td>
     </tr>
-  </table>
-  </center>
-</div>
-
-<p>&nbsp;</p>
-
-<p><b><a name="actions.mapping">FKiSS Actions - Mapping</a></b></p>
-<div align="center">
-  <center>
-  <table border="0" cellpadding="0" cellspacing="0" width="100%">
     <tr>
       <td width="150"><a href="map.html">map</a></td>
       <td> Makes an object or cel visible</td>
@@ -892,16 +534,6 @@ semantics of the FKiSS programming language.</p>
       <td>  Sets a timer if an object or cel is not visible</td>
       <td width="20%"><font color="#800000">FKiSS5 </font> </td>
     </tr>
-  </table>
-  </center>
-</div>
-
-<p>&nbsp;</p>
-
-<p><b><a name="actions.messages">FKiSS Actions - Messages</a></b></p>
-<div align="center">
-  <center>
-  <table border="0" cellpadding="0" cellspacing="0" width="100%">
     <tr>
       <td width="150"><a href="debug.html">debug</a></td>
       <td>  Shows a message dialog box</td>
@@ -922,16 +554,6 @@ semantics of the FKiSS programming language.</p>
       <td> Shows a message in the viewer status bar</td>
       <td width="20%"> <font color="#800000">UltraKiss Extension</font></td>
     </tr>
-  </table>
-  </center>
-</div>
-
-<p>&nbsp;</p>
-
-<p><b><a name="actions.movement">FKiSS Actions - Movement</a></b></p>
-<div align="center">
-  <center>
-  <table border="0" cellpadding="0" cellspacing="0" width="100%">
     <tr>
       <td width="150"><a href="move.html">move</a></td>
       <td> Moves an object or cel in x and y dimension</td>
@@ -977,16 +599,6 @@ semantics of the FKiSS programming language.</p>
       <td> Restrict object movement in Y direction</td>
       <td width="20%"><font color="#800000">FKiSS5 </font> </td>
     </tr>
-  </table>
-  </center>
-</div>
-
-<p>&nbsp;</p>
-
-<p><b><a name="actions.attachment">FKiSS Actions - Object Attachment</a></b></p>
-<div align="center">
-  <center>
-  <table border="0" cellpadding="0" cellspacing="0" width="100%">
     <tr>
       <td width="150"><a href="attach.html">attach</a></td>
       <td> Attach an object to a parent</td>
@@ -1032,16 +644,6 @@ semantics of the FKiSS programming language.</p>
       <td> Returns next lowest numbered object attached</td>
       <td width="20%"></td>
     </tr>
-  </table>
-  </center>
-</div>
-
-<p>&nbsp;</p>
-
-<p><b><a name="actions.state">FKiSS Actions - Object and Cel State</a></b></p>
-<div align="center">
-  <center>
-  <table border="0" cellpadding="0" cellspacing="0" width="100%">
     <tr>
       <td width="150"><a href="let.html">let</a></td>
       <td> Variable assignment statement</td>
@@ -1167,16 +769,6 @@ semantics of the FKiSS programming language.</p>
       <td> Returns object currently selected</td>
       <td width="20%"></td>
     </tr>
-  </table>
-  </center>
-</div>
-
-<p>&nbsp;</p>
-
-<p><b><a name="actions.transparency">FKiSS Actions - Transparency</a></b></p>
-<div align="center">
-  <center>
-  <table border="0" cellpadding="0" cellspacing="0" width="100%">
     <tr>
       <td width="150"><a href="ghost.html">ghost</a></td>
       <td> Makes cels or objects unresponsive to the mouse</td>
@@ -1192,16 +784,6 @@ semantics of the FKiSS programming language.</p>
       <td> Adjusts a cel or object transparency</td>
       <td width="20%"> </td>
     </tr>
-  </table>
-  </center>
-</div>
-
-<p>&nbsp;</p>
-
-<p><b><a name="actions.sound">FKiSS Actions - Sound and Music</a> and Video </b></p>
-<div align="center">
-  <center>
-  <table border="0" cellpadding="0" cellspacing="0" width="100%">
     <tr>
       <td width="150"><a href="sound.html">sound</a></td>
       <td> Plays a sound file</td>
@@ -1222,16 +804,6 @@ semantics of the FKiSS programming language.</p>
       <td> Invokes the media player for a playlist</td>
       <td width="20%"> <font color="#800000">UltraKiss Extension</font></td>
     </tr>
-  </table>
-  </center>
-</div>
-
-<p>&nbsp;</p>
-
-<p><b><a name="actions.string">FKiSS Actions - String Processing</a></b></p>
-<div align="center">
-  <center>
-  <table border="0" cellpadding="0" cellspacing="0" width="100%">
     <tr>
       <td width="150"><a href="concat.html">concat</a></td>
       <td> String concatenation</td>
