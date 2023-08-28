@@ -22,24 +22,27 @@
 	releases, or problems and work-arounds that may affect you.&nbsp;</p>
                                         <p>&nbsp;</p>
 					<p><B>August 30, 2023</B></p>
-					<P>UltraKiss V3.6.1 is released. This release fully supports the PlayFkiss compatibility for the Scarecrow sets.</P>
+					<P>UltraKiss V3.6.1 is released. This release fully supports the PlayFKiss compatibility for the Scarecrow sets.</P>
 					<h3><FONT face=Arial>Updates to V3.6.1&nbsp; </FONT></h3>
 					<BLOCKQUOTE>
                       <p><font face="Arial">1. A file seek write error when saving an LHA archive file when the CNF configuration file was updated through the text editor is corrected.</font></p>
  	              <p><font face="Arial">2. A problem where animated cel group frames were not being animated through the animate() command is corrected.</font></p>
- 	              <p><font face="Arial">3. Sound files with durations over 8 seconds are now processed by the MediaPlayer when the new LongSoundMedia compatibility option is set.</font></p>
+ 	              <p><font face="Arial">3. A new Media option is created to process long duration background sounds with the MediaPlayer.  Long sounds by default are 10 seconds or more. </font></p>
  	              <p><font face="Arial">4. Attached objects moved on a mouse press event now properly display the image when the mouse is depressed.  Previously, the image was clipped.</font></p>
  	              <p><font face="Arial">5. The last modified time and date stamp for updated elements written to an archive file is corrected.  Previously this timestamp could be 0.</font></p>
  	              <p><font face="Arial">6. Strong attachment chains now treat object fix values of 1 as if the object is not fixed.  The attachment is not strong as the object will be unfixed.</font></p>
  	              <p><font face="Arial">7. Corrected a problem with INCLUDE file elements not being referenced if the included archive file maintained path directories.</font></p>
  	              <p><font face="Arial">8. Introduced a new general option to enable the display the main menu bar.  The ESC key will restore the main menu if it is not visible.</font></p>
- 	              <p><font face="Arial">9. The user menu specification failed to correctly process a viewer("open","document.txt) command.  This is corrected.</font></p>
+ 	              <p><font face="Arial">9. The user menu specification failed to correctly process a viewer("open","document.txt") command.  This is corrected.</font></p>
  	              <p><font face="Arial">10. INCLUDE file specifications in the CNF file failed to properly parse a list of quoted file names delimited by commas.</font></p>
- 	              <p><font face="Arial">11. Linux can report a NoLineAvailableException on sound playback.  The sudio sound clip is now closed when stopped to release resources.</font></p>
+ 	              <p><font face="Arial">11. Linux can report a NoLineAvailableException on sound playback.  The audio sound clip is now closed when stopped to release resources.</font></p>
+ 	              <p><font face="Arial">12. Corrected a StackOverflowException and program hang if the log file exceeded the maximum allowed size.</font></p>
+ 	              <p><font face="Arial">13. In PlayFKiss compatibility FKiSS object moves on mouse controlled objects is now prohibited for alarm moves. It is allowed for other events.</font></p>
+ 	              <p><font face="Arial">14. The MediaPlayer option to repeat sound files now works when long duration background sounds are transitioned from sound() actions.</font></p>
         				</BLOCKQUOTE>
                                         <p>&nbsp;</p>
 					<p><B>July 30, 2023</B></p>
-					<P>UltraKiss V3.6 is released. This release fully supports the PlayFkiss compatibility for the Scarecrow sets.</P>
+					<P>UltraKiss V3.6 is released. This release fully supports the PlayFKiss compatibility for the Scarecrow sets.</P>
 					<h3><FONT face=Arial>Updates to V3.6&nbsp; </FONT></h3>
 					<BLOCKQUOTE>
                       <p><font face="Arial">1. Numerous corrections are made to ensure valid restart processing when expansion sets are loaded or options are changed that require a set reload.</font></p>

@@ -230,13 +230,17 @@ final public class LogFile extends PrintStream
          }
          else
          {
-            if (!error) System.out.println("LogFile: Exceed 10 MB log file size " + logfilename) ;
-   			setError();
+   			if (!error) 
+            {
+               String s = "\nLogFile: Exceed maximum log file size " + logfilename ;
+               logfile.write(s.getBytes()) ;
+            }
             error = true ;
          }         
 		}
 		catch (Exception e)
 		{
+         stop() ;
 			System.out.println("LogFile: Exception writing log file " + logfilename) ;
 			e.printStackTrace() ;
   			setError();
@@ -295,13 +299,17 @@ final public class LogFile extends PrintStream
          }
          else
          {
-   			if (!error) System.out.println("LogFile: Exceed maximum log file size " + logfilename) ;
-   			setError();
+   			if (!error) 
+            {
+               String s = "\nLogFile: Exceed maximum log file size " + logfilename ;
+               logfile.write(s.getBytes()) ;
+            }
             error = true ;
          }         
 		}
 		catch (Exception e)
 		{
+         stop() ;
 			System.out.println("LogFile: Exception writing log file " + logfilename) ;
 			e.printStackTrace() ;
   			setError();

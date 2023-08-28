@@ -676,6 +676,13 @@ final class AudioDialog extends KissDialog
 
 	void setValues()
 	{
+      if (!javax.swing.SwingUtilities.isEventDispatchThread())
+      {
+      	Runnable runner = new Runnable()
+			{ public void run() { setValues() ; } } ;
+   		javax.swing.SwingUtilities.invokeLater(runner) ;
+      }
+
    	if (audio == null) return ;
 		String state = audio.getState() ;
 		String playtime = "" + audio.getPosition() ;
@@ -894,7 +901,7 @@ final class AudioDialog extends KissDialog
 			}
 			else if (ce instanceof EndOfMediaEvent)
 			{
-				if (audio != null && !audio.isRepeating() && OptionsDialog.getAutoLoop())
+				if (audio != null && !audio.isRepeating() && OptionsDialog.getAutoMediaLoop())
             	audio.play() ;
 			}
 		}
@@ -908,8 +915,11 @@ final class AudioDialog extends KissDialog
 		{
 			if (event.getType() == LineEvent.Type.STOP)
 			{
-				if (audio != null && !audio.isRepeating() && OptionsDialog.getAutoLoop())
-            	audio.play() ;
+				if (audio != null)
+            {
+               if (audio.isRepeating() || (audio.getBackground() && OptionsDialog.getAutoMediaLoop()))
+               	audio.play() ;
+            }
 				else setValues() ;
 			}
 
@@ -928,8 +938,11 @@ final class AudioDialog extends KissDialog
 		{
 			if (message.getType() == 47)
 			{  // 47 is end of track
-				if (audio != null && !audio.isRepeating() && OptionsDialog.getAutoLoop())
-            	audio.play() ;
+				if (audio != null)
+            {
+               if (audio.isRepeating() || (audio.getBackground() && OptionsDialog.getAutoMediaLoop()))
+               	audio.play() ;
+            }
 				else setValues() ;
 			}
 		}

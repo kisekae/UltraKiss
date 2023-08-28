@@ -95,6 +95,7 @@ final class MediaFrame extends KissFrame
    private Timer timer = null ;                    // The progress timer
    private int playindex = 0 ;							// The current play index
 	private int repeatcount = 0 ;				         // The repetition count
+   private boolean internal = false ;              // True if created by action
 
    private boolean realized = false ;					// If true, media realized
 	private boolean error = false ;						// If true, media error
@@ -291,7 +292,7 @@ final class MediaFrame extends KissFrame
 		centerframe.setState(OptionsDialog.getMediaCenter());
 		centerframe.addItemListener(this) ;
 		optionMenu.add((loopcontrol = new JCheckBoxMenuItem(Kisekae.getCaptions().getString("OptionsLoopPlayback")))) ;
-		loopcontrol.setState(OptionsDialog.getAutoLoop());
+		loopcontrol.setState(OptionsDialog.getAutoMediaLoop());
 		loopcontrol.addItemListener(this) ;
 		optionMenu.add((minimize = new JCheckBoxMenuItem(Kisekae.getCaptions().getString("OptionsMinimizeAudio")))) ;
 		minimize.setState(OptionsDialog.getMediaMinimize());
@@ -743,17 +744,19 @@ final class MediaFrame extends KissFrame
 
 
 	// ItemListener interface.  The item state changed method is invoked
-	// when checkbox menu items are selected.
+	// when checkbox menu items are selected.  This is only for MediaPlayer
+   // invoked manually and not through internal mediaplayer() statements.
 
 	public void itemStateChanged(ItemEvent evt)
 	{
+      if (isInternal()) return ;
 		Object source = evt.getSource() ;
 
 		// Turn loop control on and off.
 
 		if (source == loopcontrol)
 		{
-			OptionsDialog.setAutoLoop(loopcontrol.getState()) ;
+         OptionsDialog.setAutoMediaLoop(loopcontrol.getState()) ;
 			return ;
 		}
 
@@ -798,7 +801,7 @@ final class MediaFrame extends KissFrame
 
 		if (source == optionMenu)
 		{
-        	loopcontrol.setState(OptionsDialog.getAutoLoop()) ;
+        	loopcontrol.setState(OptionsDialog.getAutoMediaLoop()) ;
          fullscreen.setState(OptionsDialog.getAutoFullScreen()) ;
          minimize.setState(OptionsDialog.getMediaMinimize()) ;
          centerframe.setState(OptionsDialog.getMediaCenter()) ;
@@ -880,6 +883,13 @@ final class MediaFrame extends KissFrame
    }
 
 
+	// Return true if the object is internally generated through FKissAction.
+
+	void setInternal(boolean b) { internal = b ; }
+   
+	boolean isInternal() { return internal ; }
+
+   
    // Method to set a minimized visible state if required.
 
    public void setVisible(boolean b)
@@ -1030,6 +1040,7 @@ final class MediaFrame extends KissFrame
       ko = kiss ;
 		if (ko instanceof Audio) Audio.stop((Audio) ko) ;
 		if (ko instanceof Video) Video.stop((Video) ko) ;
+      ko.setRepeat(repeatcount);
       play() ;
    }
 
@@ -1039,7 +1050,7 @@ final class MediaFrame extends KissFrame
 	void playNext()
    {
    	if (playlist == null) return ;
-		if (playindex >= playlist.size() && OptionsDialog.getAutoLoop())
+		if (playindex >= playlist.size() && OptionsDialog.getAutoMediaLoop())
       {
 			playindex = 0 ;
          if (repeatcount > 0) repeatcount-- ;
@@ -1111,6 +1122,7 @@ final class MediaFrame extends KissFrame
       if (ko != null)
       {
       	playlist = null ;
+         ko.setRepeat(repeatcount);
          ko.setInternal(true) ;
 		}
 
@@ -1590,7 +1602,7 @@ final class MediaFrame extends KissFrame
          if (diff > (int) (duration * 0.02)) reset.setVisible(!p.isRunning()) ;
 		}
 
-      // Determine the sound clip attributes.  Allow a positin reset unless
+      // Determine the sound clip attributes.  Allow a position reset unless
       // we are at the end of the clip.
 
 		if (currentmedia instanceof Clip)
@@ -1861,7 +1873,7 @@ final class MediaFrame extends KissFrame
 				// Start the player in a new thread as player initiation can take
 	         // time.  This frees the Player thread.
 
-		      else if (OptionsDialog.getAutoLoop())
+		      else if (OptionsDialog.getAutoMediaLoop())
 				{
 					if (audio != null && audio.isRepeating()) return ;
 					if (video != null && video.isRepeating()) return ;
@@ -1935,13 +1947,14 @@ final class MediaFrame extends KissFrame
 				// Start the player in a new thread as player initiation can take
 	         // time.  This frees the Player thread.
 
-		      else if (OptionsDialog.getAutoLoop() && complete)
+		      else if (OptionsDialog.getAutoMediaLoop() && complete)
 				{
-					if (audio != null && audio.isRepeating()) return ;
+					if (audio != null && audio.isLooping()) return ;
 		      	if (OptionsDialog.getDebugSound() || OptionsDialog.getDebugMovie())
                   System.out.println("MediaPlayer: " + getName() + " Repeat count = " + repeatcount) ;
+               if (audio != null) audio.stop(audio) ;
                if (repeatcount > 0) repeatcount-- ;
-               if (repeatcount == 0) loopcontrol.setState(false) ;
+               if (repeatcount == 0) return ;
 					Runnable runner = new Runnable()
 					{ public void run() { play() ; } } ;
    				javax.swing.SwingUtilities.invokeLater(runner) ;
@@ -1951,7 +1964,10 @@ final class MediaFrame extends KissFrame
             // Otherwise stop and update our status
 
             else
+            {
+               if (audio != null) audio.stop(audio) ;
             	updateStatus() ;
+            }
 			}
 
 			// Start events update our status.
@@ -2001,13 +2017,14 @@ final class MediaFrame extends KissFrame
 				// Start the player in a new thread as player initiation can take
 	         // time.  This frees the Player thread.
 
-		      else if (OptionsDialog.getAutoLoop() && complete)
+		      else if (OptionsDialog.getAutoMediaLoop() && complete)
 				{
 					if (audio != null && audio.isRepeating()) return ;
 		      	if (OptionsDialog.getDebugSound() || OptionsDialog.getDebugMovie())
                   System.out.println("MediaPlayer: " + getName() + " Repeat count = " + repeatcount) ;
                if (repeatcount > 0) repeatcount-- ;
                if (repeatcount == 0) loopcontrol.setState(false) ;
+               if (audio != null) audio.stop(audio) ;
 					Runnable runner = new Runnable()
 					{ public void run() { play() ; } } ;
    				javax.swing.SwingUtilities.invokeLater(runner) ;
@@ -2017,7 +2034,10 @@ final class MediaFrame extends KissFrame
             // Otherwise stop and update our status
 
             else
+            {
+               if (audio != null) audio.stop(audio) ;
             	updateStatus() ;
+            }
 			}
 
 	      // Any other meta event will signal a start event.   We use only

@@ -189,7 +189,7 @@ final class VideoDialog extends KissDialog
 			}
 			else if (ce instanceof EndOfMediaEvent)
 			{
-				if (video != null && !video.isRepeating() && OptionsDialog.getAutoLoop())
+				if (video != null && !video.isRepeating() && OptionsDialog.getAutoMediaLoop())
             	video.play() ;
 			}
 		}

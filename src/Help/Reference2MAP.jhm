@@ -89,14 +89,14 @@
 	<mapID target="reference2.event" url="product/reference2/event.html" />
 	<mapID target="reference2.exitevent" url="product/reference2/exitevent.html" />
 	<mapID target="reference2.for" url="product/reference2/for.html" />
-	<mapID target="reference2.getIndexOf" url="product/reference2/getIndexOf.html" />
-	<mapID target="reference2.getItemCount" url="product/reference2/getItemCount.html" />
-	<mapID target="reference2.getSelected" url="product/reference2/getSelected.html" />
-	<mapID target="reference2.getSelectedIndex" url="product/reference2/getSelectedIndex.html" />
-	<mapID target="reference2.getSelectedItem" url="product/reference2/getSelectedItem.html" />
-	<mapID target="reference2.getSelectedValue" url="product/reference2/getSelectedValue.html" />
-	<mapID target="reference2.getText" url="product/reference2/getText.html" />
-	<mapID target="reference2.getValueAt" url="product/reference2/getValueAt.html" />
+	<mapID target="reference2.getIndexOf" url="product/reference2/getindexof.html" />
+	<mapID target="reference2.getItemCount" url="product/reference2/getitemcount.html" />
+	<mapID target="reference2.getSelected" url="product/reference2/getselected.html" />
+	<mapID target="reference2.getSelectedIndex" url="product/reference2/getselectedindex.html" />
+	<mapID target="reference2.getSelectedItem" url="product/reference2/getselecteditem.html" />
+	<mapID target="reference2.getSelectedValue" url="product/reference2/getselectedvalue.html" />
+	<mapID target="reference2.getText" url="product/reference2/gettext.html" />
+	<mapID target="reference2.getValueAt" url="product/reference2/getvalueat.html" />
 	<mapID target="reference2.ghost" url="product/reference2/ghost.html" />
 	<mapID target="reference2.glue" url="product/reference2/glue.html" />
 	<mapID target="reference2.gosub" url="product/reference2/gosub.html" />
@@ -150,7 +150,7 @@
 	<mapID target="reference2.map" url="product/reference2/map.html" />
 	<mapID target="reference2.mediaplayer" url="product/reference2/mediaplayer.html" />
 	<mapID target="reference2.mod" url="product/reference2/mod.html" />
-	<mapID target="reference2.mouseRelease" url="product/reference2/mouseRelease.html" />
+	<mapID target="reference2.mouseRelease" url="product/reference2/mouserelease.html" />
 	<mapID target="reference2.movie" url="product/reference2/movie.html" />
 	<mapID target="reference2.move" url="product/reference2/move.html" />
 	<mapID target="reference2.movebyx" url="product/reference2/movebyx.html" />
@@ -170,24 +170,25 @@
 	<mapID target="reference2.random" url="product/reference2/random.html" />
 	<mapID target="reference2.randomtimer" url="product/reference2/randomtimer.html" />
 	<mapID target="reference2.read" url="product/reference2/read.html" />
-	<mapID target="reference2.removeItem" url="product/reference2/removeItem.html" />
-	<mapID target="reference2.removeAll" url="product/reference2/removeAll.html" />
+	<mapID target="reference2.removeItem" url="product/reference2/removeitem.html" />
+	<mapID target="reference2.removeAll" url="product/reference2/removeall.html" />
+	<mapID target="reference2.repeat" url="product/reference2/repeat.html" />
 	<mapID target="reference2.replacestr" url="product/reference2/replacestr.html" />
 	<mapID target="reference2.restrictx" url="product/reference2/restrictx.html" />
 	<mapID target="reference2.restricty" url="product/reference2/restricty.html" />
-	<mapID target="reference2.setAttributes" url="product/reference2/setAttributes.html" />
+	<mapID target="reference2.setAttributes" url="product/reference2/setattributes.html" />
 	<mapID target="reference2.setfix" url="product/reference2/setfix.html" />
 	<mapID target="reference2.setframe" url="product/reference2/setframe.html" />
 	<mapID target="reference2.setkcf" url="product/reference2/setkcf.html" />
 	<mapID target="reference2.setlevel" url="product/reference2/setlevel.html" />
 	<mapID target="reference2.setmodal" url="product/reference2/setmodal.html" />
 	<mapID target="reference2.setpal" url="product/reference2/setpal.html" />
-	<mapID target="reference2.setSelected" url="product/reference2/setSelected.html" />
-	<mapID target="reference2.setSelectedIndex" url="product/reference2/setSelectedIndex.html" />
-	<mapID target="reference2.setSelectedItem" url="product/reference2/setSelectedItem.html" />
-	<mapID target="reference2.setSelectedValue" url="product/reference2/setSelectedValue.html" />
-	<mapID target="reference2.setText" url="product/reference2/setText.html" />
-	<mapID target="reference2.setValueAt" url="product/reference2/setValueAt.html" />
+	<mapID target="reference2.setSelected" url="product/reference2/setselected.html" />
+	<mapID target="reference2.setSelectedIndex" url="product/reference2/setselectedindex.html" />
+	<mapID target="reference2.setSelectedItem" url="product/reference2/setselecteditem.html" />
+	<mapID target="reference2.setSelectedValue" url="product/reference2/setselectedvalue.html" />
+	<mapID target="reference2.setText" url="product/reference2/settext.html" />
+	<mapID target="reference2.setValueAt" url="product/reference2/setvalueat.html" />
 	<mapID target="reference2.shell" url="product/reference2/shell.html" />
 	<mapID target="reference2.showstatus" url="product/reference2/showstatus.html" />
 	<mapID target="reference2.signal" url="product/reference2/signal.html" />

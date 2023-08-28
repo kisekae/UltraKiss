@@ -1142,6 +1142,10 @@ abstract class KissObject
 
 	void setAnimate(int n) { }
 	void setAnimate(int n, boolean all, KissObject c) {setAnimate(n) ; }
+   
+	// Set the repeat flag for this media file.
+
+	void setRepeat(int n) { }
 
 	// Set the object image frame.
 

@@ -827,9 +827,15 @@ final class FKissAction extends KissObject
             // through an external request such as an alarm activation. If
             // so, ignore the move as the user may be dragging the object.
             // Maximum fixed objects can always be moved with FKiSS commands.
+            //
+            // In PlayFKiss compatibility alarm moves on mouse controlled
+            // objects are prohibited but moves through press() events
+            // are allowed.
 
             g = panel.getGroup() ;
-            if (g != null && !OptionsDialog.getReleaseMove())
+            if ((g != null && !OptionsDialog.getReleaseMove()) || 
+               (g != null && OptionsDialog.getPlayFKissCompatibility() && 
+                "alarm".equals(event.getIdentifier())))     
             {
                int gflex = (kiss instanceof Group) ? ((Group) kiss).getFlex().y : 0 ;
                if (gflex < OptionsDialog.getMaxLock())
@@ -1570,7 +1576,7 @@ final class FKissAction extends KissObject
             if (!(kiss instanceof Alarm)) break ;
             alarm = (Alarm) kiss ;
             delay = variable.getIntValue((String) parameters.elementAt(1),event) ;
-            
+/*            
             // Kludge for NoGodsLand timing problems
             s = config.getName() ;
             if (s.contains("NoGodsLand"))
@@ -1579,11 +1585,11 @@ final class FKissAction extends KissObject
                // problem in Official Meeting Hall with alarm(4057) running before alarm(128)
                if ("4057".equals(o) && "alarm(4042)".equals(event.getName())) 
                   delay = delay + 200 ;
-               // problem in Hidden Hermatage with alarm(1001) running before alarm(257)
+               // problem in Hidden Hermitage with alarm(1001) running before alarm(257)
                if ("257".equals(o) && "alarm(2887)".equals(event.getName())) 
                   delay = delay + 200 ;
             }
-            
+*/            
             alarm.setInterval(delay,activator) ;
             event.setAlarmEnable(kiss) ;
             setAlarmArguments(alarm,parameters,2) ;
@@ -2857,7 +2863,14 @@ final class FKissAction extends KissObject
                n3 = variable.getIntValue((String) parameters.elementAt(3),event) ;
             if (parameters.size() > 4)
                n4 = variable.getIntValue((String) parameters.elementAt(4),event) ;
-
+            
+            // If we are a background sound transitioned to the MediaPlayer
+            // and the MediaPlayer option id set to repeat sounds, then set 
+            // the repeat value.
+            
+            if (OptionsDialog.getAutoMediaLoop() && parameters.size() == 1)
+               if (kiss instanceof Audio && ((Audio) kiss).getBackground()) n1 = -1 ;
+           
             // Create a new configuration specific media player if none
             // exists.  If one has already been created then use it to
             // play the new media playlist or file.
@@ -2866,6 +2879,7 @@ final class FKissAction extends KissObject
             if (config != null) config.setMediaFrame(mf) ;
             mf.setRepeat(n1) ;
             mf.setMinimized(n2 != 0,n3,n4) ;
+            mf.setInternal(true) ;
             if (kiss == null)
                mf.play(ze) ;
             else
@@ -3286,6 +3300,8 @@ final class FKissAction extends KissObject
                {
                   opt.setControls() ;
                   opt.apply() ;
+                  if (panel.isVisible())
+                     panel.requestFocus();
                }
                break ;
             }

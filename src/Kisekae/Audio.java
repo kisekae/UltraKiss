@@ -329,6 +329,10 @@ abstract class Audio extends KissObject
 
 	boolean isRepeating() { return (repeatcount != 0) ; }
 
+   // Return an indication if the audio loops.
+
+	boolean isLooping() { return (repeatcount < 0) ; }
+
 	// Return an indication if the medium is Java sound.
 
 	boolean isJavaSound() { return false ; }

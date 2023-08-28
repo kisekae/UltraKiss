@@ -278,12 +278,16 @@ final class AudioSound extends Audio
             {
                Clip clip = (Clip) currentsound ;
                clip.setMicrosecondPosition(0) ;
+               if (OptionsDialog.getDebugSound())
+                  System.out.println("AudioSound: " + getName() + " clip reset to start") ;
                return ;
             }
             if (currentsound instanceof Sequencer)
             {
                Sequencer sequencer = (Sequencer) currentsound ;
                sequencer.setMicrosecondPosition(0) ;
+               if (OptionsDialog.getDebugSound())
+                  System.out.println("AudioSound: " + getName() + " sequencer reset to start") ;
                return ;
             }
          }
@@ -539,6 +543,12 @@ final class AudioSound extends Audio
 				if (OptionsDialog.getDebugSound())
 					System.out.println("AudioSound: " + getName() + " Sound clip started") ;
 				Clip clip = (Clip) currentsound ;
+            if (isLooping() || (getBackground() && OptionsDialog.getAutoMediaLoop()))
+            {
+               clip.loop(Clip.LOOP_CONTINUOUSLY);
+               if (OptionsDialog.getDebugSound())
+                  System.out.println("AudioSound: " + getName() + " Clip is looping.") ;
+            }
 				clip.start() ;
             if (clip instanceof Mp3Clip)
                cd = ((Mp3Clip) clip).getContentDescriptor() ;
@@ -586,9 +596,9 @@ final class AudioSound extends Audio
 
 			if (c != null)
 			{
-				ArchiveFile configzip = c.getZipFile() ;
-				ArchiveFile audiozip = audio.getZipFile() ;
-				if (!(configzip == audiozip)) continue ;
+            Object o1 = c.cid ;
+            Object o2 = audio.cid ;
+            if (o1 != null && !(o1.equals(o2))) continue ;
 			}
 
          // Check for type agreement.
@@ -780,7 +790,7 @@ final class AudioSound extends Audio
 				// Start the player in a new thread as player initiation can take
 				// time.  This frees the Player thread.
 
-				if (repeat)
+				if (repeatcount > 0)
 				{
 					if (OptionsDialog.getDebugSound())
                	System.out.println("AudioSound: " + getName() + " Repeat count = " + repeatcount) ;

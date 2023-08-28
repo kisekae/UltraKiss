@@ -150,7 +150,7 @@ final public class OptionsDialog extends KissDialog
 	private static boolean transparentgroup = true ;
 	private static boolean mapcollide = false ;
 	private static boolean movexycollide = false ;
-	private static boolean autoloop = false ;
+	private static boolean automedialoop = false ;
 	private static boolean autofullscreen = false ;
 	private static boolean mediaminimize = false ;
 	private static boolean mediacenter = true ;
@@ -206,6 +206,7 @@ final public class OptionsDialog extends KissDialog
    private static String commentcol = "60" ;
    private static String indentspace = "1" ;
    private static String maxlrufiles = "4" ;
+   private static String longduration = "10" ;
    private static Object language = "English" ;
    private static Object encoding = "Cp1252" ;
    private static Object exporttype = "CEL" ;
@@ -310,7 +311,7 @@ final public class OptionsDialog extends KissDialog
 	private static boolean inittransparentgroup = transparentgroup ;
 	private static boolean initmapcollide = mapcollide ;
 	private static boolean initmovexycollide = movexycollide ;
-	private static boolean initautoloop = autoloop ;
+	private static boolean initautomedialoop = automedialoop ;
 	private static boolean initautofullscreen = autofullscreen ;
 	private static boolean initmediaminimize = mediaminimize ;
 	private static boolean initmediacenter = mediacenter ;
@@ -362,6 +363,7 @@ final public class OptionsDialog extends KissDialog
    private static String initmaxpageset = new String(maxpageset) ;
    private static String initmaxcolorset = new String(maxcolorset) ;
    private static String initmaxlrufiles = new String(maxlrufiles) ;
+   private static String initlongduration = new String(longduration) ;
    private static String initjpegquality = new String(jpegquality) ;
    private static String initundolimit = new String(undolimit) ;
    private static String initcommentcol = new String(commentcol) ;
@@ -409,7 +411,7 @@ final public class OptionsDialog extends KissDialog
 	private JPanel panel1 = new JPanel();
 	private JTabbedPane jTabbedPane1 = new JTabbedPane();
 	private JTabbedPane jTabbedPane2 = new JTabbedPane();
-	private BorderLayout borderLayout2 = new BorderLayout();
+	private FlowLayout flowLayout1 = new FlowLayout(FlowLayout.LEADING,0,0);
 	private BorderLayout borderLayout3 = new BorderLayout();
    private BorderLayout borderLayout4 = new BorderLayout();
 	private BorderLayout borderLayout6 = new BorderLayout();
@@ -515,6 +517,7 @@ final public class OptionsDialog extends KissDialog
 	private JPanel jPanel110 = new JPanel();
 	private JPanel jPanel111 = new JPanel();
 	private JPanel jPanel112 = new JPanel();
+	private JPanel jPanel113 = new JPanel();
 	private JButton CANCEL = new JButton();
 	private JButton APPLY = new JButton();
 	private JButton RESET = new JButton();
@@ -622,7 +625,7 @@ final public class OptionsDialog extends KissDialog
 	private JCheckBox LongSoundMedia = new JCheckBox();
 	private JCheckBox StopMusic = new JCheckBox();
 	private JCheckBox SoundSingle = new JCheckBox();
-	private JCheckBox AutoLoop = new JCheckBox();
+	private JCheckBox AutoMediaLoop = new JCheckBox();
 	private JCheckBox AutoFullScreen = new JCheckBox();
 	private JCheckBox MediaMinimize = new JCheckBox();
 	private JCheckBox MediaCenter = new JCheckBox();
@@ -672,6 +675,7 @@ final public class OptionsDialog extends KissDialog
 	private JTextField CommentCol = new JTextField();
 	private JTextField IndentSpace = new JTextField();
 	private JTextField MaxLruFiles = new JTextField();
+	private JTextField LongDuration = new JTextField();
 	private JTextField KissWeb = new JTextField();
 	private JTextField UserDirectory = new JTextField();
 	private JTextField WebSite = new JTextField();
@@ -987,6 +991,7 @@ final public class OptionsDialog extends KissDialog
 		jPanel111.setBorder(tb11);
 		jPanel112.setBorder(tb13);
 		jPanel112.setLayout(gridLayout9);
+		jPanel113.setLayout(flowLayout1);
 		jPanel30.setLayout(gridBagLayout16);
 		jPanel30.setBorder(eb1);
 		jPanel31.setBorder(tb19);
@@ -1169,6 +1174,9 @@ final public class OptionsDialog extends KissDialog
 		MaxLruFiles.setPreferredSize(new Dimension(30, 21));
 		MaxLruFiles.setHorizontalAlignment(SwingConstants.RIGHT);
 		MaxLruFiles.setText(maxlrufiles);
+		LongDuration.setPreferredSize(new Dimension(30, 21));
+		LongDuration.setHorizontalAlignment(SwingConstants.RIGHT);
+		LongDuration.setText(longduration);
 		AnimateOption.setText(Kisekae.getCaptions().getString("OptionsEnableAnimation"));
 		AnimateOption.setToolTipText(Kisekae.getCaptions().getString("ToolTipAnimateOption"));
 		AnimateOption.setSelected(animate);
@@ -1370,9 +1378,9 @@ final public class OptionsDialog extends KissDialog
 		SoundSingle.setText(Kisekae.getCaptions().getString("OptionsSoundSingle"));
 		SoundSingle.setToolTipText(Kisekae.getCaptions().getString("ToolTipSoundSingle"));
 		SoundSingle.setSelected(soundsingle);
-		AutoLoop.setText(Kisekae.getCaptions().getString("OptionsLoopPlayback"));
-		AutoLoop.setToolTipText(Kisekae.getCaptions().getString("ToolTipLoopPlayback"));
-		AutoLoop.setSelected(autoloop);
+		AutoMediaLoop.setText(Kisekae.getCaptions().getString("OptionsLoopPlayback"));
+		AutoMediaLoop.setToolTipText(Kisekae.getCaptions().getString("ToolTipLoopPlayback"));
+		AutoMediaLoop.setSelected(automedialoop);
 		AutoFullScreen.setText(Kisekae.getCaptions().getString("OptionsFullScreenVideo"));
 		AutoFullScreen.setToolTipText(Kisekae.getCaptions().getString("ToolTipFullScreenVideo"));
 		AutoFullScreen.setSelected(autofullscreen);
@@ -1813,7 +1821,7 @@ final public class OptionsDialog extends KissDialog
             ,GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 		jPanel110.add(JavaSoundDebug, null);
 		jPanel110.add(MediaMinimize, null);
-		jPanel110.add(AutoLoop, null);
+		jPanel110.add(AutoMediaLoop, null);
 		jPanel110.add(CacheAudio1, null);
 		jPanel110.add(AutoFullScreen, null);
 		jPanel110.add(KeepAspect, null);
@@ -1824,7 +1832,9 @@ final public class OptionsDialog extends KissDialog
 		jPanel112.add(StopMusic, null);
 		jPanel112.add(SuspendMedia, null);
 		jPanel112.add(MediaMusicResume, null);
-		jPanel112.add(LongSoundMedia, null);
+      jPanel113.add(LongSoundMedia,null) ;
+		jPanel113.add(LongDuration, null);
+      jPanel112.add(jPanel113,null);
 
       // The Edit tab pane.
 
@@ -2150,7 +2160,7 @@ final public class OptionsDialog extends KissDialog
 	static public boolean getImmediateCollide() { return immediatecollide ; }
 	static public boolean getImmediateUnfix() { return immediateunfix ; }
 	static public boolean getImmediateEvent() { return immediateevent ; }
-	static public boolean getAutoLoop() { return autoloop ; }
+	static public boolean getAutoMediaLoop() { return automedialoop ; }
 	static public boolean getAutoFullScreen() { return autofullscreen ; }
 	static public boolean getSuspendMedia() { return suspendmedia ; }
 	static public boolean getLongSoundMedia() { return longsoundmedia ; }
@@ -2198,6 +2208,14 @@ final public class OptionsDialog extends KissDialog
    {
       if (maxlrufiles == null) return 0 ;
       try { return (Integer.parseInt(maxlrufiles)) ; }
+      catch (Exception e) { }
+      return 0 ;
+   }
+   
+   static public int getLongDuration() 
+   {
+      if (longduration == null) return 0 ;
+      try { return (Integer.parseInt(longduration)) ; }
       catch (Exception e) { }
       return 0 ;
    }
@@ -2456,7 +2474,7 @@ final public class OptionsDialog extends KissDialog
 	static public void setImmediateCollide(boolean b) { immediatecollide = b ; }
 	static public void setImmediateUnfix(boolean b) { immediateunfix = b ; }
 	static public void setImmediateEvent(boolean b) { immediateevent = b ; }
-	static public void setAutoLoop(boolean b) { autoloop = b ; }
+	static public void setAutoMediaLoop(boolean b) { automedialoop = b ; }
 	static public void setAutoFullScreen(boolean b) { autofullscreen = b ; }
 	static public void setSuspendMedia(boolean b) { suspendmedia = b ; }
 	static public void setLongSoundMedia(boolean b) { longsoundmedia = b ; }
@@ -2548,6 +2566,9 @@ final public class OptionsDialog extends KissDialog
 
 	static public void setMaxLruFiles(String s)
    { maxlrufiles = Variable.getStringLiteralValue(s) ; }
+
+	static public void setLongDuration(String s)
+   { longduration = Variable.getStringLiteralValue(s) ; }
 
 	static public void setUserDir(String s)
    { userdir = Variable.getStringLiteralValue(s) ; }
@@ -2759,7 +2780,7 @@ final public class OptionsDialog extends KissDialog
       else if ("transparentgroup".equalsIgnoreCase(option)) setTransparentGroup(b) ;
       else if ("mapcollide".equalsIgnoreCase(option)) setMapCollide(b) ;
       else if ("movexycollide".equalsIgnoreCase(option)) setMoveXYCollide(b) ;
-      else if ("autoloop".equalsIgnoreCase(option)) setAutoLoop(b) ;
+      else if ("automedialoop".equalsIgnoreCase(option)) setAutoMediaLoop(b) ;
       else if ("autofullscreen".equalsIgnoreCase(option)) setAutoFullScreen(b) ;
       else if ("mediaminimize".equalsIgnoreCase(option)) setMediaMinimize(b) ;
       else if ("mediacenter".equalsIgnoreCase(option)) setMediaCenter(b) ;
@@ -2806,6 +2827,7 @@ final public class OptionsDialog extends KissDialog
       else if ("commentcol".equalsIgnoreCase(option)) setCommentCol(value) ;
       else if ("indentspace".equalsIgnoreCase(option)) setIndentSpace(value) ;
       else if ("maxlrufiles".equalsIgnoreCase(option)) setMaxLruFiles(value) ;
+      else if ("longduration".equalsIgnoreCase(option)) setLongDuration(value) ;
       else if ("kissweb".equalsIgnoreCase(option)) setKissWeb(value) ;
       else if ("userdir".equalsIgnoreCase(option)) setUserDir(value) ;
       else if ("onlinehelp".equalsIgnoreCase(option)) setOnlineHelp(value) ;
@@ -2904,7 +2926,7 @@ final public class OptionsDialog extends KissDialog
       else if ("transparentgroup".equalsIgnoreCase(option)) s += getTransparentGroup() ;
       else if ("mapcollide".equalsIgnoreCase(option)) s += getMapCollide() ;
       else if ("movexycollide".equalsIgnoreCase(option)) s += getMoveXYCollide() ;
-      else if ("autoloop".equalsIgnoreCase(option)) s += getAutoLoop() ;
+      else if ("automedialoop".equalsIgnoreCase(option)) s += getAutoMediaLoop() ;
       else if ("autofullscreen".equalsIgnoreCase(option)) s += getAutoFullScreen() ;
       else if ("mediaminimize".equalsIgnoreCase(option)) s += getMediaMinimize() ;
       else if ("mediacenter".equalsIgnoreCase(option)) s += getMediaCenter() ;
@@ -2951,6 +2973,7 @@ final public class OptionsDialog extends KissDialog
       else if ("commentcol".equalsIgnoreCase(option)) s += getCommentCol() ;
       else if ("indentspace".equalsIgnoreCase(option)) s += getIndentSpace() ;
       else if ("maxlrufiles".equalsIgnoreCase(option)) s += getMaxLruFiles() ;
+      else if ("longduration".equalsIgnoreCase(option)) s += getLongDuration() ;
       else if ("kissweb".equalsIgnoreCase(option)) s += getKissWeb() ;
       else if ("userdir".equalsIgnoreCase(option)) s += getUserDir() ;
       else if ("onlinehelp".equalsIgnoreCase(option)) s += getOnlineHelp() ;
@@ -3030,6 +3053,7 @@ final public class OptionsDialog extends KissDialog
       MaxPageSet.setText(maxpageset);
       MaxColorSet.setText(maxcolorset);
       MaxLruFiles.setText(maxlrufiles);
+      LongDuration.setText(longduration);
 		CacheAudio.setSelected(cacheaudio);
 		CacheAudio1.setSelected(cacheaudio);
 		CacheVideo.setSelected(cachevideo);
@@ -3077,7 +3101,7 @@ final public class OptionsDialog extends KissDialog
 		ImmediateCollide.setSelected(immediatecollide);
 		ImmediateUnfix.setSelected(immediateunfix);
 		ImmediateEvent.setSelected(immediateevent);
-		AutoLoop.setSelected(autoloop);
+		AutoMediaLoop.setSelected(automedialoop);
 		AutoFullScreen.setSelected(autofullscreen);
 		SuspendMedia.setSelected(suspendmedia);
 		LongSoundMedia.setSelected(longsoundmedia);
@@ -3236,6 +3260,7 @@ final public class OptionsDialog extends KissDialog
       maxpageset = MaxPageSet.getText() ;
       maxcolorset = MaxColorSet.getText() ;
       maxlrufiles = MaxLruFiles.getText() ;
+      longduration = LongDuration.getText() ;
 		cacheaudio = CacheAudio.isSelected() ;
 		cachevideo = CacheVideo.isSelected() ;
 		cacheimage = CacheImage.isSelected() ;
@@ -3281,7 +3306,7 @@ final public class OptionsDialog extends KissDialog
 		immediatecollide = ImmediateCollide.isSelected() ;
 		immediateunfix = ImmediateUnfix.isSelected() ;
 		immediateevent = ImmediateEvent.isSelected() ;
-		autoloop = AutoLoop.isSelected() ;
+		automedialoop = AutoMediaLoop.isSelected() ;
 		autofullscreen = AutoFullScreen.isSelected() ;
 		longsoundmedia = LongSoundMedia.isSelected() ;
 		stopmusic = StopMusic.isSelected() ;
@@ -3468,6 +3493,7 @@ final public class OptionsDialog extends KissDialog
       maxpageset = initmaxpageset ;
       maxcolorset = initmaxcolorset ;
       maxlrufiles = initmaxlrufiles ;
+      longduration = initlongduration ;
 		cacheaudio = initcacheaudio ;
 		cachevideo = initcachevideo ;
 		cacheimage = initcacheimage ;
@@ -3513,7 +3539,7 @@ final public class OptionsDialog extends KissDialog
 		immediatecollide = initimmediatecollide ;
 		immediateunfix = initimmediateunfix ;
 		immediateevent = initimmediateevent ;
-		autoloop = initautoloop ;
+		automedialoop = initautomedialoop ;
 		autofullscreen = initautofullscreen ;
 		suspendmedia = initsuspendmedia ;
 		longsoundmedia = initlongsoundmedia ;
@@ -3603,6 +3629,7 @@ final public class OptionsDialog extends KissDialog
       initmaxpageset = new String(maxpageset) ;
       initmaxcolorset = new String(maxcolorset) ;
       initmaxlrufiles = new String(maxlrufiles) ;
+      initlongduration = new String(longduration) ;
 	   initcacheaudio = cacheaudio ;
 	   initcachevideo = cachevideo ;
 	   initcacheimage = cacheimage ;
@@ -3648,7 +3675,7 @@ final public class OptionsDialog extends KissDialog
 	   initimmediatecollide = immediatecollide ;
 	   initimmediateunfix = immediateunfix ;
 	   initimmediateevent = immediateevent ;
-	   initautoloop = autoloop ;
+	   initautomedialoop = automedialoop ;
 	   initautofullscreen = autofullscreen ;
 	   initsuspendmedia = suspendmedia ;
 	   initlongsoundmedia = longsoundmedia ;
@@ -3773,7 +3800,7 @@ final public class OptionsDialog extends KissDialog
       transparentgroup = true ;
       mapcollide = false ;
       movexycollide = false ;
-      autoloop = false ;
+      automedialoop = false ;
       autofullscreen = false ;
       mediaminimize = false ;
       mediacenter = true ;
@@ -3824,6 +3851,7 @@ final public class OptionsDialog extends KissDialog
       maxpageset = "10" ;
       maxcolorset = "10" ;
       maxlrufiles = "4" ;
+      longduration = "10" ;
       jpegquality = "0.9" ;
       undolimit = "100" ;
       commentcol = "60" ;
@@ -3893,6 +3921,7 @@ final public class OptionsDialog extends KissDialog
       if (!(initmaxpageset.equals(MaxPageSet.getText()))) return true ;
       if (!(initmaxcolorset.equals(MaxColorSet.getText()))) return true ;
 //    if (!(initmaxlrufiles.equals(MaxLruFiles.getText()))) return true ;
+      if (!(initlongduration.equals(LongDuration.getText()))) return true ;
 //	   if (initcacheaudio != CacheAudio.isSelected()) return true ;
 //	   if (initcachevideo != CacheVideo.isSelected()) return true ;
 //	   if (initcacheimage != CacheImage.isSelected()) return true ;
@@ -3950,7 +3979,7 @@ final public class OptionsDialog extends KissDialog
 	   if (initkeepaspect != KeepAspect.isSelected()) return true ;
 	   if (initkeycase != KeyCase.isSelected()) return true ;
 	   if (initvariablecase != VariableCase.isSelected()) return true ;
-//	   if (initautoloop != AutoLoop.isSelected()) return true ;
+//	   if (initautomedialoop != AutoMediaLoop.isSelected()) return true ;
 //	   if (initautofullscreen != AutoFullScreen.isSelected()) return true ;
 //	   if (initsuspendmedia != SuspendMedia.isSelected()) return true ;
 //	   if (initlongsoundmedia != LongSoundMedia.isSelected()) return true ;
@@ -4020,6 +4049,7 @@ final public class OptionsDialog extends KissDialog
       if (!(maxpageset.equals(MaxPageSet.getText()))) return true ;
       if (!(maxcolorset.equals(MaxColorSet.getText()))) return true ;
 //    if (!(maxlrufiles.equals(MaxLruFiles.getText()))) return true ;
+      if (!(longduration.equals(LongDuration.getText()))) return true ;
 //	   if (cacheaudio != CacheAudio.isSelected()) return true ;
 //	   if (cachevideo != CacheVideo.isSelected()) return true ;
 //	   if (cacheimage != CacheImage.isSelected()) return true ;
@@ -4077,7 +4107,7 @@ final public class OptionsDialog extends KissDialog
 	   if (keepaspect != KeepAspect.isSelected()) return true ;
 	   if (keycase != KeyCase.isSelected()) return true ;
 	   if (variablecase != VariableCase.isSelected()) return true ;
-//	   if (autoloop != AutoLoop.isSelected()) return true ;
+//	   if (automedialoop != AutoMediaLoop.isSelected()) return true ;
 //	   if (autofullscreen != AutoFullScreen.isSelected()) return true ;
 //	   if (suspendmedia != SuspendMedia.isSelected()) return true ;
 //	   if (longsoundmedia != LongSoundMedia.isSelected()) return true ;
@@ -4129,6 +4159,7 @@ final public class OptionsDialog extends KissDialog
       maxpageset = toString1(p.getProperty("maxpageset"),maxpageset) ;
       maxcolorset = toString1(p.getProperty("maxcolorset"),maxcolorset) ;
       maxlrufiles = toString1(p.getProperty("maxlrufiles"),maxlrufiles) ;
+      longduration = toString1(p.getProperty("longduration"),longduration) ;
 	   cacheaudio = toBoolean1(p.getProperty("cacheaudio"),cacheaudio) ;
 	   cachevideo = toBoolean1(p.getProperty("cachevideo"),cachevideo) ;
 	   cacheimage = toBoolean1(p.getProperty("cacheimage"),cacheimage) ;
@@ -4174,7 +4205,7 @@ final public class OptionsDialog extends KissDialog
 	   immediatecollide = toBoolean1(p.getProperty("immediatecollide"),immediatecollide) ;
 	   immediateunfix = toBoolean1(p.getProperty("immediateunfix"),immediateunfix) ;
 	   immediateevent = toBoolean1(p.getProperty("immediateevent"),immediateevent) ;
-	   autoloop = toBoolean1(p.getProperty("autoloop"),autoloop) ;
+	   automedialoop = toBoolean1(p.getProperty("automedialoop"),automedialoop) ;
 	   autofullscreen = toBoolean1(p.getProperty("autofullscreen"),autofullscreen) ;
 	   suspendmedia = toBoolean1(p.getProperty("suspendmedia"),suspendmedia) ;
 	   longsoundmedia = toBoolean1(p.getProperty("longsoundmedia"),longsoundmedia) ;
@@ -4307,6 +4338,7 @@ final public class OptionsDialog extends KissDialog
       p.put("maxpageset",toString2(maxpageset)) ;
       p.put("maxcolorset",toString2(maxcolorset)) ;
       p.put("maxlrufiles",toString2(maxlrufiles)) ;
+      p.put("longduration",toString2(longduration)) ;
       p.put("cacheaudio",toString2(cacheaudio)) ;
       p.put("cachevideo",toString2(cachevideo)) ;
       p.put("cacheimage",toString2(cacheimage)) ;
@@ -4352,7 +4384,7 @@ final public class OptionsDialog extends KissDialog
       p.put("immediatecollide",toString2(immediatecollide)) ;
       p.put("immediateunfix",toString2(immediateunfix)) ;
       p.put("immediateevent",toString2(immediateevent)) ;
-      p.put("autoloop",toString2(autoloop)) ;
+      p.put("automedialoop",toString2(automedialoop)) ;
       p.put("autofullscreen",toString2(autofullscreen)) ;
       p.put("suspendmedia",toString2(suspendmedia)) ;
       p.put("longsoundmedia",toString2(longsoundmedia)) ;
@@ -5411,7 +5443,6 @@ final public class OptionsDialog extends KissDialog
       ComponentCel.setSelected((b) ? true : false) ;
       WriteCelOffset.setSelected((b) ? true : true) ;
       SoundSingle.setSelected((b) ? true : false) ;
-      LongSoundMedia.setSelected((b) ? true : false) ;
       MultipleEvents.setSelected((b) ? false : true) ;
       TimerPeriod.setText((b) ? "60" : "10") ;
   }
@@ -5459,7 +5490,6 @@ final public class OptionsDialog extends KissDialog
       setComponentCel(true) ;
       setWriteCelOffset(true) ;
       setSoundSingle(true) ;
-      setLongSoundMedia(true) ;
       setMultipleEvents(false) ;
       setMaxLock("32768") ;
       setMaxPageSet("10") ;
@@ -5897,7 +5927,7 @@ final public class OptionsDialog extends KissDialog
 	   if (suspendmedia != initsuspendmedia) writeLine(out,"; suspendmedia = " + suspendmedia) ;
 	   if (stopmusic != initstopmusic) writeLine(out,"; stopmusic = " + stopmusic) ;
 	   if (soundsingle != initsoundsingle && !b) writeLine(out,"; soundsingle = " + soundsingle) ;
-	   if (longsoundmedia != initlongsoundmedia && !b) writeLine(out,"; longsoundmedia = " + longsoundmedia) ;
+	   if (longsoundmedia != initlongsoundmedia) writeLine(out,"; longsoundmedia = " + longsoundmedia) ;
 	   if (scaletofit != initscaletofit) writeLine(out,"; scaletofit = " + scaletofit) ;
 	   if (sizetofit != initsizetofit) writeLine(out,"; sizetofit = " + sizetofit) ;
 	   if (retainwindowsize != initretainwindowsize) writeLine(out,"; retainwindowsize = " + retainwindowsize) ;
@@ -5929,7 +5959,7 @@ final public class OptionsDialog extends KissDialog
 	   if (transparentgroup != inittransparentgroup && !b) writeLine(out,"; transparentgroup = " + transparentgroup) ;
 	   if (mapcollide != initmapcollide && !b) writeLine(out,"; mapcollide = " + mapcollide) ;
 	   if (movexycollide != initmovexycollide && !b) writeLine(out,"; movexycollide = " + movexycollide) ;
-	   if (autoloop != initautoloop) writeLine(out,"; autoloop = " + autoloop) ;
+	   if (automedialoop != initautomedialoop) writeLine(out,"; automedialoop = " + automedialoop) ;
 	   if (autofullscreen != initautofullscreen) writeLine(out,"; autofullscreen = " + autofullscreen) ;
 	   if (mediacenter != initmediacenter) writeLine(out,"; mediacenter = " + mediacenter) ;
 	   if (mediamusicresume != initmediamusicresume) writeLine(out,"; mediamusicresume = " + mediamusicresume) ;
@@ -5975,6 +6005,7 @@ final public class OptionsDialog extends KissDialog
 	   if (!maxpageset.equals(initmaxpageset) && !b) writeLine(out,"; maxpageset = \"" + maxpageset + "\"") ;
 	   if (!maxcolorset.equals(initmaxcolorset)) writeLine(out,"; maxcolorset = \"" + maxcolorset + "\"") ;
 //	   if (!maxlrufiles.equals(initmaxlrufiles)) writeLine(out,"; maxlrufiles = \"" + maxlrufiles + "\"") ;
+	   if (!longduration.equals(initlongduration)) writeLine(out,"; longduration = \"" + longduration + "\"") ;
 //	   if (!jpegquality.equals(initjpegquality)) writeLine(out,"; jpegquality = \"" + jpegquality + "\"") ;
 //	   if (!undolimit.equals(initundolimit)) writeLine(out,"; undolimit = \"" + undolimit + "\"") ;
 //	   if (!commentcol.equals(initcommentcol)) writeLine(out,"; commentcol = \"" + commentcol + "\"") ;
@@ -5990,7 +6021,6 @@ final public class OptionsDialog extends KissDialog
       {
          if (!timerperiod.equals("60") && b) writeLine(out,"; timerperiod = \"" + timerperiod + "\"") ;
          if (releasemove != true && b) writeLine(out,"; releasemove = " + releasemove) ;  
-         if (longsoundmedia != true && b) writeLine(out,"; longsoundmedia = " + longsoundmedia) ;  
          if (strictsyntax != true && b) writeLine(out,"; strictsyntax = " + strictsyntax) ;  
          if (multipleevents != false && b) writeLine(out,"; multipleevents = " + multipleevents) ;
       }

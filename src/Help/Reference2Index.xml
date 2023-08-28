@@ -153,6 +153,7 @@
     <indexitem text="read" target="reference2.read"/>
     <indexitem text="removeItem" target="reference2.removeItem"/>
     <indexitem text="removeAll" target="reference2.removeAll"/>
+    <indexitem text="repeat" target="reference2.repeat"/>
     <indexitem text="replacestr" target="reference2.replacestr"/>
     <indexitem text="restrictx" target="reference2.restrictx"/>
     <indexitem text="restricty" target="reference2.restricty"/>

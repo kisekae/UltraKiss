@@ -1741,18 +1741,21 @@ final class ImageFrame extends KissFrame
 		cel = null ;
 		palette = null ;
 		ze = null ;
-      
-      windowMenu.remove(window) ;
-      windows.remove(window) ;
-      window = null ;
 
-      int n = windows.size() ;
-      if (n > 0)
+      if (windowMenu != null && windows != null)
       {
-         window = (WindowImageItem) windows.elementAt(n-1) ;
-         cel = window.cel ;
-         palette = window.palette ;
-         updated = window.changed ;
+         windowMenu.remove(window) ;
+         windows.remove(window) ;
+         window = null ;
+
+         int n = windows.size() ;
+         if (n > 0)
+         {
+            window = (WindowImageItem) windows.elementAt(n-1) ;
+            cel = window.cel ;
+            palette = window.palette ;
+            updated = window.changed ;
+         }
       }
 	}
 
