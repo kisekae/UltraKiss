@@ -4268,7 +4268,8 @@ final class Configuration extends KissObject
 	{
       if (s == null) return ;
       if (zip == null) return ;
-      s = trim(s) ;
+      s = trim(s) + " " ;
+      s = s.replaceAll("[,\\s]+", " ") ;
 		StringTokenizer st = new StringTokenizer(s," \t,") ;
       if (includefiles == null) includefiles = new Vector() ;
 

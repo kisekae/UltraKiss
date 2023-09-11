@@ -70,8 +70,8 @@ import java.util.NoSuchElementException ;
 
 final class AlarmTimer extends Thread
 {
-   private static Object suspendlock = new Object() ;	// Suspend lock
-   private static Object queuelock = new Object() ;	// Queue lock
+   private static final Object suspendlock = new Object() ;	// Suspend lock
+   private static final Object queuelock = new Object() ;	// Queue lock
 
    private static boolean enabled = true ;         // Timer enable state
    private static boolean manualsuspend = false ;  // True, manual suspension

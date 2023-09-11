@@ -1,31 +1,58 @@
 # UltraKiss
-In 2002 I developed a computer program that implements the Kisekae Set system, KiSS, a Japanese graphics system originally developed to facilitate costume changes on virtual dolls.  
+In 2002 I developed a computer program to implement the Kisekae Set system, KiSS, a Japanese graphics system originally developed to facilitate costume changes on virtual dolls.  KiSS is a presentation method that allows the artist to program certain actions as you interact with images and other items in the application.  The original KiSS specifications were presented as a graduate thesis in Japan in 1992. 
 
-Kisekae is short for "kisekae ningyou", a Japanese term meaning "dress-up dolls". Unlike "computer art" which creates or displays traditional art via a computer, KiSS uses the computer as the medium, allowing the art to be not only animated, but also interactive. 
+Japanese Kisekae sets were often drawings of anime characters with many different costumes packaged in an LHA archive file for viewing the work. Kisekae became popular in Japan and was adopted by the western world. 
 
-UltraKiss is not restricted to dress-up dolls but is rather an integrated development environment to create visual applications.  This is an artistic process that uses images and other related elements to create new interactive entertainment. It allows the artist to think in terms of visual objects and related actions rather than text-based code.
+The development of KiSS sets is an artistic process that uses images and other related elements to create new interactive entertainment. The creative process allows the artist to think in terms of visual objects and related actions applied to these objects. Unlike "computer art" which creates or displays traditional art via a computer, KiSS uses the computer as the medium, allowing the art to be not only animated, but also interactive. 
+
+UltraKiss was developed as a platform independent system to help artists build their KiSS sets. UltraKiss can be used to view KiSS sets and provide an integrated development environment to construct KiSS sets. UltraKiss provides an integrated color editor tool to change the colors of images.  An image editor tool lets you change the size, shape, or structure of your images.  There is also an integrated audio and video player so that you can include different sounds or movies in your model.  For packaging the work, UltraKiss has an integrated LHA, ZIP, and JAR archive file manager that lets you convert between archive types and save your KiSS set in standard files or compressed archive files. 
+
+Interactions between objects are recognized through an event processing language for object interaction known as FKiSS.  This language facilitates the programming of automated actions and system interaction with the user. This language was originally conceived as a non-procedural language that would respond to various events, but with the development of FKiSS 3 a procedural structure was imposed on the language that introduced program variables and control logic.
+
+UltraKiss extended and standardized many aspects of the FKiSS language. The standardization, referred to as FKiSS version 5, was designed to correct many of the FKiSS language deficiencies. Each UltraKiss FKiSS command is either a backward compatible extension to previous versions of FKiSS or is a new command implemented for completeness or new capabilities (FKiSS5 Extension), or is an UltraKiss viewer specific command (UltraKiss Extension).
+
+Some examples of interactive KiSS sets are shown below.
 
 
+#### Example KiSS Sets
 
+![NoGodsLand - Mindy's Secret Place](https://github.com/kisekae/UltraKiss/blob/master/src/Splash/MindySecretPlace.png)
+
+![A Slot Machine](https://github.com/kisekae/UltraKiss/blob/master/src/Demo/slotmachine.jpg)
+
+![FreeCell Card Game](https://github.com/kisekae/UltraKiss/blob/master/src/Demo/freecell.jpg)
 
 ![Sailor Moon](https://github.com/kisekae/UltraKiss/blob/master/src/Images/intro_03.jpg)
 
 
 
-UltraKiss was developed to help artists build KiSS sets. UltraKiss reads and interprets KiSS data files.  These files contain computer graphics images, color palettes and data control files.  Objects, in the original KiSS model such as the doll figure, costumes, and other items are constructed from layered image components that usually show only parts of the complete image. 
+#### How does UltraKiss work?
 
-Objects can be manipulated through user actions or through  a simple event processing model that enables timed animations or other actions if objects are touched or dragged across the screen.  Color variations, enabled through palette changes in UltraKiss, can also be used to produce different results.  
+UltraKiss reads and interprets text based KiSS set configuration files contained within archive files or file directories.  The archive files or directories contain computer graphics images, color palettes, sounds, and other related control files.  Objects in the original KiSS model such as a doll figure, costumes, and other items are constructed from layered image components that usually show only parts of the complete image. 
+
+The original KiSS specification defined one image format, known as CEL, to represent image pixel data. With CEL images, the image data is isolated from the palette data.  A CEL image does not contain a color table as part of the image file, therefore a separate color file must be referenced in order to properly display the image. This is known as a KiSS Color File, or KCF file. Because the separation of colors from data introduced management difficulties for keeping track of pixel data and color data, CEL images have not become a widely recognized image format.
+
+UltraKiss, as part of the FKiSS 5 specification, enabled standard image types such as GIF, JPG, PNG, and others to be used as image cels.  UltraKiss also implemented standard graphical user interface components such as buttons and lists and other forms as image cels for used input and display presentation.  These features facilitate the development of more complex applications from graphical images.
+
+When KiSS was originally conceived an object was considered to be a collection of cel image files grouped together as a unit. In KiSS, the term object is an abstract term that relates a number of entities to a particular point on the screen.  In practice, an object group is the realization of this abstraction and is a concrete implementation of a number of image cels in one movable group that is visible on the screen. An object can be dragged by the mouse and manipulated by the user as a single entity. 
+
+Objects can also be manipulated through the FKiSS event processing model that enables timed animations or other actions if objects are touched or dragged across the screen.  Color variations, enabled through palette changes in UltraKiss, can also be used to produce different results. 
+
+An example of a KiSS configuration file using graphic input and display components with code logic to compute the factorial of a number is shown below.
+
+![N Factorial Calculator](https://github.com/kisekae/UltraKiss/blob/master/src/Demo/factorial.jpg)
+
+![Factorial CNF File](https://github.com/kisekae/UltraKiss/blob/master/src/Demo/factorial.png)
+
 
 In 2008 I ceased this work. Computers were faster and the KiSS model was replaced with different animation tools.
 
 In 2018 I removed this application from my websites. Later, I had a request to restore the application.
 
-In 2023, prompted by new KiSS work from [The Owl](http://followtheowl.com/) with his Scarecrow sets, I completed this project.  I am releasing my source code under a GNU version 3 license in the hopes that it is useful and brings enjoyment to others.  I am seeking contributors and another sponsor to take over this work.
-
+In 2023, prompted by new KiSS work from [The Owl](http://followtheowl.com/) with his Scarecrow sets and NoGodsLand interactive quest game, I completed this project.  I am releasing my source code under a GNU version 3 license in the hopes that it is useful and brings enjoyment to others.  I am seeking contributors and another sponsor to take over this work.
 
 
 ### How to get started with UltraKiss
-
 
 
 1. Download the current UltraKiss release from [GitHub](https://github.com/kisekae/UltraKiss).  For all systems, extract the files from the **UltraKiss_3.6.zip** (or later) download. This extract will create a folder named **ultrakiss**.

@@ -875,11 +875,13 @@ final class MediaFrame extends KissFrame
    {
       loopcontrol.setState(b) ;
       repeatcount = (b) ? -1 : 0 ;
+      OptionsDialog.setAutoMediaLoop(loopcontrol.getState()) ;
    }
 	void setRepeat(int n)
    {
       repeatcount = n ;
       loopcontrol.setState(repeatcount != 0) ;
+      OptionsDialog.setAutoMediaLoop(loopcontrol.getState()) ;
    }
 
 
@@ -2025,9 +2027,12 @@ final class MediaFrame extends KissFrame
                if (repeatcount > 0) repeatcount-- ;
                if (repeatcount == 0) loopcontrol.setState(false) ;
                if (audio != null) audio.stop(audio) ;
-					Runnable runner = new Runnable()
-					{ public void run() { play() ; } } ;
-   				javax.swing.SwingUtilities.invokeLater(runner) ;
+               if (repeatcount > 0)
+               {
+         			Runnable runner = new Runnable()
+         			{ public void run() { play() ; } } ;
+         			javax.swing.SwingUtilities.invokeLater(runner) ;
+               }
                return ;
             }
 

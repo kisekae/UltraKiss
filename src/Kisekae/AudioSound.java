@@ -90,6 +90,7 @@ import java.util.Enumeration ;
 import java.net.URL ;
 import javax.swing.* ;
 import javax.sound.sampled.* ;
+import java.util.concurrent.locks.ReentrantLock ;
 
 import javax.sound.midi.* ;
 
@@ -102,6 +103,7 @@ final class AudioSound extends Audio
    private Object listener = null ;			// Last listener added
    private Object metalistener = null ;	// Internal sequencer listener
    private Object linelistener = null ;	// Internal line listener
+   private final Object waithold = new Object() ; 
 
 	// Constructor for when we do not have a configuration.
 
@@ -246,6 +248,7 @@ final class AudioSound extends Audio
 
 	void init()
 	{
+      playcount = 0 ;
 		started = false ;
 		if (error || (cache && b == null)) return ;
 		if ("".equals(getPath())) return ;
@@ -263,8 +266,9 @@ final class AudioSound extends Audio
 		if (error || (cache && b == null)) return ;
 		if ("".equals(getPath())) return ;
 		if (!OptionsDialog.getJavaSound()) return ;
+      long time = System.currentTimeMillis() - Configuration.getTimestamp() ;
 		if (OptionsDialog.getDebugSound())
-			System.out.println("AudioSound: " + getName() + " Open request.") ;
+			System.out.println("[" + time + "] AudioSound: " + getName() + " [" + playcount + "]" + " Open request.") ;
 
 		// Midi files do not play properly using JMF when the application is
 		// loaded from a jar file.  We use Java Sound for playback if the Java
@@ -278,16 +282,18 @@ final class AudioSound extends Audio
             {
                Clip clip = (Clip) currentsound ;
                clip.setMicrosecondPosition(0) ;
+               time = System.currentTimeMillis() - Configuration.getTimestamp() ;
                if (OptionsDialog.getDebugSound())
-                  System.out.println("AudioSound: " + getName() + " clip reset to start") ;
+                  System.out.println("[" + time + "] AudioSound: " + getName() + " [" + playcount + "]" + " clip reset to start") ;
                return ;
             }
             if (currentsound instanceof Sequencer)
             {
                Sequencer sequencer = (Sequencer) currentsound ;
                sequencer.setMicrosecondPosition(0) ;
+               time = System.currentTimeMillis() - Configuration.getTimestamp() ;
                if (OptionsDialog.getDebugSound())
-                  System.out.println("AudioSound: " + getName() + " sequencer reset to start") ;
+                  System.out.println("[" + time + "] AudioSound: " + getName() + " [" + playcount + "]" + " sequencer reset to start") ;
                return ;
             }
          }
@@ -305,15 +311,17 @@ final class AudioSound extends Audio
                 currentsound = is ;     
             else
                throw new Exception("unknown sound type") ;
+            time = System.currentTimeMillis() - Configuration.getTimestamp() ;
             if (OptionsDialog.getDebugSound())
-               System.out.println("AudioSound: " + getName() + " is a recognized stream") ;
+               System.out.println("[" + time + "] AudioSound: " + getName() + " [" + playcount + "]" + " is a recognized stream") ;
          }
          catch (Exception ex)
    		{  // load midi & rmf as inputstreams for now.
             if (OptionsDialog.getDebugSound())
             {
- 					System.out.println("AudioSound: " + getName() + " " + ex) ;
- 					System.out.println("AudioSound: " + getName() + " attempt recovery, assuming sequencer type") ;
+               time = System.currentTimeMillis() - Configuration.getTimestamp() ;
+ 					System.out.println("[" + time + "] AudioSound: " + getName() + " [" + playcount + "]" + " " + ex) ;
+ 					System.out.println("[" + time + "] AudioSound: " + getName() + " [" + playcount + "]" + " attempt recovery, assuming sequencer type") ;
             }
 	         currentsound = new BufferedInputStream(is,4096) ;
          }
@@ -360,8 +368,9 @@ final class AudioSound extends Audio
 				   clip.addLineListener((LineListener) linelistener);
 				   clip.open(stream);
 				   currentsound = clip;
+               time = System.currentTimeMillis() - Configuration.getTimestamp() ;
 				   if (OptionsDialog.getDebugSound())
-					   System.out.println("AudioSound: " + getName() + " Sound clip opened") ;
+					   System.out.println("[" + time + "] AudioSound: " + getName() + " [" + playcount + "]" + " Sound clip opened") ;
                opened = true ;
                return ;
 				}
@@ -372,14 +381,16 @@ final class AudioSound extends Audio
             catch (LineUnavailableException e)
             {
                currentsound = null ;
+               time = System.currentTimeMillis() - Configuration.getTimestamp() ;
 				   if (OptionsDialog.getDebugSound())
-                  System.out.println("AudioSound: " + getName() + " " + e) ;
+                  System.out.println("[" + time + "] AudioSound: " + getName() + " [" + playcount + "]" + " " + e) ;
             }
             catch (Exception ex)
             {
               	error = true ;
 					currentsound = null ;
-					showError("AudioSound: " + getName() + " Sound clip stream exception") ;
+               time = System.currentTimeMillis() - Configuration.getTimestamp() ;
+					showError("AudioSound: " + getName() + " [" + playcount + "]" + " Sound clip stream exception") ;
 					ex.printStackTrace() ;
 				}
 			}
@@ -396,8 +407,9 @@ final class AudioSound extends Audio
 					Sequencer sequencer = MidiSystem.getSequencer() ;
 					sequencer.open() ;
 					sequencer.setSequence((BufferedInputStream) currentsound) ;
+               time = System.currentTimeMillis() - Configuration.getTimestamp() ;
 					if (OptionsDialog.getDebugSound())
-						System.out.println("AudioSound: " + getName() + " Sequencer opened") ;
+						System.out.println("[" + time + "] AudioSound: " + getName() + " [" + playcount + "]" + " Sequencer opened") ;
 
                currentsound = sequencer ;
                metalistener = new SequencerListener() ;
@@ -413,14 +425,16 @@ final class AudioSound extends Audio
 					currentsound = null;
               	if (!Kisekae.isMediaInstalled())
                {
-        				showError("AudioSound: " + getName() + " not a recognized audio format") ;
+                  time = System.currentTimeMillis() - Configuration.getTimestamp() ;
+        				showError("AudioSound: " + getName() + " [" + playcount + "]" + " not a recognized audio format") ;
                }
                else
                {
   						if (OptionsDialog.getDebugSound())
                   {
-                     System.out.println("AudioSound: " + getName() + " " + e) ;
-  							System.out.println("AudioSound: " + getName() + " attempt JMF recovery") ;
+                     time = System.currentTimeMillis() - Configuration.getTimestamp() ;
+                     System.out.println("[" + time + "] AudioSound: " + getName() + " [" + playcount + "]" + " " + e) ;
+  							System.out.println("[" + time + "] AudioSound: " + getName() + " [" + playcount + "]" + " attempt JMF recovery") ;
                   }
                }
 				}
@@ -438,8 +452,9 @@ final class AudioSound extends Audio
 			      clip.addLineListener((LineListener) linelistener);
                clip.open() ;  
                currentsound = clip ;
+               time = System.currentTimeMillis() - Configuration.getTimestamp() ;
 				   if (OptionsDialog.getDebugSound())
-					   System.out.println("AudioSound: " + getName() + " MP3 player opened") ;
+					   System.out.println("[" + time + "] AudioSound: " + getName() + " [" + playcount + "]" + " MP3 player opened") ;
                opened = true ;
                return ;
 				}
@@ -447,7 +462,8 @@ final class AudioSound extends Audio
             {
               	error = true ;
 					currentsound = null ;
-					showError("AudioSound: " + getName() + " Sound clip stream exception, " + ex) ;
+               time = System.currentTimeMillis() - Configuration.getTimestamp() ;
+					showError("AudioSound: " + getName() + " [" + playcount + "]" + " Sound clip stream exception, " + ex) ;
 				}
 			}
 
@@ -502,10 +518,44 @@ final class AudioSound extends Audio
 	{
       if (!loaded) return ;
 		if (!OptionsDialog.getSoundOn()) return ;
-		if (OptionsDialog.getDebugSound())
-			System.out.println("AudioSound: " + getName() + " Play request.") ;
 
-		try
+      // Run the sound playback activity in a separate thread so as to not
+      // interfere with the event handler FKissAction processing.  
+
+      playcount++ ;
+      Runnable runner = new Runnable()
+      { public void run() { play1() ; } } ;
+      Thread runthread = new Thread(runner) ;
+      runthread.setName("AudioSound play " + getName());
+      runthread.start() ;
+   }
+   
+	void play1()
+   {
+      long time = System.currentTimeMillis() - Configuration.getTimestamp() ;
+		if (OptionsDialog.getDebugSound())
+		   System.out.println("[" + time + "] AudioSound: " + getName() + " [" + playcount + "]" + " Play request.") ;
+
+      if (this.isStopping()) 
+      {
+         synchronized(waithold) 
+         {            
+            try 
+            { 
+               time = System.currentTimeMillis() - Configuration.getTimestamp() ;
+         		if (OptionsDialog.getDebugSound())
+         		   System.out.println("[" + time + "] AudioSound: " + getName() + " [" + playcount + "]" + " Waiting for stop to complete") ;
+               waithold.wait(); 
+            }
+            catch (InterruptedException e) { }       
+            time = System.currentTimeMillis() - Configuration.getTimestamp() ;
+       		if (OptionsDialog.getDebugSound())
+       		   System.out.println("[" + time + "] AudioSound: " + getName()  + " [" + playcount + "]" + " Resuming play request") ;
+         }
+      }
+
+      lock.lock() ;
+      try
 		{
 			if (format) throw new KissException("unknown media format") ;
 			if (error) throw new KissException("audio object in error") ;
@@ -516,6 +566,7 @@ final class AudioSound extends Audio
          // clip or sequencer if unopened.
          
          open() ;
+			if (error) throw new KissException("audio object in error on open") ;
 
 	      // Midi files may not play properly if a soundbank is not installed.
          // We use Java Sound playback.  The sequencer events for start and
@@ -524,15 +575,21 @@ final class AudioSound extends Audio
 
          if (currentsound instanceof Sequencer)
          {
+            time = System.currentTimeMillis() - Configuration.getTimestamp() ;
 				if (OptionsDialog.getDebugSound())
-					System.out.println("AudioSound: " + getName() + " Sequencer started") ;
+					System.out.println("[" + time + "] AudioSound: " + getName() + " [" + playcount + "]" + " Sequencer started") ;
 				Sequencer sequencer = (Sequencer) currentsound ;
             doCallback() ;
             started = false ;
+            if (isLooping() || (getBackground() && OptionsDialog.getAutoMediaLoop()))
+            {
+               sequencer.setLoopCount(Sequencer.LOOP_CONTINUOUSLY);
+               time = System.currentTimeMillis() - Configuration.getTimestamp() ;
+               if (OptionsDialog.getDebugSound())
+                  System.out.println("[" + time + "] AudioSound: " + getName() + " [" + playcount + "]" + " Sequencer is looping.") ;
+            }
          	sequencer.start() ;
             doCallstart() ;
-            if (sequencer.isRunning()) started = true ;
-            return ;
          }
 
          // Java sound can be standard media, too.  In this case resetting the
@@ -540,14 +597,17 @@ final class AudioSound extends Audio
 
 			if (currentsound instanceof Clip)
          {
+            time = System.currentTimeMillis() - Configuration.getTimestamp() ;
 				if (OptionsDialog.getDebugSound())
-					System.out.println("AudioSound: " + getName() + " Sound clip started") ;
+					System.out.println("[" + time + "] AudioSound: " + getName() + " [" + playcount + "]" + " Clip started") ;
 				Clip clip = (Clip) currentsound ;
+            started = false ;
             if (isLooping() || (getBackground() && OptionsDialog.getAutoMediaLoop()))
             {
                clip.loop(Clip.LOOP_CONTINUOUSLY);
+               time = System.currentTimeMillis() - Configuration.getTimestamp() ;
                if (OptionsDialog.getDebugSound())
-                  System.out.println("AudioSound: " + getName() + " Clip is looping.") ;
+                  System.out.println("[" + time + "] AudioSound: " + getName() + " [" + playcount + "]" + " Clip is looping.") ;
             }
 				clip.start() ;
             if (clip instanceof Mp3Clip)
@@ -557,20 +617,57 @@ final class AudioSound extends Audio
                AudioFormat fmt = clip.getFormat() ;
                if (fmt != null) cd = fmt.toString() ;
             }
-            if (clip.isRunning()) started = true ;
-            return ;
 			}
 		}
 
       catch (KissException e) 
       { 
-      // Do not report these format exceptions for the time being.         
+         // The play request may fail.  For audio sound files we can
+         // try and recover using Java Media Framework.  The new AudioMedia
+         // object is a load copy of the original object and it replaces the
+         // original AudioSound object.
+
+         if (Kisekae.isMediaInstalled())
+         {
+            Object o = Audio.getByKey(Audio.getKeyTable(),cid,getPath().toUpperCase()) ;
+
+            // Have we replaced this object previously?
+
+            if (o == this)
+            {
+               KissObject kiss = new AudioMedia(getZipFile(),getPath()) ;
+               Audio a1 = (Audio) kiss ;
+               a1.setIdentifier(getIdentifier()) ;
+               a1.setRelativeName(getRelativeName()) ;
+               a1.setRepeat(getRepeat()) ;
+               a1.setType(getType()) ;
+               a1.setID(getID()) ;
+               a1.load() ;
+               Audio.removeKey(Audio.getKeyTable(),cid,getPath().toUpperCase()) ;
+               a1.setKey(a1.getKeyTable(),cid,a1.getPath().toUpperCase()) ;
+               a1.setCopy(false) ;
+               Enumeration enum1 = getEvents() ;
+               while (enum1 != null && enum1.hasMoreElements())
+                  a1.addEvent((Vector) enum1.nextElement()) ;
+               MainFrame mf = Kisekae.getMainFrame() ;
+               Configuration config = (mf != null) ? mf.getConfig() : null ;
+               Vector sounds = (config != null) ? config.getSounds() : null ;
+               int n = (sounds != null) ? sounds.indexOf(this) : -1 ;
+               if (n >= 0) sounds.setElementAt(a1,n) ;
+      			players.remove(o) ;
+               a1.init() ;
+               o = a1 ;
+            }
+            if (o instanceof AudioMedia)
+               ((Audio) o).play() ;
+         }
       }
 		catch (Exception e)
 		{
  			showError("AudioSound: " + getName() + " start fault " + e.getMessage()) ;
          e.printStackTrace();
 		}
+      finally { lock.unlock() ; }
 	}
 
 
@@ -583,87 +680,110 @@ final class AudioSound extends Audio
 
 	static void stop(Configuration c, Audio a, String type)
 	{
-		for (int i = players.size()-1 ; i >= 0 ; i--)
-		{
-			Audio audio = (Audio) players.elementAt(i) ;
-			if (a != null && a != audio) continue ;
-         if (!(audio instanceof AudioSound)) continue ;
-
-			// Check for configuration archive file agreement.  If the object
-         // configuration reference equals the specified configuration
-         // reference the the audio object was established at configuration
-         // load time.  This would exclude media player objects.
-
-			if (c != null)
-			{
-            Object o1 = c.cid ;
-            Object o2 = audio.cid ;
-            if (o1 != null && !(o1.equals(o2))) continue ;
-			}
-
-         // Check for type agreement.
-
-         if (type != null)
+      // Run the sound stop activity in a separate thread so as to not
+      // interfere with the event handler FKissAction processing.  
+   
+      Runnable runner = new Runnable()
+      { public void run() { stop1(c,a,type) ; } } ;
+      Thread runthread = new Thread(runner) ;
+      runthread.setName("AudioSound stop");
+      runthread.start() ;
+   }
+   
+   static void stop1(Configuration c, Audio a, String type)
+   {
+      lock.lock() ;
+      try 
+      {
+         Vector stoppedplayers = new Vector() ;
+         Vector p = (Vector) players.clone() ;
+         for (int i = p.size()-1 ; i >= 0 ; i--)
          {
-            String audiotype = audio.getType() ;
-            if (audiotype != null && !type.equals(audiotype)) continue ;
-         }
+            Audio audio = (Audio) p.elementAt(i) ;
+            if (a != null && a != audio) continue ;
+            if (!(audio instanceof AudioSound)) continue ;
 
-			// Get the player and/or midi sequencer.
+            // Check for configuration archive file agreement.  If the object
+            // configuration reference equals the specified configuration
+            // reference the the audio object was established at configuration
+            // load time.  This would exclude media player objects.
 
-			if (OptionsDialog.getDebugSound())
-				System.out.println("AudioSound: " + audio.getName() + " Stop request.") ;
-         Object currentsound = audio.getPlayer() ;
-
-			// Shut the sequencer down.  We have to do a manual callback request
-         // as the sequencer event listener does not recognize stop events.
-
-			if (currentsound instanceof Sequencer)
-			{
-				try
-				{
-					if (OptionsDialog.getDebugSound())
-						System.out.println("AudioSound: " + audio.getName() + " Sequencer stopped") ;
-					Sequencer sequencer = (Sequencer) currentsound ;
-               if (sequencer.isRunning()) sequencer.stop() ;
-               if (sequencer.isOpen()) sequencer.close() ;
-               audio.doCallback() ;
-               audio.started = false ;
+            if (c != null)
+            {
+               Object o1 = c.cid ;
+               Object o2 = audio.cid ;
+               if (o1 != null && !(o1.equals(o2))) continue ;
             }
-				catch (Exception e)
-				{
-					System.out.println("AudioSound: " + audio.getName() +  "Audio sequencer stop fault.");
-					if (!(e instanceof KissException)) e.printStackTrace();
-				}
-         }
 
-			// Shut the sound clip down.  The sound clip event listener will
-         // fire any callback events when the clip stops.
+            // Check for type agreement.
 
-			if (currentsound instanceof Clip)
-			{
-				try
-				{
-					if (OptionsDialog.getDebugSound())
-						System.out.println("AudioSound: " + audio.getName() + " Sound clip stopped") ;
-					Clip clip = (Clip) currentsound;
-	         	if (clip.isRunning()) clip.stop() ;
-               if (clip.isOpen()) clip.close() ;  // Linux reports NoLineAvailableException at times
-               audio.started = false ;
+            if (type != null)
+            {  
+               String audiotype = audio.getType() ;
+               if (audiotype != null && !type.equals(audiotype)) continue ;
             }
-				catch (Exception e)
-				{
-					System.out.println("AudioSound: " + audio.getName() + "Audio clip stop fault.");
-					if (!(e instanceof KissException)) e.printStackTrace();
-				}
+
+            // Get the player and/or midi sequencer.
+
+            long time = System.currentTimeMillis() - Configuration.getTimestamp() ;
+            if (OptionsDialog.getDebugSound())
+               System.out.println("[" + time + "] AudioSound: " + audio.getName() + " Stop request.") ;
+            Object currentsound = audio.getPlayer() ;
+
+            // Shut the sequencer down.  We have to do a manual callback request
+            // as the sequencer event listener does not recognize stop events.
+
+            if (currentsound instanceof Sequencer)
+            {
+               try
+               {
+                  time = System.currentTimeMillis() - Configuration.getTimestamp() ;
+                  if (OptionsDialog.getDebugSound())
+                     System.out.println("[" + time + "] AudioSound: " + audio.getName() + " Sequencer stopped") ;
+                  Sequencer sequencer = (Sequencer) currentsound ;
+                  if (sequencer.isRunning()) sequencer.stop() ;
+                  if (sequencer.isOpen()) sequencer.close() ;
+                  audio.doCallback() ;
+               }
+               catch (Exception e)
+               {
+                  time = System.currentTimeMillis() - Configuration.getTimestamp() ;
+                  System.out.println("[" + time + "] AudioSound: " + audio.getName() +  "Audio sequencer stop fault.");
+                  if (!(e instanceof KissException)) e.printStackTrace();
+               }
+            }
+
+            // Shut the sound clip down.  The sound clip event listener will
+            // fire any callback events when the clip stops.
+
+            if (currentsound instanceof Clip)
+            {
+               try
+               {
+                  time = System.currentTimeMillis() - Configuration.getTimestamp() ;
+                  if (OptionsDialog.getDebugSound())
+                     System.out.println("[" + time + "] AudioSound: " + audio.getName() + " Sound clip stopped") ;
+                  Clip clip = (Clip) currentsound;
+                  if (clip.isRunning()) clip.stop() ;
+                  if (clip.isOpen()) clip.close() ;  // Linux reports NoLineAvailableException at times
+               }
+               catch (Exception e)
+               {
+                  time = System.currentTimeMillis() - Configuration.getTimestamp() ;
+                  System.out.println("[" + time + "] AudioSound: " + audio.getName() + "Audio clip stop fault.");
+                  if (!(e instanceof KissException)) e.printStackTrace();
+               }
+            }
+
+            // Remove the player from our active list.
+
+            audio.setRepeat(0) ;
+            audio.setType(null) ;
+            stoppedplayers.add(audio) ;
          }
-
-			// Remove the player from our active list.
-
-         audio.setRepeat(0) ;
-         audio.setType(null) ;
-			players.remove(audio) ;
-		}
+         players.removeAll(stoppedplayers) ;
+      }
+      finally { lock.unlock() ; }
 	}
 
 
@@ -678,21 +798,28 @@ final class AudioSound extends Audio
 	private void closeaudio()
 	{
       opened = false ;
+      long time = System.currentTimeMillis() - Configuration.getTimestamp() ;
       if (!OptionsDialog.getCacheAudio() && zip != null)
       {
-      	System.out.println("AudioSound: " + getName() + " call zip.disconnect()") ;
+         System.out.println("[" + time + "] AudioSound: " + getName() + " [" + playcount + "]" + " call zip.disconnect()") ;
          zip.disconnect() ;
       }
 
 		// Look for our player in the active play list.  If we find it,
 		// remove it and close the player down.
 
-		if (OptionsDialog.getDebugSound())
-      	System.out.println("AudioSound: " + getName() + " Close request.") ;
-		players.removeElement(me) ;
-      removeListener(listener) ;
-      removeListener(metalistener) ;
-      removeListener(linelistener) ;
+      lock.lock() ;
+      try
+      {
+         time = System.currentTimeMillis() - Configuration.getTimestamp() ;
+         if (OptionsDialog.getDebugSound())
+            System.out.println("[" + time + "] AudioSound: " + getName() + " [" + playcount + "]" + " Close request.") ;
+         players.removeElement(me) ;
+         removeListener(listener) ;
+         removeListener(metalistener) ;
+         removeListener(linelistener) ;
+      }
+      finally { lock.unlock() ; }
 
 		// Close the player.
 
@@ -700,20 +827,22 @@ final class AudioSound extends Audio
 		{
 			if (currentsound instanceof Sequencer)
 			{
-				if (OptionsDialog.getDebugSound())
-					System.out.println("AudioSound: " + getName() + " Sequencer closed") ;
             Sequencer sequencer = (Sequencer) currentsound ;
 				if (sequencer.isRunning()) sequencer.stop() ;
 				if (sequencer.isOpen()) sequencer.close() ;
+            time = System.currentTimeMillis() - Configuration.getTimestamp() ;
+				if (OptionsDialog.getDebugSound())
+					System.out.println("[" + time + "] AudioSound: " + getName() + " [" + playcount + "]" + " Sequencer closed") ;
 			}
 
 			if (currentsound instanceof Clip)
 			{
-				if (OptionsDialog.getDebugSound())
-					System.out.println("AudioSound: " + getName() + " Sound clip closed") ;
 				Clip clip = (Clip) currentsound ;
          	if (clip.isRunning()) clip.stop() ;
             if (clip.isOpen()) clip.close() ;  // Linux reports NoLineAvailableException at times
+            time = System.currentTimeMillis() - Configuration.getTimestamp() ;
+				if (OptionsDialog.getDebugSound())
+					System.out.println("[" + time + "] AudioSound: " + getName() + " [" + playcount + "]" + " Sound clip closed") ;
          }
 		}
 		catch (Exception e)
@@ -739,6 +868,7 @@ final class AudioSound extends Audio
 		loaded = false ;
       opened = false ;
       started = false ;
+      stopping = false ;
       hascallback = false ;
       callback = null ;
       listener = null ;
@@ -782,23 +912,29 @@ final class AudioSound extends Audio
 		{
 			// Stop events occurs when the media file has played till the end.
 
+         long time = System.currentTimeMillis() - Configuration.getTimestamp() ;
 			if (event.getType() == LineEvent.Type.STOP)
 			{
 				if (OptionsDialog.getDebugSound())
-					System.out.println("AudioSound: " + getName() + " ClipStopEvent") ;
+					System.out.println("[" + time + "] AudioSound: " + getName() + " [" + playcount + "]" + " ClipStopEvent") ;
 
 				// Start the player in a new thread as player initiation can take
-				// time.  This frees the Player thread.
+				// time.  This frees the Player thread.  The repeat count is a count 
+            // of the number of times to play the sound.  If zero this is a 
+            // request to stop playing the sound.
 
-				if (repeatcount > 0)
+				if (repeat)
 				{
-					if (OptionsDialog.getDebugSound())
-               	System.out.println("AudioSound: " + getName() + " Repeat count = " + repeatcount) ;
 					if (repeatcount > 0) repeatcount-- ;
 					repeat = (repeatcount != 0) ;
-					Runnable runner = new Runnable()
-					{ public void run() { play() ; } } ;
-   				javax.swing.SwingUtilities.invokeLater(runner) ;
+					if (repeatcount > 0) 
+               {
+                  Runnable runner = new Runnable()
+                  { public void run() { play() ; } } ;
+                  javax.swing.SwingUtilities.invokeLater(runner) ;
+   					if (OptionsDialog.getDebugSound())
+                  	System.out.println("[" + time + "] AudioSound: " + getName() + " [" + playcount + "]" + " Clip repeat invoked, count = " + repeatcount) ;
+               }
 				}
 				else
             {
@@ -814,7 +950,18 @@ final class AudioSound extends Audio
 			{
 				opened = false ;
 				if (OptionsDialog.getDebugSound())
-					System.out.println("AudioSound: " + getName() + " ClipCloseEvent") ;
+					System.out.println("[" + time + "] AudioSound: " + getName() + " [" + playcount + "]" + " ClipCloseEvent") ;
+            lock.lock() ;
+            try { players.removeElement(me) ; }
+            finally { lock.unlock() ; }
+            stopping = false ;
+            synchronized (waithold)
+            {
+               time = System.currentTimeMillis() - Configuration.getTimestamp() ;
+         		if (OptionsDialog.getDebugSound())
+         		   System.out.println("[" + time + "] AudioSound: " + getName() + " [" + playcount + "]" + " Notify stop is complete") ;
+               waithold.notify() ;
+            }
 			}
 
 			else if (event.getType() == LineEvent.Type.START)
@@ -822,14 +969,14 @@ final class AudioSound extends Audio
 				doCallstart() ;
 				started = true ;
 				if (OptionsDialog.getDebugSound())
-					System.out.println("AudioSound: " + getName() + " ClipStartEvent") ;
+					System.out.println("[" + time + "] AudioSound: " + getName() + " [" + playcount + "]" + " ClipStartEvent") ;
 			}
 
 			else if (event.getType() == LineEvent.Type.OPEN)
 			{
 				opened = true ;
 				if (OptionsDialog.getDebugSound())
-					System.out.println("AudioSound: " + getName() + " ClipOpenEvent") ;
+					System.out.println("[" + time + "] AudioSound: " + getName() + " [" + playcount + "]" + " ClipOpenEvent") ;
 	      }
       }
    }
@@ -841,23 +988,27 @@ final class AudioSound extends Audio
 	{
 		public void meta(MetaMessage message)
       {
+         long time = System.currentTimeMillis() - Configuration.getTimestamp() ;
 			if (message.getType() == 47)
          {  // 47 is end of track
 				if (OptionsDialog.getDebugSound())
-					System.out.println("AudioSound: " + getName() + " MidiEndTrackEvent " + message.getType()) ;
+					System.out.println("[" + time + "] AudioSound: " + getName() + " [" + playcount + "]" + " MidiEndTrackEvent " + message.getType()) ;
 
 				// Start the player in a new thread as player initiation can take
 				// time.  This frees the Player thread.
 
 				if (repeat)
 				{
-					if (OptionsDialog.getDebugSound())
-               	System.out.println("AudioSound: " + getName() + " Repeat count = " + repeatcount) ;
 					if (repeatcount > 0) repeatcount-- ;
 					repeat = (repeatcount != 0) ;
-					Runnable runner = new Runnable()
-					{ public void run() { play() ; } } ;
-   				javax.swing.SwingUtilities.invokeLater(runner) ;
+					if (repeatcount > 0) 
+               {
+                  Runnable runner = new Runnable()
+                  { public void run() { play() ; } } ;
+                  javax.swing.SwingUtilities.invokeLater(runner) ;
+   					if (OptionsDialog.getDebugSound())
+                  	System.out.println("[" + time + "] AudioSound: " + getName() + " [" + playcount + "]" + " Sequencer repeat invoked, count = " + repeatcount) ;
+               }
 				}
 				else
             {
@@ -875,9 +1026,9 @@ final class AudioSound extends Audio
 	         // 04 is instrument name (optional)
             if (message.getType() == 2)
                copyright = new String(message.getData()) ;
-	         if (started) return ;
 				if (OptionsDialog.getDebugSound())
-					System.out.println("AudioSound: " + getName() + " MidiStartTrackEvent " + message.getType()) ;
+					System.out.println("[" + time + "] AudioSound: " + getName() + " [" + playcount + "]" + " MidiStartTrackEvent " + message.getType()) ;
+	         if (started) return ;
 				doCallstart() ;
 	         started = true ;
          }

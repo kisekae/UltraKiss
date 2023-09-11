@@ -70,14 +70,18 @@ import java.util.Enumeration ;
 import java.net.URL ;
 import javax.swing.JButton ;
 import javax.sound.sampled.* ;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 
 abstract class Audio extends KissObject
 {
 	// Class attributes.  Sized for 256 audio objects.
+   // Reentrant lock for players changes by concurrent stop/play activties
 
 	static private Hashtable key = new Hashtable(300,0.855f) ;
 	static protected Vector players = new Vector() ;
+   static protected final Lock lock = new ReentrantLock();
 
 	// Audio attributes
 
@@ -91,6 +95,7 @@ abstract class Audio extends KissObject
    protected AudioFormat audiofmt = null ;   // Audio format from inputstream
    protected int framesize = 0 ;             // Audio frame size from format
    protected float framerate = 0 ;           // Audio frame rate from format
+   protected int playcount = 0 ;             // Number of play requests
 
 	// State attributes
 
@@ -106,6 +111,7 @@ abstract class Audio extends KissObject
 	protected boolean format = false ;	      // True if unknown media format
    protected boolean converted = false ;     // True if converted to JMF
    protected boolean background = false ;    // True if media player background
+   protected boolean stopping = false ;      // True if audio is being stopped
 
 	// Our end of media callback button that other components can attach
 	// listeners to.
@@ -301,6 +307,10 @@ abstract class Audio extends KissObject
 
 	void setCopy(boolean b) { copy = b ; }
 
+	// Set the stopping indicator.
+
+	void setStopping(boolean b) { stopping = b ; }
+
 	// Set the background media player indicator.
 
 	void setBackground(boolean b) { background = b ; }
@@ -324,6 +334,14 @@ abstract class Audio extends KissObject
 	// Return an indication if the data has been loaded.
 
 	boolean isLoaded() { return (loaded || copy) ; }
+
+	// Return an indication if this sound is being stopped.
+
+	boolean isStopping() { return stopping ; }
+
+	// Return an indication if this sound is playing.
+
+	boolean isStarted() { return started ; }
 
 	// Return an indication if the audio repeats.
 
@@ -555,7 +573,9 @@ abstract class Audio extends KissObject
 	abstract Object getContentType(String filename) ;
 
 
-	// The generic audio stop method.
+	// The generic audio stop method.  The static stop methods in AudioSound and
+   // AudioMedia loop throught the players list to stop all required sounds
+   // based on the configuration, audio object, and type parameters.
 
 	static void stop() { stop(null,null,null) ; }
 	static void stop(Audio a) { stop(null,a,null) ; }
@@ -563,16 +583,36 @@ abstract class Audio extends KissObject
 	static void stop(Configuration c, String t) { stop(c,null,t) ; }
 	static void stop(Configuration c, Audio a, String t)
 	{
-		Vector p = (Vector) players.clone() ;
-		for (int i = p.size()-1 ; i >= 0 ; i--)
-		{
-			Audio audio = (Audio) p.elementAt(i) ;
-			if (a != null && a != audio) continue ;
-			if (audio instanceof AudioMedia)
-				((AudioMedia) audio).stop(c,a,t) ;
-			if (audio instanceof AudioSound)
-				((AudioSound) audio).stop(c,a,t) ;
-		}
+      boolean stoppedmedia = false ;
+      boolean stoppedsound = false ;
+      lock.lock() ;
+      try
+      {
+         Vector p = (Vector) players.clone() ;
+         long time = System.currentTimeMillis() - Configuration.getTimestamp() ;
+   		for (int i = p.size()-1 ; i >= 0 ; i--)
+   		{
+    			Audio audio = (Audio) p.elementAt(i) ;
+   			if (a != null && a != audio) continue ;
+   			if (audio instanceof AudioMedia)
+            {
+         		if (OptionsDialog.getDebugSound())
+         		   System.out.println("[" + time + "] Audio: about to stop media " + ((AudioMedia) audio).getName()) ;
+   				if (!stoppedmedia) ((AudioMedia) audio).stop(c,a,t) ;
+               stoppedmedia = true ;
+            }
+   			if (audio instanceof AudioSound)
+            {
+         		if (OptionsDialog.getDebugSound())
+         		   System.out.println("[" + time + "] Audio: about to stop sound " + ((AudioSound) audio).getName()) ;
+   				if (!stoppedsound) ((AudioSound) audio).stop(c,a,t) ;
+                stoppedsound = true ;
+            }
+   		}
+   		if (OptionsDialog.getDebugSound() && !(stoppedsound || stoppedmedia))
+   		   System.out.println("[" + time + "] Audio: no sounds stopped.") ;
+      }
+      finally { lock.unlock() ; }
 	}
 
 

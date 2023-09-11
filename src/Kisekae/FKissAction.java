@@ -407,7 +407,8 @@ final class FKissAction extends KissObject
                {
                   Audio a = (Audio) kiss ;
                   int n = a.getDuration() ;
-                  if (n >= 8) // assume more than 8 seconds is background
+                  int m = OptionsDialog.getLongDuration() ;
+                  if (n >= m && m > 0) 
                   {
                      code = 93 ;
                      a.setBackground(true) ;
@@ -1297,7 +1298,11 @@ final class FKissAction extends KissObject
             o1 = variable.getValue((String) parameters.elementAt(0),event) ;
             if ("".equals(o1)) { Audio.stop(config,audiotype) ;  break ; }
             if (OptionsDialog.getSoundSingle() && !OptionsDialog.getLongSoundMedia())
-               if ("sound".equals(audiotype)) Audio.stop(config,audiotype) ;  
+            {
+         		if (OptionsDialog.getDebugSound())
+         			System.out.println("FKissAction: SoundSingle about to play " + o1 + " stopping any sound") ;
+               if ("sound".equals(audiotype)) Audio.stop(config,audiotype) ;
+            }
 
             // Identify the action object.
 
@@ -1327,53 +1332,28 @@ final class FKissAction extends KissObject
                }
             }
 
-            // Set the repeat count.
+            // Set the repeat count.  If the repeat count is specified and 
+            // is zero then this is a request to stop the named sound.
+            // Otherwise the play request is performed in a separate thread 
+            // (AudioSound) so as to not restrict event processing.
 
             n1 = 0 ;
             if (parameters.size() > 1)
                n1 = variable.getIntValue((String) parameters.elementAt(1),event) ;
             a.setRepeat(n1) ;
             a.setType(audiotype) ;
-            a.play() ;
-
-            // The play request may fail.  For audio sound files we can
-            // try and recover using Java Media Framework.  The new AudioMedia
-            // object is a load copy of the original object and it replaces the
-            // original AudioSound object.
-
-            if (a.isError() && a instanceof AudioSound && Kisekae.isMediaInstalled())
+            if (parameters.size() > 1 && n1 == 0)
             {
-               o = a.getByKey(a.getKeyTable(),cid,a.getPath().toUpperCase()) ;
-
-               // Have we replaced this object previously?
-
-               if (o == a)
-               {
-                  kiss = new AudioMedia(a.getZipFile(),a.getPath()) ;
-                  Audio a1 = (Audio) kiss ;
-                  a1.setIdentifier(a.getIdentifier()) ;
-                  a1.setRelativeName(a.getRelativeName()) ;
-                  a1.setRepeat(a.getRepeat()) ;
-                  a1.setType(a.getType()) ;
-                  a1.setID(a.getID()) ;
-                  a1.load() ;
-                  a.removeKey(a.getKeyTable(),cid,a.getPath().toUpperCase()) ;
-                  a1.setKey(a1.getKeyTable(),cid,a1.getPath().toUpperCase()) ;
-                  a1.setCopy(false) ;
-                  Enumeration enum1 = a.getEvents() ;
-                  while (enum1 != null && enum1.hasMoreElements())
-                     a1.addEvent((Vector) enum1.nextElement()) ;
-//                  a.close() ;  // problematic if expansion set load for JMF
-                  Vector sounds = (config != null) ? config.getSounds() : null ;
-                  int n = (sounds != null) ? sounds.indexOf(a) : -1 ;
-                  if (n >= 0) sounds.setElementAt(a1,n) ;
-                  a1.init() ;
-                  object = a1 ;
-                  o = a1 ;
-               }
-               if (o instanceof AudioMedia)
-                  ((Audio) o).play() ;
+               Audio.stop(a) ;
+               break ;
             }
+            
+            // If single sound and stopping and currently playing this sound 
+            // then set the indicator to wait for the stop to complete.
+            
+            if (OptionsDialog.getSoundSingle() && !OptionsDialog.getLongSoundMedia())
+               if (a.isStarted()) a.setStopping(true) ;
+            a.play() ;
             break ;
 
 
@@ -2870,6 +2850,14 @@ final class FKissAction extends KissObject
             
             if (OptionsDialog.getAutoMediaLoop() && parameters.size() == 1)
                if (kiss instanceof Audio && ((Audio) kiss).getBackground()) n1 = -1 ;
+            
+            // If we have a repeat of 0 and a specified file then stop that sound.
+            
+            if (parameters.size() > 1 && n1 == 0 && kiss instanceof Audio)
+            {
+               Audio.stop(config,((Audio) kiss),audiotype) ;
+               break ;
+            }
            
             // Create a new configuration specific media player if none
             // exists.  If one has already been created then use it to

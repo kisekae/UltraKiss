@@ -81,7 +81,7 @@ public class Kisekae extends Applet
    // Security variables
 
    private static String copyright = 
-      "Kisekae UltraKiss V3.6 (c) 2002-2023 William Miles" ;
+      "Kisekae UltraKiss V3.6.1 (c) 2002-2023 William Miles" ;
    private static Object authorize = null ;        // Seigen module
    private static Calendar warningdate = null ;    // Secure warning
    private static Calendar expiredate = null ;     // Licence expire
@@ -172,7 +172,7 @@ public class Kisekae extends Applet
 
       LogFile.start() ;
       builddate = Calendar.getInstance() ;
-      builddate.set(2023,8-1,27) ;
+      builddate.set(2023,9-1,10) ;
       
       // Restore the properties.
       
@@ -949,7 +949,9 @@ public class Kisekae extends Applet
    static String getTipsIndex() { return tipsindex ; }
    static String getDemoIndex() { return demoindex ; }
    static String getReadMeIndex() { return readmeindex ; }
-  
+
+   static String getFactorySplashDir() { return "Splash/hubble.jpg" ; }
+   
    static ImageIcon getImageIcon() 
    { return icon ; }
    static Image getIconImage() 
@@ -2017,6 +2019,7 @@ public class Kisekae extends Applet
          {
             ArchiveFile zip = config.getZipFile() ;
             if (zip != null) file = zip.getName() ;
+            config.close() ;
          }
          mainframe.closeframe() ;
       }

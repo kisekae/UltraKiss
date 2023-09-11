@@ -444,7 +444,7 @@ final public class MainFrame extends KissFrame
          // configuration object will equal the old configuration object.
 			// Inform any objects waiting on a callback of a successful load.
 
-			closeconfig(c == config,false) ;
+			closeconfig((c == config || restart),false) ;
 			config = c ;
 			showStatus("Initializing " + config.getName() + " ...") ;
    		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
@@ -1787,12 +1787,17 @@ final public class MainFrame extends KissFrame
 
 	void setNewSplashPane(boolean reset)
 	{
-      if (reset) imagenum = -1 ;
+      if (reset) 
+      {
+         images = -1 ;
+         imagenum = -1 ;
+      }
 		if (splash != null) getContentPane().remove(splash) ;
       splash = null ;
       if (scrollpane != null) return ;
       setSplashPane() ;
       validate() ;
+      repaint() ;
  	}
 
 
@@ -2219,6 +2224,7 @@ final public class MainFrame extends KissFrame
 		private URL ultraImageURL = null ;		// The URL for the name file
 		private URL backImageURL = null ;	   // The URL for the back file
 		private String description = "" ;      // The description for the back file
+      private boolean nosplash = false ;     // True if no paint logo
 		private Dimension size = null ;			// The panel size
 
 		// Constructor
@@ -2257,10 +2263,11 @@ final public class MainFrame extends KissFrame
                   backimage = Toolkit.getDefaultToolkit().getImage(backImageURL) ;
                
                // Look for image description
-               
+
+               description = "" ;
                String s1 = s.substring(0,m) ;
                URL reference = Kisekae.getResource(s1+"_reference.txt") ;
-               if (reference != null)
+               if (reference != null && backimage != null)
                {
                   s1 = reference.getPath() ;
                   s1 = s1.replaceAll("^.*[\\/\\\\]", "/") ;
@@ -2270,12 +2277,16 @@ final public class MainFrame extends KissFrame
                   Scanner scanner = new Scanner(input) ;
                   while (scanner.hasNextLine())
                   {
+                     nosplash = false ;
                      String line = scanner.nextLine() ;
-                     if (line.startsWith(s1))
-                     {
-                        description = line.substring(s1.length()).trim() ;
-                        break ;
-                     }
+                     if (line.isEmpty()) continue ;
+                     if (line.startsWith(";")) continue ;
+                     String [] parts = line.split("\\|") ;
+                     if (parts.length > 1 && s1.equalsIgnoreCase(parts[0].trim()))
+                        description = parts[1].trim() ;
+                     if (parts.length > 2 && "nosplash".equalsIgnoreCase(parts[2].trim()))
+                        nosplash = true ;
+                     if (!description.isEmpty()) break ;
                   }
                }
             }
@@ -2351,9 +2362,9 @@ final public class MainFrame extends KissFrame
          
 			if (backimage != null)
 				g.drawImage(backimage,x1,y1,this) ;
-			if (splashimage != null)
+			if (splashimage != null && !nosplash)
 				g.drawImage(splashimage,x2,y2,this) ;
-			if (ultraimage != null)
+			if (ultraimage != null && !nosplash)
 				g.drawImage(ultraimage,x3,y3,this) ;
          if (copyright != null)
             g.drawString(copyright,x4,y4) ;

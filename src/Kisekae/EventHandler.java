@@ -687,7 +687,7 @@ final class EventHandler extends KissObject
    private static ThreadGroup threadgroup = null ;	// The event handler group
    private static Vector handlers = new Vector() ;	// The active handlers
 	private static Vector queue = new Vector() ;    // The event queue
-   private static Object eventlock = new Object() ;  // The event lock
+   private static final Object eventlock = new Object() ;  // The event lock
 	private static PanelFrame panel = null ;        // The drawing window
 	private static Object modal = null ;            // The modal event source
    private static Hashtable signatures = null ;    // The event signatures
@@ -927,6 +927,7 @@ final class EventHandler extends KissObject
 
       synchronized (eventlock)
       {
+         Collections.sort(v, new EventHandlerOrder()) ;
    		for (int i = 0 ; i < v.size() ; i++)
          {
             Object [] qentry = new Object[3]  ;
@@ -943,6 +944,8 @@ final class EventHandler extends KissObject
                   FKissEvent evt = (FKissEvent) qentry[0] ;
                   o = evt.getParent() ;
                   Long n = (o instanceof Alarm) ? ((Alarm) o).getTriggeredTime() : 0 ;
+                  if (n == 0)
+                     n = n ;
                   if (n > 0) n -= Configuration.getTimestamp() ;
                   String s = (n != 0) ? " triggered time " + n.toString() : "" ;
                   System.out.println("[" + time + "] [" + Thread.currentThread().getName() + "] queue " + evt.getName() + " on EventHandler, source " + qentry[2] + " queue size " + queue.size() + s) ;
@@ -951,7 +954,7 @@ final class EventHandler extends KissObject
             }
             if (!OptionsDialog.getMultipleEvents()) break ;
          }
-   		eventlock.notify() ;
+         eventlock.notify() ;
       }
 	}
 
@@ -985,6 +988,7 @@ final class EventHandler extends KissObject
                stats.put(qentry[0],new Long(System.currentTimeMillis())) ; // Java 1.5
             }
          }
+     		eventlock.notify() ;
       }
 	}
 
@@ -995,14 +999,16 @@ final class EventHandler extends KissObject
 
 	static Object dequeueEvent()
 	{
+      Object o ;
       synchronized (eventlock)
       {
 	   	if (queue.size() == 0) return null ;
          Collections.sort(queue, new EventHandlerOrder());
-	   	Object o = queue.elementAt(0) ;
+	   	o = queue.elementAt(0) ;
 	   	queue.removeElement(o) ;
-	   	return o ;
+     		eventlock.notify() ;
       }
+   	return o ;
 	}
 
 
@@ -1371,6 +1377,7 @@ final class EventHandler extends KissObject
       synchronized (eventlock) 
       { 
          queue.removeAllElements() ; 
+     		eventlock.notify() ;
       } 
    }
 

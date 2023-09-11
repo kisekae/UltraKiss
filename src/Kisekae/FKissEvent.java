@@ -793,7 +793,6 @@ final class FKissEvent extends KissObject
          if (o instanceof String) o = ((String) o).toUpperCase() ;
          Alarm alarm = (Alarm) Alarm.getByKey(Alarm.getKeyTable(),cid,o) ;
          if (alarm == null) return null ;
-         alarm.setTriggerTime(0) ;
 //    This allows only 1 alarm event to fire on a single alarm.
          if (!OptionsDialog.getMultipleEvents() || alarm.getInterval() == 0) 
          {
@@ -801,6 +800,7 @@ final class FKissEvent extends KissObject
                return null ; 
          }
  			alarm.setInterval(-1,thread) ;
+         alarm.setTriggerTime(0) ;
          AlarmTimer timer = config.getTimer() ;
          if (timer != null) timer.removeAlarm(alarm) ;
       }

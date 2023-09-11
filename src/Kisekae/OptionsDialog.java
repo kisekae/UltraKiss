@@ -65,8 +65,9 @@ final public class OptionsDialog extends KissDialog
    private static boolean initialized = false ;    // Properties read
    private static boolean compatapply = false ;    // True if compat change
    private static boolean compatperm = false ;     // True if compat permanent
-   private boolean languagerestart = false ;       // True if language change
-   private boolean iconrestart = false ;           // True if icon change
+   private static boolean languagerestart = false ;// True if language change
+   private static boolean iconrestart = false ;    // True if icon change
+   private static boolean splashrestart = false ;  // True if splash change
    private boolean languageapply = false ;         // True if apply language
    private boolean userdirapply = false ;          // True if user dir change
    private boolean icondirapply = false ;          // True if icon dir change
@@ -3392,6 +3393,7 @@ final public class OptionsDialog extends KissDialog
       {
          if (mf != null) mf.setNewSplashPane(true) ;
          initsplashdir = splashdir ;
+         splashrestart = true ;
       }
 
       // Change our background icon image if required.
@@ -3863,9 +3865,11 @@ final public class OptionsDialog extends KissDialog
       kissweb = Kisekae.getKissWeb() ;
       userdir = Kisekae.getBaseDir() ;
       website = Kisekae.getWebSite() ; ;
-      splashdir = Kisekae.getSplashDir() ; 
+      splashdir = Kisekae.getFactorySplashDir() ; 
       icondir = Kisekae.getIconDir() ; 
       onlinehelp = "HelpFiles/product/" ;
+      
+      splashrestart = true ;
       
       // Clear lru menu files.
       
@@ -4715,6 +4719,7 @@ final public class OptionsDialog extends KissDialog
                Kisekae.setIconDir(s) ;
                IconDirectory.setText((f != null) ? f.getPath() : "") ;
                IconDirectory.setCaretPosition(0) ;
+               iconrestart = true ;
             }
             return ;
          }
@@ -4730,8 +4735,14 @@ final public class OptionsDialog extends KissDialog
                Kisekae.setSplashDir(s) ;
                SplashDirectory.setText((f != null) ? f.getPath() : "") ;
                SplashDirectory.setCaretPosition(0) ;
+               splashrestart = true ;
             }
             return ;
+         }
+         
+         if (source == SplashDirectory)
+         {
+            splashrestart = true ;            
          }
          
          if (source == ClearLruBtn)
@@ -5021,6 +5032,7 @@ final public class OptionsDialog extends KissDialog
                setFactoryOptions() ;
                setInitOptions() ;
                setControls() ;
+               CANCEL.setEnabled(false);
          	   apply(this) ;
             }
    			return ;
@@ -5310,6 +5322,17 @@ final public class OptionsDialog extends KissDialog
          setIconImage() ;
          closeWindow() ;
          Kisekae.restart() ;
+         return true ;
+      }
+      
+      // Watch for splash pane changes.
+      
+      if (splashrestart)
+      {
+         if (mf != null) 
+         {
+            mf.setNewSplashPane(true) ;
+         }
          return true ;
       }
       
@@ -5898,7 +5921,7 @@ final public class OptionsDialog extends KissDialog
 //	   if (!userdir.equals(inituserdir)) writeLine(out,"; userdir = \"" + userdir + "\"") ;
 //	   if (!onlinehelp.equals(initonlinehelp)) writeLine(out,"; onlinehelp = \"" + onlinehelp + "\"") ;
 //	   if (!website.equals(initwebsite)) writeLine(out,"; website = \"" + website + "\"") ;
-//	   if (!splashdir.equals(initsplashdir)) writeLine(out,"; splashdir = \"" + splashdir + "\"") ;
+	   if (!splashdir.equals(initsplashdir)) writeLine(out,"; splashdir = \"" + splashdir + "\"") ;
 //	   if (!icondir.equals(initicondir)) writeLine(out,"; icondir = \"" + icondir + "\"") ;
 //    if (applemac != initapplemac) writeLine(out,"; applemac = \"" + applemac + "\"") ;
 //    if (linux != initlinux) writeLine(out,"; linux = \"" + linux + "\"") ;

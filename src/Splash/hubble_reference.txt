@@ -1,11 +1,13 @@
-hubble1	M 104, Sombrero Galaxy, credit ESA/Hubble
-hubble2	Messier 51, Whirlpool Galaxy, credit ESA/Hubble
-hubble3	NGC 1300, credit ESA/Hubble
-hubble4	Cigar Galaxy, Messier 82, credit ESA/Hubble
-hubble5	NGC 2008, credit ESA/Hubble
-hubble6	NGC 4449, credit ESA/Hubble
-hubble7	potw2318a, credit ESA/Hubble
-hubble8	ZwCl 1012-0047, credit ESA/Hubble
-hubble9	NGC 2444, credit ESA/Hubble
-hubble10 Stephan's Quintet, credit ESA/Hubble
+; Syntax:  splash image name | description | nosplash
+
+hubble1|M 104, Sombrero Galaxy, credit ESA/Hubble
+hubble2|Messier 51, Whirlpool Galaxy, credit ESA/Hubble
+hubble3|NGC 1300, credit ESA/Hubble
+hubble4|Cigar Galaxy, Messier 82, credit ESA/Hubble
+hubble5|NGC 2008, credit ESA/Hubble
+hubble6|NGC 4449, credit ESA/Hubble
+hubble7|potw2318a, credit ESA/Hubble
+hubble8|ZwCl 1012-0047, credit ESA/Hubble
+hubble9|NGC 2444, credit ESA/Hubble
+hubble10|Stephan's Quintet, credit ESA/Hubble
 

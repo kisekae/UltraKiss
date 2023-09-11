@@ -21,7 +21,7 @@ The sound() command will initiate the playback of an audio stream file. The file
 <p>&nbsp;</p>
 <p><font color="#FF0000"><b>FKiSS 5 Syntax:</b></font>&nbsp;&nbsp;&nbsp;&nbsp;
 sound (filename[,repeat])</p>
-<p>FKiSS 5 introduced an optional <em>repeat</em> parameter for audio playback. This parameter specifies the number of times that the sound is to be repeated. Note that the repeat value specifies the number of sound repetitions, thus a value of 1 repeats the sound once, resulting in the original playback being heard plus one repetition of the sound. A negative repeat value will result in the sound being repeated indefinately.</p>
+<p>FKiSS 5 introduced an optional <em>repeat</em> parameter for audio playback. This parameter specifies the number of times that the sound is to be played. Note that the repeat value specifies the number of sound repetitions, thus a value of 1 plays the sound once.  A value of 0 requests that the sound be stopped. A negative repeat value will result in the sound being repeated indefinitely.</p>
 <p>FKiSS  provided no easy way to control or manage sound playback. There was no  way to determine when a sound file terminated such that it could be repeated. </p>
 <p>The FKiSS5 mediastart() and mediastop() events can  be used to recognize sound playback events. These events fire on sound initiation and sound termination for the specified sound file. These events fire on completion of the command and not on completion of the sound. Thus, if repetition was specified, one  mediastart event fires at the beginning of the command and one mediastop event fires when all repetitions are complete. </p>
 <p>&nbsp;</p>
@@ -55,7 +55,7 @@ sound (filename[,repeat])</p>
     <tr>
       <td>CacheAudio</td>
       <td>cache audio files in memory </td>
-      <td>default value &quot;<font color="#0000FF">false</font>&quot; (General option)</td>
+      <td>default value &quot;<font color="#0000FF">true</font>&quot; (General option)</td>
     </tr>
     <tr>
       <td>DebugAudio</td>
@@ -71,6 +71,12 @@ sound (filename[,repeat])</p>
       <td width="20%">VariableCase</td>
       <td width="30%">variable names are case sensitive</td>
       <td>default value &quot;<font color="#0000FF">false</font>&quot; (FKiSS
+        option)</td>
+    </tr>
+    <tr>
+      <td width="20%">SoundSingle</td>
+      <td width="30%">only one sound can play at a time</td>
+      <td>default value &quot;<font color="#0000FF">false</font>&quot; (Compatibility
         option)</td>
     </tr>
   </table>
