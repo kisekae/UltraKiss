@@ -94,7 +94,7 @@ public class Kisekae extends Applet
    private static String website = "https://github.com/kisekae/UltraKiss/" ; // Web site
    private static String splashname = "Images/splash.gif" ; // Splash image
    private static String webstart = "HTML/KissWeb.html" ; // Portal page
-   private static String splashdir = "Splash/hubble.jpg" ; // Splash dir
+   private static String splashdir = "Splash/" ;   // Splash dir
    private static String demoindex = "Demo/index.html" ; // Demo index file
    private static String readmeindex = "ReadMe/index.html" ; // ReadMe index
    private static String icondir = "Icons/icon.gif" ; // Icon dir
@@ -172,7 +172,7 @@ public class Kisekae extends Applet
 
       LogFile.start() ;
       builddate = Calendar.getInstance() ;
-      builddate.set(2023,9-1,10) ;
+      builddate.set(2023,9-12,18) ;
       
       // Restore the properties.
       
@@ -496,7 +496,7 @@ public class Kisekae extends Applet
       }
 
       // Determine if the background splash image exists.
-
+/*
       try
       {
          int m = splashdir.indexOf('.') ;
@@ -512,7 +512,7 @@ public class Kisekae extends Applet
       {
 //         OptionsDialog.setSplashDir(splashdir) ;
       }
-      
+*/      
       
       // Determine if the Tips system is available.
 
@@ -950,7 +950,7 @@ public class Kisekae extends Applet
    static String getDemoIndex() { return demoindex ; }
    static String getReadMeIndex() { return readmeindex ; }
 
-   static String getFactorySplashDir() { return "Splash/hubble.jpg" ; }
+   static String getFactorySplashDir() { return "Splash/" ; }
    
    static ImageIcon getImageIcon() 
    { return icon ; }

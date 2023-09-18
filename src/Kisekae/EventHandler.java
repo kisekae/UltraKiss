@@ -28,16 +28,16 @@ package Kisekae ;
 %  The software is provided "as is", without warranty of any kind, express or %
 %  implied, including but not limited to the warranties of merchantability,   %
 %  fitness for a particular purpose and noninfringement.  In no event shall   %
-%  WSM Information Systems be liable for any claim, damages or other          %
-%  liability, whether in an action of contract, tort or otherwise, arising    %
-%  from, out of or in connection with UltraKiss or the use of UltraKiss       %
+%  William Miles be liable for any claim, damages or other liability,         %
+%  whether in an action of contract, tort or otherwise, arising from, out of  %
+%  or in connection with Kisekae UltraKiss or the use of UltraKiss.           %
 %                                                                             %
-%  WSM Information Systems Inc.                                               %
+%  William Miles                                                              %
 %  144 Oakmount Rd. S.W.                                                      %
 %  Calgary, Alberta                                                           %
 %  Canada  T2V 4X4                                                            %
 %                                                                             %
-%  http://www.kisekaeworld.com                                                %
+%  w.miles@wmiles.com                                                         %
 %                                                                             %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 */

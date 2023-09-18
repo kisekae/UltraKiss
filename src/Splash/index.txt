@@ -1,0 +1,6 @@
+; Syntax:  splash image name | description | nosplash
+
+default
+resinmodels
+hubble
+NoGodsLand

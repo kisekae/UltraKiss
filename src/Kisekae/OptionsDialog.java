@@ -68,6 +68,7 @@ final public class OptionsDialog extends KissDialog
    private static boolean languagerestart = false ;// True if language change
    private static boolean iconrestart = false ;    // True if icon change
    private static boolean splashrestart = false ;  // True if splash change
+   private static Vector backsetnames = new Vector() ; // Back splash set names
    private boolean languageapply = false ;         // True if apply language
    private boolean userdirapply = false ;          // True if user dir change
    private boolean icondirapply = false ;          // True if icon dir change
@@ -218,7 +219,8 @@ final public class OptionsDialog extends KissDialog
    private static String splashdir = Kisekae.getSplashDir() ; 
    private static String icondir = Kisekae.getIconDir() ; 
    private static String onlinehelp = "HelpFiles/product/" ;
-   private static Integer iconnumber = null ;
+   private static Integer iconnumber = new Integer(0) ;
+   private static Integer splashsetnumber = new Integer(0) ;
    private static Vector lrufiles = null ;
 
    // WebSearch Option values.
@@ -413,6 +415,7 @@ final public class OptionsDialog extends KissDialog
 	private JTabbedPane jTabbedPane1 = new JTabbedPane();
 	private JTabbedPane jTabbedPane2 = new JTabbedPane();
 	private FlowLayout flowLayout1 = new FlowLayout(FlowLayout.LEADING,0,0);
+	private FlowLayout flowLayout2 = new FlowLayout(FlowLayout.CENTER);
 	private BorderLayout borderLayout3 = new BorderLayout();
    private BorderLayout borderLayout4 = new BorderLayout();
 	private BorderLayout borderLayout6 = new BorderLayout();
@@ -441,6 +444,7 @@ final public class OptionsDialog extends KissDialog
 	private GridLayout gridLayout21 = new GridLayout();
 	private GridLayout gridLayout22 = new GridLayout();
 	private GridLayout gridLayout23 = new GridLayout();
+	private GridLayout gridLayout24 = new GridLayout();
 	private GridBagLayout gridBagLayout1 = new GridBagLayout();
 	private GridBagLayout gridBagLayout2 = new GridBagLayout();
    private GridBagLayout gridBagLayout3 = new GridBagLayout();
@@ -515,6 +519,9 @@ final public class OptionsDialog extends KissDialog
 	private JPanel jPanel47 = new JPanel();
 	private JPanel jPanel48 = new JPanel();
 	private JPanel jPanel49 = new JPanel();
+	private JPanel jPanel50 = new JPanel();
+	private JPanel jPanel51 = new JPanel();
+	private JPanel jPanel52 = new JPanel();
 	private JPanel jPanel110 = new JPanel();
 	private JPanel jPanel111 = new JPanel();
 	private JPanel jPanel112 = new JPanel();
@@ -542,11 +549,12 @@ final public class OptionsDialog extends KissDialog
    private JLabel jLabel14 = new JLabel();
    private JLabel jLabel15 = new JLabel();
    private JLabel jLabel16 = new JLabel();
-   private JLabel jLabel17= new JLabel();
-   private JLabel jLabel18= new JLabel();
-   private JLabel jLabel19= new JLabel();
-   private JLabel jLabel20= new JLabel();
-   private JLabel jLabel21= new JLabel();
+   private JLabel jLabel17 = new JLabel();
+   private JLabel jLabel18 = new JLabel();
+   private JLabel jLabel19 = new JLabel();
+   private JLabel jLabel20 = new JLabel();
+   private JLabel jLabel21 = new JLabel();
+   private JLabel SplashSetName = new JLabel();
 	private JCheckBox MouseDebug = new JCheckBox();
 	private JCheckBox ControlDebug = new JCheckBox();
 	private JCheckBox LoadDebug = new JCheckBox();
@@ -684,6 +692,9 @@ final public class OptionsDialog extends KissDialog
 	private JTextField SplashDirectory = new JTextField();
 	private JTextField IconDirectory = new JTextField();
 	private JList IconList = new JList();
+	private JList SplashList = new JList();
+   private JScrollPane IconScrollPane = new JScrollPane(IconList) ;
+   private JScrollPane SplashScrollPane = new JScrollPane(SplashList) ;
    private JButton SplashBtn = new JButton() ;
    private JButton IconBtn = new JButton() ;
    private JButton HelpBtn = new JButton() ;
@@ -778,8 +789,8 @@ final public class OptionsDialog extends KissDialog
       
       // Set the available icons.  Index from 1.
       
-      DefaultListModel model = new DefaultListModel() ;
-      IconList.setModel(model) ;
+      DefaultListModel model1 = new DefaultListModel() ;
+      IconList.setModel(model1) ;
       IconList.setVisibleRowCount(1) ;
       String s2 = getIconDir() ;
       for (int n = 1 ; ; n++)
@@ -792,14 +803,84 @@ final public class OptionsDialog extends KissDialog
             URL iconurl =  Kisekae.getResource(s1) ;
             if (iconurl == null) break ;
             ImageIcon icon = new ImageIcon(iconurl) ;
-            model.addElement(icon) ;
+            model1.addElement(icon) ;
          }
          catch (Exception e) { break ; }
       }
-      if (model.size() == 0) 
+      if (model1.size() == 0) 
       {
          icondir = "" ;
          jPanel32.setVisible(false) ;
+      }
+      
+      // Set the available splash options.  Index from 1.
+      
+      DefaultListModel model2 = new DefaultListModel() ;
+      SplashList.setModel(model2) ;
+      SplashList.setVisibleRowCount(1) ;
+      s2 = getSplashDir() ;
+      
+      String directory = "" ;
+      String extension = "" ;
+      try
+      {
+         int m = s2.lastIndexOf('.') ;
+         extension = (m > 0) ? s2.substring(m) : ".jpg" ;
+         int n = s2.lastIndexOf('/') ;
+         if (n < 0) n = s2.lastIndexOf('\\') ;
+         if (n < 0) n = s2.length() ;
+         directory = s2.substring(0,n) ;  // directory
+      }
+      catch (IndexOutOfBoundsException e) { }
+      
+      try
+      {
+         URL reference = Kisekae.getResource(directory+"/index.txt") ;
+         if (reference != null)
+         {
+            int i = 0 ;
+            InputStream input = reference.openStream();
+            Scanner scanner = new Scanner(input) ;
+            while (scanner.hasNextLine())
+            {
+               String line = scanner.nextLine() ;
+               if (line.isEmpty()) continue ;
+               if (line.startsWith(";")) continue ;
+               line = line.trim() ;
+               String s3 = directory + "/" + line + "-icon" + extension ;
+               URL iconurl =  Kisekae.getResource(s3) ;
+               if (iconurl != null) 
+               {
+                  ImageIcon icon = new ImageIcon(iconurl) ;
+                  model2.addElement(icon) ;
+                  backsetnames.addElement(line) ;
+                  i = i + 1 ;
+               }
+            }
+         }
+      }
+      catch (Exception e) { }
+      
+      // The SplashSetNumber is the definitive set to show.  
+      // If the SplashDir is not correct set it to the correct 
+      // directory and back image set value.
+      
+      int backset = getSplashSetNumber() ;
+      String s1 = getSplashSetName(backset-1) ;
+      SplashSetName.setText(s1) ;
+      if ("".equals(s1)) 
+         setSplashDir(Kisekae.getSplashDir()) ;
+      else
+      {
+         s1 = Kisekae.getSplashDir() + s1 + ".jpg" ;
+         if (!s1.equals(s2)) setSplashDir(s1) ;
+      }
+      
+      if (model2.size() == 0) 
+      {
+         splashdir = "" ;
+         jPanel50.setVisible(false) ;
+         jPanel52.setVisible(false) ;
       }
 
 		// Set initial option values.
@@ -821,6 +902,7 @@ final public class OptionsDialog extends KissDialog
       pack() ;
  		center(this) ;
       IconList.ensureIndexIsVisible(getIconNumber()-1) ;
+      SplashList.ensureIndexIsVisible(getSplashSetNumber()-1) ;
 
 		// Establish event listeners
 
@@ -879,6 +961,7 @@ final public class OptionsDialog extends KissDialog
       Border tb25 = new CompoundBorder(BorderFactory.createTitledBorder(Kisekae.getCaptions().getString("ExportBoxText")),eb1) ;
       Border tb26 = new CompoundBorder(BorderFactory.createTitledBorder(Kisekae.getCaptions().getString("ToolbarBoxText")),eb1) ;
       Border tb27 = new CompoundBorder(BorderFactory.createTitledBorder(Kisekae.getCaptions().getString("BrowserBoxText")),eb1) ;
+      Border tb28 = new CompoundBorder(BorderFactory.createTitledBorder(Kisekae.getCaptions().getString("SplashBoxText")),eb1) ;
 
       jTabbedPane1.setBorder(eb2);
 
@@ -928,6 +1011,8 @@ final public class OptionsDialog extends KissDialog
 		gridLayout22.setRows(10);
 		gridLayout23.setColumns(1);
 		gridLayout23.setRows(5);
+		gridLayout24.setColumns(1);
+		gridLayout24.setRows(2);
       
 		panel1.setLayout(gridBagLayout4);
 		jPanel1.setBorder(eb1);
@@ -1030,6 +1115,10 @@ final public class OptionsDialog extends KissDialog
 		jPanel48.setLayout(gridBagLayout23);
 		jPanel49.setBorder(eb1);
 		jPanel49.setLayout(gridBagLayout24);
+		jPanel50.setBorder(tb28);
+		jPanel50.setLayout(borderLayout8);
+		jPanel51.setLayout(flowLayout2);
+		jPanel52.setLayout(gridLayout24);
 
 		CANCEL.setText(Kisekae.getCaptions().getString("CancelMessage"));
 		APPLY.setText(Kisekae.getCaptions().getString("ApplyMessage"));
@@ -1488,27 +1577,22 @@ final public class OptionsDialog extends KissDialog
 		jLabel18.setText(Kisekae.getCaptions().getString("SplashDirectoryText"));
 		jLabel19.setText(Kisekae.getCaptions().getString("IconDirectoryText"));
 		KissWeb.setText(kissweb);
-		KissWeb.setPreferredSize(new Dimension(200, 21));
 		jLabel14.setToolTipText(Kisekae.getCaptions().getString("ToolTipKissWeb"));
 		KissWeb.addActionListener(this);
 		UserDirectory.setText(userdir);
-		UserDirectory.setPreferredSize(new Dimension(200, 21));
 		jLabel15.setToolTipText(Kisekae.getCaptions().getString("ToolTipUserDir"));
 		UserDirectory.addActionListener(this);
 		WebSite.setText(website);
-		WebSite.setPreferredSize(new Dimension(200, 21));
 		jLabel16.setToolTipText(Kisekae.getCaptions().getString("ToolTipWebSite"));
  		WebSite.addActionListener(this);
 		OnlineHelp.setText(onlinehelp);
-		OnlineHelp.setPreferredSize(new Dimension(200, 21));
 		jLabel17.setToolTipText(Kisekae.getCaptions().getString("ToolTipOnlineHelp"));
 		OnlineHelp.addActionListener(this);
 		SplashDirectory.setText(splashdir);
-		SplashDirectory.setPreferredSize(new Dimension(200, 21));
 		jLabel18.setToolTipText(Kisekae.getCaptions().getString("ToolTipSplashDir"));
 		SplashDirectory.addActionListener(this);
+      SplashList.addListSelectionListener(this);
 		IconDirectory.setText(icondir);
-		IconDirectory.setPreferredSize(new Dimension(200, 21));
 		jLabel19.setToolTipText(Kisekae.getCaptions().getString("ToolTipIconDir"));
 		IconDirectory.addActionListener(this);
       IconList.addListSelectionListener(this);
@@ -1662,7 +1746,7 @@ final public class OptionsDialog extends KissDialog
       // The UKiSS custom tab pane.
 
 		jTabbedPane1.add(jPanel30, Kisekae.getCaptions().getString("CustomTabText"));
-		jPanel30.add(jPanel31, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
+		jPanel30.add(jPanel31, new GridBagConstraints(0, 0, 2, 1, 0.0, 0.0
 				,GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(5, 5, 5, 5), 0, 0));
 		jPanel31.add(jLabel16, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
             ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(5, 0, 5, 10), 0, 0));
@@ -1688,26 +1772,25 @@ final public class OptionsDialog extends KissDialog
             ,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
 		jPanel31.add(OnlineHelp, new GridBagConstraints(1, 3, 1, 1, 0.0, 0.0
             ,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
-		jPanel31.add(HelpBtn, new GridBagConstraints(2, 3, 1, 1, 0.0, 0.0
-            ,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 10, 0, 0), 0, 0));
+//		jPanel31.add(HelpBtn, new GridBagConstraints(2, 3, 1, 1, 0.0, 0.0
+//            ,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 10, 0, 0), 0, 0));
 		jPanel31.add(SplashDirectory, new GridBagConstraints(1, 4, 1, 1, 0.0, 0.0
             ,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
-		jPanel31.add(SplashBtn, new GridBagConstraints(2, 4, 1, 1, 0.0, 0.0
-            ,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 10, 0, 0), 0, 0));
+//		jPanel31.add(SplashBtn, new GridBagConstraints(2, 4, 1, 1, 0.0, 0.0
+//            ,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 10, 0, 0), 0, 0));
 		jPanel31.add(IconDirectory, new GridBagConstraints(1, 5, 1, 1, 0.0, 0.0
             ,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
-		jPanel31.add(IconBtn, new GridBagConstraints(2, 5, 1, 1, 0.0, 0.0
-            ,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 10, 0, 0), 0, 0));
-		jPanel30.add(jPanel32, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0
+//		jPanel31.add(IconBtn, new GridBagConstraints(2, 5, 1, 1, 0.0, 0.0
+//            ,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 10, 0, 0), 0, 0));
+		jPanel30.add(jPanel51, new GridBagConstraints(0, 1, 2, 1, 0.0, 0.0
 				,GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(5, 5, 5, 5), 0, 0));
-      jPanel32.add(new JScrollPane(IconList),BorderLayout.NORTH) ;
-		jPanel32.add(RandomSplash, BorderLayout.SOUTH) ;
-		jPanel30.add(jPanel48, new GridBagConstraints(0, 1, 2, 1, 0.0, 0.0
-				,GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(5, 5, 5, 5), 0, 0));
-		jPanel48.add(jLabel21, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
-            ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(5, 0, 5, 10), 0, 0));
-		jPanel48.add(BrowserBox, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0
-            ,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 10, 0, 0), 0, 0));
+		jPanel51.add(jPanel32, null);
+      jPanel32.add(IconScrollPane,BorderLayout.NORTH) ;
+		jPanel51.add(jPanel50, null);
+      jPanel50.add(SplashScrollPane,BorderLayout.NORTH) ;
+		jPanel51.add(jPanel52, null);
+		jPanel52.add(SplashSetName, null) ;
+		jPanel52.add(RandomSplash, null) ;
 
       // The Compatibility tab pane.
 
@@ -2323,6 +2406,19 @@ final public class OptionsDialog extends KissDialog
       return iconnumber.intValue() ;
    }
    
+	static public int getSplashSetNumber()
+   {
+      if (splashsetnumber == null) return 0 ;
+      return splashsetnumber.intValue() ;
+   }
+   
+	static public String getSplashSetName(int i)
+   {
+      if (i < 0) return "" ;
+      if (i >= backsetnames.size()) return "" ;
+      return (String) backsetnames.elementAt(i) ;
+   }
+   
    static public String getCompatibilityMode()
    {
       if (playfkiss) return "PlayFKiss" ;
@@ -2582,6 +2678,9 @@ final public class OptionsDialog extends KissDialog
 
 	static public void setSplashDir(String s)
    { splashdir = Variable.getStringLiteralValue(s) ; }
+   
+	static public void setSplashSetNumber(int n)
+   { splashsetnumber = new Integer(n) ; }
    
 	static public void setIconDir(String s)
    { icondir = Variable.getStringLiteralValue(s) ; }
@@ -3724,6 +3823,7 @@ final public class OptionsDialog extends KissDialog
       initdefaultplayfkiss = defaultplayfkiss ;
       initacceptcnferrors = acceptcnferrors ;
       initmultipleevents = multipleevents ;
+	   initsplashdir = new String(splashdir) ;
    }
    
    // Set initial factory option values.
@@ -3866,9 +3966,10 @@ final public class OptionsDialog extends KissDialog
       userdir = Kisekae.getBaseDir() ;
       website = Kisekae.getWebSite() ; ;
       splashdir = Kisekae.getFactorySplashDir() ; 
+      splashsetnumber = new Integer(0) ;
       icondir = Kisekae.getIconDir() ; 
+      iconnumber = new Integer(0) ;
       onlinehelp = "HelpFiles/product/" ;
-      
       splashrestart = true ;
       
       // Clear lru menu files.
@@ -4255,6 +4356,7 @@ final public class OptionsDialog extends KissDialog
       splashdir = toString1(p.getProperty("splashdir"),splashdir) ;
       icondir = toString1(p.getProperty("icondir"),icondir) ;
 	   iconnumber = new Integer(toInteger1(p.getProperty("iconnumber"),iconnumber)) ;
+	   splashsetnumber = new Integer(toInteger1(p.getProperty("splashsetnumber"),splashsetnumber)) ;
       setLanguage(toString1(p.getProperty("language"),language)) ;
       setEncoding(toString1(p.getProperty("encoding"),encoding)) ;
       setExportType(toString1(p.getProperty("exporttype"),exporttype)) ;
@@ -4438,6 +4540,7 @@ final public class OptionsDialog extends KissDialog
       p.put("userdir",toString2(userdir)) ;
       p.put("website",toString2(website)) ;
       p.put("splashdir",toString2(splashdir)) ;
+      p.put("splashsetnumber",(""+getSplashSetNumber())) ;
       p.put("icondir",toString2(icondir)) ;
       p.put("iconnumber",(""+getIconNumber())) ;
      
@@ -4462,6 +4565,7 @@ final public class OptionsDialog extends KissDialog
       p.put("splashdir",toString2(splashdir)) ;
       p.put("icondir",toString2(icondir)) ;
       p.put("iconnumber",(""+getIconNumber())) ;
+      p.put("splashsetnumber",(""+getSplashSetNumber())) ;
       
       if (lrufiles != null)
       {
@@ -4541,6 +4645,7 @@ final public class OptionsDialog extends KissDialog
       languagerestart = false ;
       suspendactions = false ;
       IconList.clearSelection() ;
+      SplashList.clearSelection() ;
       setVisible(false) ;
  }
    
@@ -5029,6 +5134,7 @@ final public class OptionsDialog extends KissDialog
             if (i == JOptionPane.YES_OPTION)
             {
                IconList.clearSelection() ;
+               SplashList.clearSelection() ;
                setFactoryOptions() ;
                setInitOptions() ;
                setControls() ;
@@ -5096,11 +5202,11 @@ final public class OptionsDialog extends KissDialog
 		Object source = evt.getSource() ;
       if (source instanceof JList)
          if (((JList) source).getSelectedValue() == null) return ;
+      MainFrame mf = Kisekae.getMainFrame() ;
+      Configuration config = (mf != null) ? mf.getConfig() : null ;
 
       if (source == IconList)
       {
-         MainFrame mf = Kisekae.getMainFrame() ;
-         Configuration config = (mf != null) ? mf.getConfig() : null ;
          if (config == null)
          {
             iconrestart = true ;
@@ -5129,6 +5235,57 @@ final public class OptionsDialog extends KissDialog
          {
             ((JList) source).clearSelection() ;
          }
+         return ;
+      }
+
+      if (source == SplashList)
+      {
+         int n = SplashList.getSelectedIndex() ;
+         if (n < 0) return ;
+         n = n + 1 ;
+         splashsetnumber = new Integer(n) ;
+
+         // Establish Splash option.  Format is path/setname.ext
+         
+         String name = getSplashSetName(n-1) ;
+         SplashSetName.setText(name) ;
+         if ("".equals(name)) return ;
+         String s2 = getSplashDir() ;      
+         int m = s2.lastIndexOf('.') ;
+         String extension = (m > 0) ? s2.substring(m) : ".jpg" ;
+         n = s2.lastIndexOf('/') ;
+         if (n < 0) n = s2.lastIndexOf('\\') ;
+         if (n < 0) n = s2.length() ;
+         String directory = s2.substring(0,n) ;  
+         s2 = directory + "/" + name + extension ;
+         
+         // Confirm the change
+                          
+         String s = Kisekae.getCaptions().getString("OptionsDialogRestartText2") ;
+         int i1 = s.indexOf('[') ;
+         int j1 = s.indexOf(']') ;
+         if (i1 >= 0 && j1 > i1 && config != null)
+            s = s.substring(0,i1+1) + config.getName() + s.substring(j1) ;
+         if (i1 >= 0 && j1 > i1 && config == null)
+            s = s.substring(0,i1) + s.substring(j1+1) ;
+         int i = JOptionPane.showConfirmDialog(this,
+            Kisekae.getCaptions().getString("OptionsDialogRestartText1") + "\n" + s,
+            Kisekae.getCaptions().getString("OptionsDialogWarningTitle"),
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.INFORMATION_MESSAGE) ;
+         
+         if (i == JOptionPane.YES_OPTION)
+         {
+            setSplashDir(s2) ;
+            splashrestart = true ;
+            closeWindow() ;
+            Kisekae.restart() ;
+         }
+         else
+         {
+            ((JList) source).clearSelection() ;
+         }
+         return ;
       }
    }
    

@@ -161,7 +161,7 @@ final public class MainFrame extends KissFrame
       // the menu, toolbar, and status bar.
 
       updateUI() ;
-      setSplashPane() ;
+      setNewSplashPane(true) ;
       try { if (OptionsDialog.getAppleMac()) new AboutHandler() ; }
       catch (Throwable e) { } 
 
@@ -2119,12 +2119,20 @@ final public class MainFrame extends KissFrame
       catch (Throwable e) { }
       
 		super.close() ;
-		dispose() ;
+		super.dispose() ;
       
       if (!kisekae.inApplet()) 
          System.exit(0) ;
 	}
 
+
+	// Close this main window frame on a Kisekae restart from scratch.
+
+	public void dispose()
+	{
+		super.close() ;
+		super.dispose() ;
+   }
 
 	// Close the panel frame.
 
@@ -2236,6 +2244,21 @@ final public class MainFrame extends KissFrame
 			try
 			{
             String s = OptionsDialog.getSplashDir() ;
+      
+            // The SplashSetNumber is the definitive set to show.  
+            // If the SplashDir is not correct set it to the correct 
+            // directory and back image set value.
+      
+            int backset = OptionsDialog.getSplashSetNumber() ;
+            String s1 = OptionsDialog.getSplashSetName(backset-1) ;
+            if ("".equals(s1)) 
+               OptionsDialog.setSplashDir(Kisekae.getSplashDir()) ;
+            else
+            {
+               s1 = Kisekae.getSplashDir() + s1 + ".jpg" ;
+               if (!s1.equals(s)) OptionsDialog.setSplashDir(s1) ;
+            }
+            s = OptionsDialog.getSplashDir() ;
             
             // Get the next splash image.  
 
@@ -2248,7 +2271,7 @@ final public class MainFrame extends KissFrame
                   for ( n = 1 ; ; n++ )
                   {
                      images++ ;
-                     String s1 = s.substring(0,m) + n + s.substring(m) ;
+                     s1 = s.substring(0,m) + n + s.substring(m) ;
                      URL u = Kisekae.getResource(s1) ;
                      if (u == null) break ;
                   }
@@ -2257,6 +2280,7 @@ final public class MainFrame extends KissFrame
                   imagenum = (int) (Math.random()*(images)) ;
                else
                   imagenum = (imagenum + 1) % (images+1) ;
+               if (imagenum == images) imagenum = 0 ;
                s = s.substring(0,m) + (imagenum+1) + s.substring(m) ;
                backImageURL = Kisekae.getResource(s) ;
                if (backImageURL != null)
@@ -2265,7 +2289,7 @@ final public class MainFrame extends KissFrame
                // Look for image description
 
                description = "" ;
-               String s1 = s.substring(0,m) ;
+               s1 = s.substring(0,m) ;
                URL reference = Kisekae.getResource(s1+"_reference.txt") ;
                if (reference != null && backimage != null)
                {

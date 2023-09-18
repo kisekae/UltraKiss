@@ -936,7 +936,7 @@ final class AudioSound extends Audio
                   	System.out.println("[" + time + "] AudioSound: " + getName() + " [" + playcount + "]" + " Clip repeat invoked, count = " + repeatcount) ;
                }
 				}
-				else
+				if (!repeat || repeatcount == 0)
             {
 					doCallback() ;
             	started = false ;
@@ -1010,7 +1010,7 @@ final class AudioSound extends Audio
                   	System.out.println("[" + time + "] AudioSound: " + getName() + " [" + playcount + "]" + " Sequencer repeat invoked, count = " + repeatcount) ;
                }
 				}
-				else
+				if (!repeat || repeatcount == 0)
             {
 					doCallback() ;
             	started = false ;

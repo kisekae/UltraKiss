@@ -9,7 +9,7 @@ UltraKiss was developed as a platform independent system to help artists build t
 
 Interactions between objects are recognized through an event processing language for object interaction known as FKiSS.  This language facilitates the programming of automated actions and system interaction with the user. This language was originally conceived as a non-procedural language that would respond to various events, but with the development of FKiSS 3 a procedural structure was imposed on the language that introduced program variables and control logic.
 
-UltraKiss extended and standardized many aspects of the FKiSS language. The standardization, referred to as FKiSS version 5, was designed to correct many of the FKiSS language deficiencies. Each UltraKiss FKiSS command is either a backward compatible extension to previous versions of FKiSS or is a new command implemented for completeness or new capabilities (FKiSS5 Extension), or is an UltraKiss viewer specific command (UltraKiss Extension).
+UltraKiss extended and standardized many aspects of the FKiSS language. The standardization, referred to as FKiSS version 5, was designed to correct many of the FKiSS language deficiencies. Each UltraKiss FKiSS command is either a backward compatible extension to previous versions of FKiSS or is a new command implemented for completeness or new capabilities or is an UltraKiss viewer specific command.
 
 Some examples of interactive KiSS sets are shown below.
 
