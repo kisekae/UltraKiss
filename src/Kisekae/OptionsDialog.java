@@ -5984,12 +5984,13 @@ final public class OptionsDialog extends KissDialog
          if (Kisekae.isSecure()) return false ;
          if (p == null) return false ;
          FileOutputStream out = null ;
+         String pathname ;
          
          try
          {
             File f = new File(properties) ;
-            properties = f.getAbsolutePath() ;
-            out = new FileOutputStream(properties) ;
+            pathname = f.getAbsolutePath() ;
+            out = new FileOutputStream(pathname) ;
             p.store(out,"UltraKiss Properties") ;
          }
          catch (Exception ex1)
@@ -5999,16 +6000,16 @@ final public class OptionsDialog extends KissDialog
                URL url = Kisekae.getLoadBase() ;
                String userdir = url.getPath() ; 
                File f = new File(userdir,properties) ;
-               properties = f.getAbsolutePath() ;
-               out = new FileOutputStream(properties) ;
+               pathname = f.getAbsolutePath() ;
+               out = new FileOutputStream(pathname) ;
                p.store(out,"UltraKiss Properties") ;
             }
             catch (Exception ex2)
             {
                String userdir = System.getProperty("user.home") ;
                File f = new File(userdir,properties) ;
-               properties = f.getAbsolutePath() ;
-               out = new FileOutputStream(properties) ;
+               pathname = f.getAbsolutePath() ;
+               out = new FileOutputStream(pathname) ;
                p.store(out,"UltraKiss Properties") ;
             }
          }
