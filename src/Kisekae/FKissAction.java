@@ -834,9 +834,10 @@ final class FKissAction extends KissObject
             // are allowed.
 
             g = panel.getGroup() ;
-            if ((g != null && !OptionsDialog.getReleaseMove()) || 
-               (g != null && OptionsDialog.getPlayFKissCompatibility() && 
-                "alarm".equals(event.getIdentifier())))     
+            if (g != null && !OptionsDialog.getReleaseMove())
+//          if ((g != null && !OptionsDialog.getReleaseMove()) || 
+//             (g != null && OptionsDialog.getPlayFKissCompatibility() && 
+//              "alarm".equals(event.getIdentifier())))     
             {
                int gflex = (kiss instanceof Group) ? ((Group) kiss).getFlex().y : 0 ;
                if (gflex < OptionsDialog.getMaxLock())

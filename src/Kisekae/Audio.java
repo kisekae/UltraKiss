@@ -331,6 +331,10 @@ abstract class Audio extends KissObject
 
 	boolean isRealized() { return realized ; }
 
+	// Return an indication if the sound has been opened.
+
+	boolean isOpen() { return opened ; }
+
 	// Return an indication if the data has been loaded.
 
 	boolean isLoaded() { return (loaded || copy) ; }

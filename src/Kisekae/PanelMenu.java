@@ -110,6 +110,7 @@ final class PanelMenu extends KissMenu
    protected JMenuItem regroup = null ;
    protected JMenuItem newgroup = null ;
    protected JMenuItem selectall = null ;
+   protected JMenuItem selectallvisible = null ;
    protected JMenuItem unselectall = null ;
    protected JMenuItem selectfind = null ;
    protected JMenuItem addimage = null ;
@@ -336,6 +337,9 @@ final class PanelMenu extends KissMenu
       if (!applemac) selectall.setMnemonic(KeyEvent.VK_A) ;
       selectall.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, accelerator));
       selectall.setEnabled(false) ;
+      m[1].add((selectallvisible = new JMenuItem(Kisekae.getCaptions().getString("MenuEditSelectAllVisible")))) ;
+      selectallvisible.addActionListener(this) ;
+      selectallvisible.setEnabled(false) ;
       m[1].add((unselectall = new JMenuItem(Kisekae.getCaptions().getString("MenuEditUnselectAll")))) ;
       unselectall.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, accelerator+ActionEvent.SHIFT_MASK));
       unselectall.addActionListener(this) ;
@@ -539,6 +543,7 @@ final class PanelMenu extends KissMenu
          save.setEnabled(zip != null && zip.getDirectoryName() != null  && !Kisekae.isSecure() && !menu.getNoCopy()) ;
          archive.setEnabled(zip != null && zip.isArchive()) ;
          selectall.setEnabled(pageset != null && pageset.getGroupCount() > 0) ;
+         selectallvisible.setEnabled(pageset != null && pageset.getGroupCount() > 0) ;
          selectfind.setEnabled(pageset != null && pageset.getGroupCount() > 0) ;
          importimage.setEnabled(pageset != null && !Kisekae.isSecure()) ;
          importpalette.setEnabled(pageset != null && !Kisekae.isSecure()) ;
@@ -646,6 +651,7 @@ final class PanelMenu extends KissMenu
       paste.setEnabled(b && panel.isClipOn()) ;
       pastenew.setEnabled(b && panel.isClipOn()) ;
       selectall.setEnabled(b && pageset != null && pageset.getGroupCount() > 0);
+      selectallvisible.setEnabled(b && pageset != null && pageset.getGroupCount() > 0);
       selectfind.setEnabled(b && pageset != null && pageset.getGroupCount() > 0);
       unselectall.setEnabled(b && panel.isEditOn()) ;
       importimage.setEnabled(b && pageset != null  && !Kisekae.isSecure()) ;
@@ -1149,6 +1155,8 @@ final class PanelMenu extends KissMenu
 
          if (source == selectall) { eventSelectAll(true) ; return ; }
 
+         if (source == selectallvisible) { eventSelectAllVisible(true) ; return ; }
+
          if (source == unselectall) { eventSelectAll(false) ; return ; }
 
          if (source == selectfind) { eventSelectFind() ; return ; }
@@ -1284,6 +1292,8 @@ final class PanelMenu extends KissMenu
    void eventNewgroup() { parent.editNewgroup() ; }
 
    void eventSelectAll(boolean selectall) { parent.selectAll(selectall) ; }
+
+   void eventSelectAllVisible(boolean selectall) { parent.selectAllVisible(selectall) ; }
    
    // Magnify or reduce the screen size
    

@@ -231,7 +231,21 @@ final class PageSet extends KissObject
 
 	Vector getGroups() { return groups ; }
 
-	// Return the number of groups visible on this page.
+	// Return all the visible groups on this page.
+
+	Vector getVisibleGroups() 
+   { 
+      Vector v = new Vector() ;
+      for (int i = 0; i < groups.size() ; i++)
+      {
+         Group g = (Group) groups.elementAt(i) ;
+         if (!g.isVisible()) continue ;
+         v.addElement(g) ;
+      }
+      return v ; 
+   }
+
+   // Return the number of groups on this page.
 
 	int getGroupCount() { return groups.size() ; }
 

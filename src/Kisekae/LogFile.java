@@ -115,7 +115,12 @@ final public class LogFile extends PrintStream
 			if (ls != null) logfile.write(ls.getBytes()) ;
 			s = "Run time Java Virtual Machine level " + System.getProperty("java.version") ;
 			logfile.write(s.getBytes()) ;
-			if (ls != null) logfile.write(ls.getBytes()) ;
+			if (ls != null) logfile.write(ls.getBytes()) ;         
+         Runtime rt = Runtime.getRuntime();
+         long maxMem = rt.maxMemory();
+         s = "Maximum Java Memory: " + maxMem + " (" + maxMem/(1024*1024) + " MB)" ;
+			logfile.write(s.getBytes()) ;
+			if (ls != null) logfile.write(ls.getBytes()) ;         
 
 			// Start redirecting the output.
 

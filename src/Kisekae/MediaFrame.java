@@ -93,6 +93,7 @@ final class MediaFrame extends KissFrame
    private Vector playlist = null ;						// The playlist entries
    private String playlistname = null ;            // The playlist name
    private Timer timer = null ;                    // The progress timer
+   private float volumeadjust = 1.0f ;             // The volume adjustment
    private int playindex = 0 ;							// The current play index
 	private int repeatcount = 0 ;				         // The repetition count
    private boolean internal = false ;              // True if created by action
@@ -156,7 +157,8 @@ final class MediaFrame extends KissFrame
 	private JCheckBoxMenuItem fullscreen ;
 	private JCheckBoxMenuItem centerframe ;
 	private JCheckBoxMenuItem aspectratio ;
-	private Insets insets = null ;
+   private JCheckBoxMenuItem volume ;
+   private Insets insets = null ;
 
 
    // Listeners
@@ -303,7 +305,11 @@ final class MediaFrame extends KissFrame
 		optionMenu.add((aspectratio = new JCheckBoxMenuItem(Kisekae.getCaptions().getString("OptionsRetainAspectRatio")))) ;
 		aspectratio.setState(OptionsDialog.getKeepAspect());
 		aspectratio.addItemListener(this) ;
-		mb.add(optionMenu) ;
+      optionMenu.add((volume = new JCheckBoxMenuItem(Kisekae.getCaptions().getString("OptionsMediaVolume")))) ;
+      volume.setState(OptionsDialog.getAdjustMediaVolume());
+      volumeadjust = OptionsDialog.getMediaVolume() ;
+      volume.addItemListener(this) ;
+      mb.add(optionMenu) ;
 
 		// Create the Help menu and About dialog.
 
@@ -749,7 +755,7 @@ final class MediaFrame extends KissFrame
 
 	public void itemStateChanged(ItemEvent evt)
 	{
-      if (isInternal()) return ;
+//      if (isInternal()) return ;
 		Object source = evt.getSource() ;
 
 		// Turn loop control on and off.
@@ -786,6 +792,24 @@ final class MediaFrame extends KissFrame
 			OptionsDialog.setKeepAspect(aspectratio.getState()) ;
 			return ;
 		}
+
+      if (source == volume)
+		{
+         if (volume.getState())
+         { 
+            String s = JOptionPane.showInputDialog(Kisekae.getCaptions().getString("MediaVolumeAdjustment"),
+                 OptionsDialog.getMediaVolume()) ;
+            if (s != null)
+            {
+               try { volumeadjust = Float.valueOf(s) ; }
+               catch (NumberFormatException e) { }
+               if (volumeadjust < 0) volumeadjust = 0 ;
+               if (volumeadjust > 1.0f) volumeadjust = 1.0f ;
+               resume() ;
+            }
+         }
+         return ;
+      }
 	}
 
 
@@ -1011,6 +1035,16 @@ final class MediaFrame extends KissFrame
          	Player player = (Player) currentmedia ;
 				int state = player.getState() ;
 				realized = (state >= Player.Realized) ;
+            GainControl gc = player.getGainControl() ;
+            if (gc != null && volume.isSelected()) 
+               gc.setLevel(20f * (float) Math.log10(volumeadjust)) ;
+         }
+      	if (Kisekae.isMediaInstalled() && currentmedia instanceof Clip)
+         {
+         	Clip clip = (Clip) currentmedia ;
+            FloatControl fc = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN) ;
+            if (fc != null && volume.isSelected())
+               fc.setValue(20f * (float) Math.log10(volumeadjust)) ;
          }
       }
 		updateLayout() ;
@@ -1340,11 +1374,21 @@ final class MediaFrame extends KissFrame
    public void resume()
    {
    	Object player = null ;
-		if (audio != null) player = audio.getPlayer() ;
-		if (video != null) player = video.getPlayer() ;
+		if (audio != null) 
+      {
+         if (!audio.isOpen()) audio.open() ;
+         player = audio.getPlayer() ;
+      }
+		if (video != null) 
+      {
+         player = video.getPlayer() ;
+      }
 		if (Kisekae.isMediaInstalled() && player instanceof Player)
 		{
       	Player p = (Player) player ;
+         GainControl gc = p.getGainControl() ;
+         if (gc != null && volume.isSelected()) 
+            gc.setLevel(20f * (float) Math.log10(volumeadjust)) ;
 			int state = p.getState() ;
 			if (state != Player.Started) p.start() ;
 		}
@@ -1366,6 +1410,9 @@ final class MediaFrame extends KissFrame
          long diff = Math.abs(p.getFramePosition() - duration) ;
          if (diff <= (int) (duration * 0.02))
             p.setFramePosition(0) ;
+         FloatControl fc = (FloatControl) p.getControl(FloatControl.Type.MASTER_GAIN) ;
+         if (fc != null && volume.isSelected())
+            fc.setValue(20f * (float) Math.log10(volumeadjust)) ;
 			p.start() ;
          if (timer != null) timer.start() ;
 		}

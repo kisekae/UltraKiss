@@ -1506,6 +1506,48 @@ final class PanelFrame extends JPanel
       repaint() ;
    }
 
+
+   // Method to select all visible groups on the current page.
+
+   void selectAllVisible() { selectAllVisible(null) ; }
+   void selectAllVisible(Vector v)
+   {
+      if (page == null) return ;
+      PanelEdit oldselection = selection ;
+      PanelEdit newselection = new PanelEdit() ;
+      newselection.setPageUniqueID(page.getUniqueID()) ;
+      if (v == null) newselection.addAll(page.getVisibleGroups()) ;
+      else newselection.addAll(v) ;
+      if (newselection.size() == 0) return ;
+      selection = newselection ;
+
+      // If we have a selection create a new group set.
+
+      groupset = new Group() ;
+      for (int i = 0 ; i < selection.size() ; i++)
+         groupset.addElement((KissObject) selection.elementAt(i),false) ;
+
+      // Disable input on selected components.
+
+      setInputState(true,oldselection) ;
+      setInputState(false,newselection) ;
+
+      // Capture this edit for undo/redo processing.
+
+      if (!undoredo)
+      {
+         UndoablePageEdit ce = new UndoablePageEdit(SELECT,selection,oldselection,selection) ;
+         UndoableEditEvent evt = new UndoableEditEvent(this,ce) ;
+         if (undo != null) undo.undoableEditHappened(evt) ;
+      }
+
+      // Update our menu state.
+
+      OptionsDialog.setTempEditEnable(true) ;
+      parent.updateMenu() ;
+      repaint() ;
+   }
+
    
    // Method to unselect all objects currently selected.
 

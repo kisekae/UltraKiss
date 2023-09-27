@@ -2050,6 +2050,12 @@ final public class MainFrame extends KissFrame
 		if (selectall) panel.selectAll() ; else panel.unselectAll() ;
    }
 
+	void selectAllVisible(boolean selectall)
+   {
+   	if (panel == null) return ;
+		if (selectall) panel.selectAllVisible() ; else panel.unselectAll() ;
+   }
+
 	void selectFind(Vector v)
    {
    	if (panel == null) return ;
