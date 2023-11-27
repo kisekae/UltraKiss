@@ -51,8 +51,9 @@ package Kisekae ;
 *
 * This object encapsulates the drawing panel that represents a data
 * set window.  It paints the data set panel and it contains helper methods
-* to both draw and update the screen.  This module supports full undoable edit
-* recovery for all changes to a configuration data set.
+* to both draw and update the screen.  This module supports full undo edit
+* recovery for all changes to a configuration data set.  It also handles all
+* keyboard input and key events for the set.
 *
 */
 
@@ -660,6 +661,7 @@ final class PanelFrame extends JPanel
                if (!(o instanceof Cel)) continue ;
                Cel c = (Cel) o ;
                if (!groupinuse) c.setInternal(true) ;
+               if (!undoredo) c.setUndoAllPages(c.isOnAllPage()) ;
                c.setAllPages(false) ;
                if (!(o instanceof Video)) continue ;
                Video video = (Video) o ;
@@ -690,12 +692,14 @@ final class PanelFrame extends JPanel
             // Cels that are cut have this page removed from their page list.
             // If the parent group is no longer contained on the page it is
             // removed from the page set.  If the cel is not on any pages
-            // it becomes an internal cel.
+            // it becomes an internal cel. 
 
             Object o = c.getGroup() ;
             Vector pages = c.getPages() ;
             Integer pid = (Integer) page.getIdentifier() ;
             pages.removeElement(pid) ;
+            if (!undoredo) c.setUndoAllPages(c.isOnAllPage()) ;
+            c.setAllPages(false) ;
             if (pages.size() == 0) c.setInternal(true) ;
             if (OptionsDialog.getDebugEdit())
                System.out.println("Edit: cut " + c + " remove from page " + pid) ;
@@ -887,7 +891,7 @@ final class PanelFrame extends JPanel
             // contains the group or we are pasting a temporary group or
             // performing a pastenew.
 
-            if (pastenew || page.contains(g) || gid.intValue() < 0)
+            if ((pastenew || page.contains(g) || gid.intValue() < 0) && !OptionsDialog.getPagesAreScenes())
             {
                Vector groupcels = g.getCels() ;
                Point location = editpage.getGroupPosition(gid) ;
@@ -932,6 +936,7 @@ final class PanelFrame extends JPanel
                   c1.setInternal(false) ;
                   c1.setCopy((c.isInternal()) ? c.isCopy() : true) ;
                   if (c1 instanceof JavaCel) c1.setCopy(false) ;
+                  c1.setAllPages(c.getUndoAllPages());
                   
                   // If we are performing a Paste New then we need to ensure
                   // that new cels are created. We append a number to our cel
@@ -1048,6 +1053,17 @@ final class PanelFrame extends JPanel
             grouplocation = editpage.getInitialGroupPosition(gid) ;
             if (grouplocation == null) grouplocation = g.getLocation() ;
             page.setInitialGroupPosition(newgid,grouplocation) ;
+            
+            // However, if we are using pages as scenes and pasting something 
+            // cut from page 0 onto a new page then the initial page positions
+            // for the pasted group should be the initial page positions
+            // from the source page, page 0.
+            
+            if (OptionsDialog.getPagesAreScenes() && sourcepage.equals(new Integer(0)))
+            {
+               grouplocation = editpage.getInitialGroupPosition(newgid) ;
+               page.setInitialGroupPosition(newgid,grouplocation) ;
+            }
 
             // As this group will be in use add it to the configuration
             // group list if it does not exist.
@@ -1154,6 +1170,7 @@ final class PanelFrame extends JPanel
 
             c.setInternal(false) ;
             c.setPasted(true) ;
+            c.setAllPages(c.getUndoAllPages());
             if (!newselection.contains(c)) newselection.addElement(c) ;
             if (marked) newselection.setMarked(c,true) ;
             newselection.setPasted(c,true) ;
@@ -1187,6 +1204,32 @@ final class PanelFrame extends JPanel
                   int y = (grouplocation.y - (box.y-offset.y)) ;
                   g.setPlacement(x,y) ;
                   g.drop() ;
+
+                  // Update the page initial state.  Initial positions for the
+                  // pasted groups will become the initial positions from the
+                  // selection edit source page.  If no initial position exists
+                  // then the initial position becomes the current position.
+
+                  Integer gid = (Integer) g.getIdentifier() ;
+                  grouplocation = editpage.getInitialGroupPosition(gid) ;
+                  if (grouplocation == null) grouplocation = g.getLocation() ;
+                  page.setInitialGroupPosition(gid,grouplocation) ;
+            
+                  // However, if we are using pages as scenes and pasting something 
+                  // cut from page 0 onto a new page then the initial page positions
+                  // for the pasted group should be the initial page positions
+                  // from the source page, page 0.
+            
+                  if (OptionsDialog.getPagesAreScenes() && sourcepage.equals(new Integer(0)))
+                  {
+                     grouplocation = editpage.getInitialGroupPosition(gid) ;
+                     page.setInitialGroupPosition(gid,grouplocation) ;
+                  }
+
+                  // Update the location of the group on the page.
+         
+                  if (kiss instanceof Group)
+                     g.updatePageSetLocation(page) ;
                }
             }
          }
@@ -1507,7 +1550,8 @@ final class PanelFrame extends JPanel
    }
 
 
-   // Method to select all visible groups on the current page.
+   // Method to select all visible cels on the current page.  We return only
+   // the cels necessary to fully cover the screen.  
 
    void selectAllVisible() { selectAllVisible(null) ; }
    void selectAllVisible(Vector v)
@@ -1516,7 +1560,7 @@ final class PanelFrame extends JPanel
       PanelEdit oldselection = selection ;
       PanelEdit newselection = new PanelEdit() ;
       newselection.setPageUniqueID(page.getUniqueID()) ;
-      if (v == null) newselection.addAll(page.getVisibleGroups()) ;
+      if (v == null) newselection.addAll(page.getVisibleCels()) ;
       else newselection.addAll(v) ;
       if (newselection.size() == 0) return ;
       selection = newselection ;
@@ -1524,8 +1568,16 @@ final class PanelFrame extends JPanel
       // If we have a selection create a new group set.
 
       groupset = new Group() ;
+      Collections.sort(selection,new LevelComparator()) ;
+      Rectangle r = new Rectangle() ;
       for (int i = 0 ; i < selection.size() ; i++)
-         groupset.addElement((KissObject) selection.elementAt(i),false) ;
+      {
+         Cel c = (Cel) selection.elementAt(i) ;
+         groupset.addElement(c,false) ;
+         r = r.union(c.getBoundingBox()) ;
+         if (r.x <= 0 && r.y <= 0 && r.width >= panelSize.width && r.height >= panelSize.height)
+            break ;
+      }
 
       // Disable input on selected components.
 
@@ -2676,6 +2728,8 @@ final class PanelFrame extends JPanel
          sf = config.getScaleFactor() ;
          cels = config.getCels() ;
          groups = config.getGroups() ;
+   		if (OptionsDialog.getDebugControl())
+   			System.out.println("PanelFrame initialize frame for configuration \"" + name + "\" (" + config.getID() + ")") ;
       }
 
       // Allocate the panel frame image buffers.
@@ -2870,7 +2924,8 @@ final class PanelFrame extends JPanel
 
       // We must save the object positions for the page set currently
       // on display and then restore any prior positions for the new
-      // page being displayed.
+      // page being displayed.  If pages are scenes then page 0 is the
+      // position of record for movement and restoring object positions.
 
       Object cid = config.getID() ;
       if (page != null) page.saveState(cid,"panelframe") ;
@@ -2884,22 +2939,9 @@ final class PanelFrame extends JPanel
 
       if (baseList != null && !OptionsDialog.getCacheImage())
       {
-         for (int i = 0 ; i < baseList.length ; i++)
-         {
-            int index = baseList[i] ;
-            if (index < 0 || index >= cels.size()) continue ;
-            Cel c = (Cel) cels.elementAt(index) ;
-            if (!c.isLoaded()) continue ;
-            if (c.isUpdated()) continue ;
-            if (c.isImported()) continue ;
-            if (c.isExported()) continue ;
-            if (isSelected(c)) continue ;
-            if (c.isOnPage(new Integer(pageset))) continue ;
-            if (c.getFrameCount() > 1) continue ;
-            Object o = c.getGroup() ;
-            if (o instanceof Group && ((Group) o).isInternal()) continue ;
-            c.unload() ;
-         }
+         if (OptionsDialog.getDebugLoad())
+            System.out.println("PanelFrame unload cels not on page " + pageset) ;
+         unloadCels(pageset) ;
       }
 
       // Create our cel display list.  Cels must be painted in reverse
@@ -2913,6 +2955,8 @@ final class PanelFrame extends JPanel
 
       // Load all unloaded cel images that are on our new page.
 
+      if (OptionsDialog.getDebugLoad())
+         System.out.println("PanelFrame load unloaded cels on page " + pageset) ;
       loadCels(pageset) ;
 
       // Set the initial colors for this page.  These are the colors defined
@@ -3234,7 +3278,9 @@ final class PanelFrame extends JPanel
          boolean open = (zip != null) ? zip.isOpen() : true ;
          if (!open) zip.open() ;
          Vector groups = new Vector() ;
-         parent.showStatus("Load images on page " + pageset + " ...");
+         String s = (OptionsDialog.getPagesAreScenes()) ? "scene" : "page" ;
+         parent.showStatus("Load images on " + s + " " + pageset + " ...");
+         Integer page = new Integer(pageset) ;
 
          for (int i = 0 ; i < baseList.length ; i++)
          {
@@ -3242,21 +3288,45 @@ final class PanelFrame extends JPanel
             if (index < 0 || index >= cels.size()) continue ;
             Cel c = (Cel) cels.elementAt(index) ;
             if (c.isLoaded()) continue ;
-            loadCel(c,pageset) ;
+            if (!c.isOnSpecificPage(page)) continue ;
+            Vector includefiles = config.getIncludeFiles() ;
+            loadCel(c,pageset,includefiles) ;
             if (!update) continue ;
             Object o = c.getGroup() ;
             if (o instanceof Group)
+            {
                if (!groups.contains(o)) groups.addElement(o) ;
+               ((Group) o).updateBoundingBox() ;
+            }            
          }
 
-         // Rebuild the group offsets.
+         // Rebuild the group offsets.  Cels may have been moved through 
+         // alarms while unloaded.  We need to position the group when the
+         // cels are established and we know the size.
 
          if (update)
          {
             for (int i = 0 ; i < groups.size() ; i++)
             {
                Group g = (Group) groups.elementAt(i) ;
+               Point p = g.getLocation() ;
                g.updateOffset() ;
+
+               // Get the current group location and compute the relative
+               // placement offset necessary to move the group to the required
+               // position.
+
+               g.setContext(pageset) ;
+               Rectangle box = g.getBoundingBox() ;
+               Point offset = g.getOffset() ;
+               Point location = new Point(box.x-offset.x,box.y-offset.y) ;
+
+               // Apply the displacement offset.
+
+               int dispX = p.x - location.x ;
+               int dispY = p.y - location.y ;
+               g.setPlacement(dispX,dispY) ;
+               g.drop() ;
             }
          }
 
@@ -3268,26 +3338,88 @@ final class PanelFrame extends JPanel
             animator.updateCels(config.getAnimatedCels()) ;
             animator.setPanelFrame(this) ;
          }
-         if (!open) zip.close() ;
+//       if (!open) zip.close() ;
       }
       catch (Exception e)
       {
          System.out.println("PanelFrame: initPage load cels, " + e) ;
+         e.printStackTrace();
       }
    }
 
+   // A function to unload all cels not on the specified page.  Cels may be
+   // unloaded on a page change.  This function is typically called on
+   // a page initialization when images are not cached. 
+   
+   private void unloadCels(int pageset)
+   {
+      try
+      {
+         Integer p = new Integer(pageset) ;
+         Integer p0 = new Integer(0) ;
+         for (int i = 0 ; i < baseList.length ; i++)
+         {
+            int index = baseList[i] ;
+            if (index < 0 || index >= cels.size()) continue ;
+            Cel c = (Cel) cels.elementAt(index) ;
+            if (c instanceof JavaCel) continue ;
+            if (!c.isLoaded()) continue ;
+            if (c.isUpdated()) continue ;
+            if (c.isImported()) continue ;
+            if (c.isExported()) continue ;
+            if (isSelected(c)) continue ;
+            if (c.isOnAllPage()) continue ;
+            if (c.isOnSpecificPage(p)) continue ;
+            if (OptionsDialog.getPagesAreScenes() && c.isOnSpecificPage(p0)) continue ;
+            if (OptionsDialog.getPagesAreScenes() && pageset == 0) continue ;
+            if (c.getFrameCount() > 1) continue ;
+            Object o = c.getGroup() ;
+            if (o instanceof Group && ((Group) o).isInternal()) continue ;
+            c.unload() ;
+         }      
+      }
+      catch (Exception e)
+      {
+         System.out.println("PanelFrame: initPage unload cels, " + e) ;
+      }
+   }
 
+   
    // A function to load a specific cel for the specified pageset.  
    // Cels may be unloaded on a page change. 
 
-   private void loadCel(Cel c, int pageset)
+   private void loadCel(Cel c, int pageset, Vector includefiles)
    {
       if (c == null) return ;
       if (c.isLoaded()) return ;
-      c.load() ;
+      c.load(includefiles) ;
       if (OptionsDialog.getDebugLoad())
       {
          String s = "Load: (page " + pageset + ") " + c ;
+         if (c.isCopy()) s += " [copy]" ;
+         System.out.println(s) ;
+      }
+   }
+
+   
+   // A function to unload a specific cel for the specified pageset.  
+   // Cels may be unloaded on a page change. 
+
+   private void unloadCel(Cel c, int pageset)
+   {
+      if (c == null) return ;
+      if (!c.isLoaded()) return ;
+      if (c.isUpdated()) return ;
+      if (c.isImported()) return ;
+      if (isSelected(c)) return ;
+      if (c.isOnAllPage()) return ;
+      if (!c.isOnSpecificPage(new Integer(pageset))) return ;
+      if (OptionsDialog.getPagesAreScenes() && c.isOnSpecificPage(new Integer(0))) return ;
+      if (c.getFrameCount() > 1) return ;
+      c.unload() ;
+      if (OptionsDialog.getDebugLoad())
+      {
+         String s = "Unload: (page " + pageset + ") " + c ;
          if (c.isCopy()) s += " [copy]" ;
          System.out.println(s) ;
       }
@@ -3543,8 +3675,8 @@ final class PanelFrame extends JPanel
       newsf = Math.min(sx,sy) ;
       if (newsf < 0.01f) newsf = 0.01f ;
       if (!fit) newsf = 1.0f ;
-      if (OptionsDialog.getDebugEdit())
-         System.out.println("Edit: Scale by " + newsf) ;
+      if (OptionsDialog.getDebugEdit() && newsf != 1.0f)
+         System.out.println("Edit: Scale to fit screen by " + newsf) ;
 
       // We must scale input type JavaCel and Video components.  Scaling 
       // will resize the component and position it properly within the
@@ -4076,6 +4208,35 @@ final class PanelFrame extends JPanel
          if (!(o instanceof Integer)) continue ;
          int n = ((Integer) o).intValue() ;
          if (level >= 0 && n > level) continue ;
+         if (!drawcel.isDrawable(box)) continue ;
+         
+         // If drawing an unloaded cel when using pages as scenes then 
+         // load all the cels in the new scene.  These cels are 
+         // unloaded periodically by our SceneTimer activity that 
+         // scans the cel list to free unused cel memory.
+         
+         if (OptionsDialog.getPagesAreScenes() && !drawcel.isLoaded())
+         {
+            Vector pages = drawcel.getPages() ;
+            if (pages == null || pages.size() == 0) continue ;
+            for (int j = 0 ; j < pages.size() ; j++)
+            {
+               o = pages.elementAt(j) ;
+               if (!(o instanceof Integer)) continue ;
+               Integer page = (Integer) o ;
+               int p = page.intValue() ;
+               if (OptionsDialog.getDebugLoad())
+                  System.out.println("PanelFrame: unloaded cel is "+drawcel+", loading scene page "+p) ;
+               SceneTimer.setPage(page) ;
+               if (p > 0) loadCels(p,true) ;
+               o = drawcel.getGroup() ;
+               if (o instanceof Group)
+               {
+                  Rectangle r = ((Group) o).getBoundingBox() ;
+                  box = box.union(r) ;
+               }
+            }
+         }
          drawcel.draw(g2,box) ;
       }
    }
@@ -4275,13 +4436,16 @@ final class PanelFrame extends JPanel
          Rectangle r = c.getBoundingBox() ;
          int t = c.getAlpha(x-r.x,y-r.y) ;
          if (t < 0) continue ;
+         int n = c.getTransparency() ;
+   if ("black.cel".equals(c.getName()))
+     c = c ;
 
-         // Transparent pixels are accepted unless the pixel is the cel
+         // Transparent pixels are not accepted if the pixel is the cel
          // transparent color.  GIF images appear to return the background
          // color if this the transparent pixel.  This is because the GIF
          // frame 0 buffered image is set to the background color in GifCel.
 
-         if (t == 0)
+         if (t == 0 || (n == 0 && selection != null))
          {
             if (c.isTruecolor()) continue ;
             int rgb = c.getRGB(x-r.x,y-r.y) ;
@@ -5195,7 +5359,20 @@ final class PanelFrame extends JPanel
       int i = s.indexOf(' ') ;
       if (i >= 0) s = s.substring(0,i) ;
       parent.setTitle(s.trim()) ;
+		if (OptionsDialog.getDebugControl() && config != null)
+  			System.out.println("PanelFrame close frame for configuration \"" + config.getName() + "\" (" + config.getID() + ")") ;
 
+		// Flush all image data.  This cleans up our memory allocation.
+/*
+      if (cels != null)
+      {
+         for (i = 0 ; i < cels.size() ; i++)
+         {
+            Cel c = (Cel) cels.elementAt(i) ;
+            c.unload() ;
+         }
+      }
+*/      
       // Release resources.
 
       config = null ;
@@ -5930,6 +6107,10 @@ final class PanelFrame extends JPanel
                baseList = new int [celList.length] ;
                for (int i = 0 ; i < celList.length ; i++) baseList[i] = celList[i] ;
             }
+
+            // Update the location of the group on the page.
+         
+            group.updatePageSetLocation(page) ;
 
             // Capture this edit for undo/redo processing.
 
@@ -7334,16 +7515,22 @@ final class PanelFrame extends JPanel
 
       // Establish our event control key states.
 
-      boolean ctrldown = false ;
-      if (e instanceof MouseEvent) 
-         ctrldown = ((MouseEvent) e).isControlDown() ;
-      else if (e instanceof ActionEvent) 
-         ctrldown = (((ActionEvent) e).getModifiers() & ActionEvent.CTRL_MASK) != 0 ;
-      boolean metadown = false ;
-      if (e instanceof MouseEvent) 
-         metadown = ((MouseEvent) e).isMetaDown() ;
-      else if (e instanceof ActionEvent) 
-         metadown = (((ActionEvent) e).getModifiers() & ActionEvent.META_MASK) != 0 ;
+      boolean ctrldown = (keycode == KeyEvent.VK_CONTROL && !newmultikey) ;
+//      boolean ctrldown = false ;
+//      if (e instanceof MouseEvent) 
+//         ctrldown = ((MouseEvent) e).isControlDown() ;
+//      else if (e instanceof ActionEvent) 
+//         ctrldown = (((ActionEvent) e).getModifiers() & ActionEvent.CTRL_MASK) != 0 ;
+      boolean metadown = (keycode == KeyEvent.VK_META && !newmultikey) ;
+//      boolean metadown = false ;
+//      if (e instanceof MouseEvent) 
+//      {
+//         metadown = ((MouseEvent) e).isMetaDown() ;
+//      }
+//      else if (e instanceof ActionEvent) 
+//      {
+//         metadown = (((ActionEvent) e).getModifiers() & ActionEvent.META_MASK) != 0 ;
+//      }
       
       // If we are ungrouped but did not select anything in out ungrouped set,
       // then this is a selection of a new group object. Set up to accept this
@@ -7372,6 +7559,13 @@ final class PanelFrame extends JPanel
          if (selectset.size() == 0 && group != null)
             if (selectbox.width <=1 && selectbox.height <= 1)
                selectset.addElement(group) ;
+      }
+      
+      if (OptionsDialog.getDebugEdit())
+      {
+         System.out.println("Edit: selection environment " + " (ctrl)=" + ctrldown + " (meta)=" + metadown + " ungrouped=" + ungrouped) ;
+         for (int i = 0 ; i < selectset.size() ; i++)
+            System.out.println("Edit: selection set contains element " + selectset.elementAt(i)) ;
       }
       
       // If the control key was down on a left mouse press add the
@@ -8743,6 +8937,11 @@ final class PanelFrame extends JPanel
 
          if (kiss instanceof Cel) 
             relocateCel((Cel) kiss) ;
+
+         // Update the location of the group on the page.
+         
+         if (kiss instanceof Group)
+            ((Group) kiss).updatePageSetLocation(page) ;
          
          // If this was a JavaCel component then eliminate the group offset.
          

@@ -130,6 +130,7 @@ final class Palette extends KissObject
 	// State attributes
 
 	private boolean loaded = false ;		// True if data has been loaded
+	private boolean frominclude = false ;	// True if data from include file
 	private boolean copy = false ;		// True if file is a copy
 	private Vector visible = null ;		// List of palette group visible
 
@@ -365,6 +366,14 @@ final class Palette extends KissObject
 
 	void setLine(int l) { if (line == 0) line = l ; }
 
+   // Set the loaded state.  
+
+   void setLoaded(boolean b) { loaded = b ; }
+
+   // Indicate if loaded from an include file.  
+
+   void setFromInclude(boolean b) { frominclude = b ; }
+
 	// Set the number of colors actually used in the image that references
    // this palette.  This attribute is only valid for internal palettes that
    // are associated with a single image.
@@ -389,6 +398,10 @@ final class Palette extends KissObject
 	// Return an indication if the data has been loaded.
 
 	boolean isLoaded() { return (loaded || copy) ; }
+
+   // Return an indication if data was loaded from an include file.
+
+   boolean isFromInclude() { return frominclude ; }
 
 	// Return an indication if the multipalette is visible.
 
@@ -636,7 +649,7 @@ final class Palette extends KissObject
 				if (p != null && p.isLoaded())
 	         {
 	         	loadCopy(p) ;
-               zip.addEntry(ze) ;
+               if (!p.isFromInclude()) zip.addEntry(ze) ;
                zip.setUpdated(ze,p.isUpdated()) ;
 	            return ;
             }
@@ -683,6 +696,7 @@ final class Palette extends KissObject
             {
                zip = ze.getZipFile() ;
                includename = (zip != null) ? zip.getFileName() : null ;
+               setFromInclude(true) ;
             }
          }
 
@@ -801,6 +815,7 @@ final class Palette extends KissObject
       background = (int []) o[1] ;
       transparent = (int []) o[0] ;
       setLastModified(p.lastModified()) ;
+      setFromInclude(p.isFromInclude()) ;
 		if (loader != null)
       {
          String s1 = Kisekae.getCaptions().getString("FileNameText") ;

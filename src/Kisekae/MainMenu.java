@@ -516,6 +516,14 @@ final public class MainMenu extends KissMenu
    
    void updateRunState()
    {
+		if (!SwingUtilities.isEventDispatchThread())
+		{
+			Runnable awt = new Runnable()
+			{ public void run() { updateRunState() ; } } ;
+			SwingUtilities.invokeLater(awt) ;
+			return ;
+		}
+      
       Window [] windows = parent.getOwnedWindows() ;
       if (windows == null) return ;
       
@@ -1049,6 +1057,8 @@ final public class MainMenu extends KissMenu
                // Load the LRU file.  If the load fails disable the 
                // entry on the menu list. 
                
+      			if (ArchiveFile.isArchive(archive))
+      				System.out.println("Open LRU archive " + archive) ;
                parent.loadfile(archive,cnf) ; 
                if (fd == null)
                {

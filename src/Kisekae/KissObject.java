@@ -424,10 +424,15 @@ abstract class KissObject
 
    void flush() 
    { 
-      evtkey.clear() ;
+      evtkey = null ;
       ref = null ;
       zip = null ;
       ze = null ;
+      clone = null ;
+      parent = null ;
+      children = null ;
+      trailcomment = null ;
+      leadcomment = null ;
    }
 
 

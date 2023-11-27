@@ -84,7 +84,7 @@ final class CelDialog extends KissDialog
 	private JWindow window = null ;					// Our movie window
 	private int expansions1 = 0 ;			  			// Number of tree expansions
 	private int expansions2 = 0 ;			  			// Number of tree expansions
-    private boolean loaded = false ;             // If true, cel was loaded
+   private boolean loaded = false ;             // If true, cel was loaded
    private Object listselection = null ;        // Selected list object
    private Vector alarms = null ;               // The alarms referenced
 
@@ -111,6 +111,7 @@ final class CelDialog extends KissDialog
 	private JButton CANCEL = new JButton();
 	private JButton VIEW = new JButton();
 	private JButton VIEWGROUP = new JButton();
+	private JButton VIEWPAGE = new JButton();
 	private JButton EDITPALETTE = new JButton();
 	private JButton VIEWCELGROUP = new JButton();
 	private JButton EDITIMAGE = new JButton();
@@ -164,12 +165,14 @@ final class CelDialog extends KissDialog
 	private JLabel grouplabel = new JLabel();
 	private JLabel framelabel = new JLabel();
 	private JLabel celgrouplabel = new JLabel();
+	private JLabel pagelabel = new JLabel();
 	private JCheckBox visiblelabel = new JCheckBox();
 	private JCheckBox ghostlabel = new JCheckBox();
  	private JCheckBox truecolorlabel = new JCheckBox();
 	private JCheckBox copylabel = new JCheckBox();
 	private JComboBox groupselect = new JComboBox();
 	private JComboBox celgroupselect = new JComboBox();
+	private JComboBox pageselect = new JComboBox();
 
    // Define a background color for disabled checkboxes that does not
    // grey the text.
@@ -285,6 +288,18 @@ final class CelDialog extends KissDialog
             }
         		c = (Cel) c.getNextByKey(c.getKeyTable(),cid,c.getPath().toUpperCase()) ;
 			}
+         setValues() ;
+      }
+   } ;
+
+   ItemListener pageListener = new ItemListener()
+   {
+     	public void itemStateChanged(ItemEvent e)
+      {
+        	Integer page = (Integer) pageselect.getSelectedItem() ;
+         Object cid = (config == null) ? null : config.getID() ;
+         PageSet ps = (PageSet) PageSet.getByKey(PageSet.getKeyTable(),cid,page) ;
+         setPageContext(ps) ;
          setValues() ;
       }
    } ;
@@ -424,6 +439,18 @@ final class CelDialog extends KissDialog
       setSize(d2) ;
 		center(this) ;
 
+		// Set the initial values according to the cel page context.
+
+		for (int i = 0 ; i < config.getPageCount() ; i++)
+		{
+      	Integer pg = new Integer(i) ;
+			if (!cel.isOnPage(pg)) continue ;
+         pageselect.addItem(pg) ;
+		}
+      PageSet ps = getPageContext() ;
+      Object id = (ps != null) ? ps.getIdentifier() : null ;
+      if (id != null) pageselect.setSelectedItem(id) ;
+
 		// Set the initial values.  Populate the group popdown selection box
       // with the current group context.  If we have a known group context
       // highlight the selection in the group combo box.
@@ -486,6 +513,7 @@ final class CelDialog extends KissDialog
 		VIEW.addActionListener(this) ;
 		VIEWGROUP.addActionListener(this) ;
 		VIEWCELGROUP.addActionListener(this) ;
+		VIEWPAGE.addActionListener(this) ;
 		EDITPALETTE.addActionListener(this) ;
 		EDITIMAGE.addActionListener(this) ;
 		ADDEVENT.addActionListener(this) ;
@@ -503,6 +531,7 @@ final class CelDialog extends KissDialog
       TREE2.addTreeSelectionListener(treeListener);
       TREE2.addTreeExpansionListener(treeExpander2);
       groupselect.addItemListener(groupListener) ;
+      pageselect.addItemListener(pageListener) ;
       visiblelabel.addActionListener(this) ;
       ghostlabel.addActionListener(this) ;
       copylabel.addActionListener(this) ;
@@ -537,6 +566,9 @@ final class CelDialog extends KissDialog
 		VIEWGROUP.setText(Kisekae.getCaptions().getString("ViewObjectMessage"));
       VIEWGROUP.setToolTipText(Kisekae.getCaptions().getString("ToolTipObjectButton"));
 		VIEWGROUP.setPreferredSize(new Dimension(150, 27));
+      VIEWPAGE.setText(Kisekae.getCaptions().getString("ViewPageSetMessage"));
+      VIEWPAGE.setToolTipText(Kisekae.getCaptions().getString("ToolTipPageSetButton"));
+		VIEWPAGE.setPreferredSize(new Dimension(150, 27));
 		VIEWCELGROUP.setText(Kisekae.getCaptions().getString("ViewCelGroupMessage"));
       VIEWCELGROUP.setToolTipText(Kisekae.getCaptions().getString("ToolTipCelGroupButton"));
 		VIEWCELGROUP.setPreferredSize(new Dimension(150, 27));
@@ -578,6 +610,9 @@ final class CelDialog extends KissDialog
       DummyButton3.setMinimumSize(new Dimension(10, 10));
       DummyButton3.setPreferredSize(new Dimension(10, 10));
       DummyButton3.setVisible(false);
+		pageselect.setMinimumSize(new Dimension(50, 24));
+		pageselect.setPreferredSize(new Dimension(50, 24));
+		pageselect.setMaximumRowCount(OptionsDialog.getMaxPageSet());
 
       Border cb1 = new CompoundBorder(BorderFactory.createEtchedBorder(),eb1) ;
       Border cb2 = new CompoundBorder(new TitledBorder(Kisekae.getCaptions().getString("BoundingBoxText")),eb2) ;
@@ -679,6 +714,8 @@ final class CelDialog extends KissDialog
 		celgrouplabel.setToolTipText(Kisekae.getCaptions().getString("ToolTipCelGroup"));
 		celgroupselect.setPreferredSize(new Dimension(150, 24));
 		celgroupselect.setMinimumSize(new Dimension(50, 24));
+		pagelabel.setToolTipText(Kisekae.getCaptions().getString("ToolTipPageSet"));
+		pagelabel.setText(Kisekae.getCaptions().getString("PageSetText"));
 
 		getContentPane().add(panel1);
 		panel1.add(jPanel1, BorderLayout.NORTH);
@@ -720,12 +757,18 @@ final class CelDialog extends KissDialog
             ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 10, 5, 20), 0, 0));
 		jPanel8.add(VIEWGROUP, new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0
             ,GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(0, 0, 5, 0), 0, 0));
-		jPanel8.add(celgrouplabel, new GridBagConstraints(0, 1, 1, 2, 0.0, 0.0
+		jPanel8.add(celgrouplabel, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
             ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(5, 0, 5, 0), 0, 0));
-		jPanel8.add(celgroupselect, new GridBagConstraints(1, 1, 1, 2, 0.0, 0.0
+		jPanel8.add(celgroupselect, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0
             ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(5, 10, 5, 20), 0, 0));
 		jPanel8.add(VIEWCELGROUP, new GridBagConstraints(2, 1, 1, 1, 0.0, 0.0
             ,GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(5, 0, 5, 0), 0, 0));
+		jPanel8.add(pagelabel, new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0
+            ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 8, 0), 0, 0));
+		jPanel8.add(pageselect, new GridBagConstraints(1, 2, 1, 1, 1.0, 0.0
+            ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 10, 8, 0), 0, 0));
+		jPanel8.add(VIEWPAGE, new GridBagConstraints(2, 2, 1, 1, 0.0, 0.0
+            ,GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(0, 0, 8, 0), 0, 0));
 		panel1.add(jPanel2, BorderLayout.SOUTH);
       jPanel2.add(Box.createGlue()) ;
 		jPanel2.add(ADDEVENT, null) ;
@@ -909,6 +952,22 @@ final class CelDialog extends KissDialog
 	         }
 				return ;
 			}
+
+   		// A View Page Set invokes the appropriate pageset context dialog.
+
+         if (command.equals(Kisekae.getCaptions().getString("ViewPageSetMessage")))
+   		{
+         	Object o = pageselect.getSelectedItem() ;
+            if (o instanceof Integer)
+            {
+            	Object cid = (config == null) ? null : config.getID() ;
+            	PageSet p = (PageSet) PageSet.getByKey(PageSet.getKeyTable(),cid,o) ;
+               if (p == null) return ;
+               PageSetDialog pd = new PageSetDialog(me,p,config) ;
+               pd.show() ;
+            }
+   			return ;
+   		}
 
 	      // A View Event or View Action brings up the event dialog.
 
@@ -1098,7 +1157,8 @@ final class CelDialog extends KissDialog
 	{
       setDialogTitle(cel) ;
 
-      // Load the cel if necessary.
+      // Load the cel if necessary.  If the cel was not originally loaded 
+      // keep an indicator and unload it when the dialog is closed.
 
       if (!cel.isError() && !cel.isLoaded())
       {
@@ -1110,7 +1170,8 @@ final class CelDialog extends KissDialog
                loaded = true ;
                boolean opened = !zip.isOpen() ;
                if (opened) zip.open() ;
-               if (zip.isOpen()) cel.load() ;
+               if (zip.isOpen() && config != null) 
+                  cel.load(config.getIncludeFiles()) ;
                if (opened) zip.close() ;
                if (OptionsDialog.getDebugLoad())
                {
@@ -1144,8 +1205,10 @@ final class CelDialog extends KissDialog
          Point grouplocation = page.getGroupPosition(gid) ;
          if (grouplocation != null)
          {
-            location.x = grouplocation.x + offset.x ;
-            location.y = grouplocation.y + offset.y ;
+//            location.x = grouplocation.x + offset.x ;
+//            location.y = grouplocation.y + offset.y ;
+            location.x = grouplocation.x ;
+            location.y = grouplocation.y ;
          }
       }
 
@@ -1345,7 +1408,15 @@ final class CelDialog extends KissDialog
 		listmodel.addElement(Kisekae.getCaptions().getString("UpdatedImageText") + " " + cel.isUpdated()) ;
 		listmodel.addElement(Kisekae.getCaptions().getString("InternalImageText") + " " + cel.isInternal()) ;
 		listmodel.addElement(Kisekae.getCaptions().getString("InputComponentText") + " " + cel.isInput()) ;
-		listmodel.addElement(Kisekae.getCaptions().getString("CommentText") + " " + cel.getComment()) ;
+		listmodel.addElement(Kisekae.getCaptions().getString("LoadedText") + " " + cel.isLoaded()) ;
+		listmodel.addElement(Kisekae.getCaptions().getString("AllPagesText") + " " + cel.isOnAllPage()) ;
+      Vector pages = cel.getPages() ;
+      if (pages != null && pages.size() > 0)
+      {
+         for (int i = 0; i < pages.size(); i++)
+      		listmodel.addElement(Kisekae.getCaptions().getString("OnPageText") + " " + pages.elementAt(i)) ;
+      }
+      listmodel.addElement(Kisekae.getCaptions().getString("CommentText") + " " + cel.getComment()) ;
 
       // Show the frame characteristics for multiframe cels.
 
@@ -1609,6 +1680,7 @@ final class CelDialog extends KissDialog
 		VIEW.removeActionListener(this) ;
 		VIEWGROUP.removeActionListener(this) ;
 		VIEWCELGROUP.removeActionListener(this) ;
+		VIEWPAGE.removeActionListener(this) ;
 		EDITPALETTE.removeActionListener(this) ;
 		EDITIMAGE.removeActionListener(this) ;
 		ADDEVENT.removeActionListener(this) ;
@@ -1622,6 +1694,7 @@ final class CelDialog extends KissDialog
       TREE2.removeTreeSelectionListener(treeListener);
       TREE2.removeTreeExpansionListener(treeExpander2) ;
       groupselect.removeItemListener(groupListener) ;
+      pageselect.removeItemListener(pageListener) ;
       visiblelabel.removeActionListener(this) ;
       ghostlabel.removeActionListener(this) ;
       copylabel.removeActionListener(this) ;

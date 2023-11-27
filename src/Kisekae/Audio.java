@@ -96,10 +96,13 @@ abstract class Audio extends KissObject
    protected int framesize = 0 ;             // Audio frame size from format
    protected float framerate = 0 ;           // Audio frame rate from format
    protected int playcount = 0 ;             // Number of play requests
+   protected String includename = null ;     // Name of include file used
+   protected InputStream is = null ;         // Audio input data stream
 
 	// State attributes
 
 	protected boolean loaded = false ;			// True if data has been loaded
+	protected boolean frominclude = false ;	// True if data from include file
 	protected boolean opened = false ;			// True if sound has been opened
 	protected boolean realized = false ;		// True if player is realized
 	protected boolean copy = false ;				// True if file is a copy
@@ -177,7 +180,11 @@ abstract class Audio extends KissObject
 	// only those entities that are associated with the specified
 	// file.
 
-	static void clearTable() { key.clear() ; }
+	static void clearTable() 
+   { 
+      players = new Vector() ;
+      key.clear() ; 
+   }
 	static void clearTable(Object cid)
 	{
       players = new Vector() ;
@@ -286,6 +293,10 @@ abstract class Audio extends KissObject
 
 	String getCopyright() { return copyright ; }
 
+	// Return the name of the include file used to load data.
+
+	String getIncludeFileName() { return includename ; }
+
 	// The configuration file line number showing where this object was
 	// first declared is used for diagnostic output messages.
 
@@ -302,6 +313,14 @@ abstract class Audio extends KissObject
 	// Set the audio type.
 
 	void setType(String s) { type = s ; }
+
+   // Set the loaded state.  
+
+   void setLoaded(boolean b) { loaded = b ; }
+
+   // Indicate if loaded from an include file.  
+
+   void setFromInclude(boolean b) { frominclude = b ; }
 
 	// Set the copy indicator.
 
@@ -339,6 +358,10 @@ abstract class Audio extends KissObject
 
 	boolean isLoaded() { return (loaded || copy) ; }
 
+   // Return an indication if data was loaded from an include file.
+
+   boolean isFromInclude() { return frominclude ; }
+
 	// Return an indication if this sound is being stopped.
 
 	boolean isStopping() { return stopping ; }
@@ -372,22 +395,42 @@ abstract class Audio extends KissObject
 	int write(FileWriter fw, OutputStream out, String type) throws IOException
 	{
 		if (error) return -1 ;
-		if (b != null) out.write(b) ;
+      if (b == null) 
+      {
+         InputStream is = getInputStream() ;
+         if (is == null) return 0 ;
+         bytes = 0 ;
+   		byte buffer [] = new byte[10240] ;
+   		while (true)
+         {
+           	int n = is.read(buffer,0,buffer.length) ;
+   			if (n <= 0) break ;
+   			bytes += n ;
+            out.write(buffer,0,n);
+            if (fw != null) fw.updateProgress(n) ;
+         }
+         return bytes ;
+      }
+      out.write(b) ;
       if (fw != null) fw.updateProgress(b.length) ;
-		return b.length ;
+      return b.length ;
 	}
    
-   // Method to return an input stream for this audio object
+   // Method to return an input stream for this audio object.
+   // If we have already established an input stream then return it.
    
    InputStream getInputStream()
    {
+      InputStream input = null ;
       try
       {
-         if (!cache) return (ze != null) ? ze.getInputStream() : null ;
-         if (b != null) return new ByteArrayInputStream(b) ;
+         if (!cache) 
+            input = (ze != null) ? ze.getInputStream() : null ;
+         if (b != null) 
+            input = new ByteArrayInputStream(b) ;
       }
-      catch (IOException e) { }
-      return null ;
+      catch (IOException e) { input = null ; }
+      return input ;
    }
 
 
@@ -411,7 +454,7 @@ abstract class Audio extends KissObject
 		Audio a = (Audio) Audio.getByKey(Audio.getKeyTable(),cid,name) ;
 		if (a != null && a.isLoaded()) loadCopy(a) ;
 		if (isLoaded()) { copy = true ; return ; }
-
+         
 		// Load a reference copy if we are accessing the same zip file as our
       // reference configuration.  On new data sets we may not yet have known
       // paths to the files.
@@ -427,11 +470,14 @@ abstract class Audio extends KissObject
 				a = (Audio) Audio.getByKey(Audio.getKeyTable(),ref.getID(),name) ;
 				if (a != null && a.isLoaded())
 	         {
-	         	loadCopy(a) ;
-               copy = false ;
-               zip.addEntry(ze) ;
-               zip.setUpdated(ze,a.isUpdated()) ;
-	            return ;
+               if ((cache && a.getAudioData() != null) || (!cache && a.getAudioData() == null))
+               {
+                  loadCopy(a) ;
+                  copy = false ;
+                  if (!a.isFromInclude()) zip.addEntry(ze) ;
+                  zip.setUpdated(ze,a.isUpdated()) ;
+                  return ;
+               }
             }
          }
 		}
@@ -460,9 +506,12 @@ abstract class Audio extends KissObject
 					a = (Audio) Audio.getByKey(Audio.getKeyTable(),ref.getID(),name) ;
 					if (a != null && a.isLoaded())
 					{
-						loadCopy(a) ;
-                  copy = false ;
-						return ;
+                  if ((cache && a.getAudioData() != null) || (!cache && a.getAudioData() == null))
+                  {
+   						loadCopy(a) ;
+                     copy = false ;
+   						return ;
+                  }
 					}
 
       			// Load an unloaded copy if it exists in the reference file.
@@ -475,7 +524,7 @@ abstract class Audio extends KissObject
 
          // If we have not yet found the file, check the INCLUDE list.
 
-         String includename = null ;
+         includename = null ;
          if (ze == null)
          {
             ze = searchIncludeList(includefiles,name) ;
@@ -483,6 +532,7 @@ abstract class Audio extends KissObject
             {
                zip = ze.getZipFile() ;
                includename = (zip != null) ? zip.getFileName() : null ;
+               setFromInclude(true) ;
             }
          }
 
@@ -497,14 +547,15 @@ abstract class Audio extends KissObject
             if (i1 >= 0 && j1 > i1)
                s = s.substring(0,i1) + file + s.substring(j1+1) ;
             loader.showFile(s + " [" + bytes + " bytes]" +
-               ((includename != null) ? (" (" + includename + ")") : "")) ;
+               ((includename != null) ? (" (" + includename + ")") : "") + 
+               ((cache) ? " (cached)" : "")) ;
          }
 
 			// Create the file input stream.
 
-			if (!cache) { loaded = true ; return ; }
 			is = (zip == null) ? null : zip.getInputStream(ze) ;
 			if (is == null) throw new IOException("file not found") ;
+			if (!cache) { loaded = false ; return ; }
 
 			// Read the entire contents.
 
@@ -550,6 +601,7 @@ abstract class Audio extends KissObject
 		b = a.getAudioData() ;
 		bytes = a.getBytes() ;
 		setLastModified(a.lastModified()) ;
+      setFromInclude(a.isFromInclude()) ;
       loaded = true ;
 		if (loader != null)
       {
@@ -558,10 +610,28 @@ abstract class Audio extends KissObject
          int j1 = s.indexOf(']') ;
          if (i1 >= 0 && j1 > i1)
             s = s.substring(0,i1) + file + s.substring(j1+1) ;
-         loader.showFile(s + " [" + bytes + " bytes]") ;
+         loader.showFile(s + " [" + bytes + " bytes]" + "(copy)") ;
       }
 	}
 
+   
+   // Close the audio input stream.
+   
+   void closeInputStream() throws IOException
+   {
+ System.out.println("Audio: closeInputStream audio="+this.getName()+" is="+is) ;
+      if (is == null) return ;
+      is.close() ;
+   }
+   
+   // Release critical resources.
+
+   void flush()
+   {
+      super.flush() ;
+      me = null ;
+      b = null ;
+   }
 
 
 	// Abstract methods

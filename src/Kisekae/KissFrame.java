@@ -78,9 +78,21 @@ public abstract class KissFrame extends JFrame
 
 	public void close() 
    { 
+		if (!SwingUtilities.isEventDispatchThread())
+		{
+			Runnable awt = new Runnable()
+			{ public void run() { close() ; } } ;
+			SwingUtilities.invokeLater(awt) ;
+			return ;
+		}
+      
       windows.remove(this) ;
       if (Kisekae.isVolatileImage())
          KissPreferences.closePreferences(this) ;
+      MainMenu mainmenu = null ;
+      MainFrame mainframe = Kisekae.getMainFrame() ;
+      if (mainframe != null) mainmenu = mainframe.getMainMenu() ;
+      if (mainmenu != null) mainmenu.updateRunState() ;                   
    }
 
    

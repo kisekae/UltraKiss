@@ -107,7 +107,7 @@ final class State
 		if (o != null)
 		{
 			String s = cid.toString() + " " + o.getClass().hashCode() + o.hashCode() + "-" + id.toString() ;
-			key.remove(s) ;
+         key.remove(s) ;
 			key.put(s,this) ;
 		}
 	}

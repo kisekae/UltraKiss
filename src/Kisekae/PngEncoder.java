@@ -64,8 +64,6 @@ import javax.imageio.stream.* ;
 
 public class PngEncoder extends ImageEncoder
 {
-	static private Component component = new Component() { } ;
-
 	private int bytes = 0 ;                   // bytes written
    private int lastbytes = 0 ;               // last number of bytes written
    private int width = 0 ;

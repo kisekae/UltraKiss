@@ -82,6 +82,7 @@ class TextFindDialog extends KissDialog
    private Point textlocation = new Point(-1,-1) ;
 	private boolean searchUp = false ;
 	private String searchData ;
+   private int startcaret = 0 ;
 
    // User interface objects.
 
@@ -356,8 +357,8 @@ class TextFindDialog extends KissDialog
 		searchdown1.setSelected(true) ;
 		searchdown1.setText(Kisekae.getCaptions().getString("SearchDownText")) ;
 		FINDNEXT.setText(Kisekae.getCaptions().getString("FindNextMessage")) ;
-		CLOSE.setText(Kisekae.getCaptions().getString("CancelMessage")) ;
-		CLOSE1.setText(Kisekae.getCaptions().getString("CancelMessage")) ;
+		CLOSE.setText(Kisekae.getCaptions().getString("CloseMessage")) ;
+		CLOSE1.setText(Kisekae.getCaptions().getString("CloseMessage")) ;
 		REPLACE.setText(Kisekae.getCaptions().getString("ReplaceMessage")) ;
 		REPLACEALL.setText(Kisekae.getCaptions().getString("ReplaceAllMessage")) ;
 
@@ -446,11 +447,15 @@ class TextFindDialog extends KissDialog
 
 	private int findNext(boolean doReplace)
 	{
+		String key = "" ;
       Document doc = owner.getDocument() ;
       JTextComponent monitor = owner.getTextComponent() ;
       if (doc == null) return -1 ;
       if (monitor == null) return -1 ;
+      
+      if (doReplace) monitor.setCaretPosition(startcaret) ;
 		int caret = monitor.getCaretPosition();
+      startcaret = caret ;
       boolean directionchange = false ;
 
 		// Watch for up/down direction changes.
@@ -495,7 +500,7 @@ class TextFindDialog extends KissDialog
 
       // Get the target text.
 
-		String key = "" ;
+		key = "" ;
 		try { key = docFind.getText(0, docFind.getLength()) ; }
 		catch (BadLocationException ex) {}
 		if (key.length() == 0)
@@ -624,7 +629,9 @@ class TextFindDialog extends KissDialog
          searchIndex = -1 ;
       }
       else
+      {
          owner.setSelection(xStart,xFinish,searchUp) ;
+      }
  
       // Retain the location of the found text.
 
@@ -642,7 +649,9 @@ class TextFindDialog extends KissDialog
       JTextComponent monitor = owner.getTextComponent() ;
 		if (doc == null) return -1 ;
       if (monitor == null) return -1 ;
+      monitor.setCaretPosition(startcaret) ;
 		int caret = monitor.getCaretPosition();
+      startcaret = caret ;
       StringBuffer sb = new StringBuffer() ;
       String baseData = null ;
 
@@ -762,7 +771,9 @@ class TextFindDialog extends KissDialog
       }
 
       // Return the number of items replaced.
-
+      
+      monitor.setCaretPosition(startcaret);
+      textlocation = new Point(startcaret,startcaret) ;
   		return counter ;
 	}
 

@@ -85,7 +85,7 @@ final public class FileOpen
 
 	// File attributes
 
-	private JFrame parent = null ;					// Parent frame
+	private JFrame parent = null ;				// Parent frame
 	private Vector entries = null ;				// List of .cnf files
 	private String filename = null ;				// Entered file name
 	private String elementname = null ;			// Selected element name
@@ -874,8 +874,19 @@ final public class FileOpen
 
 		// Clear references.
 
+      parent = null ;
+      allfiles = null ;
+      archives = null ;
+      kissarchives = null ;
+      palettefiles = null ;
+      imagefiles = null ;
+      mediafiles = null ;
+      audiofiles = null ;
+      videofiles = null ;
+      textfiles = null ;
       elementname = null ;
       zipFileURL = null ;
+      files = null ;
       entries = null ;
       zip = null ;
       ze = null ;

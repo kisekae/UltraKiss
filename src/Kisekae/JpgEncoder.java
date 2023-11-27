@@ -69,8 +69,6 @@ import javax.imageio.metadata.IIOMetadata;
 
 public class JpgEncoder extends ImageEncoder
 {
-	static private Component component = new Component() { } ;
-
 	private int bytes = 0 ;                   // bytes written
    private int inbytes = 0 ;                 // bytes processed
    private int lastbytes = 0 ;               // last number of bytes processed

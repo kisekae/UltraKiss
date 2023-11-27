@@ -65,7 +65,6 @@ import javax.swing.* ;
 
 final class KissCel extends Cel
 {
-   static private Component component = new Component() { } ;
 
 	// KiSS cel file attributes
 
@@ -188,7 +187,8 @@ final class KissCel extends Cel
       }
 
 		// Load a reference copy if we are accessing the same zip file as our
-      // reference configuration.
+      // reference configuration.  The original cel is unloaded to release
+      // memory resources.
 
 		if (ref != null && zip != null)
 		{
@@ -206,8 +206,9 @@ final class KissCel extends Cel
 				if (c != null && c.isLoaded())
 	         {
 	         	loadCopy(c) ;
+               c.unload() ;
                copy = false ;
-               zip.addEntry(ze) ;
+               if (!c.isFromInclude()) zip.addEntry(ze) ;
                zip.setUpdated(ze,c.isUpdated()) ;
 	            return ;
             }
@@ -254,6 +255,7 @@ final class KissCel extends Cel
             {
                zip = ze.getZipFile() ;
                includename = (zip != null) ? zip.getFileName() : null ;
+               setFromInclude(true) ;
             }
          }
 
@@ -446,7 +448,7 @@ final class KissCel extends Cel
                ImageProducer ip = image.getSource() ;
                ip = new FilteredImageSource(ip, new CropImageFilter(0,0,w,h)) ;
                image = Toolkit.getDefaultToolkit().createImage(ip) ;
-               MediaTracker tracker = new MediaTracker(component) ;
+               MediaTracker tracker = new MediaTracker(Kisekae.getKisekae()) ;
                tracker.addImage(image,0) ;
                try { tracker.waitForAll(500) ; }
                catch (InterruptedException e) { }
@@ -578,6 +580,7 @@ final class KissCel extends Cel
       background = c.getBackgroundIndex() ;
       setLastModified(c.lastModified()) ;
       setUpdated(c.isUpdated()) ;
+      setFromInclude(c.isFromInclude()) ;
 
       if (loader != null)
       {
@@ -618,7 +621,7 @@ final class KissCel extends Cel
 		ImageProducer ip = image.getSource() ;
 		ip = new FilteredImageSource(ip, new PaletteFilter(cm,basecm,transparency,transparentcolor)) ;
 		filteredimage = Toolkit.getDefaultToolkit().createImage(ip) ;
-      MediaTracker tracker = new MediaTracker(component) ;
+      MediaTracker tracker = new MediaTracker(Kisekae.getKisekae()) ;
       tracker.addImage(filteredimage,0) ;
       try { tracker.waitForAll(500) ; }
       catch (InterruptedException e) { }
@@ -695,7 +698,7 @@ final class KissCel extends Cel
                   CropImageFilter f = new CropImageFilter(0,0,cw,ch);
                   img = Toolkit.getDefaultToolkit().createImage(
                      new FilteredImageSource(img.getSource(),f)) ;
-                  MediaTracker tracker = new MediaTracker(component) ;
+                  MediaTracker tracker = new MediaTracker(Kisekae.getKisekae()) ;
                   tracker.addImage(img,0) ;
                   try { tracker.waitForAll(500) ; }
                   catch (InterruptedException e) { }
@@ -761,7 +764,7 @@ final class KissCel extends Cel
 			ImageProducer ip = new FilteredImageSource(base,
          	new PaletteFilter(cm,basecm,transparency,transparentcolor));
 			filteredimage = Toolkit.getDefaultToolkit().createImage(ip) ;
-         MediaTracker tracker = new MediaTracker(component) ;
+         MediaTracker tracker = new MediaTracker(Kisekae.getKisekae()) ;
          tracker.addImage(filteredimage,0) ;
          try { tracker.waitForAll(500) ; }
          catch (InterruptedException e) { }
@@ -778,7 +781,6 @@ final class KissCel extends Cel
 	void changeTransparency(int t, boolean bounded, boolean ambiguous)
 	{
 		if (error) return ;
-		if (image == null) return ;
 
       // Limit transparency between 0 and 255 if this is a bounded change.
 
@@ -799,6 +801,7 @@ final class KissCel extends Cel
 		int kisstransparency = 255 - transparency ;
       kisstransparency += adjust ;
 		setTransparency(255 - kisstransparency,(OptionsDialog.getAllAmbiguous() && ambiguous),this) ;
+		if (image == null) return ;
 
 		// Identify the image to filter.
 /*
@@ -822,7 +825,7 @@ final class KissCel extends Cel
 		PaletteFilter pf = new PaletteFilter(cm,basecm,transparency,transparentcolor) ;
 		ImageProducer ip = new FilteredImageSource(img.getSource(),pf) ;
 		filteredimage = Toolkit.getDefaultToolkit().createImage(ip) ;
-      MediaTracker tracker = new MediaTracker(component) ;
+      MediaTracker tracker = new MediaTracker(Kisekae.getKisekae()) ;
       tracker.addImage(filteredimage,0) ;
       try { tracker.waitForAll(500) ; }
       catch (InterruptedException e) { }

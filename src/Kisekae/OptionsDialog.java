@@ -195,10 +195,12 @@ final public class OptionsDialog extends KissDialog
    private static boolean kissld = false ;
    private static boolean defaultplayfkiss = false ;
    private static boolean acceptcnferrors = false ;
+   private static boolean pagesarescenes = false ;
    private static boolean multipleevents = true ;
    private static String eventqueues = "1" ;
    private static String timerperiod = "10" ;
    private static String gifperiod = "100" ;
+   private static String sceneperiod = "1000" ;
    private static String stickyflex = "10" ;
    private static String maxflex = "100" ;
    private static String maxlock = "32767" ;
@@ -356,6 +358,7 @@ final public class OptionsDialog extends KissDialog
    private static boolean initplayfkiss = playfkiss ;
    private static boolean initdefaultplayfkiss = defaultplayfkiss ;
    private static boolean initacceptcnferrors = acceptcnferrors ;
+   private static boolean initpagesarescenes = pagesarescenes ;
    private static boolean initmultipleevents = multipleevents ;
    private static boolean initdirectkiss = directkiss ;
    private static boolean initgnomekiss = gnomekiss ;
@@ -363,6 +366,7 @@ final public class OptionsDialog extends KissDialog
 	private static String initeventqueues = new String(eventqueues) ;
    private static String inittimerperiod = new String(timerperiod) ;
    private static String initgifperiod = new String(gifperiod) ;
+   private static String initsceneperiod = new String(sceneperiod) ;
    private static String initstickyflex = new String(stickyflex) ;
    private static String initmaxflex = new String(maxflex) ;
    private static String initmaxlock = new String(maxlock) ;
@@ -560,6 +564,7 @@ final public class OptionsDialog extends KissDialog
    private JLabel jLabel19 = new JLabel();
    private JLabel jLabel20 = new JLabel();
    private JLabel jLabel21 = new JLabel();
+	private JLabel jLabel22 = new JLabel();
    private JLabel SplashSetName = new JLabel();
 	private JCheckBox MouseDebug = new JCheckBox();
 	private JCheckBox ControlDebug = new JCheckBox();
@@ -663,6 +668,7 @@ final public class OptionsDialog extends KissDialog
 	private JCheckBox InitEdit = new JCheckBox();
 	private JCheckBox DefaultPlayFKiss = new JCheckBox();
 	private JCheckBox AcceptCnfErrors = new JCheckBox();
+	private JCheckBox PagesAreScenes = new JCheckBox();
 	private JCheckBox MultipleEvents = new JCheckBox();
 	private JRadioButton AltEditDrag = new JRadioButton();
 	private JRadioButton ShiftEditDrag = new JRadioButton();
@@ -681,6 +687,7 @@ final public class OptionsDialog extends KissDialog
    private JComboBox BrowserBox = new JComboBox(browsers) ;
 	private JTextField TimerPeriod = new JTextField();
 	private JTextField GifPeriod = new JTextField();
+	private JTextField ScenePeriod = new JTextField();
 	private JTextField EventQueues = new JTextField();
 	private JTextField MaxFlex = new JTextField();
 	private JTextField MaxLock = new JTextField();
@@ -1014,7 +1021,7 @@ final public class OptionsDialog extends KissDialog
 		gridLayout20.setColumns(1);
 		gridLayout20.setRows(10);
 		gridLayout21.setColumns(1);
-		gridLayout21.setRows(10);
+		gridLayout21.setRows(11);
 		gridLayout22.setColumns(1);
 		gridLayout22.setRows(10);
 		gridLayout23.setColumns(1);
@@ -1204,6 +1211,8 @@ final public class OptionsDialog extends KissDialog
 		jLabel3.setToolTipText(Kisekae.getCaptions().getString("ToolTipTimerPeriod"));
 		jLabel8.setText(Kisekae.getCaptions().getString("AnimationPeriodText"));
 		jLabel8.setToolTipText(Kisekae.getCaptions().getString("ToolTipAnimationPeriod"));
+		jLabel22.setText(Kisekae.getCaptions().getString("ScenePeriodText"));
+		jLabel22.setToolTipText(Kisekae.getCaptions().getString("ToolTipScenePeriod"));
 		jLabel4.setText(Kisekae.getCaptions().getString("EventHandlersText"));
 		jLabel4.setToolTipText(Kisekae.getCaptions().getString("ToolTipEventHandlers"));
 		SystemLF.setText(Kisekae.getCaptions().getString("OptionsSystemLF"));
@@ -1232,13 +1241,16 @@ final public class OptionsDialog extends KissDialog
 		LoadClose.setText(Kisekae.getCaptions().getString("OptionsLoadClose"));
 		LoadClose.setToolTipText(Kisekae.getCaptions().getString("ToolTipLoadClose"));
 		LoadClose.setSelected(loadclose);
-		TimerPeriod.setPreferredSize(new Dimension(30, 21));
+		TimerPeriod.setPreferredSize(new Dimension(40, 21));
 		TimerPeriod.setHorizontalAlignment(SwingConstants.RIGHT);
 		TimerPeriod.setText(timerperiod);
-		GifPeriod.setPreferredSize(new Dimension(30, 21));
+		GifPeriod.setPreferredSize(new Dimension(40, 21));
 		GifPeriod.setHorizontalAlignment(SwingConstants.RIGHT);
 		GifPeriod.setText(gifperiod);
-		EventQueues.setPreferredSize(new Dimension(30, 21));
+		ScenePeriod.setPreferredSize(new Dimension(40, 21));
+		ScenePeriod.setHorizontalAlignment(SwingConstants.RIGHT);
+		ScenePeriod.setText(sceneperiod);
+		EventQueues.setPreferredSize(new Dimension(40, 21));
 		EventQueues.setHorizontalAlignment(SwingConstants.RIGHT);
 		EventQueues.setText(eventqueues);
 		TimerOption.setText(Kisekae.getCaptions().getString("OptionsEnableTimer"));
@@ -1642,6 +1654,9 @@ final public class OptionsDialog extends KissDialog
 		AcceptCnfErrors.setText(Kisekae.getCaptions().getString("OptionsAcceptCnfErrors"));
       AcceptCnfErrors.setToolTipText(Kisekae.getCaptions().getString("ToolTipAcceptCnfErrors"));
 		AcceptCnfErrors.setSelected(acceptcnferrors);
+		PagesAreScenes.setText(Kisekae.getCaptions().getString("OptionsPagesAreScenes"));
+      PagesAreScenes.setToolTipText(Kisekae.getCaptions().getString("ToolTipPagesAreScenes"));
+		PagesAreScenes.setSelected(pagesarescenes);
 		MultipleEvents.setText(Kisekae.getCaptions().getString("OptionsMultipleEvents"));
       MultipleEvents.setToolTipText(Kisekae.getCaptions().getString("ToolTipMultipleEvents"));
 		MultipleEvents.setSelected(multipleevents);
@@ -1727,9 +1742,9 @@ final public class OptionsDialog extends KissDialog
 		jTabbedPane1.add(jPanel2, Kisekae.getCaptions().getString("FKissTabText"));
       jPanel2.add(jPanel10, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0
             ,GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 10, 0, 0), 0, 0));
-      jPanel10.add(EventQueues, new GridBagConstraints(1, 2, 1, 1, 0.0, 0.0
+      jPanel10.add(EventQueues, new GridBagConstraints(1, 3, 1, 1, 0.0, 0.0
             ,GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(5, 0, 5, 0), 0, 0));
-      jPanel10.add(jLabel4, new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0
+      jPanel10.add(jLabel4, new GridBagConstraints(0, 3, 1, 1, 0.0, 0.0
             ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(5, 0, 5, 10), 0, 0));
       jPanel10.add(TimerPeriod, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0
             ,GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(5, 0, 5, 0), 0, 0));
@@ -1738,6 +1753,10 @@ final public class OptionsDialog extends KissDialog
       jPanel10.add(GifPeriod, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0
             ,GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(5, 0, 5, 0), 0, 0));
       jPanel10.add(jLabel8, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
+            ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(5, 0, 5, 10), 0, 0));
+      jPanel10.add(ScenePeriod, new GridBagConstraints(1, 2, 1, 1, 0.0, 0.0
+            ,GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(5, 0, 5, 0), 0, 0));
+      jPanel10.add(jLabel22, new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0
             ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(5, 0, 5, 10), 0, 0));
       jPanel2.add(jPanel11, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
             ,GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
@@ -1853,6 +1872,7 @@ final public class OptionsDialog extends KissDialog
 		jPanel43.add(AutoEndif, null);
 		jPanel43.add(DefaultPlayFKiss, null);
 		jPanel43.add(AcceptCnfErrors, null);
+		jPanel43.add(PagesAreScenes, null);
 
 		jPanel23.add(jPanel40, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0
             ,GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 10, 0, 0), 0, 0));
@@ -2299,6 +2319,7 @@ final public class OptionsDialog extends KissDialog
 	static public boolean getLinux() { return linux ; }
    static public boolean getDefaultPlayFKiss() { return defaultplayfkiss ; }
    static public boolean getAcceptCnfErrors() { return acceptcnferrors ; }
+   static public boolean getPagesAreScenes() { return pagesarescenes ; }
    static public boolean getMultipleEvents() { return multipleevents ; }
 
    static public boolean getPlayFKissCompatibility() { return playfkiss ; }
@@ -2351,6 +2372,14 @@ final public class OptionsDialog extends KissDialog
    {
       if (gifperiod == null) return -1 ;
       try { return (Integer.parseInt(gifperiod)) ; }
+      catch (Exception e) { }
+      return -1 ;
+   }
+
+	static public int getScenePeriod()
+   {
+      if (sceneperiod == null) return -1 ;
+      try { return (Integer.parseInt(sceneperiod)) ; }
       catch (Exception e) { }
       return -1 ;
    }
@@ -2638,6 +2667,7 @@ final public class OptionsDialog extends KissDialog
 	static public void setLinux(boolean b) { linux = b ; }
    static public void setDefaultPlayFKiss(boolean b) { defaultplayfkiss = b ; }
    static public void setAcceptCnfErrors(boolean b) { acceptcnferrors = b ; }
+   static public void setPagesAreScenes(boolean b) { pagesarescenes = b ; }
    static public void setMultipleEvents(boolean b) { multipleevents = b ; }
 
    static public void setLruFile(String s) 
@@ -2661,6 +2691,9 @@ final public class OptionsDialog extends KissDialog
 
 	static public void setGifPeriod(String s)
    { gifperiod = Variable.getStringLiteralValue(s) ; }
+
+	static public void setScenePeriod(String s)
+   { sceneperiod = Variable.getStringLiteralValue(s) ; }
 
 	static public void setMaxFlex(String s)
    { maxflex = Variable.getStringLiteralValue(s) ; }
@@ -2949,6 +2982,7 @@ final public class OptionsDialog extends KissDialog
       else if ("eventqueues".equalsIgnoreCase(option)) setEventQueues(value) ;
       else if ("timerperiod".equalsIgnoreCase(option)) setTimerPeriod(value) ;
       else if ("gifperiod".equalsIgnoreCase(option)) setGifPeriod(value) ;
+      else if ("sceneperiod".equalsIgnoreCase(option)) setScenePeriod(value) ;
       else if ("stickyflex".equalsIgnoreCase(option)) setStickyFlex(value) ;
       else if ("maxflex".equalsIgnoreCase(option)) setMaxFlex(value) ;
       else if ("maxlock".equalsIgnoreCase(option)) setMaxLock(value) ;
@@ -2977,6 +3011,7 @@ final public class OptionsDialog extends KissDialog
       else if ("kissld".equalsIgnoreCase(option)) setKissLDCompatibility(value) ;
       else if ("defaultplayfkiss".equalsIgnoreCase(option)) setDefaultPlayFKiss(b) ;
       else if ("acceptcnferrors".equalsIgnoreCase(option)) setAcceptCnfErrors(b) ;
+      else if ("pagesarescenes".equalsIgnoreCase(option)) setPagesAreScenes(b) ;
       else if ("multipleevents".equalsIgnoreCase(option)) setMultipleEvents(b) ;
    }
 
@@ -3097,6 +3132,7 @@ final public class OptionsDialog extends KissDialog
       else if ("eventqueues".equalsIgnoreCase(option)) s += getEventQueues() ;
       else if ("timerperiod".equalsIgnoreCase(option)) s += getTimerPeriod() ;
       else if ("gifperiod".equalsIgnoreCase(option)) s += getGifPeriod() ;
+      else if ("sceneperiod".equalsIgnoreCase(option)) s += getScenePeriod() ;
       else if ("stickyflex".equalsIgnoreCase(option)) s += getStickyFlex() ;
       else if ("maxflex".equalsIgnoreCase(option)) s += getMaxFlex() ;
       else if ("maxlock".equalsIgnoreCase(option)) s += getMaxLock() ;
@@ -3173,6 +3209,7 @@ final public class OptionsDialog extends KissDialog
       KissLDBtn.setSelected(kissld);
       DefaultPlayFKiss.setSelected(defaultplayfkiss);
       AcceptCnfErrors.setSelected(acceptcnferrors);
+      PagesAreScenes.setSelected(pagesarescenes);
       MultipleEvents.setSelected(multipleevents);
       Backup.setSelected(backup);
       SaveSource.setSelected(savesource);
@@ -3182,6 +3219,7 @@ final public class OptionsDialog extends KissDialog
       EventQueues.setText(eventqueues);
       TimerPeriod.setText(timerperiod);
       GifPeriod.setText(gifperiod);
+      ScenePeriod.setText(sceneperiod);
       StickyFlex.setText(stickyflex);
       MaxFlex.setText(maxflex);
       MaxLock.setText(maxlock);
@@ -3382,6 +3420,7 @@ final public class OptionsDialog extends KissDialog
       kissld = KissLDBtn.isSelected() ;
       defaultplayfkiss = DefaultPlayFKiss.isSelected() ;
       acceptcnferrors = AcceptCnfErrors.isSelected() ;
+      pagesarescenes = PagesAreScenes.isSelected() ;
       multipleevents = MultipleEvents.isSelected() ;
       backup = Backup.isSelected() ;
       savesource = SaveSource.isSelected() ;
@@ -3391,6 +3430,7 @@ final public class OptionsDialog extends KissDialog
 		eventqueues = EventQueues.getText() ;
       timerperiod = TimerPeriod.getText() ;
       gifperiod = GifPeriod.getText() ;
+      sceneperiod = ScenePeriod.getText() ;
       stickyflex = StickyFlex.getText() ;
       maxflex = MaxFlex.getText() ;
       maxlock = MaxLock.getText() ;
@@ -3599,6 +3639,7 @@ final public class OptionsDialog extends KissDialog
 //    showtips = initshowtips ;
 		defaultplayfkiss = initdefaultplayfkiss ;
 		acceptcnferrors = initacceptcnferrors ;
+		pagesarescenes = initpagesarescenes ;
 		multipleevents = initmultipleevents ;
 		timer = inittimer ;
 		event = initevent ;
@@ -3627,6 +3668,7 @@ final public class OptionsDialog extends KissDialog
 		eventqueues = initeventqueues ;
       timerperiod = inittimerperiod ;
       gifperiod = initgifperiod ;
+      sceneperiod = initsceneperiod ;
       stickyflex = initstickyflex ;
       maxflex = initmaxflex ;
       maxlock = initmaxlock ;
@@ -3765,6 +3807,7 @@ final public class OptionsDialog extends KissDialog
 	   initeventqueues = new String(eventqueues) ;
       inittimerperiod = new String(timerperiod) ;
       initgifperiod = new String(gifperiod) ;
+      initsceneperiod = new String(sceneperiod) ;
       initstickyflex = new String(stickyflex) ;
       initmaxflex = new String(maxflex) ;
       initmaxlock = new String(maxlock) ;
@@ -3865,6 +3908,7 @@ final public class OptionsDialog extends KissDialog
       tempeditenable = initedit ;
       initdefaultplayfkiss = defaultplayfkiss ;
       initacceptcnferrors = acceptcnferrors ;
+      initpagesarescenes = pagesarescenes ;
       initmultipleevents = multipleevents ;
 	   initsplashdir = new String(splashdir) ;
    }
@@ -3986,11 +4030,13 @@ final public class OptionsDialog extends KissDialog
       kissld = false ;
       defaultplayfkiss = false ;
       acceptcnferrors = false ;
+      pagesarescenes = false ;
       multipleevents = true ;
       compatapply = false ;
       eventqueues = "1" ;
       timerperiod = "10" ;
       gifperiod = "100" ;
+      sceneperiod = "1000" ;
       stickyflex = "10" ;
       maxflex = "100" ;
       maxlock = "32767" ;
@@ -4039,6 +4085,7 @@ final public class OptionsDialog extends KissDialog
 //    if (initinitedit != InitEdit.isSelected()) return true ;
       if (initdefaultplayfkiss != DefaultPlayFKiss.isSelected()) return true ;
       if (initacceptcnferrors != AcceptCnfErrors.isSelected()) return true ;
+      if (initpagesarescenes != PagesAreScenes.isSelected()) return true ;
       if (initmultipleevents != MultipleEvents.isSelected()) return true ;
       if (initeditenable != EditEnable.isSelected()) return true ;
       if (initsecurityenable != SecurityEnable.isSelected()) return true ;
@@ -4065,6 +4112,7 @@ final public class OptionsDialog extends KissDialog
 	   if (!(initeventqueues.equals(EventQueues.getText()))) return true ;
       if (!(inittimerperiod.equals(TimerPeriod.getText()))) return true ;
       if (!(initgifperiod.equals(GifPeriod.getText()))) return true ;
+      if (!(initsceneperiod.equals(ScenePeriod.getText()))) return true ;
       if (!(initstickyflex.equals(StickyFlex.getText()))) return true ;
       if (!(initmaxflex.equals(MaxFlex.getText()))) return true ;
       if (!(initmaxlock.equals(MaxLock.getText()))) return true ;
@@ -4169,6 +4217,7 @@ final public class OptionsDialog extends KissDialog
 //    if (initedit != InitEdit.isSelected()) return true ;
       if (defaultplayfkiss != DefaultPlayFKiss.isSelected()) return true ;
       if (acceptcnferrors != AcceptCnfErrors.isSelected()) return true ;
+      if (pagesarescenes != PagesAreScenes.isSelected()) return true ;
       if (multipleevents != MultipleEvents.isSelected()) return true ;
       if (editenable != EditEnable.isSelected()) return true ;
       if (securityenable != SecurityEnable.isSelected()) return true ;
@@ -4195,6 +4244,7 @@ final public class OptionsDialog extends KissDialog
 	   if (!(eventqueues.equals(EventQueues.getText()))) return true ;
       if (!(timerperiod.equals(TimerPeriod.getText()))) return true ;
       if (!(gifperiod.equals(GifPeriod.getText()))) return true ;
+      if (!(sceneperiod.equals(ScenePeriod.getText()))) return true ;
       if (!(stickyflex.equals(StickyFlex.getText()))) return true ;
       if (!(maxflex.equals(MaxFlex.getText()))) return true ;
       if (!(maxlock.equals(MaxLock.getText()))) return true ;
@@ -4307,6 +4357,7 @@ final public class OptionsDialog extends KissDialog
 	   eventqueues = toString1(p.getProperty("eventqueues"),eventqueues) ;
       timerperiod = toString1(p.getProperty("timerperiod"),timerperiod) ;
       gifperiod = toString1(p.getProperty("gifperiod"),gifperiod) ;
+      sceneperiod = toString1(p.getProperty("sceneperiod"),sceneperiod) ;
       stickyflex = toString1(p.getProperty("stickyflex"),stickyflex) ;
       maxflex = toString1(p.getProperty("maxflex"),maxflex) ;
       maxlock = toString1(p.getProperty("maxlock"),maxlock) ;
@@ -4385,6 +4436,7 @@ final public class OptionsDialog extends KissDialog
 	   playfkiss = toBoolean1(p.getProperty("playfkiss"),playfkiss) ;
 	   defaultplayfkiss = toBoolean1(p.getProperty("defaultplayfkiss"),defaultplayfkiss) ;
 	   acceptcnferrors = toBoolean1(p.getProperty("acceptcnferrors"),acceptcnferrors) ;
+	   pagesarescenes = toBoolean1(p.getProperty("pagesarescenes"),pagesarescenes) ;
 	   multipleevents = toBoolean1(p.getProperty("multipleevents"),multipleevents) ;
 	   directkiss = toBoolean1(p.getProperty("directkiss"),directkiss) ;
 	   gnomekiss = toBoolean1(p.getProperty("gnomekiss"),gnomekiss) ;
@@ -4489,6 +4541,7 @@ final public class OptionsDialog extends KissDialog
       p.put("eventqueues",toString2(eventqueues)) ;
       p.put("timerperiod",toString2(timerperiod)) ;
       p.put("gifperiod",toString2(gifperiod)) ;
+      p.put("sceneperiod",toString2(sceneperiod)) ;
       p.put("stickyflex",toString2(stickyflex)) ;
       p.put("maxflex",toString2(maxflex)) ;
       p.put("maxlock",toString2(maxlock)) ;
@@ -4585,6 +4638,7 @@ final public class OptionsDialog extends KissDialog
       p.put("playfkiss",toString2(playfkiss)) ;
       p.put("defaultplayfkiss",toString2(defaultplayfkiss)) ;
       p.put("acceptcnferrors",toString2(acceptcnferrors)) ;
+      p.put("pagesarescenes",toString2(pagesarescenes)) ;
       p.put("multipleevents",toString2(multipleevents)) ;
       p.put("directkiss",toString2(directkiss)) ;
       p.put("gnomekiss",toString2(gnomekiss)) ;
@@ -5079,7 +5133,6 @@ final public class OptionsDialog extends KissDialog
                   config.setOptionsChanged(true) ;
                   config.setRestartable(false) ;
                   setOptions() ;
-                  setInitOptions() ;
                   mf.restart() ;
                   closeWindow() ;
                   return ;
@@ -5093,6 +5146,7 @@ final public class OptionsDialog extends KissDialog
              !EventQueues.getText().equals(eventqueues) ||
              !TimerPeriod.getText().equals(timerperiod) ||
              !GifPeriod.getText().equals(gifperiod) ||
+             !ScenePeriod.getText().equals(sceneperiod) ||
              languagerestart)
          {
             MainFrame mf = Kisekae.getMainFrame() ;
@@ -5673,7 +5727,7 @@ final public class OptionsDialog extends KissDialog
       ImportCel.setSelected((b) ? true : false) ;
       ExportCel.setSelected((b) ? false : false) ;
       ImportComponent.setSelected((b) ? false : false) ;
-      ComponentCel.setSelected((b) ? true : false) ;
+//    ComponentCel.setSelected((b) ? true : false) ;
       WriteCelOffset.setSelected((b) ? true : true) ;
       SoundSingle.setSelected((b) ? true : false) ;
       MultipleEvents.setSelected((b) ? false : true) ;
@@ -5720,7 +5774,7 @@ final public class OptionsDialog extends KissDialog
       setImportCel(true) ;
       setExportCel(false) ;
       setImportComponent(false) ;
-      setComponentCel(true) ;
+//    setComponentCel(true) ;
       setWriteCelOffset(true) ;
       setSoundSingle(true) ;
       setMultipleEvents(false) ;
@@ -6142,6 +6196,7 @@ final public class OptionsDialog extends KissDialog
       else if (kissld) writeLine(out,"; kissld = \"" + kissld + "\"") ;
 //    if (defaultplayfkiss) writeLine(out,"; defaultplayfkiss = " + defaultplayfkiss) ;
       if (acceptcnferrors != initacceptcnferrors) writeLine(out,"; acceptcnferrors = " + acceptcnferrors) ;
+      if (pagesarescenes != initpagesarescenes) writeLine(out,"; pagesarescenes = " + pagesarescenes) ;
       if (multipleevents != initmultipleevents && !b) writeLine(out,"; multipleevents = " + multipleevents) ;
 //	   if (backup != initbackup) writeLine(out,"; backup = " + backup) ;
 //	   if (savesource != initsavesource) writeLine(out,"; savesource = " + savesource) ;
@@ -6234,6 +6289,7 @@ final public class OptionsDialog extends KissDialog
 	   if (!eventqueues.equals(initeventqueues)) writeLine(out,"; eventqueues = \"" + eventqueues + "\"") ;
 	   if (!timerperiod.equals(inittimerperiod) && !b) writeLine(out,"; timerperiod = \"" + timerperiod + "\"") ;
 	   if (!gifperiod.equals(initgifperiod)) writeLine(out,"; gifperiod = \"" + gifperiod + "\"") ;
+	   if (!sceneperiod.equals(initsceneperiod)) writeLine(out,"; sceneperiod = \"" + sceneperiod + "\"") ;
 	   if (!stickyflex.equals(initstickyflex)) writeLine(out,"; stickyflex = \"" + stickyflex + "\"") ;
 	   if (!maxflex.equals(initmaxflex)) writeLine(out,"; maxflex = \"" + maxflex + "\"") ;
 	   if (!maxlock.equals(initmaxlock) && !b) writeLine(out,"; maxlock = \"" + maxlock + "\"") ;

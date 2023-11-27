@@ -21,12 +21,25 @@
 	web. I will also place notices here regarding product updates, scheduled 
 	releases, or problems and work-arounds that may affect you.&nbsp;</p>
                                         <p>&nbsp;</p>
-					<P>UltraKiss V3.6.2 is being developed. This release fully supports the PlayFKiss compatibility for the Scarecrow sets.</P>
-					<h3><FONT face=Arial>Updates to V3.6.2&nbsp; </FONT></h3>
+					<P>UltraKiss V3.7 is being developed. This release improves memory utilization for the Scarecrow sets.</P>
+					<h3><FONT face=Arial>Updates to V3.7&nbsp; </FONT></h3>
 					<BLOCKQUOTE>
                       <p><font face="Arial">1. A new option to reduce the Media Player background sound volume is provided.  See the Options-Media tab.</font></p>
                       <p><font face="Arial">2. UltraKiss now configures a maximum memory pool of 50% available memory with bundled installers.  The log file now shows the maximum memory the JVM will use.</font></p>
-                      <p><font face="Arial">3. A new edit selection of all visible objects is now available in the Edit menu.  This option selects a subset of all objects on the screen. </font></p>
+                      <p><font face="Arial">3. A new edit selection of all visible objects is now available in the Edit menu.  This option selects the visible subset of all objects on the screen. </font></p>
+                      <p><font face="Arial">4. Audio sound caching now works if caching is disabled and/or enabled.  Previously sounds would not work if caching was disabled.</font></p>
+                      <p><font face="Arial">5. Enhanced the cel and object properties dialog to display and enable attribute display based on the cel page set context.</font></p>
+                      <p><font face="Arial">6. Implemented a new compatibility feature to allow page sets to be treated as loadable scenes for page 0.  Memory use for sets that use many large cels can now be managed by placing these cels in separate scenes.</font></p>
+                      <p><font face="Arial">7. Set saves when expansion sets are in use are corrected to write only the original archive contents.  Previously, all elements including those from expansion sets could be written to the primary archive file.</font></p>
+                      <p><font face="Arial">8. Set restarts when the set was loaded from directory folders could fail to properly load and play some audio files.  This is corrected.</font></p>
+                      <p><font face="Arial">9. Original cel images are now flushed when copied on a set restart to release internal image memory.  Previously, unloaded original images could contribute to increased memory use.</font></p>
+                      <p><font face="Arial">10. INCLUDE file objects are now retained across set restarts.  Previously, the file directory contents were reestablished and this could contribute to increased memory use.</font></p>
+                      <p><font face="Arial">11. The Text Editor Find-Replace function would not find and replace new text without repositioning the document cursor to the top of the file.  This is corrected.</font></p>
+                      <p><font face="Arial">12. An Edit Undo All function is now implemented for the Text Editor tool.  Previously only single edits could be undone.</font></p>
+                      <p><font face="Arial">13. Corrected the edit selection process to not select fully transparent pixels made transparent through a KiSS cel transparency setting.</font></p>
+                      <p><font face="Arial">14. Corrected a memory leak in the File Loader on repeated set restarts or loads by properly terminating the file loader thread.</font></p>
+                      <p><font face="Arial">15. Corrected a memory leak in the Media Player by closing the input data stream when audio files were closed.</font></p>
+                      <p><font face="Arial">16. Corrected a memory leak where GIF images did not properly establish cloned frame palettes on a restart.</font></p>
          				</BLOCKQUOTE>
                                          <p>&nbsp;</p>
 					<p><B>August 30, 2023</B></p>

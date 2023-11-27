@@ -67,7 +67,6 @@ import javax.swing.* ;
 
 final class PngCel extends Cel
 {
-   static private Component component = new Component() { } ;
 
 	// Kiss cel file attributes
 
@@ -170,7 +169,7 @@ final class PngCel extends Cel
 
 		// Load a reference copy if we are accessing the same zip file as our
       // reference configuration.  On new data sets we may not yet have known
-      // paths to the files.
+      // paths to the files.  The original cel is unloaded to release memory.
 
 //		if (ref != null && zip != null && ref.isRestartable())
 		if (ref != null && zip != null)
@@ -189,8 +188,9 @@ final class PngCel extends Cel
 				if (c != null && c.isLoaded())
 	         {
 	         	loadCopy(c) ;
+               c.unload() ;
                copy = false ;
-               zip.addEntry(ze) ;
+               if (!c.isFromInclude()) zip.addEntry(ze) ;
                zip.setUpdated(ze,c.isUpdated()) ;
 	            return ;
             }
@@ -235,6 +235,7 @@ final class PngCel extends Cel
             {
                zip = ze.getZipFile() ;
                includename = (zip != null) ? zip.getFileName() : null ;
+               setFromInclude(true) ;
             }
          }
 
@@ -437,6 +438,7 @@ final class PngCel extends Cel
       backgroundcolor = c.getBackgroundColor() ;
       setLastModified(c.lastModified()) ;
       setUpdated(c.isUpdated()) ;
+      setFromInclude(c.isFromInclude()) ;
 
       if (loader != null)
       {
@@ -573,7 +575,7 @@ final class PngCel extends Cel
 			ImageProducer ip = new FilteredImageSource(base,
          	new PaletteFilter(cm,basecm,transparency,transparentcolor));
 			filteredimage = Toolkit.getDefaultToolkit().createImage(ip) ;
-         MediaTracker tracker = new MediaTracker(component) ;
+         MediaTracker tracker = new MediaTracker(Kisekae.getKisekae()) ;
          tracker.addImage(filteredimage,0) ;
          try { tracker.waitForAll(500) ; }
          catch (InterruptedException e) { }
@@ -628,7 +630,7 @@ final class PngCel extends Cel
 		PaletteFilter pf = new PaletteFilter(cm,basecm,transparency,transparentcolor) ;
 		ImageProducer ip = new FilteredImageSource(img.getSource(),pf) ;
 		filteredimage = Toolkit.getDefaultToolkit().createImage(ip) ;
-      MediaTracker tracker = new MediaTracker(component) ;
+      MediaTracker tracker = new MediaTracker(Kisekae.getKisekae()) ;
       tracker.addImage(filteredimage,0) ;
       try { tracker.waitForAll(500) ; }
       catch (InterruptedException e) { }

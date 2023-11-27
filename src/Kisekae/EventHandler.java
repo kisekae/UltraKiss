@@ -1594,6 +1594,7 @@ final class EventHandler extends KissObject
 	            // We yield control after every event.
 
 					wait = false ;
+               if (stop) break ;
 	 	 			Object qentry = EventHandler.dequeueEvent() ;
 					if (qentry != null)
 					{

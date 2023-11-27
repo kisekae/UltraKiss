@@ -70,6 +70,7 @@ import java.io.* ;
 final class FileLoader extends KissFrame
 	implements WindowListener, ActionListener, Runnable
 {
+	private static int count = 0 ;			// Count of class instances
 	private MainFrame parent = null ;		// The parent frame
 	private FileLoader me = null ;		   // Reference to ourselves
 	private Thread thread = null ;			// The loader thread
@@ -155,7 +156,7 @@ final class FileLoader extends KissFrame
       {
          expansion = true ;
          if (OptionsDialog.getDebugControl())
-            System.out.println("Expanding configuration " + config) ;
+            System.out.println("Loading expansion configuration " + config) ;
       }
 	}
 
@@ -252,19 +253,20 @@ final class FileLoader extends KissFrame
 
 	public void run()
 	{
+		count = count + 1 ;
 		thread = Thread.currentThread() ;
-		thread.setName("File Loader") ;
+		thread.setName("File Loader " + count) ;
 		thread.setPriority(Thread.MIN_PRIORITY) ;
 		time = System.currentTimeMillis() ;
 		errors = warnings = 0 ;
+      errormsgs = null ;
       jLabel1.setVisible(false);
 		EDIT.setVisible(false);
 		PLAY.setEnabled(false);
 		TextWindow.setText("") ;
 		TextWindow.setCaretPosition(0);
 		if (OptionsDialog.getDebugControl())
-			System.out.println("Configuration Loader active.") ;
-      errormsgs = null ;
+			System.out.println("Configuration loader " + thread.getName() + " active.") ;
       
       // Bring the load window to the front on the AWT thread
       
@@ -333,7 +335,7 @@ final class FileLoader extends KissFrame
 
 				// Read the configuration file.
 
-            if (stop) return ;
+            if (stop) thread.interrupt() ;
             MainFrame mf = Kisekae.getMainFrame() ;
             OptionsDialog options = mf.getOptionsDialog() ;
             if (!reload && !expansion && options != null) 
@@ -341,13 +343,25 @@ final class FileLoader extends KissFrame
 				config.setLoader(this) ;
 				showStatus(Kisekae.getCaptions().getString("ReadConfigStatus")) ;
 				config.read() ;
+            
+            // If we have a reference configuration that used INCLUDE files
+            // then the reference include file archives should be used in the 
+            // current configuration.  This ensures that the same archive entry 
+            // objects are used for cels when loaded and fixes a memory leak.
+            
+            if (stop) thread.interrupt() ;
+            if (reference != null)
+            {
+               Vector includefiles = reference.getIncludeFiles() ;
+               config.setIncludeFiles(includefiles) ;              
+            }
 
             // If we loaded from a URL and our configuration referenced
             // INCLUDE files then we need to download the included files
             // to set up for proper loading.  The list of included files
             // is corrected to reference the downloaded file objects.
 
-            if (stop) return ;
+            if (stop) thread.interrupt() ;
             FileOpen fo = config.getFileOpen() ;
             Vector includefiles = config.getIncludeFiles() ;
             URL sourceURL = (fo != null) ? fo.getSourceURL() : null ;
@@ -364,7 +378,9 @@ final class FileLoader extends KissFrame
      				showStatus(Kisekae.getCaptions().getString("LoadIncludeStatus")) ;
                for (int i = 0 ; i < includefiles.size() ; i++)
                {
-                  File f = (File) includefiles.elementAt(i) ;
+                  Object o = includefiles.elementAt(i) ;
+                  if (!(o instanceof File)) continue ;
+                  File f = (File) o ;
                   String includename = f.getName() ;
                   s = Kisekae.getCaptions().getString("FileNameText") ;
                   i1 = s.indexOf('[') ;
@@ -373,20 +389,20 @@ final class FileLoader extends KissFrame
                      s = s.substring(0,i1) + includename + s.substring(j1+1) ;
       				showFile(s) ;
         			   URL includeURL = new URL(sourceURL,includename) ;
-                  Object o = download(includeURL) ;
+                  o = download(includeURL) ;
                   includefiles.setElementAt(o,i) ;
                }
             }
 
 				// Load the cel images.
 
-            if (stop) return ;
+            if (stop) thread.interrupt() ;
 				showStatus(Kisekae.getCaptions().getString("LoadKissStatus")) ;
 				config.load() ;
 
 				// Set up the cel groups and the page sets.
 
-            if (stop) return ;
+            if (stop) thread.interrupt() ;
 				showStatus(Kisekae.getCaptions().getString("InitializeStatus")) ;
 				FileName.setText("") ;
 				config.init() ;
@@ -406,8 +422,63 @@ final class FileLoader extends KissFrame
             // This prevents a memory leak from a load-edit-load cycle.
             
             if (reference != null) 
+            {
                reference.close(false,false) ;
+               reference.flush() ;
+            }
+            newconfig = config ;
 			}
+
+         // Show the load status to the user.
+
+         if (stop) thread.interrupt() ;
+  			time = System.currentTimeMillis() - time ;
+         String s = Kisekae.getCaptions().getString("LoadTimeText") ;
+         int i1 = s.indexOf('[') ;
+         int j1 = s.indexOf(']') ;
+         if (i1 >= 0 && j1 > i1)
+            s = s.substring(0,i1) + (time/1000+1) + s.substring(j1+1) ;
+    		showText(s) ;
+     		if (config != null)
+     		{
+     			int n = config.getLoadBytes() / 1024 ;
+            s = Kisekae.getCaptions().getString("LoadBytesText") ;
+            i1 = s.indexOf('[') ;
+            j1 = s.indexOf(']') ;
+            if (i1 >= 0 && j1 > i1)
+               s = s.substring(0,i1) + n + s.substring(j1+1) ;
+     			showText(s) ;
+     		}
+
+     		// Continue with the main panel frame initialization.  This
+     		// is automatic if the load was error free and this frame
+     		// currently has active focus.  Note that we must run the
+     		// callback function under the AWT eventhandler thread to
+     		// eliminate potential thread problems.
+
+         faults = errors ;
+         if (OptionsDialog.getStrictSyntax()) faults += warnings ;
+    		if (faults == 0) showText(Kisekae.getCaptions().getString("NoErrorsText")) ;
+     		if (faults > 0) showText(errors + " Errors, " + warnings + " Warnings") ;
+     		if (active && (faults == 0 || OptionsDialog.getAcceptCnfErrors() || Kisekae.isBatch()))
+     		{
+            try { thread.sleep(1000) ; }
+            catch (InterruptedException e) { }
+     			Runnable callback = new Runnable()
+     			{ public void run() { parent.initframe() ; }	} ;
+     			javax.swing.SwingUtilities.invokeLater(callback) ;
+     		}
+
+     		// Signal completion to the user.  Bring load window into focus.
+         // Do this on the AWT thread.  We were receiving NullPointerException
+         // on javax.swing.text.FlowView$FlowStrategy.layoutRow(FlowView.java:546)
+
+         else
+         {
+            Runnable complete = new Runnable()
+            { public void run() { signalComplete() ; } } ;
+            javax.swing.SwingUtilities.invokeLater(complete) ;
+         }
 		}
       catch (InterruptedException e) { interrupted = true ; }
 
@@ -439,59 +510,8 @@ final class FileLoader extends KissFrame
 			config = null ;
 		}
 
-		// Show the load status to the user.
-
-     	newconfig = config ;
-      if (!interrupted && !stop)
-      {
-			time = System.currentTimeMillis() - time ;
-         String s = Kisekae.getCaptions().getString("LoadTimeText") ;
-         int i1 = s.indexOf('[') ;
-         int j1 = s.indexOf(']') ;
-         if (i1 >= 0 && j1 > i1)
-            s = s.substring(0,i1) + (time/1000+1) + s.substring(j1+1) ;
-			showText(s) ;
-			if (config != null)
-			{
-				int n = config.getLoadBytes() / 1024 ;
-            s = Kisekae.getCaptions().getString("LoadBytesText") ;
-            i1 = s.indexOf('[') ;
-            j1 = s.indexOf(']') ;
-            if (i1 >= 0 && j1 > i1)
-               s = s.substring(0,i1) + n + s.substring(j1+1) ;
-				showText(s) ;
-			}
-
-			// Continue with the main panel frame initialization.  This
-			// is automatic if the load was error free and this frame
-			// currently has active focus.  Note that we must run the
-			// callback function under the AWT eventhandler thread to
-			// eliminate potential thread problems.
-
-         faults = errors ;
-         if (OptionsDialog.getStrictSyntax()) faults += warnings ;
-			if (faults == 0) showText(Kisekae.getCaptions().getString("NoErrorsText")) ;
-			if (faults > 0) showText(errors + " Errors, " + warnings + " Warnings") ;
-			if (active && (faults == 0 || OptionsDialog.getAcceptCnfErrors() || Kisekae.isBatch()))
-			{
-	         try { thread.sleep(1000) ; }
-	         catch (InterruptedException e) { }
-				Runnable callback = new Runnable()
-				{ public void run() { parent.initframe() ; }	} ;
-				javax.swing.SwingUtilities.invokeLater(callback) ;
-				close() ;
-				return ;
-			}
-
-			// Signal completion to the user.  Bring load window into focus.
-         // Do this on the AWT thread.  We were receiving NullPointerException
-         // on javax.swing.text.FlowView$FlowStrategy.layoutRow(FlowView.java:546)
-
-			Runnable complete = new Runnable()
-			{ public void run() { signalComplete() ; } } ;
-			javax.swing.SwingUtilities.invokeLater(complete) ;
-			return ;
-      }
+		if (OptionsDialog.getDebugControl())
+         System.out.println("Configuration loader " + thread.getName() + " terminates.") ;
 	}
    
    
@@ -1038,7 +1058,7 @@ final class FileLoader extends KissFrame
 
 	public void close()
 	{
-		super.close() ;
+      super.close() ;
 		flush() ;
 		dispose() ;
 	}
@@ -1048,6 +1068,8 @@ final class FileLoader extends KissFrame
 	private void flush()
    {
       me = null ;
+      ze = null ;
+      zip = null ;
    	config = null ;
       setVisible(false) ;
       KissObject.setLoader(null) ;

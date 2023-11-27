@@ -618,6 +618,28 @@ final class Group extends KissObject
          c.setPlacement(((Group) o).getPlacementObject()) ;
       }
    }
+   
+   // If the group was moved then the PageSet location must be updated.
+   
+   void updatePageSetLocation(PageSet page)
+   {
+   	if (groups.size() > 0)
+      {
+			for (int i = 0 ; i < groups.size() ; i++)
+         {
+            Group pko = (Group) groups.elementAt(i) ;
+				pko.updatePageSetLocation(page) ;
+         }
+      }
+      
+      // For groups that do not have subgroups, update the page.
+      
+      else
+      {
+         Integer p = (Integer) getIdentifier() ;
+         page.setGroupPosition(p, getLocation());
+      }
+   }
 
 	// Set the group offset.  Under normal conditions this is the minimum
    // offset over all cels in the group.  However, if we are editing and
@@ -949,6 +971,8 @@ final class Group extends KissObject
    		box = new Rectangle(basebox) ;
    		offset.x = -(location.x - box.x) ;
    		offset.y = -(location.y - box.y) ;
+         box.x = location.x ;
+         box.y = location.y ;
       }
    }
 
@@ -1303,10 +1327,30 @@ final class Group extends KissObject
 
 	// Return an indication if the group has any cel on the specified page.
 
+   boolean isOnPage(int n) 
+   { return isOnPage(new Integer(n)) ; }
+   
 	boolean isOnPage(Integer p)
 	{
 		for (int i = 0 ; i < cels.size() ; i++)
 			if (((Cel) cels.elementAt(i)).isOnPage(p)) return true ;
+		return false ;
+	}
+
+	// Return an indication if the group is specifically on the specified page.
+
+   boolean isOnSpecificPage(int n) 
+   { return isOnSpecificPage(new Integer(n)) ; }
+   
+	boolean isOnSpecificPage(Integer p)
+	{
+		for (int i = 0 ; i < cels.size() ; i++)
+      {
+         Cel c = (Cel) cels.elementAt(i) ;
+         Object o = c.getIdentifier() ;
+         Integer n = (Integer) o ;
+			if (((Cel) cels.elementAt(i)).isOnSpecificPage(p)) return true ;
+      }
 		return false ;
 	}
 
@@ -1324,6 +1368,7 @@ final class Group extends KissObject
          if (!cel.isOnPage(page)) continue ;
          if (!cel.isVisible()) continue ;
          if (cel.isInternal()) continue ;
+         if (!cel.isLoaded()) continue ;
          Dimension d = cel.getSize() ;
          Point p = cel.getOffset() ;
          if (r == null)

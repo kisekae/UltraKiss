@@ -73,9 +73,9 @@ import java.io.OutputStream ;
 
 final class PageSet extends KissObject
 {
-	// Class attributes.  Sized for 16 page set objects.
+	// Class attributes.  Sized for 100 page set or scene objects.
 	
-	static private Hashtable key = new Hashtable(16,1f) ;
+	static private Hashtable key = new Hashtable(100,1f) ;
 	
 	// Hashtable keys are compound entities that contain a reference
 	// to a configuration.  Thus, multiple configurations can coexist 
@@ -245,6 +245,46 @@ final class PageSet extends KissObject
       return v ; 
    }
 
+	// Return all the visible cels on this page.  
+
+	Vector getVisibleCels() 
+   { 
+      Vector v = new Vector() ;
+      for (int i = 0; i < groups.size() ; i++)
+      {
+         Group g = (Group) groups.elementAt(i) ;
+         Vector cels = g.getCels() ;
+         for (int j = 0; j < cels.size() ; j++)
+         {
+            Cel c = (Cel) cels.elementAt(j) ;
+            if (!c.isVisible()) continue ;
+            v.add(c) ;
+         }
+      }
+      return v ; 
+   }
+
+	// Return all the fully visible cels on this page.  Transparent or partly
+   // transparent cels are not fully visible.
+
+	Vector getFullyVisibleCels() 
+   { 
+      Vector v = new Vector() ;
+      for (int i = 0; i < groups.size() ; i++)
+      {
+         Group g = (Group) groups.elementAt(i) ;
+         Vector cels = g.getCels() ;
+         for (int j = 0; j < cels.size() ; j++)
+         {
+            Cel c = (Cel) cels.elementAt(j) ;
+            if (!c.isVisible()) continue ;
+            if (c.getTransparency() > 0) continue ;
+            v.add(c) ;
+         }
+      }
+      return v ; 
+   }
+
    // Return the number of groups on this page.
 
 	int getGroupCount() { return groups.size() ; }
@@ -271,10 +311,10 @@ final class PageSet extends KissObject
 		if (sv == null) return getGroupPosition(group) ;
 		Object o = sv.variable[0] ;
 		if (!(o instanceof Vector)) return getGroupPosition(group) ;
-		Vector positions = (Vector) o ;
+		Vector initpositions = (Vector) o ;
 		int g = group.intValue() ;
-		if (g < 0 || g >= positions.size()) return getGroupPosition(group) ;
-      o = positions.elementAt(g) ;
+		if (g < 0 || g >= initpositions.size()) return getGroupPosition(group) ;
+      o = initpositions.elementAt(g) ;
       if (!(o instanceof Point)) return null ;
 		return new Point((Point) o) ;
 	}
@@ -306,11 +346,11 @@ final class PageSet extends KissObject
 		}
 		Object o = sv.variable[0] ;
 		if (!(o instanceof Vector)) return ;
-		Vector positions = (Vector) o ;
+		Vector initpositions = (Vector) o ;
 		int g = group.intValue() ;
       if (g < 0) return ;
-		if (g >= positions.size()) positions.setSize(g+1) ;
-		positions.setElementAt(p,g) ;
+		if (g >= initpositions.size()) initpositions.setSize(g+1) ;
+		initpositions.setElementAt(p,g) ;
 		return ;
 	}
 
@@ -516,14 +556,20 @@ final class PageSet extends KissObject
 	
 	
 	// Restore the page set state.  For a complete restoration we must
-	// restore the position of all groups.
+	// restore the position of all groups.   If pages are scenes then page 0 
+   // is the position of record for all object movement and restoring 
+   // of object positions.
 	
 	void restoreState(Object cid, Object state)
    { restoreState(cid,state,false) ; }
 
 	void restoreState(Object cid, Object state, boolean restorevisibility)
 	{
+      Integer id = (Integer) this.getIdentifier() ;
 		State sv = (State) State.getByKey(cid,this,state) ;
+      PageSet p0 = (PageSet) PageSet.getByKey(PageSet.getKeyTable(),cid,new Integer(0)) ;
+      State sv0 = (State) State.getByKey(cid,p0,state) ;
+      if (OptionsDialog.getPagesAreScenes() && "panelframe".equals(state)) sv = sv0 ;
 		if (sv != null)
 		{
 			positions = (sv.variable[0] instanceof Vector)
@@ -539,7 +585,9 @@ final class PageSet extends KissObject
 		{
 			if (positions.elementAt(i) == null) continue ;
 			Group g = (Group) Group.getByKey(Group.getKeyTable(),cid,new Integer(i)) ;
-			if (g != null) g.restoreState(cid,state,restorevisibility) ;
+         if (g == null) continue ;
+         if (OptionsDialog.getPagesAreScenes() && id.intValue() != 0 && !g.isOnSpecificPage(id)) continue ;
+			g.restoreState(cid,state,restorevisibility) ;
 		}
 	}
 	
@@ -583,7 +631,8 @@ final class PageSet extends KissObject
 
    // Assign initial positions for all group objects on this page that are
    // internal groups and not cloned.  These groups were newly created.
-   // This function returns the number of updates performed.
+   // This function returns the number of updates performed.  Note, initial
+   // positions for pages are not updated if we are using pages as scenes.  
 
    int updateInitialPositions(Object cid)
    {
@@ -591,6 +640,7 @@ final class PageSet extends KissObject
 		State initstate = getState(cid,"initial") ;
       if (initstate == null) return -1 ;
       if (!(initstate.variable[0] instanceof Vector)) return -1 ;
+      if (OptionsDialog.getPagesAreScenes()) return -1 ;
       Vector ip = (Vector) initstate.variable[0] ;
 
 		// Compute the group positions.  If this is a new page initial

@@ -352,6 +352,11 @@ final class ThreadDialog extends KissDialog
          	GifTimer animator = config.getAnimator() ;
             if (animator != null) animator.suspendTimer(true) ;
          }
+         else if (item.startsWith("SceneTimer") && config != null)
+         {
+         	SceneTimer scenetimer = config.getSceneTimer() ;
+            if (scenetimer != null) scenetimer.suspendTimer(true) ;
+         }
          else if (item.startsWith("EventHandler"))
          {
             EventHandler.suspendEventHandler(true) ;
@@ -374,6 +379,11 @@ final class ThreadDialog extends KissDialog
          {
          	GifTimer animator = config.getAnimator() ;
             if (animator != null) animator.resumeTimer(true) ;
+         }
+         else if (item.startsWith("SceneTimer") && config != null)
+         {
+         	SceneTimer scenetimer = config.getSceneTimer() ;
+            if (scenetimer != null) scenetimer.resumeTimer(true) ;
          }
          else if (item.startsWith("EventHandler"))
          {
@@ -547,10 +557,26 @@ final class ThreadDialog extends KissDialog
 				s = format(" ","",0,len) ;
 				listmodel.addElement(s) ;
          }
-      	AlarmTimer timer = config.getTimer() ;
+
+         // Do the same for the scene memory timer.
+
+      	SceneTimer scenetimer = config.getSceneTimer() ;
+         if (scenetimer != null)
+         {
+	         String queuesize = "" + scenetimer.getQueueSize() ;
+            String fired = "" + scenetimer.getCount() ;
+				format("clear","",0,len) ;
+				format("left",scenetimer.getName(),0,19) ;
+				format("left",scenetimer.getTimerState(),20,10) ;
+				format("right",queuesize,31,5) ;
+            format("right",fired,40,9) ;
+				s = format(" ","",0,len) ;
+				listmodel.addElement(s) ;
+         }
 
          // Do the same for the alarm timer.
 
+      	AlarmTimer timer = config.getTimer() ;
          if (timer != null)
          {
 	         String queuesize = "" + timer.getQueueSize() ;

@@ -152,16 +152,16 @@ final class ToolBar extends JPanel
 				{
 					if (source == page[i])
 					{
-						PageSet pageset = (PageSet) PageSet.getByKey(
+						PageSet page = (PageSet) PageSet.getByKey(
 							PageSet.getKeyTable(),config.getID(),new Integer(i)) ;
-						if (pageset == null) return ;
+						if (page == null) return ;
 
                   // Right mouse buttons show the page set dialog.
 
 						if (evt.isMetaDown() && OptionsDialog.getEditEnable())
 						{
 							parent.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
-							PageSetDialog pd = new PageSetDialog(parent,pageset,config) ;
+							PageSetDialog pd = new PageSetDialog(parent,page,config) ;
 							parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
 							pd.show() ;
 						}
@@ -170,7 +170,7 @@ final class ToolBar extends JPanel
 
 						else
                   {
-                     if (!pageset.isVisible()) return ;
+                     if (!page.isVisible()) return ;
                   	selectPage(i) ;
 							menu.eventPage(i) ;
                   }

@@ -79,7 +79,7 @@ abstract class Cel extends KissObject
    // Class attributes.  Sized for 1000 cel objects.
 
    static private Hashtable key = new Hashtable(1200,0.855f) ;
-   static private Component component = new Component() { } ;
+   private Component component = new Component() { } ;
 
    // Cel image attributes inherited by cel instances
 
@@ -141,6 +141,7 @@ abstract class Cel extends KissObject
    // Cel state attributes inherited by cel instances
 
    protected boolean loaded = false ;			// If true, data has been loaded
+   protected boolean frominclude = false ;	// If true, loaded from include file 
    protected boolean visible = true ;			// If true, show cel
    protected boolean ghost = false ;			// If true, cel cannot be caught
    protected boolean input = false ;			// If true, cel accepts input
@@ -154,6 +155,8 @@ abstract class Cel extends KissObject
    protected boolean initinput = false ;		// The cel initial input state
    protected boolean ambiguous = true ;		// If false, no ambiguous cel
    protected boolean importascel = false ;	// If true, converted to cel
+   protected boolean undoallpages = false ;	// Edit undo for all pages 
+   protected boolean unloadedmove = false ;	// True if cel moved when unloaded
 
    // Cel tag update attributes
 
@@ -490,6 +493,10 @@ abstract class Cel extends KissObject
 
    void setAllPages(boolean b) { allpages = b ; }
 
+   // Keep the indicator that the cel is on all pages for undo processing.
+
+   void setUndoAllPages(boolean b) { undoallpages = b ; }
+
    // Set the page format leading space count.  This value is used during
    // formatted output of the colon page section to retain user spacing.
 
@@ -665,6 +672,10 @@ abstract class Cel extends KissObject
    // Set the cel loaded state.  This is required if we create a cel image.
 
    void setLoaded(boolean b) { loaded = b ; }
+
+   // Indicate if loaded from an include file.  
+
+   void setFromInclude(boolean b) { frominclude = b ; }
 
    // Set the cel imported as cel state.  This is required for cel write names.
 
@@ -931,6 +942,10 @@ abstract class Cel extends KissObject
    // Return the cel initial input state.
 
    boolean getInitInput() { return initinput ; }
+
+   // Return the cel initial value for allpages for edit undo.
+
+   boolean getUndoAllPages() { return undoallpages ; }
 
    // Return the cel initial palette ID.
 
@@ -1232,7 +1247,24 @@ abstract class Cel extends KissObject
 
    // Return an indication if the cel is on the specified page.
 
+   boolean isOnPage(int n) 
+   { return isOnPage(new Integer(n)) ; }
+   
    boolean isOnPage(Integer p)
+   {
+      if (error) return false ;
+      if (p == null) return false ;
+      if (pages == null || allpages) return true ;
+      if (pages == null || allpages || OptionsDialog.getPagesAreScenes()) return true ;
+      return pages.contains(p) ;
+   }
+
+   // Return an indication if the cel is on the specified page.
+
+   boolean isOnSpecificPage(int n) 
+   { return isOnSpecificPage(new Integer(n)) ; }
+   
+   boolean isOnSpecificPage(Integer p)
    {
       if (error) return false ;
       if (p == null) return false ;
@@ -1240,9 +1272,9 @@ abstract class Cel extends KissObject
       return pages.contains(p) ;
    }
 
-   // Return an indication if the cel is on all pages.
+   // Return an indication if the cel is on all pages as set in the CNF.
 
-   boolean isOnAllPage() { return allpages ; }
+   boolean isOnAllPage() { return allpages ;}
 
    // Return an indication if the cel is visible.
 
@@ -1267,6 +1299,10 @@ abstract class Cel extends KissObject
    // Return an indication if the data has been loaded.
 
    boolean isLoaded() { return loaded ; }
+
+   // Return an indication if data was loaded from an include file.
+
+   boolean isFromInclude() { return frominclude ; }
 
    // Return an indication if the image was imported as cel.
 
@@ -1352,6 +1388,7 @@ abstract class Cel extends KissObject
    {
       location.x += placement.x ;
       location.y += placement.y ;
+      unloadedmove = (!loaded) ;
    }
 
    // Reset the cel to its initial state.  This restores cel visibility,
@@ -1880,7 +1917,18 @@ abstract class Cel extends KissObject
 
    abstract void draw(Graphics g, Rectangle box) ;
 
+   // Determine if the cel can be drawn at its current position. 
+   // Only visible cels that intersect our drawing area can be drawn.
 
+   boolean isDrawable(Rectangle box) 
+   {
+   	if (error) return false ;
+		if (!visible) return false ;
+		Rectangle celBox = getBoundingBox() ;
+		Rectangle r = (box == null) ? celBox : box.intersection(celBox) ;
+		if (r.width < 0 || r.height < 0) return false ;   
+      return true ;
+   }
 
 
    // Object graphics methods
@@ -2337,7 +2385,7 @@ abstract class Cel extends KissObject
             ImageProducer ip = new FilteredImageSource(base,
                new PaletteFilter(cm,basecm,transparency,transparentcolor));
             filteredimage = Toolkit.getDefaultToolkit().createImage(ip) ;
-            MediaTracker tracker = new MediaTracker(component) ;
+            MediaTracker tracker = new MediaTracker(Kisekae.getKisekae()) ;
             tracker.addImage(filteredimage,0) ;
             try { tracker.waitForAll(500) ; }
             catch (InterruptedException e) { }
@@ -2386,7 +2434,7 @@ abstract class Cel extends KissObject
             ImageProducer ip = new FilteredImageSource(base,
                new PaletteFilter(cm,basecm,transparency,transparentcolor));
             filteredimage = Toolkit.getDefaultToolkit().createImage(ip) ;
-            MediaTracker tracker = new MediaTracker(component) ;
+            MediaTracker tracker = new MediaTracker(Kisekae.getKisekae()) ;
             tracker.addImage(filteredimage,0) ;
             try { tracker.waitForAll(500) ; }
             catch (InterruptedException e) { }
@@ -2432,7 +2480,7 @@ abstract class Cel extends KissObject
             ImageProducer ip = new FilteredImageSource(base,
                new PaletteFilter(cm,basecm,transparency,transparentcolor));
             filteredimage = Toolkit.getDefaultToolkit().createImage(ip) ;
-            MediaTracker tracker = new MediaTracker(component) ;
+            MediaTracker tracker = new MediaTracker(Kisekae.getKisekae()) ;
             tracker.addImage(filteredimage,0) ;
             try { tracker.waitForAll(500) ; }
             catch (InterruptedException e) { }
@@ -2465,7 +2513,7 @@ abstract class Cel extends KissObject
             ImageProducer ip = new FilteredImageSource(base,
                new PaletteFilter(cm,basecm,transparency,transparentcolor));
             filteredimage = Toolkit.getDefaultToolkit().createImage(ip) ;
-            MediaTracker tracker = new MediaTracker(component) ;
+            MediaTracker tracker = new MediaTracker(Kisekae.getKisekae()) ;
             tracker.addImage(filteredimage,0) ;
             try { tracker.waitForAll(500) ; }
             catch (InterruptedException e) { }

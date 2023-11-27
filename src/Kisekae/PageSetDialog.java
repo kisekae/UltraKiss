@@ -129,9 +129,13 @@ final class PageSetDialog extends KissDialog
       {
         	if (e.getClickCount() == 2)
          {
-           	int item = LIST.getSelectedIndex() ;
-            if (item < 0) return ;
-				group = pageset.getGroup(item) ;
+           	int g ;
+            Object o = LIST.getSelectedValue() ;
+            if (!(o instanceof String)) return ;
+            String [] s = ((String) o).trim().split(" ") ;
+            try { g = Integer.parseInt(s[0]) ; }
+            catch (NumberFormatException ex) { return ; }
+            group = (Group) Group.getByKey(Group.getKeyTable(),config.getID(),g) ;	
 				if (group == null) return ;
 				GroupDialog gd = new GroupDialog(me,group,pageset,config) ;
 				gd.show() ;
@@ -493,8 +497,7 @@ final class PageSetDialog extends KissDialog
 
          // A List Cels updates the list table to display the group cels.
 
-         if (command.equals(Kisekae.getCaptions().getString(
-             "ListObjectsMessage"))) {
+         if (command.equals(Kisekae.getCaptions().getString("ListObjectsMessage"))) {
             VIEW.setText(Kisekae.getCaptions().getString("ViewObjectMessage")) ;
             VIEW.setEnabled(false) ;
             LISTBTN.setText(Kisekae.getCaptions().getString("ListEventsMessage")) ;
@@ -506,10 +509,14 @@ final class PageSetDialog extends KissDialog
          // A View Group brings up a Group dialog.
 
          if (command.equals(Kisekae.getCaptions().getString("ViewObjectMessage"))) {
-            int item = LIST.getSelectedIndex() ;
-            if (item < 0)
-               return ;
-            group = pageset.getGroup(item) ;
+           	int g ;
+            Object o = LIST.getSelectedValue() ;
+            if (!(o instanceof String)) return ;
+            String [] s = ((String) o).trim().split(" ") ;
+            try { g = Integer.parseInt(s[0]) ; }
+            catch (NumberFormatException ex) { return ; }
+            group = (Group) Group.getByKey(Group.getKeyTable(),config.getID(),g) ;	
+				if (group == null) return ;
             GroupDialog gd = new GroupDialog(me, group, pageset, config) ;
             gd.show() ;
             return ;
@@ -599,19 +606,21 @@ final class PageSetDialog extends KissDialog
       // Calculate the overall page set event count as the page events plus
       // the potential group and cel events.
 
-      int groupcount = pageset.getGroupCount() ;
+      int groupcount = 0 ;
       int eventcount = pageset.getEventCount() ;
       Dimension d = (config != null) ? config.getSize() : new Dimension() ;
       for (int i = 0 ; ; i++)
       {
          group = pageset.getGroup(i) ;
          if (group == null) break ;
+         if (!group.isOnSpecificPage(page)) continue ;
+         groupcount++ ;
          eventcount += group.getEventCount() ;
          for (int j = 0 ; ; j++)
          {
 	         cel = group.getCel(j) ;
 	         if (cel == null) break ;
-	         if (!cel.isOnPage(page)) continue ;
+	         if (!cel.isOnSpecificPage(page)) continue ;
          	eventcount += cel.getEventCount() ;
          }
       }
@@ -682,12 +691,18 @@ final class PageSetDialog extends KissDialog
 		jScrollPane1.setColumnHeaderView(columns);
       listmodel.removeAllElements();
 
-		// Populate the display list with the group vector contents.
+		// Populate the display list with the group vector contents.  These
+      // groups are specific to the requested page.
 
 		for (int i = 0 ; ; i++)
 		{
 			group = pageset.getGroup(i) ;
-			if (group == null) break ;
+			if (group == null) 
+            break ;
+         Object o = group.getIdentifier() ;
+         int n = ((Integer) o).intValue() ;
+         if (!group.isOnSpecificPage(page)) 
+            continue ;
 
 			// Put the group in the list.  Identify the group characteristics.
 
@@ -698,7 +713,7 @@ final class PageSetDialog extends KissDialog
          {
 	         cel = group.getCel(j) ;
 	         if (cel == null) break ;
-	         if (!cel.isOnPage(page)) continue ;
+	         if (!cel.isOnSpecificPage(page)) continue ;
          	eventcount += cel.getEventCount() ;
          }
          String groupEventCount = "" + eventcount ;
@@ -723,7 +738,8 @@ final class PageSetDialog extends KissDialog
 	}
 
 
-   // A function to construct the event tree entries.
+   // A function to construct the event tree entries.  The events shown 
+   // are specific to the groups and cels on the requested page.
 
    private void showEvents()
    {
@@ -748,6 +764,8 @@ final class PageSetDialog extends KissDialog
       for (int n = 0 ; n < pageset.getGroupCount() ; n++)
       {
       	group = pageset.getGroup(n) ;
+			if (group == null) break ;
+         if (!group.isOnSpecificPage(page)) continue ;
 	      e = group.getEvents() ;
          appendevents(sorted,e) ;
 
@@ -757,7 +775,7 @@ final class PageSetDialog extends KissDialog
 	      {
 	         cel = group.getCel(j) ;
 	         if (cel == null) break ;
-	         if (page != null && !cel.isOnPage(page)) continue ;
+	         if (!cel.isOnSpecificPage(page)) continue ;
 	         e = cel.getEvents() ;
             appendevents(sorted,e) ;
          }

@@ -451,7 +451,6 @@ final class VideoDialog extends KissDialog
 
       // Rebuild the window.
 
-		addNotify() ;
 		validate() ;
 		toFront() ;
 		repaint() ;

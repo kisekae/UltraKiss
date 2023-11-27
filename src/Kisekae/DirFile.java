@@ -156,6 +156,7 @@ final class DirFile extends ArchiveFile
 
 	public void close()
 	{
+      if (opencount <= 0) return ;
 		if (OptionsDialog.getDebugControl() && pathname != null)
       	System.out.println("Close file " + pathname + ", Open count " + --opencount) ;
 		file = null ;

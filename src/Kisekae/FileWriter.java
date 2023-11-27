@@ -1380,7 +1380,8 @@ final class FileWriter extends KissFrame
 	      // Add the cel object entries to the contents vector.  We do not
          // add component or video cels here as they are handled below.
          // On a File Save only updated elements are written unless cels
-         // are being exported to a different format.
+         // are being exported to a different format.  We also do not write
+         // cels loaded from include files unless the cel was updated.
 
 	      int i = 0 ;
 	      Vector cels = c.getCels() ;
@@ -1391,6 +1392,8 @@ final class FileWriter extends KissFrame
 				if (cel.isInternal()) continue ;
             if (cel instanceof JavaCel) continue ;
             if (cel instanceof Video) continue ;
+            if (cel.isFromInclude() && !cel.isUpdated()) continue ;
+            if (OptionsDialog.getPagesAreScenes() && !cel.isOnSpecificPage(0)) continue ;
             if (!OptionsDialog.getExportCel() && !cel.isUpdated())
             {
                if (mode == SAVE) continue ;
@@ -1521,8 +1524,10 @@ final class FileWriter extends KissFrame
 	      while (palettes != null && i < palettes.size())
 	      {
 				Palette palette = (Palette) palettes.elementAt(i++) ;
+            if (palette.isError()) continue ;
 	         if (palette.isCopy()) continue ;
             if (!palette.isWritable()) continue ;
+            if (palette.isFromInclude() && !palette.isUpdated()) continue ;
             if (mode == SAVE && !palette.isUpdated()) continue ;
             if (mode == COPY && zip != null && zip.isDirectory() && directory != null &&
                directory.equals(zip.getDirectoryName()) && !palette.isUpdated()) continue ;
@@ -1566,8 +1571,10 @@ final class FileWriter extends KissFrame
 	      while (sounds != null && i < sounds.size())
 	      {
 				Audio audio = (Audio) sounds.elementAt(i++) ;
+            if (audio.isError()) continue ;
 	         if (audio.isCopy()) continue ;
             if (!audio.isWritable()) continue ;
+            if (audio.isFromInclude() && !audio.isUpdated()) continue ;
             if (mode == SAVE && !audio.isUpdated()) continue ;
             if (mode == COPY && zip != null && zip.isDirectory() && directory != null &&
                directory.equals(zip.getDirectoryName()) && !audio.isUpdated()) continue ;
@@ -1609,8 +1616,10 @@ final class FileWriter extends KissFrame
 			while (movies != null && i < movies.size())
 	      {
 				Video video = (Video) movies.elementAt(i++) ;
+            if (video.isError()) continue ;
 				if (video.isCopy()) continue ;
 				if (!video.isWritable()) continue ;
+            if (video.isFromInclude() && !video.isUpdated()) continue ;
             if (mode == SAVE && !video.isUpdated()) continue ;
             if (mode == COPY && zip != null && zip.isDirectory() && directory != null &&
                directory.equals(zip.getDirectoryName()) && !video.isUpdated()) continue ;
@@ -1655,6 +1664,7 @@ final class FileWriter extends KissFrame
 	      while (comps != null && i < comps.size())
 	      {
 				JavaCel cel = (JavaCel) comps.elementAt(i++) ;
+            if (cel.isError()) continue ;
 				if (cel.isCopy()) continue ;
 				if (!cel.isWritable()) continue ;
             if (mode == SAVE && !OptionsDialog.getComponentCel()) continue ;

@@ -116,6 +116,7 @@ final class Configuration extends KissObject
 	private Variable variable = null ;		// Variable storage
 	private AlarmTimer timer = null ;		// Primary alarm timer
    private GifTimer animator = null ;		// Primary cel animator
+   private SceneTimer scenetimer = null ;	// Primary scene memory unload
 	private EventHandler handler = null ;	// Primary event handler
 	private MediaFrame mediaframe = null ;	// Primary media player
    private String properties = null ;     // Doll properties pool name
@@ -157,6 +158,8 @@ final class Configuration extends KissObject
    private boolean activated = false ;		// True if configuration is active
 	private boolean copy = false ;			// True if file is a reload copy
 	private boolean changed = false ;		// True if object structure changed
+	private boolean closed = false ;       // True if confuuguration closed
+	private boolean flushed = false ;      // True if configuration flushed
    private boolean rgbborder = false ;    // True if border is rgb value
    private boolean restartable = true ;   // True if configuration can restart
    private boolean optionchange = false ; // True if options have changed
@@ -533,6 +536,10 @@ final class Configuration extends KissObject
 
 	GifTimer getAnimator() { return animator ; }
 
+	// Method to return our scene memory unload timer.
+
+	SceneTimer getSceneTimer() { return scenetimer ; }
+
 	// Method to return a reference to our primary event handler.
 
 	EventHandler getEventHandler() { return handler ; }
@@ -557,6 +564,10 @@ final class Configuration extends KissObject
 
 	void setAnimator(GifTimer t) { animator = t ; }
 
+	// Method to set our scene memory unload reference.
+
+	void setSceneTimer(SceneTimer t) { scenetimer = t ; }
+
 	// Method to set a reference to our primary event handler.
 
 	void setEventHandler(EventHandler h) { handler = h ; }
@@ -575,6 +586,10 @@ final class Configuration extends KissObject
 			file = ze.getPath() ;
       }
    }
+   
+   // Method to set our include files list.
+   
+   void setIncludeFiles(Vector v) {includefiles = v ; }
 
 	// Method to set our edit change indicator.
 
@@ -646,6 +661,14 @@ final class Configuration extends KissObject
       	if (((PageSet) pages.elementAt(i)).isChanged()) return true ;
       return false ;
    }
+
+	// Return our closed indicator.
+
+	boolean isClosed() { return closed ; }
+
+	// Return our flushed indicator.
+
+	boolean isFlushed() { return flushed ; }
 
 	// Return our option change indicator.
 
@@ -855,7 +878,7 @@ final class Configuration extends KissObject
 
 			// Read the entire file contents into memory.
 
-			System.out.println("Open configuration " + file) ;
+			System.out.println("Open configuration \"" + file + "\" (" + getID() + ")") ;
 			int n = 0, len = 0 ;
 			b = new byte[bytes] ;
 			while (n < bytes && (len = is.read(b,n,bytes-n)) >= 0)
@@ -894,6 +917,7 @@ final class Configuration extends KissObject
 	void openref(Configuration r) throws Exception
 	{
 		ref = r ;
+      ref.ref = null ;
 		FileOpen fileopen = ref.getFileOpen() ;
       if (fileopen == null) return ;
       zip = ref.getZipFile() ;
@@ -915,7 +939,7 @@ final class Configuration extends KissObject
       // On a restart we created a new zip file.  The old one should be
       // flushed to discard the old content entries.
       
-      if (zip != null) zip.flush() ;
+      if (zip != null && zip != newzip) zip.flush() ;
       zip = newzip ;
       ze = newze ;
 
@@ -930,7 +954,7 @@ final class Configuration extends KissObject
       setRestartable(ref.isRestartable()) ;
 		file = ref.getPath() ;
 		bytes = ref.getBytes() ;
-		System.out.println("Open configuration " + file) ;
+		System.out.println("Open configuration \"" + file + "\" (" + getID() + ")") ;
 
 		// Open the memory copy of our reference configuration file.
 
@@ -1360,7 +1384,8 @@ final class Configuration extends KissObject
 
       if (includefiles != null && includefiles.size() > 0)
       {
-         OptionsDialog.setCacheImage(true) ;
+//         OptionsDialog.setCacheImage(!OptionsDialog.getPagesAreScenes()) ;
+//         OptionsDialog.setCacheAudio(!OptionsDialog.getPagesAreScenes()) ;
          setRestartable(false) ;
       }
 	}
@@ -1426,13 +1451,14 @@ final class Configuration extends KissObject
          
          // If our cel is on the start page or we are caching images, then load.
          
-         if (c.isOnPage(startpage) || OptionsDialog.getCacheImage()) load = true ; 
+         if (c.isOnSpecificPage(startpage) || OptionsDialog.getCacheImage()) load = true ; 
          if (c instanceof Video) load = true ; 
          if (load) c.load(includefiles) ;
          
          // Retain the progress state.
-         
-         loadbytes += c.getBytes() ;
+
+         if (load && (c instanceof Video) && OptionsDialog.getCacheVideo()) loadbytes += c.getBytes() ;
+         if (load && !(c instanceof Video)) loadbytes += c.getBytes() ;
          if (c.isTruecolor()) ckiss = true ;
 			if (loader != null) loader.updateProgress(1) ;
 		}
@@ -1446,22 +1472,9 @@ final class Configuration extends KissObject
          if (loader instanceof FileLoader && ((FileLoader) loader).stop) break ;
 			Audio a = (Audio) sounds.elementAt(i++) ;
 			a.load(includefiles) ;
-         loadbytes += a.getBytes() ;
+         loadbytes += (OptionsDialog.getCacheAudio()) ? a.getBytes() : 0 ;
 			if (loader != null) loader.updateProgress(1) ;
 		}
-
-      // Close any INCLUDE files that were opened.
-
-      if (includefiles != null)
-      {
-         for (i = 0 ; i < includefiles.size() ; i++)
-         {
-            Object o = includefiles.elementAt(i) ;
-            if (!(o instanceof ArchiveFile)) continue ;
-            try { ((ArchiveFile) o).close() ; }
-            catch (IOException e) { }
-         }
-      }
 	}
 
 
@@ -2470,7 +2483,7 @@ final class Configuration extends KissObject
 	{
   		createtime = System.currentTimeMillis() ;
 		if (OptionsDialog.getDebugControl())
-			System.out.println("Configuration " + file + " begin activation.") ;
+			System.out.println("Configuration \"" + file + "\" (" + getID() + ")" + " begin activation.") ;
 
 		// Retain the initial states for all cels, groups, and pages.
 
@@ -2524,6 +2537,14 @@ final class Configuration extends KissObject
       animator.suspendTimer(true) ;
       animator.setEnabled(true) ;
 		animator.setPanelFrame(panel) ;
+
+		// If we are using pages as scenes, start the scene memory manager.
+
+      if (OptionsDialog.getPagesAreScenes())
+      {
+   		scenetimer = new SceneTimer() ;
+   		scenetimer.startTimer(cels) ;
+      }
 
 		// If we have FKiSS events, start the event handler threads.
 
@@ -2594,7 +2615,7 @@ final class Configuration extends KissObject
       if (mf != null) mf.updateMenuOptions() ;
 
 		if (OptionsDialog.getDebugControl())
-			System.out.println("Configuration " + file + " activated.") ;
+			System.out.println("Configuration \"" + file + "\" (" + getID() + ")" + " activated.") ;
 	}
 
 
@@ -2605,9 +2626,10 @@ final class Configuration extends KissObject
    void close() { close(false,true) ; }
 	void close(boolean restart, boolean resetoptions)
 	{
+      if (isClosed()) return ;
 		String s = (file == null) ? "" : file ;
 		if (OptionsDialog.getDebugControl())
-			System.out.println("Configuration " + s + " begin close.") ;
+			System.out.println("Configuration \"" + s + "\" (" + getID() + ")" + " begin close.") ;
 
       // Ensure that we can have no breakpoint restarts.
 
@@ -2620,6 +2642,7 @@ final class Configuration extends KissObject
       {
          stopTimer() ;
 			if (animator != null) animator.stopTimer() ;
+	      if (scenetimer != null) scenetimer.stopTimer() ;
 			EventHandler.stopEventHandler() ;
          EventHandler.clearEventQueue() ;
 	      EventHandler.setPanelFrame(null);
@@ -2644,10 +2667,12 @@ final class Configuration extends KissObject
 */
       // Terminate any configuration mediaplayer that is active.
 
-      if (mediaframe != null) mediaframe.stop() ;
+      if (mediaframe != null) 
+         mediaframe.stop() ;
       mediaframe = null ;
 		timer = null ;
       animator = null ;
+      scenetimer = null ;
 
       // If restarting from memory we must re-establish initial object
       // states.  Internal objects must be removed from the configuration
@@ -2716,8 +2741,13 @@ final class Configuration extends KissObject
 
          // Cancel any valuepool settings.
          
+         variables.clear() ;
+   		variable.clear() ;
          propertypool.clear() ;
-			System.out.println("Restart configuration " + s) ;
+         MainFrame mf = Kisekae.getMainFrame() ;
+         Object newconfigid = (mf != null) ? mf.getNewConfigID() : null ;
+         String newID = (newconfigid != null) ? newconfigid.toString() : "unknown" ;
+			System.out.println("Restarted configuration \"" + s + "\" (" + getID() + ") as (" + newID + ")") ;
          return ;
       }
 
@@ -2813,14 +2843,65 @@ final class Configuration extends KissObject
    		}
          zip = null ;
          ze = null ;
+
+         // Close any INCLUDE files that were opened.
+
+         if (includefiles != null)
+         {
+            for (int i = 0 ; i < includefiles.size() ; i++)
+            {
+               Object o = includefiles.elementAt(i) ;
+               if (!(o instanceof ArchiveFile)) continue ;
+               try 
+               { 
+                  ((ArchiveFile) o).close() ; 
+                  ((ArchiveFile) o).flush() ; 
+               }
+               catch (IOException e) { }
+            }
+         }
+         includefiles = null ;
       }
 
 		// Invoke the garbage collector.
 
-		System.out.println("Close configuration " + s) ;
+		System.out.println("Close configuration \"" + s + "\" (" + getID() + ")") ;
 		Runtime.getRuntime().gc() ;
+		try { Thread.currentThread().sleep(300) ; }
+		catch (InterruptedException ex) { }
+      closed = true ;
 	}
    
+   // A function to delete all object storage.  
+   
+   void flush()
+   {
+      super.flush() ;
+      is = null ;             // The file input stream
+      f = null;               // The buffered input stream
+      screen = null ;         // Dimension of the current screen
+      includefiles = null ;   // Set of expansion base files
+      palettes = null ;			// Set of palettes
+      cels = null ;				// Set of cels
+      pages = null ;				// Set of pages
+      groups = null ;			// Set of groups
+      alarms = null ;			// Set of alarms
+      labels = null ;			// Set of labels
+      sounds = null ;			// Set of audio files
+      movies = null ;			// Set of video files
+      comps = null ;			   // Set of component cels
+      frames = null ;  			// Set of animated cels
+      celgroups = null ;		// Set of cel groups
+      variable = null ;       // Variable storage
+      timer = null ;          // Primary alarm timer
+      animator = null ;       // Primary cel animator
+      scenetimer = null ;     // Primary scene memory unload
+      handler = null ;        // Primary event handler
+      mediaframe = null ;     // Primary media player
+      properties = null ;     // Doll properties pool name
+      variables = null ;      // FKiSS variables declared    
+      flushed = true ;
+   }
    
    // A function to stop the timer.  
    
@@ -3697,7 +3778,7 @@ final class Configuration extends KissObject
             // Watch for 0123456789 type page entries on older KiSS sets.
             // If we see these parse the individual digits as page numbers.
 
-            if (value.length() > 1 && OptionsDialog.getMaxPageSet() <= 10)
+            if (value.length() > 1 && !ultrakiss)
             {
                for (int digit = 0 ; digit < value.length() ; digit++)
                {
@@ -3746,7 +3827,7 @@ final class Configuration extends KissObject
             // Watch for 0123456789 type page entries on older KiSS sets.
             // If we see these parse the individual digits as page numbers.
 
-            if (value.length() > 1 && (!ultrakiss || OptionsDialog.getCompatibilityMode() != null))
+            if (value.length() > 1 && !ultrakiss)
             {
                for (int digit = 0 ; digit < value.length() ; digit++)
                {

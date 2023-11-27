@@ -234,8 +234,20 @@ final class AudioMedia extends Audio
 		if (!Kisekae.isMediaInstalled()) { error = true ; return ; }
 
 		if ("".equals(getPath())) return ;
-      if (!OptionsDialog.getCacheAudio() && zip != null) zip.connect() ;
       long time = System.currentTimeMillis() - Configuration.getTimestamp() ;
+      if (!OptionsDialog.getCacheAudio() && zip != null) 
+      {
+         try
+         {
+            zip.connect() ;
+            if (!zip.isOpen()) zip.open(); 
+         }
+         catch (IOException e)
+         {
+            error = true ;
+            System.out.println("[" + time + "] AudioMedia: " + getName() + " Unable to open " + zip + " on initialization");
+         }
+      }
 		if (OptionsDialog.getDebugSound())
 			System.out.println("[" + time + "] AudioMedia: " + getName() + " [" + playcount + "]" + " Initialization request.") ;
 
@@ -281,6 +293,7 @@ final class AudioMedia extends Audio
 
 		if (!error)
 		{
+         loaded = true ;
       	currentsound = player ;
          controller = new AudioListener() ;
 			player.addControllerListener((ControllerListener) controller) ;
@@ -406,13 +419,13 @@ final class AudioMedia extends Audio
       // interfere with the event handler FKissAction processing.  
       
       Runnable runner = new Runnable()
-      { public void run() { stop1(c,a,type) ; } } ;
+      { public void run() { stop1m(c,a,type) ; } } ;
       Thread runthread = new Thread(runner) ;
       runthread.setName("AudioMedia stop");
       runthread.start() ;
    }
    
-   static void stop1(Configuration c, Audio a, String type)
+   static void stop1m(Configuration c, Audio a, String type)
    {
       lock.lock() ;
       try
@@ -488,10 +501,20 @@ final class AudioMedia extends Audio
 
 	void close()
 	{
+      long time = System.currentTimeMillis() - Configuration.getTimestamp() ;
       if (!OptionsDialog.getCacheAudio() && zip != null)
       {
-      	System.out.println("AudioMedia: " + getName() + " call zip.disconnect()") ;
-         zip.disconnect() ;
+         if (OptionsDialog.getDebugSound())
+         	System.out.println("[" + time + "] AudioMedia: " + getName() + " call zip.disconnect()") ;
+//         try
+//         {
+            zip.disconnect() ;
+//            zip.close() ;
+//         }
+//         catch (IOException e)
+//         {
+//            System.out.println("[" + time + "] AudioMedia: " + getName() + " exception on close zip " + e.getMessage()) ;            
+//         }
       }
 		if (currentsound == null) return ;
 
@@ -501,7 +524,7 @@ final class AudioMedia extends Audio
       lock.lock() ;
       try
       {
-         long time = System.currentTimeMillis() - Configuration.getTimestamp() ;
+         time = System.currentTimeMillis() - Configuration.getTimestamp() ;
          if (OptionsDialog.getDebugSound())
             System.out.println("[" + time + "] AudioMedia: " + getName() + " [" + playcount + "]" + " Close request.") ;
          players.removeElement(me) ;
@@ -548,6 +571,8 @@ final class AudioMedia extends Audio
 		ds = null ;
       currentsound = null ;
 		loaded = false ;
+      opened = false ;
+      started = false ;
       hascallback = false ;
       callback = null ;
       controller = null ;
@@ -621,7 +646,6 @@ final class AudioMedia extends Audio
                System.out.println("[" + time + "] AudioMedia: " + getName() + " [" + playcount + "]" + " PrefetchCompleteEvent") ;
 			}
 
-
 			// EndOfMediaEvent occurs when the media file has played till the end.
 			// The player is now in the stopped state.
 
@@ -654,12 +678,10 @@ final class AudioMedia extends Audio
             }
          	started = false ;
 			}
-
-
+         
 			// If at any point the Player encountered an error - possibly in the
 			// data stream and it could not recover from the error, it generates
 			// a ControllerErrorEvent
-
 
 			else if (ce instanceof ControllerErrorEvent)
 			{
@@ -683,6 +705,7 @@ final class AudioMedia extends Audio
             lock.lock() ;
             try { players.removeElement(me) ; }
             finally { lock.unlock() ; }
+            loaded = false ;
 			}
 
 			// DurationUpdateEvent occurs when the player's duration changes or is

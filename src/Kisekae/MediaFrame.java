@@ -86,6 +86,8 @@ final class MediaFrame extends KissFrame
 	private Audio audio = null ;    			  	  	 	// The audio object
 	private Video video = null ;					  		// The video object
 	private Object currentmedia = null ;				// The media player object
+   private Object audiolistener = null ;           // The audio listener for object
+   private Object medialistener = null ;           // The media listener for object
 	private FileOpen fd = null ;							// The fileopen object
 	private Component visual = null ;					// The visual component
 	private Component control = null ;					// The control component
@@ -229,7 +231,8 @@ final class MediaFrame extends KissFrame
 
 	private void init()
 	{
-		setIconImage(Kisekae.getIconImage()) ;
+      frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+      setIconImage(Kisekae.getIconImage()) ;
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false) ;
       boolean applemac = OptionsDialog.getAppleMac() ;
 
@@ -961,6 +964,7 @@ final class MediaFrame extends KissFrame
 		if (audio != null)
       {
          audio.open() ;
+         
          if (audio.isError() && Kisekae.isMediaInstalled())
          {
             if (audio instanceof AudioSound)
@@ -1015,15 +1019,24 @@ final class MediaFrame extends KissFrame
       // Add listeners.
 
      	if (audio != null && currentmedia instanceof Sequencer)
-        	audio.addListener(new SequencerListener()) ;
+      {
+         audiolistener = new SequencerListener() ;
+        	audio.addListener(audiolistener) ;
+      }
      	if (audio != null && currentmedia instanceof Clip)
-        	audio.addListener(new ClipListener()) ;
+      {
+         audiolistener = new ClipListener() ;
+        	audio.addListener(audiolistener) ;
+      }
       if (Kisekae.isMediaInstalled())
       {
+         medialistener = new MediaListener() ;
         	if (audio != null && currentmedia instanceof Player)
-           	audio.addListener(new MediaListener()) ;
-        	if (video != null && currentmedia instanceof Player)
-           	video.addListener(new MediaListener()) ;
+           	audio.addListener(medialistener) ;
+         else if (video != null && currentmedia instanceof Player)
+           	video.addListener(medialistener) ;
+         else 
+            medialistener = null ;
       }
 
 		// Adjust the visual layout.
@@ -1035,9 +1048,12 @@ final class MediaFrame extends KissFrame
          	Player player = (Player) currentmedia ;
 				int state = player.getState() ;
 				realized = (state >= Player.Realized) ;
-            GainControl gc = player.getGainControl() ;
-            if (gc != null && volume.isSelected()) 
-               gc.setLevel(20f * (float) Math.log10(volumeadjust)) ;
+            if (realized)
+            {
+               GainControl gc = player.getGainControl() ;
+               if (gc != null && volume.isSelected()) 
+                  gc.setLevel(20f * (float) Math.log10(volumeadjust)) ;
+            }
          }
       	if (Kisekae.isMediaInstalled() && currentmedia instanceof Clip)
          {
@@ -1062,9 +1078,13 @@ final class MediaFrame extends KissFrame
       progress.setMinimum(0) ;
       progress.setMaximum(1000) ;
       progress.setValue(0) ;
-      if (timer != null) timer.stop() ;
-      timer = new Timer(300,timerTask) ;
-      timer.start() ;
+      if (timer != null) 
+         timer.start() ;
+      else 
+      {
+         timer = new Timer(300,timerTask) ;
+         timer.start() ;
+      }
 	}
 
    // Method to play a specific KiSS object.
@@ -1318,13 +1338,33 @@ final class MediaFrame extends KissFrame
 
 	public void close()
 	{
-   	closecheck(false) ;
+		if (!SwingUtilities.isEventDispatchThread())
+		{
+			Runnable awt = new Runnable()
+			{ public void run() { close() ; } } ;
+			SwingUtilities.invokeLater(awt) ;
+			return ;
+		}
+
+      if (OptionsDialog.getDebugControl())
+         System.out.println("Media Player " + me.getTitle() + " is closed.");       
+      closecheck(false) ;
       MainFrame mf = Kisekae.getMainFrame() ;
       Configuration config = (mf != null) ? mf.getConfig() : null ;
       if (config != null) config.setMediaFrame(null) ;
+      play.removeActionListener(this);
+      reset.removeActionListener(this);
+		list1.removeListSelectionListener(listListener);
+      if (timer != null) 
+      {
+         timer.removeActionListener(timerTask) ;
+         timer.stop() ;
+      }
+		removeWindowListener(this);
+      setVisible(false) ;
 		super.close() ;
 		flush() ;
-      dispose() ;
+      frame.dispose() ;
 	}
 
 
@@ -1333,6 +1373,7 @@ final class MediaFrame extends KissFrame
    public void stop()
    {
       suspend() ;
+      closeMedia() ;
       fireMediaStop() ;
       close() ;
    }
@@ -1575,8 +1616,8 @@ final class MediaFrame extends KissFrame
 		// Determine the preferred size.  The frame is centered if
       // necessary.
 
-      addNotify() ;
 		doLayout() ;
+           
       Dimension s = getPreferredSize() ;
       if (!(ko instanceof Video)) s.width = Math.max(s.width,400) ;
 		setSize(s) ;
@@ -1706,26 +1747,20 @@ final class MediaFrame extends KissFrame
 		if (audio != null)
       {
          audio.setLoader(null) ;
-      	audio.removeListener(audio.getListener()) ;
-      	if (audio.isInternal())
-            audio.close() ;
-         else
-            audio.stop() ;
+      	audio.removeListener(audiolistener) ;
+      	audio.removeListener(medialistener) ;
+         audio.stop(null,audio,null) ;
       }
 		if (video != null)
       {
          video.setLoader(null) ;
-      	video.removeListener(video.getListener()) ;
-      	if (video.isInternal())
-            video.close() ;
-         else
-            video.stop() ;
+      	video.removeListener(medialistener) ;
+         video.stop() ;
       }
       
       // Terminate any progress timing.
       
       if (timer != null) timer.stop() ;
-      timer = null ;
 
       // Release references.
 
@@ -1736,6 +1771,8 @@ final class MediaFrame extends KissFrame
 		control = null ;
       loader = null ;
 		currentmedia = null ;
+      audiolistener = null ;
+      medialistener = null ;
 		realized = false ;
 		Runtime.getRuntime().gc() ;
 	}
@@ -1854,12 +1891,14 @@ final class MediaFrame extends KissFrame
       Configuration config = (mf != null) ? mf.getConfig() : null ;
       FileOpen fileopen = (config != null) ? config.getFileOpen() : null ;
 		if (fd != null && fd != fileopen) fd.close() ;
+      aboutdialog = null ;
+      helper = null ;
       playze = null ;
       playlist = null ;
       playlistname = null ;
       timer = null ;
+      list1 = null ;
 		setVisible(false) ;
-		removeWindowListener(this);
 		getContentPane().removeAll() ;
 		getContentPane().removeNotify() ;
 	}

@@ -192,8 +192,8 @@ final class GroupDialog extends KissDialog
 		      {
 					cel = group.getCel(i) ;
 					if (cel == null) return ;
-					if (!cel.isOnPage(page)) continue ;
-               if (item-- == 0) break ;
+					if (!cel.isOnSpecificPage(page)) continue ;
+               if (item-- <= 0) break ;
 				}
 				CelDialog cd = new CelDialog(me,cel,group,config) ;
 				cd.show() ;
@@ -855,18 +855,17 @@ final class GroupDialog extends KissDialog
 
          if (command.equals(Kisekae.getCaptions().getString("ViewImageMessage")))
    		{
-           	int item = LIST.getSelectedIndex() ;
-            if (item < 0) return ;
-   	      for (int i = 0 ; ; i++)
-   	      {
-   				cel = group.getCel(i) ;
-   				if (cel == null) return ;
-   				if (!cel.isOnPage(page)) continue ;
-               if (item-- > 0) continue ;
-   				CelDialog cd = new CelDialog(me,cel,group,config) ;
-   				cd.show() ;
-   				return ;
-            }
+           	int c ;
+            Object o = LIST.getSelectedValue() ;
+            if (!(o instanceof String)) return ;
+            String [] s = ((String) o).trim().split(" ") ;
+            try { c = Integer.parseInt(s[0]) ; }
+            catch (NumberFormatException ex) { return ; }
+            cel = (Cel) Cel.getByKey(Cel.getKeyTable(),config.getID(),c) ;	
+				if (cel == null) return ;
+ 				CelDialog cd = new CelDialog(me,cel,group,config) ;
+ 				cd.show() ;
+  				return ;
    		}
 
    		// A View Page Set invokes the appropriate pageset context dialog.
@@ -1047,7 +1046,8 @@ final class GroupDialog extends KissDialog
                   loaded[i] = true ;
                   boolean opened = !zip.isOpen() ;
                   if (opened) zip.open() ;
-                  if (zip.isOpen()) cel.load() ;
+                  if (zip.isOpen() && config != null) 
+                     cel.load(config.getIncludeFiles()) ;
                   if (opened) zip.close() ;
                   if (OptionsDialog.getDebugLoad())
                   {
@@ -1236,7 +1236,7 @@ final class GroupDialog extends KissDialog
 		{
 			cel = group.getCel(i) ;
 			if (cel == null) break ;
-         if (!cel.isOnPage(page)) continue ;
+         if (!cel.isOnSpecificPage(page)) continue ;
 
 			// Put cel in list.
 

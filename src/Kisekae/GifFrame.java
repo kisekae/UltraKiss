@@ -64,12 +64,10 @@ import java.io.* ;
 import java.awt.* ;
 import java.awt.image.* ;
 import javax.swing.* ;
-import java.awt.geom.AffineTransform ;
 
 final class GifFrame
    implements Cloneable
 {
-	static private Component component = new Component() { } ;
 
 	// Cel image attributes
 
@@ -354,6 +352,11 @@ final class GifFrame
 	// Set the frame delay.
 
 	void setDelay(int n) { delay = n / 10 ; }
+
+	// Set a reference to the parent cel.  This is required when the
+   // frame is cloned for a cel copy.
+
+	void setCel(GifCel c) { cel = c ; }
 
 
 	// Set or clear the local palette copy from the global palette.
@@ -793,7 +796,7 @@ final class GifFrame
             PaletteFilter pf = new PaletteFilter(cm,basecm,transparency,transparentcolor);
         		ImageProducer ip = new FilteredImageSource(image.getSource(),pf) ;
         		filteredimage = Toolkit.getDefaultToolkit().createImage(ip) ;
-            MediaTracker tracker = new MediaTracker(component) ;
+            MediaTracker tracker = new MediaTracker(Kisekae.getKisekae()) ;
             tracker.addImage(filteredimage,0) ;
             try { tracker.waitForAll(500) ; }
             catch (InterruptedException e) { }
@@ -823,6 +826,20 @@ final class GifFrame
 			e.printStackTrace() ;
 		}
 	}
+
+   // Unload the gif frame.  This releases our image allocation.
+
+   void unload()
+   {
+      scaled = false ;
+      if (image != null) image.flush();
+      if (filteredimage != null) filteredimage.flush();
+      if (scaledimage != null) scaledimage.flush();
+      image = filteredimage = scaledimage = null ;
+      if (OptionsDialog.getDebugLoad())
+         System.out.println("Unload: " + toString());
+      cel = null ;
+   }
 
 
    // A function to construct a palette object for this frame.  Usually
@@ -891,7 +908,7 @@ final class GifFrame
       // Not sure why we require the media tracker, but cases exist where
       // the image does not display.
 
-		MediaTracker mt = new MediaTracker(component) ;
+		MediaTracker mt = new MediaTracker(Kisekae.getKisekae()) ;
 		mt.addImage(filteredimage,frame) ;
 		try { mt.waitForAll(500) ; }
 		catch (InterruptedException e) { }
@@ -964,7 +981,7 @@ final class GifFrame
       // Not sure why the mediatracker is required, but without this the
       // image does not always display.
 
-		MediaTracker mt = new MediaTracker(component) ;
+		MediaTracker mt = new MediaTracker(Kisekae.getKisekae()) ;
 		mt.addImage(filteredimage,0) ;
 		try { mt.waitForAll(500) ; }
 		catch (InterruptedException e) { }

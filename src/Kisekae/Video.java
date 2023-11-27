@@ -122,6 +122,7 @@ final class Video extends Cel
 	// State attributes
 
 	private boolean loaded = false ;			// True if data has been loaded
+	private boolean frominclude = false ;	// True if data from include file
 	private boolean initialized = false ;	// True if video is initialized
 	private boolean activated = false ;    // True if video visibility active
 	private boolean realized = false ;		// True if player is realized
@@ -249,6 +250,14 @@ final class Video extends Cel
 
 	void setLine(int l) { if (line == 0) line = l ; }
 
+   // Set the cel loaded state.  
+
+   void setLoaded(boolean b) { loaded = b ; }
+
+   // Indicate if loaded from an include file.  
+
+   void setFromInclude(boolean b) { frominclude = b ; }
+
 	// Set the configuration ID for this video file.
 
 	void setID(Object id) { cid = id ; }
@@ -295,9 +304,13 @@ final class Video extends Cel
 
 	boolean isRepeating() { return (repeatcount != 0) ; }
 
-	// Return an indication if the data has been loaded.
+   // Return an indication if the data has been loaded.
 
-	boolean isLoaded() { return (loaded || copy) ; }
+   boolean isLoaded() { return loaded ; }
+
+   // Return an indication if data was loaded from an include file.
+
+   boolean isFromInclude() { return frominclude ; }
 
 	// Return an indication if the video has been activated.
 
@@ -772,7 +785,7 @@ final class Video extends Cel
 	         {
 	         	loadCopy(c) ;
                copy = false ;
-               zip.addEntry(ze) ;
+               if (!c.isFromInclude()) zip.addEntry(ze) ;
                zip.setUpdated(ze,c.isUpdated()) ;
 	            return ;
             }
@@ -826,6 +839,7 @@ final class Video extends Cel
             {
                zip = ze.getZipFile() ;
                includename = (zip != null) ? zip.getFileName() : null ;
+               setFromInclude(true) ;
             }
          }
 
@@ -912,6 +926,7 @@ final class Video extends Cel
 		bytes = a.getBytes() ;
       setLastModified(a.lastModified()) ;
       setUpdated(a.isUpdated()) ;
+      setFromInclude(a.isFromInclude()) ;
       
       if (loader != null)
       {

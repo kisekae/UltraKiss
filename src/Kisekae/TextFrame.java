@@ -159,6 +159,7 @@ final class TextFrame extends KissFrame
    private JMenu formatMenu ;
    private JMenu windowMenu ;
    private JMenu helpMenu ;
+   private JMenuItem undoall = null ;
 	private JMenuItem update ;
 	private JMenuItem newdoc ;
 	private JMenuItem open ;
@@ -1290,6 +1291,9 @@ final class TextFrame extends KissFrame
 		JMenuItem redo = menu.add(redoAction) ;
       redo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y, accelerator));
       if (!applemac) redo.setMnemonic(KeyEvent.VK_R) ;
+      menu.add((undoall = new JMenuItem(Kisekae.getCaptions().getString("MenuEditUndoAll")))) ;
+      undoall.addActionListener(this) ;
+      undoall.setEnabled(false) ;
 		menu.addSeparator() ;
 
 		// These actions come from the default editor kit, but we rename
@@ -1765,6 +1769,7 @@ final class TextFrame extends KissFrame
 		undo.addEdit(e.getEdit()) ;
 		undoAction.updateUndoState() ;
 		redoAction.updateRedoState() ;
+      undoall.setEnabled(undo.canUndo()) ;
       textobject.setUpdated(true) ;
       setChanged() ;
 	}
@@ -2125,6 +2130,28 @@ final class TextFrame extends KissFrame
 				redoAction.actionPerformed(evt) ;
 				return ;
 			}
+
+         // An Undo All request rolls back all edit changes.
+
+         if (undoall == source)
+         {
+            if (!undo.canUndo()) return ;
+            int n = JOptionPane.showConfirmDialog(me,
+               Kisekae.getCaptions().getString("UndoAllConfirmText"),
+               Kisekae.getCaptions().getString("MenuEditUndoAll"),
+               JOptionPane.YES_NO_OPTION) ;
+            if (n != JOptionPane.YES_OPTION) return ;
+
+            // Undo everything.  Reset to initial state.
+
+            me.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
+            while (undo.canUndo()) undo.undo() ;
+            me.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
+            undo.discardAllEdits() ;
+            undoAction.updateUndoState() ;
+            redoAction.updateRedoState() ;
+            undoall.setEnabled(undo.canUndo());
+         }
 
 			// A Find request invokes the find/replace dialog.
 
@@ -2616,12 +2643,14 @@ final class TextFrame extends KissFrame
 			{
 				setEnabled(true) ;
 				UNDO.setEnabled(true) ;
+            undoall.setEnabled(true) ;
 				putValue(Action.NAME, undo.getUndoPresentationName()) ;
 			}
 			else
 			{
 				setEnabled(false) ;
 				UNDO.setEnabled(false) ;
+            undoall.setEnabled(false) ;
 				putValue(Action.NAME, Kisekae.getCaptions().getString("MenuEditUndo")) ;
 			}
 		}

@@ -103,6 +103,7 @@ final class AudioSound extends Audio
    private Object listener = null ;			// Last listener added
    private Object metalistener = null ;	// Internal sequencer listener
    private Object linelistener = null ;	// Internal line listener
+   private InputStream is = null ;        // Audio input data stream
    private final Object waithold = new Object() ; 
 
 	// Constructor for when we do not have a configuration.
@@ -135,6 +136,15 @@ final class AudioSound extends Audio
 	Object getContentDescriptor() { return (error) ? null : cd ; }
 
    // Method to return the last listener object added.
+   
+   // Method to return an input stream for this audio object.
+   // If we have already established an input stream then return it.
+   
+   InputStream getInputStream()
+   {
+      if (is != null) return is ;
+      return super.getInputStream() ;
+   }
 
 
    Object getListener() { return listener ; }
@@ -252,8 +262,20 @@ final class AudioSound extends Audio
 		started = false ;
 		if (error || (cache && b == null)) return ;
 		if ("".equals(getPath())) return ;
-      if (!OptionsDialog.getCacheAudio() && zip != null) zip.connect() ;
-		if (OptionsDialog.getDebugSound())
+      if (!OptionsDialog.getCacheAudio() && zip != null) 
+      {
+         try
+         {
+            zip.connect() ;
+            if (!zip.isOpen()) zip.open(); 
+         }
+         catch (IOException e)
+         {
+            error = true ;
+            System.out.println("AudioSound: " + getName() + " Unable to open " + zip + " on initialization");
+         }
+      }
+		if (!error && OptionsDialog.getDebugSound())
 			System.out.println("AudioSound: " + getName() + " Initialization request.") ;
    }
 
@@ -301,7 +323,7 @@ final class AudioSound extends Audio
          // Actually open the sound file. Get an input stream and create
          // a player.
          
-        	InputStream is = getInputStream() ;
+       	is = getInputStream() ;
          if (is == null) return ;
          try
          {
@@ -371,7 +393,7 @@ final class AudioSound extends Audio
                time = System.currentTimeMillis() - Configuration.getTimestamp() ;
 				   if (OptionsDialog.getDebugSound())
 					   System.out.println("[" + time + "] AudioSound: " + getName() + " [" + playcount + "]" + " Sound clip opened") ;
-               opened = true ;
+               loaded = true ;
                return ;
 				}
             
@@ -414,7 +436,7 @@ final class AudioSound extends Audio
                currentsound = sequencer ;
                metalistener = new SequencerListener() ;
 					sequencer.addMetaEventListener((MetaEventListener) metalistener) ;
-               opened = true ;
+               loaded = true ;
 					return ;
 				}
 
@@ -455,7 +477,7 @@ final class AudioSound extends Audio
                time = System.currentTimeMillis() - Configuration.getTimestamp() ;
 				   if (OptionsDialog.getDebugSound())
 					   System.out.println("[" + time + "] AudioSound: " + getName() + " [" + playcount + "]" + " MP3 player opened") ;
-               opened = true ;
+               loaded = true ;
                return ;
 				}
             catch (Exception ex)
@@ -516,7 +538,7 @@ final class AudioSound extends Audio
 
 	void play()
 	{
-      if (!loaded) return ;
+      if (!loaded && OptionsDialog.getCacheAudio()) return ;
 		if (!OptionsDialog.getSoundOn()) return ;
 
       // Run the sound playback activity in a separate thread so as to not
@@ -609,6 +631,7 @@ final class AudioSound extends Audio
                if (OptionsDialog.getDebugSound())
                   System.out.println("[" + time + "] AudioSound: " + getName() + " [" + playcount + "]" + " Clip is looping.") ;
             }
+            
 				clip.start() ;
             if (clip instanceof Mp3Clip)
                cd = ((Mp3Clip) clip).getContentDescriptor() ;
@@ -635,6 +658,8 @@ final class AudioSound extends Audio
 
             if (o == this)
             {
+               MainFrame mf = Kisekae.getMainFrame() ;
+               Configuration config = (mf != null) ? mf.getConfig() : null ;
                KissObject kiss = new AudioMedia(getZipFile(),getPath()) ;
                Audio a1 = (Audio) kiss ;
                a1.setIdentifier(getIdentifier()) ;
@@ -642,15 +667,13 @@ final class AudioSound extends Audio
                a1.setRepeat(getRepeat()) ;
                a1.setType(getType()) ;
                a1.setID(getID()) ;
-               a1.load() ;
+               a1.load((config != null) ? config.getIncludeFiles() : null) ;
                Audio.removeKey(Audio.getKeyTable(),cid,getPath().toUpperCase()) ;
                a1.setKey(a1.getKeyTable(),cid,a1.getPath().toUpperCase()) ;
                a1.setCopy(false) ;
                Enumeration enum1 = getEvents() ;
                while (enum1 != null && enum1.hasMoreElements())
                   a1.addEvent((Vector) enum1.nextElement()) ;
-               MainFrame mf = Kisekae.getMainFrame() ;
-               Configuration config = (mf != null) ? mf.getConfig() : null ;
                Vector sounds = (config != null) ? config.getSounds() : null ;
                int n = (sounds != null) ? sounds.indexOf(this) : -1 ;
                if (n >= 0) sounds.setElementAt(a1,n) ;
@@ -682,16 +705,17 @@ final class AudioSound extends Audio
 	{
       // Run the sound stop activity in a separate thread so as to not
       // interfere with the event handler FKissAction processing.  
-   
+/*   
       Runnable runner = new Runnable()
-      { public void run() { stop1(c,a,type) ; } } ;
+      { public void run() { stop1s(c,a,type) ; } } ;
       Thread runthread = new Thread(runner) ;
       runthread.setName("AudioSound stop");
       runthread.start() ;
    }
    
-   static void stop1(Configuration c, Audio a, String type)
+   static void stop1s(Configuration c, Audio a, String type)
    {
+        */
       lock.lock() ;
       try 
       {
@@ -763,9 +787,10 @@ final class AudioSound extends Audio
                   time = System.currentTimeMillis() - Configuration.getTimestamp() ;
                   if (OptionsDialog.getDebugSound())
                      System.out.println("[" + time + "] AudioSound: " + audio.getName() + " Sound clip stopped") ;
-                  Clip clip = (Clip) currentsound;
-                  if (clip.isRunning()) clip.stop() ;
-                  if (clip.isOpen()) clip.close() ;  // Linux reports NoLineAvailableException at times
+                  Clip clip = (Clip) currentsound ;
+                  clip.stop() ;
+                  clip.flush() ;
+                  clip.close() ;  // Linux reports NoLineAvailableException at times
                }
                catch (Exception e)
                {
@@ -792,17 +817,35 @@ final class AudioSound extends Audio
 	void close()
    {
       closeaudio() ;
+      try 
+      {
+         if (is != null) 
+            is.close() ;
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace() ;
+      }
       flush() ;
    }
    
 	private void closeaudio()
 	{
-      opened = false ;
+      if (error) return ;
       long time = System.currentTimeMillis() - Configuration.getTimestamp() ;
       if (!OptionsDialog.getCacheAudio() && zip != null)
       {
-         System.out.println("[" + time + "] AudioSound: " + getName() + " [" + playcount + "]" + " call zip.disconnect()") ;
-         zip.disconnect() ;
+         if (OptionsDialog.getDebugSound())
+            System.out.println("[" + time + "] AudioSound: " + getName() + " [" + playcount + "]" + " call zip.disconnect()") ;
+//         try
+//         {
+            zip.disconnect() ;
+//            zip.close() ;
+//         }
+//         catch (IOException e)
+//         {
+//            System.out.println("[" + time + "] AudioSound: " + getName() + " exception on close zip " + e.getMessage()) ;            
+//         }
       }
 
 		// Look for our player in the active play list.  If we find it,
@@ -828,8 +871,8 @@ final class AudioSound extends Audio
 			if (currentsound instanceof Sequencer)
 			{
             Sequencer sequencer = (Sequencer) currentsound ;
-				if (sequencer.isRunning()) sequencer.stop() ;
-				if (sequencer.isOpen()) sequencer.close() ;
+				sequencer.stop() ;
+				sequencer.close() ;
             time = System.currentTimeMillis() - Configuration.getTimestamp() ;
 				if (OptionsDialog.getDebugSound())
 					System.out.println("[" + time + "] AudioSound: " + getName() + " [" + playcount + "]" + " Sequencer closed") ;
@@ -838,8 +881,9 @@ final class AudioSound extends Audio
 			if (currentsound instanceof Clip)
 			{
 				Clip clip = (Clip) currentsound ;
-         	if (clip.isRunning()) clip.stop() ;
-            if (clip.isOpen()) clip.close() ;  // Linux reports NoLineAvailableException at times
+         	clip.stop() ;
+            clip.flush() ;
+            clip.close() ;  // Linux reports NoLineAvailableException at times
             time = System.currentTimeMillis() - Configuration.getTimestamp() ;
 				if (OptionsDialog.getDebugSound())
 					System.out.println("[" + time + "] AudioSound: " + getName() + " [" + playcount + "]" + " Sound clip closed") ;
@@ -852,6 +896,8 @@ final class AudioSound extends Audio
 	   }
 
       started = false ;
+      opened = false ;
+      loaded = false ;
       currentsound = null ;
       metalistener = null ;
       linelistener = null ;
@@ -863,8 +909,10 @@ final class AudioSound extends Audio
 
    void flush()
    {
+      super.flush() ;
 		b = null ;
 		ds = null ;
+      is = null ;
 		loaded = false ;
       opened = false ;
       started = false ;
@@ -918,10 +966,8 @@ final class AudioSound extends Audio
 				if (OptionsDialog.getDebugSound())
 					System.out.println("[" + time + "] AudioSound: " + getName() + " [" + playcount + "]" + " ClipStopEvent") ;
 
-				// Start the player in a new thread as player initiation can take
-				// time.  This frees the Player thread.  The repeat count is a count 
-            // of the number of times to play the sound.  If zero this is a 
-            // request to stop playing the sound.
+				// The repeat count is a count of the number of times to play the 
+            // sound.  If zero this is a request to stop playing the sound.
 
 				if (repeat)
 				{
@@ -941,6 +987,14 @@ final class AudioSound extends Audio
 					doCallback() ;
             	started = false ;
             }
+
+            // Flush the line to remove any queued data.
+            
+            Line line = event.getLine() ;
+            if (line instanceof DataLine)
+            {
+               ((DataLine) line).flush() ;
+            }
 			}
 
 
@@ -952,8 +1006,19 @@ final class AudioSound extends Audio
 				if (OptionsDialog.getDebugSound())
 					System.out.println("[" + time + "] AudioSound: " + getName() + " [" + playcount + "]" + " ClipCloseEvent") ;
             lock.lock() ;
-            try { players.removeElement(me) ; }
+            try 
+            { 
+               players.removeElement(me) ; 
+               if (is != null) 
+               {
+                  is.close() ;
+            		if (OptionsDialog.getDebugSound())
+                     System.out.println("[" + time + "] AudioSound: " + getName() + " input stream is closed") ;
+               }
+            }
+            catch (IOException e) { }     
             finally { lock.unlock() ; }
+            is = null ;
             stopping = false ;
             synchronized (waithold)
             {

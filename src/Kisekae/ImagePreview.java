@@ -1070,7 +1070,7 @@ class ImagePreview extends JPanel
          // Not sure why the mediatracker is required, but without this the
          // image does not always display.
 
-//          MediaTracker mt = new MediaTracker(component) ;
+//          MediaTracker mt = new MediaTracker(Kisekae.getKisekae()) ;
 //          mt.addImage(scaledimage,0) ;
 //          mt.waitForAll(500) ; 
          }

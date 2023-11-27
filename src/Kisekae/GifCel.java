@@ -62,7 +62,6 @@ import java.util.Vector ;
 
 final class GifCel extends Cel
 {
-	static private Component component = new Component() { } ;
 
 	// GIF cel file attributes
 
@@ -654,7 +653,7 @@ final class GifCel extends Cel
 
 		// Load a reference copy if we are accessing the same zip file as our
       // reference configuration.  On new data sets we may not yet have known
-      // paths to the files.
+      // paths to the files.  The original cel is unloaded to release memory.
 
 //		if (ref != null && zip != null && ref.isRestartable())
 		if (ref != null && zip != null)
@@ -673,8 +672,9 @@ final class GifCel extends Cel
 				if (c != null && c.isLoaded())
 	         {
 	         	loadCopy(c) ;
+               c.unload() ;
                copy = false ;
-               zip.addEntry(ze) ;
+               if (!c.isFromInclude()) zip.addEntry(ze) ;
                zip.setUpdated(ze,c.isUpdated()) ;
 	            return ;
             }
@@ -719,6 +719,7 @@ final class GifCel extends Cel
             {
                zip = ze.getZipFile() ;
                includename = (zip != null) ? zip.getFileName() : null ;
+               setFromInclude(true) ;
             }
          }
 
@@ -783,8 +784,7 @@ final class GifCel extends Cel
 			error = true ;
          String s = e.getMessage() ;
          if (s == null) s = e.toString() ;
-			showError("I/O Exception: " + s + "\n" + file) ;
-//			e.printStackTrace() ;
+			showError("I/O Exception, Cel " + file + ", " + s) ;
 		}
 
 		// Watch for general exceptions.
@@ -794,7 +794,7 @@ final class GifCel extends Cel
 			error = true ;
          String s = e.getMessage() ;
          if (s == null) s = e.toString() ;
-			showError("Exception: " + s + "\n" + file) ;
+			showError("Exception, Cel " + file + ", " + s) ;
          e.printStackTrace() ;
 		}
 
@@ -851,17 +851,25 @@ final class GifCel extends Cel
       if (c instanceof GifCel)
       {
          GifCel gc = (GifCel) c ;
-         Vector v = gc.getFrames() ;
-         frames = (v != null) ? new Vector() : null ;
-         if (v != null)
-            for (int i = 0 ; i < v.size() ; i++)
-               frames.addElement(((GifFrame) v.elementAt(i)).clone()) ;
          framedelay = gc.getInterval() ;
 	      framedispose = gc.getDisposal() ;
          backgroundcolor = gc.getBackgroundColor() ;
          baseoffset = gc.getBaseOffset() ;
 			maxloop = gc.getLoopLimit() ;
-			palette = gc.getPalette() ;
+			setPalette(gc.getPalette()) ;
+         Vector v = gc.getFrames() ;
+         frames = (v != null) ? new Vector() : null ;
+         if (v != null)
+         {
+            for (int i = 0 ; i < v.size() ; i++)
+            {
+               GifFrame gf = (GifFrame) ((GifFrame) v.elementAt(i)).clone() ;
+               gf.setCel(this) ;
+               if (!gf.isLocalColorTable())
+                  gf.setLocalPalette(false) ;
+               frames.addElement(gf) ;
+            }
+         }
       }
 
       // Set this cel's attributes from the cel copy.
@@ -885,6 +893,7 @@ final class GifCel extends Cel
       backgroundcolor = c.getBackgroundColor() ;
 		setLastModified(c.lastModified()) ;
       setUpdated(c.isUpdated()) ;
+      setFromInclude(c.isFromInclude()) ;
 
       if (loader != null)
       {
@@ -899,7 +908,12 @@ final class GifCel extends Cel
 		// Get the required transparency for this image copy.
 
 		palette = c.getPalette() ;
-      if (pid == null) pid = c.getPaletteID() ;
+      if (palette != null)
+      {
+     		palette.setIdentifier(this) ;
+   		pid = palette.getIdentifier() ;
+      }
+      super.setPalette(palette) ;
       if (truecolor) pid = null ;
 		if (transparency == c.getTransparency()) return ;
       changeTransparency(0) ;
@@ -910,8 +924,13 @@ final class GifCel extends Cel
 
 	void unload()
    {
-      frame = 0 ;
+      if (frames != null)
+      {
+         for (int i = 0 ; i < frames.size() ; i++)
+            ((GifFrame) frames.elementAt(i)).unload() ;
+      }
 		frames = new Vector() ;
+      source = null ;
       super.unload() ;
    }
 

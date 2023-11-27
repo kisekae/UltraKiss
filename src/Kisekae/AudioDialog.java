@@ -895,7 +895,6 @@ final class AudioDialog extends KissDialog
 					jPanel8.add(comp, new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0
 						,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
 						new Insets(0, 0, 0, 0), 0, 0)) ;
-				me.addNotify() ;
 				me.validate() ;
 				me.repaint() ;
 			}

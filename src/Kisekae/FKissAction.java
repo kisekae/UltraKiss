@@ -84,7 +84,6 @@ final class FKissAction extends KissObject
    private FKissEvent event = null ;		// Parent event for this action
    private Variable variable = null ;		// Our variable storage
    private Alarm alarm = null ;		      // The action alarm for timers
-   private MediaFrame mf = null ;		   // The configuration media frame
    private String comment = null ;			// Action comment text
    private String message = null ;			// Notify box message
    private Object [] skip = null ;        // Skip actions data buffer
@@ -421,7 +420,7 @@ final class FKissAction extends KissObject
                
          // Stop the media player if requested.  
 
-         mf = (config == null) ? null : config.getMediaFrame() ;
+         MediaFrame mf = (config == null) ? null : config.getMediaFrame() ;
          if (mf != null && ("".equals(o1) || "silence.wav".equals(o1)))
          {
             Runnable runner = new Runnable()
@@ -532,8 +531,8 @@ final class FKissAction extends KissObject
                {
                   public void run()
                   {
-                     MainFrame mf = Kisekae.getMainFrame() ;
-                     if (mf != null) mf.debugFKiss(msg) ;
+                     MainFrame mfm = Kisekae.getMainFrame() ;
+                     if (mfm != null) mfm.debugFKiss(msg) ;
                   }
                } ;
                if (!Kisekae.isBatch())
@@ -1261,6 +1260,7 @@ final class FKissAction extends KissObject
             KissObject parent = primary.getParent() ;
             kiss.updateMoveRestrictions(kiss.getChildren()) ;
             if (parent != null) parent.updateMoveRestrictions(parent.getChildren()) ;
+            Rectangle kb = kiss.getBoundingBox() ;
             box = r.union(kiss.getBoundingBox()) ;
             
             // Fire any object overlap or collision events if the object has
@@ -1322,7 +1322,7 @@ final class FKissAction extends KissObject
             // Suspend the media player if it is active and we are starting
             // a music file.
 
-            mf = (config == null) ? null : config.getMediaFrame() ;
+            MediaFrame mf = (config == null) ? null : config.getMediaFrame() ;
             if (mf != null && code == 18)
             {
                if (OptionsDialog.getSuspendMedia())
@@ -1373,8 +1373,8 @@ final class FKissAction extends KissObject
             {
                public void run()
                {
-                  MainFrame mf = Kisekae.getMainFrame() ;
-                  PanelFrame panel = (mf != null) ? mf.getPanel() : null ;
+                  MainFrame mfm = Kisekae.getMainFrame() ;
+                  PanelFrame panel = (mfm != null) ? mfm.getPanel() : null ;
                   if (panel != null) panel.quit() ;
                }
             } ;
@@ -2793,8 +2793,9 @@ final class FKissAction extends KissObject
             {
                if (mf != null)
                {
+                  MediaFrame mf1 = mf ;
                   Runnable runner = new Runnable()
-                  { public void run() { mf.stop() ; } } ;
+                  { public void run() { mf1.stop() ; } } ;
                   Thread runthread = new Thread(runner) ;
                   runthread.start() ;
                   if (config != null) config.setMediaFrame(null) ;
@@ -3283,8 +3284,8 @@ final class FKissAction extends KissObject
             if ("setoption".equalsIgnoreCase(vs1))
             {
                OptionsDialog.setOption(vs2,vs3) ;
-               MainFrame mf = Kisekae.getMainFrame() ;
-               OptionsDialog opt = (mf != null) ? mf.getOptionsDialog() : null ;
+               MainFrame mfm = Kisekae.getMainFrame() ;
+               OptionsDialog opt = (mfm != null) ? mfm.getOptionsDialog() : null ;
                if (opt != null)
                {
                   opt.setControls() ;

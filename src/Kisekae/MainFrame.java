@@ -107,6 +107,7 @@ final public class MainFrame extends KissFrame
    private String title = null ;          // User frame title
 
 	private Configuration config = null ;	// The configuration object
+   private Object newconfigid = null ;    // The new configuration ID
    private FileLoader loader = null ;		// The file loader object
 	private FileOpen fileopen = null ;		// The current file open object
 	private Color background = null ;		// The panel background color
@@ -346,6 +347,7 @@ final public class MainFrame extends KissFrame
 
 	void init(Configuration config)
 	{
+      closeframe() ;
 		fileopen = config.getFileOpen() ;
 		if (fileopen == null) return ;
 		loader = new FileLoader(this,config) ;
@@ -390,7 +392,7 @@ final public class MainFrame extends KissFrame
    {
    	if (loader == null) return ;
       Configuration c = loader.getNewConfiguration() ;
-      loader.setNewConfiguration(null) ;
+      newconfigid = (c != null) ? c.getID() : null ;
    	initframe(c) ;
    }
 
@@ -398,14 +400,18 @@ final public class MainFrame extends KissFrame
 	{
 		try
 		{
-         // Close any reference file if it was opened.
-
+         // Close any reference file if it was opened.  Note, if the zip file
+         // is closed the file is opened again when loading cels in PanelFrame.  
+         // This creates new zip entries that are different objects from those 
+         // stored and referenced in cels and other KissObjects. This leads to 
+         // a zipentry memory leak on restarts.
+/*
          if (config != null)
          {
             ArchiveFile refzip = config.getZipFile() ;
             if (refzip != null && refzip.isOpen()) refzip.close() ;
          }
-
+*/
 			// If the load was cancelled restore our old fileopen object.
 
 			if (c == null)
@@ -416,10 +422,16 @@ final public class MainFrame extends KissFrame
 				if (m != null) m.setFileOpen(fileopen) ;
 		      KissObject.setLoader(null) ;
             Kisekae.setLoaded(false) ;
-            loader = null ;
             closeframe(); // cancel on syntax error CNF reload
       		if (fileopen != null) fileopen.close() ;
-				return ;
+            if (loader != null) 
+            {
+               loader.setNewConfiguration(null) ;
+               loader.close() ;
+            }
+		      KissObject.setLoader(null) ;
+            loader = null ;			
+            return ;
 			}
          
          // If this initialization is due to a restart request where we
@@ -446,10 +458,9 @@ final public class MainFrame extends KissFrame
 
 			closeconfig((c == config || restart),false) ;
 			config = c ;
-			showStatus("Initializing " + config.getName() + " ...") ;
+			showStatus("Initializing \"" + config.getName() + "\" (" + config.getID() + ")" + " ...") ;
    		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
          if (loader != null) loadtext = loader.getLoadText() ;
-         loader = null ;
          
          // Restore any retained audio and video files from the previous
          // configuration if we restarted our set.  
@@ -497,7 +508,7 @@ final public class MainFrame extends KissFrame
          // waiting on a successful load. Open an FKiSS trace
          // dialog if required.
 
-			showStatus("Activating " + config.getName() + " ...") ;
+			showStatus("Activating \"" + config.getName() + "\" (" + config.getID() + ")" + " ...") ;
          traceFKiss(mainmenu.tracefkiss.isSelected()) ;
 			config.activate(panel) ;
 			callback.doClick() ;
@@ -531,7 +542,7 @@ final public class MainFrame extends KissFrame
 
 			// Perform any events keyed on this set first becoming visible.
 
-			showStatus("Beginning " + config.getName() + " ...") ;
+			showStatus("Beginning \"" + config.getName() + "\" (" + config.getID() + ")" + " ...") ;
          panel.setVisible(true) ;
 			Vector v = handler.getEvent("begin") ;
 			EventHandler.fireEvents(v,panel,Thread.currentThread(),null) ;
@@ -626,8 +637,16 @@ final public class MainFrame extends KissFrame
       fitScreen(getFitScreen(),false) ;
 		showStatus(null) ;
       Kisekae.setLoaded(config != null) ;
+      if (loader != null)
+      {
+         loader.setNewConfiguration(null) ;
+         loader.close() ;
+      }
       KissObject.setLoader(null) ;
       loader = null ;
+		Runtime.getRuntime().gc() ;
+		try { Thread.currentThread().sleep(300) ; }
+		catch (InterruptedException ex) { }
 	}
    
    
@@ -683,7 +702,7 @@ final public class MainFrame extends KissFrame
 
 		if (config != null)
 		{
-			showStatus("Closing " + config.getName() + " ...") ;
+			showStatus("Closing \"" + config.getName() + "\" (" + config.getID() + ")" + " ...") ;
 			EventHandler handler = config.getEventHandler() ;
 			if (handler != null && !restart && handler.isActive())
 			{
@@ -748,7 +767,6 @@ final public class MainFrame extends KissFrame
 
 		// Close our frame.
 
-      KissObject.setLoader(null) ;
       config = null ;
       title = null ;
 		closeframe() ;
@@ -1198,6 +1216,15 @@ final public class MainFrame extends KissFrame
 	// Return a reference to our current configuration.
 
 	Configuration getConfig() { return config ; }
+
+	// Return a reference to our new configuration.
+
+	Configuration getNewConfig() 
+   { return (loader != null) ? loader.getNewConfiguration() : null ; }
+
+	// Return the new configuration ID.
+
+	Object getNewConfigID() { return newconfigid ; }
 
 	// Return a reference to our current panel frame.
 
@@ -1840,6 +1867,12 @@ final public class MainFrame extends KissFrame
 
 	void restart()
 	{
+      if (!EventHandler.isActive()) 
+      {
+   		setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
+         return ;
+      }
+      
 		if (config != null && (config.isUpdated() || config.isOptionChanged()))
 		{
       	if (config.isChanged())
@@ -1879,6 +1912,22 @@ final public class MainFrame extends KissFrame
 			}
 		}
 
+      // Close any established trace window.
+         
+      if (trace != null)
+      {
+         traceFKiss(false) ;
+         mainmenu.tracefkiss.setState(false) ;
+      }
+      
+      // Close any internal Media Player currently running
+      
+      if (config != null)
+      {
+         MediaFrame mf = config.getMediaFrame() ;
+         if (mf != null) mf.stop() ;
+      }
+
       // Initialize the current configuration.  If the configuration has
       // changed we must reload it, otherwise we simply re-initialize the
       // current values.
@@ -1886,7 +1935,8 @@ final public class MainFrame extends KissFrame
       restart = true ;
       if (config != null)
       {
-         showStatus("Restart " + config.getName() + " ...") ;
+         showStatus("Restart \"" + config.getName() + "\" (" + config.getID() + ")" + " ...") ;
+   		System.out.println("Restart configuration \"" + config.getName() + "\" (" + config.getID() + ")") ;
          if (!config.isRestartable())
             init(config) ;
          else
@@ -2124,8 +2174,7 @@ final public class MainFrame extends KissFrame
       }
       catch (Throwable e) { }
       
-		super.close() ;
-		super.dispose() ;
+      dispose() ;
       
       if (!kisekae.inApplet()) 
          System.exit(0) ;
@@ -2140,6 +2189,21 @@ final public class MainFrame extends KissFrame
 		super.dispose() ;
    }
 
+
+	// Remove references to objects.
+
+	void flush()
+	{
+      removeKeyListener(this) ;
+		removeWindowListener(this) ;
+		removeComponentListener(this) ;
+		about = null ;
+		loader = null ;
+      fileopen = null ;
+      config = null ;
+   }
+
+   
 	// Close the panel frame.
 
 	void closepanel()
@@ -2181,7 +2245,7 @@ final public class MainFrame extends KissFrame
          {
             public void run()
             {
-               showStatus("Exit " + config.getName() + " ...") ;
+               showStatus("Exit \"" + config.getName() + "\" ...") ;
                closetimer = new Timer(10000,Kisekae.getMainFrame()) ;
                EventHandler handler = config.getEventHandler() ;
                closetimer.setRepeats(false) ;
