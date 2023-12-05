@@ -1382,6 +1382,8 @@ final class FileWriter extends KissFrame
          // On a File Save only updated elements are written unless cels
          // are being exported to a different format.  We also do not write
          // cels loaded from include files unless the cel was updated.
+         // Unloaded cels are also not written if they were not originally
+         // present in the configuration archive.
 
 	      int i = 0 ;
 	      Vector cels = c.getCels() ;
@@ -1393,12 +1395,16 @@ final class FileWriter extends KissFrame
             if (cel instanceof JavaCel) continue ;
             if (cel instanceof Video) continue ;
             if (cel.isFromInclude() && !cel.isUpdated()) continue ;
-            if (OptionsDialog.getPagesAreScenes() && !cel.isOnSpecificPage(0)) continue ;
             if (!OptionsDialog.getExportCel() && !cel.isUpdated())
             {
                if (mode == SAVE) continue ;
                if (mode == COPY && zip != null && zip.isDirectory() && 
                   directory != null && directory.equals(zip.getDirectoryName())) continue ;
+            }
+            if (!cel.isLoaded() && czip != null)
+            {
+               Object o = czip.getEntry(cel.getPath(), true) ;
+               if (o == null) continue ;
             }
             
             // Create a name for this cel if necessary.

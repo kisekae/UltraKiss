@@ -339,6 +339,7 @@ final class EventHandler extends KissObject
     // FKiSS 5 additional commands for cloned objects.
   
     "letcloned",           // [160] Cloned object source
+    "letaudio",            // [161] Last audio name started
 	} ;
 
    // FKiSS event specification levels.
@@ -370,7 +371,7 @@ final class EventHandler extends KissObject
       5,5,5,5,5,5,5,5,5,5,5,
       4,4,4,4,4,4,
       5,5,5,5,5,
-      5 } ;
+      5,5 } ;
 
    // FKiSS event mandatory number of parameters.
 
@@ -401,7 +402,7 @@ final class EventHandler extends KissObject
       1,2,0,1,1,0,1,1,1,0,2,
       3,1,2,2,1,0,
       1,1,2,2,6,
-      2 } ;
+      2,1 } ;
 
    // FKiSS event valid parameter types by parameter position.
    // These are according to the fuzzy FKiSS specifications.
@@ -470,7 +471,7 @@ final class EventHandler extends KissObject
       132,132,7,132,20,12,4,4,12,0,132,
       76,16,132,16,16,0,
       132,132,132,132,132, 
-      132 },
+      132,4 },
       
       { 0,0,0,0,76,76,76,76,76,76,0,12,5,5,12,12,12,0,0,0,0,0,12,12,0,0,12,12,0,12,12,
       0,0,76,76,0,12,12,12,12,12,12,12,5,5,5,39,0,6,0,0,0,39,39,39,12,12,12,12,0,0,12,
@@ -487,7 +488,7 @@ final class EventHandler extends KissObject
       20,20,0,0,20,0,12,0,0,0,12,
       12,0,16,28,0,0,
       0,0,6,20,12, 
-      5 },
+      5,0 },
       
       { 0,0,0,0,12,12,12,12,12,12,0,12,12,12,12,12,12,0,0,0,0,0,12,0,0,0,0,0,0,0,0,
       0,0,76,76,0,0,12,12,12,12,12,12,0,0,0,0,0,0,0,0,0,39,39,0,0,0,0,0,0,0,0,
@@ -504,7 +505,7 @@ final class EventHandler extends KissObject
       20,20,0,0,20,0,0,0,0,0,0,
       132,0,0,0,0,0,
       0,0,20,12,12, 
-      0},
+      0,0 },
       
       { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
       0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -521,7 +522,7 @@ final class EventHandler extends KissObject
       20,20,0,0,20,0,0,0,0,0,0,
       0,0,0,0,0,0,
       0,0,0,12,12, 
-      0 }
+      0,0 }
       } ;
       
 
@@ -547,7 +548,7 @@ final class EventHandler extends KissObject
       132,132,7,132,20,12,4,4,12,0,132,
       76,16,132,16,16,0,
       132,132,132,132,132,
-      132 },
+      132,4 },
       
       { 0,0,0,0,76,76,76,76,76,76,0,12,5,5,12,12,12,0,0,0,0,0,12,12,0,0,12,12,0,12,12,
       0,0,76,76,0,12,12,12,12,12,12,12,5,5,5,39,0,6,0,0,0,39,39,39,12,12,12,12,0,0,12,
@@ -564,7 +565,7 @@ final class EventHandler extends KissObject
       20,20,0,0,20,0,12,0,0,0,12,
       12,0,16,28,0,0,
       0,0,6,20,12,
-      5 },
+      5,0 },
       
       { 0,0,0,0,12,12,12,12,12,12,0,12,12,12,12,12,12,0,0,0,0,0,12,0,0,0,0,0,0,0,0,
       0,0,76,76,0,0,12,12,12,12,12,12,0,0,0,0,0,0,0,0,0,39,39,0,0,0,0,0,0,0,0,
@@ -581,7 +582,7 @@ final class EventHandler extends KissObject
       20,20,0,0,20,0,0,0,0,0,0,
       132,0,0,0,0,0,
       0,0,20,12,12,
-      0 },
+      0,0 },
       
       { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
       0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -598,7 +599,7 @@ final class EventHandler extends KissObject
       20,20,0,0,20,0,0,0,0,0,0,
       0,0,0,0,0,0,
       0,0,0,12,12,
-      0 }
+      0,0 }
       } ;
 
    // FKiSS action valid parameter types by parameter position.
@@ -626,7 +627,7 @@ final class EventHandler extends KissObject
       148,132,7,132,20,12,4,4,12,0,132,
       76,16,132,16,16,0,
       132,132,132,132,132,
-      132 },
+      132,4 },
       
       { 0,0,0,28,76,76,76,76,76,76,0,12,7,7,12,12,12,0,12,0,28,0,12,12,0,12,12,12,0,12,12,
       28,28,76,76,0,540,12,12,12,12,12,12,7,7,7,39,0,6,0,0,39,39,39,39,28,28,28,28,0,0,12,
@@ -643,7 +644,7 @@ final class EventHandler extends KissObject
       20,28,0,0,20,0,12,0,0,0,12,
       12,0,16,28,0,0,
       0,0,6,20,12,
-      5 },
+      5,0 },
       
       { 0,0,0,28,12,12,12,12,12,12,0,12,12,12,12,12,12,0,0,0,28,0,12,0,0,0,28,28,0,0,0,
       28,28,76,76,0,0,12,12,12,12,12,12,0,0,0,0,0,0,0,0,0,39,39,0,0,0,0,0,0,0,0,
@@ -660,7 +661,7 @@ final class EventHandler extends KissObject
       20,28,0,0,20,0,0,0,0,0,0,
       132,0,0,0,0,0,
       0,0,20,12,12,
-      0 },
+      0,0 },
       
       { 0,0,0,28,28,28,28,28,28,28,0,24,24,24,24,24,24,0,0,0,28,0,0,0,0,0,28,0,0,0,0,
       28,28,28,28,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -677,7 +678,7 @@ final class EventHandler extends KissObject
       20,20,0,0,20,0,0,0,0,0,0,
       0,0,0,0,0,0,
       0,0,0,12,12,
-      0 }
+      0,0 }
       } ;
 
 
@@ -908,6 +909,7 @@ final class EventHandler extends KissObject
          signatures.put("math","math(variable,function,operand1,operand2,...) ; Math function library") ;
          signatures.put("format","format(variable,number,maxfraction,minfraction,maxint,minint) ; Decimal format function") ;
          signatures.put("letcloned","format(variable,object) ; Returns the source objecy number if cloned") ;
+         signatures.put("letaudio","format(variable) ; Returns the last sound name played") ;
       }
    }
 

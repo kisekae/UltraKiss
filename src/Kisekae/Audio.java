@@ -72,6 +72,8 @@ import javax.swing.JButton ;
 import javax.sound.sampled.* ;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.Collections;
+import java.util.Comparator;
 
 
 abstract class Audio extends KissObject
@@ -98,6 +100,7 @@ abstract class Audio extends KissObject
    protected int playcount = 0 ;             // Number of play requests
    protected String includename = null ;     // Name of include file used
    protected InputStream is = null ;         // Audio input data stream
+   protected long starttime = 0 ;            // Time when playback started
 
 	// State attributes
 
@@ -285,9 +288,17 @@ abstract class Audio extends KissObject
 
 	int getLatency() { return 0 ; }
 
-	// Returnt the repeat count.
+	// Return the repeat count.
 
 	int getRepeat() { return repeatcount ; }
+
+	// Return the playback start time.
+
+	long getStartTime() { return starttime ; }
+
+	// Set the playback start time.
+
+	void setStartTime(long n) { starttime = n ; }
 
 	// Return the copyright text.
 
@@ -431,6 +442,30 @@ abstract class Audio extends KissObject
       }
       catch (IOException e) { input = null ; }
       return input ;
+   }
+   
+   // Method to get last sound played.
+   
+   static String getLastAudio()
+   {
+      if (players == null) return null ;
+      if (players.size() == 0) return null ;
+      Vector v = (Vector) players.clone() ;
+      Collections.sort(v, new Comparator() 
+      {
+         public int compare(Object o1, Object o2)
+         {
+            if (!(o1 instanceof Audio)) return 0 ;
+            if (!(o2 instanceof Audio)) return 0 ;
+            if (((Audio) o1).getStartTime() > ((Audio) o2).getStartTime()) return -1 ;
+            if (((Audio) o1).getStartTime() < ((Audio) o2).getStartTime()) return 1 ;
+            return 0 ;
+         }
+      }) ;
+      Object o = v.elementAt(0) ;
+      if (!(o instanceof Audio)) return null ;
+      Audio a = (Audio) o ;
+      return (a.getWriteName()) ;
    }
 
 
@@ -619,7 +654,6 @@ abstract class Audio extends KissObject
    
    void closeInputStream() throws IOException
    {
- System.out.println("Audio: closeInputStream audio="+this.getName()+" is="+is) ;
       if (is == null) return ;
       is.close() ;
    }

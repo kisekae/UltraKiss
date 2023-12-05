@@ -68,6 +68,7 @@ final class MediaLoad extends Thread
    private KissFrame parent = null ;               // The parent frame
    private ArchiveFile zip = null ;                // The media zip file
    private boolean opened = false ;                // True if zip file opened
+   private boolean active = false ;                // True if loader is running
 
 	// Our update callback button that other components can attach
 	// listeners to.  The callback is fired when the load is complete.
@@ -84,6 +85,10 @@ final class MediaLoad extends Thread
 
    KissObject getKissObject() { return ko ; }
 
+   // Return our active state.
+
+   boolean isActive() { return active ; }
+
 
 
 	// Method to load a media object.   The load is performed asynchronously.
@@ -91,7 +96,8 @@ final class MediaLoad extends Thread
 
 	public void run()
 	{
-      if (OptionsDialog.getDebugControl())
+      active = true ;
+      if (OptionsDialog.getDebugSound())
          System.out.println("MediaLoad: loading " + ko) ;
 
       // Ensure the file is open.
@@ -125,23 +131,39 @@ final class MediaLoad extends Thread
             v.init() ;
          }
 
-         // Close the archive file.
+         // Close the archive file.  Note, close() can cause problems
+         // if we look for another entry in the zip file.
 
          if (opened && zip != null)
          {
             zip.disconnect() ;
-            zip.close() ;
+//          zip.close() ;
          }
+         
+         // If we were interrupted then stop.
+         
+         if (Thread.currentThread().isInterrupted())
+            throw new InterruptedException() ;
 
          // Signal the load is complete.
          
          callback.doClick() ;
+         if (OptionsDialog.getDebugSound())
+            System.out.println("MediaLoad: complete " + ko + " file " + zip) ;         
    	}
+      
+      catch (InterruptedException e)
+      {
+         if (OptionsDialog.getDebugSound())
+            System.out.println("MediaLoad: interrupted " + ko + " file " + zip) ;         
+      }
 
       catch (IOException e)
       {
          System.out.println("MediaLoad: IOException loading " + ko + " file " + zip) ;
          e.printStackTrace() ;
       }
+      
+      finally { active = false ; }
    }
 }

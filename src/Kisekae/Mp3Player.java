@@ -200,7 +200,7 @@ public class Mp3Player extends Thread
 	}
 		
 	/**
-	 * Cloases this player. Any audio currently playing is stopped immediately. 
+	 * Closes this player. Any audio currently playing is stopped immediately. 
 	 */
 	public synchronized void close()
 	{		

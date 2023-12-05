@@ -938,6 +938,15 @@ final class MediaFrame extends KissFrame
 		if (ko instanceof Video) video = (Video) ko ;
       if (OptionsDialog.getDebugSound() && ko != null)
 	      System.out.println("MediaPlayer: play " + ko) ;
+      
+      // If we are loading from a previous play() request then interrupt 
+      // the load and continue with this request.
+      
+      if (loader != null && loader.isActive())
+      {
+         loader.interrupt() ;
+         loader = null ;
+      }
 
       // Check for errors.
 

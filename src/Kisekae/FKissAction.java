@@ -421,7 +421,7 @@ final class FKissAction extends KissObject
          // Stop the media player if requested.  
 
          MediaFrame mf = (config == null) ? null : config.getMediaFrame() ;
-         if (mf != null && ("".equals(o1) || "silence.wav".equals(o1)))
+         if (mf != null && ("".equals(o1)))
          {
             Runnable runner = new Runnable()
             { public void run() { mf.closeMedia() ; } } ;
@@ -1296,6 +1296,7 @@ final class FKissAction extends KissObject
 
             // Determine if this is a stop request.
 
+            s = (String) parameters.elementAt(0) ;
             o1 = variable.getValue((String) parameters.elementAt(0),event) ;
             if ("".equals(o1)) { Audio.stop(config,audiotype) ;  break ; }
             if (OptionsDialog.getSoundSingle() && !OptionsDialog.getLongSoundMedia())
@@ -1305,7 +1306,10 @@ final class FKissAction extends KissObject
                if ("sound".equals(audiotype)) Audio.stop(config,audiotype) ;
             }
 
-            // Identify the action object.
+            // Identify the action object.  Sounds were identified as audio objects
+            // during the configuration parse on sound() or music() or mediaplayer() 
+            // actions for literal names.  If a variables contain a sound file
+            // names it is recognized now.
 
             if (kiss == null)
             {
@@ -1314,6 +1318,17 @@ final class FKissAction extends KissObject
                {
                   s1 = ((String) o1).toUpperCase() ;
                   kiss = (Audio) Audio.getByKey(Audio.getKeyTable(),cid,s1) ;
+                  if (kiss == null && config != null && !Variable.isLiteral(s))
+                  {
+                     config.createAudio(config.getZipFile(), o1.toString()) ;
+                     kiss = (Audio) Audio.getByKey(Audio.getKeyTable(),cid,s1) ;
+                     if (kiss != null) 
+                     {
+                        Audio audio = (Audio) kiss ;
+                        audio.load(config.getIncludeFiles()) ;
+                        audio.init() ;
+                     }
+                  }
                }
             }
             if (!(kiss instanceof Audio)) break ;
@@ -3440,6 +3455,9 @@ final class FKissAction extends KissObject
                }
             } ;
             javax.swing.SwingUtilities.invokeLater(runner);
+            
+            if ("restart".equalsIgnoreCase(vs1))            
+               exception = "exitevent" ;
             break ;
 
          // Determine the length of a string.
@@ -4526,6 +4544,16 @@ final class FKissAction extends KissObject
             n1 = (o2 instanceof Integer) ? ((Integer) o2).intValue() : -1 ;
             variable.setIntValue((String) parameters.elementAt(0),n1,event) ;
             break;
+
+         // letaudio command.
+
+         case 161:	// "letaudio(variable)"
+            if (parameters.size() < 1) break ;
+            if (config == null) break ;
+            s = Audio.getLastAudio() ;
+            if (s == null) s = "unknown" ;
+            variable.setValue((String) parameters.elementAt(0),s,event) ;
+            break ;
          }
       }
 

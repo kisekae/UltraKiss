@@ -2041,12 +2041,14 @@ final class Configuration extends KissObject
 			}
 
 			// Media start events are invoked when media file starts playing.
+         // Generic events mediastart() can exist.
 
 			if ("mediastart".equals(name))
 			{
            	String s1 = Variable.getStringLiteralValue(target) ;
-		      File f = new File(getDirectory(),s1) ;
-		      s1 = f.getPath().toUpperCase() ;
+            if (s1 == null) s1 = "" ;
+  		      File f = new File(getDirectory(),s1) ;
+  		      s1 = f.getPath().toUpperCase() ;
 				KissObject k = (Audio) Audio.getByKey(Audio.getKeyTable(),cid,s1) ;
 				if (k != null)
             {
@@ -2069,12 +2071,14 @@ final class Configuration extends KissObject
 			}
 
 			// Media stop events are invoked when media file stops playing.
+         // Generic events mediastop() can exist.
 
 			if ("mediastop".equals(name))
 			{
            	String s1 = Variable.getStringLiteralValue(target) ;
-		      File f = new File(getDirectory(),s1) ;
-		      s1 = f.getPath().toUpperCase() ;
+            if (s1 == null) s1 = "" ;
+  		      File f = new File(getDirectory(),s1) ;
+  		      s1 = f.getPath().toUpperCase() ;
 				KissObject k = (Audio) Audio.getByKey(Audio.getKeyTable(),cid,s1) ;
 				if (k != null)
             {
@@ -2653,7 +2657,7 @@ final class Configuration extends KissObject
 		// Flush all image data.  This cleans up our memory allocation
 		// and seems to stop odd things from happening.  Note: this
       // causes GIF images to not display on a restart.
-/*
+
 		if (cels != null)
 		{
 			for (int i = 0 ; i < cels.size() ; i++)
@@ -2664,7 +2668,7 @@ final class Configuration extends KissObject
 				if (img != null) img.flush() ;
 			}
 		}
-*/
+
       // Terminate any configuration mediaplayer that is active.
 
       if (mediaframe != null) 
@@ -5359,7 +5363,7 @@ final class Configuration extends KissObject
 	// unnamed file is interpreted as a request to stop the current
 	// audio output.
 
-	private void createAudio(ArchiveFile zip, String file)
+	void createAudio(ArchiveFile zip, String file)
 	{
 		if (file == null) return ;
 		file = trim(file) ;

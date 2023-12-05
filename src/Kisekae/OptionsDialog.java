@@ -102,6 +102,7 @@ final public class OptionsDialog extends KissDialog
 	private static boolean debugmedia = false ;
 	private static boolean debugsearch = false ;
 	private static boolean debugdisabled = false ;
+	private static boolean debugcomponent = false ;
 	private static boolean javasound = true ;
 	private static boolean systemlf = false ;
 	private static boolean javalf = true ;
@@ -268,6 +269,7 @@ final public class OptionsDialog extends KissDialog
 	private static boolean initdebugmedia = debugmedia ;
 	private static boolean initdebugsearch = debugsearch ;
 	private static boolean initdebugdisabled = debugdisabled ;
+	private static boolean initdebugcomponent = debugcomponent ;
 	private static boolean initjavasound = javasound ;
 	private static boolean initsystemlf = systemlf ;
 	private static boolean initjavalf = javalf ;
@@ -580,6 +582,7 @@ final public class OptionsDialog extends KissDialog
 	private JCheckBox MediaDebug = new JCheckBox();
 	private JCheckBox SearchDebug = new JCheckBox();
 	private JCheckBox DisabledDebug = new JCheckBox();
+	private JCheckBox ComponentDebug = new JCheckBox();
 	private JCheckBox JavaSoundDebug = new JCheckBox();
 	private JCheckBox SystemLF = new JCheckBox();
 	private JCheckBox JavaLF = new JCheckBox();
@@ -989,7 +992,7 @@ final public class OptionsDialog extends KissDialog
 		gridLayout4.setColumns(1);
 		gridLayout4.setRows(4);
 		gridLayout5.setColumns(2);
-		gridLayout5.setRows(7);
+		gridLayout5.setRows(8);
 		gridLayout6.setRows(3);
 		gridLayout6.setColumns(1);
 		gridLayout7.setColumns(1);
@@ -1196,6 +1199,9 @@ final public class OptionsDialog extends KissDialog
 		DisabledDebug.setText(Kisekae.getCaptions().getString("OptionsLogDisabledDebug"));
 		DisabledDebug.setToolTipText(Kisekae.getCaptions().getString("ToolTipDisabledDebug"));
 		DisabledDebug.setSelected(debugdisabled);
+		ComponentDebug.setText(Kisekae.getCaptions().getString("OptionsLogComponentDebug"));
+		ComponentDebug.setToolTipText(Kisekae.getCaptions().getString("ToolTipComponentDebug"));
+		ComponentDebug.setSelected(debugcomponent);
 		jLabel2.setPreferredSize(new Dimension(60, 17));
 		jLabel2.setText(Kisekae.getCaptions().getString("OptionsDialogLogFileText"));
 		jLabel2.setToolTipText(Kisekae.getCaptions().getString("ToolTipLogFile"));
@@ -2020,6 +2026,7 @@ final public class OptionsDialog extends KissDialog
 		jPanel5.add(MediaDebug, null);
 		jPanel5.add(SearchDebug, null);
 		jPanel5.add(DisabledDebug, null);
+		jPanel5.add(ComponentDebug, null);
 		jPanel5a.add(jPanel6, BorderLayout.NORTH);
 		jPanel6.add(jLabel2, BorderLayout.WEST);
 		jPanel6.add(LogFileBox, BorderLayout.CENTER);
@@ -2231,6 +2238,7 @@ final public class OptionsDialog extends KissDialog
 	static public boolean getDebugMedia() { return debugmedia ; }
 	static public boolean getDebugSearch() { return debugsearch ; }
 	static public boolean getDebugDisabled() { return debugdisabled ; }
+	static public boolean getDebugComponent() { return debugcomponent ; }
 	static public boolean getJavaSound() { return javasound ; }
 	static public boolean getBackupFileOn() { return backup ; }
 	static public boolean getSaveSourceOn() { return savesource ; }
@@ -2577,6 +2585,7 @@ final public class OptionsDialog extends KissDialog
 	static public void setDebugMedia(boolean b) { debugmedia = b ; }
 	static public void setDebugSearch(boolean b) { debugsearch = b ; }
 	static public void setDebugDisabled(boolean b) { debugdisabled = b ; }
+	static public void setDebugComponent(boolean b) { debugcomponent = b ; }
 	static public void setJavaSound(boolean b) { javasound = b ; }
 	static public void setSaveSourceOn(boolean b) { savesource = b ; }
 	static public void setShowDLPrompt(boolean b) { showdlprompt = b ; }
@@ -2892,6 +2901,7 @@ final public class OptionsDialog extends KissDialog
       else if ("debugmedia".equalsIgnoreCase(option)) setDebugMedia(b) ;
       else if ("debugsearch".equalsIgnoreCase(option)) setDebugSearch(b) ;
       else if ("debugdisabled".equalsIgnoreCase(option)) setDebugDisabled(b) ;
+      else if ("debugcomponent".equalsIgnoreCase(option)) setDebugComponent(b) ;
       else if ("javasound".equalsIgnoreCase(option)) setJavaSound(b) ;
       else if ("systemlf".equalsIgnoreCase(option)) setSystemLF(b) ;
       else if ("javalf".equalsIgnoreCase(option)) setJavaLF(b) ;
@@ -3044,6 +3054,7 @@ final public class OptionsDialog extends KissDialog
       else if ("debugmedia".equalsIgnoreCase(option)) s += getDebugMedia() ;
       else if ("debugsearch".equalsIgnoreCase(option)) s += getDebugSearch() ;
       else if ("debugdisabled".equalsIgnoreCase(option)) s += getDebugDisabled() ;
+      else if ("debugcomponent".equalsIgnoreCase(option)) s += getDebugComponent() ;
       else if ("javasound".equalsIgnoreCase(option)) s += getJavaSound() ;
       else if ("systemlf".equalsIgnoreCase(option)) s += getSystemLF() ;
       else if ("applemac".equalsIgnoreCase(option)) s += getAppleMac() ;
@@ -3199,6 +3210,7 @@ final public class OptionsDialog extends KissDialog
 		MediaDebug.setSelected(debugmedia) ;
 		SearchDebug.setSelected(debugsearch) ;
 		DisabledDebug.setSelected(debugdisabled) ;
+		ComponentDebug.setSelected(debugcomponent) ;
 		JavaSoundDebug.setSelected(javasound) ;
       SystemLF.setSelected(systemlf);
       JavaLF.setSelected(javalf);
@@ -3410,6 +3422,7 @@ final public class OptionsDialog extends KissDialog
 		debugmedia = MediaDebug.isSelected() ;
 		debugsearch = SearchDebug.isSelected() ;
 		debugdisabled = DisabledDebug.isSelected() ;
+		debugcomponent = ComponentDebug.isSelected() ;
 		javasound = JavaSoundDebug.isSelected() ;
       systemlf = SystemLF.isSelected() ;
       javalf = JavaLF.isSelected() ;
@@ -3661,6 +3674,7 @@ final public class OptionsDialog extends KissDialog
 		debugmedia = initdebugmedia ;
 		debugsearch = initdebugsearch ;
 		debugdisabled = initdebugdisabled ;
+		debugcomponent = initdebugcomponent ;
 		javasound = initjavasound ;
 //    backup = initbackup ;
 //    savesource = initsavesource ;
@@ -3796,6 +3810,7 @@ final public class OptionsDialog extends KissDialog
 	   initdebugmedia = debugmedia ;
 	   initdebugsearch = debugsearch ;
 	   initdebugdisabled = debugdisabled ;
+	   initdebugcomponent = debugcomponent ;
 	   initjavasound = javasound ;
       initsystemlf = systemlf ;
       initjavalf = javalf ;
@@ -3939,6 +3954,7 @@ final public class OptionsDialog extends KissDialog
       debugmedia = false ;
       debugsearch = false ;
       debugdisabled = false ;
+      debugcomponent = false ;
       javasound = true ;
       systemlf = false ;
       javalf = true ;
@@ -4103,6 +4119,7 @@ final public class OptionsDialog extends KissDialog
 	   if (initdebugmedia != MediaDebug.isSelected()) return true ;
 	   if (initdebugsearch != SearchDebug.isSelected()) return true ;
 	   if (initdebugdisabled != DisabledDebug.isSelected()) return true ;
+	   if (initdebugcomponent != ComponentDebug.isSelected()) return true ;
 	   if (initjavasound != JavaSoundDebug.isSelected()) return true ;
 //    if (initbackup != Backup.isSelected()) return true ;
 //    if (initsavesource != SaveSource.isSelected()) return true ;
@@ -4235,6 +4252,7 @@ final public class OptionsDialog extends KissDialog
 	   if (debugmedia != MediaDebug.isSelected()) return true ;
 	   if (debugsearch != SearchDebug.isSelected()) return true ;
 	   if (debugdisabled != DisabledDebug.isSelected()) return true ;
+	   if (debugcomponent != ComponentDebug.isSelected()) return true ;
 	   if (javasound != JavaSoundDebug.isSelected()) return true ;
 //    if (backup != Backup.isSelected()) return true ;
 //    if (savesource != SaveSource.isSelected()) return true ;
@@ -4530,6 +4548,7 @@ final public class OptionsDialog extends KissDialog
       p.put("debugmedia",toString2(debugmedia)) ;
       p.put("debugsearch",toString2(debugsearch)) ;
       p.put("debugdisabled",toString2(debugdisabled)) ;
+      p.put("debugcomponent",toString2(debugcomponent)) ;
       p.put("javasound",toString2(javasound)) ;
       p.put("systemlf",toString2(systemlf)) ;
       p.put("javalf",toString2(javalf)) ;
@@ -6178,6 +6197,7 @@ final public class OptionsDialog extends KissDialog
 //	   if (debugmedia != initdebugmedia) writeLine(out,"; debugmedia = " + debugmedia) ;
 //	   if (debugsearch != initdebugsearch) writeLine(out,"; debugsearch = " + debugsearch) ;
 //	   if (debugdisabled != initdebugdisabled) writeLine(out,"; debugdisabled = " + debugdisabled) ;
+//	   if (debugcomponent != initdebugcomponent) writeLine(out,"; debugcomponent = " + debugcomponent) ;
 //	   if (debugmouse != initdebugmouse) writeLine(out,"; debugmouse = " + debugmouse) ;
 //	   if (systemlf != initsystemlf) writeLine(out,"; systemlf = " + systemlf) ;
 //	   if (javalf != initjavalf) writeLine(out,"; javalf = " + javalf) ;

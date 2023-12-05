@@ -138,7 +138,7 @@ public class Mp3Clip implements Clip
     
    public void setLoopPoints(int start, int end) { }
     
-   // Shut the player down and set it for another start request.
+   // Shut the player down and set it for another start request.  
    
    public synchronized void setMicrosecondPosition(long microseconds) 
    { 
@@ -148,7 +148,7 @@ public class Mp3Clip implements Clip
          listeners = null ;  // disable listener events
          stop() ;
          close() ;
-         if (stream != null) stream.close() ;
+//         if (stream != null) stream.close() ;
          stream = audiosound.getInputStream() ;
          listeners = ln ;   // enable listener events
      }
@@ -162,6 +162,7 @@ public class Mp3Clip implements Clip
    {
       if (!Kisekae.isMP3Installed()) return ;
       if (listeners == null) return ;
+
       frame = 0 ;
       for (int i = 0 ; i < listeners.size() ; i++)
         ((LineListener) listeners.elementAt(i)).update(new LineEvent(this,LineEvent.Type.OPEN,0)) ; 

@@ -167,6 +167,8 @@ final class DirFile extends ArchiveFile
 
 	void flush() 
 	{
+      file = null ;
+      opencount = 0 ;
       contents = null ;
 	}
 

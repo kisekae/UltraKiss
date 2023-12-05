@@ -70,8 +70,6 @@ import java.net.MalformedURLException ;
 class ImagePreview extends JPanel
 	implements ActionListener, MouseListener, MouseMotionListener, ComponentListener
 {
-   static private Component component = new Component() { } ;
-
    private KissFrame parent = null ;      // The parent frame
 	protected Image image = null ;			// The base image to preview
 	protected Image scaledimage = null ;   // The scaled image to paint

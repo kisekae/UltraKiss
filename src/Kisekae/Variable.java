@@ -685,7 +685,7 @@ final class Variable
 	// Determine if the variable is literal.  Undefined or zero length
    // variable names return true.
 
-	boolean isLiteral(String v)
+	static boolean isLiteral(String v)
 	{ 
 		if (v == null) return true ;
 		if (v.length() == 0) return true ;

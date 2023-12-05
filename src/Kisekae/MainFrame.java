@@ -1918,6 +1918,7 @@ final public class MainFrame extends KissFrame
       {
          traceFKiss(false) ;
          mainmenu.tracefkiss.setState(false) ;
+         trace = null ;
       }
       
       // Close any internal Media Player currently running
