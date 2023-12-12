@@ -780,6 +780,19 @@ final class AudioDialog extends KissDialog
       listmodel.addElement(Kisekae.getCaptions().getString("AudioTypeText") + " " + audiotype) ;
       listmodel.addElement(Kisekae.getCaptions().getString("CopyrightText") + " " + copyright) ;
       listmodel.addElement(Kisekae.getCaptions().getString("ContentDescriptorText") + " " + contentdesc.toString()) ;
+      listmodel.addElement(Kisekae.getCaptions().getString("IsJavaMediaText") + " " + audio.isJavaMedia()) ;
+      listmodel.addElement(Kisekae.getCaptions().getString("IsJavaSoundText") + " " + audio.isJavaSound()) ;
+      listmodel.addElement(Kisekae.getCaptions().getString("IsFromIncludeText") + " " + audio.isFromInclude()) ;
+      listmodel.addElement(Kisekae.getCaptions().getString("IsCachedText") + " " + audio.isCached()) ;
+      listmodel.addElement(Kisekae.getCaptions().getString("IsOpenText") + " " + audio.isOpen()) ;
+      listmodel.addElement(Kisekae.getCaptions().getString("IsStartedText") + " " + audio.isStarted()) ;
+      listmodel.addElement(Kisekae.getCaptions().getString("IsStoppingText") + " " + audio.isStopping()) ;
+      listmodel.addElement(Kisekae.getCaptions().getString("IsLoopingText") + " " + audio.isLooping()) ;
+      listmodel.addElement(Kisekae.getCaptions().getString("IsRepeatingText") + " " + audio.isRepeating()) ;
+      listmodel.addElement(Kisekae.getCaptions().getString("AudioStartTimeText") + " " + audio.getStartTime()) ;
+      listmodel.addElement(Kisekae.getCaptions().getString("AudioStopTimeText") + " " + audio.getStopTime()) ;
+      listmodel.addElement(Kisekae.getCaptions().getString("AudioOpenTimeText") + " " + audio.getOpenTime()) ;
+      listmodel.addElement(Kisekae.getCaptions().getString("AudioCloseTimeText") + " " + audio.getCloseTime()) ;
 	}
 
 

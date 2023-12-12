@@ -409,8 +409,11 @@ class UrlLoader extends KissFrame
          if (!stop) 
          {
             System.out.println("UrlLoader: " + threadname + " exception " + e) ;
-            System.out.println("UrlLoader: " + threadname + " URL " + urlname) ;
-            if (!(e instanceof KissException)) e.printStackTrace() ;
+            if (!(e instanceof FileNotFoundException))
+            {
+               System.out.println("UrlLoader: " + threadname + " URL " + urlname) ;
+               if (!(e instanceof KissException)) e.printStackTrace() ;
+            }
          }
 		}
 

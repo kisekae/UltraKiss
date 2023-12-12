@@ -99,6 +99,9 @@ final class FKissAction extends KissObject
 	private long runtime = 0 ;				   // Action cummulative run time
 	private long invocations = 0 ;	 	   // Action run count
    private int indentlevel = 0 ;          // toString() leading space
+   
+   protected final Object confirmlock = new Object() ; // used for the confirm() 
+
 
 
    // Constructor
@@ -568,7 +571,7 @@ final class FKissAction extends KissObject
             if (parameters.size() < 3) break ;
             if (kiss == null)
                kiss = findGroupOrCel((String) parameters.elementAt(0),event) ;
-            if(kiss instanceof Cel) 
+            if (kiss instanceof Cel) 
             {
                o = ((Cel) kiss).getGroup() ;
                if (!(o instanceof Group)) break ;
@@ -1327,6 +1330,23 @@ final class FKissAction extends KissObject
                         Audio audio = (Audio) kiss ;
                         audio.load(config.getIncludeFiles()) ;
                         audio.init() ;
+      
+                        // If we have new audio objects update the audio timer.
+      
+                        Vector sounds = config.getSounds() ;
+                        AudioTimer closetimer = config.getAudioTimer() ;
+                        if (closetimer == null)
+                        {
+                     		closetimer = new AudioTimer() ;
+                           config.setAudioTimer(closetimer) ;
+                     		closetimer.startTimer(sounds) ;
+                        }
+                        else
+                        {
+                           closetimer.suspendTimer() ;
+                           closetimer.updateAudio(audio) ;
+                           closetimer.resumeTimer() ;
+                        }
                      }
                   }
                }
@@ -4220,41 +4240,22 @@ final class FKissAction extends KissObject
             // Construct the notify box.
 
             event.setConfirmWait(true) ;
-            final String confirmmsg = new String(message) ;
-            final Object confirmlock = new Object() ;
-            final NotifyDialog cd = new NotifyDialog(Kisekae.getMainFrame(),
-               "Confirm",confirmmsg,null,true) ;
+            ConfirmNotify confirm = new ConfirmNotify() ;
 
             // Show the notify box in the AWT event handler thread.  This event
             // thread is suspended until the confirm dialog is acknowledged.
+            // This may stop alarms from being processed if only one EventHandler
+            // is running.
 
-            if (!SwingUtilities.isEventDispatchThread())
+            javax.swing.SwingUtilities.invokeLater(confirm) ;
+            synchronized (confirmlock)
             {
-               Runnable confirm = new Runnable()
-               {
-                  public void run()
-                  {
-                     cd.setVisible(true) ;
-                     synchronized (confirmlock)
-                     {
-                        confirmlock.notifyAll() ;
-                     }
-                  }
-               } ;
-               javax.swing.SwingUtilities.invokeLater(confirm) ;
-               synchronized (confirmlock)
-               {
-                  confirmlock.wait() ;
-               }
-            }
-            else
-            {
-               cd.setVisible(true) ;
+               confirmlock.wait() ;
             }
 
             // Set the return value and continue.
 
-            n = cd.getConfirmValue() ;
+            n = confirm.getConfirmValue() ;
             variable.setIntValue((String) parameters.elementAt(0),n,event);
             event.setConfirmWait(false) ;
             break ;
@@ -4916,4 +4917,31 @@ final class FKissAction extends KissObject
       if (literal) s1 = "\"" + s1 + "\"" ;
       return s1 ;
    }
+   
+   
+   // Inner class to display a confirm dialog.  This dialog must be displayed
+   // on the AWT thread.  The action thread that invokes this dialog uses the
+   // Swing invokeLater() call and waits on the confirm lock for notification 
+   // before proceeding.
+   
+   class ConfirmNotify implements Runnable
+   {
+      private volatile int confirmvalue ;
+      private String confirmmsg = new String(message) ;
+                  
+      public void run()
+      {
+         NotifyDialog cd = new NotifyDialog(Kisekae.getMainFrame(),
+            "Confirm",confirmmsg,null,true) ;
+         cd.setVisible(true) ;
+         confirmvalue = cd.getConfirmValue() ;                     
+         synchronized (confirmlock)
+         {
+            confirmlock.notify() ;
+         }
+      }                 
+
+      public int getConfirmValue() { return confirmvalue ; }
+   } 
 }
+

@@ -101,6 +101,9 @@ abstract class Audio extends KissObject
    protected String includename = null ;     // Name of include file used
    protected InputStream is = null ;         // Audio input data stream
    protected long starttime = 0 ;            // Time when playback started
+   protected long stoptime = 0 ;             // Time when playback stopped
+   protected long opentime = 0 ;             // Time when the audio is opened
+   protected long closetime = 0 ;            // Time when the audio is closed
 
 	// State attributes
 
@@ -300,6 +303,30 @@ abstract class Audio extends KissObject
 
 	void setStartTime(long n) { starttime = n ; }
 
+	// Return the playback stop time.
+
+	long getStopTime() { return stoptime ; }
+
+	// Set the playback stop time.
+
+	void setStopTime(long n) { stoptime = n ; }
+
+	// Return the object open time.
+
+	long getOpenTime() { return opentime ; }
+
+   // Set the time when the audio object is opened.
+
+	void setOpenTime(long n) { opentime = n ; }
+
+	// Return the object close time.
+
+	long getCloseTime() { return closetime ; }
+
+   // Set the time when the audio object is closed.
+
+	void setCloseTime(long n) { closetime = n ; }
+
 	// Return the copyright text.
 
 	String getCopyright() { return copyright ; }
@@ -360,6 +387,10 @@ abstract class Audio extends KissObject
 	// Return an indication if the audio object is realized.
 
 	boolean isRealized() { return realized ; }
+
+	// Return an indication if the audio object is cached.
+
+	boolean isCached() { return (b != null && b.length > 0) ; }
 
 	// Return an indication if the sound has been opened.
 
@@ -658,12 +689,13 @@ abstract class Audio extends KissObject
       is.close() ;
    }
    
-   // Release critical resources.
+   // Release critical resources.  We must retain the zip and ze entries
+   // from the KissObject to re-open the audio object.
 
    void flush()
    {
-      super.flush() ;
       me = null ;
+      is = null ;
       b = null ;
    }
 

@@ -167,6 +167,10 @@ final class AudioSound extends Audio
 
 	boolean isClip() { return (currentsound instanceof Clip) ; }
 
+	// Return an indication if the medium is Java sound.
+
+	boolean isJavaSound() { return true ; }
+
 	// Return the object state.
 
 	String getState()
@@ -323,6 +327,8 @@ final class AudioSound extends Audio
          // Actually open the sound file. Get an input stream and create
          // a player.
          
+         setOpenTime(time) ;
+         setCloseTime(0) ;
        	is = getInputStream() ;
          if (is == null) return ;
          try
@@ -412,7 +418,7 @@ final class AudioSound extends Audio
               	error = true ;
 					currentsound = null ;
                time = System.currentTimeMillis() - Configuration.getTimestamp() ;
-					showError("AudioSound: " + getName() + " [" + playcount + "]" + " Sound clip stream exception") ;
+					showError("[" + time + "] AudioSound: " + getName() + " [" + playcount + "]" + " Sound clip stream exception") ;
 					ex.printStackTrace() ;
 				}
 			}
@@ -440,7 +446,7 @@ final class AudioSound extends Audio
               	error = true ;
 					currentsound = null ;
                time = System.currentTimeMillis() - Configuration.getTimestamp() ;
-					showError("AudioSound: " + getName() + " [" + playcount + "]" + " Sound clip stream exception, " + ex) ;
+					showError("[" + time + "] AudioSound: " + getName() + " [" + playcount + "]" + " Sound clip stream exception, " + ex) ;
 				}
 			}
 
@@ -475,7 +481,7 @@ final class AudioSound extends Audio
               	if (!Kisekae.isMediaInstalled())
                {
                   time = System.currentTimeMillis() - Configuration.getTimestamp() ;
-        				showError("AudioSound: " + getName() + " [" + playcount + "]" + " not a recognized audio format") ;
+        				showError("[" + time + "] AudioSound: " + getName() + " [" + playcount + "]" + " not a recognized audio format") ;
                }
                else
                {
@@ -558,6 +564,10 @@ final class AudioSound extends Audio
 		   System.out.println("[" + time + "] AudioSound: " + getName() + " [" + playcount + "]" + " Play request.") ;
 
       setStartTime(time) ;      
+      setStopTime(0) ;    
+      
+      // Wait for completion if we are already stopping.
+      
       if (this.isStopping()) 
       {
          synchronized(waithold) 
@@ -576,6 +586,9 @@ final class AudioSound extends Audio
          }
       }
 
+      // Now open the audio and start playing the sound.  If the playback
+      // fails try Java Media Framework.
+      
       lock.lock() ;
       try
 		{
@@ -680,6 +693,17 @@ final class AudioSound extends Audio
       			players.remove(o) ;
                a1.init() ;
                o = a1 ;
+               
+               if (config != null)
+               {
+                  AudioTimer timer = config.getAudioTimer() ;
+                  if (timer != null)
+                  {
+                     timer.suspendTimer(true) ;
+                     timer.updateAudio(a1) ;
+                     timer.resumeTimer(true) ;
+                  }
+               }
             }
             if (o instanceof AudioMedia)
                ((Audio) o).play() ;
@@ -815,6 +839,8 @@ final class AudioSound extends Audio
 
 	void close()
    {
+      long time = System.currentTimeMillis() - Configuration.getTimestamp() ;
+      setCloseTime(time) ;
       closeaudio() ;
       try 
       {
@@ -832,7 +858,9 @@ final class AudioSound extends Audio
 	{
       if (error) return ;
       long time = System.currentTimeMillis() - Configuration.getTimestamp() ;
-      if (!OptionsDialog.getCacheAudio() && zip != null)
+      if (OptionsDialog.getDebugSound())
+         System.out.println("[" + time + "] AudioSound: " + getName() + " [" + playcount + "]" + " Close request.") ;
+       if (!OptionsDialog.getCacheAudio() && zip != null)
       {
          if (OptionsDialog.getDebugSound())
             System.out.println("[" + time + "] AudioSound: " + getName() + " [" + playcount + "]" + " call zip.disconnect()") ;
@@ -845,9 +873,6 @@ final class AudioSound extends Audio
       lock.lock() ;
       try
       {
-         time = System.currentTimeMillis() - Configuration.getTimestamp() ;
-         if (OptionsDialog.getDebugSound())
-            System.out.println("[" + time + "] AudioSound: " + getName() + " [" + playcount + "]" + " Close request.") ;
          players.removeElement(me) ;
          removeListener(listener) ;
          removeListener(metalistener) ;
@@ -954,6 +979,7 @@ final class AudioSound extends Audio
          long time = System.currentTimeMillis() - Configuration.getTimestamp() ;
 			if (event.getType() == LineEvent.Type.STOP)
 			{
+            setStopTime(time) ;      
 				if (OptionsDialog.getDebugSound())
 					System.out.println("[" + time + "] AudioSound: " + getName() + " [" + playcount + "]" + " ClipStopEvent") ;
 
@@ -975,9 +1001,8 @@ final class AudioSound extends Audio
 				}
 				if (!repeat || repeatcount == 0)
             {
-               stopping = true ;
+					doCallback() ;
             	started = false ;
- 					doCallback() ;
             }
 
             // Flush the line to remove any queued data.
@@ -988,18 +1013,39 @@ final class AudioSound extends Audio
                ((DataLine) line).flush() ;
             }
 
+            // Fire any generic mediastop() events.  
+      
+            MainFrame mf = Kisekae.getMainFrame() ;
+            Configuration config = (mf != null) ? mf.getConfig() : null ;
+            PanelFrame panel = (mf != null) ? mf.getPanel() : null ;
+            EventHandler handler = (config != null) ? config.getEventHandler() : null ;
+      		Vector v = (handler != null) ? handler.getEvent("mediastop") : null ;
+            if (v != null)
+            {
+               Vector mediaevents = new Vector() ;
+               for (int i = 0; i < v.size(); i++)
+               {
+                  FKissEvent e = (FKissEvent) v.elementAt(i) ;
+                  Vector params = e.getParameters() ;
+                  if (params == null || params.size() > 0) continue ;
+                  mediaevents.add(e) ;
+               }
+               if (mediaevents.size() > 0)
+            		EventHandler.fireEvents(mediaevents,panel,Thread.currentThread(),null) ;
+            }
+/*
             // Close the audio stream at the end of playback.
 
             Runnable runner = new Runnable()
             { public void run() { stop(me) ; } } ;
             javax.swing.SwingUtilities.invokeLater(runner) ;        
-			}
+*/
+         }
 
 			// The Close Event occurs when a clip is closed.
 
 			else if (event.getType() == LineEvent.Type.CLOSE)
 			{
-            if (!opened) return ;
 				opened = false ;
 				if (OptionsDialog.getDebugSound())
 					System.out.println("[" + time + "] AudioSound: " + getName() + " [" + playcount + "]" + " ClipCloseEvent") ;
@@ -1025,22 +1071,10 @@ final class AudioSound extends Audio
          		   System.out.println("[" + time + "] AudioSound: " + getName() + " [" + playcount + "]" + " Notify stop is complete") ;
                waithold.notify() ;
             }
-
-            // Fire any generic mediastop() events.  This is on the close() event
-            // because I wanted to see the input stream closed when the sound stopped.
-      
-            MainFrame mf = Kisekae.getMainFrame() ;
-            Configuration config = (mf != null) ? mf.getConfig() : null ;
-            PanelFrame panel = (mf != null) ? mf.getPanel() : null ;
-            EventHandler handler = (config != null) ? config.getEventHandler() : null ;
-      		Vector v = (handler != null) ? handler.getEvent("mediastop") : null ;
-            if (v != null)
-         		EventHandler.fireEvents(v,panel,Thread.currentThread(),null) ;
   			}
 
 			else if (event.getType() == LineEvent.Type.START)
 			{
-	         if (started) return ;
 				doCallstart() ;
 				started = true ;
 				if (OptionsDialog.getDebugSound())
@@ -1054,7 +1088,18 @@ final class AudioSound extends Audio
             EventHandler handler = (config != null) ? config.getEventHandler() : null ;
       		Vector v = (handler != null) ? handler.getEvent("mediastart") : null ;
             if (v != null)
-         		EventHandler.fireEvents(v,panel,Thread.currentThread(),null) ;
+            {
+               Vector mediaevents = new Vector() ;
+               for (int i = 0; i < v.size(); i++)
+               {
+                  FKissEvent e = (FKissEvent) v.elementAt(i) ;
+                  Vector params = e.getParameters() ;
+                  if (params == null || params.size() > 0) continue ;
+                  mediaevents.add(e) ;
+               }
+               if (mediaevents.size() > 0)
+            		EventHandler.fireEvents(mediaevents,panel,Thread.currentThread(),null) ;
+            }
 			}
 
 			else if (event.getType() == LineEvent.Type.OPEN)
@@ -1074,6 +1119,7 @@ final class AudioSound extends Audio
 		public void meta(MetaMessage message)
       {
          long time = System.currentTimeMillis() - Configuration.getTimestamp() ;
+         setStopTime(time) ;      
 			if (message.getType() == 47)
          {  // 47 is end of track
 				if (OptionsDialog.getDebugSound())
@@ -1097,8 +1143,29 @@ final class AudioSound extends Audio
 				}
 				if (!repeat || repeatcount == 0)
             {
-            	started = false ;
 					doCallback() ;
+            	started = false ;
+            }
+
+            // Fire any generic mediastop() events.  
+      
+            MainFrame mf = Kisekae.getMainFrame() ;
+            Configuration config = (mf != null) ? mf.getConfig() : null ;
+            PanelFrame panel = (mf != null) ? mf.getPanel() : null ;
+            EventHandler handler = (config != null) ? config.getEventHandler() : null ;
+      		Vector v = (handler != null) ? handler.getEvent("mediastop") : null ;
+            if (v != null)
+            {
+               Vector mediaevents = new Vector() ;
+               for (int i = 0; i < v.size(); i++)
+               {
+                  FKissEvent e = (FKissEvent) v.elementAt(i) ;
+                  Vector params = e.getParameters() ;
+                  if (params == null || params.size() > 0) continue ;
+                  mediaevents.add(e) ;
+               }
+               if (mediaevents.size() > 0)
+            		EventHandler.fireEvents(mediaevents,panel,Thread.currentThread(),null) ;
             }
 			}
 
@@ -1116,6 +1183,27 @@ final class AudioSound extends Audio
 	         if (started) return ;
 				doCallstart() ;
 	         started = true ;
+
+            // Fire any generic mediastart() events.
+      
+            MainFrame mf = Kisekae.getMainFrame() ;
+            Configuration config = (mf != null) ? mf.getConfig() : null ;
+            PanelFrame panel = (mf != null) ? mf.getPanel() : null ;
+            EventHandler handler = (config != null) ? config.getEventHandler() : null ;
+      		Vector v = (handler != null) ? handler.getEvent("mediastart") : null ;
+            if (v != null)
+            {
+               Vector mediaevents = new Vector() ;
+               for (int i = 0; i < v.size(); i++)
+               {
+                  FKissEvent e = (FKissEvent) v.elementAt(i) ;
+                  Vector params = e.getParameters() ;
+                  if (params == null || params.size() > 0) continue ;
+                  mediaevents.add(e) ;
+               }
+               if (mediaevents.size() > 0)
+            		EventHandler.fireEvents(mediaevents,panel,Thread.currentThread(),null) ;
+            }
          }
       }
    }

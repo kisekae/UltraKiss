@@ -357,6 +357,11 @@ final class ThreadDialog extends KissDialog
          	SceneTimer scenetimer = config.getSceneTimer() ;
             if (scenetimer != null) scenetimer.suspendTimer(true) ;
          }
+         else if (item.startsWith("AudioTimer") && config != null)
+         {
+         	AudioTimer closetimer = config.getAudioTimer() ;
+            if (closetimer != null) closetimer.suspendTimer(true) ;
+         }
          else if (item.startsWith("EventHandler"))
          {
             EventHandler.suspendEventHandler(true) ;
@@ -384,6 +389,11 @@ final class ThreadDialog extends KissDialog
          {
          	SceneTimer scenetimer = config.getSceneTimer() ;
             if (scenetimer != null) scenetimer.resumeTimer(true) ;
+         }
+         else if (item.startsWith("AudioTimer") && config != null)
+         {
+         	AudioTimer closetimer = config.getAudioTimer() ;
+            if (closetimer != null) closetimer.resumeTimer(true) ;
          }
          else if (item.startsWith("EventHandler"))
          {
@@ -568,6 +578,22 @@ final class ThreadDialog extends KissDialog
 				format("clear","",0,len) ;
 				format("left",scenetimer.getName(),0,19) ;
 				format("left",scenetimer.getTimerState(),20,10) ;
+				format("right",queuesize,31,5) ;
+            format("right",fired,40,9) ;
+				s = format(" ","",0,len) ;
+				listmodel.addElement(s) ;
+         }
+
+         // Do the same for the scene memory timer.
+
+      	AudioTimer closetimer = config.getAudioTimer() ;
+         if (closetimer != null)
+         {
+	         String queuesize = "" + closetimer.getQueueSize() ;
+            String fired = "" + closetimer.getCount() ;
+				format("clear","",0,len) ;
+				format("left",closetimer.getName(),0,19) ;
+				format("left",closetimer.getTimerState(),20,10) ;
 				format("right",queuesize,31,5) ;
             format("right",fired,40,9) ;
 				s = format(" ","",0,len) ;

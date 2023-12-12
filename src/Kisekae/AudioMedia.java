@@ -144,8 +144,11 @@ final class AudioMedia extends Audio
 
    // Method to return the last listener object added.
 
-
    Object getListener() { return listener ; }
+
+	// Return an indication if the medium is JMF sound.
+
+	boolean isJavaMedia() { return true ; }
 
 
 	// Return the object state.
@@ -229,7 +232,6 @@ final class AudioMedia extends Audio
 	{
       playcount = 0 ;
 		started = false ;
-		Player player = null ;
 		if (error || (cache && b == null)) return ;
 		if (!Kisekae.isMediaInstalled()) { error = true ; return ; }
 
@@ -249,13 +251,44 @@ final class AudioMedia extends Audio
          }
       }
 		if (OptionsDialog.getDebugSound())
-			System.out.println("[" + time + "] AudioMedia: " + getName() + " [" + playcount + "]" + " Initialization request.") ;
+			System.out.println("[" + time + "] AudioMedia: " + getName() + " [" + playcount+1 + "]" + " Initialization request.") ;
+	}
+
+
+
+	// Audio player open. 	Media sources are opened when initialized.
+
+	void open()
+   {
+      Player player = null ;
+		if (!Kisekae.isMediaInstalled()) { error = true ; return ; }
+		if (!OptionsDialog.getSoundOn()) return ;
+      long time = System.currentTimeMillis() - Configuration.getTimestamp() ;
+      setOpenTime(time) ;
+      setCloseTime(0) ;
+		if (OptionsDialog.getDebugSound())
+			System.out.println("[" + time + "] AudioMedia: " + getName() + " [" + playcount + "]" + " Open request.") ;
+
+      if (opened)
+      {
+         if (currentsound instanceof Player)
+         {
+            player = (Player) currentsound ;
+  	  			int playerstate = player.getState() ;
+   			if (playerstate >= Player.Realized)
+               player.setMediaTime(new Time(0)) ;
+            time = System.currentTimeMillis() - Configuration.getTimestamp() ;
+            if (OptionsDialog.getDebugSound())
+               System.out.println("[" + time + "] AudioMedia: " + getName() + " [" + playcount + "]" + " player reset to start") ;
+            return ;
+         }
+      }
 
 		// Create a JMF data source for the media file.
 
 		try
 		{
-			if (cache)
+			if (cache && b != null)
 			{
 				ds = new MediaDataSource(getContentType(file),b,b.length,getName()) ;
 				ds.connect() ;
@@ -294,25 +327,12 @@ final class AudioMedia extends Audio
 		if (!error)
 		{
          loaded = true ;
+         opened = true ;
       	currentsound = player ;
          controller = new AudioListener() ;
 			player.addControllerListener((ControllerListener) controller) ;
 		}
-	}
-
-
-
-	// Audio player open. 	Media sources are opened when initialized.
-
-	void open()
-   {
-		if (!Kisekae.isMediaInstalled()) { error = true ; return ; }
-		if (!OptionsDialog.getSoundOn()) return ;
-      long time = System.currentTimeMillis() - Configuration.getTimestamp() ;
-		if (OptionsDialog.getDebugSound())
-			System.out.println("[" + time + "] AudioMedia: " + getName() + " [" + playcount + "]" + " Open request.") ;
    }
-
 
 
    // Method to add a listener to our player object.
@@ -344,59 +364,70 @@ final class AudioMedia extends Audio
 
 	void play()
 	{
-      if (!loaded) return ;
 		if (!Kisekae.isMediaInstalled()) { error = true ; return ; }
 		if (!OptionsDialog.getSoundOn()) return ;
-		if (!(currentsound instanceof Player)) return ;
-
+         
 		try
 		{
+         playcount++ ;
 			if (format) throw new KissException("unknown media format") ;
 			if (error) throw new KissException("object in error") ;
+         
+         // Open the audio file.  This will reset the audio position if the
+         // file has been previously opened, or establish the appropriate 
+         // player if unopened.
+         
+         open() ;
+			if (error) throw new KissException("audio object in error on open") ;
+
          lock.lock() ;
 			try { if (!players.contains(me)) players.addElement(me) ; }
          finally { lock.unlock() ; }
 
 			// For JMF sound, identify the player state for debug output.
 
-			Player player = (Player) currentsound ;
-			String state = "Unknown" ;
-			int playerstate = player.getState() ;
-			if (playerstate == Player.Prefetched)
+   		if (!(currentsound instanceof Player)) return ;
+         Player player = (Player) currentsound ;
+
+ 			String state = "Unknown" ;
+  			int playerstate = player.getState() ;
+  			if (playerstate == Player.Prefetched)
             state = "Prefetched" ;
-			if (playerstate == Player.Prefetching)
+  			if (playerstate == Player.Prefetching)
             state = "Prefetching" ;
-			if (playerstate == Player.Realized)
+         if (playerstate == Player.Realized)
             state = "Realized" ;
-			if (playerstate == Player.Realizing)
+ 			if (playerstate == Player.Realizing)
             state = "Realizing" ;
-			if (playerstate == Player.Started)
+         if (playerstate == Player.Started)
             state = "Started" ;
-			if (playerstate == Player.Unrealized)
+ 			if (playerstate == Player.Unrealized)
             state = "Unrealized" ;
          long time = System.currentTimeMillis() - Configuration.getTimestamp() ;
          if (OptionsDialog.getDebugSound())
             System.out.println("[" + time + "] AudioMedia: " + getName() + " [" + playcount + "]" + " Play request, current state is " + state) ;
+         
+  			// Start the player.
 
-			// Start the player.
+  			restart = false ;
+  			if (player != null)
+  			{
+  				if (playerstate >= Player.Started)
+  				{
+  					restart = true ;
+  					player.stop() ;
+  					return ;
+  				}
 
-			restart = false ;
-			if (player != null)
-			{
-				if (playerstate >= Player.Started)
-				{
-					restart = true ;
-					player.stop() ;
-					return ;
-				}
+  				// Player is stopped.  It could be in the unrealized or
+  				// prefetched state.  Start it from the beginning.
 
-				// Player is stopped.  It could be in the unrealized or
-				// prefetched state.  Start it from the beginning.
-
-				if (playerstate >= Player.Realized)
-					player.setMediaTime(new Time(0)) ;
-				player.start() ;
-			}
+  				if (playerstate >= Player.Realized)
+  					player.setMediaTime(new Time(0)) ;
+            setStartTime(time) ;      
+            setStopTime(0) ;      
+  				player.start() ;
+         }
 		}
 
 		catch (Exception e)
@@ -419,13 +450,13 @@ final class AudioMedia extends Audio
       // interfere with the event handler FKissAction processing.  
       
       Runnable runner = new Runnable()
-      { public void run() { stop1m(c,a,type) ; } } ;
+      { public void run() { stop1(c,a,type) ; } } ;
       Thread runthread = new Thread(runner) ;
       runthread.setName("AudioMedia stop");
       runthread.start() ;
    }
    
-   static void stop1m(Configuration c, Audio a, String type)
+   static void stop1(Configuration c, Audio a, String type)
    {
       lock.lock() ;
       try
@@ -502,19 +533,14 @@ final class AudioMedia extends Audio
 	void close()
 	{
       long time = System.currentTimeMillis() - Configuration.getTimestamp() ;
+      setCloseTime(time) ;
+      if (OptionsDialog.getDebugSound())
+         System.out.println("[" + time + "] AudioMedia: " + getName() + " [" + playcount + "]" + " Close request.") ;
       if (!OptionsDialog.getCacheAudio() && zip != null)
       {
          if (OptionsDialog.getDebugSound())
-         	System.out.println("[" + time + "] AudioMedia: " + getName() + " call zip.disconnect()") ;
-//         try
-//         {
+         	System.out.println("[" + time + "] AudioMedia: " + getName() + " [" + playcount + "]" + " call zip.disconnect()") ;
             zip.disconnect() ;
-//            zip.close() ;
-//         }
-//         catch (IOException e)
-//         {
-//            System.out.println("[" + time + "] AudioMedia: " + getName() + " exception on close zip " + e.getMessage()) ;            
-//         }
       }
 		if (currentsound == null) return ;
 
@@ -524,9 +550,6 @@ final class AudioMedia extends Audio
       lock.lock() ;
       try
       {
-         time = System.currentTimeMillis() - Configuration.getTimestamp() ;
-         if (OptionsDialog.getDebugSound())
-            System.out.println("[" + time + "] AudioMedia: " + getName() + " [" + playcount + "]" + " Close request.") ;
          players.removeElement(me) ;
          removeListener(listener) ;
       }
@@ -556,6 +579,9 @@ final class AudioMedia extends Audio
                {
                   ds.disconnect() ;
                }
+               time = System.currentTimeMillis() - Configuration.getTimestamp() ;
+               if (OptionsDialog.getDebugSound())
+                  System.out.println("[" + time + "] AudioMedia: " + getName() + " [" + playcount + "]" + " Media player closed.") ;
             }
 			}
 		}
@@ -675,8 +701,10 @@ final class AudioMedia extends Audio
 				else
             {
 					doCallback() ;
+            	started = false ;
+               time = System.currentTimeMillis() - Configuration.getTimestamp() ;
+               setStopTime(time) ;   
             }
-         	started = false ;
 			}
          
 			// If at any point the Player encountered an error - possibly in the
@@ -734,6 +762,27 @@ final class AudioMedia extends Audio
             long time = System.currentTimeMillis() - Configuration.getTimestamp() ;
             if (OptionsDialog.getDebugSound())
                System.out.println("[" + time + "] AudioMedia: " + getName() + " [" + playcount + "]" + " StartEvent") ;
+
+            // Fire any generic mediastart() events.
+      
+            MainFrame mf = Kisekae.getMainFrame() ;
+            Configuration config = (mf != null) ? mf.getConfig() : null ;
+            PanelFrame panel = (mf != null) ? mf.getPanel() : null ;
+            EventHandler handler = (config != null) ? config.getEventHandler() : null ;
+      		Vector v = (handler != null) ? handler.getEvent("mediastart") : null ;
+            if (v != null)
+            {
+               Vector mediaevents = new Vector() ;
+               for (int i = 0; i < v.size(); i++)
+               {
+                  FKissEvent e = (FKissEvent) v.elementAt(i) ;
+                  Vector params = e.getParameters() ;
+                  if (params == null || params.size() > 0) continue ;
+                  mediaevents.add(e) ;
+               }
+               if (mediaevents.size() > 0)
+            		EventHandler.fireEvents(mediaevents,panel,Thread.currentThread(),null) ;
+            }
 			}
 
 			else if (ce instanceof StopEvent)
@@ -765,6 +814,29 @@ final class AudioMedia extends Audio
 				}
             doCallback() ;
             started = false ;
+            time = System.currentTimeMillis() - Configuration.getTimestamp() ;
+            setStopTime(time) ;      
+
+            // Fire any generic mediastop() events.  
+      
+            MainFrame mf = Kisekae.getMainFrame() ;
+            Configuration config = (mf != null) ? mf.getConfig() : null ;
+            PanelFrame panel = (mf != null) ? mf.getPanel() : null ;
+            EventHandler handler = (config != null) ? config.getEventHandler() : null ;
+      		Vector v = (handler != null) ? handler.getEvent("mediastop") : null ;
+            if (v != null)
+            {
+               Vector mediaevents = new Vector() ;
+               for (int i = 0; i < v.size(); i++)
+               {
+                  FKissEvent e = (FKissEvent) v.elementAt(i) ;
+                  Vector params = e.getParameters() ;
+                  if (params == null || params.size() > 0) continue ;
+                  mediaevents.add(e) ;
+               }
+               if (mediaevents.size() > 0)
+            		EventHandler.fireEvents(mediaevents,panel,Thread.currentThread(),null) ;
+            }
 	      }
 
 			else if (ce instanceof MediaTimeSetEvent)

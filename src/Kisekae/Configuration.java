@@ -117,6 +117,7 @@ final class Configuration extends KissObject
 	private AlarmTimer timer = null ;		// Primary alarm timer
    private GifTimer animator = null ;		// Primary cel animator
    private SceneTimer scenetimer = null ;	// Primary scene memory unload
+   private AudioTimer closetimer = null ;	// Primary audio memory unload
 	private EventHandler handler = null ;	// Primary event handler
 	private MediaFrame mediaframe = null ;	// Primary media player
    private String properties = null ;     // Doll properties pool name
@@ -540,6 +541,10 @@ final class Configuration extends KissObject
 
 	SceneTimer getSceneTimer() { return scenetimer ; }
 
+	// Method to return our audio memory unload timer.
+
+	AudioTimer getAudioTimer() { return closetimer ; }
+
 	// Method to return a reference to our primary event handler.
 
 	EventHandler getEventHandler() { return handler ; }
@@ -567,6 +572,10 @@ final class Configuration extends KissObject
 	// Method to set our scene memory unload reference.
 
 	void setSceneTimer(SceneTimer t) { scenetimer = t ; }
+
+	// Method to set our audio close memory unload reference.
+
+	void setAudioTimer(AudioTimer t) { closetimer = t ; }
 
 	// Method to set a reference to our primary event handler.
 
@@ -2549,6 +2558,14 @@ final class Configuration extends KissObject
    		scenetimer = new SceneTimer() ;
    		scenetimer.startTimer(cels) ;
       }
+      
+      // If we have audio objects start the audio close timer.
+      
+      if (sounds != null && sounds.size() > 0)
+      {
+   		closetimer = new AudioTimer() ;
+   		closetimer.startTimer(sounds) ;         
+      }
 
 		// If we have FKiSS events, start the event handler threads.
 
@@ -2647,6 +2664,7 @@ final class Configuration extends KissObject
          stopTimer() ;
 			if (animator != null) animator.stopTimer() ;
 	      if (scenetimer != null) scenetimer.stopTimer() ;
+	      if (closetimer != null) closetimer.stopTimer() ;
 			EventHandler.stopEventHandler() ;
          EventHandler.clearEventQueue() ;
 	      EventHandler.setPanelFrame(null);
@@ -2672,11 +2690,14 @@ final class Configuration extends KissObject
       // Terminate any configuration mediaplayer that is active.
 
       if (mediaframe != null) 
+      {
          mediaframe.stop() ;
+      }
       mediaframe = null ;
 		timer = null ;
       animator = null ;
       scenetimer = null ;
+      closetimer = null ;
 
       // If restarting from memory we must re-establish initial object
       // states.  Internal objects must be removed from the configuration
@@ -2900,6 +2921,7 @@ final class Configuration extends KissObject
       timer = null ;          // Primary alarm timer
       animator = null ;       // Primary cel animator
       scenetimer = null ;     // Primary scene memory unload
+      closetimer = null ;     // Primary audio close memory unload
       handler = null ;        // Primary event handler
       mediaframe = null ;     // Primary media player
       properties = null ;     // Doll properties pool name

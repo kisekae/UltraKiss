@@ -183,7 +183,13 @@ final class StatusBar extends JPanel
    // Update memory if user clicks on memory label.   Note that this
    // event can be held if a garbage collection is currently in progress.
 
-   void memlabel_mouseClicked(MouseEvent e) { showMem() ; }
+   void memlabel_mouseClicked(MouseEvent e) 
+   { 
+      if (thread == null)
+         setStatusBar(true) ;
+      else
+         showMem() ; 
+   }
 }
 
 

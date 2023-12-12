@@ -2026,6 +2026,7 @@ public class Kisekae extends Applet
       
       MainFrame mainframe1 = mainframe ;
       System.out.println("Application restarted.") ;
+      HelpLoader.clearTables() ;
       mainframe = new MainFrame(kisekae,file,true) ;
       if (mainframe1 != null) mainframe1.dispose() ;
    }

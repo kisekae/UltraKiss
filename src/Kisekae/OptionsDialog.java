@@ -72,7 +72,7 @@ final public class OptionsDialog extends KissDialog
    private boolean languageapply = false ;         // True if apply language
    private boolean userdirapply = false ;          // True if user dir change
    private boolean icondirapply = false ;          // True if icon dir change
-   private boolean splashdirapply = false ;        // True if spash dir change
+   private boolean splashdirapply = false ;        // True if splash dir change
    private Locale newlocale = null ;               // New locale to set
    private Object newencoding = null ;             // New encoding to set
 
@@ -202,6 +202,7 @@ final public class OptionsDialog extends KissDialog
    private static String timerperiod = "10" ;
    private static String gifperiod = "100" ;
    private static String sceneperiod = "1000" ;
+   private static String audioperiod = "30000" ;
    private static String stickyflex = "10" ;
    private static String maxflex = "100" ;
    private static String maxlock = "32767" ;
@@ -369,6 +370,7 @@ final public class OptionsDialog extends KissDialog
    private static String inittimerperiod = new String(timerperiod) ;
    private static String initgifperiod = new String(gifperiod) ;
    private static String initsceneperiod = new String(sceneperiod) ;
+   private static String initaudioperiod = new String(audioperiod) ;
    private static String initstickyflex = new String(stickyflex) ;
    private static String initmaxflex = new String(maxflex) ;
    private static String initmaxlock = new String(maxlock) ;
@@ -567,6 +569,7 @@ final public class OptionsDialog extends KissDialog
    private JLabel jLabel20 = new JLabel();
    private JLabel jLabel21 = new JLabel();
 	private JLabel jLabel22 = new JLabel();
+	private JLabel jLabel23 = new JLabel();
    private JLabel SplashSetName = new JLabel();
 	private JCheckBox MouseDebug = new JCheckBox();
 	private JCheckBox ControlDebug = new JCheckBox();
@@ -691,6 +694,7 @@ final public class OptionsDialog extends KissDialog
 	private JTextField TimerPeriod = new JTextField();
 	private JTextField GifPeriod = new JTextField();
 	private JTextField ScenePeriod = new JTextField();
+	private JTextField AudioPeriod = new JTextField();
 	private JTextField EventQueues = new JTextField();
 	private JTextField MaxFlex = new JTextField();
 	private JTextField MaxLock = new JTextField();
@@ -1219,6 +1223,8 @@ final public class OptionsDialog extends KissDialog
 		jLabel8.setToolTipText(Kisekae.getCaptions().getString("ToolTipAnimationPeriod"));
 		jLabel22.setText(Kisekae.getCaptions().getString("ScenePeriodText"));
 		jLabel22.setToolTipText(Kisekae.getCaptions().getString("ToolTipScenePeriod"));
+		jLabel23.setText(Kisekae.getCaptions().getString("AudioPeriodText"));
+		jLabel23.setToolTipText(Kisekae.getCaptions().getString("ToolTipAudioPeriod"));
 		jLabel4.setText(Kisekae.getCaptions().getString("EventHandlersText"));
 		jLabel4.setToolTipText(Kisekae.getCaptions().getString("ToolTipEventHandlers"));
 		SystemLF.setText(Kisekae.getCaptions().getString("OptionsSystemLF"));
@@ -1256,6 +1262,9 @@ final public class OptionsDialog extends KissDialog
 		ScenePeriod.setPreferredSize(new Dimension(40, 21));
 		ScenePeriod.setHorizontalAlignment(SwingConstants.RIGHT);
 		ScenePeriod.setText(sceneperiod);
+		AudioPeriod.setPreferredSize(new Dimension(40, 21));
+		AudioPeriod.setHorizontalAlignment(SwingConstants.RIGHT);
+		AudioPeriod.setText(audioperiod);
 		EventQueues.setPreferredSize(new Dimension(40, 21));
 		EventQueues.setHorizontalAlignment(SwingConstants.RIGHT);
 		EventQueues.setText(eventqueues);
@@ -1748,9 +1757,9 @@ final public class OptionsDialog extends KissDialog
 		jTabbedPane1.add(jPanel2, Kisekae.getCaptions().getString("FKissTabText"));
       jPanel2.add(jPanel10, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0
             ,GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 10, 0, 0), 0, 0));
-      jPanel10.add(EventQueues, new GridBagConstraints(1, 3, 1, 1, 0.0, 0.0
+      jPanel10.add(EventQueues, new GridBagConstraints(1, 4, 1, 1, 0.0, 0.0
             ,GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(5, 0, 5, 0), 0, 0));
-      jPanel10.add(jLabel4, new GridBagConstraints(0, 3, 1, 1, 0.0, 0.0
+      jPanel10.add(jLabel4, new GridBagConstraints(0, 4, 1, 1, 0.0, 0.0
             ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(5, 0, 5, 10), 0, 0));
       jPanel10.add(TimerPeriod, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0
             ,GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(5, 0, 5, 0), 0, 0));
@@ -1763,6 +1772,10 @@ final public class OptionsDialog extends KissDialog
       jPanel10.add(ScenePeriod, new GridBagConstraints(1, 2, 1, 1, 0.0, 0.0
             ,GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(5, 0, 5, 0), 0, 0));
       jPanel10.add(jLabel22, new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0
+            ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(5, 0, 5, 10), 0, 0));
+      jPanel10.add(AudioPeriod, new GridBagConstraints(1, 3, 1, 1, 0.0, 0.0
+            ,GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(5, 0, 5, 0), 0, 0));
+      jPanel10.add(jLabel23, new GridBagConstraints(0, 3, 1, 1, 0.0, 0.0
             ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(5, 0, 5, 10), 0, 0));
       jPanel2.add(jPanel11, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
             ,GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
@@ -2392,6 +2405,14 @@ final public class OptionsDialog extends KissDialog
       return -1 ;
    }
 
+	static public int getAudioPeriod()
+   {
+      if (audioperiod == null) return -1 ;
+      try { return (Integer.parseInt(audioperiod)) ; }
+      catch (Exception e) { }
+      return -1 ;
+   }
+
 	static public int getMaxFlex()
    {
       if (maxflex == null) return -1 ;
@@ -2704,6 +2725,9 @@ final public class OptionsDialog extends KissDialog
 	static public void setScenePeriod(String s)
    { sceneperiod = Variable.getStringLiteralValue(s) ; }
 
+	static public void setAudioPeriod(String s)
+   { audioperiod = Variable.getStringLiteralValue(s) ; }
+
 	static public void setMaxFlex(String s)
    { maxflex = Variable.getStringLiteralValue(s) ; }
 
@@ -2993,6 +3017,7 @@ final public class OptionsDialog extends KissDialog
       else if ("timerperiod".equalsIgnoreCase(option)) setTimerPeriod(value) ;
       else if ("gifperiod".equalsIgnoreCase(option)) setGifPeriod(value) ;
       else if ("sceneperiod".equalsIgnoreCase(option)) setScenePeriod(value) ;
+      else if ("audioperiod".equalsIgnoreCase(option)) setAudioPeriod(value) ;
       else if ("stickyflex".equalsIgnoreCase(option)) setStickyFlex(value) ;
       else if ("maxflex".equalsIgnoreCase(option)) setMaxFlex(value) ;
       else if ("maxlock".equalsIgnoreCase(option)) setMaxLock(value) ;
@@ -3144,6 +3169,7 @@ final public class OptionsDialog extends KissDialog
       else if ("timerperiod".equalsIgnoreCase(option)) s += getTimerPeriod() ;
       else if ("gifperiod".equalsIgnoreCase(option)) s += getGifPeriod() ;
       else if ("sceneperiod".equalsIgnoreCase(option)) s += getScenePeriod() ;
+      else if ("audioperiod".equalsIgnoreCase(option)) s += getAudioPeriod() ;
       else if ("stickyflex".equalsIgnoreCase(option)) s += getStickyFlex() ;
       else if ("maxflex".equalsIgnoreCase(option)) s += getMaxFlex() ;
       else if ("maxlock".equalsIgnoreCase(option)) s += getMaxLock() ;
@@ -3232,6 +3258,7 @@ final public class OptionsDialog extends KissDialog
       TimerPeriod.setText(timerperiod);
       GifPeriod.setText(gifperiod);
       ScenePeriod.setText(sceneperiod);
+      AudioPeriod.setText(audioperiod);
       StickyFlex.setText(stickyflex);
       MaxFlex.setText(maxflex);
       MaxLock.setText(maxlock);
@@ -3330,7 +3357,7 @@ final public class OptionsDialog extends KissDialog
       EncodingBox.setSelectedItem(encoding);
       ExportBox.setSelectedItem(exporttype);
       BrowserBox.setSelectedItem(browser);
-
+      
 //    Turn off look and feel changes if Apple
       if (applemac)
       {
@@ -3368,6 +3395,14 @@ final public class OptionsDialog extends KissDialog
          }
       }
       
+//    Ensure SplashList shows current splash selection (after reset)
+      if (splashsetnumber instanceof Integer)
+      {
+         int n = ((Integer) splashsetnumber).intValue() - 1;
+         if (n < 0) n = 0 ;
+         SplashList.ensureIndexIsVisible(n) ;
+      }
+      
 //    Disable SAVE function if we have a loaded configuration
       MainFrame mf = Kisekae.getMainFrame() ;
       Configuration config = (mf != null) ? mf.getConfig() : null ;
@@ -3397,6 +3432,22 @@ final public class OptionsDialog extends KissDialog
       // --------------------------------
       
 	}
+
+   public void setSplashListIndex()
+   {
+		if (!SwingUtilities.isEventDispatchThread())
+		{
+			Runnable awt = new Runnable()
+			{ public void run() { setSplashListIndex() ; } } ;
+			SwingUtilities.invokeLater(awt) ;
+			return ;
+		}
+      
+      if (!(splashsetnumber instanceof Integer)) return ;
+      int n = ((Integer) splashsetnumber).intValue() - 1;
+      if (n < 0) n = 0 ;
+      SplashList.ensureIndexIsVisible(n) ;
+   }
 
 	private void setOptions()
 	{
@@ -3444,6 +3495,7 @@ final public class OptionsDialog extends KissDialog
       timerperiod = TimerPeriod.getText() ;
       gifperiod = GifPeriod.getText() ;
       sceneperiod = ScenePeriod.getText() ;
+      audioperiod = AudioPeriod.getText() ;
       stickyflex = StickyFlex.getText() ;
       maxflex = MaxFlex.getText() ;
       maxlock = MaxLock.getText() ;
@@ -3683,6 +3735,7 @@ final public class OptionsDialog extends KissDialog
       timerperiod = inittimerperiod ;
       gifperiod = initgifperiod ;
       sceneperiod = initsceneperiod ;
+      audioperiod = initaudioperiod ;
       stickyflex = initstickyflex ;
       maxflex = initmaxflex ;
       maxlock = initmaxlock ;
@@ -3823,6 +3876,7 @@ final public class OptionsDialog extends KissDialog
       inittimerperiod = new String(timerperiod) ;
       initgifperiod = new String(gifperiod) ;
       initsceneperiod = new String(sceneperiod) ;
+      initaudioperiod = new String(audioperiod) ;
       initstickyflex = new String(stickyflex) ;
       initmaxflex = new String(maxflex) ;
       initmaxlock = new String(maxlock) ;
@@ -4053,6 +4107,7 @@ final public class OptionsDialog extends KissDialog
       timerperiod = "10" ;
       gifperiod = "100" ;
       sceneperiod = "1000" ;
+      audioperiod = "30000" ;
       stickyflex = "10" ;
       maxflex = "100" ;
       maxlock = "32767" ;
@@ -4130,6 +4185,7 @@ final public class OptionsDialog extends KissDialog
       if (!(inittimerperiod.equals(TimerPeriod.getText()))) return true ;
       if (!(initgifperiod.equals(GifPeriod.getText()))) return true ;
       if (!(initsceneperiod.equals(ScenePeriod.getText()))) return true ;
+      if (!(initaudioperiod.equals(AudioPeriod.getText()))) return true ;
       if (!(initstickyflex.equals(StickyFlex.getText()))) return true ;
       if (!(initmaxflex.equals(MaxFlex.getText()))) return true ;
       if (!(initmaxlock.equals(MaxLock.getText()))) return true ;
@@ -4263,6 +4319,7 @@ final public class OptionsDialog extends KissDialog
       if (!(timerperiod.equals(TimerPeriod.getText()))) return true ;
       if (!(gifperiod.equals(GifPeriod.getText()))) return true ;
       if (!(sceneperiod.equals(ScenePeriod.getText()))) return true ;
+      if (!(audioperiod.equals(AudioPeriod.getText()))) return true ;
       if (!(stickyflex.equals(StickyFlex.getText()))) return true ;
       if (!(maxflex.equals(MaxFlex.getText()))) return true ;
       if (!(maxlock.equals(MaxLock.getText()))) return true ;
@@ -4376,6 +4433,7 @@ final public class OptionsDialog extends KissDialog
       timerperiod = toString1(p.getProperty("timerperiod"),timerperiod) ;
       gifperiod = toString1(p.getProperty("gifperiod"),gifperiod) ;
       sceneperiod = toString1(p.getProperty("sceneperiod"),sceneperiod) ;
+      audioperiod = toString1(p.getProperty("audioperiod"),audioperiod) ;
       stickyflex = toString1(p.getProperty("stickyflex"),stickyflex) ;
       maxflex = toString1(p.getProperty("maxflex"),maxflex) ;
       maxlock = toString1(p.getProperty("maxlock"),maxlock) ;
@@ -4561,6 +4619,7 @@ final public class OptionsDialog extends KissDialog
       p.put("timerperiod",toString2(timerperiod)) ;
       p.put("gifperiod",toString2(gifperiod)) ;
       p.put("sceneperiod",toString2(sceneperiod)) ;
+      p.put("audioperiod",toString2(audioperiod)) ;
       p.put("stickyflex",toString2(stickyflex)) ;
       p.put("maxflex",toString2(maxflex)) ;
       p.put("maxlock",toString2(maxlock)) ;
@@ -5166,6 +5225,7 @@ final public class OptionsDialog extends KissDialog
              !TimerPeriod.getText().equals(timerperiod) ||
              !GifPeriod.getText().equals(gifperiod) ||
              !ScenePeriod.getText().equals(sceneperiod) ||
+             !AudioPeriod.getText().equals(audioperiod) ||
              languagerestart)
          {
             MainFrame mf = Kisekae.getMainFrame() ;
@@ -6310,6 +6370,7 @@ final public class OptionsDialog extends KissDialog
 	   if (!timerperiod.equals(inittimerperiod) && !b) writeLine(out,"; timerperiod = \"" + timerperiod + "\"") ;
 	   if (!gifperiod.equals(initgifperiod)) writeLine(out,"; gifperiod = \"" + gifperiod + "\"") ;
 	   if (!sceneperiod.equals(initsceneperiod)) writeLine(out,"; sceneperiod = \"" + sceneperiod + "\"") ;
+	   if (!audioperiod.equals(initaudioperiod)) writeLine(out,"; audioperiod = \"" + audioperiod + "\"") ;
 	   if (!stickyflex.equals(initstickyflex)) writeLine(out,"; stickyflex = \"" + stickyflex + "\"") ;
 	   if (!maxflex.equals(initmaxflex)) writeLine(out,"; maxflex = \"" + maxflex + "\"") ;
 	   if (!maxlock.equals(initmaxlock) && !b) writeLine(out,"; maxlock = \"" + maxlock + "\"") ;

@@ -1368,6 +1368,7 @@ final class MediaFrame extends KissFrame
       {
          timer.removeActionListener(timerTask) ;
          timer.stop() ;
+         timer = null ;
       }
 		removeWindowListener(this);
       setVisible(false) ;
@@ -1906,7 +1907,9 @@ final class MediaFrame extends KissFrame
       playlist = null ;
       playlistname = null ;
       timer = null ;
+      timerTask = null ;
       list1 = null ;
+      listListener = null ;
 		setVisible(false) ;
 		getContentPane().removeAll() ;
 		getContentPane().removeNotify() ;

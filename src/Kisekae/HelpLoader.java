@@ -174,4 +174,12 @@ final public class HelpLoader
       if (!loaded) return ;
       if (hb != null) ((HelpSetBroker) hb).setActionListener(a) ;
    }
+   
+   // Clear our static tables.
+   
+   public static void clearTables()
+   {
+      brokers.clear() ;
+      helpsets.clear() ;
+   }
 }
