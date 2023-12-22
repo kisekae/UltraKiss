@@ -328,6 +328,7 @@ final class SceneTimer extends Thread
                if (!(o instanceof Cel)) continue ;
 					Cel c = (Cel) o ;
                if (!c.isLoaded()) continue ;
+               if (c.isUpdated()) continue ;
                if (c.isOnAllPage()) continue ;
                if (c.isOnSpecificPage(0)) continue ;             
                if (c.isOnSpecificPage(scene)) continue ; 

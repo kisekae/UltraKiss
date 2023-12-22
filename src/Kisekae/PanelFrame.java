@@ -4437,8 +4437,6 @@ final class PanelFrame extends JPanel
          int t = c.getAlpha(x-r.x,y-r.y) ;
          if (t < 0) continue ;
          int n = c.getTransparency() ;
-   if ("black.cel".equals(c.getName()))
-     c = c ;
 
          // Transparent pixels are not accepted if the pixel is the cel
          // transparent color.  GIF images appear to return the background
@@ -6109,9 +6107,9 @@ final class PanelFrame extends JPanel
             }
 
             // Update the location of the group on the page.
-         
+/*    causes reset to fail on second time.  Not sure why this was added for pagesasscenes?     
             group.updatePageSetLocation(page) ;
-
+*/
             // Capture this edit for undo/redo processing.
 
             if (selected && (placement.x != 0 || placement.y != 0))

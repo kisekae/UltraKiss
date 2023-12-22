@@ -75,12 +75,17 @@ final class ObjectDialog extends KissDialog
 	private JPanel jPanel1 = new JPanel();
 	private JPanel jPanel2 = new JPanel();
 	private JPanel jPanel3 = new JPanel();
+	private JPanel jPanel4 = new JPanel();
+	private JPanel jPanel5 = new JPanel();
 	private JButton OK = new JButton();
 	private JButton CANCEL = new JButton();
 	private JButton VIEW = new JButton();
+	private JButton FIND = new JButton();
 	private BorderLayout borderLayout1 = new BorderLayout();
 	private BorderLayout borderLayout2 = new BorderLayout();
 	private BorderLayout borderLayout3 = new BorderLayout();
+	private BorderLayout borderLayout4 = new BorderLayout();
+	private FlowLayout flowLayout1 = new FlowLayout();
 	private GridLayout gridLayout1 = new GridLayout();
 	private JScrollPane jScrollPane1 = new JScrollPane();
    private JTree TREE = new JTree() ;
@@ -88,6 +93,7 @@ final class ObjectDialog extends KissDialog
    private Border eb1 = BorderFactory.createEmptyBorder(10,10,10,10) ;
    private Border eb2 = BorderFactory.createEmptyBorder(0,5,5,5) ;
    private Border eb3 = BorderFactory.createEmptyBorder(15,0,0,0) ;
+   private Border eb4 = BorderFactory.createEmptyBorder(10,10,10,10) ;
 	private JLabel heading = new JLabel();
 	private JLabel configlabel = new JLabel();
 	private JLabel filelabel = new JLabel();
@@ -253,9 +259,15 @@ final class ObjectDialog extends KissDialog
 	TreeExpansionListener treeExpander = new TreeExpansionListener()
    {
 		public void treeExpanded(TreeExpansionEvent e)
-		{ ++expansions ; CANCEL.setEnabled(parent instanceof KissDialog || expansions > 0) ; }
+		{ 
+         ++expansions ; 
+         CANCEL.setEnabled(parent instanceof KissDialog || expansions > 0) ; 
+      }
 		public void treeCollapsed(TreeExpansionEvent e)
-		{ --expansions ; CANCEL.setEnabled(parent instanceof KissDialog || expansions > 0) ; }
+		{ 
+         --expansions ; 
+         CANCEL.setEnabled(parent instanceof KissDialog || expansions > 0) ; 
+      }
 	} ;
 
 
@@ -344,6 +356,7 @@ final class ObjectDialog extends KissDialog
 		OK.addActionListener(this) ;
 		CANCEL.addActionListener(this) ;
 		VIEW.addActionListener(this) ;
+		FIND.addActionListener(this) ;
 		TREE.addMouseListener(treeBreakpoint) ;
 		TREE.addMouseListener(mouseTreeListener) ;
       TREE.addTreeSelectionListener(treeListener);
@@ -367,6 +380,8 @@ final class ObjectDialog extends KissDialog
       CANCEL.setEnabled(parent instanceof KissDialog);
 		VIEW.setEnabled(false);
 		VIEW.setText(Kisekae.getCaptions().getString("ViewObjectMessage"));
+		FIND.setEnabled(true);
+		FIND.setText(Kisekae.getCaptions().getString("FindMessage"));
 		TREE = new noExpandTree(top);
 		TREE.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
       TREE.setCellRenderer(new FKissCellRenderer());
@@ -377,7 +392,10 @@ final class ObjectDialog extends KissDialog
 		gridLayout1.setRows(3);
 
  		jPanel2.setLayout(new BoxLayout(jPanel2,BoxLayout.X_AXIS));
-		jPanel3.setLayout(borderLayout3);
+		jPanel3.setLayout(borderLayout3) ;
+		jPanel4.setLayout(borderLayout4) ;
+      jPanel5.setLayout(flowLayout1) ;
+      jPanel5.setBorder(eb4) ;
 
       heading.setText(Kisekae.getCaptions().getString("ObjectHeadingText"));
       heading.setBorder(BorderFactory.createEmptyBorder(20,0,5,0));
@@ -391,10 +409,13 @@ final class ObjectDialog extends KissDialog
 		jPanel2.setBorder(eb3);
 
 		getContentPane().add(panel1);
-		panel1.add(jPanel1, BorderLayout.NORTH);
+		panel1.add(jPanel4, BorderLayout.NORTH);
 		jPanel1.add(configlabel, null);
 		jPanel1.add(filelabel, null);
 		jPanel1.add(bytelabel, null);
+		jPanel4.add(jPanel1, BorderLayout.CENTER);
+		jPanel5.add(FIND, null);
+		jPanel4.add(jPanel5, BorderLayout.EAST);
 		panel1.add(jPanel2, BorderLayout.SOUTH);
   	   jPanel2.add(Box.createGlue()) ;
 		jPanel2.add(component1, null);
@@ -457,6 +478,15 @@ final class ObjectDialog extends KissDialog
 				}
 				else
 					close() ;
+				return ;
+			}
+         
+			// A FIND request opens a dialog to search the tree for a node.
+
+			if (source == FIND)
+			{
+				ObjectFindDialog find = new ObjectFindDialog(me,TREE) ;
+            find.show() ;
 				return ;
 			}
 

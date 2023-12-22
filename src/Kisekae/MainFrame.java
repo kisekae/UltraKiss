@@ -2360,8 +2360,8 @@ final public class MainFrame extends KissFrame
                // Look for image description
 
                description = "" ;
-               s1 = s.substring(0,m) ;
-               URL reference = Kisekae.getResource(s1+"_reference.txt") ;
+               s1 = s.substring(0,m) + "_reference.txt";
+               URL reference = Kisekae.getResource(s1) ;
                if (reference != null && backimage != null)
                {
                   s1 = reference.getPath() ;
