@@ -326,22 +326,16 @@ class UrlLoader extends KissFrame
             s1 = s1.substring(0,i1+1) + s + s1.substring(j1) ;
          showStatus(s1) ;
 
-         int completed = 0 ;
-         while (!stop && (b = is.read()) >= 0)
+         byte[] buffer = new byte[2048];
+         while (!stop && (n = is.read(buffer)) >= 0)
          {
-         	bytes++ ;
-            completed++ ;
-            os.write(b) ;
-            if (completed >= 2048)
-            {
-               completed -= 2048 ;
-               updateProgress(2048) ;
-            }
+         	bytes = bytes + n ;
+            os.write(buffer,0,n) ;
+            updateProgress(n) ;
          }
 
          // Close the connection.
 
-         updateProgress(completed) ;
          showStatus(Kisekae.getCaptions().getString("CloseConnectionStatus")) ;
          is.close() ;
          os.close() ;
