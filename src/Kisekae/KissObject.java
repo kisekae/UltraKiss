@@ -1199,7 +1199,7 @@ abstract class KissObject
 		if (kiss == this) return ;
 		if (kiss != null) o.detach() ;
 		o.setParent(this) ;
-		if (children == null) children = new Vector() ;
+		if (children == null) children = new Vector() ; 
 		if (!children.contains(o)) children.add(o) ;
 		Collections.sort(children) ;
       updateMoveRestrictions(o.getLocation(),o.getRestrictX(),o.getRestrictY()) ;
@@ -1210,7 +1210,7 @@ abstract class KissObject
 		if (parent == null) return ;
 		Vector v = parent.getChildren() ;
 		if (v == null) return ;
-		v.remove(this) ;
+		boolean b = v.remove(this) ;
       parent.updateMoveRestrictions(v) ;
 		glued = false ;
 		parent = null ;
@@ -1295,8 +1295,10 @@ abstract class KissObject
 
       // If this object has a parent we must update the parent restrictions.
 
-      if (parent != null)
+      if ((x != null || y != null) && parent != null)
+      {
          parent.updateMoveRestrictions(parent.getChildren()) ;
+      }
    }
 
 
@@ -1312,7 +1314,8 @@ abstract class KissObject
       if (v == null || v.size() == 0)
       {
          if (parent == null) return ;
-         parent.updateMoveRestrictions(parent.getChildren()) ;
+         if (restrictx != null || restricty != null)
+            parent.updateMoveRestrictions(parent.getChildren()) ;
          return ;
       }
 

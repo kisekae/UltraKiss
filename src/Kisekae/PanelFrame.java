@@ -3279,7 +3279,8 @@ final class PanelFrame extends JPanel
          if (!open) zip.open() ;
          Vector groups = new Vector() ;
          String s = (OptionsDialog.getPagesAreScenes()) ? "scene" : "page" ;
-         parent.showStatus("Load images on " + s + " " + pageset + " ...");
+         if (OptionsDialog.getDebugLoad())
+            parent.showStatus("Load images on " + s + " " + pageset + " ...");
          Integer page = new Integer(pageset) ;
 
          for (int i = 0 ; i < baseList.length ; i++)

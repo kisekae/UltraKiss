@@ -74,6 +74,7 @@ import javax.media.* ;
 final class FKissAction extends KissObject
 {
    private static Vector groupsetpool = new Vector() ;
+   private static int groupsetid = 0 ;
 
    private String identifier = null ;		// Action name (map, unmap, ...)
    private Vector parameters = null ;		// Action parameter list
@@ -122,17 +123,26 @@ final class FKissAction extends KissObject
    // movement of attached groups.  These objects are allocated as
    // required and reused to minimize memory management overhead.
 
-   static void clearGroupsetPool() { groupsetpool = new Vector() ; }
+   synchronized static void clearGroupsetPool() 
+   { 
+      groupsetpool = new Vector() ; 
+      groupsetid = 0 ;
+   }
 
-   static Group allocateGroupset()
+   synchronized static Group allocateGroupset()
    {
-      if (groupsetpool.size() == 0) return new Group() ;
+      if (groupsetpool.size() == 0)
+      {
+         Group g = new Group() ;        
+         g.setIdentifier(--groupsetid);
+         return g ;
+      }
       Group g = (Group) groupsetpool.elementAt(0) ;
       groupsetpool.removeElement(g) ;
       return g ;
    }
 
-   static void returnGroupset(Group g)
+   synchronized static void returnGroupset(Group g)
    {
       if (g == null) return ;
       g.init() ;
@@ -292,7 +302,7 @@ final class FKissAction extends KissObject
    // this action occurs.  The activation thread helps us manage alarm
    // activation.
 
-   Object [] doAction(PanelFrame panel, Thread thread, Thread currentthread, Hashtable eventstate)
+   synchronized Object [] doAction(PanelFrame panel, Thread thread, Thread currentthread, Hashtable eventstate)
    {
       int i, n1, n2, n3, n4 ;
       long l1, l2, l3, l4 ;
@@ -1572,7 +1582,7 @@ final class FKissAction extends KissObject
             }
             catch (IOException e)
             {
-               s = "Exception, Event action: " + toString() ;
+               s = "[" + Thread.currentThread().getName() + "] " + "Exception, Event action: " + toString() ;
                System.out.println("Line [" + line + "] " + s) ;
                System.out.println(e) ;
             }
@@ -1727,166 +1737,175 @@ final class FKissAction extends KissObject
             o = (labelevt != null && labelevt.size() > 0) ? labelevt.elementAt(0) : null ;
             if (o instanceof FKissEvent)
             {
-               FKissFrame fk = event.getBreakFrame() ;
-               FKissEvent invoker = (fk != null) ? fk.getInvoker() : null ;
-               if (invoker != null && invoker.isBreakEnter())
-                 ((FKissEvent) o).setNoBreakpoint(false);
-
-               // Establish any label arguments.  These are provided on the gosub or goto
-               // or goto statement and referenced as local parameters by the label event 
-               // code.  For gosubrandom or gotorandom statements parameters should be  
-               // consistent across each potential label module
-
-               n1 = n2 = 1 ;
-               if (code == 33 || code == 34) n1 = 3 ;
-               FKissEvent labelevent = (FKissEvent) o ;
-               Vector arguments = labelevent.getParameters() ;
-               for (i = n1 ; i < parameters.size() ; i++)
+               // Label events are not reentrant.  Multiple activities which
+               // are unique with respect to their event code may chose to 
+               // call the same subroutine concurrently.  Parameter passing
+               // between the subroutine must be synchronized.
+               
+               synchronized (o) 
                {
-                  o1 = variable.getValue((String) parameters.elementAt(i),event) ;
-                  if (n2 < arguments.size())
+                  FKissFrame fk = event.getBreakFrame() ;
+                  FKissEvent invoker = (fk != null) ? fk.getInvoker() : null ;
+                  if (invoker != null && invoker.isBreakEnter())
+                    ((FKissEvent) o).setNoBreakpoint(false);
+
+                  // Establish any label arguments.  These are provided on the 
+                  // gosub or goto statement and referenced as local parameters 
+                  // by the label event code.  For gosubrandom or gotorandom 
+                  // statements parameters should be consistent across each 
+                  // potential label module.
+
+                  n1 = n2 = 1 ;
+                  if (code == 33 || code == 34) n1 = 3 ;
+                  FKissEvent labelevent = (FKissEvent) o ;
+                  Vector arguments = labelevent.getParameters() ;
+                  for (i = n1 ; i < parameters.size() ; i++)
                   {
-                     s = (String) arguments.elementAt(n2++) ;
-                     if (!s.startsWith("@")) s = "@" + s ;
-                     if (!(code == 31 || code == 33))
-                        labelevent.setDepth(labelevent.getDepth()+1) ;
-                     variable.setValue(s,o1,labelevent) ;
-                     if (!(code == 31 || code == 33))
-                        labelevent.setDepth(labelevent.getDepth()-1) ;
+                     o1 = variable.getValue((String) parameters.elementAt(i),event) ;
+                     if (n2 < arguments.size())
+                     {
+                        s = (String) arguments.elementAt(n2++) ;
+                        if (!s.startsWith("@")) s = "@" + s ;
+                        if (!(code == 31 || code == 33))
+                           labelevent.setDepth(labelevent.getDepth()+1) ;
+                        variable.setValue(s,o1,labelevent) ;
+                        if (!(code == 31 || code == 33))
+                           labelevent.setDepth(labelevent.getDepth()-1) ;
+                     }
                   }
-               }
                
-               // The goto action is processed sequentially.  The event
-               // firing routine will switch focus to this new label event.
-               // We must transfer any pending alarm activations to this
-               // label event so they do not get lost.
+                  // The goto action is processed sequentially.  The event
+                  // firing routine will switch focus to this new label event.
+                  // We must transfer any pending alarm activations to this
+                  // label event so they do not get lost.
 
-               if (code == 31 || code == 33)
-               {
-                  Vector alarmlist = event.getAlarmList() ;
-                  ((FKissEvent) o).setAlarmEnable(alarmlist) ;
-                  exception = "goto" ;
-                  exceptionitem = o ;
-                  break ;
-               }
+                  if (code == 31 || code == 33)
+                  {
+                     Vector alarmlist = event.getAlarmList() ;
+                     ((FKissEvent) o).setAlarmEnable(alarmlist) ;
+                     exception = "goto" ;
+                     exceptionitem = o ;
+                     break ;
+                  }
 
-               // The gosub action causes the label event to be processed
-               // recursively.  The display is not updated until the main event
-               // is complete.  We propagate breakpoint states into the label
-               // event if we are performing a breakpoint subroutine entry.
+                  // The gosub action causes the label event to be processed
+                  // recursively.  The display is not updated until the main event
+                  // is complete.  We propagate breakpoint states into the label
+                  // event if we are performing a breakpoint subroutine entry.
 
-               Object [] breakstate = null ;
-               fk = event.getBreakFrame() ;
-               invoker = (fk != null) ? fk.getInvoker() : null ;
-               int iflevel = event.getIfLevel() ;
-               int elseiflevel = event.getElseIfLevel() ;
-               Object skipactions = event.getSkipActions(currentthread) ;
-               if (invoker != null && invoker.isBreakEnter())
-               {
-                  breakstate = invoker.getBreakState() ;
-                  invoker.setBreakState(null) ;
-                  labelevent.setBreakState(breakstate) ;
-               }
+                  Object [] breakstate = null ;
+                  fk = event.getBreakFrame() ;
+                  invoker = (fk != null) ? fk.getInvoker() : null ;
+                  int iflevel = event.getIfLevel() ;
+                  int elseiflevel = event.getElseIfLevel() ;
+                  Object skipactions = event.getSkipActions(currentthread) ;
+                  if (invoker != null && invoker.isBreakEnter())
+                  {
+                     breakstate = invoker.getBreakState() ;
+                     invoker.setBreakState(null) ;
+                     labelevent.setBreakState(breakstate) ;
+                  }
                
-               // Indicate if this event is the target of a repeat() action.
-               // If it is then exitloop() actions are valid.
+                  // Indicate if this event is the target of a repeat() action.
+                  // If it is then exitloop() actions are valid.
                
-               if (code == 149) 
-               {
-                  labelevent.setRepeating(true) ;
+                  if (code == 149) 
+                  {
+                     labelevent.setRepeating(true) ;
             
-                  // Initialize or increment.  Set the iteration variable value.
+                     // Initialize or increment.  Set the iteration variable value.
 
-                  if (initializerepeat) 
-                  { 
-                     repeatcount = 1 ; 
-                     labelevent.setRepeatLimit(repeatlimit) ; 
-                     initializerepeat = false ; 
+                     if (initializerepeat) 
+                     { 
+                        repeatcount = 1 ; 
+                        labelevent.setRepeatLimit(repeatlimit) ; 
+                        initializerepeat = false ; 
+                     }
+                     else  
+                     {
+                        repeatlimit = labelevent.getRepeatLimit() ; 
+                        repeatcount += 1 ;
+                     }
+                     if (!directkiss)
+                        variable.setIntValue(repeatvbl,repeatcount,event) ;
+                     if (repeatcount > repeatlimit) 
+                     { 
+                        initializerepeat = true ; 
+                        break ; 
+                     }
+                     if (directkiss)
+                        variable.setIntValue(repeatvbl,repeatcount,event) ;
+                     exception = "repeat" ;
                   }
-                  else  
+
+                  // Process the gosub event.  Restore our break and skip state
+                  // on return.
+
+                  labelevent.fireEvent(panel,thread,null) ;
+                  labelevent.setRepeating(false) ;
+                  event.setIfLevel(iflevel) ;
+                  event.setElseIfLevel(elseiflevel) ;
+                  event.setSkipActions(currentthread,skipactions) ;
+                  if (breakstate != null)
                   {
-                     repeatlimit = labelevent.getRepeatLimit() ; 
-                     repeatcount += 1 ;
+                     breakstate = labelevent.getBreakState() ;
+                     labelevent.setBreakState(null) ;
+                     if (invoker != null) invoker.setBreakState(breakstate) ;
                   }
-                  if (!directkiss)
-                     variable.setIntValue(repeatvbl,repeatcount,event) ;
-                  if (repeatcount > repeatlimit) 
-                  { 
-                     initializerepeat = true ; 
-                     break ; 
-                  }
-                  if (directkiss)
-                     variable.setIntValue(repeatvbl,repeatcount,event) ;
-                  exception = "repeat" ;
-               }
 
-               // Process the gosub event.  Restore our break and skip state
-               // on return.
+                  // Establish the label return value as a local variable
+                  // for this event.
 
-               labelevent.fireEvent(panel,thread,null) ;
-               labelevent.setRepeating(false) ;
-               event.setIfLevel(iflevel) ;
-               event.setElseIfLevel(elseiflevel) ;
-               event.setSkipActions(currentthread,skipactions) ;
-               if (breakstate != null)
-               {
-                  breakstate = labelevent.getBreakState() ;
-                  labelevent.setBreakState(null) ;
-                  if (invoker != null) invoker.setBreakState(breakstate) ;
-               }
-
-               // Establish the label return value as a local variable
-               // for this event.
-
-               o = labelevent.getReturnValue() ;
-               arguments = labelevent.getParameters() ;
-               if (o != null && arguments != null && arguments.size() > 0)
-               {
-                  s = '@' + (String) arguments.elementAt(0) ;
-                  variable.setValue(s,o,event) ;
-               }
-
-               // Ensure that any new event collision states are propagated
-               // to this event.
-
-               Hashtable labelcollide = labelevent.getCollisionState() ;
-               Enumeration enum1 = labelcollide.keys() ;
-               while (enum1 != null && enum1.hasMoreElements())
-               {
-                  Object key = enum1.nextElement() ;
-                  Object value = labelcollide.get(key) ;
-                  Object collisionstate = eventstate.get(key) ;
-                  if (collisionstate == null)
-                     eventstate.put(key,value) ;
-                  else if (collisionstate instanceof Object [])
+                  o = labelevent.getReturnValue() ;
+                  arguments = labelevent.getParameters() ;
+                  if (o != null && arguments != null && arguments.size() > 0)
                   {
-                     Boolean mapped = (Boolean) ((Object []) collisionstate)[4] ;
-                     Boolean mapstate = (Boolean) ((Object []) value)[4] ;
-                     if (!mapstate.booleanValue() & mapped.booleanValue())
-                        ((Object []) collisionstate)[4] = new Boolean(false) ;
+                     s = '@' + (String) arguments.elementAt(0) ;
+                     variable.setValue(s,o,event) ;
                   }
+
+                  // Ensure that any new event collision states are propagated
+                  // to this event.
+
+                  Hashtable labelcollide = labelevent.getCollisionState() ;
+                  Enumeration enum1 = labelcollide.keys() ;
+                  while (enum1 != null && enum1.hasMoreElements())
+                  {
+                     Object key = enum1.nextElement() ;
+                     Object value = labelcollide.get(key) ;
+                     Object collisionstate = eventstate.get(key) ;
+                     if (collisionstate == null)
+                        eventstate.put(key,value) ;
+                     else if (collisionstate instanceof Object [])
+                     {
+                        Boolean mapped = (Boolean) ((Object []) collisionstate)[4] ;
+                        Boolean mapstate = (Boolean) ((Object []) value)[4] ;
+                        if (!mapstate.booleanValue() & mapped.booleanValue())
+                           ((Object []) collisionstate)[4] = new Boolean(false) ;
+                     }
+                  }
+               
+                  // Cancel any repeat exception if we terminated with an exitloop.
+               
+                  if ("exitloop".equals(labelevent.getEventException()))
+                  {
+                     exception = null ;
+                     initializerepeat = true ;
+                  }
+
+                  // Return the label event bounding box and ensure that any
+                  // label alarm enable requests are attached to this event.
+
+                  box = labelevent.getBoundingBox() ;
+                  actionsprocessed = labelevent.getActionsProcessed() ;
+                  Vector alarmlist = labelevent.getAlarmList() ;
+                  event.setAlarmEnable(alarmlist) ;
                }
                
-               // Cancel any repeat exception if we terminated with an exitloop.
-               
-               if ("exitloop".equals(labelevent.getEventException()))
-               {
-                  exception = null ;
-                  initializerepeat = true ;
-               }
-
-               // Return the label event bounding box and ensure that any
-               // label alarm enable requests are attached to this event.
-
-               box = labelevent.getBoundingBox() ;
-               actionsprocessed = labelevent.getActionsProcessed() ;
-               Vector alarmlist = labelevent.getAlarmList() ;
-               event.setAlarmEnable(alarmlist) ;
-
                if (OptionsDialog.getDebugAction() && (!getNoBreakpoint() || OptionsDialog.getDebugDisabled()))
                {
                    String bp = (nobreakpoint) ? "*" : " " ;
-                   System.out.println(" >"+bp+"gosub(" + kiss.getIdentifier() + ") returns") ;
+                   System.out.println("  > [" + Thread.currentThread().getName() + "]"+bp+"gosub(" + kiss.getIdentifier() + ") returns") ;
                }
             }
             break ;
@@ -3986,7 +4005,7 @@ final class FKissAction extends KissObject
                catch (IOException e)
                {
                   n1 = -1 ;
-                  System.out.println("FKissAction: write " + text.getPath() + " " + e);
+                  System.out.println("[" + Thread.currentThread().getName() + "] " + "FKissAction: write " + text.getPath() + " " + e);
                }
             }
             variable.setIntValue((String) parameters.elementAt(0),n1,event) ;
@@ -4569,21 +4588,21 @@ final class FKissAction extends KissObject
       catch (StackOverflowError e)
       {
          long depth = event.getDepth() ;
-         s = "Event action stack overflow at depth " + depth + "\nLine [" + line + "] " + toString() ;
+         s = "[" + Thread.currentThread().getName() + "] Event action stack overflow at depth " + depth + "\nLine [" + line + "] " + toString() ;
          if (e.getMessage() == null) e = new StackOverflowError(s) ;
          throw e ;
       }
 
       catch (SecurityException e)
       {
-         s = "Event action security exception " + toString() ;
+         s = "[" + Thread.currentThread().getName() + "] " + "Event action security exception " + toString() ;
          System.out.println("Line [" + line + "] " + s) ;
          if (panel != null) panel.showStatus(s) ;
       }
 
       catch (Exception e)
       {
-         s = "Exception, Event action: " + toString() ;
+         s = "[" + Thread.currentThread().getName() + "] " + "Exception, Event action: " + toString() ;
          System.out.println("Line [" + line + "] " + s) ;
          if (panel != null) panel.showStatus(s) ;
          e.printStackTrace() ;
@@ -4629,6 +4648,7 @@ final class FKissAction extends KissObject
 
    private KissObject findGroupOrCel(String s, FKissEvent event)
    {
+      if (s == null) return null ;
       Object o = Group.findGroup(s,config,event) ;
       if (o == null) o = Cel.findCel(s,config,event) ;
       if (o == null) o = CelGroup.findCelGroup(s,config,event) ;

@@ -758,7 +758,7 @@ final class FKissEvent extends KissObject
 	// event thread.  The event thread is used to distinguish between user
 	// initiated events and animation Timer events during Alarm processing.
 
-	Rectangle fireEvent(final PanelFrame panel, final Thread thread, final Object source)
+	synchronized Rectangle fireEvent(final PanelFrame panel, final Thread thread, final Object source)
 	{
       // If we are modal, only process events from the modal source.  Events
       // without a source such as keyboard events or set initialization events

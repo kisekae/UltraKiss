@@ -112,6 +112,8 @@ final class Variable
       {
          event.setTemporary(true) ;
          variable = event.getVariableTable() ;
+         if (variable == null)
+            event = event ;
       }
 
 		// Save the value using the absolute variable name.  Note, event, action, 
@@ -125,7 +127,7 @@ final class Variable
 			if (OptionsDialog.getDebugVariable())
          {
             String bp = (event.getNoBreakpoint()) ? "*" : " " ;
-				System.out.println("  >"+bp+"Variable " + v + " removed.") ;
+				System.out.println("  > [" + Thread.currentThread().getName() + "]"+bp+"Variable " + v + " removed.") ;
          }
 		}
 		else
@@ -134,7 +136,7 @@ final class Variable
 			if (OptionsDialog.getDebugVariable())
          {
             String bp = (event.getNoBreakpoint()) ? "*" : " " ;
-				System.out.println("  >"+bp+"Variable " + v + " set to " + o.toString()) ;
+				System.out.println("  > [" + Thread.currentThread().getName() + "]"+bp+"Variable " + v + " set to " + o.toString()) ;
          }
 		}
 	}
@@ -227,6 +229,7 @@ final class Variable
 
 		// Otherwise return the variable value.
 
+      if (variable == null) return null ;
 		return variable.get(v) ;
 	}
 
@@ -300,6 +303,7 @@ final class Variable
 
 		// Otherwise return the variable type.
 
+      if (variable == null) return 0 ;
 		Object o = variable.get(v) ;
       if (o instanceof Integer) return 1 ;
       if (o instanceof Long) return 2 ;
@@ -379,7 +383,7 @@ final class Variable
 		if (OptionsDialog.getDebugVariable()) 
       {
          String bp = (event.getNoBreakpoint()) ? "*" : " " ;
-			System.out.println("  >"+bp+"Variable " + v + " set to " + n) ;
+			System.out.println("  > [" + Thread.currentThread().getName() + "]"+bp+"Variable " + v + " set to " + n) ;
       }
 	}
 
@@ -422,7 +426,7 @@ final class Variable
 		if (OptionsDialog.getDebugVariable()) 
       {
          String bp = (event.getNoBreakpoint()) ? "*" : " " ;
-			System.out.println("  >"+bp+"Variable " + v + " set to " + n) ;
+			System.out.println("  > [" + Thread.currentThread().getName() + "]"+bp+"Variable " + v + " set to " + n) ;
       }
 	}
 
@@ -465,7 +469,7 @@ final class Variable
 		if (OptionsDialog.getDebugVariable()) 
       {
          String bp = (event.getNoBreakpoint()) ? "*" : " " ;
-			System.out.println("  >"+bp+"Variable " + v + " set to " + n) ;
+			System.out.println("  > [" + Thread.currentThread().getName() + "]"+bp+"Variable " + v + " set to " + n) ;
       }
 	}
 
@@ -514,6 +518,7 @@ final class Variable
 		
 		// Reference the integer value using the absolute variable name.
 
+      if (variable == null) return 0 ;
 		Object o = variable.get(v) ;
       if (o == null) return 0 ;
 		if (o instanceof Integer) return ((Integer) o).intValue() ;
@@ -569,6 +574,7 @@ final class Variable
 		
 		// Reference the long value using the absolute variable name.
 
+      if (variable == null) return 0 ;
 		Object o = variable.get(v) ;
       if (o == null) return 0 ;
 		if (o instanceof Integer) return ((Integer) o).longValue() ;
@@ -624,6 +630,7 @@ final class Variable
 		
 		// Reference the double value using the absolute variable name.
 
+      if (variable == null) return 0 ;
 		Object o = variable.get(v) ;
       if (o == null) return 0 ;
 		if (o instanceof Integer) return ((Integer) o).doubleValue() ;
