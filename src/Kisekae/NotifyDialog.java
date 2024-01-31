@@ -69,6 +69,7 @@ final class NotifyDialog extends KissDialog
    implements ActionListener, WindowListener
 {
    private Image image = null ;
+   private String hyperlink = null ;
    private int state = 0 ;
    private boolean confirm = false ;
 
@@ -97,6 +98,7 @@ final class NotifyDialog extends KissDialog
       super(frame, title, true);
       confirm = conf ;
       image = img ;
+      hyperlink = text ;
       setDefaultCloseOperation(DISPOSE_ON_CLOSE) ;
 
       // Initialize the user interface.
@@ -182,6 +184,8 @@ final class NotifyDialog extends KissDialog
       {
          LABEL.setIcon(new ImageIcon(image));
          jScrollPane1.getViewport().add(LABEL, null);
+         MouseListener listener = new HyperlinkListener() ;
+         LABEL.addMouseListener(listener);            
       }
       else
          jScrollPane1.getViewport().add(TEXT, null);
@@ -261,4 +265,46 @@ final class NotifyDialog extends KissDialog
    }
    
    void setValues() { }
+
+
+   // Mouse listener for hyperlinks on images in notify dialog.
+   // FKiSS syntax:  notify(cel,string)
+   
+   class HyperlinkListener extends MouseAdapter 
+   {
+      private Cursor defaultcursor = 
+         Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR) ;
+      private Cursor presscursor = 
+         Cursor.getPredefinedCursor(Cursor.HAND_CURSOR) ;
+ 
+      public void mouseClicked(MouseEvent event) 
+      { 
+         if (hyperlink == null || "".equals(hyperlink)) return ;
+         String s = hyperlink.toLowerCase() ;
+         try
+         {
+            if (s.startsWith("http:") || s.startsWith("https:"))
+            {
+               BrowserControl browser = new BrowserControl() ;
+               browser.displayURL(s) ;
+            }
+         }
+         catch (Exception e)
+         {
+            System.out.println(e) ;
+         }
+      }
+      
+      public void mouseEntered(MouseEvent e) 
+      { 
+         if (hyperlink == null || "".equals(hyperlink)) return ;
+         setCursor(presscursor) ; 
+      }
+      
+      public void mouseExited(MouseEvent e) 
+      { 
+         if (hyperlink == null || "".equals(hyperlink)) return ;
+         setCursor(defaultcursor) ; 
+      }
+   }
 }

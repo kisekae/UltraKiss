@@ -219,6 +219,7 @@ final class KissCel extends Cel
 
 		try
 		{
+         String includename = null ;
 			if (zip != null) ze = zip.getEntry(file) ;
 
 			// Load a reference copy if it exists.
@@ -244,10 +245,16 @@ final class KissCel extends Cel
                if (refzip != null && ze == null ) ze = refzip.getEntry(getPath(),true) ;
 				}
 			}
+         
+         // If we are still stuck, try just the filename.  If include files
+         // were in use and a cel was edited and subsequently saved it will
+         // be written to the top level archive.  This supercedes the included
+         // file, but it may have been stored with directory path information.
+         
+			if (includefiles != null && zip != null) ze = zip.getEntry(file,true) ;         
 
          // If we have not yet found the file, check the INCLUDE list.
 
-         String includename = null ;
          if (ze == null)
          {
             ze = searchIncludeList(includefiles,name) ;

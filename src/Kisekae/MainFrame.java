@@ -887,9 +887,25 @@ final public class MainFrame extends KissFrame
 				options[2] = changes ;
 			}
 
-			// Show the save dialog.
+			// Has anything changed?
 
-			if ((zip != null && zip.isUpdated()) || (ze != null && ze.isUpdated()))
+         boolean changed = false ;
+			if (zip != null && zip.isUpdated()) changed = true ;
+         if (ze != null && ze.isUpdated()) changed = true ;
+         Vector includefiles = config.getIncludeFiles() ;
+         if (includefiles != null)
+         {
+            for (int i = 0 ; i < includefiles.size(); i++)
+            {
+               Object include = includefiles.elementAt(i) ;
+               if (!(include instanceof ArchiveFile)) continue ;
+               if (((ArchiveFile) include).isUpdated()) changed = true ;
+            }
+         }
+
+			// Show the save dialog.
+         
+         if (changed)
 			{
 				while (!Kisekae.isSecure())
 				{
@@ -961,6 +977,26 @@ final public class MainFrame extends KissFrame
                   {
                   	Object o = v.elementAt(i) ;
                      if (!v2.contains(o)) v2.addElement(o) ;
+                  }
+
+                  // Watch for include files with updated elements.
+
+                  if (includefiles != null)
+                  {
+                     for (int i = 0 ; i < includefiles.size(); i++)
+                     {
+                        Object include = includefiles.elementAt(i) ;
+                        if (!(include instanceof ArchiveFile)) continue ;
+                        v = ((ArchiveFile) include).getUpdated() ;
+                        if (v != null)
+                        {
+                           for (int j = 0 ; j < v.size() ; j++)
+                           {
+                              Object o = v.elementAt(j) ;
+                              if (!v2.contains(o)) v2.addElement(o) ;
+                           }
+                        }
+                     }
                   }
 
                   // Show the updated list.
@@ -2175,9 +2211,9 @@ final public class MainFrame extends KissFrame
       }
       catch (Throwable e) { }
       
-      dispose() ;
-      
-      if (!kisekae.inApplet()) 
+      if (kisekae.inApplet()) 
+         dispose() ;
+      else 
          System.exit(0) ;
 	}
 
@@ -2286,7 +2322,8 @@ final public class MainFrame extends KissFrame
          thread.start() ;
          return ;
       }
-      close() ;
+      else 
+         close() ;
    }
 
 

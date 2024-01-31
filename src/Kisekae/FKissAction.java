@@ -509,7 +509,15 @@ final class FKissAction extends KissObject
             {
                kiss = findGroupOrCel((String) parameters.elementAt(0),event) ;
                if (kiss instanceof Cel)
+               {
                   img = ((Cel) kiss).getImage() ;
+                  // notify(image,hyperlink)
+                  if (parameters.size() > 1)
+                  {
+                     o = variable.getValue((String) parameters.elementAt(1),event) ;
+                     if (o != null) message += o.toString() ;                     
+                  }
+               }
                else
                {
                   for (i = 0 ; i < parameters.size() ; i++)

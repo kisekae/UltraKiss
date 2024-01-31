@@ -1841,6 +1841,7 @@ final class ImageFrame extends KissFrame
 			{
 				if (!closecheck(true)) return ;
 				closeimage() ;
+            close(false) ;
 				return ;
 			}
 

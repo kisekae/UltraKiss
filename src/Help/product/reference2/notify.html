@@ -26,6 +26,12 @@ dialog window.</p>
 <p>Notify() dialogs do not suspend dynamic execution. Multiple notify windows
 can be concurrently displayed. For dialogs that must wait for a response, use
 the confirm() statement.</p>
+<p>Notify actions will also accept the literal name of an image file or an image 
+    cel as the first argument.  This will display the image in the notify dialog.
+    The second argument is an optional variable or a literal text string of a URL.  
+    This URL will be shown in the default browser if the image is clicked.  
+    The URL must begin with http:// or https://
+    </p>
 <p><br>
 Related actions: <a href="debug.html">debug()</a>, <a href="confirm.html">confirm()</a>,
 <a href="showstatus.html">showstatus()</a></p>
@@ -83,6 +89,16 @@ pressed&quot;)&nbsp; ;&nbsp;<br>
 <font face="Courier New">;@press(#1)&nbsp;&nbsp; let(S,&quot;Object #1
 pressed&quot;)&nbsp;notify(S) ;&nbsp;<br>
 ;@release(#1) notify(S,&quot; and then released&quot;)&nbsp; ;&nbsp;
+<br>
+</font></p>
+<p><font color="#FF0000"><b>&nbsp;FKiSS 5 Example:
+</b></font>
+</p>
+<p><font face="Courier New">#619         AboutTheOwl.png             : 0                ;%u &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+#615         HelpAbout.MenuItem          :                  ;%size[0,0] %attributes[text=&quot;About The Owl...&quot;] <br>
+</font>
+<br>
+<font face="Courier New">;@press(&quot;HelpAbout.MenuItem&quot;) notify(&quot;AboutTheOwl.png&quot;,&quot;http://followtheowl.com/&quot;) ;
 <br>
 </font></p>
 
