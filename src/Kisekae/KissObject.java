@@ -1538,14 +1538,14 @@ abstract class KissObject
       {
          Object o1 = getIdentifier() ;
       	Object o2 = ((KissObject) o).getIdentifier() ;
-
+  
 	      // Use an Integer sort if applicable.  This maintains a
 	      // numeric sort for object name comparisons.
 
 	      try { n1 = new Integer(o1.toString()) ; }
-	      catch (NumberFormatException e) { numeric = false ; }
+	      catch (Exception e) { numeric = false ; }
 	      try { n2 = new Integer(o2.toString()) ; }
-	      catch (NumberFormatException e) { numeric = false ; }
+	      catch (Exception e) { numeric = false ; }
       	if (numeric) return (n1.compareTo(n2)) ;
       }
       return (toString().compareTo(o.toString())) ;

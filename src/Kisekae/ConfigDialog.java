@@ -592,7 +592,7 @@ final class ConfigDialog extends KissDialog
             JDialog pb = new PanelSizeDialog(me) ;
             Point p = PanelButton.getLocationOnScreen() ;
             pb.setLocation(p.x,p.y) ;
-            pb.show() ;
+            pb.setVisible(true) ;
    			return ;
    		}
 
@@ -602,7 +602,7 @@ final class ConfigDialog extends KissDialog
    		{
             JDialog pb = new BorderColorDialog(me) ;
             Point p = BorderButton.getLocationOnScreen() ;
-            pb.show() ;
+            pb.setVisible(true) ;
    			return ;
    		}
 
@@ -1164,8 +1164,6 @@ final class ConfigDialog extends KissDialog
 
          if (cm != null)
          {
-            panel4 = new JPanel() ;
-            panel4.setLayout(borderLayout3) ;
             popup = cm.getPopupMenu() ;
             popup.setVisible(true) ;
             panel3.add(popup,BorderLayout.CENTER) ;
@@ -1298,8 +1296,6 @@ final class ConfigDialog extends KissDialog
    		{
             ColorChooser.setText(Kisekae.getCaptions().getString("ColorChooserMessage")) ;
             panel3.removeAll() ;
-            panel4 = new JPanel() ;
-            panel4.setLayout(borderLayout3) ;
             popup = cm.getPopupMenu() ;
             popup.setVisible(true) ;
             panel3.add(popup,BorderLayout.CENTER) ;
@@ -1313,7 +1309,11 @@ final class ConfigDialog extends KissDialog
 
       // Close the dialog.
 
-      private void close() { dispose() ; }
+      private void close() 
+      { 
+         if (popup != null) popup.setVisible(false) ;
+         dispose() ; 
+      }
 
 
       // A utility function to center our dialog window.
@@ -1328,9 +1328,24 @@ final class ConfigDialog extends KissDialog
      		int y = (s.height < d.height) ? (d.height - s.height) / 2 : 0 ;
      		setLocation(x,y) ;
          validate() ;
+
+         // The popup ColorMenu is a menu item.  It must be positioned
+         // where the window is, otherwise it shows at (0,0).
+         
+         if (popup != null)
+         {
+            Component c = panel3.getComponent(0) ;
+            int x1 = c.getX() ;
+            int y1 = c.getY() ;
+            int w1 = c.getWidth() ;
+            int h1 = c.getHeight() ;
+            Point p = SwingUtilities.convertPoint(panel3,x1,y1,null) ;
+            popup.setLocation(p.x+x,p.y+y) ;
+            popup.setSize(w1,h1) ;
+         }
       }
 
-
+      
    	// Window Events
 
    	public void windowOpened(WindowEvent evt) { CANCEL.requestFocus() ; }

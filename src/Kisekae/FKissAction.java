@@ -3902,7 +3902,11 @@ final class FKissAction extends KissObject
                   if (n3 != 0)
                   {
                      s = text.getText() ;
-                     try { s = new String(new sun.misc.BASE64Decoder().decodeBuffer(s)) ; }
+                     try 
+                     { 
+                        byte[] decoded = Base64.getDecoder().decode(s) ; 
+                        s = Arrays.toString(decoded) ;
+                     }
                      catch (SecurityException e) { }
                      text.setText(s) ;
                   }
@@ -3988,7 +3992,11 @@ final class FKissAction extends KissObject
                   if (n != 0)
                   {
                      s = text.getText() ;
-                     try { s = new sun.misc.BASE64Encoder().encode(s.getBytes()) ; }
+                     try 
+                     { 
+                        byte[] encoded = Base64.getEncoder().encode(s.getBytes()) ; 
+                        s = Arrays.toString(encoded) ;
+                     }
                      catch (SecurityException e) { }
                      text.setText(s) ;
                   }
@@ -4142,7 +4150,11 @@ final class FKissAction extends KissObject
                else if ("getuser".equalsIgnoreCase(s1))
                {
                   s = Kisekae.getUser() ;
-                  try { s = new String(new sun.misc.BASE64Decoder().decodeBuffer(s)) ; }
+                  try 
+                  { 
+                     byte[] decoded = Base64.getDecoder().decode(s) ; 
+                     s = Arrays.toString(decoded) ;
+                  }
                   catch (SecurityException e) { }
                }
                else if ("gettotalmemory".equalsIgnoreCase(s1))

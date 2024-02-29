@@ -21,8 +21,8 @@
 	web. I will also place notices here regarding product updates, scheduled 
 	releases, or problems and work-arounds that may affect you.&nbsp;</p>
                                         <p>&nbsp;</p>
-					<p><B>February 1, 2024</B></p>
-					<P>UltraKiss V3.7.1 is being developed. This release corrects miscellaneous problems.</P>
+					<p><B>February 29, 2024</B></p>
+					<P>UltraKiss V3.7.1 is released. This release corrects miscellaneous problems.</P>
 					<h3><FONT face=Arial>Updates to V3.7.1&nbsp; </FONT></h3>
 					<BLOCKQUOTE>
                       <p><font face="Arial">1. URL downloads are now buffered.  This significantly increases file transfer speeds from network connections.</font></p>
@@ -31,6 +31,11 @@
                       <p><font face="Arial">4. The notify() action command is extended to allow for an optional URL specification for an image.  See the notify() FKiSS documentation. </font></p>
                       <p><font face="Arial">5. Cels with directory paths in expansion sets and then written to to primary archive file after update were not being loaded after the set was saved.</font></p>
                       <p><font face="Arial">6. The Slot Machine demonstration set is updated to version 2.  Win probabilities are documented and corrected.  </font></p>
+                      <p><font face="Arial">7. Resolved a NullPointerException when attempting to invoke the ColorEditor to edit the global palette for a cloned GIF image.</font></p>
+                      <p><font face="Arial">8. Updates to the set background color for palette type sets failed to position or close the color selection menu.  This is corrected.</font></p>
+                      <p><font face="Arial">9. SUN early Java version packages for JPEG images and BASE64 decoding are replaces with Java 8 standard packages.</font></p>
+                      <p><font face="Arial">10. Java Component cels are now thread safe on creation.  Previously exceptions could occur when a configuration was read and components were used.</font></p>
+                      <p><font face="Arial">11. Reset the mouse cursor to a pointer after a file not found exception when referencing a last recently used file.</font></p>
          				</BLOCKQUOTE>
                                         <p>&nbsp;</p>
 					<p><B>December 5, 2023</B></p>

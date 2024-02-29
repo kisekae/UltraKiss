@@ -162,9 +162,7 @@ final class JavaCel extends Cel
             return ;
          }
       }
-      public void mouseReleased(MouseEvent e) 
-      { 
-      }
+      public void mouseReleased(MouseEvent e) { }
       public void mouseEntered(MouseEvent e) { }
       public void mouseExited(MouseEvent e) { }
       public void mouseClicked(MouseEvent e) { }
@@ -174,6 +172,20 @@ final class JavaCel extends Cel
 	// Constructor
 
 	public JavaCel(String type, String file, Configuration ref)
+	{
+		if (!SwingUtilities.isEventDispatchThread())
+      {
+   		Runnable runner = new Runnable()
+   		{ public void run() { JavaCel1(type,file,ref) ; } } ;
+         try { javax.swing.SwingUtilities.invokeAndWait(runner) ; }
+         catch (InterruptedException e) { }
+         catch (Exception e) { e.printStackTrace(); }
+      }
+      else
+         JavaCel1(type,file,ref) ;
+   }
+
+	private void JavaCel1(String type, String file, Configuration ref)
 	{
 		this.type = type ;
 		this.file = convertSeparator(file) ;
@@ -209,12 +221,28 @@ final class JavaCel extends Cel
          if (view != null) c = view.getView() ;
       }
       if (c != null) c.addMouseListener(mouseListener);
+      if (OptionsDialog.getDebugComponent())
+          System.out.println("JavaCel: constructor for "+getName()+" result=\""+c+"\""+" on thread "+Thread.currentThread());               
 	}
 
 
    // Create a new component.
 
    void createComponent(String type)
+   {
+		if (!SwingUtilities.isEventDispatchThread())
+      {
+   		Runnable runner = new Runnable()
+   		{ public void run() { createComponent1(type) ; } } ;
+         try { javax.swing.SwingUtilities.invokeAndWait(runner) ; }
+         catch (InterruptedException e) { }
+         catch (Exception e) { e.printStackTrace(); }
+      }
+      else
+         createComponent1(type) ;      
+   }
+      
+   private void createComponent1(String type)
    {
       if ("label".equals(type))
       {
@@ -344,6 +372,9 @@ final class JavaCel extends Cel
          component = new JLabel("menuSeparator") ;
          initinput = false ;
       }
+      
+      if (OptionsDialog.getDebugComponent())
+          System.out.println("JavaCel: createComponent for "+getName()+" result=\""+type+"\""+" on thread "+Thread.currentThread());               
 	}
 
 
@@ -424,6 +455,19 @@ final class JavaCel extends Cel
 
    void reset()
    {
+		if (!SwingUtilities.isEventDispatchThread())
+      {
+   		Runnable runner = new Runnable()
+   		{ public void run() { reset1() ; } } ;
+         try { javax.swing.SwingUtilities.invokeAndWait(runner) ; }
+         catch (Exception e) { e.printStackTrace(); }
+      }
+      else
+         reset1() ;
+   }
+
+   private void reset1()
+   {
       if ("menuseparator".equals(type)) return ;
       removeAll() ;
       setEditable(true) ;
@@ -432,12 +476,28 @@ final class JavaCel extends Cel
       
       if (component instanceof AbstractButton)
          ((AbstractButton) component).setSelected(false) ;
+      if (OptionsDialog.getDebugComponent())
+          System.out.println("JavaCel: reset for "+getName()+" on thread "+Thread.currentThread());               
    }
 
 
    // Reset the initial attribute state of the component.
 
    void resetAttributes()
+   {
+		if (!SwingUtilities.isEventDispatchThread())
+      {
+   		Runnable runner = new Runnable()
+   		{ public void run() { resetAttributes1() ; } } ;
+         try { javax.swing.SwingUtilities.invokeAndWait(runner) ; }
+         catch (InterruptedException e) { }
+         catch (Exception e) { e.printStackTrace(); }
+      }
+      else
+         resetAttributes1() ;
+   }
+
+   private void resetAttributes1()
    {
       if (showcomponent != null) 
       {
@@ -452,6 +512,8 @@ final class JavaCel extends Cel
       setAttributes(s) ;
       setAttributes(attributes) ;
       currentattr = null ;
+      if (OptionsDialog.getDebugComponent())
+          System.out.println("JavaCel: resetAttributes for "+getName()+" on thread "+Thread.currentThread());               
    }
 
 
@@ -544,6 +606,20 @@ final class JavaCel extends Cel
 
 
 	void load(Vector includefiles)
+   {
+		if (!SwingUtilities.isEventDispatchThread())
+      {
+   		Runnable runner = new Runnable()
+   		{ public void run() { load1(includefiles) ; } } ;
+         try { javax.swing.SwingUtilities.invokeAndWait(runner) ; }
+         catch (InterruptedException e) { }
+         catch (Exception e) { e.printStackTrace(); }
+      }
+      else
+         load1(includefiles) ;
+   }
+   
+	private void load1(Vector includefiles)
 	{
       String name = getRelativeName() ;
       if (name != null) name = name.toUpperCase() ;
@@ -583,6 +659,9 @@ final class JavaCel extends Cel
       cm = basecm = Palette.getDirectColorModel() ;
       truecolor = true ;
       loaded = true ;
+      
+      if (OptionsDialog.getDebugComponent())
+          System.out.println("JavaCel: load for "+getName()+" result=\""+c+"\""+" on thread "+Thread.currentThread());               
    }
 
 
@@ -600,6 +679,20 @@ final class JavaCel extends Cel
    // an image representation for non-input and read only components.
 
    void createImage()
+   {
+		if (!SwingUtilities.isEventDispatchThread())
+      {
+   		Runnable runner = new Runnable()
+   		{ public void run() { createImage1() ; } } ;
+         try { javax.swing.SwingUtilities.invokeAndWait(runner) ; }
+         catch (InterruptedException e) { }
+         catch (Exception e) { e.printStackTrace(); }
+      }
+      else
+         createImage1() ;
+   }
+
+   private void createImage1()
    {
       if (input && !readonly) return ;
       if (component == null) return ;
@@ -655,6 +748,9 @@ final class JavaCel extends Cel
       baseimage = image ;
       comp.paint(g) ;
   		g.dispose() ;
+      
+      if (OptionsDialog.getDebugComponent())
+          System.out.println("JavaCel: createImage for "+getName()+" result=\""+image+"\""+" on thread "+Thread.currentThread());               
    }
    
          
@@ -663,12 +759,26 @@ final class JavaCel extends Cel
    // the component added to the panel frame and must be referencable
    // during addComponent and removeComponent.
    
-   private JPanel createBorder(Component c) 
-   { return createBorder(c,borderpanel) ; }
-   private JPanel createBorder(Component c, JPanel p)
+   private void createBorder(Component c) 
+   { createBorder(c,borderpanel) ; }
+   private void createBorder(Component c, JPanel p)
+   {
+      if (!SwingUtilities.isEventDispatchThread())
+      {
+   		Runnable runner = new Runnable()
+   		{ public void run() { createBorder1(c,p) ; } } ;
+         try { javax.swing.SwingUtilities.invokeAndWait(runner) ; }
+         catch (InterruptedException e) { }
+         catch (Exception e) { e.printStackTrace(); }
+      }
+      else
+         createBorder1(c,p) ;
+   }
+   
+   private void createBorder1(Component c, JPanel p)
    {
       Border b = null ;
-      if (p == null) return null ;
+      if (p == null) { showcomponent = null ; return ; }
       p.removeAll() ;
       p.setBorder(null) ;
       p.setLayout(new BorderLayout()) ;
@@ -712,7 +822,7 @@ final class JavaCel extends Cel
          p.setLocation(c.getLocation()) ;
          p.setSize(getSize()) ;
       }
-      return p ;
+      showcomponent = p ;
    }
 
 
@@ -731,7 +841,24 @@ final class JavaCel extends Cel
 
 	// Set the component size.
 
-	synchronized void setSize(Dimension d)
+	void setSize(Dimension d)
+   {
+      final Dimension param = d ;
+		if (!SwingUtilities.isEventDispatchThread())
+      {
+   		Runnable runner = new Runnable()
+   		{ public void run() { setSize1(d) ; } } ;
+         try { javax.swing.SwingUtilities.invokeAndWait(runner) ; }
+         catch (InterruptedException e) { }
+         catch (Exception e) { e.printStackTrace(); }
+      }
+      else
+         setSize1(d) ;    
+   }
+ 
+   // Perform the component update.
+      
+   private synchronized void setSize1(Dimension d)
    {
       invalidateImage() ;
       super.setSize(d) ;
@@ -739,6 +866,8 @@ final class JavaCel extends Cel
       if (text != null) text.setSize(d) ;
       if (list != null) list.setSize(d) ;
       if (borderpanel != null) borderpanel.setSize(d) ;
+      if (OptionsDialog.getDebugComponent())
+          System.out.println("JavaCel: setSize for "+getName()+" result=\""+d+"\""+" on thread "+Thread.currentThread());               
    }
 
 
@@ -746,6 +875,20 @@ final class JavaCel extends Cel
    // foreground color, establish our contrasting color.
 
 	void setPanel(PanelFrame p) 
+   { 
+		if (!SwingUtilities.isEventDispatchThread())
+      {
+   		Runnable runner = new Runnable()
+   		{ public void run() { setPanel1(p) ; } } ;
+         try { javax.swing.SwingUtilities.invokeAndWait(runner) ; }
+         catch (InterruptedException e) { }
+         catch (Exception e) { e.printStackTrace(); }
+      }
+      else
+         setPanel1(p) ;    
+   }
+   
+	private void setPanel1(PanelFrame p) 
    { 
       panel = p ; 
       if (!(component instanceof JLabel)) return ;
@@ -756,6 +899,8 @@ final class JavaCel extends Cel
       int rgb = (c.getRGB() ^ 0xFFFFFF) ;
       rgb = (rgb ^ 0) | 0xFF000000 ;
       ((JLabel) component).setForeground(new Color(rgb)) ;
+      if (OptionsDialog.getDebugComponent())
+          System.out.println("JavaCel: setPanel for "+getName()+" on thread "+Thread.currentThread());               
    }
 
 
@@ -763,8 +908,24 @@ final class JavaCel extends Cel
 
 	void setVisible(boolean b)
 	{
+		if (!SwingUtilities.isEventDispatchThread())
+      {
+   		Runnable runner = new Runnable()
+   		{ public void run() { setVisible1(b) ; } } ;
+         try { javax.swing.SwingUtilities.invokeAndWait(runner) ; }
+         catch (InterruptedException e) { }
+         catch (Exception e) { e.printStackTrace(); }
+      }
+      else
+         setVisible1(b) ;    
+   }
+
+	private void setVisible1(boolean b)
+	{
       super.setVisible(b) ;
       showComponent(show) ;
+      if (OptionsDialog.getDebugComponent())
+          System.out.println("JavaCel: setVisible for "+getName()+" result=\""+b+"\""+" on thread "+Thread.currentThread());               
 	}
 
 
@@ -788,9 +949,25 @@ final class JavaCel extends Cel
 
    void setVisibility(boolean b)
 	{
+		if (!SwingUtilities.isEventDispatchThread())
+      {
+   		Runnable runner = new Runnable()
+   		{ public void run() { setVisibility1(b) ; } } ;
+         try { javax.swing.SwingUtilities.invokeAndWait(runner) ; }
+         catch (InterruptedException e) { }
+         catch (Exception e) { e.printStackTrace(); }
+      }
+      else
+         setVisibility1(b) ;    
+   }
+
+   private void setVisibility1(boolean b)
+	{
       super.setVisibility(b) ;
       if (component == null) return ;
       component.setVisible(b) ;
+      if (OptionsDialog.getDebugComponent())
+          System.out.println("JavaCel: setVisibility for "+getName()+" result=\""+b+"\""+" on thread "+Thread.currentThread());               
 	}
 
 
@@ -799,20 +976,52 @@ final class JavaCel extends Cel
 
    void showComponent(boolean b)
    {
+		if (!SwingUtilities.isEventDispatchThread())
+      {
+   		Runnable runner = new Runnable()
+   		{ public void run() { showComponent1(b) ; } } ;
+         try { javax.swing.SwingUtilities.invokeAndWait(runner) ; }
+         catch (InterruptedException e) { }
+         catch (Exception e) { e.printStackTrace(); }
+      }
+      else
+         showComponent1(b) ;    
+   }
+
+   private void showComponent1(boolean b)
+   {
       show = b ;
       if (isVisible() && show && input) addComponent() ;
       else removeComponent() ;
+      if (OptionsDialog.getDebugComponent())
+          System.out.println("JavaCel: showComponent for "+getName()+" result=\""+b+"\""+" on thread "+Thread.currentThread());               
    }
 
 
    // Method to set text components editable.
 
-   synchronized void setEditable(boolean b)
+   void setEditable(boolean b)
+   {
+		if (!SwingUtilities.isEventDispatchThread())
+      {
+   		Runnable runner = new Runnable()
+   		{ public void run() { setEditable1(b) ; } } ;
+         try { javax.swing.SwingUtilities.invokeAndWait(runner) ; }
+         catch (InterruptedException e) { }
+         catch (Exception e) { e.printStackTrace(); }
+      }
+      else
+         setEditable1(b) ;    
+   }
+
+   private void setEditable1(boolean b)
    {
       readonly = !b ;
       if (text != null) text.setEditable(b) ;
       if (combobox != null) combobox.setEditable(b) ;
       if (component != null) component.setEnabled(b) ;
+      if (OptionsDialog.getDebugComponent())
+          System.out.println("JavaCel: setEditable for "+getName()+" result=\""+b+"\""+" on thread "+Thread.currentThread());               
    }
 
 
@@ -824,9 +1033,25 @@ final class JavaCel extends Cel
 
 	void setInput(boolean b)
    {
+		if (!SwingUtilities.isEventDispatchThread())
+      {
+   		Runnable runner = new Runnable()
+   		{ public void run() { setInput1(b) ; } } ;
+         try { javax.swing.SwingUtilities.invokeAndWait(runner) ; }
+         catch (InterruptedException e) { }
+         catch (Exception e) { e.printStackTrace(); }
+      }
+      else
+         setInput1(b) ;    
+   }
+
+	private void setInput1(boolean b)
+   {
       invalidateImage() ;
       super.setInput(b) ;
       if (b) addComponent() ; else removeComponent() ;
+      if (OptionsDialog.getDebugComponent())
+          System.out.println("JavaCel: setInput for "+getName()+" result=\""+b+"\""+" on thread "+Thread.currentThread());               
    }
 
 
@@ -834,8 +1059,24 @@ final class JavaCel extends Cel
 
    void setInitAttributes(String s)
    {
+		if (!SwingUtilities.isEventDispatchThread())
+      {
+   		Runnable runner = new Runnable()
+   		{ public void run() { setInitAttributes1(s) ; } } ;
+         try { javax.swing.SwingUtilities.invokeAndWait(runner) ; }
+         catch (InterruptedException e) { }
+         catch (Exception e) { e.printStackTrace(); }
+      }
+      else
+         setInitAttributes1(s) ;    
+   }
+
+   private void setInitAttributes1(String s)
+   {
       attributes = s ;
       setAttributes(s) ;
+      if (OptionsDialog.getDebugComponent())
+          System.out.println("JavaCel: setInitAttributes for "+getName()+" result=\""+s+"\""+" on thread "+Thread.currentThread());               
    }
 
 
@@ -845,6 +1086,20 @@ final class JavaCel extends Cel
 
 	void setAttributes(String s) { setAttributes(s,false) ; }
 	void setAttributes(String s, boolean temp)
+   {
+		if (!SwingUtilities.isEventDispatchThread())
+      {
+   		Runnable runner = new Runnable()
+   		{ public void run() { setAttributes1(s,temp) ; } } ;
+         try { javax.swing.SwingUtilities.invokeAndWait(runner) ; }
+         catch (InterruptedException e) { }
+         catch (Exception e) { e.printStackTrace(); }
+      }
+      else
+         setAttributes1(s,temp) ;    
+   }
+   
+	private void setAttributes1(String s, boolean temp)
    {
       if (s == null) return ;
       String s1 = eraseLiterals(s) ;
@@ -1225,7 +1480,7 @@ final class JavaCel extends Cel
             showcomponent = null ;
          }
          else
-            showcomponent = createBorder(component) ;
+            createBorder(component) ;
          showComponent(showing) ;
       }
 
@@ -1259,7 +1514,7 @@ final class JavaCel extends Cel
             showcomponent = null ;
          }
          else if ("line".equals(borderstyle) || "".equals(borderstyle))
-            showcomponent = createBorder(component) ;
+            createBorder(component) ;
          showComponent(showing) ;
       }
 
@@ -1278,7 +1533,7 @@ final class JavaCel extends Cel
          bordertitle = Variable.getStringLiteralValue(s2) ;
          if (!onoff) bordertitle = "" ;
          if ("titled".equals(borderstyle))
-            showcomponent = createBorder(component) ;
+            createBorder(component) ;
          showComponent(showing) ;
       }
 
@@ -1297,7 +1552,7 @@ final class JavaCel extends Cel
          bevelstyle = Variable.getStringLiteralValue(s2) ;
          if (!onoff) bevelstyle = "" ;
          if ("bevel".equals(borderstyle))
-            showcomponent = createBorder(component) ;
+            createBorder(component) ;
          showComponent(showing) ;
       }
 
@@ -1324,9 +1579,11 @@ final class JavaCel extends Cel
 
          // Show the border component.
          
-         showcomponent = createBorder(component) ;
+         createBorder(component) ;
          showComponent(showing) ;
       }
+      if (OptionsDialog.getDebugComponent())
+          System.out.println("JavaCel: setAttributes for "+getName()+" result=\""+s+"\""+" on thread "+Thread.currentThread());               
    }
 
    
@@ -1407,11 +1664,27 @@ final class JavaCel extends Cel
 
    // Method to enable the component.
 
-   synchronized void setEnabled(boolean b)
+   void setEnabled(boolean b)
+   {
+		if (!SwingUtilities.isEventDispatchThread())
+      {
+   		Runnable runner = new Runnable()
+   		{ public void run() { setEnabled1(b) ; } } ;
+         try { javax.swing.SwingUtilities.invokeAndWait(runner) ; }
+         catch (InterruptedException e) { }
+         catch (Exception e) { e.printStackTrace(); }
+      }
+      else
+         setEnabled1(b) ;    
+   }
+
+   private void setEnabled1(boolean b)
    {
       if (component == null) return ;
       component.setEnabled(b) ;
       invalidateImage() ;
+      if (OptionsDialog.getDebugComponent())
+          System.out.println("JavaCel: setEnabled for "+getName()+" result=\""+b+"\""+" on thread "+Thread.currentThread());               
    }
 
 
@@ -1525,66 +1798,38 @@ final class JavaCel extends Cel
    // component.  If we switch to the AWT thread we suspend the invoking
    // thread until the AWT thread finishes.  
 
-   private String setTextResult = null ;
-   private final Object setTextMonitor = new Object();
    void setText(String s)
    {
-      setTextResult = null ;
       final String param = s ;
 		if (!SwingUtilities.isEventDispatchThread())
       {
    		Runnable runner = new Runnable()
    		{ public void run() { setText1(param) ; } } ;
-   		javax.swing.SwingUtilities.invokeLater(runner) ;
-         
-           // Wait until finished. 
-
-         synchronized(setTextMonitor)
-         {
-            while (setTextResult == null)
-            {
-               if (OptionsDialog.getDebugComponent())
-                  System.out.println("JavaCel: setText for "+getName()+" waiting on EDT completion, text=\""+param+"\"");               
-               try { setTextMonitor.wait(300) ; }
-               catch (InterruptedException e) { }  
-               if (OptionsDialog.getDebugComponent() && setTextResult == null)
-                  System.out.println("JavaCel: setText for "+getName()+" continues without notify");
-               if (OptionsDialog.getDebugComponent() && setTextResult != null)
-                  System.out.println("JavaCel: setText for "+getName()+" continues, result=\""+setTextResult+"\"");               
-               return ;
-            }
-         }
+         try { javax.swing.SwingUtilities.invokeAndWait(runner) ; }
+         catch (InterruptedException e) { }
+         catch (Exception e) { e.printStackTrace(); }
       }
       else
-      {
-         if (OptionsDialog.getDebugComponent())
-            System.out.println("JavaCel: setText for "+getName()+" run directly, text=\""+param+"\"");               
          setText1(param) ;    
-      }
    }
  
    // Perform the component update
       
-   private void setText1(String s)
+   private synchronized void setText1(String s)
    {
-      synchronized(setTextMonitor) 
-      {
-         invalidateImage() ;
-         if (s == null) s = "" ;
-         if (text != null)
-            text.setText(s) ;
-         else if (component instanceof JLabel)
-            ((JLabel) component).setText(s) ;
-         else if (component instanceof AbstractButton)
-            ((AbstractButton) component).setText(s) ;
-         if (text instanceof JTextArea && scroll != null)
-            if (!((JTextArea) text).isEditable())
-            ((JTextArea) text).setCaretPosition(s.length()) ;
-         setTextResult = s ;
-         if (OptionsDialog.getDebugComponent())
-            System.out.println("JavaCel: setText for "+getName()+" notify result=\""+setTextResult+"\"");               
-         setTextMonitor.notify() ;
-      }
+      invalidateImage() ;
+      if (s == null) s = "" ;
+      if (text != null)
+         text.setText(s) ;
+      else if (component instanceof JLabel)
+         ((JLabel) component).setText(s) ;
+      else if (component instanceof AbstractButton)
+         ((AbstractButton) component).setText(s) ;
+      if (text instanceof JTextArea && scroll != null)
+         if (!((JTextArea) text).isEditable())
+         ((JTextArea) text).setCaretPosition(s.length()) ;
+      if (OptionsDialog.getDebugComponent())
+          System.out.println("JavaCel: setText for "+getName()+" result=\""+s+"\""+" on thread "+Thread.currentThread());               
    }
 
 
@@ -1607,82 +1852,54 @@ final class JavaCel extends Cel
    // Method to set the current list selection.  For a list that supports
    // multiple selections the new value is added to the selection set.
 
-   private Object setSelectedValueResult = null ;
-   private final Object setSelectedValueMonitor = new Object();
    void setSelectedValue(Object value)
    {
-      setSelectedValueResult = null ;
       final Object param = value ;
 		if (!SwingUtilities.isEventDispatchThread())
       {
 			Runnable runner = new Runnable()
 			{ public void run() { setSelectedValue1(param) ; } } ;
-			javax.swing.SwingUtilities.invokeLater(runner) ;
-
-         // Wait until finished. 
-
-         synchronized(setSelectedValueMonitor)
-         {
-            while (setSelectedValueResult == null)
-            {
-               if (OptionsDialog.getDebugComponent())
-                  System.out.println("JavaCel: setSelectedValue for "+getName()+" waiting on EDT completion");               
-               try { setSelectedValueMonitor.wait(300) ; }
-               catch (InterruptedException e) { }  
-               if (OptionsDialog.getDebugComponent() && setSelectedValueResult == null)
-                  System.out.println("JavaCel: setSelectedValue for "+getName()+" continues without notify");
-               if (OptionsDialog.getDebugComponent() && setSelectedValueResult != null)
-                  System.out.println("JavaCel: setSelectedValue for "+getName()+" continues, result=\""+setSelectedValueResult+"\"");               
-               return ;
-            }
-         }
+         try { javax.swing.SwingUtilities.invokeAndWait(runner) ; }
+         catch (InterruptedException e) { }
+         catch (Exception e) { e.printStackTrace(); }
       }
       else
-      {
-         if (OptionsDialog.getDebugComponent())
-            System.out.println("JavaCel: setSelectedValue for "+getName()+" run directly");               
          setSelectedValue1(param) ;    
-      }
    }
  
    // Perform the component update
       
-   private void setSelectedValue1(Object value)
+   private synchronized void setSelectedValue1(Object value)
    {
-      synchronized(setSelectedValueMonitor) 
+      if (list != null)
       {
-         if (list != null)
+         list.removeListSelectionListener(listListener) ;
+         int i = list.getSelectionMode() ;
+         if (i != ListSelectionModel.MULTIPLE_INTERVAL_SELECTION)
+            list.setSelectedValue(value,true) ;
+         else
          {
-            list.removeListSelectionListener(listListener) ;
-            int i = list.getSelectionMode() ;
-            if (i != ListSelectionModel.MULTIPLE_INTERVAL_SELECTION)
-               list.setSelectedValue(value,true) ;
-            else
+            int [] selected = list.getSelectedIndices() ;
+            int len = selected.length ;
+            list.setSelectedValue(value,false) ;
+            i = list.getSelectedIndex() ;
+            if (i >= 0)
             {
-               int [] selected = list.getSelectedIndices() ;
-               int len = selected.length ;
-               list.setSelectedValue(value,false) ;
-               i = list.getSelectedIndex() ;
-               if (i >= 0)
-               {
-                  int [] newselection = new int[len+1] ;
-                  System.arraycopy(selected,0,newselection,0,len);
-                  newselection[len] = i ;
-                  list.setSelectedIndices(newselection) ;
-                  if (len == 0) list.ensureIndexIsVisible(i) ;
-               }
+               int [] newselection = new int[len+1] ;
+               System.arraycopy(selected,0,newselection,0,len);
+               newselection[len] = i ;
+               list.setSelectedIndices(newselection) ;
+               if (len == 0) list.ensureIndexIsVisible(i) ;
             }
-            list.addListSelectionListener(listListener) ;
          }
-         if (combobox != null)
-         {
-            combobox.setSelectedItem(value) ;
-         }
-         setSelectedValueResult = value ;
-         if (OptionsDialog.getDebugComponent())
-            System.out.println("JavaCel: setSelectedValue for "+getName()+" notify result=\""+setSelectedValueResult+"\"");               
-         setSelectedValueMonitor.notify() ;
+         list.addListSelectionListener(listListener) ;
       }
+      if (combobox != null)
+      {
+         combobox.setSelectedItem(value) ;
+      }
+      if (OptionsDialog.getDebugComponent())
+         System.out.println("JavaCel: setSelectedValue for "+getName()+" result=\""+value+"\""+" on thread "+Thread.currentThread());               
    }
 
 
@@ -1708,89 +1925,61 @@ final class JavaCel extends Cel
    // clears any existing list selection.  For a list that supports multiple
    // selections the new value is added to the selection set.
 
-   private Object setSelectedIndexResult = null ;
-   private final Object setSelectedIndexMonitor = new Object();
    void setSelectedIndex(int n)
    {
-      setSelectedIndexResult = null ;
       final int param = n ;
 		if (!SwingUtilities.isEventDispatchThread())
       {
 			Runnable runner = new Runnable()
 			{ public void run() { setSelectedIndex1(param) ; } } ;
-			javax.swing.SwingUtilities.invokeLater(runner) ;
-
-         // Wait until finished. 
-
-         synchronized(setSelectedIndexMonitor)
-         {
-            while (setSelectedIndexResult == null)
-            {
-               if (OptionsDialog.getDebugComponent())
-                  System.out.println("JavaCel: setSelectedIndex for "+getName()+" waiting on EDT completion, index="+n);               
-               try { setSelectedIndexMonitor.wait(300) ; }
-               catch (InterruptedException e) { }  
-               if (OptionsDialog.getDebugComponent() && setSelectedIndexResult == null)
-                  System.out.println("JavaCel: setSelectedIndex for "+getName()+" continues without notify");
-               if (OptionsDialog.getDebugComponent() && setSelectedIndexResult != null)
-                  System.out.println("JavaCel: setSelectedIndex for "+getName()+" continues, result=\""+setSelectedIndexResult+"\"");               
-               return ;
-            }
-         }
+         try { javax.swing.SwingUtilities.invokeAndWait(runner) ; }
+         catch (InterruptedException e) { }
+         catch (Exception e) { e.printStackTrace(); }
       }
       else
-      {
-         if (OptionsDialog.getDebugComponent())
-            System.out.println("JavaCel: setSelectedIndex for "+getName()+" run directly");               
          setSelectedIndex1(n) ;    
-      }
    }
  
    // Perform the component update
       
-   private void setSelectedIndex1(int n)
+   private synchronized void setSelectedIndex1(int n)
    {
-      synchronized(setSelectedIndexMonitor) 
+      if (list != null)
       {
-         if (list != null)
+         list.removeListSelectionListener(listListener);
+         if (n < 0 || n >= list.getModel().getSize())
          {
-            list.removeListSelectionListener(listListener);
-            if (n < 0 || n >= list.getModel().getSize())
+            list.clearSelection() ;
+            next = 0 ;
+         }
+         else
+         {
+            int i = list.getSelectionMode() ;
+            if (i != ListSelectionModel.MULTIPLE_INTERVAL_SELECTION)
             {
-               list.clearSelection() ;
-               next = 0 ;
+               list.setSelectedIndex(n) ;
+               list.ensureIndexIsVisible(n) ;
             }
             else
             {
-               int i = list.getSelectionMode() ;
-               if (i != ListSelectionModel.MULTIPLE_INTERVAL_SELECTION)
-               {
-                  list.setSelectedIndex(n) ;
-                  list.ensureIndexIsVisible(n) ;
-               }
-               else
-               {
-                  int [] selected = list.getSelectedIndices() ;
-                  int len = selected.length ;
-                  int [] newselection = new int[len+1] ;
-                  System.arraycopy(selected,0,newselection,0,len);
-                  newselection[len] = n ;
-                  list.setSelectedIndices(newselection) ;
-                  if (len == 0) list.ensureIndexIsVisible(n) ;
-               }
+               int [] selected = list.getSelectedIndices() ;
+               int len = selected.length ;
+               int [] newselection = new int[len+1] ;
+               System.arraycopy(selected,0,newselection,0,len);
+               newselection[len] = n ;
+               list.setSelectedIndices(newselection) ;
+               if (len == 0) list.ensureIndexIsVisible(n) ;
             }
-            list.addListSelectionListener(listListener);
          }
-         if (combobox != null)
-         {
-            if (n < -1 || n >= combobox.getModel().getSize()) return ;
-            combobox.setSelectedIndex(n) ;
-         }
-         setSelectedIndexResult = new Integer(n) ;
-         if (OptionsDialog.getDebugComponent())
-            System.out.println("JavaCel: setSelectedIndex for "+getName()+" notify result=\""+setSelectedIndexResult+"\"");               
-         setSelectedIndexMonitor.notify() ;
+         list.addListSelectionListener(listListener);
       }
+      if (combobox != null)
+      {
+         if (n < -1 || n >= combobox.getModel().getSize()) return ;
+         combobox.setSelectedIndex(n) ;
+      }
+      if (OptionsDialog.getDebugComponent())
+         System.out.println("JavaCel: setSelectedIndex for "+getName()+" result=\""+n+"\""+" on thread "+Thread.currentThread());               
    }
 
 
@@ -1824,57 +2013,29 @@ final class JavaCel extends Cel
 
    // Method to set the combobox selection.
 
-   private Object setSelectedItemResult = null ;
-   private final Object setSelectedItemMonitor = new Object();
    void setSelectedItem(Object value)
    {
-      setSelectedItemResult = null ;
       final Object param = value ;
 		if (!SwingUtilities.isEventDispatchThread())
       {
 			Runnable runner = new Runnable()
 			{ public void run() { setSelectedItem1(param) ; } } ;
-			javax.swing.SwingUtilities.invokeLater(runner) ;
-
-         // Wait until finished. 
-
-         synchronized(setSelectedIndexMonitor)
-         {
-            while (setSelectedIndexResult == null)
-            {
-               if (OptionsDialog.getDebugComponent())
-                  System.out.println("JavaCel: setSelectedItem for "+getName()+" waiting on EDT completion");               
-               try { setSelectedItemMonitor.wait(300) ; }
-               catch (InterruptedException e) { }  
-               if (OptionsDialog.getDebugComponent() && setSelectedItemResult == null)
-                  System.out.println("JavaCel: setSelectedItem for "+getName()+" continues without notify");
-               if (OptionsDialog.getDebugComponent() && setSelectedItemResult != null)
-                  System.out.println("JavaCel: setSelectedItem for "+getName()+" continues, result=\""+setSelectedItemResult+"\"");               
-               return ;
-            }
-         }
+         try { javax.swing.SwingUtilities.invokeAndWait(runner) ; }
+         catch (InterruptedException e) { }
+         catch (Exception e) { e.printStackTrace(); }
       }
       else
-      {
-         if (OptionsDialog.getDebugComponent())
-            System.out.println("JavaCel: setSelectedItem for "+getName()+" run directly");               
          setSelectedItem1(param) ;    
-      }
    }
  
    // Perform the component update
       
-   private void setSelectedItem1(Object value)
+   private synchronized void setSelectedItem1(Object value)
    {
-      synchronized(setSelectedItemMonitor) 
-      {      
-         if (combobox != null) 
-            combobox.setSelectedItem(value) ;
-         setSelectedItemResult = value ;
-         if (OptionsDialog.getDebugComponent())
-            System.out.println("JavaCel: setSelectedItem for "+getName()+" notify result=\""+setSelectedItemResult+"\"");               
-         setSelectedItemMonitor.notify() ;
-      }
+      if (combobox != null) 
+         combobox.setSelectedItem(value) ;
+      if (OptionsDialog.getDebugComponent())
+         System.out.println("JavaCel: setSelectedItem for "+getName()+" result=\""+value+"\""+" on thread "+Thread.currentThread());               
    }
 
 
@@ -1891,71 +2052,42 @@ final class JavaCel extends Cel
 
    // Method to set the selected state of the component.
 
-   private Object setSelectedResult = null ;
-   private final Object setSelectedMonitor = new Object();
    void setSelected(Object value)
    {
-      setSelectedResult = null ;
       final Object param = value ;
 		if (!SwingUtilities.isEventDispatchThread())
       {
          Runnable runner = new Runnable()
 			{ public void run() { setSelected1(param) ; } } ;
-			javax.swing.SwingUtilities.invokeLater(runner) ;
-
-         // Wait until finished. 
-
-         synchronized(setSelectedMonitor)
-         {
-            while (setSelectedResult == null)
-            {
-               if (OptionsDialog.getDebugComponent())
-                  System.out.println("JavaCel: setSelected for "+getName()+" waiting on EDT completion");               
-               try { setSelectedMonitor.wait(300) ; }
-               catch (InterruptedException e) { }  
-               if (OptionsDialog.getDebugComponent() && setSelectedResult == null)
-                  System.out.println("JavaCel: setSelected for "+getName()+" continues without notify");
-               if (OptionsDialog.getDebugComponent() && setSelectedResult != null)
-                  System.out.println("JavaCel: setSelected for "+getName()+" continues, result=\""+setSelectedResult+"\"");               
-               return ;
-            }
-         }
+         try { javax.swing.SwingUtilities.invokeAndWait(runner) ; }
+         catch (Exception e) { e.printStackTrace(); }
       }
       else
-      {
-         if (OptionsDialog.getDebugComponent())
-            System.out.println("JavaCel: setSelected for "+getName()+" run directly");               
          setSelected1(param) ;    
-      }
    }
  
    // Perform the component update
       
-   private void setSelected1(Object value)
+   private synchronized void setSelected1(Object value)
    {
-      synchronized(setSelectedMonitor) 
-      {            
-         boolean b = false ;
-         if (value instanceof String && value.toString().equalsIgnoreCase("true")) b = true ;
-         if (value instanceof String && value.toString().equalsIgnoreCase("1")) b = true ;
-         if (value instanceof Integer && ((Integer) value).intValue() != 0) b = true ;
-         if (component instanceof AbstractButton)
-           ((AbstractButton) component).setSelected(b) ;
-         if (list != null && list.getSelectionMode() == ListSelectionModel.MULTIPLE_INTERVAL_SELECTION)
+      boolean b = false ;
+      if (value instanceof String && value.toString().equalsIgnoreCase("true")) b = true ;
+      if (value instanceof String && value.toString().equalsIgnoreCase("1")) b = true ;
+      if (value instanceof Integer && ((Integer) value).intValue() != 0) b = true ;
+      if (component instanceof AbstractButton)
+        ((AbstractButton) component).setSelected(b) ;
+      if (list != null && list.getSelectionMode() == ListSelectionModel.MULTIPLE_INTERVAL_SELECTION)
+      {
+         ListModel model = list.getModel() ;
+         if (model instanceof DefaultListModel)
          {
-            ListModel model = list.getModel() ;
-            if (model instanceof DefaultListModel)
-            {
-               DefaultListModel dlm = (DefaultListModel) model ;
-               int n = dlm.getSize() ;
-               if (b) list.setSelectionInterval(0,n-1) ; else list.clearSelection() ;
-            }
+            DefaultListModel dlm = (DefaultListModel) model ;
+            int n = dlm.getSize() ;
+            if (b) list.setSelectionInterval(0,n-1) ; else list.clearSelection() ;
          }
-         setSelectedResult = value ;
-         if (OptionsDialog.getDebugComponent())
-            System.out.println("JavaCel: setSelected for "+getName()+" notify result=\""+setSelectedResult+"\"");               
-         setSelectedMonitor.notify() ;
       }
+      if (OptionsDialog.getDebugComponent())
+         System.out.println("JavaCel: setSelected for "+getName()+" result=\""+value+"\""+" on thread "+Thread.currentThread());               
    }
 
 
@@ -1983,65 +2115,37 @@ final class JavaCel extends Cel
    // be added to the list one at a time.  Entries begin at index 0.
    // This can update the component image.
 
-   private Object setValueAtResult = null ;
-   private final Object setValueAtMonitor = new Object();
    void setValueAt(Object value, int n)
    {
-      setValueAtResult = null ;
       final Object param = value ;
 		if (!SwingUtilities.isEventDispatchThread())
       {
 			Runnable runner = new Runnable()
 			{ public void run() { setValueAt1(param,n) ; } } ;
-			javax.swing.SwingUtilities.invokeLater(runner) ;
-
-         // Wait until finished. 
-
-         synchronized(setValueAtMonitor)
-         {
-            while (setValueAtResult == null)
-            {
-               if (OptionsDialog.getDebugComponent())
-                  System.out.println("JavaCel: setValueAt for "+getName()+" waiting on EDT completion");               
-               try { setValueAtMonitor.wait(300) ; }
-               catch (InterruptedException e) { }  
-               if (OptionsDialog.getDebugComponent() && setValueAtResult == null)
-                  System.out.println("JavaCel: setValueAt for "+getName()+" continues without notify");
-               if (OptionsDialog.getDebugComponent() && setValueAtResult != null)
-                  System.out.println("JavaCel: setValueAt for "+getName()+" continues, result=\""+setValueAtResult+"\"");               
-               return ;
-            }
-         }
+         try { javax.swing.SwingUtilities.invokeAndWait(runner) ; }
+         catch (InterruptedException e) { }
+         catch (Exception e) { e.printStackTrace(); }
       }
       else
-      {
-         if (OptionsDialog.getDebugComponent())
-            System.out.println("JavaCel: setValueAt for "+getName()+" run directly");               
          setValueAt1(param,n) ;    
-      }
    }
  
    // Perform the component update
       
-   private void setValueAt1(Object value, int n)
+   private synchronized void setValueAt1(Object value, int n)
    {
-      synchronized(setValueAtMonitor) 
-      {                  
-         invalidateImage() ;
-         if (list != null)
-         {
-            ListModel model = list.getModel() ;
-            if (!(model instanceof DefaultListModel)) return ;
-            DefaultListModel dlm = (DefaultListModel) model ;
-            if (n < 0 || n > dlm.getSize()) return ;
-            if (n == dlm.getSize()) dlm.setSize(n+1) ;
-            dlm.setElementAt(value,n) ;
-         }
-         setValueAtResult = value ;
-         if (OptionsDialog.getDebugComponent())
-            System.out.println("JavaCel: setValueAt for "+getName()+" notify result=\""+setValueAtResult+"\"");               
-         setValueAtMonitor.notify() ;
+      invalidateImage() ;
+      if (list != null)
+      {
+         ListModel model = list.getModel() ;
+         if (!(model instanceof DefaultListModel)) return ;
+         DefaultListModel dlm = (DefaultListModel) model ;
+         if (n < 0 || n > dlm.getSize()) return ;
+         if (n == dlm.getSize()) dlm.setSize(n+1) ;
+         dlm.setElementAt(value,n) ;
       }
+      if (OptionsDialog.getDebugComponent())
+         System.out.println("JavaCel: setValueAt for "+getName()+" result=\""+value+"\""+" on thread "+Thread.currentThread());               
    }
 
 
@@ -2067,131 +2171,75 @@ final class JavaCel extends Cel
    // be added to the list one at a time.  Entries begin at index 0.
    // This can update the component image.
 
-   private Object addItemResult = null ;
-   private final Object addItemMonitor = new Object();
    void addItem(Object value)
    {
-      addItemResult = null ;
       final Object param = value ;
 		if (!SwingUtilities.isEventDispatchThread())
       {
 			Runnable runner = new Runnable()
 			{ public void run() { addItem1(param) ; } } ;
-			javax.swing.SwingUtilities.invokeLater(runner) ;
-
-         // Wait until finished. 
-
-         synchronized(addItemMonitor)
-         {
-            while (addItemResult == null)
-            {
-               if (OptionsDialog.getDebugComponent())
-                  System.out.println("JavaCel: addItem for "+getName()+" waiting on EDT completion");               
-               try { addItemMonitor.wait(300) ; }
-               catch (InterruptedException e) { }  
-               if (OptionsDialog.getDebugComponent() && addItemResult == null)
-                  System.out.println("JavaCel: addItem for "+getName()+" continues without notify");
-               if (OptionsDialog.getDebugComponent() && addItemResult == null)
-                  System.out.println("JavaCel: addItem for "+getName()+" continues, result=\""+addItemResult+"\"");               
-               return ;
-            }
-         }
+         try { javax.swing.SwingUtilities.invokeAndWait(runner) ; }
+         catch (InterruptedException e) { }
+         catch (Exception e) { e.printStackTrace(); }
       }
       else
-      {
-         if (OptionsDialog.getDebugComponent())
-            System.out.println("JavaCel: addItem for "+getName()+" run directly");               
          addItem1(param) ;    
-      }
    }
  
    // Perform the component update
       
-   private void addItem1(Object value)
+   private synchronized void addItem1(Object value)
    {
-      synchronized(addItemMonitor) 
-      {                        
-         invalidateImage() ;
-         if (combobox != null) combobox.addItem(value) ;
-         if (list != null)
-         {
-            ListModel model = list.getModel() ;
-            if (!(model instanceof DefaultListModel)) return ;
-            DefaultListModel dlm = (DefaultListModel) model ;
-            dlm.addElement(value) ;
-         }
-         addItemResult = value ;
-         if (OptionsDialog.getDebugComponent())
-            System.out.println("JavaCel: addItem for "+getName()+" notify result=\""+addItemResult+"\"");               
-         addItemMonitor.notify() ;
+      invalidateImage() ;
+      if (combobox != null) combobox.addItem(value) ;
+      if (list != null)
+      {
+         ListModel model = list.getModel() ;
+         if (!(model instanceof DefaultListModel)) return ;
+         DefaultListModel dlm = (DefaultListModel) model ;
+         dlm.addElement(value) ;
       }
+      if (OptionsDialog.getDebugComponent())
+         System.out.println("JavaCel: addItem for "+getName()+"  result=\""+value+"\""+" on thread "+Thread.currentThread());               
    }
 
 
    // Method to remove an item from a combo box.  This can update the
    // component image.
 
-   private Object removeItemResult = null ;
-   private final Object removeItemMonitor = new Object();
    void removeItem(Object value)
    {
-      removeItemResult = null ;
       final Object param = value ;
 		if (!SwingUtilities.isEventDispatchThread())
       {
 			Runnable runner = new Runnable()
 			{ public void run() { removeItem1(param) ; } } ;
-			javax.swing.SwingUtilities.invokeLater(runner) ;
-
-         // Wait until finished. 
-
-         synchronized(removeItemMonitor)
-         {
-            while (removeItemResult == null)
-            {
-               if (OptionsDialog.getDebugComponent())
-                  System.out.println("JavaCel: removeItem for "+getName()+" waiting on EDT completion");               
-               try { removeItemMonitor.wait(300) ; }
-               catch (InterruptedException e) { }  
-               if (OptionsDialog.getDebugComponent() && removeItemResult == null)
-                  System.out.println("JavaCel: removeItem for "+getName()+" continues without notify");
-               if (OptionsDialog.getDebugComponent() && removeItemResult != null)
-                  System.out.println("JavaCel: removeItem for "+getName()+" continues, result=\""+removeItemResult+"\"");               
-               return ;
-            }
-         }
+         try { javax.swing.SwingUtilities.invokeAndWait(runner) ; }
+         catch (InterruptedException e) { }
+         catch (Exception e) { e.printStackTrace(); }
       }
       else
-      {
-         if (OptionsDialog.getDebugComponent())
-            System.out.println("JavaCel: removeItem for "+getName()+" run directly");               
          removeItem1(param) ;    
-      }
    }
  
    // Perform the component update
       
-   private void removeItem1(Object value)
+   private synchronized void removeItem1(Object value)
    {
-      synchronized(removeItemMonitor) 
-      {                              
-         invalidateImage() ;
-         if (combobox != null) combobox.removeItem(value) ;
-         if (list != null)
-         {
-            list.removeListSelectionListener(listListener);
-            ListModel model = list.getModel() ;
-            if (!(model instanceof DefaultListModel)) return ;
-            DefaultListModel dlm = (DefaultListModel) model ;
-            dlm.removeElement(value) ;
-            list.addListSelectionListener(listListener);
-         }
-         setSelectedIndex(-1) ;
-         removeItemResult = value ;
-         if (OptionsDialog.getDebugComponent())
-            System.out.println("JavaCel: removeItem for "+getName()+" notify result=\""+removeItemResult+"\"");               
-         removeItemMonitor.notify() ;
+      invalidateImage() ;
+      if (combobox != null) combobox.removeItem(value) ;
+      if (list != null)
+      {
+         list.removeListSelectionListener(listListener);
+         ListModel model = list.getModel() ;
+         if (!(model instanceof DefaultListModel)) return ;
+         DefaultListModel dlm = (DefaultListModel) model ;
+         dlm.removeElement(value) ;
+         list.addListSelectionListener(listListener);
       }
+      setSelectedIndex(-1) ;
+      if (OptionsDialog.getDebugComponent())
+         System.out.println("JavaCel: removeItem for "+getName()+" result=\""+value+"\""+" on thread "+Thread.currentThread());               
    }
 
 
@@ -2220,66 +2268,39 @@ final class JavaCel extends Cel
    // Method to remove all elements from a list or combo box.  This can
    // update the component image.
 
-   private Object removeAllResult = null ;
-   private final Object removeAllMonitor = new Object();
+   
    void removeAll()
    {
-      removeAllResult = null ;
 		if (!SwingUtilities.isEventDispatchThread())
       {
 			Runnable runner = new Runnable()
 			{ public void run() { removeAll1() ; } } ;
-			javax.swing.SwingUtilities.invokeLater(runner) ;
-
-         // Wait until finished. 
-
-         synchronized(removeAllMonitor)
-         {
-            while (removeAllResult == null)
-            {
-               if (OptionsDialog.getDebugComponent())
-                  System.out.println("JavaCel: removeAll for "+getName()+" waiting on EDT completion");               
-               try { removeAllMonitor.wait(300) ; }
-               catch (InterruptedException e) { }  
-               if (OptionsDialog.getDebugComponent() && removeAllResult == null)
-                  System.out.println("JavaCel: removeAll for "+getName()+" continues without notify");
-               if (OptionsDialog.getDebugComponent() && removeAllResult != null)
-                  System.out.println("JavaCel: removeAll for "+getName()+" continues, result=\""+removeAllResult+"\"");               
-               return ;
-            }
-         }
+         try { javax.swing.SwingUtilities.invokeAndWait(runner) ; }
+         catch (InterruptedException e) { }
+         catch (Exception e) { e.printStackTrace(); }
       }
       else
-      {
-         if (OptionsDialog.getDebugComponent())
-            System.out.println("JavaCel: removeAll for "+getName()+" run directly");               
          removeAll1() ;    
-      }
    }
  
    // Perform the component update
       
-   private void removeAll1()
+   private synchronized void removeAll1()
    {
-      synchronized(removeAllMonitor) 
-      {                                    
-         invalidateImage() ;
-         if (combobox != null) combobox.removeAllItems() ;
-         if (list != null)
-         {
-            next = 0 ;
-            list.removeListSelectionListener(listListener);
-            ListModel model = list.getModel() ;
-            if (!(model instanceof DefaultListModel)) return ;
-            DefaultListModel dlm = (DefaultListModel) model ;
-            dlm.removeAllElements() ;
-            list.addListSelectionListener(listListener);
-         }
-         removeAllResult = "DONE" ;
-         if (OptionsDialog.getDebugComponent())
-            System.out.println("JavaCel: removeAll for "+getName()+" notify result=\""+removeAllResult+"\"");               
-         removeAllMonitor.notify() ;
+      invalidateImage() ;
+      if (combobox != null) combobox.removeAllItems() ;
+      if (list != null)
+      {
+         next = 0 ;
+         list.removeListSelectionListener(listListener);
+         ListModel model = list.getModel() ;
+         if (!(model instanceof DefaultListModel)) return ;
+         DefaultListModel dlm = (DefaultListModel) model ;
+         dlm.removeAllElements() ;
+         list.addListSelectionListener(listListener);
       }
+      if (OptionsDialog.getDebugComponent())
+         System.out.println("JavaCel: removeAll for "+getName()+"  result=\""+"DONE"+"\""+" on thread "+Thread.currentThread());               
    }
 
 
@@ -2302,61 +2323,33 @@ final class JavaCel extends Cel
 
    // Method to set a button icon. This can update the component image.
 
-   private Object setIconResult = null ;
-   private final Object setIconMonitor = new Object();
    void setIcon(Object img)
    {
-      setIconResult = null ;
       final Object param = img ;
 		if (!SwingUtilities.isEventDispatchThread())
       {
 			Runnable runner = new Runnable()
 			{ public void run() { setIcon1(param) ; } } ;
-			javax.swing.SwingUtilities.invokeLater(runner) ;
-
-         // Wait until finished. 
-
-         synchronized(setIconMonitor)
-         {
-            while (setIconResult == null)
-            {
-               if (OptionsDialog.getDebugComponent())
-                  System.out.println("JavaCel: setIcon for "+getName()+" waiting on EDT completion");               
-               try { setIconMonitor.wait(300) ; }
-               catch (InterruptedException e) { }  
-               if (OptionsDialog.getDebugComponent() && setIconResult == null)
-                  System.out.println("JavaCel: setIcon for "+getName()+" continues without notify");
-               if (OptionsDialog.getDebugComponent() && setIconResult != null)
-                  System.out.println("JavaCel: setIcon for "+getName()+" continues, result=\""+setIconResult+"\"");               
-               return ;
-            }
-         }
+         try { javax.swing.SwingUtilities.invokeAndWait(runner) ; }
+         catch (InterruptedException e) { }
+         catch (Exception e) { e.printStackTrace(); }
       }
       else
-      {
-         if (OptionsDialog.getDebugComponent())
-            System.out.println("JavaCel: setIcon for "+getName()+" run directly");               
          setIcon1(param) ;    
-      }
    }
  
    // Perform the component update
       
-   private void setIcon1(Object img)
+   private synchronized void setIcon1(Object img)
    {
-      synchronized(setIconMonitor) 
-      {                                          
-         invalidateImage() ;
-         if ((img instanceof Image) && (component instanceof JButton))
-         {
-            ImageIcon icon = new ImageIcon((Image) img) ;
-            ((JButton) component).setIcon(icon) ;
-         }
-         setIconResult = "DONE" ;
-         if (OptionsDialog.getDebugComponent())
-            System.out.println("JavaCel: setIcon for "+getName()+" notify result=\""+setIconResult+"\"");               
-         setIconMonitor.notify() ;
+      invalidateImage() ;
+      if ((img instanceof Image) && (component instanceof JButton))
+      {
+         ImageIcon icon = new ImageIcon((Image) img) ;
+         ((JButton) component).setIcon(icon) ;
       }
+      if (OptionsDialog.getDebugComponent())
+         System.out.println("JavaCel: setIcon for "+getName()+" result=\""+"DONE"+"\""+" on thread "+Thread.currentThread());               
    }
 
 
@@ -2407,13 +2400,19 @@ final class JavaCel extends Cel
 		if (!SwingUtilities.isEventDispatchThread())
       {
 			Runnable runner = new Runnable()
-			{ public void run() { addComponent() ; } } ;
-			javax.swing.SwingUtilities.invokeLater(runner) ;
-         return ;
+			{ public void run() { addComponent1() ; } } ;
+         try { javax.swing.SwingUtilities.invokeAndWait(runner) ; }
+         catch (InterruptedException e) { }
+         catch (Exception e) { e.printStackTrace(); }
       }
+      else
+         addComponent1() ;
+   }
 
       // Add our component to the panel frame if it is not present.
 
+   private void addComponent1()
+   {
       boolean member = false ;
       Component [] components = panel.getComponents() ;
       if (components != null)
@@ -2457,13 +2456,19 @@ final class JavaCel extends Cel
 		if (!SwingUtilities.isEventDispatchThread())
       {
 			Runnable runner = new Runnable()
-			{ public void run() { removeComponent() ; } } ;
-			javax.swing.SwingUtilities.invokeLater(runner) ;
-         return ;
+			{ public void run() { removeComponent1() ; } } ;
+         try { javax.swing.SwingUtilities.invokeAndWait(runner) ; }
+         catch (InterruptedException e) { }
+         catch (Exception e) { e.printStackTrace(); }
       }
+      else
+         removeComponent1() ;
+   }
       
       // Remove the component.
       
+   private void removeComponent1()
+   {
       Component c = component ;
       if (showcomponent != null) c = showcomponent ;
       panel.remove(c) ;
@@ -2546,7 +2551,7 @@ final class JavaCel extends Cel
 
    // Function to scale the component.
 
-   synchronized void scaleImage(float scale)
+   void scaleImage(float scale)
    	throws KissException
    {
       if (component instanceof JMenuItem) return ;

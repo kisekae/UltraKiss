@@ -1064,6 +1064,7 @@ final public class MainMenu extends KissMenu
                {
                   OptionsDialog.removeLruFile(s) ;
                   ((LruMenuItem) source).setEnabled(false) ;
+                  parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
                }
             }
          }

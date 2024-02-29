@@ -61,8 +61,8 @@ import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
 import javax.imageio.plugins.jpeg.JPEGImageWriteParam;
 import javax.imageio.stream.ImageOutputStream;
-
-import com.sun.imageio.plugins.jpeg.JPEGImageWriter;
+// import com.sun.imageio.plugins.jpeg.JPEGImageWriter;
+import javax.imageio.ImageWriter ;
 import javax.imageio.ImageTypeSpecifier;
 import javax.imageio.metadata.IIOMetadata;
 
@@ -192,7 +192,8 @@ public class JpgEncoder extends ImageEncoder
     //com.sun.image.codec.jpeg.JPEGEncodeParam jpegEncodeParam = jpegEncoder.getDefaultJPEGEncodeParam(image_to_save);
  
     // Image writer
-    JPEGImageWriter imageWriter = (JPEGImageWriter) ImageIO.getImageWritersBySuffix("jpeg").next();
+    // JPEGImageWriter imageWriter = (JPEGImageWriter) ImageIO.getImageWritersBySuffix("jpeg").next();
+    ImageWriter imageWriter = ImageIO.getImageWritersBySuffix("jpeg").next();
     ImageOutputStream ios = ImageIO.createImageOutputStream(fos);
     imageWriter.setOutput(ios);
  
