@@ -622,7 +622,7 @@ class ImagePreview extends JPanel
 
 		if (SELECT.isSelected())
 		{
-			if (e.isMetaDown())
+			if (SwingUtilities.isRightMouseButton(e))
 			{
 				multiple = 1 ;
 				clip = new Rectangle(0,0,iw,ih) ;
@@ -650,7 +650,7 @@ class ImagePreview extends JPanel
 
 		if (CROP.isSelected())
 		{
-			if (e.isMetaDown())
+			if (SwingUtilities.isRightMouseButton(e))
 			{
             selectbox = null ;
 				drawImage() ;
@@ -695,7 +695,7 @@ class ImagePreview extends JPanel
          // original image.
 
          float interval = 1.66f ;
-			if (e.isMetaDown()) multiple /= interval ; else multiple *= interval ;
+			if (SwingUtilities.isRightMouseButton(e)) multiple /= interval ; else multiple *= interval ;
          if (multiple < 1)
          {
          	multiple = 1 ;
@@ -742,7 +742,7 @@ class ImagePreview extends JPanel
 	public void mouseDragged(MouseEvent e)
 	{
 		if (image == null) return ;
-		if (e.isMetaDown()) return ;
+		if (SwingUtilities.isRightMouseButton(e)) return ;
 
       // If we are in SELECT or CROP mode, update our select box.
 
@@ -808,7 +808,7 @@ class ImagePreview extends JPanel
       	if (scaledimage == null) return ;
          pickupcontrol = e.isControlDown() ;
          pickupshift = e.isShiftDown() ;
-         pickupmeta = e.isMetaDown() ;
+         pickupmeta = SwingUtilities.isRightMouseButton(e) ;
 	      int ix = e.getX() - x ;
 	      int iy = e.getY() - y ;
          if (ix < 0 || iy < 0) return ;
@@ -909,7 +909,7 @@ class ImagePreview extends JPanel
 
          // Restore our initial state?
 
-         if (e.isMetaDown() && undoclip != null)
+         if (SwingUtilities.isRightMouseButton(e) && undoclip != null)
          	clip = new Rectangle(undoclip) ;
 
          // Ensure that the clip rectangle is sound.

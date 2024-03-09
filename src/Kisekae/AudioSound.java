@@ -567,7 +567,7 @@ final class AudioSound extends Audio
       setStopTime(0) ;    
       
       // Wait for completion if we are already stopping.
-      
+/*      
       if (this.isStopping()) 
       {
          synchronized(waithold) 
@@ -585,7 +585,7 @@ final class AudioSound extends Audio
        		   System.out.println("[" + time + "] AudioSound: " + getName()  + " [" + playcount + "]" + " Resuming play request") ;
          }
       }
-
+*/
       // Now open the audio and start playing the sound.  If the playback
       // fails try Java Media Framework.
       
@@ -784,13 +784,15 @@ final class AudioSound extends Audio
             {
                try
                {
-                  time = System.currentTimeMillis() - Configuration.getTimestamp() ;
-                  if (OptionsDialog.getDebugSound())
-                     System.out.println("[" + time + "] AudioSound: " + audio.getName() + " Sequencer stopped") ;
                   Sequencer sequencer = (Sequencer) currentsound ;
-                  if (sequencer.isRunning()) sequencer.stop() ;
-                  if (sequencer.isOpen()) sequencer.close() ;
-                  audio.doCallback() ;
+                  if (sequencer.isRunning()) 
+                  {
+                     time = System.currentTimeMillis() - Configuration.getTimestamp() ;
+                     if (OptionsDialog.getDebugSound())
+                        System.out.println("[" + time + "] AudioSound: " + audio.getName() + " Sequencer stopped") ;
+                     sequencer.stop() ;
+                     audio.doCallback() ;
+                  }
                }
                catch (Exception e)
                {
@@ -801,19 +803,22 @@ final class AudioSound extends Audio
             }
 
             // Shut the sound clip down.  The sound clip event listener will
-            // fire any callback events when the clip stops.
+            // fire any callback events when the clip stops.  Clip resources
+            // and input stream are freed on a periodic basis by the AudioTimer 
+            // activity if audio is not cached.
 
             if (currentsound instanceof Clip)
             {
                try
                {
-                  time = System.currentTimeMillis() - Configuration.getTimestamp() ;
-                  if (OptionsDialog.getDebugSound())
-                     System.out.println("[" + time + "] AudioSound: " + audio.getName() + " Sound clip stopped") ;
                   Clip clip = (Clip) currentsound ;
-                  clip.stop() ;
-                  clip.flush() ;
-                  clip.close() ;  // Linux reports NoLineAvailableException at times
+                  if (clip.isRunning())
+                  {
+                     time = System.currentTimeMillis() - Configuration.getTimestamp() ;
+                     if (OptionsDialog.getDebugSound())
+                        System.out.println("[" + time + "] AudioSound: " + audio.getName() + " Sound clip stopped") ;
+                     clip.stop() ;
+                  }
                }
                catch (Exception e)
                {

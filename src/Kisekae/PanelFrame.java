@@ -5094,6 +5094,7 @@ final class PanelFrame extends JPanel
             FKissEvent event = (FKissEvent) evt.elementAt(i) ;
             String key = "" + event.hashCode() + g.hashCode() ;
             o = eventstate.get(key) ;
+            if (o == null) o = new Boolean(false) ;
             if (o instanceof Object [] && ((Object []) o).length > 1)
                o = ((Object []) o)[1] ;
             if (o instanceof Boolean)
@@ -5120,6 +5121,7 @@ final class PanelFrame extends JPanel
             FKissEvent event = (FKissEvent) evt.elementAt(i) ;
             String key = "" + event.hashCode() + g.hashCode() ;
             o = eventstate.get(key) ;
+            if (o == null) o = new Boolean(false) ;
             if (o instanceof Object [] && ((Object []) o).length > 1)
                o = ((Object []) o)[1] ;
             if (o instanceof Boolean)
@@ -5147,6 +5149,7 @@ final class PanelFrame extends JPanel
             FKissEvent event = (FKissEvent) evt.elementAt(i) ;
             String key = "" + event.hashCode() + g.hashCode() ;
             o = eventstate.get(key) ;
+            if (o == null) o = new Boolean(false) ;
             if (o instanceof Object [] && ((Object []) o).length > 1)
                o = ((Object []) o)[1] ;
             if (o instanceof Boolean)
@@ -5175,6 +5178,7 @@ final class PanelFrame extends JPanel
             FKissEvent event = (FKissEvent) evt.elementAt(i) ;
             String key = "" + event.hashCode() + g.hashCode() ;
             o = eventstate.get(key) ;
+            if (o == null) o = new Boolean(false) ;
             if (o instanceof Object [])
             {
                Boolean map = (Boolean) ((Object []) o)[4] ;
@@ -5206,6 +5210,7 @@ final class PanelFrame extends JPanel
             FKissEvent event = (FKissEvent) evt.elementAt(i) ;
             String key = "" + event.hashCode() + g.hashCode() ;
             o = eventstate.get(key) ;
+            if (o == null) o = new Boolean(false) ;
             if (o instanceof Object [] && ((Object []) o).length > 1)
                o = ((Object []) o)[1] ;
             if (o instanceof Boolean)
@@ -5233,6 +5238,7 @@ final class PanelFrame extends JPanel
             FKissEvent event = (FKissEvent) evt.elementAt(i) ;
             String key = "" + event.hashCode() + g.hashCode() ;
             o = eventstate.get(key) ;
+            if (o == null) o = new Boolean(false) ;
             if (o instanceof Object [])
             {
                Boolean map = (Boolean) ((Object []) o)[4] ;
@@ -5600,7 +5606,7 @@ final class PanelFrame extends JPanel
    {
       if (mousedown) return ;
       if (config == null) return ;
-      metadown = e.isMetaDown() ;
+      metadown = SwingUtilities.isRightMouseButton(e) ;
       mousedown = true ;
       enabledrag = true ;
       boolean selected = false ;
@@ -5655,7 +5661,7 @@ final class PanelFrame extends JPanel
          
          // If we right clicked with no selection, unselect all.
          
-         if (e.isMetaDown() && OptionsDialog.getTempEditEnable())
+         if (SwingUtilities.isRightMouseButton(e)&& OptionsDialog.getTempEditEnable())
          {
             if (cel == null && group == null && selection != null) 
             {
@@ -5683,7 +5689,7 @@ final class PanelFrame extends JPanel
          // If right mouse button pressed, show a context dialog.
          // or a pop-up selection for choice.
 
-         if (e.isPopupTrigger() || e.isMetaDown())
+         if (e.isPopupTrigger() || SwingUtilities.isRightMouseButton(e))
          {
             if (OptionsDialog.getEditEnable() && OptionsDialog.getTempEditEnable())
                showpopup(e.getComponent(),e.getX(),e.getY(),cel,group) ;
@@ -6025,7 +6031,7 @@ final class PanelFrame extends JPanel
    synchronized public void mouseReleased(MouseEvent e)
    {
       if (!mousedown) return ;
-      if (e.isMetaDown() != metadown) return ;
+      if (SwingUtilities.isRightMouseButton(e) != metadown) return ;
       if (config == null) return ;
       mousedown = false ;
       boolean snapback = false ;
@@ -6062,7 +6068,7 @@ final class PanelFrame extends JPanel
 
          // There is no need for right mouse clicks here.
 
-         if (e.isMetaDown()) 
+         if (SwingUtilities.isRightMouseButton(e)) 
          {
             cel = null ;
             group = null ;
@@ -6434,7 +6440,7 @@ final class PanelFrame extends JPanel
 
          // Calculate the object displacement from its base position.
 
-         if (e.isMetaDown()) return ;
+         if (SwingUtilities.isRightMouseButton(e)) return ;
          dragobject = group ;
          if (group == null || flexdrop) return ;
          int dispX = (int) ((xmouse - posX) / sf) ;

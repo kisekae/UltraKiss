@@ -496,7 +496,7 @@ final class PrintPreview extends KissFrame
       public void mouseReleased(MouseEvent e)
       {
          if (nomouse) return ;
-			if (e.isMetaDown()) return ;
+			if (!SwingUtilities.isLeftMouseButton(e)) return ;
          if (e.getClickCount() > 1) return ;
          if (target == null) return ;
          if (pageFormat == null) return ;

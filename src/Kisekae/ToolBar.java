@@ -158,7 +158,7 @@ final class ToolBar extends JPanel
 
                   // Right mouse buttons show the page set dialog.
 
-						if (evt.isMetaDown() && OptionsDialog.getEditEnable())
+						if (SwingUtilities.isRightMouseButton(evt) && OptionsDialog.getEditEnable())
 						{
 							parent.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
 							PageSetDialog pd = new PageSetDialog(parent,page,config) ;
@@ -191,7 +191,7 @@ final class ToolBar extends JPanel
                   // Right mouse buttons show the color set dialog.
                   // Alt right mouse buttons show the color edit tool.
 
-						if (evt.isMetaDown() && OptionsDialog.getEditEnable())
+						if (SwingUtilities.isRightMouseButton(evt) && OptionsDialog.getEditEnable())
 						{
 							Window cd = null ;
 							parent.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;

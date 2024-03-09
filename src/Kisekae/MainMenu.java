@@ -864,10 +864,10 @@ final public class MainMenu extends KissMenu
                if (s.equals(f.getTitle()))
                {
                   if (f instanceof MediaFrame)
-                  {
                      ((MediaFrame) f).setMinimized(false) ;
-                     ((MediaFrame) f).setVisible(true) ;
-                  }
+                  if ((f.getExtendedState() & Frame.ICONIFIED) != 0)
+                     f.setState(Frame.NORMAL) ;
+                  f.setVisible(true) ;
                   f.toFront() ;
                   break ;
                }

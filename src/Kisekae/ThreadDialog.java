@@ -91,7 +91,7 @@ final class ThreadDialog extends KissDialog
    {
 		public void mouseClicked(MouseEvent e)
       {
-         if (e.isMetaDown()) return ;
+         if (!SwingUtilities.isLeftMouseButton(e)) return ;
         	if (e.getClickCount() == 2)
          {
 				DefaultMutableTreeNode node = (DefaultMutableTreeNode)
@@ -171,7 +171,7 @@ final class ThreadDialog extends KissDialog
    {
       public void mouseReleased(MouseEvent e)
       {
-         if (!e.isMetaDown()) return ;
+         if (!SwingUtilities.isRightMouseButton(e)) return ;
          int x = e.getX() ;
          int y = e.getY() ;
          TreePath path = TREE.getPathForLocation(x,y) ;

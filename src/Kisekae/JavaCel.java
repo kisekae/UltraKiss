@@ -154,7 +154,7 @@ final class JavaCel extends Cel
 
          // If right mouse button pressed, show a context dialog.
 
-         if (e.isPopupTrigger() || e.isMetaDown())
+         if (e.isPopupTrigger() || SwingUtilities.isRightMouseButton(e))
          {
             Object o = me.getGroup() ;
             Group g = (o instanceof Group) ? (Group) o : null ;

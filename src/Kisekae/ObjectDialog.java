@@ -277,7 +277,7 @@ final class ObjectDialog extends KissDialog
    {
       public void mouseReleased(MouseEvent e)
       {
-         if (!e.isMetaDown()) return ;
+         if (!SwingUtilities.isRightMouseButton(e)) return ;
          int x = e.getX() ;
          int y = e.getY() ;
          TreePath path = TREE.getPathForLocation(x,y) ;

@@ -293,7 +293,7 @@ class ColorMenu extends JMenu
 		{
 // 		MenuSelectionManager.defaultManager().clearSelectedPath() ;
 			setBorder(unselectedBorder) ;
-      	if (e.isMetaDown())
+      	if (SwingUtilities.isRightMouseButton(e))
          {
             if (getSelected() == this)
 					setSelectedColor(null) ;

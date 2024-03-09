@@ -4398,7 +4398,7 @@ final class ColorFrame extends KissFrame
 
 			public void mousePressed(MouseEvent e)
          {
-         	if (e.isMetaDown())
+         	if (SwingUtilities.isRightMouseButton(e))
             {
             	setColor(index,true,true) ;
             	return ;
@@ -5451,12 +5451,12 @@ final class ColorFrame extends KissFrame
 
          // On a right mouse button down, enable or disable the button.
 
-         if (e.isMetaDown())
+         if (SwingUtilities.isRightMouseButton(e))
          	button.setEnabled(!button.isEnabled()) ;
 
          // Process only if enabled and left button press.
 
-         if (e.isMetaDown()) return ;
+         if (SwingUtilities.isRightMouseButton(e)) return ;
          if (!button.isEnabled()) return ;
 
          // Get mouse down position.  If we are in the upper right third of
@@ -5516,7 +5516,7 @@ final class ColorFrame extends KissFrame
 
          // Process only if enabled and left button release.
 
-         if (e.isMetaDown()) return ;
+         if (!SwingUtilities.isLeftMouseButton(e)) return ;
          if (!button.isEnabled()) return ;
 
          // Initiate a selection action.
