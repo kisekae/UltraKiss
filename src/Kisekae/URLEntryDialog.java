@@ -49,6 +49,7 @@ import java.awt.event.* ;
 import java.util.Vector ;
 import java.util.ResourceBundle ;
 import javax.swing.* ;
+import javax.swing.text.* ;
 
 
 // Class to define the URL name entry dialog.  This is a modal dialog.
@@ -118,7 +119,17 @@ class URLEntryDialog extends KissDialog
 		addWindowListener(this) ;
       CANCEL.addActionListener(this) ;
       OK.addActionListener(this) ;
-      jCombo1.addActionListener(this) ;
+      
+      JTextComponent editor = (JTextComponent) jCombo1.getEditor().getEditorComponent();
+      editor.addKeyListener(new KeyAdapter() 
+      {
+         public void keyReleased(KeyEvent evt) 
+         {
+            if (evt.getKeyCode() == KeyEvent.VK_ENTER)
+               OK.doClick();
+         }
+      });
+      
       setDefaultCloseOperation(DISPOSE_ON_CLOSE) ;
       setVisible(true) ;
 	}

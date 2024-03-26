@@ -81,7 +81,7 @@ public class Kisekae extends Applet
    // Security variables
 
    private static String copyright = 
-      "Kisekae UltraKiss V3.7.1 (c) 2002-2024 William Miles" ;
+      "Kisekae UltraKiss V3.7.2 (c) 2002-2024 William Miles" ;
    private static Object authorize = null ;        // Seigen module
    private static Calendar warningdate = null ;    // Secure warning
    private static Calendar expiredate = null ;     // Licence expire
@@ -95,6 +95,7 @@ public class Kisekae extends Applet
    private static String splashname = "Images/splash.gif" ; // Splash image
    private static String webstart = "HTML/KissWeb.html" ; // Portal page
    private static String splashdir = "Splash/" ;   // Splash dir
+   private static String cachedir = "Cache/" ;     // Cache dir
    private static String demoindex = "Demo/index.html" ; // Demo index file
    private static String readmeindex = "ReadMe/index.html" ; // ReadMe index
    private static String icondir = "Icons/icon.gif" ; // Icon dir
@@ -123,6 +124,7 @@ public class Kisekae extends Applet
    private static Image iconimage = null ;	 		// Our product icon image
    private static Image iconimage16 = null ;	 		// Our product small icon 
    private static Image splashimage = null ;	 		// Our product splash image
+   private static String cachepath = null ;        // Our cache directory path
    private static String file = null ;             // Our command line file arg
    private static String directory = null ;        // Our command line dir arg
    private static String language = "" ;           // Our command line lang arg
@@ -172,7 +174,7 @@ public class Kisekae extends Applet
 
       LogFile.start() ;
       builddate = Calendar.getInstance() ;
-      builddate.set(2024,2-1,29) ;
+      builddate.set(2024,3-1,25) ;
       
       // Restore the properties.
       
@@ -725,6 +727,34 @@ public class Kisekae extends Applet
             }
          }
       }
+      
+      // Establish the cache directory.  In some cases (Windows) we cannot
+      // write into the program installation directory as it is write protected.
+      // Use the system temporary directory instead.  
+   
+      String cachedirectory = System.getProperty("java.io.tmpdir") ;
+      cachepath = cachedirectory + OptionsDialog.getCacheDir() ;
+      if (File.separatorChar=='\\') 
+         cachepath = cachepath.replace('/', File.separatorChar);
+      else 
+         cachepath = cachepath.replace('\\', File.separatorChar);
+      try 
+      {
+         File f = new File(cachepath) ;
+         if (!f.exists())
+         {
+            System.out.println("Creating cache directory " + cachepath) ;
+            if (!f.mkdir())
+               System.out.println("Cache directory " + cachepath + " not created.") ;
+         }
+         else
+            System.out.println("Cache directory " + cachepath + " exists.") ;
+      }
+      catch (Throwable e)
+      {
+         System.out.println("Unable to create cache directory " + cachepath);
+         System.out.println("Exception " + e.getMessage()) ;         
+      }
    }
 
 
@@ -945,6 +975,8 @@ public class Kisekae extends Applet
    static String getWebSite() { return website ; }
    static String getSplashDir() { return splashdir ; }
    static String getIconDir() { return icondir ; }
+   static String getCacheDir() { return cachedir ; }
+   static String getCachePath() { return cachepath ; }
    static String getTipsApp() { return tipsapp ; }
    static String getTipsIndex() { return tipsindex ; }
    static String getDemoIndex() { return demoindex ; }
@@ -959,7 +991,7 @@ public class Kisekae extends Applet
 
    static String getBaseDir() 
    { return (codebase != null) ? codebase.getPath() : "" ; }
-    static String getUser()
+   static String getUser()
    { return (authorize != null) ? ((Seigen.Seigen) authorize).getUser() : "" ; }
    static String getPassword()
    { return (authorize != null) ? ((Seigen.Seigen) authorize).getPassword() : "" ; }
@@ -1418,6 +1450,12 @@ public class Kisekae extends Applet
    { 
       icondir = s ; 
       OptionsDialog.setIconDir(s) ;
+   }
+ 
+   static void setCacheDir(String s) 
+   { 
+      cachedir = s ; 
+      OptionsDialog.setCacheDir(s) ;
    }
    
    static void setSplashDir(String s) 

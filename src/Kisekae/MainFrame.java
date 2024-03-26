@@ -967,7 +967,8 @@ final public class MainFrame extends KissFrame
 	            else if (selected == changes)
 	            {
 	            	Vector v = (zip != null) ? zip.getUpdated() : new Vector() ;
-                  if (ze != null && !v.contains(ze)) v.addElement(ze) ;
+//                  if (ze != null && !v.contains(ze)) v.addElement(ze) ;
+                  if (v.size() == 0 && ze != null) v.addElement(ze) ;
 
                   // Isolate only unique elements.  Multiple zip entries
                   // can exist for elements that have been cut and pasted.

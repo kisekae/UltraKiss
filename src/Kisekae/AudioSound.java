@@ -567,7 +567,7 @@ final class AudioSound extends Audio
       setStopTime(0) ;    
       
       // Wait for completion if we are already stopping.
-/*      
+      
       if (this.isStopping()) 
       {
          synchronized(waithold) 
@@ -577,7 +577,7 @@ final class AudioSound extends Audio
                time = System.currentTimeMillis() - Configuration.getTimestamp() ;
          		if (OptionsDialog.getDebugSound())
          		   System.out.println("[" + time + "] AudioSound: " + getName() + " [" + playcount + "]" + " Waiting for stop to complete") ;
-               waithold.wait(1000) ; 
+               waithold.wait() ; 
             }
             catch (InterruptedException e) { }       
             time = System.currentTimeMillis() - Configuration.getTimestamp() ;
@@ -585,7 +585,7 @@ final class AudioSound extends Audio
        		   System.out.println("[" + time + "] AudioSound: " + getName()  + " [" + playcount + "]" + " Resuming play request") ;
          }
       }
-*/
+
       // Now open the audio and start playing the sound.  If the playback
       // fails try Java Media Framework.
       
@@ -987,6 +987,15 @@ final class AudioSound extends Audio
             setStopTime(time) ;      
 				if (OptionsDialog.getDebugSound())
 					System.out.println("[" + time + "] AudioSound: " + getName() + " [" + playcount + "]" + " ClipStopEvent") ;
+
+            stopping = false ;
+            synchronized (waithold)
+            {
+               time = System.currentTimeMillis() - Configuration.getTimestamp() ;
+         		if (OptionsDialog.getDebugSound())
+         		   System.out.println("[" + time + "] AudioSound: " + getName() + " [" + playcount + "]" + " Notify stop is complete") ;
+               waithold.notify() ;
+            }
 
 				// The repeat count is a count of the number of times to play the 
             // sound.  If zero this is a request to stop playing the sound.

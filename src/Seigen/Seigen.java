@@ -69,7 +69,7 @@ import java.text.DateFormat ;
 public final class Seigen extends Authenticator
 {
    private static String copyright =            	// Copyright text
-      "Kisekae UltraKiss V3.7.1 (c) 2002-2024 William Miles" ;
+      "Kisekae UltraKiss V3.7.2 (c) 2002-2024 William Miles" ;
 
    private static Calendar warningdate = Calendar.getInstance() ;
    private static Calendar restrictdate = Calendar.getInstance() ;
@@ -116,9 +116,17 @@ public final class Seigen extends Authenticator
 
    // Utility functions to return user information.
 
-   public static String getUser() { return b64encode(user) ; }
+   public static String getUser() 
+   { 
+      if (user == "") user = System.getProperty("user.name");
+      return b64encode(user) ; 
+   }
    public static String getPassword() { return b64encode(password) ; }
-   public static String getUnencodedUser() { return user ; }
+   public static String getUnencodedUser() 
+   { 
+      if (user == "") user = System.getProperty("user.name");
+      return user ; 
+   }
    public static String getConnectionID() 
    { 
       if (user == null || user.length() == 0) return null ;

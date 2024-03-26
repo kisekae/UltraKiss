@@ -70,6 +70,8 @@ class TreeFindDialog extends KissDialog
 {
 	private KissFrame owner = null ;				// Parent frame
 	private JDialog me = null ;               // Ourselves
+   private JTree TREE = null ;               // Tree to search
+   private DefaultMutableTreeNode node = null ; // Node to test
 	private Document docFind;                 // Control data
 	private Document docReplace;
 	private ButtonModel modelWord;
@@ -94,6 +96,7 @@ class TreeFindDialog extends KissDialog
 	private JTabbedPane jTabbedPane = new JTabbedPane();
 	private JPanel jPanel1 = new JPanel();
 	private JPanel jPanel2 = new JPanel();
+	private JPanel jPanel2a = new JPanel();
 	private JPanel jPanel3 = new JPanel();
 	private JPanel jPanel4 = new JPanel();
 	private JPanel jPanel5 = new JPanel();
@@ -105,6 +108,7 @@ class TreeFindDialog extends KissDialog
 	private GridLayout gridLayout1 = new GridLayout();
 	private GridLayout gridLayout2 = new GridLayout();
 	private BorderLayout borderLayout1 = new BorderLayout();
+	private BorderLayout borderLayout3 = new BorderLayout();
    private Border eb1 = BorderFactory.createEmptyBorder(10,10,10,10) ;
    private Border eb2 = BorderFactory.createEmptyBorder(0,5,0,5) ;
 
@@ -116,6 +120,8 @@ class TreeFindDialog extends KissDialog
 	private JLabel findlabel = new JLabel();
 	private JLabel findlabel1 = new JLabel();
 	private JLabel replacelabel = new JLabel();
+	private JLabel statuslabel = new JLabel();
+	private JLabel statuslabel1 = new JLabel();
    private JTextField findtext = new JTextField() ;
    private JTextField findtext1 = new JTextField() ;
    private JTextField replacetext = new JTextField() ;
@@ -182,6 +188,7 @@ class TreeFindDialog extends KissDialog
 			public void actionPerformed(ActionEvent e)
 			{
             owner.setFocus() ;
+            statuslabel.setText("") ;
             int n = findNext(false) ;
             if (n == 0 && !searchUp) 
             {
@@ -212,6 +219,38 @@ class TreeFindDialog extends KissDialog
 		CLOSE.setDefaultCapable(true) ;
 		CLOSE1.addActionListener(closeAction) ;
 		CLOSE1.setDefaultCapable(true) ;
+
+		// Register for events.  Window activate and deactivate action.
+
+		WindowListener flst = new WindowAdapter()
+      {
+			public void windowOpened(WindowEvent e)
+         { windowActivated(e) ; }
+
+			public void windowActivated(WindowEvent e)
+         {
+            validate() ;
+				searchIndex = -1 ;
+				if (jTabbedPane.getSelectedIndex() == 0)
+					findtext.grabFocus(); 
+				else
+					findtext1.grabFocus();
+			}
+
+			public void windowDeactivated(WindowEvent e)
+			{ searchData = null ; }
+         
+         public void windowGainedFocus(WindowEvent e) 
+         { windowActivated(e) ; }
+
+		} ;
+		addWindowListener(flst) ;
+      
+      // Set required values.
+      
+      statuslabel.setHorizontalAlignment(SwingConstants.CENTER);
+      statuslabel1.setHorizontalAlignment(SwingConstants.CENTER);
+      setValues() ;
 	}
 
 
@@ -231,12 +270,14 @@ class TreeFindDialog extends KissDialog
 		gridLayout2.setRows(2) ;
 		jPanel1.setBorder(eb1) ;
 		jPanel2.setBorder(cb2) ;
+		jPanel2a.setBorder(eb1) ;
 		jPanel3.setBorder(eb1) ;
 		jPanel4.setBorder(eb1) ;
 		jPanel5.setBorder(eb1) ;
 		jPanel6.setBorder(cb3) ;
 		jPanel1.setLayout(gridBagLayout1) ;
 		jPanel2.setLayout(gridLayout1) ;
+		jPanel2a.setLayout(borderLayout3) ;
 		jPanel3.setLayout(new BoxLayout(jPanel3,BoxLayout.X_AXIS)) ;
 		jPanel4.setLayout(gridBagLayout2) ;
 		jPanel5.setLayout(new BoxLayout(jPanel5,BoxLayout.X_AXIS)) ;
@@ -278,7 +319,10 @@ class TreeFindDialog extends KissDialog
 		jPanel2.add(searchup, null) ;
 		jPanel2.add(matchcase, null) ;
 		jPanel2.add(searchdown, null) ;
-		jPanel1.add(jPanel3, new GridBagConstraints(0, 2, 3, 1, 1.0, 1.0
+		jPanel1.add(jPanel2a, new GridBagConstraints(0, 2, 3, 1, 1.0, 1.0
+            ,GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(5, 0, 0, 0), 0, 0)) ;
+		jPanel2a.add(statuslabel, BorderLayout.CENTER) ;
+		jPanel1.add(jPanel3, new GridBagConstraints(0, 3, 3, 1, 1.0, 1.0
             ,GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(5, 0, 0, 0), 0, 0)) ;
 		jPanel3.add(Box.createGlue()) ;
 		jPanel3.add(FINDNEXT, null) ;
@@ -298,34 +342,98 @@ class TreeFindDialog extends KissDialog
    // 0 signals the target text cannot be found
    // 1 signifies that a find or replace was successful.
 
+	private int findNext(boolean doReplace)
+	{
+      if (top == null)
+      {
+         top = (DefaultMutableTreeNode) TREE.getModel().getRoot() ;
+         TREE.setSelectionPath(new TreePath(top.getPath())) ;
+         node = top ;
+      }
+   
+      // Search for next occurance.
+      
+      node = searchNode(findtext.getText()) ;
+      if (node == null) 
+      {
+         top = null ;
+			warning(Kisekae.getCaptions().getString("NoFindResultText"),true) ;
+         return 0 ;
+      }
+      
+      // Expand found node.
+
+      TreePath path = new TreePath(node.getPath()) ;
+      TREE.setSelectionPath(path);
+      TREE.expandPath(path) ;
+      TREE.scrollPathToVisible(path) ;
+
+      // Continue search from next node.
+      
+      node = node.getNextNode() ;
+      return 1 ;
+	}
+
+   
+   // Method to traverse the tree based on the last node found.
+
    private DefaultMutableTreeNode searchNode(String nodeStr) 
-   {
-      DefaultMutableTreeNode node = null;
-      Enumeration e = top.breadthFirstEnumeration();
-      while (e.hasMoreElements()) {
-         node = (DefaultMutableTreeNode) e.nextElement();
-         if (nodeStr.equals(node.getUserObject().toString())) {
-         return node;
+   { 
+      if (nodeStr == null || "".equals(nodeStr)) return null ;
+      
+      if (modelWord.isSelected())
+         nodeStr = " " + nodeStr.trim() + " " ;
+         
+      while (node != null) 
+      {
+         if (modelUp.isSelected())
+            node = node.getPreviousNode() ;
+         else
+            node = node.getNextNode() ;
+         if (node == null) break ;
+         
+         Object o = node.getUserObject() ;
+         if (o != null)
+         {   
+            String s1 = o.toString() ;
+            String s2 = nodeStr ;
+            if (!modelCase.isSelected())
+            {
+               s1 = s1.toUpperCase() ;
+               s2 = s2.toUpperCase() ;
+            }        
+            if (s1.contains(s2)) return node;
          }
       }
       return null;
    }
 
-	private int findNext(boolean doReplace)
-	{
-      return 0 ;
-	}
-
 
    // A utility function to display a message dialog.
 
 	private void warning(String message)
+   { warning(message, false) ; }
+   
+	private void warning(String message, boolean status)
    {
-		JOptionPane.showMessageDialog(owner, message,
-         Kisekae.getCaptions().getString("OptionsDialogWarningTitle"),
-         JOptionPane.INFORMATION_MESSAGE);
+      if (status)
+      {
+         if (jTabbedPane.getSelectedIndex() == 0)
+            statuslabel.setText(message) ;
+			else
+            statuslabel1.setText(message) ;
+      }
+      else
+      {
+   		JOptionPane.showMessageDialog(null, message,
+            Kisekae.getCaptions().getString("OptionsDialogWarningTitle"),
+            JOptionPane.INFORMATION_MESSAGE);
+      }
 	}
    
-   void setValues() { }
+   void setValues() 
+   { 
+      TREE = owner.getTree() ;
+   }
 }
 

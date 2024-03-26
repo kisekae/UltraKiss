@@ -657,7 +657,7 @@ abstract class Audio extends KissObject
 
 	// Load a copy of the audio data from the specified object.
 
-	private void loadCopy(Audio a)
+	void loadCopy(Audio a)
 	{
 		if (a == null) return ;
 //		error = a.isError() ;

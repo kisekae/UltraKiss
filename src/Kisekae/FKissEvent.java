@@ -1140,7 +1140,7 @@ final class FKissEvent extends KissObject
          }
          if (breakenabled && topbreak == event)
             doBreakpoint(action,panel,box,true) ;
-         Dimension d = (panel != null) ? panel.getSize() : null ;
+         Dimension d = (panel != null) ? panel.getUnscaledPanelSize() : null ;
          if (d != null) box = new Rectangle(d) ;
          this.box = box ;
          return box ;

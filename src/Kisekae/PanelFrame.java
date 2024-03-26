@@ -109,6 +109,7 @@ final class PanelFrame extends JPanel
    private PopupMenu popup = null ;			// Reference to our context menu
    private Dimension panelSize = null ;	// The panel dimensions
    private Rectangle panelArea = null ;   // The panel area rectangle
+   private Dimension origSize = null ;    // The unscaled panel dimensions
    private Point windowOffset = null ;    // The panel window offset
    private Dimension windowSize = null ;  // The panel window size
 
@@ -223,6 +224,7 @@ final class PanelFrame extends JPanel
       panelSize = new Dimension(448,320) ;
       panelArea = new Rectangle(panelSize) ;
       windowSize = new Dimension(panelSize) ;
+      origSize = new Dimension(panelSize) ;
       windowOffset = new Point(0,0) ;
 
       // Create our internal clipboard for object transfers.  The PanelFrame
@@ -285,6 +287,11 @@ final class PanelFrame extends JPanel
    // Method to return the current scaling factor in use.
 
    float getScaleFactor() { return sf ; }
+
+
+   // Method to return the current scaling factor in use.
+
+   Dimension getUnscaledPanelSize() { return origSize ; }
 
 
    // Method to return the current selection set.
@@ -2472,17 +2479,18 @@ final class PanelFrame extends JPanel
       ArchiveFile zip = config.getZipFile() ;
 
       // Add the new audio file to the configuration if it does not exist.
-      // If the audio file duplicates a loaded file in the configuration,
-      // ignore this import.
 
-      if (a != null && !a.isInternal())
+      if (a != null && !a.isInternal() && zip != null)
       {
          Vector sounds = config.getSounds() ;
-         String name = a.getPath().toUpperCase() ;
+         String name = a.getName().toUpperCase() ;
          Audio a2 = (Audio) Audio.getByKey(Audio.getKeyTable(),cid,name) ;
          if (a2 == null) 
          {
-            zip.addEntry(a.getZipEntry()) ;
+            ArchiveEntry ze = a.getZipEntry() ;
+            ze.setImported(true);
+            ze.setUpdated(true);
+            zip.addEntry(ze) ;
             a.setID(cid) ;
             a.setUpdated(true) ;
             a.setIdentifier(new Integer(sounds.size())) ;
@@ -2492,10 +2500,59 @@ final class PanelFrame extends JPanel
             sounds.addElement(a) ;
             if (OptionsDialog.getDebugEdit())
                System.out.println("Edit: import create " + a) ;
-            JOptionPane.showMessageDialog(parent,a + " imported.") ;
+            String s = Kisekae.getCaptions().getString("AudioImported") ;
+            int i1 = s.indexOf('[') ;
+            int j1 = s.indexOf(']') ;
+            if (i1 >= 0 && j1 > i1)
+               s = s.substring(0,i1) + (a.getName()) + s.substring(j1+1) ;
+            JOptionPane.showMessageDialog(parent,s) ;
          }
          else
-            JOptionPane.showMessageDialog(parent,a + " already exists.") ;
+         {
+            // If the audio file duplicates a loaded file in the configuration,
+            // replace the sound data.  
+            
+            if (a2.isLoaded())
+            {
+               a2.loadCopy(a) ;
+               a2.setUpdated(true) ;
+               a2.setError(a.isError()) ;
+               ArchiveEntry ze = a2.getZipEntry() ;
+               ze.setImported(true) ;
+               ze.setUpdated(true) ;
+               if (OptionsDialog.getDebugEdit())
+                  System.out.println("Edit: import " + a + " audio already exists, sound replaced.") ;
+               String s = Kisekae.getCaptions().getString("AudioExists") ;
+               int i1 = s.indexOf('[') ;
+               int j1 = s.indexOf(']') ;
+               if (i1 >= 0 && j1 > i1)
+                  s = s.substring(0,i1) + (a.getName()) + s.substring(j1+1) ;
+               JOptionPane.showMessageDialog(parent,s) ;
+            }
+            else
+            {
+               // If the audio file is imported for an unloaded file in the 
+               // configuration then substitute this file for the other.
+               
+               a2.loadCopy(a) ;
+               a2.setUpdated(true) ;
+               a2.setError(a.isError()) ;
+                ArchiveEntry ze = a2.getZipEntry() ;
+               ze.setZipFile(config.getZipFile()) ;
+               ze.setDirectory(config.getDirectory()) ;
+               ze.setImported(true) ;
+               ze.setUpdated(true) ;
+               zip.addEntry(ze) ;
+               if (OptionsDialog.getDebugEdit())
+                  System.out.println("Edit: import " + a + " existing audio now loaded.") ;
+               String s = Kisekae.getCaptions().getString("AudioImported") ;
+               int i1 = s.indexOf('[') ;
+               int j1 = s.indexOf(']') ;
+               if (i1 >= 0 && j1 > i1)
+                  s = s.substring(0,i1) + (a.getName()) + s.substring(j1+1) ;
+               JOptionPane.showMessageDialog(parent,s) ;
+            }
+         }
       }
    }
 
@@ -2707,6 +2764,7 @@ final class PanelFrame extends JPanel
       panelSize = new Dimension(448,320) ;
       panelArea = new Rectangle(panelSize) ;
       windowSize = new Dimension(panelSize) ;
+      origSize = new Dimension(panelSize) ;
       windowOffset = new Point(0,0) ;
 
       // Access the configuration information to customize the parent
@@ -2725,6 +2783,7 @@ final class PanelFrame extends JPanel
          panelSize = new Dimension(config.getSize()) ;
          panelArea = new Rectangle(panelSize) ;
          windowSize = new Dimension(panelSize) ;
+         origSize = new Dimension(panelSize) ;
          sf = config.getScaleFactor() ;
          cels = config.getCels() ;
          groups = config.getGroups() ;
@@ -3675,6 +3734,7 @@ final class PanelFrame extends JPanel
       float sy = ((float) y) / size.height ;
       newsf = Math.min(sx,sy) ;
       if (newsf < 0.01f) newsf = 0.01f ;
+      if (OptionsDialog.getScaleDownOnly() && newsf > 1.0f) newsf = 1.0f ;
       if (!fit) newsf = 1.0f ;
       if (OptionsDialog.getDebugEdit() && newsf != 1.0f)
          System.out.println("Edit: Scale to fit screen by " + newsf) ;
@@ -3831,9 +3891,24 @@ final class PanelFrame extends JPanel
 
    // The showpage method draws the page and activates any suspended
    // timer activities.   We update the window title to show the current
-   // page number, color palette, and archive file in use.
+   // page number, color palette, and archive file in use.  This needs
+   // to run on the AWT thread.
 
    void showpage()
+   {
+		if (!SwingUtilities.isEventDispatchThread())
+      {
+   		Runnable runner = new Runnable()
+   		{ public void run() { showpage1() ; } } ;
+         try { javax.swing.SwingUtilities.invokeAndWait(runner) ; }
+         catch (InterruptedException e) { }
+         catch (Exception e) { e.printStackTrace(); }
+      }
+      else
+         showpage1() ;    
+   }
+
+   private void showpage1()
    {
       String s = parent.getTitle() ;
       String s1 = parent.getUserTitle() ;

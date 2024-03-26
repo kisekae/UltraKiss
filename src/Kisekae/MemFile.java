@@ -79,6 +79,10 @@ final class MemFile
    InputStream getInputStream()
    { return new ByteArrayInputStream(buffer) ; }
 
+   // Return the memory file data buffer.
+
+   byte [] getBuffer() { return buffer ; }
+
    // When we close a memory file we reset our offset pointer.
 
    public void close() { offset = 0 ; }
@@ -141,4 +145,6 @@ final class MemFile
    }
 
    public String getFileName() { return filename ; }
+   
+   public long getSize() { return length() ; }
 }

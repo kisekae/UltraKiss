@@ -49,6 +49,7 @@ import java.awt.event.* ;
 import java.util.Vector ;
 import java.util.Enumeration ;
 import java.util.Collections ;
+import java.util.HashSet ;
 import javax.swing.* ;
 import javax.swing.event.* ;
 import javax.swing.border.* ;
@@ -780,6 +781,13 @@ final class PageSetDialog extends KissDialog
             appendevents(sorted,e) ;
          }
 		}
+      
+      // Collision events (in, out, collide, apart, ...) are duplicated in
+      // the sorted event list.  Remove duplicates.
+      
+      HashSet h = new HashSet(sorted) ;
+      sorted.clear() ;
+      sorted.addAll(h) ;
 
       // Sort the event list.
 

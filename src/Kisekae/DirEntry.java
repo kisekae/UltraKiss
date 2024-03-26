@@ -83,6 +83,19 @@ final class DirEntry extends ArchiveEntry
       pathname = file.getPath() ;
 	}
 
+   // Constructor to encalsulate a memory file
+   
+	public DirEntry(MemFile mem)
+	{ 
+      archive = null ;
+      dirname = null ;
+      filename = null ;
+		if (mem == null) return ;
+		memfile = mem ;
+      filename = memfile.getFileName() ;
+      pathname = memfile.getFileName() ;      
+   }
+
 	public DirEntry(String name)
 	{ this(null,name,null) ; }
 
@@ -91,6 +104,7 @@ final class DirEntry extends ArchiveEntry
 
 	public InputStream getInputStream() throws IOException
 	{
+      if (memfile != null) return memfile.getInputStream() ;
    	InputStream is = null ;
    	if (file == null) return null ;
       try { is = new FileInputStream(file) ; }
@@ -112,13 +126,17 @@ final class DirEntry extends ArchiveEntry
 	
 	long getSize()
    {
+      if (memfile != null) return memfile.getSize() ;
       if (file == null) return -1 ;
 //    if (copy) return 0 ;
       if (filesize >= 0) return filesize ;
       return file.length() ;
    }
 
-
+   // Return the memory file.
+   
+   MemFile getMemoryFile() { return memfile ; }
+   
    // Return the compressed size of the file.
 
    long getCompressedSize() { return getSize() ; }
@@ -126,7 +144,6 @@ final class DirEntry extends ArchiveEntry
 	// Return the specified compression method.
 	
 	int getMethod() { return method ; }
-
    
    // Return the calculated CRC32 value.
    
@@ -187,7 +204,6 @@ final class DirEntry extends ArchiveEntry
    	super.setPath(path) ;
    	file = new File(pathname) ;
    }
-
    
  	// Calculate the CRC32 of the directory entry.
 

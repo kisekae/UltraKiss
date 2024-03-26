@@ -59,30 +59,43 @@ package Kisekae ;
 
 import java.awt.*;
 import java.awt.event.* ;
+import java.io.* ;
+import java.net.URL;
 import javax.swing.*;
-import javax.swing.border.*;
 import javax.swing.event.*;
 import java.util.Vector ;
 import java.util.Collections ;
+import javax.swing.filechooser.FileFilter;
 
 final class ElementDialog extends KissDialog
 	implements ActionListener, WindowListener
 {
-	private String item ;
+	private JFrame parent = null ;			// Parent frame
+	private String item = null ;           // The chosen element
+   private File selected = null ;         // The selected import file
+   private MemFile memfile = null ;       // The memory file contents
+   private FileFilter cnffiles = null ;   // FileChooser filter for CNF
+   private boolean allowimport = false ;  // if true show import button
+   private boolean importonly = false ;   // if true only show import dialog
 
    // User interface objects
 
 	private JPanel panel1 = new JPanel();
 	private JPanel jPanel1 = new JPanel();
 	private JPanel jPanel2 = new JPanel();
+	private JPanel jPanel3 = new JPanel();
+	private JPanel jPanel4 = new JPanel();
 	private BorderLayout borderLayout1 = new BorderLayout();
+	private BorderLayout borderLayout2 = new BorderLayout();
 	private BorderLayout borderLayout3 = new BorderLayout();
 	private JLabel jLabel1 = new JLabel();
 	private JScrollPane jScrollPane1 = new JScrollPane();
 	private JList LIST = new JList();
+   private JButton IMPORT = new JButton() ;
 	private JButton CANCEL = new JButton();
 	private JButton OK = new JButton();
 	private FlowLayout flowLayout1 = new FlowLayout();
+	private FlowLayout flowLayout2 = new FlowLayout();
 
    // Set up the event handlers.
 
@@ -115,10 +128,11 @@ final class ElementDialog extends KissDialog
 		// Call the base class constructor to set up our frame
 
  		super(frame, title, true);
-		if (v != null) Collections.sort(v) ;
+      parent = frame ;
 
 		// Populate the list with the vector contents.
 
+		if (v != null) Collections.sort(v) ;
       LIST = new JList(v) ;
       LIST.addListSelectionListener(listListener) ;
 		OK.setEnabled(false) ;
@@ -146,8 +160,11 @@ final class ElementDialog extends KissDialog
 
 		OK.addActionListener(this);
 		CANCEL.addActionListener(this);
+		IMPORT.addActionListener(this);
 		LIST.addMouseListener(mouseListener);
  		addWindowListener(this);
+      
+      setValues() ;
 	}
 
    // User interface initialization.
@@ -157,11 +174,15 @@ final class ElementDialog extends KissDialog
 		panel1.setLayout(borderLayout1);
 		jPanel1.setLayout(new BoxLayout(jPanel1,BoxLayout.X_AXIS));
 		jPanel1.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
-		jPanel2.setLayout(borderLayout3);
+		jPanel2.setLayout(borderLayout2);
 		jPanel2.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+		jPanel3.setLayout(borderLayout3);
+		jPanel4.setLayout(flowLayout1);
 		jLabel1.setBorder(BorderFactory.createEmptyBorder(10,10,0,10));
 		jLabel1.setHorizontalAlignment(SwingConstants.CENTER);
 		jLabel1.setText(Kisekae.getCaptions().getString("ElementDialogText"));
+      IMPORT.setText(Kisekae.getCaptions().getString("ElementDialogImportText"));
+      IMPORT.setToolTipText(Kisekae.getCaptions().getString("ToolTipImportText"));
   		CANCEL.setText(Kisekae.getCaptions().getString("CancelMessage"));
   		OK.setText(Kisekae.getCaptions().getString("OkMessage"));
 		LIST.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -173,31 +194,38 @@ final class ElementDialog extends KissDialog
       jPanel1.add(Box.createGlue()) ;
       jPanel1.add(CANCEL, null);
       jPanel1.add(Box.createGlue()) ;
-		panel1.add(jPanel2, BorderLayout.CENTER);
+		panel1.add(jPanel3, BorderLayout.CENTER);
 		jPanel2.add(jScrollPane1, BorderLayout.CENTER);
+		jPanel3.add(jPanel2, BorderLayout.CENTER);
+      jPanel4.add(IMPORT, null) ;
+      jPanel3.add(jPanel4, BorderLayout.SOUTH);
 		panel1.add(jLabel1, BorderLayout.NORTH);
 		jScrollPane1.getViewport().add(LIST, null);
 	}
 
 
 	// The action method is used to process control events.
+   // Any action closes the frame.
 
 	public void actionPerformed(ActionEvent evt)
 	{
       Object source = evt.getSource() ;
 
-		// An OK closes the frame
-
       if (source == OK)
       {
 			Object o = LIST.getSelectedValue() ;
-			if (o == null) return ;
-			item = o.toString() ;
+			item = (o != null) ? o.toString() : null ;
       }
 
       if (source == CANCEL)
       {
          item = null ;
+      }
+      
+      if (source == IMPORT)
+      {
+         item = null ;
+         importFile() ;
       }
 
 		// Close the window.
@@ -206,9 +234,38 @@ final class ElementDialog extends KissDialog
 		dispose() ;
 	}
 
-	// Return the selected item
+	// Return the selected item.
 
 	public String getSelectedItem() { return item ; }
+
+	// Return the selected file for import.
+
+	public MemFile getSelectedFile() { return memfile ; }
+
+	// Allow imports of new files.
+
+	public void setAllowImport(boolean b) 
+   { 
+      IMPORT.setVisible(b) ; 
+   }
+
+	// Allow only imports of new files.
+
+	public void setImportOnly(boolean b) 
+   { 
+      importonly = b ;
+   }
+   
+   // Override the setVisible() method to manage the importonly option
+   // for when the element selection list is not required.
+   
+   public void setVisible(boolean b)
+   {
+      if (!importonly)
+         super.setVisible(b) ;
+      else
+         importFile() ;
+   }
 
 
 	// Window Events
@@ -232,12 +289,122 @@ final class ElementDialog extends KissDialog
       setVisible(false) ;
 		OK.removeActionListener(this);
 		CANCEL.removeActionListener(this);
+		IMPORT.removeActionListener(this);
 		LIST.removeMouseListener(mouseListener);
 		LIST.removeListSelectionListener(listListener);
  		removeWindowListener(this);
 		getContentPane().removeAll() ;
 		getContentPane().removeNotify() ;
    }
+
+   // Required method for all KissDialog
    
-   void setValues() { }
+   void setValues() 
+   { 
+      IMPORT.setVisible(false) ;
+   }
+   
+   
+   // Show a file dialog to choose a CNF file to import.
+   
+   private MemFile importFile() 
+   {
+      JFileChooser jfd = new JFileChooser() ;
+      jfd.setLocale(Kisekae.getCurrentLocale()) ;
+      jfd.setDialogTitle(Kisekae.getCaptions().getString("ElementDialogCnfText")) ;
+      jfd.setMultiSelectionEnabled(false) ;
+         
+      // Define the file filters. 
+         
+      cnffiles = new SimpleFilter(Kisekae.getCaptions().getString("CnfFilter"),ArchiveFile.getConfigurationExt());
+      jfd.addChoosableFileFilter(cnffiles) ;
+      jfd.setFileFilter(cnffiles) ;
+
+      try
+      {
+         URL codebase = Kisekae.getBase() ;
+         if (codebase == null) throw new SecurityException("unknown codebase") ;
+         String directory = codebase.getFile() ;
+         if (directory != null) jfd.setCurrentDirectory(new File(directory)) ;
+
+      	// Center the dialog in the screen space.  The dialog is always set
+         // to location (0,0) of the parent frame.  We center the dialog only
+   		// if a parent frame was not specified.
+
+         int fdoption = JFileChooser.CANCEL_OPTION ;
+   		Dimension ds = new Dimension(500,400) ;
+  			Dimension d = Toolkit.getDefaultToolkit().getScreenSize() ;
+  			int x = (ds.width < d.width) ? (d.width - ds.width) / 2 : 0 ;
+  			int y = (ds.height < d.height) ? (d.height - ds.height) / 2 : 0 ;
+     		Frame dialogframe = new Frame() ;
+  			dialogframe.setLocation(x, y) ;
+  			fdoption = jfd.showOpenDialog(dialogframe) ;
+
+  			// See if we have a file to open.
+
+         selected = jfd.getSelectedFile() ;
+  			if ((selected == null) || (fdoption != JFileChooser.APPROVE_OPTION))
+  	      {
+  	      	jfd.setVisible(false) ;
+  	         return null ;
+  	      }
+         
+         // Read the file into memory.
+       
+         parent.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
+         System.out.println("Import configuration file: " + selected.getPath());
+         int b = 0 ;
+         InputStream is = new FileInputStream(selected) ;
+         OutputStream os = new ByteArrayOutputStream((int) selected.length()) ;
+         while ((b = is.read()) >= 0) { os.write(b) ; }
+         is.close() ;
+         os.close() ;
+
+         // Create a memory byte array for this CNF file.
+
+         if (os instanceof ByteArrayOutputStream)
+         {
+            ByteArrayOutputStream bos = (ByteArrayOutputStream) os ;
+            memfile = new MemFile(selected.getPath(),bos.toByteArray()) ;
+         }
+      }     
+
+      // Catch security exceptions.
+
+      catch (SecurityException e)
+      {
+         System.out.println("KiSS file open exception, " + e.toString()) ;
+			JOptionPane.showMessageDialog(null,
+            Kisekae.getCaptions().getString("SecurityException") + "\n" +
+            Kisekae.getCaptions().getString("FileOpenSecurityMessage1"),
+         	Kisekae.getCaptions().getString("SecurityException"),
+            JOptionPane.ERROR_MESSAGE) ;
+      }
+
+		// Catch file import error exceptions.
+
+		catch (IOException e)
+		{
+         System.out.println("KiSS file open exception, " + e.toString()) ;
+			JOptionPane.showMessageDialog(null, e.toString(),
+         	Kisekae.getCaptions().getString("FileOpenException"),
+            JOptionPane.ERROR_MESSAGE) ;
+		}
+
+		// Catch file error exceptions.
+
+		catch (Exception e)
+		{
+         System.out.println("ElementDialog exception, " + e.toString()) ;
+			JOptionPane.showMessageDialog(null, e.toString(),
+         	Kisekae.getCaptions().getString("FileOpenException"),
+            JOptionPane.ERROR_MESSAGE) ;
+         e.printStackTrace() ;
+		}
+   
+      // Return the entry to our memory file.
+   
+      parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
+      return memfile ;
+   }   
 }

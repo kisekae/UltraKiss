@@ -89,6 +89,7 @@ final public class FileOpen
 	private Vector entries = null ;				// List of .cnf files
 	private String filename = null ;				// Entered file name
 	private String elementname = null ;			// Selected element name
+	private MemFile cnfmemfile = null ;       // Selected CNF memory file
 	private String pathname = null ;				// Full path name
 	private String extension = null ;			// File extension
 	private String mode = null ;					// File creation mode (rw)
@@ -527,19 +528,26 @@ final public class FileOpen
    // it is automatically returned unless the 'single' parameter is true.
 
 	ArchiveEntry showConfig(JFrame parent, String title, Vector entries)
-   { return showConfig(parent,title,entries,false) ; }
-
+   { return showConfigAllowImport(parent,title,entries,false,false,false) ; }
+   
 	ArchiveEntry showConfig(JFrame parent, String title, Vector entries, boolean single)
+   { return showConfigAllowImport(parent,title,entries,single,false,false) ; }
+
+	ArchiveEntry showConfigAllowImport(JFrame parent, String title, Vector entries, boolean single, boolean allowimport, boolean importonly)
 	{
+      if (entries == null) return null ;
       if ((entries.size() == 1 && !single) || (Kisekae.isBatch() && entries.size() > 0))
          elementname = (String) entries.elementAt(0) ;
-      else if (entries.size() >= 1)
+      else if (entries.size() >= 1 || importonly)
       {
          // Have the user select the file element.
 
     		ElementDialog cl = new ElementDialog(parent,title,entries) ;
-    		cl.show() ;
+         cl.setAllowImport(allowimport) ;
+         cl.setImportOnly(importonly) ;
+    		cl.setVisible(true) ;
    		elementname = cl.getSelectedItem() ;
+         cnfmemfile = cl.getSelectedFile() ;
     		cl.dispose() ;
       }
 
@@ -566,6 +574,14 @@ final public class FileOpen
 			if (ze == null) close() ;
          return ze ;
       }
+      
+      // If we imported a new CNF file we will have a MemFile returned.
+      
+      if (elementname == null && cnfmemfile != null)
+      {
+         DirEntry newcnf = new DirEntry(cnfmemfile) ;
+         return newcnf ;
+      }
 		return null ;
 	}
 
@@ -580,10 +596,13 @@ final public class FileOpen
 	ArchiveEntry showConfig(JFrame parent, String title, Object [] ext, String cnf)
    { return showConfig(parent,title,ext,false,cnf) ; }
    
-	ArchiveEntry showConfig(JFrame parent, String title, Object [] ext, boolean b)
-   { return showConfig(parent,title,ext,b,null) ; }
+	ArchiveEntry showConfig(JFrame parent, String title, Object [] ext, boolean single)
+   { return showConfig(parent,title,ext,single,null) ; }
 
-	ArchiveEntry showConfig(JFrame parent, String title, Object [] ext, boolean single, Object entry)
+   ArchiveEntry showConfig(JFrame parent, String title, Object [] ext, boolean single, Object entry)
+   { return showConfig(parent,title,ext,single,null,false,false) ; }
+
+	ArchiveEntry showConfig(JFrame parent, String title, Object [] ext, boolean single, Object entry, boolean allowimport, boolean importonly)
 	{
       entrycount = 0 ;
       ArchiveEntry lzhentry = null ;
@@ -659,7 +678,7 @@ final public class FileOpen
 
       if (entry instanceof String && entrycount == 1)
          if (entries.elementAt(0).equals(entry)) single = false ;
-		return showConfig(parent,title,entries,single) ;
+		return showConfigAllowImport(parent,title,entries,single,allowimport,importonly) ;
 	}
 
 
@@ -839,8 +858,10 @@ final public class FileOpen
 		catch (Exception e)
 		{
          System.out.println("KiSS file open exception, " + e.toString()) ;
+         String msg = e.getMessage() ;
+         if (msg.contains("zip END header")) msg += "\nCheck download protocol, use https" ;
          if (!Kisekae.isBatch())
-   			JOptionPane.showMessageDialog(parent, e.getMessage(),
+   			JOptionPane.showMessageDialog(parent, msg,
             	captions.getString("FileOpenException"),
                JOptionPane.ERROR_MESSAGE) ;
          if (!(e instanceof IOException)) 
@@ -874,7 +895,7 @@ final public class FileOpen
 
 		// Clear references.
 
-      parent = null ;
+//      parent = null ;
       allfiles = null ;
       archives = null ;
       kissarchives = null ;

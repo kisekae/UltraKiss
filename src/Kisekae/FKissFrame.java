@@ -2698,6 +2698,11 @@ final class FKissFrame extends KissFrame
       }
       return pageformat ;
    }
+   
+   
+   // Return the event tree.  Used by the TreeFindDialog().
+   
+   JTree getTree() { return TREE ; }
 
 
 	// We close the frame after clean up.

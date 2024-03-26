@@ -131,6 +131,7 @@ final class PanelMenu extends KissMenu
    protected JMenuItem layerimage = null ;
    protected JMenuItem editimage = null ;
    protected JMenuItem selectcnf = null ;
+   protected JMenuItem importcnf = null ;
    protected JMenuItem expand = null ;
    protected JMenuItem close = null ;
    protected JMenuItem save = null ;
@@ -234,6 +235,9 @@ final class PanelMenu extends KissMenu
       m[0].add((selectcnf = new JMenuItem(Kisekae.getCaptions().getString("MenuFileSelect")))) ;
       selectcnf.addActionListener(this) ;
       if (!applemac) selectcnf.setMnemonic(KeyEvent.VK_L) ;
+      m[0].add((importcnf = new JMenuItem(Kisekae.getCaptions().getString("MenuFileNewCnf")))) ;
+      importcnf.addActionListener(this) ;
+      if (!applemac) importcnf.setMnemonic(KeyEvent.VK_N) ;
       m[0].add((close = new JMenuItem(Kisekae.getCaptions().getString("MenuFileClose")))) ;
       close.addActionListener(this) ;
       if (!applemac) close.setMnemonic(KeyEvent.VK_C) ;
@@ -261,7 +265,7 @@ final class PanelMenu extends KissMenu
       m[0].addSeparator() ;
       m[0].add(menu.openurl) ;
       m[0].add(menu.openweb) ;
-      m[0].add(menu.openkiss) ;
+      m[0].add(menu.openportal) ;
       m[0].addSeparator() ;
       m[0].add((pagesetup = new JMenuItem(Kisekae.getCaptions().getString("MenuFilePageSetup")))) ;
       pagesetup.addActionListener(this) ;
@@ -837,6 +841,7 @@ final class PanelMenu extends KissMenu
          // configuration to establish the possible cnf files.
 
          if (selectcnf == source) { eventSelect() ; return ; }
+         if (importcnf == source) { eventSelect(true) ; return ; }
 
          // A Close request terminates the currently running configuration.
 
@@ -1295,7 +1300,7 @@ final class PanelMenu extends KissMenu
 
    void eventSelectAllVisible(boolean selectall) { parent.selectAllVisible(selectall) ; }
    
-   // Magnify or reduce the screen size
+   // Magnify or reduce the screen size.
    
    void eventMagnify(int n)
    {
@@ -1336,9 +1341,13 @@ final class PanelMenu extends KissMenu
       parent.selectFind(v) ; 
    }
 
-   // Select a new configuration.
+   // Select or import a new configuration.  The no argument version shows a
+   // standard EventDialog selection list for CNF files and allows for import
+   // of a new CNF.  The importonly argument, if true, will only allow for a
+   // new import of a CNF.
 
-   void eventSelect()
+   void eventSelect() { eventSelect(false) ; }
+   void eventSelect(boolean importonly)
    {
       Configuration config = parent.getConfig() ;
       if (config == null) return ;
@@ -1349,16 +1358,31 @@ final class PanelMenu extends KissMenu
          ext[0] = ".CNF" ;
          fd.open() ;
          String title = Kisekae.getCaptions().getString("ConfigurationListTitle") ;
-         ArchiveEntry ze = fd.showConfig(parent,title,ext,true) ;
+         ArchiveEntry ze = fd.showConfig(parent,title,ext,true,null,true,importonly) ;
 
          // If we selected an entry, update our menu fileopen object
          // to agree with the new entry that we will initialize.
 
-         if (ze != null)
+         if (ze != null && !ze.isMemoryFile())
          {
             setFileOpen(fd) ;
+            parent.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
             parent.init() ;
          }
+
+         // If we have a memory file, set the configuration as being from
+         // new memory copy and initialize this configuration.  The set
+         // will be restarted.
+
+         else if (ze != null && ze.isMemoryFile())
+         {
+            setFileOpen(fd) ;
+            MemFile memfile = ze.getMemoryFile() ;
+            config.setMemoryFile(memfile.getBuffer()) ;
+            parent.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
+            parent.init(config) ;
+         }
+         
          else fd.close() ;
       }
       parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
@@ -2278,7 +2302,7 @@ final class PanelMenu extends KissMenu
    }
 
    
-   // A utility function to establish a new palette object given
+   // A utility function to establish a new audio object given
    // an archive entry.  
 
    private Audio createAudio(FileOpen fd, ArchiveEntry ze)

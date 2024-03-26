@@ -45,11 +45,14 @@ package Kisekae ;
 
 import java.awt.*;
 import java.awt.event.* ;
+import java.util.Vector ;
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.SwingUtilities ;
 import java.net.* ;
 import java.io.* ;
+import java.util.Collections;
+import java.util.Comparator;
 
 
 class UrlLoader extends KissFrame
@@ -217,6 +220,7 @@ class UrlLoader extends KissFrame
 
 	public void run()
 	{
+      boolean incache = false ;
 		if (activeloader != null) activeloader.stopload() ;
       activeloader = this ;
 		LOAD.setEnabled(false);
@@ -246,7 +250,7 @@ class UrlLoader extends KissFrame
             s = s.substring(0,i1) + urlname + s.substring(j1+1) ;
          setTitle(s) ;
    		openurl = new URL(urlname) ;
-         System.out.println("Open URL " + openurl.toExternalForm()) ;
+         System.out.println("Download file " + openurl.toExternalForm()) ;
 
          // Establish a temporary file of the correct type.
 
@@ -263,28 +267,83 @@ class UrlLoader extends KissFrame
          if (i1 >= 0 && j1 > i1)
             s = s.substring(0,i1) + setname + s.substring(j1+1) ;
          showFile(s) ;
+      
+         // Determine if the file exists in our download cache directory.
+         // Check based on filename and last date modified.  Natural sort
+         // is ascending so search backwards to get latest date.
+
+         String cachepath = Kisekae.getCachePath() ;
+         File directory = (cachepath != null) ? new File(cachepath) : null ;
+         if (!OptionsDialog.getCacheInclude()) directory = null ;
+         if (directory != null)
+         {
+            Vector v = new Vector() ;
+            File [] files = directory.listFiles() ;
+            if (files == null) 
+            {
+               files = new File [0] ;
+               directory = null ;
+            }
+            
+            for (int i = 0 ; i < files.length ; i++)
+            {
+               long date = files[i].lastModified() ;
+               String name = files[i].getName() ;
+               v.add(name+"\t"+date) ;
+            }
+            
+            Collections.sort(v, new Comparator(){
+               public int compare(Object a, Object b)
+               {
+                  String [] parts1 = ((String) a).split("\t") ;
+                  String [] parts2 = ((String) b).split("\t") ;
+                  if (parts1.length > 1 && parts2.length > 1)
+                     return (parts1[1].compareTo(parts2[1])) ;
+                  return 0 ;              
+               }
+            }) ;
+            
+            for (int i = v.size()-1 ; i >= 0 ; i--)
+            {
+               if (((String) v.elementAt(i)).startsWith("UltraKiss-"+file))
+               {
+                  String key = (String) v.elementAt(i) ;
+                  String [] parts = key.split("\t") ;
+                  f = new File(cachepath+parts[0]) ;
+                  pathname = f.getPath() ;
+                  incache = true ;
+                  System.out.println("URL File " + pathname + " located in cache.") ;
+                  break ;
+               }
+            }
+         }
 
 			// Set up the window.  If we are running in the sandbox we
-         // cannot create a file.  Load to memory.
+         // cannot create a file.  Load to memory.  Otherwise cache
+         // the file in the cache directory.
 
-         try
+         if (!incache)
          {
-            f = File.createTempFile("UltraKiss-"+file,extension) ;
-            f.deleteOnExit() ;
-            pathname = f.getPath() ;
-            if (OptionsDialog.getDebugLoad())
-   	         System.out.println("Open URL temp file " + pathname) ;
+            try
+            {  
+               f = File.createTempFile("UltraKiss-"+file,extension,directory) ;
+               if (!OptionsDialog.getCacheInclude()) f.deleteOnExit() ;
+               pathname = f.getPath() ;
+               System.out.println("Create URL file " + pathname + " in cache.") ;
+            }
+            catch (Exception e)
+            {
+               pathname = null ;
+               System.out.println("Create URL memory file, cache exception " + e.getMessage()) ;
+            }
          }
-         catch (SecurityException e)
-         {
-            pathname = null ;
-            if (OptionsDialog.getDebugLoad())
-   	         System.out.println("Open URL memory file") ;
-         }
+            
 
          // Open the URL session.
 
          bytes = 0 ;
+         InputStream is = null ;
+         OutputStream os = null ;
          showStatus(Kisekae.getCaptions().getString("OpenConnectionStatus")) ;
          if (icon != null) ErrorMsg.setIcon(icon);
          URLConnection c = openurl.openConnection() ;
@@ -295,50 +354,55 @@ class UrlLoader extends KissFrame
 
          if (connid != null)
             c.setRequestProperty("Authorization", "Basic " + connid);
-
-         // Open the stream and read the data.
-
          ErrorMsg.setIcon(null);
          int size = c.getContentLength() ;
          initProgress(size) ;
-         s = (size  / 1024) + "K" ;
-         String s1 = Kisekae.getCaptions().getString("TransferText") ;
-         i1 = s1.indexOf('[') ;
-         j1 = s1.indexOf(']') ;
-         if (i1 >= 0 && j1 > i1)
-            s1 = s1.substring(0,i1) + s + s1.substring(j1+1) ;
-         showMsg(s1) ;
-         int maxdownload = Kisekae.getMaxDownload() ;
-         if (Kisekae.isBatch() && size > maxdownload*1024)
-            throw new KissException("Batch URL size (" + size + ") exceeds " + maxdownload + " KB") ;
-         InputStream is = c.getInputStream();
-         if (pathname != null)
-            os = new FileOutputStream(f) ;
-         else
-            os = new ByteArrayOutputStream(size) ;
-
-         // Read the data.
-
-         s1 = Kisekae.getCaptions().getString("ReadDataStatus") ;
-         i1 = s1.indexOf('[') ;
-         j1 = s1.indexOf(']') ;
-         if (i1 >= 0 && j1 > i1)
-            s1 = s1.substring(0,i1+1) + s + s1.substring(j1) ;
-         showStatus(s1) ;
-
-         byte[] buffer = new byte[2048];
-         while (!stop && (n = is.read(buffer)) >= 0)
+      
+         // Open the stream and read the data.  Read stream if not cached or 
+         // the content size differs from cached file size.
+      
+         if (!incache || size != f.length())
          {
-         	bytes = bytes + n ;
-            os.write(buffer,0,n) ;
-            updateProgress(n) ;
+            s = (size  / 1024) + "K" ;
+            String s1 = Kisekae.getCaptions().getString("TransferText") ;
+            i1 = s1.indexOf('[') ;
+            j1 = s1.indexOf(']') ;
+            if (i1 >= 0 && j1 > i1)
+               s1 = s1.substring(0,i1) + s + s1.substring(j1+1) ;
+            showMsg(s1) ;
+            int maxdownload = Kisekae.getMaxDownload() ;
+            if (Kisekae.isBatch() && size > maxdownload*1024)
+               throw new KissException("Batch URL size (" + size + ") exceeds " + maxdownload + " KB") ;
+            is = c.getInputStream();
+            if (pathname != null)
+               os = new FileOutputStream(f) ;
+            else
+               os = new ByteArrayOutputStream(size) ;
+
+            // Read the data.
+
+            s1 = Kisekae.getCaptions().getString("ReadDataStatus") ;
+            i1 = s1.indexOf('[') ;
+            j1 = s1.indexOf(']') ;
+            if (i1 >= 0 && j1 > i1)
+               s1 = s1.substring(0,i1+1) + s + s1.substring(j1) ;
+            showStatus(s1) ;
+
+            byte[] buffer = new byte[2048];
+            while (!stop && (n = is.read(buffer)) >= 0)
+            {
+            	bytes = bytes + n ;
+               os.write(buffer,0,n) ;
+               updateProgress(n) ;
+            }
          }
 
          // Close the connection.
 
+         updateProgress((incache) ? size : 0) ;
          showStatus(Kisekae.getCaptions().getString("CloseConnectionStatus")) ;
-         is.close() ;
-         os.close() ;
+         if (is != null) is.close() ;
+         if (os != null) os.close() ;
 
 			// Finished.
 
@@ -419,11 +483,25 @@ class UrlLoader extends KissFrame
          {
       		time = System.currentTimeMillis() - time ;
       		int n = bytes / 1024 ;
-            String s = Kisekae.getCaptions().getString("LoadBytesText") ;
-            int i1 = s.indexOf('[') ;
-            int j1 = s.indexOf(']') ;
-            if (i1 >= 0 && j1 > i1)
-               s = s.substring(0,i1) + n + s.substring(j1+1) ;
+            int i1 = 0 ;
+            int j1 = 0 ;
+            String s = "" ;
+            if (incache)
+            {
+               s = Kisekae.getCaptions().getString("LoadBytesCacheText") ; 
+               i1 = s.indexOf('[') ;
+               j1 = s.indexOf(']') ;
+               if (i1 >= 0 && j1 > i1)
+                  s = s.substring(0,i1) + urlname + s.substring(j1+1) ;
+            }
+            else 
+            {
+               s = Kisekae.getCaptions().getString("LoadBytesText") ;
+               i1 = s.indexOf('[') ;
+               j1 = s.indexOf(']') ;
+               if (i1 >= 0 && j1 > i1)
+                 s = s.substring(0,i1) + n + s.substring(j1+1) ;               
+            }
             showMsg(s) ;
             try {thread.sleep(1000) ; }
             catch (InterruptedException e) { }
@@ -536,7 +614,7 @@ class UrlLoader extends KissFrame
 
 	void showMsg(String s)
 	{ 
-      if (s == null) 
+      if (s == null) return ;
       ErrorMsg.setText(s) ; 
       notifyWebSearch(s) ;
    }

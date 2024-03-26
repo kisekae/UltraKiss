@@ -3380,6 +3380,7 @@ final class FKissAction extends KissObject
                   PanelMenu pm = (mf != null) ? mf.getPanelMenu() : null ;
                   PageSet pageset = (panel != null) ? panel.getPage() : null ;
                   Object cid = (config != null) ? config.getID() : null ;
+                  if (mm != null) mm.setWebURL(vs3);
 
                   if ("menu".equalsIgnoreCase(vs1))
                   {
@@ -3396,8 +3397,10 @@ final class FKissAction extends KissObject
                         if ("toolbar".equalsIgnoreCase(vs2)) mm.toolbar.doClick() ;
                         if ("openweb".equalsIgnoreCase(vs2)) mm.openweb.doClick() ;
                         if ("submitbug".equalsIgnoreCase(vs2)) mm.bugreport.doClick() ;
-                        if ("openkiss".equalsIgnoreCase(vs2)) mm.openkiss.doClick() ;
+                        if ("openportal".equalsIgnoreCase(vs2)) mm.openportal.doClick() ;
                         if ("activecnf".equalsIgnoreCase(vs2)) pm.cnffile.doClick() ;
+                        if ("selectcnf".equalsIgnoreCase(vs2)) pm.selectcnf.doClick() ;
+                        if ("importcnf".equalsIgnoreCase(vs2)) pm.importcnf.doClick() ;
                      }
                   }
                   else if ("reset".equalsIgnoreCase(vs1))
@@ -4149,6 +4152,8 @@ final class FKissAction extends KissObject
                }
                else if ("getuser".equalsIgnoreCase(s1))
                {
+                  s = Kisekae.getUnencodedUser() ;
+/*
                   s = Kisekae.getUser() ;
                   try 
                   { 
@@ -4156,6 +4161,7 @@ final class FKissAction extends KissObject
                      s = Arrays.toString(decoded) ;
                   }
                   catch (SecurityException e) { }
+*/
                }
                else if ("gettotalmemory".equalsIgnoreCase(s1))
                {

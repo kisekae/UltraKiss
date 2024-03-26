@@ -71,6 +71,7 @@ import java.util.Hashtable ;
 import java.util.Date ;
 import java.util.Properties ;
 import javax.swing.Timer ;
+import java.net.URL ;
 
 
 final class Configuration extends KissObject
@@ -4408,9 +4409,27 @@ final class Configuration extends KissObject
          }
          else
    		   file = st.nextToken() ;
-         File f = new File(file) ;
-         if (!f.isAbsolute()) f = new File(zip.getDirectoryName(),file) ;
-         includefiles.add(f) ;
+
+         // The INCLUDE file can be a URL or a file name
+         
+         try
+         {
+            Object o = null ;
+            String s1 = file.toLowerCase() ;
+            if (s1.startsWith("http:") || s1.startsWith("https:"))
+               o = new URL(file) ;
+            else
+            {
+               o = new File(file) ;
+               if (!((File) o).isAbsolute()) 
+                  o = new File(zip.getDirectoryName(),file) ;
+            }
+            includefiles.add(o) ;
+         }
+         catch (Exception e)
+         {
+            showError("INCLUDE file name exception " + e.getMessage()) ;            
+         }                 
       }
 	}
 

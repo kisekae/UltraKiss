@@ -72,6 +72,7 @@ final public class OptionsDialog extends KissDialog
    private boolean languageapply = false ;         // True if apply language
    private boolean userdirapply = false ;          // True if user dir change
    private boolean icondirapply = false ;          // True if icon dir change
+   private boolean cachedirapply = false ;         // True if icon dir change
    private boolean splashdirapply = false ;        // True if splash dir change
    private Locale newlocale = null ;               // New locale to set
    private Object newencoding = null ;             // New encoding to set
@@ -114,12 +115,14 @@ final public class OptionsDialog extends KissDialog
 	private static boolean cacheaudio = true ;
  	private static boolean cachevideo = false ;
 	private static boolean cacheimage = true ;
+	private static boolean cacheinclude = true ;
 	private static boolean suspendmedia = true ;
 	private static boolean longsoundmedia = false ;
 	private static boolean adjustmediavolume = false ;
 	private static boolean stopmusic = false ;
 	private static boolean soundsingle = false ;
 	private static boolean scaletofit = false ;
+	private static boolean scaledownonly = false ;
 	private static boolean sizetofit = false ;
 	private static boolean retainwindowsize = false ;
 	private static boolean maximizewindow = false ;
@@ -224,6 +227,7 @@ final public class OptionsDialog extends KissDialog
    private static String website = Kisekae.getWebSite() ;
    private static String splashdir = Kisekae.getSplashDir() ; 
    private static String icondir = Kisekae.getIconDir() ; 
+   private static String cachedir = Kisekae.getCacheDir() ; 
    private static String onlinehelp = "HelpFiles/product/" ;
    private static Integer iconnumber = new Integer(0) ;
    private static Integer splashsetnumber = new Integer(0) ;
@@ -282,12 +286,14 @@ final public class OptionsDialog extends KissDialog
 	private static boolean initcacheaudio = cacheaudio ;
  	private static boolean initcachevideo = cachevideo ;
 	private static boolean initcacheimage = cacheimage ;
+	private static boolean initcacheinclude = cacheinclude ;
 	private static boolean initsuspendmedia = suspendmedia ;
 	private static boolean initlongsoundmedia = longsoundmedia ;
 	private static boolean initadjustmediavolume = adjustmediavolume ;
 	private static boolean initstopmusic = stopmusic ;
 	private static boolean initsoundsingle = soundsingle ;
 	private static boolean initscaletofit = scaletofit ;
+	private static boolean initscaledownonly = scaledownonly ;
 	private static boolean initsizetofit = sizetofit ;
 	private static boolean initretainwindowsize = retainwindowsize ;
 	private static boolean initmaximizewindow = maximizewindow ;
@@ -388,6 +394,7 @@ final public class OptionsDialog extends KissDialog
    private static String initwebsite = new String(website) ;
    private static String initsplashdir = new String(splashdir) ;
    private static String initicondir = new String(icondir) ;
+   private static String initcachedir = new String(cachedir) ;
    private static String initonlinehelp = new String(onlinehelp) ;
    private static Object initlanguage = language ;
    private static Object initencoding = encoding ;
@@ -570,6 +577,7 @@ final public class OptionsDialog extends KissDialog
    private JLabel jLabel21 = new JLabel();
 	private JLabel jLabel22 = new JLabel();
 	private JLabel jLabel23 = new JLabel();
+	private JLabel jLabel24 = new JLabel();
    private JLabel SplashSetName = new JLabel();
 	private JCheckBox MouseDebug = new JCheckBox();
 	private JCheckBox ControlDebug = new JCheckBox();
@@ -601,6 +609,7 @@ final public class OptionsDialog extends KissDialog
 	private JCheckBox AnimateOption = new JCheckBox();
 	private JCheckBox TimerOption = new JCheckBox();
 	private JCheckBox ScaleToFit = new JCheckBox();
+	private JCheckBox ScaleDownOnly = new JCheckBox();
 	private JCheckBox SizeToFit = new JCheckBox();
 	private JCheckBox RetainWindowSize = new JCheckBox();
 	private JCheckBox MaximizeWindow = new JCheckBox();
@@ -619,6 +628,7 @@ final public class OptionsDialog extends KissDialog
 	private JCheckBox ComponentCel = new JCheckBox();
 	private JCheckBox ImportComponent = new JCheckBox();
 	private JCheckBox CacheImage = new JCheckBox();
+	private JCheckBox CacheInclude = new JCheckBox();
 	private JCheckBox CacheAudio = new JCheckBox();
 	private JCheckBox CacheAudio1 = new JCheckBox();
 	private JCheckBox CacheVideo = new JCheckBox();
@@ -713,12 +723,14 @@ final public class OptionsDialog extends KissDialog
 	private JTextField OnlineHelp = new JTextField();
 	private JTextField SplashDirectory = new JTextField();
 	private JTextField IconDirectory = new JTextField();
+	private JTextField CacheDirectory = new JTextField();
 	private JList IconList = new JList();
 	private JList SplashList = new JList();
    private JScrollPane IconScrollPane = new JScrollPane(IconList) ;
    private JScrollPane SplashScrollPane = new JScrollPane(SplashList) ;
    private JButton SplashBtn = new JButton() ;
    private JButton IconBtn = new JButton() ;
+   private JButton CacheBtn = new JButton() ;
    private JButton HelpBtn = new JButton() ;
    private JButton UserBtn = new JButton() ;
    private JButton PortalBtn = new JButton() ;
@@ -997,7 +1009,7 @@ final public class OptionsDialog extends KissDialog
 		gridLayout4.setRows(4);
 		gridLayout5.setColumns(2);
 		gridLayout5.setRows(8);
-		gridLayout6.setRows(3);
+		gridLayout6.setRows(4);
 		gridLayout6.setColumns(1);
 		gridLayout7.setColumns(1);
 		gridLayout7.setRows(3);
@@ -1018,7 +1030,7 @@ final public class OptionsDialog extends KissDialog
 		gridLayout15.setColumns(1);
 		gridLayout15.setRows(3);
 		gridLayout16.setColumns(1);
-		gridLayout16.setRows(5);
+		gridLayout16.setRows(6);
 		gridLayout17.setColumns(1);
 		gridLayout17.setRows(3);
 		gridLayout18.setColumns(1);
@@ -1313,6 +1325,10 @@ final public class OptionsDialog extends KissDialog
 		ScaleToFit.setToolTipText(Kisekae.getCaptions().getString("ToolTipScaleToFit"));
 		ScaleToFit.setSelected(scaletofit);
 		ScaleToFit.addActionListener(this);
+		ScaleDownOnly.setText(Kisekae.getCaptions().getString("OptionsScaleDownOnly"));
+		ScaleDownOnly.setToolTipText(Kisekae.getCaptions().getString("ToolTipScaleDownOnly"));
+		ScaleDownOnly.setSelected(scaledownonly);
+		ScaleDownOnly.addActionListener(this);
 		SizeToFit.setText(Kisekae.getCaptions().getString("OptionsSizeToFit"));
 		SizeToFit.setToolTipText(Kisekae.getCaptions().getString("ToolTipSizeToFit"));
 		SizeToFit.setSelected(sizetofit);
@@ -1397,6 +1413,10 @@ final public class OptionsDialog extends KissDialog
 		CacheImage.setToolTipText(Kisekae.getCaptions().getString("ToolTipCacheImages"));
 		CacheImage.setSelected(cacheimage);
 		CacheImage.addActionListener(this);
+		CacheInclude.setText(Kisekae.getCaptions().getString("OptionsCacheInclude"));
+		CacheInclude.setToolTipText(Kisekae.getCaptions().getString("ToolTipCacheInclude"));
+		CacheInclude.setSelected(cacheinclude);
+		CacheInclude.addActionListener(this);
 		JavaSoundDebug.setText(Kisekae.getCaptions().getString("OptionsUseJavaSound"));
 		JavaSoundDebug.setToolTipText(Kisekae.getCaptions().getString("ToolTipUseJavaSound"));
 		JavaSoundDebug.setSelected(javasound);
@@ -1618,6 +1638,7 @@ final public class OptionsDialog extends KissDialog
 		jLabel17.setText(Kisekae.getCaptions().getString("OnlineHelpText"));
 		jLabel18.setText(Kisekae.getCaptions().getString("SplashDirectoryText"));
 		jLabel19.setText(Kisekae.getCaptions().getString("IconDirectoryText"));
+		jLabel24.setText(Kisekae.getCaptions().getString("CacheDirectoryText"));
 		KissWeb.setText(kissweb);
 		jLabel14.setToolTipText(Kisekae.getCaptions().getString("ToolTipKissWeb"));
 		KissWeb.addActionListener(this);
@@ -1630,6 +1651,9 @@ final public class OptionsDialog extends KissDialog
 		OnlineHelp.setText(onlinehelp);
 		jLabel17.setToolTipText(Kisekae.getCaptions().getString("ToolTipOnlineHelp"));
 		OnlineHelp.addActionListener(this);
+		CacheDirectory.setText(cachedir);
+		jLabel24.setToolTipText(Kisekae.getCaptions().getString("ToolTipCacheDir"));
+		CacheDirectory.addActionListener(this);
 		SplashDirectory.setText(splashdir);
 		jLabel18.setToolTipText(Kisekae.getCaptions().getString("ToolTipSplashDir"));
 		SplashDirectory.addActionListener(this);
@@ -1640,6 +1664,8 @@ final public class OptionsDialog extends KissDialog
       IconList.addListSelectionListener(this);
 		URL iconfile = Kisekae.getResource("Images/folder.gif") ;
       Icon folderIcon = (iconfile != null) ? new ImageIcon(iconfile) : null ;
+		URL cachefile = Kisekae.getResource("Images/button.gif") ;
+      Icon cacheIcon = (cachefile != null) ? new ImageIcon(cachefile) : null ;
       SplashBtn.setIcon(folderIcon) ;
       SplashBtn.setBorder(eb3) ;
 		SplashBtn.setToolTipText(Kisekae.getCaptions().getString("ChooseDirectoryText"));
@@ -1648,6 +1674,10 @@ final public class OptionsDialog extends KissDialog
       IconBtn.setBorder(eb3) ;
 		IconBtn.setToolTipText(Kisekae.getCaptions().getString("ChooseDirectoryText"));
 		IconBtn.addActionListener(this);
+      CacheBtn.setIcon(cacheIcon) ;
+      CacheBtn.setBorder(eb3) ;
+		CacheBtn.setToolTipText(Kisekae.getCaptions().getString("ClearCacheText"));
+		CacheBtn.addActionListener(this);
       UserBtn.setIcon(folderIcon) ;
       UserBtn.setBorder(eb3) ;
 		UserBtn.setToolTipText(Kisekae.getCaptions().getString("ChooseDirectoryText"));
@@ -1710,6 +1740,7 @@ final public class OptionsDialog extends KissDialog
 		jPanel17.add(CacheImage, null);
 		jPanel17.add(CacheAudio, null);
 		jPanel17.add(CacheVideo, null);
+//		jPanel17.add(CacheInclude, null);
 		jPanel1.add(jPanel18, new GridBagConstraints(2, 1, 1, 1, 0.0, 0.0
             ,GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(5, 5, 5, 5), 0, 0));
 		jPanel18.add(AutoScroll, null);
@@ -1813,6 +1844,8 @@ final public class OptionsDialog extends KissDialog
             ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(5, 0, 5, 10), 0, 0));
 		jPanel31.add(jLabel19, new GridBagConstraints(0, 5, 1, 1, 0.0, 0.0
             ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(5, 0, 5, 10), 0, 0));
+		jPanel31.add(jLabel24, new GridBagConstraints(0, 6, 1, 1, 0.0, 0.0
+            ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(5, 0, 5, 10), 0, 0));
 		jPanel31.add(KissWeb, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0
             ,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
 		jPanel31.add(PortalBtn, new GridBagConstraints(2, 1, 1, 1, 0.0, 0.0
@@ -1835,6 +1868,10 @@ final public class OptionsDialog extends KissDialog
             ,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
 //		jPanel31.add(IconBtn, new GridBagConstraints(2, 5, 1, 1, 0.0, 0.0
 //            ,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 10, 0, 0), 0, 0));
+		jPanel31.add(CacheDirectory, new GridBagConstraints(1, 6, 1, 1, 0.0, 0.0
+            ,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
+		jPanel31.add(CacheBtn, new GridBagConstraints(2, 6, 1, 1, 0.0, 0.0
+            ,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 10, 0, 0), 0, 0));
 		jPanel30.add(jPanel51, new GridBagConstraints(0, 1, 2, 1, 0.0, 0.0
 				,GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(5, 5, 5, 5), 0, 0));
 		jPanel51.add(jPanel32, null);
@@ -1941,6 +1978,7 @@ final public class OptionsDialog extends KissDialog
 				,GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(5, 5, 5, 5), 0, 0));
 		jPanel37.add(SizeToFit, null);
 		jPanel37.add(ScaleToFit, null);
+		jPanel37.add(ScaleDownOnly, null);
 		jPanel37.add(RetainWindowSize, null);
 		jPanel37.add(MaximizeWindow, null);
 		jPanel37.add(ShowBorder, null);
@@ -2261,7 +2299,9 @@ final public class OptionsDialog extends KissDialog
 	static public boolean getCacheAudio() { return cacheaudio ; }
 	static public boolean getCacheVideo() { return cachevideo ; }
 	static public boolean getCacheImage() { return cacheimage ; }
+	static public boolean getCacheInclude() { return cacheinclude ; }
 	static public boolean getScaleToFit() { return scaletofit ; }
+	static public boolean getScaleDownOnly() { return scaledownonly ; }
 	static public boolean getSizeToFit() { return sizetofit ; }
 	static public boolean getRetainWindowSize() { return retainwindowsize ; }
 	static public boolean getMaximizeWindow() { return maximizewindow ; }
@@ -2519,6 +2559,7 @@ final public class OptionsDialog extends KissDialog
 	static public String getOnlineHelp() { return onlinehelp ; }
 	static public String getSplashDir() { return splashdir ; }
 	static public String getIconDir() { return icondir ; }
+	static public String getCacheDir() { return cachedir ; }
    static public Object getLanguage() { return language ; }
    static public Object getEncoding() { return encoding ; }
    static public Object getExportType() { return exporttype ; }
@@ -2615,7 +2656,9 @@ final public class OptionsDialog extends KissDialog
 	static public void setCacheAudio(boolean b) { cacheaudio = b ; }
 	static public void setCacheVideo(boolean b) { cachevideo = b ; }
 	static public void setCacheImage(boolean b) { cacheimage = b ; }
+	static public void setCacheInclude(boolean b) { cacheinclude = b ; }
 	static public void setScaleToFit(boolean b) { scaletofit = b ; }
+	static public void setScaleDownOnly(boolean b) { scaledownonly = b ; }
 	static public void setSizeToFit(boolean b) { sizetofit = b ; }
 	static public void setRetainWindowSize(boolean b) { retainwindowsize = b ; }
 	static public void setMaximizeWindow(boolean b) { maximizewindow = b ; }
@@ -2781,6 +2824,9 @@ final public class OptionsDialog extends KissDialog
    
 	static public void setIconDir(String s)
    { icondir = Variable.getStringLiteralValue(s) ; }
+   
+	static public void setCacheDir(String s)
+   { cachedir = Variable.getStringLiteralValue(s) ; }
 
 	static public void setIconNumber(int n)
    { iconnumber = new Integer(n) ; }
@@ -2939,12 +2985,14 @@ final public class OptionsDialog extends KissDialog
       else if ("cacheaudio".equalsIgnoreCase(option)) setCacheAudio(b) ;
       else if ("cachevideo".equalsIgnoreCase(option)) setCacheVideo(b) ;
       else if ("cacheimage".equalsIgnoreCase(option)) setCacheImage(b) ;
+      else if ("cacheinclude".equalsIgnoreCase(option)) setCacheInclude(b) ;
       else if ("suspendmedia".equalsIgnoreCase(option)) setSuspendMedia(b) ;
       else if ("longsoundmedia".equalsIgnoreCase(option)) setLongSoundMedia(b) ;
       else if ("adjustmediavolume".equalsIgnoreCase(option)) setAdjustMediaVolume(b) ;
       else if ("stopmusic".equalsIgnoreCase(option)) setStopMusic(b) ;
       else if ("soundsingle".equalsIgnoreCase(option)) setSoundSingle(b) ;
       else if ("scaletofit".equalsIgnoreCase(option)) setScaleToFit(b) ;
+      else if ("scaledownonly".equalsIgnoreCase(option)) setScaleDownOnly(b) ;
       else if ("sizetofit".equalsIgnoreCase(option)) setSizeToFit(b) ;
       else if ("retainwindowsize".equalsIgnoreCase(option)) setRetainWindowSize(b) ;
       else if ("maximizewindow".equalsIgnoreCase(option)) setMaximizeWindow(b) ;
@@ -3036,6 +3084,7 @@ final public class OptionsDialog extends KissDialog
       else if ("website".equalsIgnoreCase(option)) setWebSite(value) ;
       else if ("splashdir".equalsIgnoreCase(option)) setSplashDir(value) ;
       else if ("icondir".equalsIgnoreCase(option)) setIconDir(value) ;
+      else if ("cachedir".equalsIgnoreCase(option)) setCacheDir(value) ;
       else if ("language".equalsIgnoreCase(option)) setLanguage(value) ;
       else if ("encoding".equalsIgnoreCase(option)) setEncoding(value) ;
       else if ("exporttype".equalsIgnoreCase(option)) setExportType(value) ;
@@ -3092,12 +3141,14 @@ final public class OptionsDialog extends KissDialog
       else if ("cacheaudio".equalsIgnoreCase(option)) s += getCacheAudio() ;
       else if ("cachevideo".equalsIgnoreCase(option)) s += getCacheVideo() ;
       else if ("cacheimage".equalsIgnoreCase(option)) s += getCacheImage() ;
+      else if ("cacheinclude".equalsIgnoreCase(option)) s += getCacheInclude() ;
       else if ("suspendmedia".equalsIgnoreCase(option)) s += getSuspendMedia() ;
       else if ("longsoundmedia".equalsIgnoreCase(option)) s += getLongSoundMedia() ;
       else if ("adjustmediavolume".equalsIgnoreCase(option)) s += getAdjustMediaVolume() ;
       else if ("stopmusic".equalsIgnoreCase(option)) s += getStopMusic() ;
       else if ("soundsingle".equalsIgnoreCase(option)) s += getSoundSingle() ;
       else if ("scaletofit".equalsIgnoreCase(option)) s += getScaleToFit() ;
+      else if ("scaledownonly".equalsIgnoreCase(option)) s += getScaleDownOnly() ;
       else if ("sizetofit".equalsIgnoreCase(option)) s += getSizeToFit() ;
       else if ("retainwindowsize".equalsIgnoreCase(option)) s += getRetainWindowSize() ;
       else if ("maximizewindow".equalsIgnoreCase(option)) s += getMaximizeWindow() ;
@@ -3188,6 +3239,7 @@ final public class OptionsDialog extends KissDialog
       else if ("website".equalsIgnoreCase(option)) s += getWebSite() ;
       else if ("splashdir".equalsIgnoreCase(option)) s += getSplashDir() ;
       else if ("icondir".equalsIgnoreCase(option)) s += getIconDir() ;
+      else if ("cachedir".equalsIgnoreCase(option)) s += getCacheDir() ;
       else if ("language".equalsIgnoreCase(option)) s += getLanguage() ;
       else if ("encoding".equalsIgnoreCase(option)) s += getEncoding() ;
       else if ("exporttype".equalsIgnoreCase(option)) s += getExportType() ;
@@ -3272,7 +3324,9 @@ final public class OptionsDialog extends KissDialog
 		CacheVideo.setSelected(cachevideo);
 		CacheVideo1.setSelected(cachevideo);
 		CacheImage.setSelected(cacheimage);
+		CacheInclude.setSelected(cacheinclude);
 		ScaleToFit.setSelected(scaletofit);
+		ScaleDownOnly.setSelected(scaledownonly);
 		SizeToFit.setSelected(sizetofit);
 		RetainWindowSize.setSelected(retainwindowsize);
 		MaximizeWindow.setSelected(maximizewindow);
@@ -3351,6 +3405,7 @@ final public class OptionsDialog extends KissDialog
       WebSite.setText(website);
       SplashDirectory.setText(splashdir);
       IconDirectory.setText(icondir);
+      CacheDirectory.setText(cachedir);
 		EventPause.setSelected(eventpause);
 		ActionPause.setSelected(actionpause);
 		DisableAll.setSelected(disableall);
@@ -3507,7 +3562,9 @@ final public class OptionsDialog extends KissDialog
 		cacheaudio = CacheAudio.isSelected() ;
 		cachevideo = CacheVideo.isSelected() ;
 		cacheimage = CacheImage.isSelected() ;
+		cacheinclude = CacheInclude.isSelected() ;
 		scaletofit = ScaleToFit.isSelected() ;
+		scaledownonly = ScaleDownOnly.isSelected() ;
 		sizetofit = SizeToFit.isSelected() ;
 		retainwindowsize = RetainWindowSize.isSelected() ;
 		maximizewindow = MaximizeWindow.isSelected() ;
@@ -3585,6 +3642,7 @@ final public class OptionsDialog extends KissDialog
 		website = WebSite.getText() ;
 		splashdir = SplashDirectory.getText() ;
 		icondir = IconDirectory.getText() ;
+		cachedir = CacheDirectory.getText() ;
 		eventpause = EventPause.isSelected() ;
 		actionpause = ActionPause.isSelected() ;
 		disableall = DisableAll.isSelected() ;
@@ -3689,7 +3747,8 @@ final public class OptionsDialog extends KissDialog
 //		onlinehelp = initonlinehelp ;
 //		website = initwebsite ;
 		splashdir = initsplashdir ;
-//		iocndir = initicondir ;
+//		icondir = initicondir ;
+//		cachedir = initcachedir ;
 //    language = initlanguage ;
 //    encoding = initencoding ;
 //    exporttype = initexporttype ;
@@ -3747,7 +3806,9 @@ final public class OptionsDialog extends KissDialog
 		cacheaudio = initcacheaudio ;
 		cachevideo = initcachevideo ;
 		cacheimage = initcacheimage ;
+		cacheinclude = initcacheinclude ;
 //		scaletofit = initscaletofit ;
+//		scaledownonly = initscaledownonly ;
 //		sizetofit = initsizetofit ;
 		retainwindowsize = initretainwindowsize ;
 		maximizewindow = initmaximizewindow ;
@@ -3822,7 +3883,7 @@ final public class OptionsDialog extends KissDialog
 //		showstepintoend = initshowstepintoend ;
 //		eventpause = initeventpause ;
 //		actionpause = initactionpause ;
-//		disableall = initdisableall ;
+		disableall = initdisableall ;
       
       // Reset specified compatibility options.
       
@@ -3888,7 +3949,9 @@ final public class OptionsDialog extends KissDialog
 	   initcacheaudio = cacheaudio ;
 	   initcachevideo = cachevideo ;
 	   initcacheimage = cacheimage ;
+	   initcacheinclude = cacheinclude ;
 	   initscaletofit = scaletofit ;
+	   initscaledownonly = scaledownonly ;
 	   initsizetofit = sizetofit ;
 	   initretainwindowsize = retainwindowsize ;
 	   initmaximizewindow = maximizewindow ;
@@ -4020,12 +4083,14 @@ final public class OptionsDialog extends KissDialog
       cacheaudio = true ;
       cachevideo = false ;
       cacheimage = true ;
+      cacheinclude = true ;
       suspendmedia = true ;
       longsoundmedia = false ;
       adjustmediavolume = false ;
       stopmusic = false ;
       soundsingle = false;
       scaletofit = false ;
+      scaledownonly = false ;
       sizetofit = false ;
       retainwindowsize = true ;
       maximizewindow = false ;
@@ -4126,6 +4191,7 @@ final public class OptionsDialog extends KissDialog
       browser = "" ;
       kissweb = Kisekae.getKissWeb() ;
       userdir = Kisekae.getBaseDir() ;
+      cachedir = Kisekae.getCacheDir() ; 
       website = Kisekae.getWebSite() ; ;
       splashdir = Kisekae.getFactorySplashDir() ; 
       splashsetnumber = new Integer(0) ;
@@ -4197,7 +4263,9 @@ final public class OptionsDialog extends KissDialog
 //	   if (initcacheaudio != CacheAudio.isSelected()) return true ;
 //	   if (initcachevideo != CacheVideo.isSelected()) return true ;
 //	   if (initcacheimage != CacheImage.isSelected()) return true ;
+//	   if (initcacheinclude != CacheInclude.isSelected()) return true ;
 //	   if (initscaletofit != ScaleToFit.isSelected()) return true ;
+//	   if (initscaledownonly != ScaleDownOnly.isSelected()) return true ;
 //	   if (initsizetofit != SizeToFit.isSelected()) return true ;
 //	   if (initretainwindowsize != RetainWindowSize.isSelected()) return true ;
 //	   if (initmaximizewindow != MaximizeWindow.isSelected()) return true ;
@@ -4272,7 +4340,7 @@ final public class OptionsDialog extends KissDialog
 //	   if (!(initindentspace.equals(IndentSpace.getText()))) return true ;
 //	   if (initeventpause != EventPause.isSelected()) return true ;
 //	   if (initactionpause != ActionPause.isSelected()) return true ;
-//	   if (initdisableall != DisableAll.isSelected()) return true ;
+	   if (initdisableall != DisableAll.isSelected()) return true ;
       return false ;
    }
    
@@ -4331,7 +4399,9 @@ final public class OptionsDialog extends KissDialog
 //	   if (cacheaudio != CacheAudio.isSelected()) return true ;
 //	   if (cachevideo != CacheVideo.isSelected()) return true ;
 //	   if (cacheimage != CacheImage.isSelected()) return true ;
+//	   if (cacheinclude != CacheInclude.isSelected()) return true ;
 //	   if (scaletofit != ScaleToFit.isSelected()) return true ;
+//	   if (scaledownonly != ScaleDownOnly.isSelected()) return true ;
 //	   if (sizetofit != SizeToFit.isSelected()) return true ;
 //	   if (retainwindowsize != RetainWindowSize.isSelected()) return true ;
 //	   if (maximizewindow != MaximizeWindow.isSelected()) return true ;
@@ -4406,7 +4476,7 @@ final public class OptionsDialog extends KissDialog
 //	   if (!(indentspace.equals(IndentSpace.getText()))) return true ;
 //	   if (eventpause != EventPause.isSelected()) return true ;
 //	   if (actionpause != ActionPause.isSelected()) return true ;
-//	   if (disableall != DisableAll.isSelected()) return true ;
+	   if (disableall != DisableAll.isSelected()) return true ;
       return false ;
    }
 
@@ -4445,7 +4515,9 @@ final public class OptionsDialog extends KissDialog
 	   cacheaudio = toBoolean1(p.getProperty("cacheaudio"),cacheaudio) ;
 	   cachevideo = toBoolean1(p.getProperty("cachevideo"),cachevideo) ;
 	   cacheimage = toBoolean1(p.getProperty("cacheimage"),cacheimage) ;
+	   cacheinclude = toBoolean1(p.getProperty("cacheinclude"),cacheinclude) ;
 	   scaletofit = toBoolean1(p.getProperty("scaletofit"),scaletofit) ;
+	   scaledownonly = toBoolean1(p.getProperty("scaledownonly"),scaledownonly) ;
 	   sizetofit = toBoolean1(p.getProperty("sizetofit"),sizetofit) ;
 	   retainwindowsize = toBoolean1(p.getProperty("retainwindowsize"),retainwindowsize) ;
 	   maximizewindow = toBoolean1(p.getProperty("maximizewindow"),maximizewindow) ;
@@ -4534,6 +4606,7 @@ final public class OptionsDialog extends KissDialog
       website = toString1(p.getProperty("website"),website) ;
       splashdir = toString1(p.getProperty("splashdir"),splashdir) ;
       icondir = toString1(p.getProperty("icondir"),icondir) ;
+      cachedir = toString1(p.getProperty("cachedir"),cachedir) ;
 	   iconnumber = new Integer(toInteger1(p.getProperty("iconnumber"),iconnumber)) ;
 	   splashsetnumber = new Integer(toInteger1(p.getProperty("splashsetnumber"),splashsetnumber)) ;
       setLanguage(toString1(p.getProperty("language"),language)) ;
@@ -4631,7 +4704,9 @@ final public class OptionsDialog extends KissDialog
       p.put("cacheaudio",toString2(cacheaudio)) ;
       p.put("cachevideo",toString2(cachevideo)) ;
       p.put("cacheimage",toString2(cacheimage)) ;
+      p.put("cacheinclude",toString2(cacheinclude)) ;
       p.put("scaletofit",toString2(scaletofit)) ;
+      p.put("scaledownonly",toString2(scaledownonly)) ;
       p.put("sizetofit",toString2(sizetofit)) ;
       p.put("retainwindowsize",toString2(retainwindowsize)) ;
       p.put("maximizewindow",toString2(maximizewindow)) ;
@@ -4727,6 +4802,7 @@ final public class OptionsDialog extends KissDialog
       p.put("splashdir",toString2(splashdir)) ;
       p.put("splashsetnumber",(""+getSplashSetNumber())) ;
       p.put("icondir",toString2(icondir)) ;
+      p.put("cachedir",toString2(cachedir)) ;
       p.put("iconnumber",(""+getIconNumber())) ;
      
       if (lrufiles != null)
@@ -4749,6 +4825,7 @@ final public class OptionsDialog extends KissDialog
       p.put("website",toString2(website)) ;
       p.put("splashdir",toString2(splashdir)) ;
       p.put("icondir",toString2(icondir)) ;
+      p.put("cachedir",toString2(cachedir)) ;
       p.put("iconnumber",(""+getIconNumber())) ;
       p.put("splashsetnumber",(""+getSplashSetNumber())) ;
       
@@ -5014,6 +5091,41 @@ final public class OptionsDialog extends KissDialog
             return ;
          }
          
+         if (source == CacheBtn)
+         {
+            String cachepath = Kisekae.getCachePath() ;
+            File directory = (cachepath != null) ? new File(cachepath) : null ;
+            if (directory != null)
+            {
+               File [] files = directory.listFiles() ;
+               String s = Kisekae.getCaptions().getString("OptionsDialogCacheClearText1") + files.length;
+     				int n = JOptionPane.showConfirmDialog(getParentFrame(), s,
+                  Kisekae.getCaptions().getString("OptionsDialogCacheClearTitle"),
+                  JOptionPane.YES_NO_OPTION,
+                  JOptionPane.INFORMATION_MESSAGE) ;
+               
+               if (n == JOptionPane.YES_OPTION)
+               {
+                  n = 0 ;
+                  for (int i = 0 ; i < files.length ; i++)
+                  {
+                     File f = files[i] ;
+                     if (f.getName().startsWith("UltraKiss-"))
+                     {
+                        boolean b = f.delete() ;
+                        if (b) n++ ;
+                     }
+                  }
+                  
+                  s = Kisekae.getCaptions().getString("OptionsDialogCacheClearText2") + n ;
+        				JOptionPane.showMessageDialog(getParentFrame(), s,
+                     Kisekae.getCaptions().getString("OptionsDialogCacheClearTitle"),
+                     JOptionPane.INFORMATION_MESSAGE) ;
+               }
+            }
+            return ;
+         }
+         
          if (source == SplashBtn)
          {
             JFileChooser fc = new JFileChooser() ;
@@ -5188,6 +5300,7 @@ final public class OptionsDialog extends KissDialog
              source == CacheAudio1 || source == CacheVideo1 ||
              source == TimerOption ||
              source == SizeToFit || source == ScaleToFit ||
+             source == ScaleDownOnly ||
              source == JavaSoundDebug || source == AppleMac ||
              source == PlayFKissBtn || source == DirectKissBtn ||
              source == GnomeKissBtn || source == KissLDBtn)
@@ -5490,6 +5603,7 @@ final public class OptionsDialog extends KissDialog
          OnlineHelp.setCaretPosition(0);
          SplashDirectory.setCaretPosition(0);
          IconDirectory.setCaretPosition(0);
+         CacheDirectory.setCaretPosition(0);
       }
       
       if (source == UseDefaultWS)
@@ -6268,6 +6382,7 @@ final public class OptionsDialog extends KissDialog
 //	   if (!website.equals(initwebsite)) writeLine(out,"; website = \"" + website + "\"") ;
 	   if (!splashdir.equals(initsplashdir)) writeLine(out,"; splashdir = \"" + splashdir + "\"") ;
 //	   if (!icondir.equals(initicondir)) writeLine(out,"; icondir = \"" + icondir + "\"") ;
+//	   if (!cachedir.equals(initcachedir)) writeLine(out,"; cachedir = \"" + cachedir + "\"") ;
 //    if (applemac != initapplemac) writeLine(out,"; applemac = \"" + applemac + "\"") ;
 //    if (linux != initlinux) writeLine(out,"; linux = \"" + linux + "\"") ;
       if (playfkiss) writeLine(out,"; playfkiss = \"" + playfkiss + "\"") ;
@@ -6293,12 +6408,14 @@ final public class OptionsDialog extends KissDialog
 	   if (cacheaudio != initcacheaudio) writeLine(out,"; cacheaudio = " + cacheaudio) ;
 	   if (cachevideo != initcachevideo) writeLine(out,"; cachevideo = " + cachevideo) ;
 	   if (cacheimage != initcacheimage) writeLine(out,"; cacheimage = " + cacheimage) ;
+	   if (cacheinclude != initcacheinclude) writeLine(out,"; cacheinclude = " + cacheinclude) ;
 	   if (suspendmedia != initsuspendmedia) writeLine(out,"; suspendmedia = " + suspendmedia) ;
 	   if (stopmusic != initstopmusic) writeLine(out,"; stopmusic = " + stopmusic) ;
 	   if (soundsingle != initsoundsingle && !b) writeLine(out,"; soundsingle = " + soundsingle) ;
 	   if (longsoundmedia != initlongsoundmedia) writeLine(out,"; longsoundmedia = " + longsoundmedia) ;
 	   if (adjustmediavolume != initadjustmediavolume) writeLine(out,"; adjustmediavolume = " + adjustmediavolume) ;
 	   if (scaletofit != initscaletofit) writeLine(out,"; scaletofit = " + scaletofit) ;
+	   if (scaledownonly != initscaledownonly) writeLine(out,"; scaledownonly = " + scaledownonly) ;
 	   if (sizetofit != initsizetofit) writeLine(out,"; sizetofit = " + sizetofit) ;
 	   if (retainwindowsize != initretainwindowsize) writeLine(out,"; retainwindowsize = " + retainwindowsize) ;
 	   if (maximizewindow != initmaximizewindow) writeLine(out,"; maximizewindow = " + maximizewindow) ;

@@ -21,8 +21,8 @@
 	web. I will also place notices here regarding product updates, scheduled 
 	releases, or problems and work-arounds that may affect you.&nbsp;</p>
                                         <p>&nbsp;</p>
-					<p><B>April 1, 2024</B></p>
-					<P>UltraKiss V3.7.2 is in development. This release corrects miscellaneous problems.</P>
+					<p><B>March 23, 2024</B></p>
+					<P>UltraKiss V3.7.2 is released. This release introduces download caching and new CNF imports to support the web distribution of the Scarecrow sets.</P>
 					<h3><FONT face=Arial>Updates to V3.7.2&nbsp; </FONT></h3>
 					<BLOCKQUOTE>
                       <p><font face="Arial">1. The SingleSound option for PlayFKiss compatibility caused intermittent event pauses when sounds were played.  This is corrected.</font></p>
@@ -30,6 +30,25 @@
                       <p><font face="Arial">3. An updated collision event demonstration set "collide.lzh" FKiSS2 set is provided to test collisions when object visibility changes.</font></p>
                       <p><font face="Arial">4. The right click mouse recognition is refactored to use SwingUtilities rather than the Java 8 meta key.  This is for Java 11. </font></p>
                       <p><font face="Arial">5. A minimized frame was not being restored and made visible if selected through the Window menu.  This is corrected.</font></p>
+                      <p><font face="Arial">6. Corrected an AWT thread hang condition if changeset() or changecol() FKiSS commands were used.  Function showpage() now runs on the EDT thread.</font></p>
+                      <p><font face="Arial">7. Collision events (collide, apart, in, out ...) were duplicated in the PageSet properties event list.  The duplicates are now removed.</font></p>
+                      <p><font face="Arial">8. Ensured current sound was stopped before resetting sound to initiate another playback activity. Repeated sounds were sometimes not played.</font></p>
+                      <p><font face="Arial">9. Enabled the download of INCLUDE files specified by a URL string.  The URL must specify an http:// or an https:// protocol.</font></p>
+                      <p><font face="Arial">10. Corrected the FKiSS 5 environment(getuser) command to return the current user name.  Previously, an empty string was returned.</font></p>
+                      <p><font face="Arial">11. Enhanced the File-Add URL command to recognize the Enter key as the submission of a new URL in the text combo box.</font></p>
+                      <p><font face="Arial">12. Introduced a new Window option to prevent scaling magnification of the set.  Sets scaled to fit the window can only be made smaller.</font></p>
+                      <p><font face="Arial">13. Messages shown in the File Loader window now automatically scroll to ensure that the last message line is visible.</font></p>
+                      <p><font face="Arial">14. Implemented a local cache directory to cache downloaded INCLUDE files and KiSS sets downloaded through the Portal.</font></p>
+         	      <p><font face="Arial">15. A cache directory option in the Options-UKiSS tab to specify the cache directory is provided.  A button to clear cache is provided.</font></p>
+         	      <p><font face="Arial">16. The FKiSS 5 viewer("menu","openportal","URL") command is extended to allow a new optional URL parameter to act as a hyperlink for an image.</font></p>
+         	      <p><font face="Arial">17. Added a URL link to the UltraKiss About box to link to the UltraKiss default website.  This defaults to the GitHub distribution for UltraKiss.</font></p>
+         	      <p><font face="Arial">18. The set configuration selection dialog is enhanced to allow for the import of a new configuration CNF file from disk. </font></p>
+         	      <p><font face="Arial">19. Introduced a new FKiSS 5 viewer("menu","importcnf") command to show a dialog to enable a new configuration CNF file import from disk.</font></p>
+         	      <p><font face="Arial">20. The Edit-Find function for text tree searches in the FKiss Editor is corrected.  Previously, this function was not fully developed.</font></p>
+         	      <p><font face="Arial">21. FKiSS variable traces were being displayed for trace disabled events.  This is corrected.</font></p>
+         	      <p><font face="Arial">22. The FKiSS option to disable all event tracing was saved as a permanent option rather than a temporary option. This is corrected. </font></p>
+         	      <p><font face="Arial">23. The Edit-Import Other-Audio Files command is corrected to allow for new audio files to replace sound files in the CNF.</font></p>
+         	      <p><font face="Arial">24. Corrected a drawing fault where artifacts could be left on the screen if the set was scaled and a label routine had been called. </font></p>
          				</BLOCKQUOTE>
                                         <p>&nbsp;</p>
 					<p><B>February 29, 2024</B></p>

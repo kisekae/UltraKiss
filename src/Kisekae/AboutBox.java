@@ -102,6 +102,7 @@ final public class AboutBox extends KissDialog
    private JLabel dummylabel = new JLabel();
    private JLabel builddate = new JLabel();
    private JLabel expiredate = new JLabel();
+   private JLabel website = new JLabel();
    private JButton OK = new JButton();
    private JButton LICENSE = new JButton();
    private JPanel jPanel1 = new JPanel();
@@ -145,7 +146,6 @@ final public class AboutBox extends KissDialog
       version = (jlayer == null) ? null : "1.0" ;
       jlayerversion = (version == null) ? "Unknown" : version ;
 
-
       // Set contributors.
 
       Vector contrib = new Vector() ;
@@ -179,6 +179,17 @@ final public class AboutBox extends KissDialog
       OK.addActionListener(this) ;
       LICENSE.addActionListener(this) ;
       addWindowListener(this);
+      
+      // Open a browser on the website link click.
+      
+      website.addMouseListener(new MouseAdapter()  
+      {  
+         public void mouseClicked(MouseEvent e)  
+         {  
+            try { BrowserControl.displayURL(Kisekae.getWebSite()) ; }
+            catch (Exception ex) { }
+         }  
+      });
    }
 
 
@@ -216,6 +227,10 @@ final public class AboutBox extends KissDialog
       iconlabel.setPreferredSize(new Dimension(100, 100));
       iconlabel.setHorizontalAlignment(JLabel.CENTER) ;
       iconlabel.setIcon(imageicon);
+      website.setText(String.format("<html><u>%s</u></html>",Kisekae.getWebSite())) ;
+      website.setBorder(BorderFactory.createEmptyBorder(20,0,0,0));
+      website.setForeground(Color.BLUE.darker()) ;
+      website.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)) ;
       OK.setText(Kisekae.getCaptions().getString("OkMessage"));
       LICENSE.setText(Kisekae.getCaptions().getString("AboutBoxLicense"));
 
@@ -231,6 +246,7 @@ final public class AboutBox extends KissDialog
       jPanel1.add(addresslabel3, null);
       jPanel1.add(builddate, null);
       jPanel1.add(expiredate, null);
+      jPanel1.add(website, null);
       if ("".equals(Kisekae.getRegistration())) jPanel1.add(expiredate, null);
       panel1.add(jPanel2, new GridBagConstraints(0, 6, 2, 1, 1.0, 1.0
             ,GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(20, 0, 10, 0), 0, 0));
@@ -244,8 +260,8 @@ final public class AboutBox extends KissDialog
             ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 29, 0, 0), 30, 10));
       panel1.add(medialabel, new GridBagConstraints(0, 4, 1, 1, 0.0, 0.0
             ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 29, 0, 0), 30, 10));
-      panel1.add(imaginglabel, new GridBagConstraints(0, 5, 1, 1, 0.0, 0.0
-            ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 29, 0, 0), 30, 10));
+//    panel1.add(imaginglabel, new GridBagConstraints(0, 5, 1, 1, 0.0, 0.0
+//          ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 29, 0, 0), 30, 10));
       panel1.add(jScrollPane1,  new GridBagConstraints(1, 1, 1, 4, 0.0, 0.0
             ,GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
       jScrollPane1.getViewport().add(jList1, null);
@@ -317,6 +333,13 @@ final public class AboutBox extends KissDialog
             System.out.println("AboutBox: license agreement exception " + e) ;
          }
          return ;
+      }
+
+      // A click on the website label invokes the browser.
+
+      if (source == website)
+      {
+         
       }
    }
 

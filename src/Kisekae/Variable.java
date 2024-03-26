@@ -124,7 +124,7 @@ final class Variable
 		if (o == null)
 		{
 			variable.remove(v) ;
-			if (OptionsDialog.getDebugVariable())
+			if (OptionsDialog.getDebugVariable() && (!event.getNoBreakpoint() || OptionsDialog.getDebugDisabled()))
          {
             String bp = (event.getNoBreakpoint()) ? "*" : " " ;
 				System.out.println("  > [" + Thread.currentThread().getName() + "]"+bp+"Variable " + v + " removed.") ;
@@ -133,7 +133,7 @@ final class Variable
 		else
 		{
 			variable.put(v,o) ;
-			if (OptionsDialog.getDebugVariable())
+			if (OptionsDialog.getDebugVariable() && (!event.getNoBreakpoint() || OptionsDialog.getDebugDisabled()))
          {
             String bp = (event.getNoBreakpoint()) ? "*" : " " ;
 				System.out.println("  > [" + Thread.currentThread().getName() + "]"+bp+"Variable " + v + " set to " + o.toString()) ;
@@ -380,7 +380,7 @@ final class Variable
       // forwarded to the trace dialog although they will appear in the log file.
 		
 		variable.put(v,new Integer(n)) ;
-		if (OptionsDialog.getDebugVariable()) 
+		if (OptionsDialog.getDebugVariable() && (!event.getNoBreakpoint() || OptionsDialog.getDebugDisabled())) 
       {
          String bp = (event.getNoBreakpoint()) ? "*" : " " ;
 			System.out.println("  > [" + Thread.currentThread().getName() + "]"+bp+"Variable " + v + " set to " + n) ;
@@ -423,7 +423,7 @@ final class Variable
 		// Save the value using the absolute variable name.
 		
 		variable.put(v,new Long(n)) ;
-		if (OptionsDialog.getDebugVariable()) 
+		if (OptionsDialog.getDebugVariable() && (!event.getNoBreakpoint() || OptionsDialog.getDebugDisabled())) 
       {
          String bp = (event.getNoBreakpoint()) ? "*" : " " ;
 			System.out.println("  > [" + Thread.currentThread().getName() + "]"+bp+"Variable " + v + " set to " + n) ;
@@ -466,7 +466,7 @@ final class Variable
 		// Save the value using the absolute variable name.
 		
 		variable.put(v,new Double(n)) ;
-		if (OptionsDialog.getDebugVariable()) 
+		if (OptionsDialog.getDebugVariable() && (!event.getNoBreakpoint() || OptionsDialog.getDebugDisabled())) 
       {
          String bp = (event.getNoBreakpoint()) ? "*" : " " ;
 			System.out.println("  > [" + Thread.currentThread().getName() + "]"+bp+"Variable " + v + " set to " + n) ;

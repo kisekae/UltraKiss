@@ -73,6 +73,7 @@ final public class MainMenu extends KissMenu
    private FileOpen fd = null ;							// Our file open list
    private UrlLoader urlloader = null ;	 			// Our active url load
    private boolean nocopy = false ;                // Our URL nocopy indicator
+   private String webURL = null ;                  // Initial URL on launch
 
    private static final int NEWFILE = 0 ;
    private static final int NEWPAGE = 1 ;
@@ -134,7 +135,7 @@ final public class MainMenu extends KissMenu
    protected JMenuItem open = null ;
    protected JMenuItem expand = null ;
    protected JMenuItem openweb = null ;
-   protected JMenuItem openkiss = null ;
+   protected JMenuItem openportal = null ;
    protected JMenuItem openurl = null ;
    protected JMenuItem websearch = null ;
    protected JMenuItem readme = null ;
@@ -293,11 +294,11 @@ final public class MainMenu extends KissMenu
       openweb.setEnabled(!Kisekae.isSecure());
       openweb.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_B, accelerator+ActionEvent.SHIFT_MASK));
       if (!applemac) openweb.setMnemonic(KeyEvent.VK_B) ;
-      fileMenu.add((openkiss = new JMenuItem(Kisekae.getCaptions().getString("MenuFileOpenPortal")))) ;
-      openkiss.addActionListener(this) ;
-      openkiss.setEnabled(true);
-      openkiss.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, accelerator+ActionEvent.SHIFT_MASK));
-      if (!applemac) openkiss.setMnemonic(KeyEvent.VK_P) ;
+      fileMenu.add((openportal = new JMenuItem(Kisekae.getCaptions().getString("MenuFileOpenPortal")))) ;
+      openportal.addActionListener(this) ;
+      openportal.setEnabled(true);
+      openportal.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, accelerator+ActionEvent.SHIFT_MASK));
+      if (!applemac) openportal.setMnemonic(KeyEvent.VK_P) ;
       fileMenu.addSeparator() ;
       String mfe = (OptionsDialog.getAppleMac()) ? "MenuFileQuit" : "MenuFileExit" ;
 		fileMenu.add((exit = new JMenuItem(Kisekae.getCaptions().getString(mfe)))) ;
@@ -498,6 +499,10 @@ final public class MainMenu extends KissMenu
    // Implementation of required KissMenu abstract method.
 
    JMenu getHelpMenu() { return helpMenu ; }
+   
+   // Set the initial URL for a launch of browser or portal.
+   
+   void setWebURL(String s) { webURL = s ; }
 
    // Implementation of the required menu item update.
 
@@ -977,7 +982,7 @@ final public class MainMenu extends KissMenu
          if (expand == source)
          { eventExpand() ; return ; }
 
-         // An Open Web request opens a frame to access web files.
+         // An Open Web request opens the default browser to access web files.
 
          if (openweb == source)
          { eventWeb() ; return ; }
@@ -987,10 +992,10 @@ final public class MainMenu extends KissMenu
          if (openurl == source)
          { eventUrl() ; return ; }
 
-         // An Open KiSS request opens a frame to browse web files.
+         // An Open Portal request opens a frame to browse HTML 3.2 web files.
 
-         if (openkiss == source)
-         { eventKiss() ; return ; }
+         if (openportal == source)
+         { eventPortal() ; return ; }
 
          // A Search request opens a frame to browse for KiSS files.
 
@@ -1088,7 +1093,11 @@ final public class MainMenu extends KissMenu
 
             // Create a FileOpen object for this temporary file.
 
+            URL sourceURL = null ;
+            try { sourceURL = new URL(urlname) ; }
+            catch (MalformedURLException e) { sourceURL = null ; }
             FileOpen fdnew = new FileOpen(parent,pathname,"r") ;
+            fdnew.setSourceURL(sourceURL) ;
             fdnew.open() ;
             ArchiveEntry ze = fdnew.showConfig(parent,cnfname) ;
             ArchiveFile zip = fdnew.getZipFile() ;
@@ -1443,16 +1452,23 @@ final public class MainMenu extends KissMenu
       loadthread.start() ;
    }
 
-   // The Open KiSS command shows the KiSS index page on the specified
+   // The Open Portal command shows the KiSS index page on the specified
    // web site.  We use a simple EditorPane object to traverse the web
    // directory to load a KiSS data set from a URL over the web as per
-   // the eventURL method.
+   // the eventURL method.  
 
-   void eventKiss()
+   void eventPortal()
    {
+      String website = null ;
+      URL currentweb = null ;
       parent.showStatus("Connecting ...");
       parent.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
-      WebFrame wf = new WebFrame(parent) ;
+      if ("".equals(webURL)) webURL = null ;
+      try { currentweb = new URL(webURL) ; }
+      catch (Exception e) { currentweb = null ; }
+      if (currentweb != null) 
+         website = currentweb.getProtocol() + "://" + currentweb.getHost() + "/" ;
+      WebFrame wf = new WebFrame(parent,webURL,website) ;
       parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
       parent.showStatus(null);
       wf.setVisible(true) ;

@@ -171,6 +171,25 @@ final public class WebFrame extends KissFrame
       runner = new WebConnect() ;
       init() ;
    }
+   
+   // Constructor for a specified home page with a current web.
+   // If website links go outside our current web site we show it 
+   // in a browser window.
+   
+   public WebFrame(MainFrame main, String homepage, String web)
+	{
+      me = this ;
+      parent = main ;
+      setCurrentWeb(web) ;
+      if (homepage == null) homepage = OptionsDialog.getKissWeb() ;
+      localhistory = new Vector() ;
+      localhistory.addElement(homepage) ;
+      statusbar = new StatusBar(this) ;
+      statusbar.setStatusBar(true) ;
+      editor.setEditorKit(new WebHTMLEditor());
+      runner = new WebConnect() ;
+      init() ;
+   }
 
 
    // Frame initialization.
@@ -458,7 +477,9 @@ final public class WebFrame extends KissFrame
       catch (Exception e) { }
 	}
 
-	// Method to set the current website.
+	// Method to set the current website.  The portal, if on the current
+   // website, processes the HTML.  Otherwise the link is passed to the
+   // default browser.
 
 	public static void setCurrentWeb(String s) 
    { 
@@ -634,6 +655,13 @@ final public class WebFrame extends KissFrame
 
    private void update()
    {
+      if (!javax.swing.SwingUtilities.isEventDispatchThread())
+      {
+      	Runnable runner = new Runnable()
+			{ public void run() { update() ; } } ;
+   		javax.swing.SwingUtilities.invokeLater(runner) ;
+      }
+      
       back.setEnabled(getBack() != null) ;
       backbtn.setEnabled(back.isEnabled()) ;
       forward.setEnabled(getForward() != null) ;
@@ -1451,13 +1479,24 @@ final public class WebFrame extends KissFrame
             setHistoryLocation(v.size() - 1) ;
             update() ;
          }
-         finally
+         
+         // End of connection.  Set display indicators.
+         
+         setEndConnection() ;            
+      }
+         
+      void setEndConnection() 
+      {
+         if (!javax.swing.SwingUtilities.isEventDispatchThread())
          {
-            me.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
-            parent.showStatus(null);
-            connecting = false ;
-            activebtn.setEnabled(false) ;
+         	Runnable runner = new Runnable()
+    			{ public void run() { setEndConnection() ; } } ;
+        		javax.swing.SwingUtilities.invokeLater(runner) ;
          }
+         me.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
+         parent.showStatus(null);
+         connecting = false ;
+         activebtn.setEnabled(false) ;
       }
    }
 }

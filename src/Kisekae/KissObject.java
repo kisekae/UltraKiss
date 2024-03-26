@@ -800,6 +800,10 @@ abstract class KissObject
 
 	void setLastModified(long t) { updatetime = t ; }
 
+	// Set the object error state.
+
+	void setError(boolean b) { error = b ; }
+
 	// Set the attachment glue setting.
 
 	void setGlue(boolean b) { glued = b ; }

@@ -73,6 +73,7 @@ abstract class ArchiveEntry
 	protected String dirname = null ;			// Entry directory name
 	protected String pathname = null ;			// Entry path name (qualified)
 	protected ArchiveFile archive = null ;		// Parent archive file object
+	protected MemFile memfile = null ;        // Memory file for this archive entry
 	protected Object userobject = null ;		// Optional user object
    protected Vector updated = null ;			// True if file has changed
    protected boolean copy = false ;				// True if Kiss object is a copy
@@ -207,6 +208,11 @@ abstract class ArchiveEntry
 
    boolean getCheckDate() { return checkdate ; }
 
+   
+   // Return the memory file.
+   
+   MemFile getMemoryFile() { return memfile ; }
+
 
 	// Return true if we have imported this entry.
 
@@ -218,19 +224,24 @@ abstract class ArchiveEntry
    boolean isWriting() { return writing ; }
 
 
+	// Return true if we have imported this entry.
+
+   boolean isMemoryFile() { return memfile != null ; }
+
+
 	// Return the FileOpen object for this archive element.
 
 	FileOpen getFileOpen() { return (archive == null) ? null : archive.getFileOpen() ; }
 
+   
 	// Returns an input stream for reading the uncompressed contents of
 	// the specified file entry.
-
    
 	public InputStream getInputStream() throws IOException { return null ; }
 
+   
 	// Returns an output stream for writing the uncompressed contents of
 	// the specified file entry.
-
    
 	public OutputStream getOutputStream() throws IOException { return null ; }
 

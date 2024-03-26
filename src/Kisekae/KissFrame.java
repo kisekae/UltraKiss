@@ -194,6 +194,7 @@ public abstract class KissFrame extends JFrame
 	void setSelection(int start, int end, boolean up) { }
 	JTextComponent getTextComponent() { return null ; }
 	Document getDocument() { return null ; }
+	JTree getTree() { return null ; }
    
    
    // Method to return our open window frame list.

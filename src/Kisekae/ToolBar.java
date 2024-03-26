@@ -87,7 +87,7 @@ final class ToolBar extends JPanel
 	protected JButton close = null ;				// The file close button
 	protected JButton openurl = null ;			// The open URL button
 	protected JButton openweb = null ;			// The open web button
-	protected JButton openkiss = null ;			// The open kiss button
+	protected JButton openportal = null ;			// The open kiss button
 	protected JButton select = null ;			// The select button
 	protected JButton save = null ;				// The file save button
 	protected JButton cut = null ;				// The edit cut button
@@ -412,14 +412,14 @@ final class ToolBar extends JPanel
 
 		// Open KiSS button
 
-		openkiss = new JButton() ;
+		openportal = new JButton() ;
 		iconfile = Kisekae.getResource("Images/ksbrowser" + ext) ;
-		if (iconfile != null) openkiss.setIcon(new ImageIcon(iconfile)) ;
-		openkiss.setMargin(new Insets(1,1,1,1)) ;
-		openkiss.setToolTipText(Kisekae.getCaptions().getString("ToolTipOpenPortal")) ;
-		openkiss.setAlignmentY(0.5f) ;
-		openkiss.addActionListener(this) ;
-      openkiss.setEnabled(true);
+		if (iconfile != null) openportal.setIcon(new ImageIcon(iconfile)) ;
+		openportal.setMargin(new Insets(1,1,1,1)) ;
+		openportal.setToolTipText(Kisekae.getCaptions().getString("ToolTipOpenPortal")) ;
+		openportal.setAlignmentY(0.5f) ;
+		openportal.addActionListener(this) ;
+      openportal.setEnabled(true);
 
 		// Select Configuration button
 
@@ -719,7 +719,7 @@ final class ToolBar extends JPanel
 //   			toolbar.add(newpage) ;
       }
 		toolbar.add(open) ;
-      toolbar.add(openkiss) ;
+      toolbar.add(openportal) ;
 		nbuttons += 2 ;
 
       // If no configuration show the URL and browser buttons.
@@ -1337,7 +1337,7 @@ final class ToolBar extends JPanel
 
 			// An open KiSS browser request.
 
-			if (source == openkiss)
+			if (source == openportal)
          	{ menu.eventKiss() ; return ; }
 
 			// A configuration select request.
