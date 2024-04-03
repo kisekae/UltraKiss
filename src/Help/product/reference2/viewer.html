@@ -49,7 +49,29 @@ literal values or variables that represent function specific values.&nbsp;</p>
       <td>&quot;open&quot;</td>
       <td>Opens the file specified in arg1.&nbsp; If the file is a CNF
         configuration file a new configuration will be loaded, otherwise the
-        appropriate tool is accessed.</td>
+        appropriate tool is accessed.  This command opens files from the 
+        default directory.</td>
+    </tr>
+    <tr>
+      <td>&quot;openarchive&quot;</td>
+      <td>Opens the archive file specified in arg1.&nbsp; If the file contains only one CNF
+        configuration file this new configuration will be loaded.  If it contains more than
+        one CNF element a selection dialog will be opened to choose the correct configuration
+        file.  If no CNF element is found nothing is opened.</td>
+    </tr>
+    <tr>
+      <td>&quot;openURL&quot;</td>
+      <td>Opens the archive file specified in arg1.&nbsp; The file specified must be a valid 
+          URL with an http:// or https:// protocol.  The URL file will be downloaded into cache.
+          If the file contains more than one CNF element a selection dialog will be opened to choose the correct configuration
+        file.  If no CNF element is found nothing is opened.</td>
+    </tr>
+    <tr>
+      <td>&quot;openURL&quot;</td>
+      <td>Opens the archive file specified in arg1.&nbsp; The file specified must be a valid 
+          URL with an http:// or https:// protocol.  The URL file will be downloaded into cache.
+          If the file contains more than one CNF element a selection dialog will be opened to choose the correct configuration
+        file.  If no CNF element is found nothing is opened.</td>
     </tr>
     <tr>
       <td>&quot;view&quot;</td>
@@ -752,12 +774,28 @@ literal values or variables that represent function specific values.&nbsp;</p>
               <td>Launches the default web browser</td>
             </tr>
             <tr>
-              <td>&quot;openkiss&quot;</td>
-              <td>Launches the UltraKiss web browser</td>
+              <td>&quot;openportal&quot;</td>
+              <td>Launches the UltraKiss web portal</td>
             </tr>
             <tr>
               <td>&quot;activecnf&quot;</td>
               <td>Displays the active configuration file in a text edit window</td>
+            </tr>
+            <tr>
+              <td>&quot;selectcnf&quot;</td>
+              <td>Displays the CNF selection dialog to choose a new CNF file</td>
+            </tr>
+            <tr>
+              <td>&quot;importcnf&quot;</td>
+              <td>Displays a dialog to load a CNF not in the set</td>
+            </tr>
+            <tr>
+              <td>&quot;appendcnf&quot;</td>
+              <td>Displays a dialog to append a CNF from the set INCLUDE files</td>
+            </tr>
+            <tr>
+              <td>&quot;clearcache&quot;</td>
+              <td>Displays a dialog to clear the download cache </td>
             </tr>
           </table>
         </div>

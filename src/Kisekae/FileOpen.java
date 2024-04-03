@@ -96,8 +96,10 @@ final public class FileOpen
 	private String title = null ;					// Selection dialog title
 	private Object [] ext = null ;				// Selection extensions
    private File [] files = null ;            // Multiple files selected
+   private File fileobject = null ;          // Selected file
 	private ArchiveFile zip = null ;				// ZIP file object
 	private ArchiveEntry ze = null ;			 	// ZIP file entry
+	private ArchiveEntry selected = null ;		// ZIP file entry selected
    private URL sourceURL = null ;		      // URL of original source
    private int entrycount = 0 ;              // Number of entries
    private boolean multiple = false ;        // Multiple selection allowed
@@ -177,6 +179,10 @@ final public class FileOpen
 
 	public String getFile() { return filename ; }
 
+	// Return the file object for the container file.
+
+	public File getFileObject() { return fileobject ; }
+
 	// Return the selected file element from the container file.
 
 	public String getElement() { return elementname ; }
@@ -209,6 +215,20 @@ final public class FileOpen
 
 	void setSourceURL(URL u) { sourceURL = u ; }
 
+	// Function to set the archive file for a new source entry.
+
+	void setZipFile(ArchiveFile af) { zip = af ; }
+
+	// Function to set the archive entry for a new source entry.
+
+	void setZipEntry(ArchiveEntry ae) 
+   { 
+      ze = ae ; 
+      filename = (ze != null) ? ze.getName() : null ;
+      pathname = (ze != null) ? ze.getPath() : null ;
+      zip = (ze != null) ? ze.getZipFile() : null ;
+   }
+
 
 	// Object utility methods
 	// ----------------------
@@ -223,8 +243,6 @@ final public class FileOpen
 		Enumeration enum1 = null ;
 		Frame dialogframe = (parent != null) ? parent : new Frame() ;
 		URL codebase = Kisekae.getBase() ;
-      ArchiveEntry lzhentry = null ;
-      ArchiveEntry lstentry = null ;
 
       // Use a platform dependent dialog if necessary.  These do not allow
       // for filename filters or multiple selections.
@@ -328,18 +346,68 @@ final public class FileOpen
             filename = f.getName() ;
          }
 
-         // Identify the file characteristics.
+         // Identify the file characteristics.  
 
-			pathname = f.getPath() ;
+         pathname = f.getPath() ;
 			int i = filename.lastIndexOf(".") ;
 			extension = (i < 0) ? "" : filename.substring(i).toLowerCase() ;
 			if (fd != null) fd.dispose() ;
          if (jfd != null) jfd.setVisible(false) ;
          if (!f.isFile()) return ;
          if ("archives".equals(filefilter)) return ;
+         
+         ze = validateFile(pathname,filename,dirname,extension) ;
+         fileobject = f ;
+     }
 
-			// Open the file and search for any configuration elements.
+      // Catch security exceptions.
 
+      catch (SecurityException e)
+      {
+         System.out.println("KiSS file open exception, " + e.toString()) ;
+			JOptionPane.showMessageDialog(parent,
+            captions.getString("SecurityException") + "\n" +
+            captions.getString("FileOpenSecurityMessage1"),
+         	captions.getString("SecurityException"),
+            JOptionPane.ERROR_MESSAGE) ;
+         if (parent != null)
+				parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
+			close() ;
+         return ;
+      }
+
+		// Catch file error exceptions.
+
+		catch (Exception e)
+		{
+         System.out.println("KiSS file open exception, " + e.toString()) ;
+			JOptionPane.showMessageDialog(parent, e.toString(),
+         	captions.getString("FileOpenException"),
+            JOptionPane.ERROR_MESSAGE) ;
+         e.printStackTrace() ;
+         if (parent != null)
+				parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
+			close() ;
+			return ;
+		}
+   }
+
+	// Open the file and search for any configuration elements.  This is the 
+   // processing after a file is chosen on an Open request or specified on
+   // a specific viewer FKiSS request.
+         
+   public ArchiveEntry validateFile(String pathname, String filename, String dirname, String extension)
+   {
+		URL codebase = Kisekae.getBase() ;
+      ArchiveEntry lzhentry = null ;
+      ArchiveEntry lstentry = null ;
+
+      if (this.pathname == null) this.pathname = pathname ;
+      if (this.filename == null) this.filename = filename ;
+      if (this.extension == null) this.extension = extension ;
+
+      try
+      {
 			String protocol = codebase.getProtocol() ;
 			String host = codebase.getHost() ;
 			int port = codebase.getPort() ;
@@ -375,20 +443,20 @@ final public class FileOpen
 	        	zip = new DirFile(this,dirname) ;
 				ze = zip.getEntry(pathname) ;
 				elementname = (ze == null) ? filename : ze.getPath() ;
-				return ;
+				return ze ;
 	      }
 
 			// Put the data set required entries into a list.
 
          entrycount = 0 ;
 			entries = new Vector() ;
-         enum1 = (zip == null) ? null : zip.entries() ;
+         Enumeration enum1 = (zip == null) ? null : zip.entries() ;
 			while (enum1 != null && enum1.hasMoreElements())
 			{
 				Object o = enum1.nextElement() ;
 				String name = ((ArchiveEntry) o).getPath() ;
 				String s = name.toUpperCase() ;
-				i = s.lastIndexOf('.') ;
+				int i = s.lastIndexOf('.') ;
 				if (i < 0) continue ;
 				String ss = s.substring(i) ;
 
@@ -427,10 +495,32 @@ final public class FileOpen
          	captions.getString("SecurityException"),
             JOptionPane.ERROR_MESSAGE) ;
          if (parent != null)
+         {
+            if (parent instanceof MainFrame)
+               ((MainFrame) parent).releaseMouse(true) ;
 				parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
+         }
 			close() ;
-         return ;
+         return null ;
       }
+
+		// Catch file error exceptions.
+
+		catch (IOException e)
+		{
+         System.out.println("KiSS file open exception, " + e.toString()) ;
+			JOptionPane.showMessageDialog(parent, e.toString(),
+         	captions.getString("FileOpenException"),
+            JOptionPane.ERROR_MESSAGE) ;
+         if (parent != null)
+         {
+            if (parent instanceof MainFrame)
+               ((MainFrame) parent).releaseMouse(true) ;
+				parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
+         }
+			close() ;
+			return null ;
+		}
 
 		// Catch file error exceptions.
 
@@ -442,9 +532,13 @@ final public class FileOpen
             JOptionPane.ERROR_MESSAGE) ;
          e.printStackTrace() ;
          if (parent != null)
+         {
+            if (parent instanceof MainFrame)
+               ((MainFrame) parent).releaseMouse(true) ;
 				parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
+         }
 			close() ;
-			return ;
+			return null ;
 		}
 
       // If we failed to find a configuration entry and we had opened an
@@ -460,7 +554,7 @@ final public class FileOpen
          if (unpack(lzhentry))
          {
             showConfig(parent) ;
-            return ;
+            return ze ;
          }
       }
 
@@ -480,7 +574,7 @@ final public class FileOpen
 //          JOptionPane.ERROR_MESSAGE) ;
 //       close() ;
          ze = null ;
-			return ;
+			return ze ;
 		}
 
 		// If we selected an element from a directory, use it.
@@ -489,7 +583,7 @@ final public class FileOpen
 		{
 			ze = zip.getEntry(pathname) ;
 			elementname = (ze == null) ? filename : ze.getPath() ;
-			return ;
+			return ze ;
 		}
 
 		// If there was only one requested element in the data set
@@ -501,7 +595,7 @@ final public class FileOpen
          if (ArchiveFile.isConfiguration(elementname))
          {
 				if (zip != null) ze = zip.getEntry(elementname) ;
-				return ;
+				return ze ;
          }
 		}
 
@@ -510,7 +604,7 @@ final public class FileOpen
 		if ((parent instanceof MediaFrame) && lstentry != null)
 		{
          if (zip != null) ze = lstentry ;
-         return ;
+         return ze ;
       }
 
 		// If there is more than one requested element in the data set,
@@ -519,6 +613,7 @@ final public class FileOpen
 
 		ze = showConfig(parent,title,entries) ;
       if (ze == null) close() ;
+      return ze ;
 	}
 
 
@@ -537,7 +632,20 @@ final public class FileOpen
 	{
       if (entries == null) return null ;
       if ((entries.size() == 1 && !single) || (Kisekae.isBatch() && entries.size() > 0))
-         elementname = (String) entries.elementAt(0) ;
+      {
+         ze = null ;
+         Object entry = entries.elementAt(0) ;
+         if (entry instanceof ArchiveEntry)
+         {
+            ze = (ArchiveEntry) entry ;
+            zip = ze.getZipFile() ;
+            elementname = ze.getName() ;
+         }
+         else if (entry instanceof String)
+            elementname = (String) entry ;
+         else
+            elementname = null ;
+      }
       else if (entries.size() >= 1 || importonly)
       {
          // Have the user select the file element.
@@ -548,6 +656,7 @@ final public class FileOpen
     		cl.setVisible(true) ;
    		elementname = cl.getSelectedItem() ;
          cnfmemfile = cl.getSelectedFile() ;
+         selected = cl.getSelectedEntry() ;
     		cl.dispose() ;
       }
 
@@ -555,8 +664,12 @@ final public class FileOpen
       // If we are working with directory files then our selected element
       // name must be made absolute as it is simply an element name.  If we
       // are working with archive files then the selected element name will
-      // include the directories relative to the configuration file.
+      // include the directories relative to the configuration file.  If we
+      // were selecting from archive entries then we are importing from an
+      // INCLUDE file and expanding our configuration.
 
+      if (selected != null) return selected ;
+      
 		if (zip != null && elementname != null)
       {
       	if (zip instanceof DirFile)
@@ -569,9 +682,12 @@ final public class FileOpen
 					ze = zip.getEntry(elementname) ;
             }
          }
-         else
+         else if (ze == null)
 	      	ze = zip.getEntry(elementname) ;
-			if (ze == null) close() ;
+			if (ze != null) 
+            ze.setZipFile(zip) ;
+         else
+            close() ;         
          return ze ;
       }
       
@@ -580,6 +696,7 @@ final public class FileOpen
       if (elementname == null && cnfmemfile != null)
       {
          DirEntry newcnf = new DirEntry(cnfmemfile) ;
+         newcnf.setZipFile(zip) ;
          return newcnf ;
       }
 		return null ;
@@ -678,6 +795,7 @@ final public class FileOpen
 
       if (entry instanceof String && entrycount == 1)
          if (entries.elementAt(0).equals(entry)) single = false ;
+      if (entries.size() == 0 && !importonly) return null ;
 		return showConfigAllowImport(parent,title,entries,single,allowimport,importonly) ;
 	}
 
@@ -777,6 +895,18 @@ final public class FileOpen
    }
 
 
+   // Method to open the archive file defined by an archive entry.  This will
+	// establish new archive entries for the file.  This constructor establishes
+	// an archive entry for the specified element.
+
+   void open(ArchiveFile af, ArchiveEntry ae)
+	{ 
+      if (af == null || ae == null) open() ; 
+      ze = ae ;
+      zip = af ;
+   }
+
+
 	// The no-argument method opens the file.  Our pathname can be a
    // standard file path or a URL specification.
 
@@ -811,7 +941,7 @@ final public class FileOpen
 		         if (elementname != null)
                {
                   if (!zip.isOpen()) zip.open() ;
-						ze = zip.getEntry(elementname) ;
+						ze = zip.getEntry(elementname,true) ;
                }
 					return ;
             }
@@ -840,12 +970,12 @@ final public class FileOpen
 			else
 				zip = new DirFile(this,(f.isDirectory()) ? urlfile : f.getParent()) ;
 
-      	// Locate the required archive entry in the file.
+      	// Locate the required archive entry in the file.  Search on name only.
 
          if (ze != null)
   				elementname = ze.getPath() ;
          if (elementname != null)
-				ze = zip.getEntry(elementname) ;
+				ze = zip.getEntry(elementname,true) ;
 			else if (zip instanceof DirFile && !f.isDirectory())
 			{
            	elementname = f.getPath() ;

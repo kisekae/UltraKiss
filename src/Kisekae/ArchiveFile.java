@@ -126,6 +126,10 @@ abstract class ArchiveFile
       return pathname ;
    }
 
+	// Return the archive file path.
+
+	String getPath() { return pathname ; }
+
 	// Return the FileOpen object for this archive.
 
 	FileOpen getFileOpen() { return fileopen ; }
@@ -207,6 +211,10 @@ abstract class ArchiveFile
          break ;
 		}
 	}
+
+	// Set the FileOpen object for this archive.
+
+	void setFileOpen(FileOpen f) { fileopen = f ; }
 
    // Method to determine if the archive is a compressed file.
 
@@ -660,6 +668,11 @@ abstract class ArchiveFile
          }
          if (i >= files.length) return null ;
       }
+      
+      // If no parent directory then not found.  If we searched in a 
+      // parent directory then we must have found it at some index.
+      
+      if (f.getParent() == null) return null ;
 		DirEntry h = new DirEntry(f.getParent(),f.getName(),this);
 		contents.addElement(h) ;
       return h ;
@@ -675,6 +688,31 @@ abstract class ArchiveFile
       File f = new File(directory,name) ;
       ArchiveEntry ae = getEntry(f.getPath()) ;
       return ae ;
+   }
+
+
+	// Returns a list of all entries of the required type, or null.
+	// The archive file entry represents one element in the archive file
+	// or the file directory. ArchiveEntry elements are returned.
+
+	Vector getEntryType(String extension) 
+	{
+		if (extension == null) return null ;
+      if (contents == null) return null ;
+      Vector files = new Vector() ;
+      
+      Enumeration e = entries() ;
+      while (e.hasMoreElements())
+      {
+         Object o = e.nextElement() ;
+         String s = o.toString() ;
+         int n = s.lastIndexOf('.') ;
+         if (n < 0) continue ;
+         String ext = s.substring(n) ;
+         if (!extension.equalsIgnoreCase(ext)) continue ;
+         files.add(o) ;
+      }
+      return files ;
    }
 
 

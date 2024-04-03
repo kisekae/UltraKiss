@@ -56,6 +56,7 @@ package Kisekae ;
 */
 
 import java.io.* ;
+import java.nio.charset.StandardCharsets ;
 
 final class MemFile
 {
@@ -147,4 +148,10 @@ final class MemFile
    public String getFileName() { return filename ; }
    
    public long getSize() { return length() ; }
+      
+   public String getString() 
+   { 
+      if (buffer == null) return "" ; 
+      return(new String(buffer, StandardCharsets.UTF_8)) ;      
+   }   
 }

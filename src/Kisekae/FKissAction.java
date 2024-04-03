@@ -3386,21 +3386,40 @@ final class FKissAction extends KissObject
                   {
                      if (pm != null && mm != null)
                      {
+                        // reset all objects to initial page positions
                         if ("reset".equalsIgnoreCase(vs2)) pm.reset.doClick() ;
+                        // restarts the set from the beginning with a new load
                         if ("restart".equalsIgnoreCase(vs2)) pm.restart.doClick() ;
+                        // magnifies the size of objects on the screen by a set amount
                         if ("magnify".equalsIgnoreCase(vs2)) pm.magnify.doClick() ;
+                        // reduces the size of objects on the screen by a set amount
                         if ("reduce".equalsIgnoreCase(vs2)) pm.reduce.doClick() ;
+                        // sizes the screen to fit the playfield size
                         if ("sizetofit".equalsIgnoreCase(vs2)) mm.fitpanel.doClick() ;
+                        // scales the objects to fit the screen size
                         if ("scaletofit".equalsIgnoreCase(vs2)) mm.fitscreen.doClick() ;
+                        // shows the log file
                         if ("logfile".equalsIgnoreCase(vs2)) mm.logfile.doClick() ;
+                        // turns the status bar on and off
                         if ("statusbar".equalsIgnoreCase(vs2)) mm.statusbar.doClick() ;
+                        // turns the toolbar on and off
                         if ("toolbar".equalsIgnoreCase(vs2)) mm.toolbar.doClick() ;
+                        // launches the default web browser
                         if ("openweb".equalsIgnoreCase(vs2)) mm.openweb.doClick() ;
+                        // launches the default web brower and shows the GitHub page
                         if ("submitbug".equalsIgnoreCase(vs2)) mm.bugreport.doClick() ;
+                        // opens the UltraKiss Portal to the page specified as webURL
                         if ("openportal".equalsIgnoreCase(vs2)) mm.openportal.doClick() ;
+                        // shows as text the current CNF loaded
                         if ("activecnf".equalsIgnoreCase(vs2)) pm.cnffile.doClick() ;
+                        // invokes the CNF selection dialog to choose a new CNF file
                         if ("selectcnf".equalsIgnoreCase(vs2)) pm.selectcnf.doClick() ;
+                        // invokes a dialog to load a CNF not in the set
                         if ("importcnf".equalsIgnoreCase(vs2)) pm.importcnf.doClick() ;
+                        // invokes a dialog to append a CNF from the set INCLUDE files
+                        if ("appendcnf".equalsIgnoreCase(vs2)) pm.appendcnf.doClick() ;
+                        // invokes a dialog to clear the download cache 
+                        if ("clearcache".equalsIgnoreCase(vs2)) mm.clearcache.doClick() ;
                      }
                   }
                   else if ("reset".equalsIgnoreCase(vs1))
@@ -3418,38 +3437,80 @@ final class FKissAction extends KissObject
                   }
                   else if ("open".equalsIgnoreCase(vs1))
                   {
-                     if (menu == null) return ;
-                     if (config == null) return ;
-                     FileOpen fd = config.getFileOpen() ;
-                     if (fd == null) return ;
-                     fd.open() ;
-                     ArchiveFile zip = fd.getZipFile() ;
-                     String name = vs2 ;
+                     if (vs2 == null) return ;
+                     if (mf == null || mm == null) return ;
+                     
+                     // Find the object to open.
 
-                     // Find the object.
-
-                     if (zip instanceof DirFile)
-                     {
-                        File f = new File(config.getDirectory(),vs2) ;
-                        name = f.getPath() ;
-                     }
+                     ArchiveEntry ze = config.getZipEntry() ;
+                     String path = (ze != null) ? ze.getPathName() : null ;
+                     String dir = (config != null) ? config.getDirectory() : null ;
+                     if (dir == null && path != null) dir = new File(path).getParent() ;
+                     File f = new File(dir,vs2) ;
+                     FileOpen fd = new FileOpen(mf,f.getPath(),"r") ;
 
                      // Open the file for this entry.
 
-                     fd.open(name) ;
-                     ArchiveEntry ze = fd.getZipEntry() ;
+                     fd.open(vs2) ;
+                     if (ArchiveFile.isArchive(vs2))
+                        ze = fd.validateFile(fd.getPath(), fd.getFile(), f.getParent(), fd.getExtension()) ;
+                     else
+                        ze = fd.getZipEntry() ;
                      if (ze == null) return ;
                      menu.openContext(fd,ze) ;
                   }
+                  else if ("openurl".equalsIgnoreCase(vs1))
+                  {
+                     if (mf == null || mm == null) return ;
+                     UrlLoader urlloader = new UrlLoader(mf,vs2) ;
+                     urlloader.callback.addActionListener(mm) ;
+                     mm.setUrlLoader(urlloader) ;
+                     Thread loadthread = new Thread(urlloader) ;
+                     loadthread.start() ;
+                  }
+                  else if ("openarchive".equalsIgnoreCase(vs1))
+                  {
+                     if (vs2 == null) return ;
+                     if (mf == null || mm == null) return ;
+                     ArchiveEntry ze = config.getZipEntry() ;
+                     String path = (ze != null) ? ze.getPathName() : null ;
+                     String dir = (config != null) ? config.getDirectory() : null ;
+                     if (dir == null && path != null) dir = new File(path).getParent() ;
+                     File f = new File(dir,vs2) ;
+                     String filename = f.getName() ;
+            			int i = filename.lastIndexOf(".") ;
+            			String ext = (i < 0) ? "" : filename.substring(i).toLowerCase() ;  
+                     FileOpen fdnew = new FileOpen(mf) ;
+                     ze = fdnew.validateFile(f.getPath(), filename, f.getParent(), ext);
+                     menu.openContext(fdnew, ze) ;
+                  }
                   else if ("view".equalsIgnoreCase(vs1))
                   {
+                     TextFrame tf = null ;
                      TextObject text = TextObject.findTextObject("\""+vs2+"\"",config,null) ;
-                     if (text == null) return ;
-                     InputStream is = text.getInputStream() ;
-                     final TextFrame tf = new TextFrame(null,is,false,false,text.getName()) ;
+                     if (text != null) 
+                     {
+                        InputStream is = text.getInputStream() ;
+                        tf = new TextFrame(null,is,false,false,text.getName()) ;
+                     }
+                     else
+                     {
+                        // Search for the appropriate entries in our archive.
+                        // New configurations will not yet exist as files.
+
+                        FileOpen fd = config.getFileOpen() ;
+                        if (fd == null) return ;
+                        fd.open(vs2) ;
+                        ArchiveEntry ze = fd.getZipEntry() ;
+                        if (ze == null) return ;
+                        tf = new TextFrame(ze) ;
+                        fd.close() ;
+                     }
                      // Seems necessary to resolve Java 1.4 flicker problem
-                     SwingUtilities.invokeLater(new Runnable()
-                     { public void run() { tf.setVisible(true); } } );
+//                     SwingUtilities.invokeLater(new Runnable()
+//                     { public void run() { tf.setVisible(true); } } );
+                     tf.setEditable(false) ;
+                     tf.setVisible(true) ;
                   }
                   else if ("print".equalsIgnoreCase(vs1))
                   {

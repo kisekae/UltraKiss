@@ -62,6 +62,8 @@ import java.awt.dnd.* ;
 import java.awt.datatransfer.* ;
 import java.io.* ;
 import java.util.* ;
+import java.net.URL ;
+import java.net.MalformedURLException ;
 import javax.swing.* ;
 import javax.swing.event.* ;
 import javax.swing.undo.* ;
@@ -132,6 +134,7 @@ final class PanelMenu extends KissMenu
    protected JMenuItem editimage = null ;
    protected JMenuItem selectcnf = null ;
    protected JMenuItem importcnf = null ;
+   protected JMenuItem appendcnf = null ;
    protected JMenuItem expand = null ;
    protected JMenuItem close = null ;
    protected JMenuItem save = null ;
@@ -238,6 +241,8 @@ final class PanelMenu extends KissMenu
       m[0].add((importcnf = new JMenuItem(Kisekae.getCaptions().getString("MenuFileNewCnf")))) ;
       importcnf.addActionListener(this) ;
       if (!applemac) importcnf.setMnemonic(KeyEvent.VK_N) ;
+      appendcnf = new JMenuItem(Kisekae.getCaptions().getString("MenuFileNewCnf")) ;
+      appendcnf.addActionListener(this) ;
       m[0].add((close = new JMenuItem(Kisekae.getCaptions().getString("MenuFileClose")))) ;
       close.addActionListener(this) ;
       if (!applemac) close.setMnemonic(KeyEvent.VK_C) ;
@@ -839,9 +844,18 @@ final class PanelMenu extends KissMenu
          // A Select request is used to select a new configuration file
          // from a data set.  We revert to the currently loaded
          // configuration to establish the possible cnf files.
+         //
+         // An import request allows the selection of a new configuration
+         // file from the local system.  
 
          if (selectcnf == source) { eventSelect() ; return ; }
          if (importcnf == source) { eventSelect(true) ; return ; }
+         
+         // An append request is used to display a selection of
+         // CNF files found in INCLUDE archives.  These files, if
+         // loaded, do not replace but extend the current CNF file.
+         
+         if (appendcnf == source) { eventAppend() ; return ; }
 
          // A Close request terminates the currently running configuration.
 
@@ -1280,7 +1294,7 @@ final class PanelMenu extends KissMenu
    
    void eventClose() { parent.closepanel() ; }
 
-   void eventKiss() { menu.eventKiss() ; }
+   void eventPortal() { menu.eventPortal() ; }
 
    void eventCut() { parent.editCut() ; }
 
@@ -1362,6 +1376,7 @@ final class PanelMenu extends KissMenu
 
          // If we selected an entry, update our menu fileopen object
          // to agree with the new entry that we will initialize.
+         
 
          if (ze != null && !ze.isMemoryFile())
          {
@@ -1376,15 +1391,219 @@ final class PanelMenu extends KissMenu
 
          else if (ze != null && ze.isMemoryFile())
          {
+            fd.setZipEntry(ze) ;
             setFileOpen(fd) ;
             MemFile memfile = ze.getMemoryFile() ;
-            config.setMemoryFile(memfile.getBuffer()) ;
+            config.setMemoryFile(memfile.getBuffer(),ze) ;
+            config.setAppended(false) ;
             parent.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
-            parent.init(config) ;
+            parent.init() ;
          }
          
          else fd.close() ;
       }
+      parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
+   }
+
+   // Appending a CNF selects a new configuration from an INCLUDE file.  This 
+   // CNF expands the current CNF object and event declarations.  The original 
+   // cels and groups and events are retained but the definitions from the 
+   // selected CNF are added to the original CNF.  The CNF text is updated.
+   //
+   // This differs from adding an expansion set.  If a new expansion is added
+   // to the existing configuration then the CNF is replaced with a new CNF
+   // discovered in the expansion set.  If no new CNF exists in the expansion
+   // set then the original CNF is used.
+   
+   void eventAppend() 
+   { 
+      Configuration config = parent.getConfig() ;
+      if (config == null) return ;
+      FileOpen fd = config.getFileOpen() ;
+      if (fd == null) return ;
+      Vector v = config.getIncludeFiles() ;
+      if (v == null) return ;
+      
+      // If we triggered this expansion automatically on an viewer("menu","appendcnf") 
+      // event or similar we may be restarting the expanded configuration.  This would 
+      // be a loop.  
+      
+      if (config.isAppended()) 
+      {
+         System.out.println("Attempt to append \"" + config.getName() + "\", already done.") ;
+         return ;
+      }
+
+      System.out.println("Expanding configuration \"" + config.getName() + "\"") ;
+      Vector files = new Vector() ;
+      String originalpath = fd.getPath() ;
+      for (int n = v.size()-1 ; n >= 0 ; n--)
+      {
+         Object include = v.elementAt(n) ;
+
+         // File object.
+
+         if (include instanceof File)
+         {
+            File f = (File) include ;
+            if (!f.isFile()) continue ;
+
+            // Isolate the file name.
+
+            String pathname = f.getPath() ;
+            String filename = f.getName() ;
+  			   int i = filename.lastIndexOf(".") ;
+  			   String extension = (i < 0) ? "" : filename.substring(i).toLowerCase() ;
+
+  			   // Construct a URL entry for the file.
+
+            URL zipFileURL = null ;
+     		   URL codebase = Kisekae.getBase() ;
+            if (codebase == null) return ;
+  			   String protocol = codebase.getProtocol() ;
+  			   String host = codebase.getHost() ;
+  			   int port = codebase.getPort() ;
+  			   try { zipFileURL = new URL(protocol,host,port,pathname) ; }
+            catch (MalformedURLException e) { continue ; }
+
+  			   // Regretfully, we must treat each file type separately as Java's
+  			   // zip file class does not appear designed for subclassing.
+
+            try
+            {
+               ArchiveFile zip = null ;
+    			   if (".zip".equals(extension))
+             	   zip = new PkzFile(null,zipFileURL.getFile()) ;
+               else if (".gzip".equals(extension))
+             	   zip = new PkzFile(null,zipFileURL.getFile()) ;
+     			   else if (".jar".equals(extension))
+              	   zip = new PkzFile(null,zipFileURL.getFile()) ;
+     			   else if (".lzh".equals(extension))
+              	   zip = new LhaFile(null,zipFileURL.getFile()) ;
+     	         if (zip == null) continue ;
+               include = zip ;
+            }
+            catch (IOException e)
+            {
+        		   System.out.println("Exception: Search INCLUDE file " + e) ;
+            }
+         }
+
+         // MemFile objects were created if include files were downloaded in
+         // a secure environment.
+
+         else if (include instanceof MemFile)
+         {
+            try
+            {
+               ArchiveFile zip = null ;
+               String filename = ((MemFile) include).getFileName() ;
+     			   int i = filename.lastIndexOf(".") ;
+     			   String extension = (i < 0) ? "" : filename.substring(i).toLowerCase() ;
+    			   if (".zip".equals(extension))
+             	   zip = new PkzFile(null,filename,(MemFile) include) ;
+               else if (".gzip".equals(extension))
+             	   zip = new PkzFile(null,filename,(MemFile) include) ;
+     			   else if (".jar".equals(extension))
+              	   zip = new PkzFile(null,filename,(MemFile) include) ;
+     			   else if (".lzh".equals(extension))
+              	   zip = new LhaFile(null,filename,(MemFile) include) ;
+     	         if (zip == null) continue ;
+               include = zip ;
+            }
+            catch (IOException e)
+            {
+        		   System.out.println("Exception: Search INCLUDE memory file " + e) ;
+            }
+         }
+
+  		   // Archive file object.  Search for CNF elements.
+
+         if (include instanceof ArchiveFile)
+         {
+     		   System.out.println("Search INCLUDE file " + ((ArchiveFile) include).getName()) ;
+            Vector entries = ((ArchiveFile) include).getEntryType(".cnf") ;
+            if (entries != null) files.addAll(entries) ;
+         }
+      }
+         
+      // Show the identified .CNF elements for selection.
+         
+      String title = Kisekae.getCaptions().getString("ConfigurationListTitle") ;
+      ArchiveEntry ze = fd.showConfig(parent, title, files) ;
+      ArchiveFile zip = (ze != null) ? ze.getZipFile() : null ;
+      
+      // Our config is the original configuration.  The archive entry is the
+      // configuration to append.  
+   
+      MemFile memfile = null ;
+      String newname = config.getName() ;
+      if (ze != null && zip != null)
+      {
+         try
+         {       
+				String file =  ze.getPath() ;
+				int bytes = (int) ze.getSize() ;
+				InputStream is = zip.getInputStream(ze) ;
+   			if (is == null)
+      			throw new IOException("No input stream for " + file) ;
+
+         	// Read the entire file contents into memory.
+
+            System.out.println("Append configuration \"" + file + "\" to configuration \"" + config.getName() + "\"") ;
+            newname = config.getName()+"+"+file ;
+   			int n = 0, len = 0 ;
+   			byte [] b2 = new byte[bytes] ;
+      		while (n < bytes && (len = is.read(b2,n,bytes-n)) >= 0) n += len ;
+   			is.close() ;
+
+   			// Open the memory copy of the configuration file.
+
+            byte [] b1 = config.write() ;
+            ByteArrayOutputStream buffer = new ByteArrayOutputStream() ;
+            buffer.write(b1) ;
+            buffer.write(b2) ;
+            memfile = new MemFile(file,buffer.toByteArray()) ;
+         }
+         catch (IOException e)
+         {
+            JOptionPane.showMessageDialog(parent,
+               e.getMessage(),
+               Kisekae.getCaptions().getString("FileAppendError"),
+               JOptionPane.ERROR_MESSAGE) ;            
+         }
+      }
+
+      // If we selected an entry, update our menu fileopen object
+      // to agree with the new entry that we will initialize.
+
+      if (ze != null && memfile != null)
+      {
+//       String s = memfile.getString() ;
+         config.setAppended(true) ;
+         config.setMemoryFile(memfile.getBuffer(),ze);
+         config.setName(originalpath) ;
+         
+         // Correct the Archive Entry to match the original load
+         // directory and the new combined name.
+         
+         File f = new File(originalpath) ;
+         String dir = f.getParent() ;
+         f = new File(dir,newname) ;
+         ze.setName(newname) ;
+         ze.setPath(f.getPath()) ;
+         ze.setMemoryFile(memfile) ;
+         
+         // Correct the FileOpen object to match the updated entry.
+         
+         ArchiveFile af = config.getZipFile() ;
+         af.setFileOpen(fd) ;
+         setFileOpen(fd) ;
+         parent.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
+         parent.expand() ;
+      }
+      else         
+         System.out.println("No expansion configuration selected.") ;
       parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
    }
 

@@ -332,7 +332,7 @@ final class FileLoader extends KissFrame
 
 				reference = config ;
 				config = new Configuration() ;
-            config.setName(name) ;
+            config.setName(file) ;
 				config.setKey(config.getKeyTable(),config.getID(),name.toUpperCase()) ;
 				if (reload)
 					config.openref(reference) ;
@@ -424,7 +424,7 @@ final class FileLoader extends KissFrame
             // If we had a reference configuration release all objects.
             // This prevents a memory leak from a load-edit-load cycle.
             
-            if (reference != null) 
+            if (reference != null && !expansion) 
             {
                reference.close(false,false) ;
                reference.flush() ;
@@ -532,7 +532,6 @@ final class FileLoader extends KissFrame
 		jLabel1.setVisible(true);
 		if (faults != 0 && !fatal) EDIT.setVisible(true) ;
    	if (config != null) PLAY.setEnabled(true) ;
-      if (errorpos >= 0) TextWindow.setCaretPosition(errorpos) ;
 	   KissObject.setLoader(null) ;
 	   validate() ;
       requestFocus() ;     

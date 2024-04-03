@@ -101,6 +101,10 @@ abstract class ArchiveEntry
 
 	public String getPath() { return pathname ; }
 
+   // Returns the full path name of the file.
+   
+	public String getPathName() { return pathname ; }
+
 	// Return the requested path name.
 
 	public String getDirectory() { return dirname ; }
@@ -213,6 +217,11 @@ abstract class ArchiveEntry
    
    MemFile getMemoryFile() { return memfile ; }
 
+   
+   // Set the memory file.
+   
+   void setMemoryFile(MemFile mf) { memfile = mf ; }
+
 
 	// Return true if we have imported this entry.
 
@@ -237,7 +246,11 @@ abstract class ArchiveEntry
 	// Returns an input stream for reading the uncompressed contents of
 	// the specified file entry.
    
-	public InputStream getInputStream() throws IOException { return null ; }
+	public InputStream getInputStream() throws IOException 
+   {  
+      if (isMemoryFile()) return memfile.getInputStream() ;
+      return null ; 
+   }
 
    
 	// Returns an output stream for writing the uncompressed contents of

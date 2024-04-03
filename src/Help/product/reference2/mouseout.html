@@ -11,7 +11,7 @@
 
 <h4><a name="mouseout">mouseout</a>()&nbsp;</h4>
 <p><font color="#FF0000"><b>Syntax:</b></font>&nbsp;&nbsp;&nbsp;&nbsp; mouseout
-(target)</p>
+(target[,visible])</p>
 <p>This event is triggered when the mouse exits a visible image on the screen. The
 target may be a literal name of an image
 file or a cel group name or an object group identifier.</p>
@@ -25,7 +25,9 @@ the object. This can provide a non-intuitive implementation as the mouseout()
 event may not fire when expected by the user.</p>
 <p>Note that visible pixels can include fully transparent pixels that are not
 the cel transparent color.&nbsp;&nbsp;&nbsp;</p>
-<p>More than one mouseout() event can be specified for a specific file. If sequential event processing is enforced each event will fire in
+<p>The optional <b>visible</b> parameter, if specified, will trigger the mouseout()
+    event if the target is unmapped, or not visible.  This enables hover type
+    events where invisible objects or cels can be recognized.&nbsp;&nbsp;&nbsp;</p><p>More than one mouseout() event can be specified for a specific file. If sequential event processing is enforced each event will fire in
 the sequence in which it was defined, otherwise they are queued for concurrent
 processing.&nbsp;
 </p>

@@ -164,6 +164,7 @@ final class Configuration extends KissObject
 	private boolean flushed = false ;      // True if configuration flushed
    private boolean rgbborder = false ;    // True if border is rgb value
    private boolean restartable = true ;   // True if configuration can restart
+   private boolean appended = false ;     // True if configuration appended
    private boolean optionchange = false ; // True if options have changed
    private boolean ckiss = false ;        // True if any cel is truecolor
    private boolean epalette = false ;     // True if palette file exceeds 256
@@ -237,6 +238,10 @@ final class Configuration extends KissObject
 	// Method to return the complete list of Java component cels.
 
 	Vector getComponents() { return comps ; }
+
+	// Method to return the label events.
+
+	Vector getLabels() { return labels ; }
    
 	// Method to return the complete list of page sets.
 
@@ -629,6 +634,11 @@ final class Configuration extends KissObject
 
 	void setRestartable(boolean b) { restartable = b ; }
 
+	// Set the configuration appended flag.  An appended configuration
+   // cannot be appended again.
+
+	void setAppended(boolean b) { appended = b ; }
+
 	// Method to set a reference to our primary media player.
 
 	void setMediaFrame(MediaFrame f) { mediaframe = f ; }
@@ -675,6 +685,10 @@ final class Configuration extends KissObject
 	// Return our closed indicator.
 
 	boolean isClosed() { return closed ; }
+
+	// Return our appended indicator.
+
+	boolean isAppended() { return appended ; }
 
 	// Return our flushed indicator.
 
@@ -879,7 +893,7 @@ final class Configuration extends KissObject
 
 			if (zip != null && ze != null)
 			{
-				file =  ze.getPath() ;
+				file = ze.getPath() ;
 				bytes = (int) ze.getSize() ;
 				is = zip.getInputStream(ze) ;
 			}
@@ -952,6 +966,10 @@ final class Configuration extends KissObject
       if (zip != null && zip != newzip) zip.flush() ;
       zip = newzip ;
       ze = newze ;
+      fileopen.setZipFile(zip) ;
+      fileopen.setZipEntry(ze) ;
+      FileOpen zipfileopen = zip.getFileOpen() ;
+      zipfileopen.setPath(zip.getPath()) ;
 
       // Set the new reloaded configuration object state attributes to be
       // the same as the reference configuration.  The new configuration
@@ -962,10 +980,11 @@ final class Configuration extends KissObject
 		setInternal(ref.isInternal()) ;
       setOptionsChanged(ref.isOptionChanged()) ;
       setRestartable(ref.isRestartable()) ;
-		file = ref.getPath() ;
+      setAppended(ref.isAppended()) ;
+		file = zip.getPath() ;
 		bytes = ref.getBytes() ;
 		System.out.println("Open configuration \"" + file + "\" (" + getID() + ")") ;
-
+      
 		// Open the memory copy of our reference configuration file.
 
 		try
@@ -1387,7 +1406,7 @@ final class Configuration extends KissObject
          while (enum1 != null && enum1.hasMoreElements())
             handler.addNamedEvent((Vector) enum1.nextElement()) ;
       }
-      if (refhandler != null) refhandler.flush() ;
+//      if (refhandler != null) refhandler.flush() ;
 
       // If we use include files we must cache images as we can reference
       // cels that are not in the base archive file.

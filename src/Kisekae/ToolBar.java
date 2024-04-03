@@ -1338,7 +1338,7 @@ final class ToolBar extends JPanel
 			// An open KiSS browser request.
 
 			if (source == openportal)
-         	{ menu.eventKiss() ; return ; }
+         	{ menu.eventPortal() ; return ; }
 
 			// A configuration select request.
 

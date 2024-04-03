@@ -1817,6 +1817,11 @@ final class TextFrame extends KissFrame
 		if (text == null) return ;
 		text.requestFocus() ;
 	}
+   
+   void setEditable(boolean b)
+   {
+      if (text != null) text.setEditable(b) ;
+   }
 
 
 	// Action event listener.  We only process menu item actions.

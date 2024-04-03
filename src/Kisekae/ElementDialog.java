@@ -74,6 +74,7 @@ final class ElementDialog extends KissDialog
 	private String item = null ;           // The chosen element
    private File selected = null ;         // The selected import file
    private MemFile memfile = null ;       // The memory file contents
+   private ArchiveEntry ze = null ;       // The selected archive entry
    private FileFilter cnffiles = null ;   // FileChooser filter for CNF
    private boolean allowimport = false ;  // if true show import button
    private boolean importonly = false ;   // if true only show import dialog
@@ -215,6 +216,7 @@ final class ElementDialog extends KissDialog
       {
 			Object o = LIST.getSelectedValue() ;
 			item = (o != null) ? o.toString() : null ;
+         ze = (o instanceof ArchiveEntry) ? (ArchiveEntry) o : null ;
       }
 
       if (source == CANCEL)
@@ -241,6 +243,10 @@ final class ElementDialog extends KissDialog
 	// Return the selected file for import.
 
 	public MemFile getSelectedFile() { return memfile ; }
+
+	// Return the selected archive entry for import.
+
+	public ArchiveEntry getSelectedEntry() { return ze ; }
 
 	// Allow imports of new files.
 
@@ -305,7 +311,10 @@ final class ElementDialog extends KissDialog
    }
    
    
-   // Show a file dialog to choose a CNF file to import.
+   // Show a file dialog to choose a CNF file to import. This dialog is shown
+   // if the user chooses to import a new CNF when looking at a list of
+   // multiple configurations or if the importonly switch is set when this
+   // ElementDialog is made visible.
    
    private MemFile importFile() 
    {

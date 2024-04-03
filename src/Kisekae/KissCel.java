@@ -214,7 +214,7 @@ final class KissCel extends Cel
             }
          }
 		}
-
+    
 		// Nothing left now, but to read the new cel file.
 
 		try
@@ -251,7 +251,8 @@ final class KissCel extends Cel
          // be written to the top level archive.  This supercedes the included
          // file, but it may have been stored with directory path information.
          
-			if (includefiles != null && zip != null) ze = zip.getEntry(file,true) ;         
+			if (ze == null && includefiles != null && zip != null) 
+            ze = zip.getEntry(file,true) ;         
 
          // If we have not yet found the file, check the INCLUDE list.
 

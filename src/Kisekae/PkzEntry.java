@@ -60,7 +60,6 @@ import java.util.zip.* ;
 final class PkzEntry extends ArchiveEntry
 {
    private ZipFile zip = null ;           // Actual zip file
-   private MemFile memin = null ;         // Reference to the memory file
    private ZipEntry ze = null ;           // Actual zip entry
 
 	// Constructor
@@ -76,6 +75,11 @@ final class PkzEntry extends ArchiveEntry
       	filename = f.getName() ;
          dirname = f.getParent() ;
          pathname = f.getPath() ;
+         if (dirname == null && af != null) 
+         {
+//            dirname = af.getDirectoryName() ;
+            pathname = af.getPath() ;
+         }
          if (dirname == null) dirname = "" ;
          else if (!dirname.endsWith(File.separator)) dirname += File.separator ;
       }
@@ -85,7 +89,7 @@ final class PkzEntry extends ArchiveEntry
 
 	PkzEntry(MemFile in, ZipEntry zipentry, ArchiveFile af)
 	{
-		memin = in;
+		memfile = in;
       ze = zipentry ;
       archive = af ;
       if (ze != null)
@@ -116,7 +120,7 @@ final class PkzEntry extends ArchiveEntry
 	{
       if (ze == null) return null ;
 		if (archive == null) return null ;
-      if (memin == null && !archive.isOpen()) return null ;
+      if (memfile == null && !archive.isOpen()) return null ;
 		if (zip != null)
       {
          try 
@@ -135,9 +139,9 @@ final class PkzEntry extends ArchiveEntry
       // the appropriate stream position.  There should be a way to
       // skip directly to the element position.
 
-      if (memin != null)
+      if (memfile != null)
       {
-         ZipInputStream is = new ZipInputStream(memin.getInputStream()) ;
+         ZipInputStream is = new ZipInputStream(memfile.getInputStream()) ;
          while (true)
          {
             ZipEntry zipentry = is.getNextEntry() ;
@@ -242,5 +246,12 @@ final class PkzEntry extends ArchiveEntry
       s1 = File.separator + s2 ;
       if (path.equalsIgnoreCase(s1)) return s2 ;
 		return path ;
+	}
+
+   // Returns the full path name of the file.
+   
+	public String getPathName() 
+	{
+		return pathname ;
 	}
 }

@@ -131,7 +131,7 @@ final class PkzFile extends ArchiveFile
       catch (Exception e)
       {
          if (memfile == null) memfile = UrlLoader.getMemoryFile() ;
-         if (memfile == null) throw(new IOException(e.getMessage())) ;
+         if (memfile == null) throw(new IOException(e.toString())) ;
          System.out.println("PkzFile: Open memory file " + memfile.getFileName()) ;
       }
 

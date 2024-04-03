@@ -72,6 +72,7 @@ final public class MainMenu extends KissMenu
 {
    private FileOpen fd = null ;							// Our file open list
    private UrlLoader urlloader = null ;	 			// Our active url load
+   private WebFrame webframe = null ;              // Our active portal
    private boolean nocopy = false ;                // Our URL nocopy indicator
    private String webURL = null ;                  // Initial URL on launch
 
@@ -144,6 +145,7 @@ final public class MainMenu extends KissMenu
    protected JMenuItem showtips = null ;
    protected JMenuItem rundemo = null ;
    protected JMenuItem bugreport = null ;
+   protected JMenuItem clearcache = null ;
    protected JMenuItem about = null ;
    protected JMenuItem options = null ;
    protected JMenuItem memory = null ;
@@ -460,6 +462,9 @@ final public class MainMenu extends KissMenu
       helpMenu.add((bugreport = new JMenuItem(Kisekae.getCaptions().getString("MenuHelpBugReport")))) ;
       bugreport.addActionListener(this);
       bugreport.setEnabled(!Kisekae.isSecure());
+      helpMenu.add((clearcache = new JMenuItem(Kisekae.getCaptions().getString("MenuHelpClearCache")))) ;
+      clearcache.addActionListener(this);
+      clearcache.setEnabled(!Kisekae.isSecure());
       helpMenu.add((about = new JMenuItem(Kisekae.getCaptions().getString("MenuHelpAbout")))) ;
       about.addActionListener(this);
       if (!applemac) about.setMnemonic(KeyEvent.VK_A) ;
@@ -503,7 +508,12 @@ final public class MainMenu extends KissMenu
    // Set the initial URL for a launch of browser or portal.
    
    void setWebURL(String s) { webURL = s ; }
+   
+   // Clear our active portal reference.
+   
+   void clearWebFrame() { webframe = null ; }
 
+   
    // Implementation of the required menu item update.
 
    void update()
@@ -1007,6 +1017,11 @@ final public class MainMenu extends KissMenu
          if (bugreport == source)
          { eventBug() ; return ; }
 
+         // A Clear Cache request clears the download cache.
+
+         if (clearcache == source)
+         { eventClearCache() ; return ; }
+
          // A Log File request shows the current log file.
 
          if (logfile == source || 
@@ -1355,10 +1370,31 @@ final public class MainMenu extends KissMenu
 
    void eventExpand()
    {
+      if (parent == null) return ;
+      Configuration c = parent.getConfig() ;
+      if (c == null) return ;
+      
       FileOpen fdnew = new FileOpen(parent) ;
       fdnew.show(Kisekae.getCaptions().getString("OpenExpansionTitle")) ;
       ArchiveEntry ze = fdnew.getZipEntry() ;
-      if (ze == null) { fdnew.close() ; return ; }
+      
+      // The added file is an INCLUDE file.
+     
+      Vector includefiles = c.getIncludeFiles() ;
+      if (includefiles == null) includefiles = new Vector() ;
+      File f = fdnew.getFileObject() ;
+      if (f == null) return ; 
+      includefiles.add(f) ;
+      c.setIncludeFiles(includefiles) ;
+      
+      // If there is a CNF in the INCLUDE file use it.  If not, use the
+      // current configuration file.  
+      
+      if (ze == null)
+      {
+         ze = c.getZipEntry() ;
+         fdnew.setZipEntry(ze) ;
+      }
       fd = fdnew ;
 
       // Configuration elements initialize the main frame.
@@ -1403,8 +1439,7 @@ final public class MainMenu extends KissMenu
       catch (Exception e) { }
    }
 
-   // If running as an applet, get the Kisekae HTML page for our initial
-   // display.  Otherwise use the default web browser to display pages.
+   // Invoke the browser to show the GitHub bug report page.
 
    void eventBug()
    {
@@ -1433,6 +1468,17 @@ final public class MainMenu extends KissMenu
          }
       }
       catch (Exception e) { }
+   }
+   
+   // The Clear Cache command clears the download cache.
+   
+   void eventClearCache()
+   {
+      if (parent == null) return ;
+      OptionsDialog options = parent.getOptionsDialog() ;
+      if (options == null) return ;
+      ActionEvent event = new ActionEvent(options.getCacheBtn(),0,"Clear Cache") ;
+      options.actionPerformed(event) ;
    }
 
    // The Open URL command loads a KiSS data set from a URL over the web.
@@ -1468,10 +1514,23 @@ final public class MainMenu extends KissMenu
       catch (Exception e) { currentweb = null ; }
       if (currentweb != null) 
          website = currentweb.getProtocol() + "://" + currentweb.getHost() + "/" ;
-      WebFrame wf = new WebFrame(parent,webURL,website) ;
+      
+      // If the portal is not running then launch the Portal.
+      
+      if (webframe == null)
+      {
+         webframe = new WebFrame(parent,webURL,website) ;
+         parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
+         parent.showStatus(null);
+         webframe.setVisible(true) ;
+         return ;
+      }
+      
+      // If the portal is running set the required page and bring to front.
+      
+      webframe.setPage(webURL) ;
       parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
-      parent.showStatus(null);
-      wf.setVisible(true) ;
+      webframe.toFront() ;
    }
 
    // The Search command uses UltraKiss to search the local computer, or

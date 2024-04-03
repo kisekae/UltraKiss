@@ -521,7 +521,11 @@ final public class WebFrame extends KissFrame
    {
       Vector v = getHistory() ;
       int i = getHistoryLocation() - 1 ;
-      if (i < 0 || i >= v.size()) return ;
+      if (i < 0 || i >= v.size()) 
+      {
+         me.toBack() ;
+         return ;
+      }
       location = (String) v.elementAt(i) ;
       setHistoryLocation(i) ;
 
@@ -680,12 +684,14 @@ final public class WebFrame extends KissFrame
    }
 
    // Utility functions to determine if back or forward entries exist.
+   // A back entry always exists.  At the end it will hide the Portal
+   // and show the main frame.
 
    String getBack()
    {
       Vector v = getHistory() ;
       int i = getHistoryLocation() - 1 ;
-      if (i < 0 || i >= v.size()) return null ;
+      if (i < 0 || i >= v.size()) return new String("Hide") ;
       return (String) v.elementAt(i) ;
    }
 
@@ -1404,6 +1410,12 @@ final public class WebFrame extends KissFrame
 
 	public void close()
 	{
+      if (parent != null)         
+      {
+         MainMenu mm = parent.getMainMenu() ;
+         if (mm != null) mm.clearWebFrame() ;
+      }
+      
       super.close() ;
 		flush() ;
       dispose() ;

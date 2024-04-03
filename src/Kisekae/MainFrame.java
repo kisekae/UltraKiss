@@ -120,6 +120,7 @@ final public class MainFrame extends KissFrame
 	private boolean callreturn = false ; 	// True if callback processed
 	private boolean terminate = false ;		// True if frame is closing
 	private boolean restart = false ;		// True if configuration is reloaded
+	private boolean append = false ;       // True if configuration being appended
 	private boolean firstback = true ;		// True if window not deactivated  
    
 
@@ -374,10 +375,19 @@ final public class MainFrame extends KissFrame
       KissMenu m = (menu instanceof UserMenu) ? panelmenu : menu ;
 		fileopen = (m != null) ? m.getFileOpen() : null ;
 		if (fileopen == null) return ;
-		fileopen.open() ;
+		fileopen.open(fileopen.getZipFile(),fileopen.getZipEntry()) ;
 		ArchiveFile zip = fileopen.getZipFile() ;
 		ArchiveEntry ze = fileopen.getZipEntry() ;
-		loader = new FileLoader(this,config,zip,ze) ;
+      if (zip != null && zip.getFileOpen() == null) 
+         zip.setFileOpen(fileopen) ;
+      if (config.isAppended())
+      {
+         config.setZipFile(zip) ;
+         config.setZipEntry(ze) ;
+         loader = new FileLoader(this,config) ;
+      }
+      else   
+         loader = new FileLoader(this,config,zip,ze) ;
 		Thread loadthread = new Thread(loader) ;
 		loadthread.start() ;
 	}
@@ -400,18 +410,6 @@ final public class MainFrame extends KissFrame
 	{
 		try
 		{
-         // Close any reference file if it was opened.  Note, if the zip file
-         // is closed the file is opened again when loading cels in PanelFrame.  
-         // This creates new zip entries that are different objects from those 
-         // stored and referenced in cels and other KissObjects. This leads to 
-         // a zipentry memory leak on restarts.
-/*
-         if (config != null)
-         {
-            ArchiveFile refzip = config.getZipFile() ;
-            if (refzip != null && refzip.isOpen()) refzip.close() ;
-         }
-*/
 			// If the load was cancelled restore our old fileopen object.
 
 			if (c == null)
@@ -430,6 +428,7 @@ final public class MainFrame extends KissFrame
                loader.close() ;
             }
 		      KissObject.setLoader(null) ;
+            config = null ;
             loader = null ;			
             return ;
 			}
@@ -1805,6 +1804,12 @@ final public class MainFrame extends KissFrame
 	}
 
 
+	// Set the append flag to show that the loaded configuration is to be
+   // appended to the last loaded configuration.
+
+	void setAppend(boolean b) { append = b ; }
+
+
 	// Set the ShowBorder menu check box on or off.
 
 	void setShowBorder(boolean state)
@@ -2087,7 +2092,6 @@ final public class MainFrame extends KissFrame
       return true ;
    }
 
-
    void editCut()
    {
    	if (panel == null) return ;
@@ -2148,6 +2152,12 @@ final public class MainFrame extends KissFrame
    {
    	if (panel == null) return ;
 		panel.selectAll(v) ;
+   }
+
+	void releaseMouse(boolean b)
+   {
+   	if (panel == null) return ;
+		panel.releaseMouse(b) ;
    }
 
 

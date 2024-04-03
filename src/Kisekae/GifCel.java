@@ -707,6 +707,7 @@ final class GifCel extends Cel
               	ArchiveFile refzip = ref.getZipFile() ;
                if (refzip != null && !refzip.isOpen()) refzip.open() ;
                ze = (refzip != null) ? refzip.getEntry(getPath()) : null ;
+               if (refzip != null && ze == null ) ze = refzip.getEntry(getPath(),true) ;
 				}
 			}
          
@@ -715,7 +716,8 @@ final class GifCel extends Cel
          // be written to the top level archive.  This supercedes the included
          // file, but it may have been stored with directory path information.
          
-			if (includefiles != null && zip != null) ze = zip.getEntry(file,true) ;         
+			if (ze == null && includefiles != null && zip != null) 
+            ze = zip.getEntry(file,true) ;         
 
          // If we have not yet found the file, check the INCLUDE list.
 

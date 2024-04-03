@@ -101,8 +101,8 @@ abstract class KissMenu
 	void eventNew(int type) { }
 	void eventOpen() { }
 	void eventUrl() { }
+	void eventPortal() { }
 	void eventWeb() { }
-	void eventKiss() { }
 	void eventSelect() { }
 	void eventClose() { }
 	void eventCut() { }

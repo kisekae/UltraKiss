@@ -437,6 +437,17 @@ class UrlLoader extends KissFrame
          showMsg(Kisekae.getCaptions().getString("InvalidURL") + " " + urlname) ;
       }
 
+      catch (IOException e)
+      {
+      	fatal = true ;
+         pathname = null ;
+         memfile = null ;
+         String msg = Kisekae.getCaptions().getString("LoadTerminatedStatus") ;
+         msg += " " + e.getMessage() ;
+         showStatus(Kisekae.getCaptions().getString("LoadTerminatedStatus")) ;
+         showMsg(msg) ;
+      }
+
       // Catch security exceptions.
 
       catch (SecurityException e)

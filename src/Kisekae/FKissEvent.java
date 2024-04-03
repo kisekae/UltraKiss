@@ -134,6 +134,7 @@ final class FKissEvent extends KissObject
 	private int repeatlimit = 0 ;	   	   // Count for repeat() statement
 	private int iflevel = 0 ;				   // Current nest level for skip
 	private int elseiflevel = 0 ;				// Current elseif nest level for skip
+   private int code = -1 ;						// Code value for this event
 
 	// Event thread table for tracking the action skip state by thread
    // Event state table for maintaining event action collision states
@@ -157,6 +158,7 @@ final class FKissEvent extends KissObject
       visibility = new Vector() ;
       objectfired = new Vector() ;
       variable = c.getVariable() ;
+      code = EventHandler.getEventNameKey(id) ;
 	}
    
    
@@ -456,6 +458,16 @@ final class FKissEvent extends KissObject
          visibility.setElementAt(((b) ? Boolean.TRUE : Boolean.FALSE),i) ;
       }
    }
+ 
+   // Update the configuration reference.  If this event was added to
+   // another CNF as an expansion then it refers to the wrong CNF.  This
+   // can reference an AlarmTimer that is not active.
+   
+   void updateConfig(Configuration c)
+   {
+      config = c ;
+      cid = c.getID() ;
+   }
 
 
 	// Object state reference methods
@@ -468,6 +480,10 @@ final class FKissEvent extends KissObject
 	// Return the event source code line number.
 
 	int getLine() { return line ; }
+
+   // Return the event code value.
+
+   int getCode() { return code ; }
    
 	// Return the object to which this event is associated.
 

@@ -301,9 +301,8 @@ abstract class KissObject
 	}
 
 
-	// Add a new, named event to this object.  The event object will not be
-   // added if it already exists in the object's event list as defined by
-   // the event name and parameter list.
+	// Add a new, named event to this object.  Named events are always added
+   // to the object's event list as defined by the event name and parameter list.
 
 	void addNamedEvent(FKissEvent e)
 	{
@@ -313,12 +312,6 @@ abstract class KissObject
       if (identifier == null) return ;
 		Vector events = (Vector) evtkey.get(identifier) ;
 		if (events == null) events = new Vector() ;
-      for (int i = 0 ; i < events.size() ; i++)
-      {
-         FKissEvent evt = (FKissEvent) events.elementAt(i) ;
-         String s = evt.toString() ;
-         if (s.equals(e.toString())) return ;
-      }
 		events.addElement(e) ;
       evtkey.put(identifier,events) ;
       eventcount++ ;
@@ -603,6 +596,13 @@ abstract class KissObject
 
 	String getDirectory()
    {
+      String path = null ;
+      if (ze != null)
+      {
+         path = ze.getPath() ;
+         if (path != null)
+            return (new File(path)).getParent() ;
+      }
    	if (file == null) return null ;
       return (new File(file)).getParent() ;
    }

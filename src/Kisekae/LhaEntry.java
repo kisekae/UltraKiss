@@ -69,7 +69,6 @@ class LhaEntry extends ArchiveEntry
 	static final public int LHD = 0 ;		// Compression method code for -lhd-
 
 	private RandomAccessFile in = null ;	// Reference to the file
-   private MemFile memin = null ;         // Reference to the memory file
 	private long filepointer = -1 ;			// Offset to this entry
 	private long datapointer = -1 ;			// Offset to the data
 
@@ -123,11 +122,11 @@ class LhaEntry extends ArchiveEntry
 
 	LhaEntry(MemFile in, ArchiveFile af) throws IOException
 	{
-		memin = in;
+		memfile = in;
       archive = af ;
-	   filepointer = memin.getFilePointer() ;
+	   filepointer = memfile.getFilePointer() ;
 		readHeader();
-	   datapointer = memin.getFilePointer() ;
+	   datapointer = memfile.getFilePointer() ;
       filename = name ;
       dirname = dir ;
       pathname = getPath() ;
@@ -335,10 +334,10 @@ class LhaEntry extends ArchiveEntry
 	
 	public InputStream getCompressedInputStream() throws IOException
 	{
-		if (in == null && memin == null) return null ;
+		if (in == null && memfile == null) return null ;
 		seek(datapointer) ;
       if (in != null) return new LhaInputStream(in,packsize) ;
-      if (memin != null) return new MemInputStream(memin,packsize) ;
+      if (memfile != null) return new MemInputStream(memfile,packsize) ;
       return null ;
 	}
 
@@ -591,34 +590,34 @@ class LhaEntry extends ArchiveEntry
    byte readByte() throws IOException
    {
       if (in != null) return in.readByte() ;
-      if (memin != null) return memin.readByte() ;
+      if (memfile != null) return memfile.readByte() ;
       return -1 ;
    }
 
    int readInt() throws IOException
    {
       if (in != null) return in.readInt() ;
-      if (memin != null) return memin.readInt() ;
+      if (memfile != null) return memfile.readInt() ;
       return -1 ;
    }
 
    short readShort() throws IOException
    {
       if (in != null) return in.readShort() ;
-      if (memin != null) return memin.readShort() ;
+      if (memfile != null) return memfile.readShort() ;
       return -1 ;
    }
 
    void seek(long pos) throws IOException
    {
       if (in != null) in.seek(pos) ;
-      if (memin != null) memin.seek(pos) ;
+      if (memfile != null) memfile.seek(pos) ;
    }
 
    int skipBytes(int n) throws IOException
    {
       if (in != null) return in.skipBytes(n) ;
-      if (memin != null) return memin.skipBytes(n) ;
+      if (memfile != null) return memfile.skipBytes(n) ;
       return -1 ;
    }
 

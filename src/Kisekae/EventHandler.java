@@ -1248,20 +1248,44 @@ final class EventHandler extends KissObject
    }
 
 
+   // Static methods to determine if an event is a begin() or initialize()
+   // event.
+
+   static boolean isBeginningEvent(FKissEvent e)
+   {
+      if (e == null) return false ;
+      int code = e.getCode() ;
+		if (code == 2 || code == 9) return true ;
+      return false ;
+   }
+
+
+
 	// Static method to directly fire a series of events without queuing them.
-   // The event is associated with the indicated thread.
+   // The event is associated with the indicated thread.  Note that multiple
+   // events will always be fired for begin() and initialize() events.  These
+   // are required so as to uniquely initialize each configuration.
+   //
+   // If multiple events are not permitted (MultipleEvents option is false)
+   // then event definitions from a prior configuration replace event
+   // declarations from an earlier configuration.  This provides the ability
+   // to correct code by developing a wrapper set that loads an earlier set 
+   // version through a viewer("menu","appendcnf") command.
 
 	static void fireEvents(Vector v, PanelFrame f, Thread t, Object source)
 	{
    	FKissEvent event = null ;
 		if (v == null) return ;
+      
       try
       {
 			for (int i = 0 ; i < v.size() ; i++)
          {
          	event = (FKissEvent) v.elementAt(i) ;
+            if (isBeginningEvent(event))
+               System.out.println("EventHandler: firing event " + event + " actions " + event.getActionList().size());
 				event.fireEvent(f,t,source) ;
-            if (!OptionsDialog.getMultipleEvents()) break ;            
+            if (!OptionsDialog.getMultipleEvents() && !isBeginningEvent(event)) break ;            
          }
       }
 

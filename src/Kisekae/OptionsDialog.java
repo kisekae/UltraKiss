@@ -5964,7 +5964,7 @@ final public class OptionsDialog extends KissDialog
       setConstrainMoves(true) ;
       setDragMove(true) ;
       setConstrainVisible(true) ;
-      setImportCel(true) ;
+//    setImportCel(true) ;
       setExportCel(false) ;
       setImportComponent(false) ;
 //    setComponentCel(true) ;
@@ -6541,7 +6541,12 @@ final public class OptionsDialog extends KissDialog
 	}
    
    void setValues() { }   
+ 
    
+   // Method to return the Clear Cache button so this function
+   // can be invoked on the ActionListener by the MainMenu.
+   
+	public JButton getCacheBtn() { return CacheBtn ; }
    
    
    // Inner class to render a combo box with disabled items.

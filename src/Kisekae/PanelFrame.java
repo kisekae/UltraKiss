@@ -2922,7 +2922,8 @@ final class PanelFrame extends JPanel
          MediaFrame mf = config.getMediaFrame() ;
          if (mf != null) mf.resume() ;
 
-         // Fire any page set events.
+         // Fire page set events. A specific event is fired if specified,
+         // otherwise the generic set(*) event is fired if it exists.
 
          boolean isvisible = OptionsDialog.getPanelVisible() || isVisible() ;
          if (!undoredo && isvisible && isEnabled())
@@ -4508,7 +4509,8 @@ final class PanelFrame extends JPanel
          int celNumber = celList[i] ;
          try { c = (Cel) cels.elementAt(celNumber) ; }
          catch (ArrayIndexOutOfBoundsException e) { continue ; }
-         if (!c.isVisible()) continue ;
+         boolean mousevisible = checkMouse(c) ;
+         if (!c.isVisible() && !mousevisible) continue ;
          Rectangle r = c.getBoundingBox() ;
          int t = c.getAlpha(x-r.x,y-r.y) ;
          if (t < 0) continue ;
@@ -4808,6 +4810,35 @@ final class PanelFrame extends JPanel
       return 0 ;
    }
 
+   
+   // The checkMouse function is used to determine if the cel of interest
+   // has mouse events that should fire on non-visible cels.  The second
+   // mouse event parameter, if specified, enables this behaviour.
+
+   private boolean checkMouse(Cel c)
+   {
+      Vector v = c.getEvent("mousein") ;
+      if (v != null) 
+      {
+         for (int i = 0 ; i < v.size(); i++)
+         {
+            Object o = v.elementAt(i) ;
+            o = (o instanceof FKissEvent) ? ((FKissEvent) o).getSecondParameter() : null ;
+            if (o != null) return true ;
+         }
+      }
+      v = c.getEvent("mouseout") ;
+      if (v != null) 
+      {
+         for (int i = 0 ; i < v.size(); i++)
+         {
+            Object o = v.elementAt(i) ;
+            o = (o instanceof FKissEvent) ? ((FKissEvent) o).getSecondParameter() : null ;
+            if (o != null) return true ;
+         }
+      }
+      return false ;
+   }
 
 
    // The checkClone method is used to correct event parameter strings
@@ -6189,9 +6220,6 @@ final class PanelFrame extends JPanel
             }
 
             // Update the location of the group on the page.
-/*    causes reset to fail on second time.  Not sure why this was added for pagesasscenes?     
-            group.updatePageSetLocation(page) ;
-*/
             // Capture this edit for undo/redo processing.
 
             if (selected && (placement.x != 0 || placement.y != 0))
