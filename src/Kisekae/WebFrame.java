@@ -60,6 +60,7 @@ import java.awt.event.* ;
 import java.util.Hashtable ;
 import java.util.Enumeration ;
 import java.util.Vector ;
+import java.util.Hashtable ;
 import javax.swing.* ;
 import javax.swing.event.* ;
 import javax.swing.text.* ;
@@ -75,6 +76,7 @@ final public class WebFrame extends KissFrame
    private static Vector history = new Vector() ;  // URL History list
    private static int currentlocation = 0 ;        // Current history index
    private static String currentweb = null ;       // Last valid web
+   private static Hashtable urlmap = new Hashtable(20) ; // Redirect URL to page set
 
    private WebFrame me = null ;						   // Reference to ourselves
    private MainFrame parent = null ;               // Reference to mainframe
@@ -156,7 +158,9 @@ final public class WebFrame extends KissFrame
    }
    
    // Constructor for a specified home page.  This constructor
-   // does not establish a current web.
+   // does not establish a current web.  A local history is used
+   // for this WebFrame object.  This history does not persist if the 
+   // frame is closed.  
    
    public WebFrame(MainFrame main, String homepage)
 	{
@@ -495,12 +499,49 @@ final public class WebFrame extends KissFrame
             history.addElement(currentweb) ;
    }
 
+	// Method to set a redirect to map a URL to a set of FKiSS events.  
+   // The portal, if it sees the URL, will fire the events.  This will
+   // typically be a set() event to change to a new page set.
+
+	public static void redirect(String url, Vector events) 
+   {
+      if (url == null || events == null) return ;
+      urlmap.put(url.toLowerCase(),events) ; 
+   }
+   
+   // Method to clear the static redirect table.  This is required 
+   // on a new set load.
+   
+   public static void clearRedirect() { urlmap.clear(); }
+
 
    // Set the JEditorPane page to view.   The connection is performed in a
-   // separate thread.
-
+   // separate thread.  Also look for a redirection to an event, typically 
+   // a label() event.
+ 
    public void setPage(String location)
-   {
+   {        
+      try
+      {
+         if (location == null) return ;
+         URL evturl = new URL(location) ;
+         String s = evturl.toExternalForm() ;
+         Object o = urlmap.get(s.toLowerCase()) ;
+         if (o instanceof Vector)
+         {
+            MainFrame mf = Kisekae.getMainFrame() ;
+            PanelFrame pf = (mf != null) ? mf.getPanel() : null ;
+            if (pf != null)
+            {
+               setVisible(false) ;
+               EventHandler.fireEvents((Vector) o,pf,Thread.currentThread(),s) ;
+               fireWindowClose() ;
+            }
+            return ;
+         }
+      }
+      catch (MalformedURLException e) { }
+      
       if (runner == null || runner.isAlive()) return ;
       runner = new WebConnect() ;
       this.location = location ;
@@ -515,7 +556,9 @@ final public class WebFrame extends KissFrame
    public void setNoCopy(boolean b) { nocopy = b ; }
 
 
-   // Menu items for browser forward and back control.
+   // Menu items for browser forward and back control.  If we are at the 
+   // beginning of the history list and cannot go back any further, simply
+   // send the portal window to the back.  
 
    void back()
    {
@@ -723,6 +766,16 @@ final public class WebFrame extends KissFrame
       if (localhistory != null) return localhistory ;
       return history ;
    }
+   
+   // Clear the local history.
+   
+   void clearLocalHistory(String homepage)
+   {
+      if (localhistory != null) localhistory = new Vector() ;
+      if (homepage == null) homepage = OptionsDialog.getKissWeb() ;
+      localhistory.addElement(homepage) ;
+      setHistoryLocation(0) ;
+   }
 
 
 	// Action event listener.  We only process menu item actions.
@@ -886,7 +939,7 @@ final public class WebFrame extends KissFrame
             String s = evt.getActionCommand() ;
             try { url = new URL(s) ; }
             catch (MalformedURLException e) { return ; }
-            if (ArchiveFile.isArchive(s)) { loadArchive(url) ; return ; }
+            if (ArchiveFile.isArchive(s)) { loadArchive(url,true) ; return ; }
             String s1 = currentweb ;
             if (s1 == null) s1 = "" ;
             int n = s1.lastIndexOf('/') ;
@@ -953,10 +1006,22 @@ final public class WebFrame extends KissFrame
             {
                if (!Kisekae.isSecure())
                {
+                  FileWriter filewriter = null ;
                   String s = Kisekae.getCaptions().getString("SaveDownloadFileText") ;
                   pathname = selectArchive(s, filename, FileDialog.SAVE) ;
                   if (pathname == null) return ;
-                  FileWriter filewriter = new FileWriter(this,fdnew.getZipFile(), pathname) ;
+                  
+                  // Write downloaded archive file if archive
+                  if (ArchiveFile.isArchive(pathname))
+                     filewriter = new FileWriter(this,fdnew.getZipFile(),pathname) ;
+                  else
+                  {
+                     // Write downloaded image file or other if downloaded
+                     Vector v = new Vector() ;
+                     ArchiveEntry ze = fdnew.getZipEntry() ;
+                     v.addElement(ze) ;
+                     filewriter = new FileWriter(this,fdnew.getZipFile(),pathname,v) ;  
+                  }
                   filewriter.callback.addActionListener( (ActionListener)this) ;
                   Thread thread = new Thread(filewriter) ;
                   thread.start() ;
@@ -1158,6 +1223,7 @@ final public class WebFrame extends KissFrame
 
             if (name == null) break ;
   		      if (ArchiveFile.isArchive(name)) break ;
+  		      if (ArchiveFile.isImage(name)) break ;
             String s = Kisekae.getCaptions().getString("InvalidFileNameText") ;
             int i1 = s.indexOf('[') ;
             int j1 = s.indexOf(']') ;
@@ -1165,7 +1231,7 @@ final public class WebFrame extends KissFrame
                s = s.substring(0,i1+1) + name.toUpperCase() + s.substring(j1) ;
             JOptionPane.showMessageDialog(this,
                s + "\n" +
-               Kisekae.getCaptions().getString("SaveAsArchiveText"),
+               Kisekae.getCaptions().getString("InvalidTypeText"),
                Kisekae.getCaptions().getString("FileSaveException"),
                JOptionPane.ERROR_MESSAGE) ;
 				name = null ;
@@ -1260,14 +1326,18 @@ final public class WebFrame extends KissFrame
                   evturl = new URL(context,description) ;
             }
          }
-         catch (MalformedURLException e) { evturl = null ; }
+         catch (MalformedURLException e) { evturl = null ; }         
 
          // If the link is to an archive, load it.
 
-         if (evturl == null) return ;
          String urlname = evturl.toExternalForm() ;
          if (ArchiveFile.isArchive(urlname))
-            { loadArchive(evturl) ; return ; }
+            { loadArchive(evturl,true) ; return ; }
+
+         // If the link is to an image file prompt for download.
+
+         if (ArchiveFile.isImage(urlname))
+            { loadArchive(evturl,false) ; return ; }
 
          // If our current web is on our local file system and we link to
          // a remote HTML page, then we adjust our current web site to point
@@ -1343,7 +1413,7 @@ final public class WebFrame extends KissFrame
    // A function to load an archive file.  Download prompts are not
    // shown for local files.
 
-   private void loadArchive(URL url)
+   private void loadArchive(URL url, boolean showrun)
    {
       boolean open = true ;
       String s = url.toExternalForm() ;
@@ -1351,7 +1421,7 @@ final public class WebFrame extends KissFrame
       {
          if (WebDloadDialog.showDialog())
          {
-            WebDloadDialog dd = new WebDloadDialog(this,url) ;
+            WebDloadDialog dd = new WebDloadDialog(this,url,showrun) ;
             dd.setVisible(true) ;
             open = dd.open.isSelected() ;
             if (dd.cancel) return ;
@@ -1393,6 +1463,14 @@ final public class WebFrame extends KissFrame
       }
    }
 
+   // Force fire a window closing event to shut down the Portal after a 
+   // redirect back to the main frame.
+   
+   private void fireWindowClose()
+   {
+      Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(
+         new WindowEvent(me, WindowEvent.WINDOW_CLOSING));      
+   }
 
 	// Window Events
 

@@ -104,6 +104,8 @@ final public class FileOpen
    private int entrycount = 0 ;              // Number of entries
    private boolean multiple = false ;        // Multiple selection allowed
    private boolean dirs = false ;            // Directories only
+   private boolean silent = false ;          // No show exceptions
+   private boolean error = false ;           // Error if no find
 
    // File Filters
 
@@ -219,6 +221,10 @@ final public class FileOpen
 
 	void setZipFile(ArchiveFile af) { zip = af ; }
 
+	// Function to set the archive file for a new source entry.
+
+	void setSilent(boolean b) { silent = b ; }
+
 	// Function to set the archive entry for a new source entry.
 
 	void setZipEntry(ArchiveEntry ae) 
@@ -228,6 +234,10 @@ final public class FileOpen
       pathname = (ze != null) ? ze.getPath() : null ;
       zip = (ze != null) ? ze.getZipFile() : null ;
    }
+
+	// Function to return the open error state.
+   
+   boolean isError() { return error ; }
 
 
 	// Object utility methods
@@ -365,11 +375,14 @@ final public class FileOpen
       catch (SecurityException e)
       {
          System.out.println("KiSS file open exception, " + e.toString()) ;
-			JOptionPane.showMessageDialog(parent,
-            captions.getString("SecurityException") + "\n" +
-            captions.getString("FileOpenSecurityMessage1"),
-         	captions.getString("SecurityException"),
-            JOptionPane.ERROR_MESSAGE) ;
+         if (!silent)
+         {
+   			JOptionPane.showMessageDialog(parent,
+               captions.getString("SecurityException") + "\n" +
+               captions.getString("FileOpenSecurityMessage1"),
+            	captions.getString("SecurityException"),
+               JOptionPane.ERROR_MESSAGE) ;
+         }
          if (parent != null)
 				parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
 			close() ;
@@ -380,10 +393,14 @@ final public class FileOpen
 
 		catch (Exception e)
 		{
+         error = true ;
          System.out.println("KiSS file open exception, " + e.toString()) ;
-			JOptionPane.showMessageDialog(parent, e.toString(),
-         	captions.getString("FileOpenException"),
-            JOptionPane.ERROR_MESSAGE) ;
+         if (!silent)
+         {
+   			JOptionPane.showMessageDialog(parent, e.toString(),
+            	captions.getString("FileOpenException"),
+               JOptionPane.ERROR_MESSAGE) ;
+         }
          e.printStackTrace() ;
          if (parent != null)
 				parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
@@ -413,7 +430,10 @@ final public class FileOpen
 			int port = codebase.getPort() ;
 			zipFileURL = new URL(protocol,host,port,pathname) ;
 			if (ArchiveFile.isArchive(filename) || ArchiveFile.isConfiguration(filename))
-				System.out.println("Open archive " + zipFileURL.toExternalForm()) ;
+         {
+            String s = (ArchiveFile.isArchive(filename)) ? "archive" : "directory" ;
+				System.out.println("Open " + s + " " + zipFileURL.toExternalForm()) ;
+         }
          else
  				System.out.println("Open " + zipFileURL.toExternalForm()) ;
 
@@ -489,11 +509,14 @@ final public class FileOpen
       catch (SecurityException e)
       {
          System.out.println("KiSS file open exception, " + e.toString()) ;
-			JOptionPane.showMessageDialog(parent,
-            captions.getString("SecurityException") + "\n" +
-            captions.getString("FileOpenSecurityMessage1"),
-         	captions.getString("SecurityException"),
-            JOptionPane.ERROR_MESSAGE) ;
+         if (!silent)
+         {
+   			JOptionPane.showMessageDialog(parent,
+               captions.getString("SecurityException") + "\n" +
+               captions.getString("FileOpenSecurityMessage1"),
+            	captions.getString("SecurityException"),
+               JOptionPane.ERROR_MESSAGE) ;
+         }
          if (parent != null)
          {
             if (parent instanceof MainFrame)
@@ -508,10 +531,14 @@ final public class FileOpen
 
 		catch (IOException e)
 		{
+         error = true ;
          System.out.println("KiSS file open exception, " + e.toString()) ;
-			JOptionPane.showMessageDialog(parent, e.toString(),
-         	captions.getString("FileOpenException"),
-            JOptionPane.ERROR_MESSAGE) ;
+         if (!silent)
+         {
+   			JOptionPane.showMessageDialog(parent, e.toString(),
+            	captions.getString("FileOpenException"),
+               JOptionPane.ERROR_MESSAGE) ;
+         }
          if (parent != null)
          {
             if (parent instanceof MainFrame)
@@ -526,10 +553,14 @@ final public class FileOpen
 
 		catch (Exception e)
 		{
+         error = true ;
          System.out.println("KiSS file open exception, " + e.toString()) ;
-			JOptionPane.showMessageDialog(parent, e.toString(),
-         	captions.getString("FileOpenException"),
-            JOptionPane.ERROR_MESSAGE) ;
+         if (!silent)
+         {
+   			JOptionPane.showMessageDialog(parent, e.toString(),
+            	captions.getString("FileOpenException"),
+               JOptionPane.ERROR_MESSAGE) ;
+         }
          e.printStackTrace() ;
          if (parent != null)
          {
@@ -987,10 +1018,11 @@ final public class FileOpen
 
 		catch (Exception e)
 		{
+         error = true ;
          System.out.println("KiSS file open exception, " + e.toString()) ;
          String msg = e.getMessage() ;
          if (msg.contains("zip END header")) msg += "\nCheck download protocol, use https" ;
-         if (!Kisekae.isBatch())
+         if (!Kisekae.isBatch() && !silent)
    			JOptionPane.showMessageDialog(parent, msg,
             	captions.getString("FileOpenException"),
                JOptionPane.ERROR_MESSAGE) ;
@@ -1005,7 +1037,7 @@ final public class FileOpen
 				parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
 		}
    }
-
+  
 
 	// Method to close the zip file and erase all record of the file content
    // entries.
@@ -1016,11 +1048,15 @@ final public class FileOpen
 		try { if (zip != null) zip.close() ; }
 		catch (IOException e)
 		{
+         error = true ;
 			System.out.println("KiSS file close exception, " + e.toString()) ;
-         if (!Kisekae.isBatch())
+         if (!silent)
+         if (!Kisekae.isBatch() && !silent)
+         {
    			JOptionPane.showMessageDialog(parent, e.toString(),
    				captions.getString("FileCloseException"),
                JOptionPane.ERROR_MESSAGE) ;
+         }
 		}
 
 		// Clear references.

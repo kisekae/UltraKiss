@@ -62,6 +62,7 @@ class WebDloadDialog extends KissDialog
 {
    private KissFrame parent = null ;			// Reference to our parent dialog
    protected boolean cancel = true ;			// True if dialog cancelled
+   protected boolean showrun = true ;			// True if run allowed
    private URL url = null ;                  // URL to download
 
    // User interface objects
@@ -91,11 +92,12 @@ class WebDloadDialog extends KissDialog
 
   	// Constructor
 
-  	public WebDloadDialog(KissFrame frame, URL url)
+  	public WebDloadDialog(KissFrame frame, URL url, boolean showrun)
   	{
   		super(frame,Kisekae.getCaptions().getString("DownloadFileTitle"),true);
       parent = frame ;
       this.url = url ;
+      this.showrun = showrun ;
 
       // Initialize the user interface.
 
@@ -143,6 +145,7 @@ class WebDloadDialog extends KissDialog
       jLabel3.setText(Kisekae.getCaptions().getString("DownloadFileText2"));
       jLabel3.setHorizontalAlignment(SwingConstants.CENTER);
       open.setText(Kisekae.getCaptions().getString("DownloadFileOpenText")) ;
+      open.setEnabled(showrun) ;
       save.setText(Kisekae.getCaptions().getString("DownloadFileSaveText")) ;
       jPanel3.setLayout(gridLayout1);
       gridLayout1.setColumns(1);
@@ -152,7 +155,8 @@ class WebDloadDialog extends KissDialog
       warnstw.setForeground(Color.RED) ;
       bGroup1.add(open) ;
       bGroup1.add(save) ;
-      open.setSelected(true) ;
+      open.setSelected(showrun) ;
+      save.setSelected(!showrun) ;
 
   		getContentPane().add(panel1);
       panel1.setLayout(new BorderLayout()) ;

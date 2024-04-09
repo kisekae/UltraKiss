@@ -441,12 +441,15 @@ final class CelDialog extends KissDialog
 
 		// Set the initial values according to the cel page context.
 
-		for (int i = 0 ; i < config.getPageCount() ; i++)
-		{
-      	Integer pg = new Integer(i) ;
-			if (!cel.isOnPage(pg)) continue ;
-         pageselect.addItem(pg) ;
-		}
+      if (config != null)
+      {
+   		for (int i = 0 ; i < config.getPageCount() ; i++)
+   		{
+         	Integer pg = new Integer(i) ;
+   			if (!cel.isOnPage(pg)) continue ;
+            pageselect.addItem(pg) ;
+   		}
+      }
       PageSet ps = getPageContext() ;
       Object id = (ps != null) ? ps.getIdentifier() : null ;
       if (id != null) pageselect.setSelectedItem(id) ;

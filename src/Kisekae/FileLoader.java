@@ -376,7 +376,7 @@ final class FileLoader extends KissFrame
             // this FileLoader window to enable window closure if the
             // load is cancelled or aborted.
 
-            if (includefiles != null)
+            if (includefiles != null && !config.isAppended())
             {
      				showStatus(Kisekae.getCaptions().getString("LoadIncludeStatus")) ;
                for (int i = 0 ; i < includefiles.size() ; i++)

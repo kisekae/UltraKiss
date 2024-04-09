@@ -3380,7 +3380,7 @@ final class FKissAction extends KissObject
                   PanelMenu pm = (mf != null) ? mf.getPanelMenu() : null ;
                   PageSet pageset = (panel != null) ? panel.getPage() : null ;
                   Object cid = (config != null) ? config.getID() : null ;
-                  if (mm != null) mm.setWebURL(vs3);
+                  if ("openportal".equals(vs2) && mm != null) mm.setWebURL(vs3);
 
                   if ("menu".equalsIgnoreCase(vs1))
                   {
@@ -3446,12 +3446,26 @@ final class FKissAction extends KissObject
                      String path = (ze != null) ? ze.getPathName() : null ;
                      String dir = (config != null) ? config.getDirectory() : null ;
                      if (dir == null && path != null) dir = new File(path).getParent() ;
+                     if (!dir.endsWith(File.separator)) dir += File.separator ;
                      File f = new File(dir,vs2) ;
                      FileOpen fd = new FileOpen(mf,f.getPath(),"r") ;
 
-                     // Open the file for this entry.
+                     // Open the file for this entry.  A silent open where
+                     // file not found exceptions do not trigger a message.
 
+                     fd.setSilent(true) ;
                      fd.open(vs2) ;
+                     
+                     if (fd.isError())
+                     {
+                        String openpath = (mm != null) ? mm.getOpenPath() : null ;
+                        if (openpath != null) openpath = new File(openpath).getParent() ;
+                        f = new File(openpath,vs2) ;
+                        fd = new FileOpen(mf,f.getPath(),"r") ;
+                        fd.setSilent(true) ;
+                        fd.open(vs2) ;
+                     }
+                     
                      if (ArchiveFile.isArchive(vs2))
                         ze = fd.validateFile(fd.getPath(), fd.getFile(), f.getParent(), fd.getExtension()) ;
                      else
@@ -3562,6 +3576,40 @@ final class FKissAction extends KissObject
                   else if ("settitle".equalsIgnoreCase(vs1))
                   {
                      if (mf != null) mf.setUserTitle(vs2) ;
+                  }
+                  else if ("redirect".equalsIgnoreCase(vs1))
+                  {
+                     Vector redirectevents = new Vector() ;
+                     EventHandler handler = (config != null) ? config.getEventHandler() : null ;
+                     Vector events = (handler != null) ? handler.getEvent(vs3) : null ;
+                     if (events != null) 
+                     {
+                        // Find all required events.  The event signature, excluding local
+                        // variables, must match the parameters on this redirect statement.
+
+                        for (int i = 0 ; i < events.size() ; i++)
+                        {
+                           boolean signaturematch = true ;
+                           FKissEvent event = (FKissEvent) events.elementAt(i) ;
+                           Vector eventparameters = event.getParameters() ;
+                           if (eventparameters == null) continue ;
+                           if (parameters.size()-3 > eventparameters.size()) continue ;
+                           for (int j = 0 ; j < eventparameters.size() ; j++)
+                           {
+                              String s = (String) eventparameters.elementAt(j) ;
+                              s = Variable.getStringLiteralValue(s) ;
+                              if (s.startsWith("@")) break ;
+                              Object o = evaluateParam((String) parameters.elementAt(j+3)) ;
+                              if (!(o instanceof String))
+                                 { signaturematch = false ; break ; }
+                              if (!s.equalsIgnoreCase(o.toString()))
+                                 { signaturematch = false ; break ; }
+                           }
+                           if (signaturematch)
+                              redirectevents.addElement(event) ;
+                        }                    
+                        WebFrame.redirect(vs2,redirectevents) ;
+                     }
                   }
                }
             } ;

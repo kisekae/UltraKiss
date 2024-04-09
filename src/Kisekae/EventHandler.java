@@ -1032,6 +1032,7 @@ final class EventHandler extends KissObject
 
 	static int getEventNameKey(String s)
 	{
+      if (s == null) return -1 ;
 		for (int i = 0 ; i < definedEvents.length ; i++)
 			if (s.equals(definedEvents[i])) return i ;
 		return -1 ;
@@ -1041,6 +1042,7 @@ final class EventHandler extends KissObject
 
 	static int getActionNameKey(String s)
 	{
+      if (s == null) return -1 ;
 		for (int i = 0 ; i < definedActions.length ; i++)
 			if (s.equals(definedActions[i])) return i ;
 		return -1 ;

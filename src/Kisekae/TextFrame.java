@@ -666,7 +666,7 @@ final class TextFrame extends KissFrame
 		fileMenu.addSeparator();
 		fileMenu.add((wordwrap = new JCheckBoxMenuItem(Kisekae.getCaptions().getString("MenuFileWordWrap")))) ;
 		wordwrap.addItemListener(this) ;
-      wordwrap.setSelected(true);
+      wordwrap.setSelected(false);
 		fileMenu.add((linenum = new JCheckBoxMenuItem(Kisekae.getCaptions().getString("MenuFileLineNumber")))) ;
 		linenum.setState(showline) ;
 		linenum.addItemListener(this) ;

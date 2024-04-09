@@ -758,6 +758,7 @@ final class FileWriter extends KissFrame
 		OutputStream out = null ;
 		InputStream in = null ;
 		DirEntry de = null ;
+      ZipEntry ze = null ;
 
 		// Open the new output file.  Archive files are written as one
 		// complete unit.  Directory files write each element individually
@@ -952,6 +953,11 @@ final class FileWriter extends KissFrame
                      export = ((ContentEntry) content).export ;
                   }
                }
+               else if (destination != null)
+               {
+                  File f = new File(destination) ;
+                  next.setName(f.getName()) ;
+               }
 				}
 				if (o instanceof ContentEntry)
 				{
@@ -1078,7 +1084,7 @@ final class FileWriter extends KissFrame
 
             if (".zip".equals(extension))
             {
-               ZipEntry ze = new ZipEntry(newname) ;
+               ze = new ZipEntry(newname) ;
                ze.setTime(next.getTime()) ;
                ze.setMethod((next.isCompressed()) ? ze.DEFLATED : ze.STORED) ;
                if (next instanceof DirEntry) ze.setMethod(ze.DEFLATED);
@@ -1091,7 +1097,7 @@ final class FileWriter extends KissFrame
 
             if (".gzip".equals(extension))
             {
-               ZipEntry ze = new ZipEntry(newname) ;
+               ze = new ZipEntry(newname) ;
                ze.setTime(next.getTime()) ;
                ze.setMethod((next.isCompressed()) ? ze.DEFLATED : ze.STORED) ;
                if (next instanceof DirEntry) ze.setMethod(ze.DEFLATED);
@@ -1104,7 +1110,7 @@ final class FileWriter extends KissFrame
             
             if (".jar".equals(extension))
             {
-               ZipEntry ze = new ZipEntry(newname) ;
+               ze = new ZipEntry(newname) ;
                ze.setTime(next.getTime()) ;
                ze.setMethod((next.isCompressed()) ? ze.DEFLATED : ze.STORED) ;
                if (next instanceof DirEntry) ze.setMethod(ze.DEFLATED);
@@ -1253,6 +1259,24 @@ final class FileWriter extends KissFrame
             fd = null ;
          }
          catch (IOException e) { }
+      }
+      
+      // Zip file duplicate entry - no overwrite allowed.  Need a better
+      // solution that allows entry replacement. Rewrite the complete
+      // zip file and replace the element.  
+      
+      catch (ZipException ex)
+      {
+         error = !(ex.toString().contains("duplicate entry")) ;
+  			ErrorText.setText("Error: " + ex.toString()) ;
+  			String s = "Write exception, write file " + ((element == null) ? "" : element) ;
+  			System.out.println(s) ;
+         if (error) ex.printStackTrace() ;
+         if (!Kisekae.isBatch()) JOptionPane.showMessageDialog(this,
+            captions.getString("FileWriteError") +
+            "\n" + element + "\n" + ex.toString(),
+            captions.getString("FileSaveException"),
+            JOptionPane.ERROR_MESSAGE) ;
       }
 
 		// Watch for internal write exceptions.

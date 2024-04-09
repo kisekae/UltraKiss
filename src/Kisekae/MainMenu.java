@@ -75,6 +75,7 @@ final public class MainMenu extends KissMenu
    private WebFrame webframe = null ;              // Our active portal
    private boolean nocopy = false ;                // Our URL nocopy indicator
    private String webURL = null ;                  // Initial URL on launch
+   private String openpath = null ;                // FileOpen path on open
 
    private static final int NEWFILE = 0 ;
    private static final int NEWPAGE = 1 ;
@@ -512,6 +513,14 @@ final public class MainMenu extends KissMenu
    // Clear our active portal reference.
    
    void clearWebFrame() { webframe = null ; }
+   
+   // Get our last Open event FileOpen path.
+   
+   String getOpenPath() { return openpath ; }
+   
+   // Set our last open event FileOpen path.
+   
+   void setOpenPath(String path) { openpath = path ; }
 
    
    // Implementation of the required menu item update.
@@ -1072,6 +1081,7 @@ final public class MainMenu extends KissMenu
                // Clear our URL NoCopy indicator for loads from the menu.
       
                setNoCopy(false) ;
+               setOpenPath(archive) ;
                OptionsDialog.setSecurityEnable(OptionsDialog.getInitSecurityEnable());  
                
                // Load the LRU file.  If the load fails disable the 
@@ -1361,6 +1371,7 @@ final public class MainMenu extends KissMenu
       // Clear our URL NoCopy indicator for loads from the menu.
       
       setNoCopy(false) ;
+      setOpenPath(fdnew.getPath()) ;      
       OptionsDialog.setSecurityEnable(OptionsDialog.getInitSecurityEnable());
       fd = fdnew ;
       openContext(fd, ze) ;
@@ -1527,7 +1538,8 @@ final public class MainMenu extends KissMenu
       }
       
       // If the portal is running set the required page and bring to front.
-      
+
+      webframe.clearLocalHistory(webURL) ;
       webframe.setPage(webURL) ;
       parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
       webframe.toFront() ;
@@ -1597,6 +1609,7 @@ final public class MainMenu extends KissMenu
       if (fd != null && !viewastext.isSelected() && ze.isConfiguration())
       {
          parent.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
+         parent.setNewInit() ;
          parent.init() ;
          parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
          return ;

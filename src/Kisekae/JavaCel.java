@@ -78,6 +78,7 @@ final class JavaCel extends Cel
    private JComponent component = null ;        // Java component
    private JComponent showcomponent = null ;    // Actual component
    private JTextComponent text = null ;         // Text component
+   private JTextPane pane = null ;              // HTML text component
    private JList list = null ;                  // List component
    private JComboBox combobox = null ;          // ComboBox component
    private JScrollPane scroll = null ;          // Scroll pane
@@ -274,6 +275,18 @@ final class JavaCel extends Cel
          initforeground = text.getForeground() ;
          initfont = text.getFont() ;
          scroll = new JScrollPane(text) ;
+         component = scroll ;
+         initinput = true ;
+      }
+
+      if ("textpane".equals(type))
+      {
+         pane = new JTextPane() ;
+         pane.setText("") ;
+         initbackground = pane.getBackground() ;
+         initforeground = pane.getForeground() ;
+         initfont = pane.getFont() ;
+         scroll = new JScrollPane(pane) ;
          component = scroll ;
          initinput = true ;
       }
@@ -1118,6 +1131,11 @@ final class JavaCel extends Cel
             ((JTextArea) text).setLineWrap(onoff) ;
             ((JTextArea) text).setWrapStyleWord(onoff) ;
          }
+         if (text instanceof JTextArea)
+         {
+            ((JTextArea) text).setLineWrap(onoff) ;
+            ((JTextArea) text).setWrapStyleWord(onoff) ;
+         }
          if (list != null)
          {
             Dimension d = component.getSize() ;
@@ -1171,6 +1189,17 @@ final class JavaCel extends Cel
             if (!onoff)
                ((JTextArea) text).setComponentOrientation(ComponentOrientation.UNKNOWN) ;
          }
+         if (pane instanceof JTextPane)
+         {
+            if ("left".equals(s2))
+               ((JTextPane) pane).setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT) ;
+            if ("right".equals(s2))
+               ((JTextPane) pane).setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT) ;
+            if ("center".equals(s2))
+               ((JTextPane) pane).setComponentOrientation(ComponentOrientation.UNKNOWN) ;
+            if (!onoff)
+               ((JTextPane) pane).setComponentOrientation(ComponentOrientation.UNKNOWN) ;
+         }
       }
 
       if ((i = s1.indexOf("noscroll")) >= 0)     // disable scrolling
@@ -1179,6 +1208,7 @@ final class JavaCel extends Cel
          boolean onoff = (c == '-') ? false : true ;
          if (scroll == component) removeComponent() ;
          if (text != null) component = text ;
+         if (pane != null) component = pane ;
          if (list != null) component = list ;
          scroll = null ;
       }
@@ -1451,6 +1481,10 @@ final class JavaCel extends Cel
          {
             ((JTextArea) text).setMargin(insets) ;
          }
+         if (pane instanceof JTextPane)
+         {
+            ((JTextPane) pane).setMargin(insets) ;
+         }
       }
 
       if ((i = s1.indexOf("borderstyle")) >= 0)        // set the border style
@@ -1694,7 +1728,7 @@ final class JavaCel extends Cel
    {
       Object [] o = new Object[7] ;
       o[0] = component ;
-      o[1] = text ;
+      o[1] = (text != null) ? text : pane ;
       o[2] = list ;
       o[3] = combobox ;
       o[4] = scroll ;
@@ -1828,6 +1862,9 @@ final class JavaCel extends Cel
       if (text instanceof JTextArea && scroll != null)
          if (!((JTextArea) text).isEditable())
          ((JTextArea) text).setCaretPosition(s.length()) ;
+      if (pane instanceof JTextPane && scroll != null)
+         if (!((JTextPane) pane).isEditable())
+         ((JTextPane) pane).setCaretPosition(s.length()) ;
       if (OptionsDialog.getDebugComponent())
           System.out.println("JavaCel: setText for "+getName()+" result=\""+s+"\""+" on thread "+Thread.currentThread());               
    }

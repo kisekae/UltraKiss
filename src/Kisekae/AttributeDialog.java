@@ -360,7 +360,7 @@ class AttributeDialog extends KissDialog
          showtextinput = true ;
       }
 
-      else if ("textfield".equals(type) || "password".equals(type))
+      else if ("textpane".equals(type))
       {
          jLabel17.setEnabled(true) ;   jTextField1.setEnabled(true) ;
          jLabel2.setEnabled(false) ;   jComboBox2.setEnabled(false) ;
@@ -851,16 +851,27 @@ class AttributeDialog extends KissDialog
                d.width += insets.left + insets.right ;
                d.height += insets.top + insets.bottom ;
             }
+            else if (o[1] instanceof JTextPane)
+            {
+               input = new JTextPane() ;
+               String s = substitute(jTextField1.getText(), "\\n", "\n") ;
+               ((JTextPane) input).setMargin(((JTextPane) o[1]).getMargin()) ;
+               ((JTextPane) input).setText(s) ;
+               scroll = new JScrollPane(input) ;
+               Insets insets = scroll.getInsets() ;
+               d.width += insets.left + insets.right ;
+               d.height += insets.top + insets.bottom ;
+            }
             else
                input.setText(jTextField1.getText()) ;
             
             // Create a custom option pane to show the text.
 
             Object o1 = (scroll != null) ? (Object) scroll : (Object) input ;
-            JOptionPane pane = new JOptionPane(o1,JOptionPane.PLAIN_MESSAGE,JOptionPane.OK_CANCEL_OPTION) ;
+            JOptionPane optionpane = new JOptionPane(o1,JOptionPane.PLAIN_MESSAGE,JOptionPane.OK_CANCEL_OPTION) ;
             String s = Kisekae.getCaptions().getString("AttributeDialogTitle") ;
-            JDialog dlg = pane.createDialog(getParentFrame(),s) ;
-            Insets insets = pane.getInsets() ;
+            JDialog dlg = optionpane.createDialog(getParentFrame(),s) ;
+            Insets insets = optionpane.getInsets() ;
             d.width += insets.left + insets.right ;
             d.width = Math.max(d.width,200) ;
             d.height += insets.top + insets.bottom + 60 ;
@@ -869,13 +880,18 @@ class AttributeDialog extends KissDialog
             
             // Get the return value. Tho option pane is modal.
             
-            o1 = pane.getValue() ;
+            o1 = optionpane.getValue() ;
             if (!(o1 instanceof Integer)) return ;
             if (((Integer) o1).intValue() == JOptionPane.CANCEL_OPTION) return ;
             
             // Replace newlines with '\n' character sequences.
 
             if (input instanceof JTextArea)
+            {
+               s = substitute(input.getText(),"\n","\\n") ;
+               jTextField1.setText(s) ;
+            }
+            else if (input instanceof JTextPane)
             {
                s = substitute(input.getText(),"\n","\\n") ;
                jTextField1.setText(s) ;

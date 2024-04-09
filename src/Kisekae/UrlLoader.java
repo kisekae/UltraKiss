@@ -442,8 +442,7 @@ class UrlLoader extends KissFrame
       	fatal = true ;
          pathname = null ;
          memfile = null ;
-         String msg = Kisekae.getCaptions().getString("LoadTerminatedStatus") ;
-         msg += " " + e.getMessage() ;
+         String msg = e.toString() ;
          showStatus(Kisekae.getCaptions().getString("LoadTerminatedStatus")) ;
          showMsg(msg) ;
       }

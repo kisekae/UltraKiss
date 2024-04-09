@@ -60,6 +60,7 @@ package Kisekae ;
 
 import java.io.* ;
 import java.awt.* ;
+import java.net.MalformedURLException;
 import java.util.StringTokenizer ;
 import java.util.Vector ;
 import java.util.Enumeration ;
@@ -164,7 +165,8 @@ final class Configuration extends KissObject
 	private boolean flushed = false ;      // True if configuration flushed
    private boolean rgbborder = false ;    // True if border is rgb value
    private boolean restartable = true ;   // True if configuration can restart
-   private boolean appended = false ;     // True if configuration appended
+   private boolean appendcnf = false ;    // True if have APPEND directive
+   private boolean appended = false ;     // True if APPEND files appended
    private boolean optionchange = false ; // True if options have changed
    private boolean ckiss = false ;        // True if any cel is truecolor
    private boolean epalette = false ;     // True if palette file exceeds 256
@@ -709,6 +711,10 @@ final class Configuration extends KissObject
 	// Return an indicator if the configuration uses INCLUDE files.
 
 	boolean hasIncludeFiles() { return (includefiles != null && includefiles.size() > 0) ; }
+
+	// Return an indicator if the configuration uses INCLUDE files.
+
+	boolean hasAppendFiles() { return appendcnf ; }
    
    // Method to add unreferenced sound files to our configuration.  This method 
    // is used on configuration restarts to retain newly imported audio objects
@@ -983,8 +989,9 @@ final class Configuration extends KissObject
       setAppended(ref.isAppended()) ;
 		file = zip.getPath() ;
 		bytes = ref.getBytes() ;
+      if (isAppended() && getReference() != null) file = ref.getPath() ;
 		System.out.println("Open configuration \"" + file + "\" (" + getID() + ")") ;
-      
+
 		// Open the memory copy of our reference configuration file.
 
 		try
@@ -1011,7 +1018,300 @@ final class Configuration extends KissObject
 		}
 	}
 
+   
+   // Method to search an INCLUDE file for a configuration element.  
+   // A list of elements found is returned.  This method is used
+   // when loading the configuration if APPEND directive exists.
+   // This method is also used by the PanelMenu if a viewer(appendcnf)
+   // directive was found.
+   
+   Vector searchInclude(Object include)
+   {
+      Vector entries = null ;
+      if (include == null) return null ;    
 
+      // File object.
+
+      String s = (hasAppendFiles()) ? "APPEND" : "INCLUDE" ;
+      if (include instanceof File)
+      {
+         File f = (File) include ;
+         if (!f.isFile()) 
+         {
+            System.out.println("No " + s + " file found: " + f.getPath()) ;
+            return null ;
+         }
+
+         // Isolate the file name.
+
+         String pathname = f.getPath() ;
+         String filename = f.getName() ;
+		   int i = filename.lastIndexOf(".") ;
+		   String extension = (i < 0) ? "" : filename.substring(i).toLowerCase() ;
+
+		   // Construct a URL entry for the file.
+
+         URL zipFileURL = null ;
+  		   URL codebase = Kisekae.getBase() ;
+         if (codebase == null) return null ;
+		   String protocol = codebase.getProtocol() ;
+		   String host = codebase.getHost() ;
+		   int port = codebase.getPort() ;
+		   try { zipFileURL = new URL(protocol,host,port,pathname) ; }
+         catch (MalformedURLException e) { return null ; }
+
+		   // Regretfully, we must treat each file type separately as Java's
+		   // zip file class does not appear designed for subclassing.
+
+         try
+         {
+            ArchiveFile zip = null ;
+ 			   if (".zip".equals(extension))
+           	   zip = new PkzFile(null,zipFileURL.getFile()) ;
+            else if (".gzip".equals(extension))
+           	   zip = new PkzFile(null,zipFileURL.getFile()) ;
+  			   else if (".jar".equals(extension))
+           	   zip = new PkzFile(null,zipFileURL.getFile()) ;
+  			   else if (".lzh".equals(extension))
+           	   zip = new LhaFile(null,zipFileURL.getFile()) ;
+  	         if (zip == null) return null ;
+            include = zip ;
+         }
+         catch (IOException e)
+         {
+     		   System.out.println("Exception: Search " + s + " file " + e) ;
+         }
+      }
+
+      // MemFile objects were created if include files were downloaded in
+      // a secure environment.
+      
+      else if (include instanceof MemFile)
+      {
+         try
+         {
+            ArchiveFile zip = null ;
+            String filename = ((MemFile) include).getFileName() ;
+  			   int i = filename.lastIndexOf(".") ;
+  			   String extension = (i < 0) ? "" : filename.substring(i).toLowerCase() ;
+ 			   if (".zip".equals(extension))
+           	   zip = new PkzFile(null,filename,(MemFile) include) ;
+            else if (".gzip".equals(extension))
+           	   zip = new PkzFile(null,filename,(MemFile) include) ;
+  			   else if (".jar".equals(extension))
+           	   zip = new PkzFile(null,filename,(MemFile) include) ;
+  			   else if (".lzh".equals(extension))
+           	   zip = new LhaFile(null,filename,(MemFile) include) ;
+  	         if (zip == null) return null ;
+            include = zip ;
+         }
+         catch (IOException e)
+         {
+     		   System.out.println("Exception: Search " + s + " memory file " + e) ;
+         }
+      }
+
+	   // Archive file object.  Search for CNF elements.
+
+      if (include instanceof ArchiveFile)
+      {
+  		   System.out.println("Search " + s + " file " + ((ArchiveFile) include).getName()) ;
+         entries = ((ArchiveFile) include).getEntryType(".cnf") ;
+         if (entries == null)
+            System.out.println("No configuration element found in " + ((ArchiveFile) include).getName()) ;
+      }
+
+      return entries ;
+   }
+   
+   
+   // This method appends a CNF entry in an INCLUDE file to our existing 
+   // configuration.  The new configuration is a memory configuration.
+   
+   boolean appendInclude(ArchiveEntry ze)
+   {
+      if (ze == null) return false ;
+      FileOpen fd = getFileOpen() ;
+      if (fd == null) return false ;
+      String originalpath = fd.getPath() ;
+      
+      // Our config is the original configuration.  The archive entry is the
+      // configuration to append.  Create a new memory file and write both
+      // the original and the new appended text into the memory file.
+
+      MemFile memfile = null ;
+      String newname = getName() ;
+      ArchiveFile zip = (ze != null) ? ze.getZipFile() : null ;
+      if (zip != null)
+      {
+         try
+         {       
+				String file =  ze.getPath() ;
+				int bytes = (int) ze.getSize() ;
+				InputStream is = zip.getInputStream(ze) ;
+   			if (is == null)
+      			throw new IOException("No input stream for \"" + file + "\"") ;
+
+         	// Read the entire file contents into memory.
+
+            System.out.println("Append configuration \"" + file + "\" to configuration \"" + getName() + "\"") ;
+            newname = getName()+"+"+file ;
+   			int n = 0, len = 0 ;
+   			byte [] b2 = new byte[bytes] ;
+      		while (n < bytes && (len = is.read(b2,n,bytes-n)) >= 0) n += len ;
+   			is.close() ;
+
+   			// Open the memory copy of the configuration file.
+
+            String s = ";\n;\n; Append configuration \"" + file + "\"\n;\n" ;
+            byte [] b3 = s.getBytes() ;
+            byte [] b1 = getMemoryFile() ;
+            if (b1 == null) b1 = write() ;
+            if (b1 == null) return false ;
+            
+            // Locate the append insertion point in the text.  This is where 
+            // the APPEND "file" statement was in the original CNF.  When
+            // we find this two parts are returned.  The beginning part up
+            // to the APPEND statement and the remaining part including the
+            // APPEND statement.
+
+            s = new String(b1) ;
+            String [] parts = findAppend(s,zip.getFileName()) ;
+            
+            // If no APPEND directive add the new configuration to the end.
+            
+            if (parts == null) 
+            {
+               parts = new String [2] ;
+               parts[0] = s ;
+               parts[1] = null ;
+            }
+
+            // Write the first part, then append the CNF, then the last part.
+            
+            ByteArrayOutputStream buffer = new ByteArrayOutputStream() ;
+            buffer.write(parts[0].getBytes()) ;
+            buffer.write(b3) ;
+            buffer.write(b2) ;
+            if (parts[1] != null) buffer.write(parts[1].getBytes()) ;
+            memfile = new MemFile(file,buffer.toByteArray()) ;
+         }
+         catch (IOException e)
+         {
+     		   System.out.println("Exception: Append INCLUDE file " + e) ;
+         }
+      }
+
+      // If we selected an entry, update our menu fileopen object
+      // to agree with the new entry that we will initialize.
+
+      if (memfile != null)
+      {
+//       String s = memfile.getString() ;
+         setAppended(true) ;
+         setMemoryFile(memfile.getBuffer(),ze);
+         setName(originalpath) ;
+         
+         // Correct the Archive Entry to match the original load
+         // directory and the new combined name.
+         
+         File f = new File(originalpath) ;
+         String dir = f.getParent() ;
+         f = new File(dir,newname) ;
+         setName(f.getPath()) ;
+         ze.setName(newname) ;
+         ze.setPath(f.getPath()) ;
+         ze.setMemoryFile(memfile) ;
+         
+         // Correct the FileOpen object to match the updated entry.
+         
+         ArchiveFile af = getZipFile() ;
+         fd.setPath(f.getPath()) ;
+         af.setFileOpen(fd) ;
+         return true ;
+      }
+      else         
+         System.out.println("No expansion configuration selected.") ; 
+      return false ;
+   }
+
+   
+   // Method to find an APPEND "file" directive in the CNF file.  The
+   // result splits the text into two parts.  One contains the text up 
+   // to the start of the line containing the directive and the other is 
+   // the remainder of the text.  The APPEND diective can contain multiple
+   // file specifications.
+   
+   private String [] findAppend(String s, String file)
+   {
+      if (s == null) return null ;
+      if (file == null) return null ;
+      
+      boolean found = false ;
+      String [] result = null ;
+      BufferedReader reader = new BufferedReader(new StringReader(s));
+      
+      try
+      {
+         while (true)
+         {
+            String line = reader.readLine() ;   
+            if (line == null) break ;
+            line = line.trim() ;
+            if (!(line.startsWith(";"))) continue ;
+            String s1 = (line.length() > 1) ? trim(line.substring(1)) : "" ;
+        
+            // Process the APPEND directive
+        
+            if (s1.startsWith("APPEND"))
+            {
+               Vector v = includefiles ;
+               includefiles = new Vector() ;
+               s1 = s1.substring("APPEND".length()) ;
+               char c = (s1.length() > 0) ? s1.charAt(0) : 0 ;
+               if (Character.isWhitespace(c)) parseIncludeFiles(s1) ;
+               for (int i = 0 ; i < includefiles.size() ; i++)
+               {
+                  Object o = includefiles.elementAt(i) ;
+                  if ((o instanceof File) && file.equals(((File) o).getName()))
+                  {
+                     found = true ;
+                     break ;
+                  }
+               }
+               includefiles = v ;
+               if (!found) continue ;
+               
+               // The APPEND statement is revised to remove the found entry.
+               // The entries are removed so as to not be processed again
+               // if the configuration is saved and at a later time loaded.
+               
+               result = new String [2] ;
+               int startposition = s.indexOf(line) ;
+               int n = line.length() ;
+               result[0] = s.substring(0,startposition-1) ;
+               s = s.substring(startposition+n) ;
+               String expr = "\\" + "\"" + file + "\\" + "\"" + "\\" + "s+" + "\\" + "," ;
+               line = line.replaceAll(expr,"") ;
+               expr = "\\" + "\"" + file + "\\" + "\"" ;
+               line = line.replaceAll(expr,"") ;
+               expr = file + "\\" + "s+" + "\\" + "," ;
+               line = line.replaceAll(expr,"") ;
+               expr = file ;
+               line = line.replaceAll(file,"") ;
+               line = line.trim() ;
+               expr = "\\" + ";" + "\\" + "s+" + "APPEND" + "$" ;
+               line = line.replaceAll(expr,"") ;
+               result[1] = line + s ;
+               break ;
+            }
+         }       
+      }
+      catch (IOException e) { }
+      return result ;
+   }
+    
+   
 	// Method to read and parse the configuration file.
 	// This method populates the palettes, cels and page set vectors.
 	// It also sets the screen dimension size.
@@ -1098,13 +1398,13 @@ final class Configuration extends KissObject
                         playfkiss = true ;
                   
                      String s1lc = s1.toLowerCase() ;
-                     if (s1lc.indexOf("the owl") >= 0)
+                     if (s1lc.indexOf("the owl") >= 0 && !ultrakiss)
                         playfkiss = true ;
-                     if (s1lc.indexOf("the scarecrow") >= 0)
+                     if (s1lc.indexOf("the scarecrow") >= 0&& !ultrakiss)
                         playfkiss = true ;
-                     if (s1lc.indexOf("living pictures") >= 0)
+                     if (s1lc.indexOf("living pictures") >= 0 && !ultrakiss)
                         playfkiss = true ;
-                     if (s1lc.indexOf("s a m o d i v a") >= 0)
+                     if (s1lc.indexOf("s a m o d i v a") >= 0 && !ultrakiss)
                         playfkiss = true ;
                   }
 
@@ -1122,6 +1422,17 @@ final class Configuration extends KissObject
                   if (s1.startsWith("INCLUDE"))
                   {
                      s1 = s1.substring("INCLUDE".length()) ;
+                     char c = (s1.length() > 0) ? s1.charAt(0) : 0 ;
+                     if (Character.isWhitespace(c))
+                        parseIncludeFiles(s1) ;
+                  }
+
+                  // Parse APPEND statements.
+
+                  if (s1.startsWith("APPEND"))
+                  {
+                     appendcnf = true ;
+                     s1 = s1.substring("APPEND".length()) ;
                      char c = (s1.length() > 0) ? s1.charAt(0) : 0 ;
                      if (Character.isWhitespace(c))
                         parseIncludeFiles(s1) ;
@@ -4062,7 +4373,7 @@ final class Configuration extends KissObject
 
    			if (token.startsWith("%x"))
    			{
-               directkiss = true ;
+               if (!ultrakiss) directkiss = true ;
    				comment += token + " " ;
    				value = token.substring(2) ;
    				if (value.length() > 0)
@@ -4079,7 +4390,7 @@ final class Configuration extends KissObject
          
    			if (token.startsWith("%y"))
    			{
-               directkiss = true ;
+               if (!ultrakiss) directkiss = true ;
    				comment += token + " " ;
    				value = token.substring(2) ;
    				if (value.length() > 0)

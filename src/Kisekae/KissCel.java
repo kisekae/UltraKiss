@@ -243,6 +243,7 @@ final class KissCel extends Cel
                if (refzip != null && !refzip.isOpen()) refzip.open() ;
                ze = (refzip != null) ? refzip.getEntry(getPath()) : null ;
                if (refzip != null && ze == null ) ze = refzip.getEntry(getPath(),true) ;
+               if (ze != null) zip = refzip ;
 				}
 			}
          

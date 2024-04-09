@@ -82,6 +82,7 @@ final class PanelMenu extends KissMenu
    private static final String COMBOBOX = "combobox" ;
    private static final String TEXTBOX = "textbox" ;
    private static final String TEXTAREA = "textarea" ;
+   private static final String TEXTPANE = "textpane" ;
    private static final String TEXTFIELD = "textfield" ;
    private static final String PASSWORDFIELD = "passwordfield" ;
    private static final String MENUITEM = "menuitem" ;
@@ -127,6 +128,7 @@ final class PanelMenu extends KissMenu
    protected JMenuItem addcombobox = null ;
    protected JMenuItem addtextbox = null ;
    protected JMenuItem addtextarea = null ;
+   protected JMenuItem addtextpane = null ;
    protected JMenuItem addtextfield = null ;
    protected JMenuItem addpasswordfield = null ;
    protected JMenuItem addmenuitem = null ;
@@ -378,6 +380,8 @@ final class PanelMenu extends KissMenu
       addtextbox.addActionListener(this) ;
       addcomponent.add((addtextarea = new JMenuItem(Kisekae.getCaptions().getString("MenuComponentTextArea")))) ;
       addtextarea.addActionListener(this) ;
+      addcomponent.add((addtextpane = new JMenuItem(Kisekae.getCaptions().getString("MenuComponentTextPane")))) ;
+      addtextpane.addActionListener(this) ;
       addcomponent.add((addtextfield = new JMenuItem(Kisekae.getCaptions().getString("MenuComponentTextField")))) ;
       addtextfield.addActionListener(this) ;
       addcomponent.addSeparator() ;
@@ -1068,7 +1072,8 @@ final class PanelMenu extends KissMenu
             if (config == null) return ;
             ArchiveEntry ze = text.getZipEntry() ;
             config.setMemoryFile(out.toByteArray(),ze) ;
-            config.setUpdated(true);
+            config.setUpdated(true) ;
+            parent.setRestart(true) ;
             parent.init(config) ;
             return ;
          }
@@ -1219,6 +1224,8 @@ final class PanelMenu extends KissMenu
          if (source == addmenuitem) { eventAddComponent(MENUITEM) ; return ; }
 
          if (source == addtextarea) { eventAddComponent(TEXTAREA) ; return ; }
+
+         if (source == addtextpane) { eventAddComponent(TEXTPANE) ; return ; }
       }
 
       // Watch for memory faults.  If we run low on memory invoke
@@ -1430,7 +1437,9 @@ final class PanelMenu extends KissMenu
       
       if (config.isAppended()) 
       {
-         System.out.println("Attempt to append \"" + config.getName() + "\", already done.") ;
+         Configuration ref = config.getReference() ;
+         String s = (ref != null) ? ref.getName() : config.getName() ;
+         System.out.println("Attempt to append \"" + s + "\", already done.") ;
          return ;
       }
 
@@ -1439,92 +1448,8 @@ final class PanelMenu extends KissMenu
       String originalpath = fd.getPath() ;
       for (int n = v.size()-1 ; n >= 0 ; n--)
       {
-         Object include = v.elementAt(n) ;
-
-         // File object.
-
-         if (include instanceof File)
-         {
-            File f = (File) include ;
-            if (!f.isFile()) continue ;
-
-            // Isolate the file name.
-
-            String pathname = f.getPath() ;
-            String filename = f.getName() ;
-  			   int i = filename.lastIndexOf(".") ;
-  			   String extension = (i < 0) ? "" : filename.substring(i).toLowerCase() ;
-
-  			   // Construct a URL entry for the file.
-
-            URL zipFileURL = null ;
-     		   URL codebase = Kisekae.getBase() ;
-            if (codebase == null) return ;
-  			   String protocol = codebase.getProtocol() ;
-  			   String host = codebase.getHost() ;
-  			   int port = codebase.getPort() ;
-  			   try { zipFileURL = new URL(protocol,host,port,pathname) ; }
-            catch (MalformedURLException e) { continue ; }
-
-  			   // Regretfully, we must treat each file type separately as Java's
-  			   // zip file class does not appear designed for subclassing.
-
-            try
-            {
-               ArchiveFile zip = null ;
-    			   if (".zip".equals(extension))
-             	   zip = new PkzFile(null,zipFileURL.getFile()) ;
-               else if (".gzip".equals(extension))
-             	   zip = new PkzFile(null,zipFileURL.getFile()) ;
-     			   else if (".jar".equals(extension))
-              	   zip = new PkzFile(null,zipFileURL.getFile()) ;
-     			   else if (".lzh".equals(extension))
-              	   zip = new LhaFile(null,zipFileURL.getFile()) ;
-     	         if (zip == null) continue ;
-               include = zip ;
-            }
-            catch (IOException e)
-            {
-        		   System.out.println("Exception: Search INCLUDE file " + e) ;
-            }
-         }
-
-         // MemFile objects were created if include files were downloaded in
-         // a secure environment.
-
-         else if (include instanceof MemFile)
-         {
-            try
-            {
-               ArchiveFile zip = null ;
-               String filename = ((MemFile) include).getFileName() ;
-     			   int i = filename.lastIndexOf(".") ;
-     			   String extension = (i < 0) ? "" : filename.substring(i).toLowerCase() ;
-    			   if (".zip".equals(extension))
-             	   zip = new PkzFile(null,filename,(MemFile) include) ;
-               else if (".gzip".equals(extension))
-             	   zip = new PkzFile(null,filename,(MemFile) include) ;
-     			   else if (".jar".equals(extension))
-              	   zip = new PkzFile(null,filename,(MemFile) include) ;
-     			   else if (".lzh".equals(extension))
-              	   zip = new LhaFile(null,filename,(MemFile) include) ;
-     	         if (zip == null) continue ;
-               include = zip ;
-            }
-            catch (IOException e)
-            {
-        		   System.out.println("Exception: Search INCLUDE memory file " + e) ;
-            }
-         }
-
-  		   // Archive file object.  Search for CNF elements.
-
-         if (include instanceof ArchiveFile)
-         {
-     		   System.out.println("Search INCLUDE file " + ((ArchiveFile) include).getName()) ;
-            Vector entries = ((ArchiveFile) include).getEntryType(".cnf") ;
-            if (entries != null) files.addAll(entries) ;
-         }
+         Vector entries = config.searchInclude(v.elementAt(n)) ;
+         if (entries != null) files.addAll(entries) ;
       }
          
       // Show the identified .CNF elements for selection.
@@ -1535,75 +1460,11 @@ final class PanelMenu extends KissMenu
       
       // Our config is the original configuration.  The archive entry is the
       // configuration to append.  
-   
-      MemFile memfile = null ;
-      String newname = config.getName() ;
-      if (ze != null && zip != null)
-      {
-         try
-         {       
-				String file =  ze.getPath() ;
-				int bytes = (int) ze.getSize() ;
-				InputStream is = zip.getInputStream(ze) ;
-   			if (is == null)
-      			throw new IOException("No input stream for " + file) ;
 
-         	// Read the entire file contents into memory.
-
-            System.out.println("Append configuration \"" + file + "\" to configuration \"" + config.getName() + "\"") ;
-            newname = config.getName()+"+"+file ;
-   			int n = 0, len = 0 ;
-   			byte [] b2 = new byte[bytes] ;
-      		while (n < bytes && (len = is.read(b2,n,bytes-n)) >= 0) n += len ;
-   			is.close() ;
-
-   			// Open the memory copy of the configuration file.
-
-            byte [] b1 = config.write() ;
-            ByteArrayOutputStream buffer = new ByteArrayOutputStream() ;
-            buffer.write(b1) ;
-            buffer.write(b2) ;
-            memfile = new MemFile(file,buffer.toByteArray()) ;
-         }
-         catch (IOException e)
-         {
-            JOptionPane.showMessageDialog(parent,
-               e.getMessage(),
-               Kisekae.getCaptions().getString("FileAppendError"),
-               JOptionPane.ERROR_MESSAGE) ;            
-         }
-      }
-
-      // If we selected an entry, update our menu fileopen object
-      // to agree with the new entry that we will initialize.
-
-      if (ze != null && memfile != null)
-      {
-//       String s = memfile.getString() ;
-         config.setAppended(true) ;
-         config.setMemoryFile(memfile.getBuffer(),ze);
-         config.setName(originalpath) ;
-         
-         // Correct the Archive Entry to match the original load
-         // directory and the new combined name.
-         
-         File f = new File(originalpath) ;
-         String dir = f.getParent() ;
-         f = new File(dir,newname) ;
-         ze.setName(newname) ;
-         ze.setPath(f.getPath()) ;
-         ze.setMemoryFile(memfile) ;
-         
-         // Correct the FileOpen object to match the updated entry.
-         
-         ArchiveFile af = config.getZipFile() ;
-         af.setFileOpen(fd) ;
-         setFileOpen(fd) ;
-         parent.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
-         parent.expand() ;
-      }
-      else         
-         System.out.println("No expansion configuration selected.") ;
+      config.appendInclude(ze) ;
+      setFileOpen(fd) ;
+      parent.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
+      parent.expand() ;
       parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
    }
 

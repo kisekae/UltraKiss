@@ -437,6 +437,11 @@ abstract class KissObject
    ArchiveEntry searchIncludeList(Vector v, String name)
    {
       if (v == null) return null ;
+      MainFrame mf = Kisekae.getMainFrame() ;
+      Configuration c = (mf != null) ? mf.getConfig() : null ;
+      boolean b = (c != null) ? c.isAppended() : false ;
+      String s = (b) ? "APPEND" : "INCLUDE" ;
+      
       for (int n = v.size()-1 ; n >= 0 ; n--)
       {
          Object include = v.elementAt(n) ;
@@ -448,7 +453,7 @@ abstract class KissObject
             File f = (File) include ;
             if (!f.isFile())
             {
-               System.out.println("INCLUDE file " + f.getPath() + " does not exist.") ;
+               System.out.println(s + " file " + f.getPath() + " does not exist.") ;
                v.removeElementAt(n) ;
                continue ;
             }
@@ -471,7 +476,7 @@ abstract class KissObject
   			   try { zipFileURL = new URL(protocol,host,port,pathname) ; }
             catch (MalformedURLException e)
             {
-               System.out.println("INCLUDE file " + pathname + " is an invalid name.") ;
+               System.out.println(s + " file " + pathname + " is an invalid name.") ;
                v.removeElementAt(n) ;
                continue ;
             }
@@ -491,13 +496,13 @@ abstract class KissObject
      			   else if (".lzh".equals(extension))
               	   zip = new LhaFile(null,zipFileURL.getFile()) ;
      	         if (zip == null) continue ;
-        		   System.out.println("Open INCLUDE file " + zipFileURL.toExternalForm()) ;
+        		   System.out.println("Open " + s + " file " + zipFileURL.toExternalForm()) ;
                v.setElementAt(zip,n) ;
                include = zip ;
             }
             catch (IOException e)
             {
-        		   System.out.println("Exception: Open INCLUDE file " + e) ;
+        		   System.out.println("Exception: Open " + s + " file " + e) ;
             }
          }
 
@@ -521,13 +526,13 @@ abstract class KissObject
      			   else if (".lzh".equals(extension))
               	   zip = new LhaFile(null,filename,(MemFile) include) ;
      	         if (zip == null) continue ;
-        		   System.out.println("Open INCLUDE memory file " + name) ;
+        		   System.out.println("Open " + s + " memory file " + name) ;
                v.setElementAt(zip,n) ;
                include = zip ;
             }
             catch (IOException e)
             {
-        		   System.out.println("Exception: Open INCLUDE memory file " + e) ;
+        		   System.out.println("Exception: Open " + s + " memory file " + e) ;
             }
          }
 

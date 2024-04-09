@@ -5117,6 +5117,7 @@ final public class OptionsDialog extends KissDialog
                      }
                   }
                   
+                  System.out.println("Cache is cleared, " + n + " files deleted out of " + files.length) ;
                   s = Kisekae.getCaptions().getString("OptionsDialogCacheClearText2") + n ;
         				JOptionPane.showMessageDialog(getParentFrame(), s,
                      Kisekae.getCaptions().getString("OptionsDialogCacheClearTitle"),

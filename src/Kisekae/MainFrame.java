@@ -110,6 +110,8 @@ final public class MainFrame extends KissFrame
    private Object newconfigid = null ;    // The new configuration ID
    private FileLoader loader = null ;		// The file loader object
 	private FileOpen fileopen = null ;		// The current file open object
+   private String preappendlru = null ;   // Reference for LRU list
+   private String preappendpath = null ;  // Reference for LRU list
 	private Color background = null ;		// The panel background color
 	private int x, y ;							// Panel centering coordinates
    
@@ -382,8 +384,8 @@ final public class MainFrame extends KissFrame
          zip.setFileOpen(fileopen) ;
       if (config.isAppended())
       {
-         config.setZipFile(zip) ;
-         config.setZipEntry(ze) ;
+         if (zip != null) config.setZipFile(zip) ;
+         if (ze != null) config.setZipEntry(ze) ;
          loader = new FileLoader(this,config) ;
       }
       else   
@@ -432,7 +434,55 @@ final public class MainFrame extends KissFrame
             loader = null ;			
             return ;
 			}
-         
+      
+         // If APPEND files exist we must open the INCLUDE files and append   
+         // any CNF elements found in these files to this configuration.   
+         // The new cel declarations and event code become an addition to  
+         // this configuration.  The first CNF element in the APPEND archive  
+         // file is used.  Retain the original source references for the 
+         // LRU list.
+   
+         Vector includefiles = c.getIncludeFiles() ;
+         if (c.hasAppendFiles() && !c.isAppended() && includefiles != null)
+         {
+            boolean b = false ;
+            ArchiveFile zip = c.getZipFile() ;
+            String zipname = (zip != null) ? zip.getName() : null ;
+            if (zipname != null && !mainmenu.getNoCopy())
+            {
+               String lruname = zipname + File.pathSeparator ;
+               if (preappendlru == null) preappendlru = lruname ;
+               String s = c.getPath() ;
+               if (preappendpath == null) preappendpath = s ;
+            }
+   
+            // Search each APPEND file for a CNF element.  If we find one
+            // then append the text at the location of the APPEND statement.
+            
+            for (int i = 0 ; i < includefiles.size() ; i++)
+            {
+               Vector entries = c.searchInclude(includefiles.elementAt(i)) ;
+               if (entries == null) continue ;
+               Object o = entries.firstElement() ;
+               if (!(o instanceof ArchiveEntry)) continue ;
+               ArchiveEntry ze = (ArchiveEntry) o ;
+               System.out.println("Configuration element found: " + ze.getName());
+               b = c.appendInclude(ze) ;
+               if (!b) break ;
+            }
+   
+            // If we found an APPEND file then process the updated configuration.
+            // If no file was found continue with normal initialization.
+            
+            if (loader != null) loader.close() ;       
+            if (b) 
+            {
+               c.setRestartable(true) ;
+               init(c) ;
+               return ; 
+            }
+         }
+            
          // If this initialization is due to a restart request where we
          // actually loaded a new configuration, rather than restarting
          // from our existing CNF, then we can lose audio and video objects
@@ -474,8 +524,7 @@ final public class MainFrame extends KissFrame
 			// panel frame size exceeds the window area.  Our panel
 			// must be initialized before its size can be established.
 
-         restart = false ;
-			Insets insets = getInsets() ;
+         Insets insets = getInsets() ;
 			windowArea = getSize() ;
 			windowArea.width -= (insets.left + insets.right) ;
 			windowArea.height -= (insets.top + insets.bottom) ;
@@ -507,20 +556,27 @@ final public class MainFrame extends KissFrame
          // waiting on a successful load. Open an FKiSS trace
          // dialog if required.
 
+         restart = false ;
 			showStatus("Activating \"" + config.getName() + "\" (" + config.getID() + ")" + " ...") ;
+			System.out.println("Activating \"" + config.getName() + "\" (" + config.getID() + ")") ;
          traceFKiss(mainmenu.tracefkiss.isSelected()) ;
 			config.activate(panel) ;
 			callback.doClick() ;
          
          // Add this configuration to the LRU list.  Downloaded files  
-         // with a NoCopy reference are not added to the list.
+         // with a NoCopy reference are not added to the list.  We
+         // retain original values if configurations are APPENDed 
+         // as the LRU value needs to refer to the original load.
 
          ArchiveFile zip = config.getZipFile() ;
          String zipname = (zip != null) ? zip.getName() : null ;
-         if (zipname != null && !mainmenu.getNoCopy())
+         if (zipname != null && !mainmenu.getNoCopy() && !restart)
          {
             String lruname = zipname + File.pathSeparator ;
-            mainmenu.setLruFile(lruname + config.getPath()) ;
+            if (preappendlru != null) lruname = preappendlru ;
+            String s = config.getPath() ;
+            if (preappendpath != null) s = preappendpath ;
+            mainmenu.setLruFile(lruname + s) ;
          }
          else
             mainmenu.setLruFile(null) ;
@@ -768,6 +824,7 @@ final public class MainFrame extends KissFrame
 
       config = null ;
       title = null ;
+      WebFrame.clearRedirect() ;
 		closeframe() ;
  		setIconImage(Kisekae.getIconImage()) ;
 		showStatus(null) ;
@@ -1269,6 +1326,11 @@ final public class MainFrame extends KissFrame
 	// Return true if we are restarting from an initial load.
 
 	boolean isRestart() { return restart ; }
+
+	// Set the restart indicator if the configuration is restarted due to a
+   // an edit in the TextEditor.
+
+	void setRestart(boolean b) { restart = b ; }
 
 	// Return a reference to our about dialog.
 
@@ -1893,6 +1955,16 @@ final public class MainFrame extends KissFrame
    {
       title = s ;
       if (title != null) setTitle(s) ;
+   }
+   
+   
+   // Set for a new load from the user menu.  This resets the LRU paths
+   // from any prior load with APPEND directives.
+   
+   void setNewInit()
+   {
+      preappendlru = null ;
+      preappendpath = null ;      
    }
 
 
