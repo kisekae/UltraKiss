@@ -953,12 +953,7 @@ final class FileWriter extends KissFrame
                      export = ((ContentEntry) content).export ;
                   }
                }
-               else if (destination != null)
-               {
-                  File f = new File(destination) ;
-                  next.setName(f.getName()) ;
-               }
-				}
+            }
 				if (o instanceof ContentEntry)
 				{
 					ko = ((ContentEntry) o).kiss ;
@@ -1033,7 +1028,7 @@ final class FileWriter extends KissFrame
 
   				if (!next.getSaveDir() && !saveconfig) element = next.getName() ;
   				if (next.isImported()) element = next.getName() ;
-				newname = new String(element) ;
+            newname = new String(element) ;
             int j = newname.lastIndexOf('.') ;
             if (j > 0) type = newname.substring(j) ;
 
@@ -1082,58 +1077,80 @@ final class FileWriter extends KissFrame
 				// uncompressed data file.  ** Updated Apr 11 2023 for zip copy
             // when archive has a directory path **
 
-            if (".zip".equals(extension))
+            try
             {
-               ze = new ZipEntry(newname) ;
-               ze.setTime(next.getTime()) ;
-               ze.setMethod((next.isCompressed()) ? ze.DEFLATED : ze.STORED) ;
-               if (next instanceof DirEntry) ze.setMethod(ze.DEFLATED);
-               if (ze.getMethod() == ze.STORED) {
-                   ze.setCrc(next.getCrc32()) ;
-                   ze.setSize(next.getSize()) ;
+               if (".zip".equals(extension))
+               {
+                  ze = new ZipEntry(newname) ;
+                  ze.setTime(next.getTime()) ;
+                  ze.setMethod((next.isCompressed()) ? ze.DEFLATED : ze.STORED) ;
+                  if (next instanceof DirEntry) ze.setMethod(ze.DEFLATED);
+                  if (ze.getMethod() == ze.STORED) {
+                      ze.setCrc(next.getCrc32()) ;
+                      ze.setSize(next.getSize()) ;
+                  }
+                  ((ZipOutputStream) out).putNextEntry(ze) ;
                }
-               ((ZipOutputStream) out).putNextEntry(ze) ;
-            }
 
-            if (".gzip".equals(extension))
-            {
-               ze = new ZipEntry(newname) ;
-               ze.setTime(next.getTime()) ;
-               ze.setMethod((next.isCompressed()) ? ze.DEFLATED : ze.STORED) ;
-               if (next instanceof DirEntry) ze.setMethod(ze.DEFLATED);
-               if (ze.getMethod() == ze.STORED) {
-                   ze.setCrc(next.getCrc32()) ;
-                   ze.setSize(next.getSize()) ;
-               }
-               ((ZipOutputStream) out).putNextEntry(ze) ;
+               if (".gzip".equals(extension))
+               {
+                  ze = new ZipEntry(newname) ;
+                  ze.setTime(next.getTime()) ;
+                  ze.setMethod((next.isCompressed()) ? ze.DEFLATED : ze.STORED) ;
+                  if (next instanceof DirEntry) ze.setMethod(ze.DEFLATED);
+                  if (ze.getMethod() == ze.STORED) {
+                      ze.setCrc(next.getCrc32()) ;
+                      ze.setSize(next.getSize()) ;
+                  }
+                  ((ZipOutputStream) out).putNextEntry(ze) ;
             }
             
-            if (".jar".equals(extension))
-            {
-               ze = new ZipEntry(newname) ;
-               ze.setTime(next.getTime()) ;
-               ze.setMethod((next.isCompressed()) ? ze.DEFLATED : ze.STORED) ;
-               if (next instanceof DirEntry) ze.setMethod(ze.DEFLATED);
-               if (ze.getMethod() == ze.STORED) {
-                   ze.setCrc(next.getCrc32()) ;
-                   ze.setSize(next.getSize()) ;
+               if (".jar".equals(extension))
+               {
+                  ze = new ZipEntry(newname) ;
+                  ze.setTime(next.getTime()) ;
+                  ze.setMethod((next.isCompressed()) ? ze.DEFLATED : ze.STORED) ;
+                  if (next instanceof DirEntry) ze.setMethod(ze.DEFLATED);
+                  if (ze.getMethod() == ze.STORED) {
+                      ze.setCrc(next.getCrc32()) ;
+                      ze.setSize(next.getSize()) ;
+                  }
+                  ((ZipOutputStream) out).putNextEntry(ze) ;
                }
-               ((ZipOutputStream) out).putNextEntry(ze) ;
-            }
 
-            if (".lzh".equals(extension))
+               if (".lzh".equals(extension))
+               {
+                  LhaEntry le = new LhaEntry(newname) ;
+                  le.setTime(next.getTime()) ;
+                  le.setMethod((next.isCompressed()) ? le.LH5 : le.LH0) ;
+                  if (next.getSize() == 0) le.setMethod(le.LH0); 
+                  ((LhaOutputStream) out).putNextEntry(le) ;
+               }
+            }
+      
+            // Zip file duplicate entry - no overwrite allowed.  Ignore
+            // and continue writing.  Updated elements with ko should 
+            // have been written first.
+      
+            catch (ZipException ex)
             {
-               LhaEntry le = new LhaEntry(newname) ;
-               le.setTime(next.getTime()) ;
-               le.setMethod((next.isCompressed()) ? le.LH5 : le.LH0) ;
-               if (next.getSize() == 0) le.setMethod(le.LH0); 
-               ((LhaOutputStream) out).putNextEntry(le) ;
+               error = !(ex.toString().contains("duplicate entry")) ;
+               if (!error) continue ;
+               throw new ZipException(ex.toString()) ;
             }
 
 				// Create the output file.  This may create new directories.
+            // If we are saving download files found in cache then the
+            // output filename is not the temporary file cache name but
+            // is the destination name.
 
 				if (ArchiveFile.isDirectory(extension))
 				{
+               if (destination != null)
+               {
+                  File f = new File(destination) ;
+                  newname = f.getName() ;	
+               }
 					File newfile = new File(pathname,newname) ;
 					if (newfile.exists())
                {

@@ -514,6 +514,10 @@ final public class MainMenu extends KissMenu
    
    void clearWebFrame() { webframe = null ; }
    
+   // Get our active portal reference.
+   
+   WebFrame getWebFrame() { return webframe ; }
+   
    // Get our last Open event FileOpen path.
    
    String getOpenPath() { return openpath ; }
@@ -599,6 +603,7 @@ final public class MainMenu extends KissMenu
    
    // Add a new last referenced file to the beginning of the LRU list. 
    // If this is a previously referenced item we reorder the list.
+   // LRU files must end in a CNF extension.
    
    void setLruFile(String s)
    {
@@ -1277,6 +1282,7 @@ final public class MainMenu extends KissMenu
       {
          parent.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
          parent.fitScreen(fitscreen.getState(),false) ;
+         OptionsDialog.setScaleToFit(fitscreen.getState()) ;
          parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
       }
 
@@ -1286,6 +1292,7 @@ final public class MainMenu extends KissMenu
       {
          parent.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
          parent.fitPanel(fitpanel.getState()) ;
+         OptionsDialog.setSizeToFit(fitpanel.getState()) ;
          parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
       }
 
@@ -1311,7 +1318,8 @@ final public class MainMenu extends KissMenu
 
       parent.validate() ;
       parent.centerpanel() ;
-      parent.requestFocus() ;
+      PanelFrame panel = parent.getPanel() ;
+      if (panel != null) panel.requestFocus() ;
    }
 
 
@@ -1609,7 +1617,7 @@ final public class MainMenu extends KissMenu
       if (fd != null && !viewastext.isSelected() && ze.isConfiguration())
       {
          parent.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
-         parent.setNewInit() ;
+         parent.setNewPreAppend(null,null) ;
          parent.init() ;
          parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
          return ;

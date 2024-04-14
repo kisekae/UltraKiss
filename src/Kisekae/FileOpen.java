@@ -221,9 +221,13 @@ final public class FileOpen
 
 	void setZipFile(ArchiveFile af) { zip = af ; }
 
-	// Function to set the archive file for a new source entry.
+	// Function to set the silent indicator for new loads.
 
 	void setSilent(boolean b) { silent = b ; }
+
+	// Function to return the silent indication for new loads.
+
+	boolean isSilent() { return silent ; }
 
 	// Function to set the archive entry for a new source entry.
 

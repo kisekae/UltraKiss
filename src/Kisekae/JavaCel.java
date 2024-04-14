@@ -59,13 +59,16 @@ import java.io.* ;
 import java.awt.* ;
 import java.awt.image.* ;
 import java.awt.event.* ;
+import java.net.MalformedURLException;
 import java.util.* ;
 import javax.swing.* ;
 import javax.swing.text.* ;
 import javax.swing.event.* ;
 import javax.swing.border.* ;
+import java.net.URL ;
 
 final class JavaCel extends Cel 
+	implements HyperlinkListener
 {
 	// Class attributes.  Sized for 16 component types.
 
@@ -74,11 +77,12 @@ final class JavaCel extends Cel
    private JavaCel me = null ;                  // Ourselves
    private String type = null ;                 // Component type
 	private String currentattr = null ;          // Current attributes
+	private String currentweb = null ;           // Current web for textpane
    private PanelFrame panel = null ;            // Panel for redraws
    private JComponent component = null ;        // Java component
    private JComponent showcomponent = null ;    // Actual component
    private JTextComponent text = null ;         // Text component
-   private JTextPane pane = null ;              // HTML text component
+   private JEditorPane pane = null ;            // HTML text component
    private JList list = null ;                  // List component
    private JComboBox combobox = null ;          // ComboBox component
    private JScrollPane scroll = null ;          // Scroll pane
@@ -168,6 +172,150 @@ final class JavaCel extends Cel
       public void mouseExited(MouseEvent e) { }
       public void mouseClicked(MouseEvent e) { }
 	} ;
+
+
+	// Hyperlink event listener.  This is for TextPane components.
+   // We process LZH, ZIP and JAR file downloads with our UrlLoader. 
+   // Normal hyperlinks switch to the required page.
+
+  	public void hyperlinkUpdate(HyperlinkEvent evt)
+  	{
+      if (currentweb == null) return ;
+      MainFrame mf = Kisekae.getMainFrame() ;
+      MainMenu menu = (mf != null) ? mf.getMainMenu() : null ;
+      WebFrame webframe = (menu != null) ? menu.getWebFrame() : null ;
+         
+      if (evt.getEventType() == HyperlinkEvent.EventType.ENTERED) 
+      {
+         URL evturl = evt.getURL() ;
+         String description = (evturl != null) ? evturl.toExternalForm() : "" ;
+         if (mf != null) 
+         {
+            mf.showStatus(description) ;
+            mf.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)) ;
+         }
+         return ;
+      }
+      
+      if (evt.getEventType() == HyperlinkEvent.EventType.EXITED) 
+      {
+         if (mf != null) 
+         {
+            mf.showStatus(null) ;
+            mf.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
+         }
+         return ;
+      }
+            
+      if (evt.getEventType() == HyperlinkEvent.EventType.ACTIVATED) 
+      {
+         URL evturl = evt.getURL() ;
+         if (evturl == null) return ;       
+         String description = evt.getDescription() ;
+         
+         // If the URL could not be decoded, parse the description.
+         
+         try
+         {
+            if (description.startsWith("file:") || description.startsWith("jar:"))
+               evturl = new URL(description) ;
+            URL context = new URL(currentweb) ;
+            if (context.toString().startsWith("http:"))
+               evturl = new URL(context,description) ;
+            else if (context.toString().startsWith("https:"))
+               evturl = new URL(context,description) ;
+            else if (context.toString().startsWith("file:"))
+               evturl = new URL("file:" + description) ;
+            else if (context.toString().startsWith("jar:"))
+               evturl = new URL(context,description) ;
+         }
+         catch (MalformedURLException e) { evturl = null ; }         
+         if (evturl == null) return ;
+
+         // If the link is to an archive, load it.
+
+         String urlname = evturl.toExternalForm() ;
+         if (webframe == null) webframe = new WebFrame(mf,currentweb) ;
+         System.out.println("JavaCel: " + getName() + " hyperlink to " + urlname) ;
+         if (ArchiveFile.isArchive(urlname))
+            { webframe.loadArchive(evturl,true) ; return ; }
+
+         // If the link is to an image file prompt for download.
+
+         if (ArchiveFile.isImage(urlname))
+            { webframe.loadArchive(evturl,true) ; return ; }
+
+         // If the link is to a media file prompt for download.
+
+         if (ArchiveFile.isAudio(urlname))
+            { webframe.loadArchive(evturl,true) ; return ; }
+
+         // If our current web is on our local file system and we link to
+         // a remote HTML page, then we adjust our current web site to point
+         // to the new remote web.
+
+         String s = currentweb ;
+         if (s == null) s = "" ;
+         int n = s.lastIndexOf('/') ;
+         if (n > 0) s = s.substring(0,n) ;
+         if ((s.startsWith("file:") || s.startsWith("jar:")) && 
+              (urlname.startsWith("http:") || urlname.startsWith("https:")))
+         {
+            currentweb = urlname ;
+            s = currentweb ;
+            n = s.lastIndexOf('/') ;
+            if (n > 0) s = s.substring(0,n) ;
+            webframe.setHosted(s);
+         }
+      
+         // Not all internal links on remote URL's start with www.  If it is 
+         // missing we correct the URL.
+      
+         boolean inframe = false ;
+         String authority = evturl.getAuthority() ;
+         n = (authority != null) ? s.indexOf(authority) : -1 ;
+         if (n >= 0) 
+         {
+            inframe = true ;
+            int m = urlname.indexOf(authority) ;
+            urlname = s.substring(0,n) + urlname.substring(m) ;
+         }
+
+         // If the link is to a page on the current web site, or if we are
+         // linking to a local file, we show the hyperlink in this frame.
+
+         if (urlname.startsWith("file:")) inframe = true ;
+         if (urlname.startsWith("jar:")) inframe = true ;
+         if (inframe)
+         {
+            Vector v = webframe.getHistory() ;
+            for (int i = v.size()-1 ; i > webframe.getHistoryLocation() ; i--)
+               v.removeElementAt(i) ;
+            webframe.setHistoryLocation(v.size()) ;
+
+            // If our URL is to a file, we need to determine if this is to
+            // a directory or a specific file.
+
+            if (urlname.startsWith("file:") && !urlname.endsWith("/"))
+            {
+               String s1 = evturl.getPath() ;
+               File f = new File(s1) ;
+               if (f.isDirectory()) urlname += File.separator ;
+            }
+
+            // Add this URL to our history list and show in the browser.
+
+            v.addElement(urlname) ;
+            webframe.setPage(urlname,this) ;
+            return ;
+         }
+
+         // If the link is outside our current web site we show it in a browser
+         // window.
+
+         BrowserControl.displayURL(urlname) ;
+      }
+   }
 
 
 	// Constructor
@@ -281,7 +429,10 @@ final class JavaCel extends Cel
 
       if ("textpane".equals(type))
       {
-         pane = new JTextPane() ;
+         pane = new JEditorPane() ;
+         pane.setContentType("text/html");
+         pane.setEditorKit(new WebHTMLEditor());
+         pane.addHyperlinkListener(this);
          pane.setText("") ;
          initbackground = pane.getBackground() ;
          initforeground = pane.getForeground() ;
@@ -1031,6 +1182,7 @@ final class JavaCel extends Cel
    {
       readonly = !b ;
       if (text != null) text.setEditable(b) ;
+      if (pane != null) pane.setEditable(b) ;
       if (combobox != null) combobox.setEditable(b) ;
       if (component != null) component.setEnabled(b) ;
       if (OptionsDialog.getDebugComponent())
@@ -1189,16 +1341,16 @@ final class JavaCel extends Cel
             if (!onoff)
                ((JTextArea) text).setComponentOrientation(ComponentOrientation.UNKNOWN) ;
          }
-         if (pane instanceof JTextPane)
+         if (pane instanceof JEditorPane)
          {
             if ("left".equals(s2))
-               ((JTextPane) pane).setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT) ;
+               ((JEditorPane) pane).setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT) ;
             if ("right".equals(s2))
-               ((JTextPane) pane).setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT) ;
+               ((JEditorPane) pane).setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT) ;
             if ("center".equals(s2))
-               ((JTextPane) pane).setComponentOrientation(ComponentOrientation.UNKNOWN) ;
+               ((JEditorPane) pane).setComponentOrientation(ComponentOrientation.UNKNOWN) ;
             if (!onoff)
-               ((JTextPane) pane).setComponentOrientation(ComponentOrientation.UNKNOWN) ;
+               ((JEditorPane) pane).setComponentOrientation(ComponentOrientation.UNKNOWN) ;
          }
       }
 
@@ -1218,6 +1370,7 @@ final class JavaCel extends Cel
          char c = (i > 0) ? s1.charAt(i-1) : ' ' ;
          boolean onoff = (c == '-') ? false : true ;
          setEditable(!onoff) ;
+   //      setInput((!onoff) ? initinput : false) ;
       }
 
       if ((i = s1.indexOf("vsb")) >= 0)          // enable vertical scroll bars
@@ -1438,6 +1591,7 @@ final class JavaCel extends Cel
             if (component instanceof AbstractButton) ((AbstractButton) component).setText(s2) ;
             if (component instanceof JMenuItem) ((JMenuItem) component).setText(s2) ;
             if (text != null) text.setText(s2) ;
+            if (pane != null) pane.setText(s2) ;
             if (inittext == null) inittext = s2 ;
          }
       }
@@ -1481,9 +1635,9 @@ final class JavaCel extends Cel
          {
             ((JTextArea) text).setMargin(insets) ;
          }
-         if (pane instanceof JTextPane)
+         if (pane instanceof JEditorPane)
          {
-            ((JTextPane) pane).setMargin(insets) ;
+            ((JEditorPane) pane).setMargin(insets) ;
          }
       }
 
@@ -1786,7 +1940,7 @@ final class JavaCel extends Cel
       if (n1 < attributes.length() && attributes.charAt(n1) == '=') n1++ ;
       int n2 = s1.indexOf(',',n1) ;
       if (n2 < 0) n2 = s1.length() ;
-      if (n2 == n1) return "" ; 
+      if (n2 == n1) return "true" ; 
       String s2 = attributes.substring(n1,n2) ;
       s2 = Variable.getStringLiteralValue(s2) ;
       return s2 ;
@@ -1859,12 +2013,11 @@ final class JavaCel extends Cel
          ((JLabel) component).setText(s) ;
       else if (component instanceof AbstractButton)
          ((AbstractButton) component).setText(s) ;
+      else if (pane instanceof JEditorPane)
+         setPage(s) ;
       if (text instanceof JTextArea && scroll != null)
          if (!((JTextArea) text).isEditable())
-         ((JTextArea) text).setCaretPosition(s.length()) ;
-      if (pane instanceof JTextPane && scroll != null)
-         if (!((JTextPane) pane).isEditable())
-         ((JTextPane) pane).setCaretPosition(s.length()) ;
+            ((JTextArea) text).setCaretPosition(s.length()) ;
       if (OptionsDialog.getDebugComponent())
           System.out.println("JavaCel: setText for "+getName()+" result=\""+s+"\""+" on thread "+Thread.currentThread());               
    }
@@ -1885,6 +2038,66 @@ final class JavaCel extends Cel
       return "" ;
    }
 
+   void setPage(String s)
+   {
+      final String param = s ;
+		if (!SwingUtilities.isEventDispatchThread())
+      {
+   		Runnable runner = new Runnable()
+   		{ public void run() { setPage1(param) ; } } ;
+         try { javax.swing.SwingUtilities.invokeAndWait(runner) ; }
+         catch (InterruptedException e) { }
+         catch (Exception e) { e.printStackTrace(); }
+      }
+      else
+         setPage1(param) ;    
+   }
+
+ 
+   // Perform the component update
+      
+   private synchronized void setPage1(String s)
+   {
+      invalidateImage() ;
+      if (s == null) return ;
+      URL url = null ;
+      
+      try { url = new URL(s) ; }
+      catch (Exception e)
+      { url = Kisekae.class.getClassLoader().getResource(s) ; }
+      
+      if (url == null && ref != null)
+      {
+         try
+         {
+            ArchiveFile af = ref.getZipFile() ;
+            String dir = af.getDirectoryName() ;
+            File f = new File(dir,s) ;
+     			URL codebase = Kisekae.getBase() ;
+   			if (codebase == null) codebase = new URL("file","",-1,"") ;
+     			String protocol = codebase.getProtocol() ;
+     			String host = codebase.getHost() ;
+     			int port = codebase.getPort() ;
+     			url = new URL(protocol,host,port,f.getPath()) ;
+         }
+         catch (Exception e) { return ; }           
+      }
+      
+      try 
+      {
+         if (pane != null)
+         {
+            Document doc = pane.getDocument();
+            doc.putProperty(Document.StreamDescriptionProperty, null);
+            currentweb = (url != null) ? url.toExternalForm() : null ;
+            if (url != null) pane.setPage(url) ;
+         }
+      }
+      catch (Exception e)
+      {
+         System.out.println("Error Loading URL " + url + " Message: " + e.toString());         
+      }
+   }
 
    // Method to set the current list selection.  For a list that supports
    // multiple selections the new value is added to the selection set.
@@ -2579,6 +2792,7 @@ final class JavaCel extends Cel
          if (!(width > w || height > h))
          {
             gc.setColor(Color.black) ;
+// disable drawing name as it sometimes always shows when selected
             gc.drawString(s,cx+(w/2)-(width/2),cy+(h/2)+(height/2));
          }
       }

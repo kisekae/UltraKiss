@@ -363,12 +363,12 @@ class AttributeDialog extends KissDialog
       else if ("textpane".equals(type))
       {
          jLabel17.setEnabled(true) ;   jTextField1.setEnabled(true) ;
-         jLabel2.setEnabled(false) ;   jComboBox2.setEnabled(false) ;
-         jLabel3.setEnabled(false) ;   jComboBox1.setEnabled(false) ;
+         jLabel2.setEnabled(true) ;    jComboBox2.setEnabled(true) ;
+         jLabel3.setEnabled(true) ;    jComboBox1.setEnabled(true) ;
          jLabel4.setEnabled(true) ;    jComboBox3.setEnabled(true) ;
-         jLabel5.setEnabled(false) ;   jComboBox4.setEnabled(false) ;
-         jLabel6.setEnabled(false) ;   jComboBox5.setEnabled(false) ;
-         jLabel7.setEnabled(false) ;   jComboBox6.setEnabled(false) ;
+         jLabel5.setEnabled(true) ;    jComboBox4.setEnabled(true) ;
+         jLabel6.setEnabled(true) ;    jComboBox5.setEnabled(true) ;
+         jLabel7.setEnabled(true) ;    jComboBox6.setEnabled(true) ;
          jLabel13.setEnabled(false) ;  jComboBox7.setEnabled(false) ;
          jLabel14.setEnabled(true) ;   jComboBox8.setEnabled(true) ;
          jLabel15.setEnabled(false) ;  jComboBox9.setEnabled(false) ;
@@ -878,7 +878,7 @@ class AttributeDialog extends KissDialog
             dlg.setSize(d) ;
             dlg.show() ;
             
-            // Get the return value. Tho option pane is modal.
+            // Get the return value. The option pane is modal.
             
             o1 = optionpane.getValue() ;
             if (!(o1 instanceof Integer)) return ;

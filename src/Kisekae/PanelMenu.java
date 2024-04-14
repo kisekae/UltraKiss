@@ -1457,10 +1457,22 @@ final class PanelMenu extends KissMenu
       String title = Kisekae.getCaptions().getString("ConfigurationListTitle") ;
       ArchiveEntry ze = fd.showConfig(parent, title, files) ;
       ArchiveFile zip = (ze != null) ? ze.getZipFile() : null ;
+
+      if (ze == null)
+      {
+         parent.closeframe();
+         return ;
+      }
       
       // Our config is the original configuration.  The archive entry is the
       // configuration to append.  
 
+      ArchiveFile preappendzip = config.getZipFile() ;
+      ArchiveEntry preappendze = config.getZipEntry() ;
+      String preappendlru = (preappendzip != null) ? preappendzip.getPath() : null ;
+      String preappendpath = (preappendze != null) ? preappendze.getPath() : null ;
+      String lruname = (preappendlru != null) ? preappendlru + File.pathSeparator : null ;
+      if (parent != null) parent.setNewPreAppend(lruname,preappendpath) ;
       config.appendInclude(ze) ;
       setFileOpen(fd) ;
       parent.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
@@ -1696,10 +1708,22 @@ final class PanelMenu extends KissMenu
 
    void eventTextEdit(String title, String [] ext, boolean showline)
    {
+      FileOpen fileopen = null ;
       Configuration config = parent.getConfig() ;
       if (config == null) return ;
-      FileOpen fileopen = config.getFileOpen() ;
-      if (fileopen == null) return ;
+      
+      if (!config.isAppended())
+      {
+         fileopen = config.getFileOpen() ;
+         if (fileopen == null) return ;
+      }
+      else
+      {
+         String preappendlru = parent.getPreAppendLru() ;
+         String s = preappendlru ;
+         if (s != null) s = s.replace(File.pathSeparatorChar,' ').trim() ;
+         fileopen = new FileOpen(parent,s,"r") ;
+      }
       fileopen.open() ;
 
       // Search for the appropriate entries in our archive.
@@ -1709,12 +1733,13 @@ final class PanelMenu extends KissMenu
       if (ze == null) { fileopen.close() ; return ; }
       parent.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
       tf = new TextFrame(ze) ;
-      tf.showLineNumbers(showline) ;
 
       // Edit the file.
 
       parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
       fileopen.close() ;
+      if (tf.isError()) { tf.close() ; return ; }
+      tf.showLineNumbers(showline) ;
       tf.setVisible(true) ;
    }
 

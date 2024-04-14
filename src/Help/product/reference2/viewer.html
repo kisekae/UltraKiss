@@ -67,13 +67,6 @@ literal values or variables that represent function specific values.&nbsp;</p>
         file.  If no CNF element is found nothing is opened.</td>
     </tr>
     <tr>
-      <td>&quot;openURL&quot;</td>
-      <td>Opens the archive file specified in arg1.&nbsp; The file specified must be a valid 
-          URL with an http:// or https:// protocol.  The URL file will be downloaded into cache.
-          If the file contains more than one CNF element a selection dialog will be opened to choose the correct configuration
-        file.  If no CNF element is found nothing is opened.</td>
-    </tr>
-    <tr>
       <td>&quot;view&quot;</td>
       <td>Opens a text editor to display the specified KiSS file entity
         specified in arg1.&nbsp; The file entity is a file object previously opened with an 'open()' command.</td>
@@ -91,7 +84,15 @@ literal values or variables that represent function specific values.&nbsp;</p>
     <tr>
       <td>&quot;setmenu&quot;</td>
       <td>Replaces the UltraKiss menu bar with a user specified menu.&nbsp; For
-        menu specifications see the example.
+        menu specifications see the example.  When user menus are set the UltraKiss
+        toolbar and status bar are hidden.
+      </td>
+    </tr>
+    <tr>
+      <td>&quot;restoremenu&quot;</td>
+      <td>Replaces any user menu bar with the UltraKiss standard menu.&nbsp; For
+        menu specifications see the example.  When the UltraKiss menu is restored
+        the UltraKiss toolbar and status bar are restored to their initial option state.
       </td>
     </tr>
     <tr>
@@ -104,6 +105,13 @@ literal values or variables that represent function specific values.&nbsp;</p>
       <td>&quot;settitle&quot;</td>
       <td>Sets the UltraKiss main window title.&nbsp; The argument arg1 should specify the
         text string that is to be used for the window title.</td>
+    </tr>
+    <tr>
+      <td>&quot;redirect&quot;</td>
+      <td>Sets the Portal to redirect a URL to an event specified in the KiSS set.  The argument arg1
+      should be a string that specifies a valid URL with http: or https: protocol.  The second argument arg2 should be 
+      the name of an event such as press() or label() or some other event name.  The third and 
+      following arguments are literal strings or variables specifying the event parameters.</td>
     </tr>
     <tr>
       <td>&quot;menu&quot;</td>

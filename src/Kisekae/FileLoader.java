@@ -194,12 +194,17 @@ final class FileLoader extends KissFrame
       CANCEL.addActionListener(this) ;
       EDIT.addActionListener(this) ;
       PLAY.addActionListener(this) ;
+      
+      MainMenu mm = (frame != null) ? frame.getMainMenu() : null ;
+      FileOpen fileopen = (mm != null) ? mm.getFileOpen() : null ;
+      boolean silent = (fileopen != null) ? fileopen.isSilent() : false ;
+      
       boolean b = OptionsDialog.getShowLoad() ;
       KissFrame f = Kisekae.getBatchFrame() ;
       boolean b1 = (f instanceof WebSearch.WebSearchFrame)
-         ? !((WebSearch.WebSearchFrame) f).isLocalSearch() : true ;
+         ? !((WebSearch.WebSearchFrame) f).isLocalSearch() : !silent ;
       if (OptionsDialog.getUseDefaultWS()) b = b1 ;
-      if (!Kisekae.isBatch() || b) setVisible(true) ;
+      if (!Kisekae.isBatch() || b) setVisible(b) ;
 	}
 
    // User interface initialization.
@@ -431,7 +436,14 @@ final class FileLoader extends KissFrame
             }
             newconfig = config ;
 			}
-
+         else
+         {
+            if (config.isAppended())
+               throw new KissException("Unable to reload an appended configuration.") ;
+            else
+               throw new KissException("FileLoader: Internal error. Configuration ArchiveEntry is null.") ;
+         }
+            
          // Show the load status to the user.
 
          if (stop) thread.interrupt() ;
@@ -471,27 +483,21 @@ final class FileLoader extends KissFrame
      			{ public void run() { parent.initframe() ; }	} ;
      			javax.swing.SwingUtilities.invokeLater(callback) ;
      		}
-
-     		// Signal completion to the user.  Bring load window into focus.
-         // Do this on the AWT thread.  We were receiving NullPointerException
-         // on javax.swing.text.FlowView$FlowStrategy.layoutRow(FlowView.java:546)
-
-         else
-         {
-            Runnable complete = new Runnable()
-            { public void run() { signalComplete() ; } } ;
-            javax.swing.SwingUtilities.invokeLater(complete) ;
-         }
 		}
       catch (InterruptedException e) { interrupted = true ; }
 
+		catch (KissException e)
+		{
+      	fatal = true ;
+			showStatus(Kisekae.getCaptions().getString("LoadTerminatedStatus")) ;
+         showError(e.toString()) ;
+		}
+      
 		catch (OutOfMemoryError e)
 		{
       	fatal = true ;
 			showStatus(Kisekae.getCaptions().getString("LoadTerminatedStatus")) ;
          showError(Kisekae.getCaptions().getString("LowMemoryFault")) ;
-			if (config != null) config.close() ;
-			config = null ;
 		}
 
       catch (MalformedURLException e)
@@ -499,8 +505,6 @@ final class FileLoader extends KissFrame
       	fatal = true ;
          showStatus(Kisekae.getCaptions().getString("LoadTerminatedStatus")) ;
 			showError(e.toString()) ;
-			if (config != null) config.close() ;
-			config = null ;
       }
 
       catch (ConnectException e)
@@ -508,8 +512,6 @@ final class FileLoader extends KissFrame
       	fatal = true ;
          showStatus(Kisekae.getCaptions().getString("LoadTerminatedStatus")) ;
 			showError(e.toString()) ;
-			if (config != null) config.close() ;
-			config = null ;
       }
 
 		catch (Throwable e)
@@ -518,9 +520,21 @@ final class FileLoader extends KissFrame
          showStatus(Kisekae.getCaptions().getString("LoadTerminatedStatus")) ;
 			showError(e.toString()) ;
          e.printStackTrace() ;
-			if (config != null) config.close() ;
-			config = null ;
 		}
+      
+      if (fatal)
+      {
+			if (config != null) config.close() ;
+			config = null ;         
+      }
+
+  		// Signal completion to the user.  Bring load window into focus.
+      // Do this on the AWT thread.  We were receiving NullPointerException
+      // on javax.swing.text.FlowView$FlowStrategy.layoutRow(FlowView.java:546)
+
+      Runnable complete = new Runnable()
+      { public void run() { signalComplete() ; } } ;
+      javax.swing.SwingUtilities.invokeLater(complete) ;
 
 		if (OptionsDialog.getDebugControl())
          System.out.println("Configuration loader " + thread.getName() + " terminates.") ;
@@ -1123,6 +1137,10 @@ final class FileLoader extends KissFrame
 
    Configuration getNewConfiguration() { return newconfig ; }
    void setNewConfiguration(Configuration c) { newconfig = c ; }
+
+   // Method to return our interrupt state.
+
+   boolean isInterrupted() { return interrupted ; }
    
    // Method to return our text object.
    

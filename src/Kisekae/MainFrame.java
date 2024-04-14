@@ -335,6 +335,7 @@ final public class MainFrame extends KissFrame
 
 		fileopen.open() ;
 		if (fileopen == null) fileopen = temp ;
+      mainmenu.setFileOpen(fileopen) ;
 		ArchiveFile zip = fileopen.getZipFile() ;
 		ArchiveEntry ze = fileopen.getZipEntry() ;
 		loader = new FileLoader(this,config,zip,ze) ;
@@ -452,7 +453,7 @@ final public class MainFrame extends KissFrame
             {
                String lruname = zipname + File.pathSeparator ;
                if (preappendlru == null) preappendlru = lruname ;
-               String s = c.getPath() ;
+               String s = c.getName() ;
                if (preappendpath == null) preappendpath = s ;
             }
    
@@ -576,10 +577,14 @@ final public class MainFrame extends KissFrame
             if (preappendlru != null) lruname = preappendlru ;
             String s = config.getPath() ;
             if (preappendpath != null) s = preappendpath ;
-            mainmenu.setLruFile(lruname + s) ;
+            int i = s.lastIndexOf('.') ;
+            String ext = (i < 0) ? "" : s.substring(i).toLowerCase() ;
+            if (".cnf".equals(ext))       
+               mainmenu.setLruFile(lruname + s) ;
          }
          else
             mainmenu.setLruFile(null) ;
+         if (zip != null) zip.close() ;
                
 			// Activate the animation threads.
 
@@ -1854,7 +1859,7 @@ final public class MainFrame extends KissFrame
 	{
 		if (mainmenu == null) return ;
 		mainmenu.fitscreen.setState(state) ;
-	}
+   }
 
 
 	// Set the FitSize menu check box on or off.
@@ -1961,11 +1966,14 @@ final public class MainFrame extends KissFrame
    // Set for a new load from the user menu.  This resets the LRU paths
    // from any prior load with APPEND directives.
    
-   void setNewInit()
+   void setNewPreAppend(String lru, String path)
    {
-      preappendlru = null ;
-      preappendpath = null ;      
+      preappendlru = lru ;
+      preappendpath = path ;      
    }
+
+   String getPreAppendPath() { return preappendpath ; }   
+   String getPreAppendLru() { return preappendlru ; }   
 
 
 	// Panel frame functions.  These functions are invoked by menu

@@ -278,6 +278,7 @@ abstract class ArchiveFile
       if (".label".equals(ext)) return true ;
       if (".textbox".equals(ext)) return true ;
       if (".textarea".equals(ext)) return true ;
+      if (".textpane".equals(ext)) return true ;
       if (".textfield".equals(ext)) return true ;
       if (".passwordfield".equals(ext)) return true ;
       if (".button".equals(ext)) return true ;

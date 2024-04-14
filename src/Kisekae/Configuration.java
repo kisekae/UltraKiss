@@ -1726,7 +1726,7 @@ final class Configuration extends KissObject
       {
 //         OptionsDialog.setCacheImage(!OptionsDialog.getPagesAreScenes()) ;
 //         OptionsDialog.setCacheAudio(!OptionsDialog.getPagesAreScenes()) ;
-         setRestartable(false) ;
+//         setRestartable(false) ;
       }
 	}
 

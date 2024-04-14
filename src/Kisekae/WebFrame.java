@@ -520,6 +520,9 @@ final public class WebFrame extends KissFrame
    // a label() event.
  
    public void setPage(String location)
+   { setPage(location,null) ; }
+   
+   public void setPage(String location, JavaCel cel)
    {        
       try
       {
@@ -527,12 +530,17 @@ final public class WebFrame extends KissFrame
          URL evturl = new URL(location) ;
          String s = evturl.toExternalForm() ;
          Object o = urlmap.get(s.toLowerCase()) ;
+         
+         // Redirect exist?
+         
          if (o instanceof Vector)
          {
             MainFrame mf = Kisekae.getMainFrame() ;
             PanelFrame pf = (mf != null) ? mf.getPanel() : null ;
             if (pf != null)
             {
+               if (OptionsDialog.getDebugControl())
+                  System.out.println("WebFrame: redirect " + s + " to event \"" + ((Vector) o).elementAt(0) + "\"") ;
                setVisible(false) ;
                EventHandler.fireEvents((Vector) o,pf,Thread.currentThread(),s) ;
                fireWindowClose() ;
@@ -541,10 +549,18 @@ final public class WebFrame extends KissFrame
          }
       }
       catch (MalformedURLException e) { }
+      this.location = location ;
+
+      // Load page.
+   
+      if (cel != null)
+      {
+         cel.setPage(location) ;
+         return ;
+      }
       
       if (runner == null || runner.isAlive()) return ;
       runner = new WebConnect() ;
-      this.location = location ;
       runner.start() ;
    }
 
@@ -745,23 +761,27 @@ final public class WebFrame extends KissFrame
       if (i < 0 || i >= v.size()) return null ;
       return (String) v.elementAt(i) ;
    }
+
+
+   // Get our current web base.
    
+   static String getCurrentWeb() { return currentweb ; }
    
    // Translate between permanent and local history
    
-   private int getHistoryLocation()
+   int getHistoryLocation()
    {
       if (localhistory != null) return locallocation ;
       return currentlocation ;
    }
    
-   private void setHistoryLocation(int n)
+   void setHistoryLocation(int n)
    {
       if (localhistory != null) locallocation = n ;
       currentlocation = n ;
    }
    
-   private Vector getHistory()
+   Vector getHistory()
    {
       if (localhistory != null) return localhistory ;
       return history ;
@@ -776,7 +796,11 @@ final public class WebFrame extends KissFrame
       localhistory.addElement(homepage) ;
       setHistoryLocation(0) ;
    }
-
+   
+   // Set our hosted website.
+   
+   void setHosted(String s) { editor.setHosted(s); }
+   
 
 	// Action event listener.  We only process menu item actions.
 
@@ -1064,18 +1088,14 @@ final public class WebFrame extends KissFrame
             // If no configuration element exists in the file we check
             // for an LZH element in the archive and unpack it.
 
-   			ArchiveEntry ze = fdnew.showConfig(me) ;
+            ArchiveEntry ze = fdnew.getZipEntry() ;
+//   			ze = fdnew.showConfig(me) ;
    	      if (ze == null)
    	      {
                ze = fdnew.findEntry(".lzh") ;
                if (ze != null)
                {
                   if (fdnew.unpack(ze)) ze = fdnew.showConfig(me) ;
-               }
-               if (ze == null)
-               {
-      	      	fdnew.close() ;
-      	         return ;
                }
    	      }
 
@@ -1084,13 +1104,13 @@ final public class WebFrame extends KissFrame
             close() ;
             MainFrame mf = Kisekae.getMainFrame() ;
             MainMenu menu = (mf != null) ? mf.getMainMenu() : null ;
-   	      if (menu != null)
+   	      if (menu != null && ze != null)
             {
-               menu.setNoCopy(nocopy);
+               ze.setName(filename) ;
+               menu.setNoCopy(nocopy) ;
                menu.openContext(fdnew,ze) ;
             }
-            else
-               fdnew.close() ;
+            fdnew.close() ;
          }
 		}
 
@@ -1327,7 +1347,8 @@ final public class WebFrame extends KissFrame
             }
          }
          catch (MalformedURLException e) { evturl = null ; }         
-
+         if (evturl == null) return ;
+         
          // If the link is to an archive, load it.
 
          String urlname = evturl.toExternalForm() ;
@@ -1337,7 +1358,12 @@ final public class WebFrame extends KissFrame
          // If the link is to an image file prompt for download.
 
          if (ArchiveFile.isImage(urlname))
-            { loadArchive(evturl,false) ; return ; }
+            { loadArchive(evturl,true) ; return ; }
+
+         // If the link is to a media file prompt for download.
+
+         if (ArchiveFile.isAudio(urlname))
+            { loadArchive(evturl,true) ; return ; }
 
          // If our current web is on our local file system and we link to
          // a remote HTML page, then we adjust our current web site to point
@@ -1413,7 +1439,7 @@ final public class WebFrame extends KissFrame
    // A function to load an archive file.  Download prompts are not
    // shown for local files.
 
-   private void loadArchive(URL url, boolean showrun)
+   void loadArchive(URL url, boolean showrun)
    {
       boolean open = true ;
       String s = url.toExternalForm() ;
@@ -1541,6 +1567,8 @@ final public class WebFrame extends KissFrame
                s = s.substring(0,i1) + location + s.substring(j1+1) ;
             parent.showStatus(s) ;
             activebtn.setEnabled(true) ;
+            if (OptionsDialog.getDebugControl())
+               System.out.println("WebFrame: setPage " + location) ;
             editor.setPage(location);
             enterurl.setText(location) ;
             if (location.equals(OptionsDialog.getKissWeb()))
@@ -1583,7 +1611,8 @@ final public class WebFrame extends KissFrame
     			{ public void run() { setEndConnection() ; } } ;
         		javax.swing.SwingUtilities.invokeLater(runner) ;
          }
-         me.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
+         if (me != null)
+            me.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
          parent.showStatus(null);
          connecting = false ;
          activebtn.setEnabled(false) ;

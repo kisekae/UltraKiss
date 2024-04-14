@@ -3442,11 +3442,11 @@ final class FKissAction extends KissObject
                      
                      // Find the object to open.
 
-                     ArchiveEntry ze = config.getZipEntry() ;
+                     ArchiveEntry ze = (config != null) ? config.getZipEntry() : null ;
                      String path = (ze != null) ? ze.getPathName() : null ;
                      String dir = (config != null) ? config.getDirectory() : null ;
                      if (dir == null && path != null) dir = new File(path).getParent() ;
-                     if (!dir.endsWith(File.separator)) dir += File.separator ;
+                     if (dir != null && !dir.endsWith(File.separator)) dir += File.separator ;
                      File f = new File(dir,vs2) ;
                      FileOpen fd = new FileOpen(mf,f.getPath(),"r") ;
 
@@ -3458,7 +3458,7 @@ final class FKissAction extends KissObject
                      
                      if (fd.isError())
                      {
-                        String openpath = (mm != null) ? mm.getOpenPath() : null ;
+                        String openpath = mm.getOpenPath() ;
                         if (openpath != null) openpath = new File(openpath).getParent() ;
                         f = new File(openpath,vs2) ;
                         fd = new FileOpen(mf,f.getPath(),"r") ;
@@ -3471,7 +3471,8 @@ final class FKissAction extends KissObject
                      else
                         ze = fd.getZipEntry() ;
                      if (ze == null) return ;
-                     menu.openContext(fd,ze) ;
+                     mm.setFileOpen(fd) ;
+                     mm.openContext(fd,ze) ;
                   }
                   else if ("openurl".equalsIgnoreCase(vs1))
                   {
@@ -3486,7 +3487,7 @@ final class FKissAction extends KissObject
                   {
                      if (vs2 == null) return ;
                      if (mf == null || mm == null) return ;
-                     ArchiveEntry ze = config.getZipEntry() ;
+                     ArchiveEntry ze = (config != null) ? config.getZipEntry() : null ;
                      String path = (ze != null) ? ze.getPathName() : null ;
                      String dir = (config != null) ? config.getDirectory() : null ;
                      if (dir == null && path != null) dir = new File(path).getParent() ;
@@ -3507,7 +3508,7 @@ final class FKissAction extends KissObject
                         InputStream is = text.getInputStream() ;
                         tf = new TextFrame(null,is,false,false,text.getName()) ;
                      }
-                     else
+                     else if (config != null)
                      {
                         // Search for the appropriate entries in our archive.
                         // New configurations will not yet exist as files.
@@ -3516,13 +3517,31 @@ final class FKissAction extends KissObject
                         if (fd == null) return ;
                         fd.open(vs2) ;
                         ArchiveEntry ze = fd.getZipEntry() ;
-                        if (ze == null) return ;
-                        tf = new TextFrame(ze) ;
-                        fd.close() ;
+                        if (ze != null) 
+                        {
+                           tf = new TextFrame(ze) ;
+                           fd.close() ;
+                        }
+                        
+                        // If still no find and we are an appended configuration
+                        // then look in the preappended archive.  
+                        
+                        else if (config.isAppended() && mf != null)
+                        {
+                           String s = mf.getPreAppendLru() ;
+                           if (s != null) s = s.replace(File.pathSeparatorChar,' ').trim() ;
+                           fd = new FileOpen(mf,s,"r") ;
+                           fd.open(vs2) ;
+                           ze = fd.getZipEntry() ;
+                           if (ze != null) 
+                           {
+                              tf = new TextFrame(ze) ;
+                              fd.close() ;
+                           }
+                        }
                      }
-                     // Seems necessary to resolve Java 1.4 flicker problem
-//                     SwingUtilities.invokeLater(new Runnable()
-//                     { public void run() { tf.setVisible(true); } } );
+
+                     if (tf == null) return ;
                      tf.setEditable(false) ;
                      tf.setVisible(true) ;
                   }
@@ -3530,7 +3549,6 @@ final class FKissAction extends KissObject
                   {
                      int orientation = PageFormat.PORTRAIT ;
                      TextObject text = TextObject.findTextObject("\""+vs2+"\"",config,null) ;
-                     if (text == null) return ;
                      if (text == null) return ;
                      new PrintPreview(text,orientation) ;
                   }
@@ -3556,11 +3574,15 @@ final class FKissAction extends KissObject
                            i = i + 1 ;
                         }
                      }
+                     mf.setToolBar(false) ;
+                     mf.setStatusBar(false) ;
                      mf.setMenu(usermenu);
                   }
                   else if ("restoremenu".equalsIgnoreCase(vs1))
                   {
                      if (mf == null) return ;
+                     mf.setToolBar(OptionsDialog.getInitToolbar()) ;
+                     mf.setStatusBar(OptionsDialog.getInitStatusbar()) ;
                      mf.setMenu((pm != null) ? pm : mm);
                   }
                   else if ("seticon".equalsIgnoreCase(vs1))
@@ -3662,6 +3684,19 @@ final class FKissAction extends KissObject
             if (!(kiss instanceof JavaCel)) break ;
             n1 = ((JavaCel) kiss).getSelected() ;
             variable.setIntValue((String) parameters.elementAt(0),n1,event) ;
+            break;
+
+         // Set the page of a text pane.
+
+         case 162:		// "setPage(component,vbl)"
+            if (parameters.size() < 2) break ;
+            if (kiss == null)
+               kiss = findGroupOrCel((String) parameters.elementAt(0),event) ;
+            if (!(kiss instanceof JavaCel)) break ;
+            o1 = variable.getValue((String) parameters.elementAt(1),event) ;
+            s1 = (o1 != null) ? o1.toString() : "" ;
+            ((JavaCel) kiss).setPage(s1) ;
+            if (kiss.isVisible()) box = kiss.getBoundingBox() ;
             break;
 
          // Set the selection state of a component.

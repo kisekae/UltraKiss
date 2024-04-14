@@ -122,7 +122,7 @@ final public class OptionsDialog extends KissDialog
 	private static boolean stopmusic = false ;
 	private static boolean soundsingle = false ;
 	private static boolean scaletofit = false ;
-	private static boolean scaledownonly = false ;
+	private static boolean scaledownonly = true ;
 	private static boolean sizetofit = false ;
 	private static boolean retainwindowsize = false ;
 	private static boolean maximizewindow = false ;
@@ -3807,9 +3807,9 @@ final public class OptionsDialog extends KissDialog
 		cachevideo = initcachevideo ;
 		cacheimage = initcacheimage ;
 		cacheinclude = initcacheinclude ;
-//		scaletofit = initscaletofit ;
-//		scaledownonly = initscaledownonly ;
-//		sizetofit = initsizetofit ;
+		scaletofit = initscaletofit ;
+		scaledownonly = initscaledownonly ;
+		sizetofit = initsizetofit ;
 		retainwindowsize = initretainwindowsize ;
 		maximizewindow = initmaximizewindow ;
 		randomsplash = initrandomsplash ;
@@ -4090,7 +4090,7 @@ final public class OptionsDialog extends KissDialog
       stopmusic = false ;
       soundsingle = false;
       scaletofit = false ;
-      scaledownonly = false ;
+      scaledownonly = true ;
       sizetofit = false ;
       retainwindowsize = true ;
       maximizewindow = false ;
@@ -5098,27 +5098,25 @@ final public class OptionsDialog extends KissDialog
             if (directory != null)
             {
                File [] files = directory.listFiles() ;
-               String s = Kisekae.getCaptions().getString("OptionsDialogCacheClearText1") + files.length;
-     				int n = JOptionPane.showConfirmDialog(getParentFrame(), s,
+               int n = (files == null) ? 0 : files.length ;
+               String s = Kisekae.getCaptions().getString("OptionsDialogCacheClearText1") + n;
+     				int opt = JOptionPane.showConfirmDialog(getParentFrame(), s,
                   Kisekae.getCaptions().getString("OptionsDialogCacheClearTitle"),
                   JOptionPane.YES_NO_OPTION,
                   JOptionPane.INFORMATION_MESSAGE) ;
                
-               if (n == JOptionPane.YES_OPTION)
+               if (opt == JOptionPane.YES_OPTION)
                {
-                  n = 0 ;
-                  for (int i = 0 ; i < files.length ; i++)
+                  int m = 0 ;
+                  for (int i = 0 ; i < n ; i++)
                   {
                      File f = files[i] ;
-                     if (f.getName().startsWith("UltraKiss-"))
-                     {
-                        boolean b = f.delete() ;
-                        if (b) n++ ;
-                     }
+                     boolean b = f.delete() ;
+                     if (b) m++ ;
                   }
                   
-                  System.out.println("Cache is cleared, " + n + " files deleted out of " + files.length) ;
-                  s = Kisekae.getCaptions().getString("OptionsDialogCacheClearText2") + n ;
+                  System.out.println("Cache is cleared, " + m + " files deleted out of " + n) ;
+                  s = Kisekae.getCaptions().getString("OptionsDialogCacheClearText2") + m ;
         				JOptionPane.showMessageDialog(getParentFrame(), s,
                      Kisekae.getCaptions().getString("OptionsDialogCacheClearTitle"),
                      JOptionPane.INFORMATION_MESSAGE) ;

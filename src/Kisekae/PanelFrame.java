@@ -5402,7 +5402,11 @@ final class PanelFrame extends JPanel
             Cel c = (Cel) o ;
             if (c.isOnPage(pid))
             {
-               if (state) c.setInput(c.getInitInput()) ;
+               if (state) 
+               {
+                  if (c instanceof JavaCel && ((JavaCel) c).getAttribute("read") != "true")
+                     c.setInput(c.getInitInput()) ;
+               }
                else c.setInput(false) ;
             }
          }
@@ -5413,7 +5417,11 @@ final class PanelFrame extends JPanel
             {
                Cel c = (Cel) cels.elementAt(j) ;
                if (!c.isOnPage(pid)) continue ;
-               if (state) c.setInput(c.getInitInput()) ;
+               if (state) 
+               {
+                  if (c instanceof JavaCel && ((JavaCel) c).getAttribute("read") != "true")
+                     c.setInput(c.getInitInput()) ;
+               }
                else c.setInput(false) ;
             }
          }
@@ -7069,7 +7077,7 @@ final class PanelFrame extends JPanel
             // events are triggered if we change to a new group.  We can only
             // be in one group at a time.
 
-            if (!selected)
+            if (!selected && !isUngrouped())
             {
                if (ingroup != null && ingroup != group)
                {
@@ -7096,7 +7104,7 @@ final class PanelFrame extends JPanel
          // events are triggered if we change to a new cel.  We can only
          // be in one cel at a time.
 
-         if (!selected)
+         if (!selected && !isUngrouped())
          {
             if (incel != null && incel != cel)
             {

@@ -174,7 +174,7 @@ public class Kisekae extends Applet
 
       LogFile.start() ;
       builddate = Calendar.getInstance() ;
-      builddate.set(2024,4-1,8) ;
+      builddate.set(2024,4-1,11) ;
       
       // Restore the properties.
       
@@ -732,8 +732,16 @@ public class Kisekae extends Applet
       // write into the program installation directory as it is write protected.
       // Use the system temporary directory instead.  
    
-      String cachedirectory = System.getProperty("java.io.tmpdir") ;
-      cachepath = cachedirectory + OptionsDialog.getCacheDir() ;
+      String tempdirectory = System.getProperty("java.io.tmpdir") ;
+      String cachedirectory = OptionsDialog.getCacheDir() ;
+      if (!tempdirectory.endsWith(File.separator) && !cachedirectory.startsWith(File.separator))
+         cachepath = tempdirectory + File.separator + cachedirectory ;
+      else if (!tempdirectory.endsWith(File.separator) && cachedirectory.startsWith(File.separator))  
+         cachepath = tempdirectory + cachedirectory ;
+      else if (tempdirectory.endsWith(File.separator) && !cachedirectory.startsWith(File.separator))  
+         cachepath = tempdirectory + cachedirectory ;
+      else if (tempdirectory.endsWith(File.separator) && cachedirectory.startsWith(File.separator))  
+         cachepath = tempdirectory + cachedirectory.substring(1) ;
       if (File.separatorChar=='\\') 
          cachepath = cachepath.replace('/', File.separatorChar);
       else 

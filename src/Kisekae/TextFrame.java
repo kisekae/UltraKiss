@@ -605,6 +605,10 @@ final class TextFrame extends KissFrame
 
 	JTextComponent getTextComponent() { return text ; }
 
+	// Method to return our error state.
+
+	boolean isError() { return error ; }
+
 
 	// Initialize the edit frame.
 
@@ -635,6 +639,7 @@ final class TextFrame extends KissFrame
 		// Create the document.
 
 		error = createDocument(type) ;
+      if (error) return ;
 		createActionTable(text) ;
 
 		// Set up the menu bar.
