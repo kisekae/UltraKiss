@@ -116,7 +116,7 @@ final class PkzFile extends ArchiveFile
       if (contents == null) init() ;
       if (pathname == null) return ;
 		if (OptionsDialog.getDebugControl())
-      	System.out.println("Open file " + pathname + ", Open count " + ++opencount) ;
+      	System.out.println("Open PkzFile file " + pathname + ", Open count " + ++opencount) ;
 
       // Construct the zip file object.
 
@@ -138,6 +138,7 @@ final class PkzFile extends ArchiveFile
 		// Construct an index of the elements in the file.
       // Flush the old contents as we have created a new zip file.
 
+      open = true ;
 		if (zipfile != null)
       {
          flush() ;
@@ -209,11 +210,14 @@ final class PkzFile extends ArchiveFile
 	{
 		if (connections > 0) return ;
 		if (OptionsDialog.getDebugControl() && pathname != null)
-      	System.out.println("Close file " + pathname + ", Open count " + --opencount) ;
+      	System.out.println("Close PkzFile file " + pathname + ", Open count " + --opencount) ;
 		if (zipfile != null) zipfile.close() ;
 		if (memfile != null) memfile.close() ;
 		zipfile = null ;
       memfile = null ;
+//      contents = null ;
+//      fileopen = null ;
+      open = false ;
 	}
 
 

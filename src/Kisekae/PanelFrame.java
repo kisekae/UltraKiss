@@ -3022,6 +3022,13 @@ final class PanelFrame extends JPanel
       // Set the initial colors for this page.  These are the colors defined
       // by the multipalette established for the page set.
 
+      Integer rgbcolor = (page != null) ? page.getBorderColor() : null ;
+      if (rgbcolor != null)
+         background = new Color(rgbcolor.intValue()) ;
+      else
+         background = config.getBorderColor() ;
+      setBackground(background) ;
+      parent.setBackground(background) ;
       Integer multipalette = (page != null) ? page.getMultiPalette() : null ;
       initcolor(multipalette) ;
 
@@ -3396,7 +3403,8 @@ final class PanelFrame extends JPanel
          GifTimer animator = config.getAnimator() ;
          if (animator != null)
          {
-            animator.updateCels(config.getAnimatedCels()) ;
+            Vector v = config.getAnimatedCels() ;
+            animator.updateCels(v) ;
             animator.setPanelFrame(this) ;
          }
 //       if (!open) zip.close() ;
@@ -3717,11 +3725,13 @@ final class PanelFrame extends JPanel
    // independent activity to scale all the cel images.  When the activity
    // terminates a callback event occurs and the fitscreenreturn method
    // is invoked.  If the fit option is false we revert to normal size.
-   // If the exact option is true we do not adjust scale factors near 1.
+   // If the scaletofit option is true this call is from a window scaletofit
+   // request and scaling can be limited by the ScaleDownOnly option.  
+   // The magnify, reduce, and scale edit requests are not restricted.
 
-   void fitscreen(int x, int y) { fitscreen(true,x,y,undoredo) ; }
-   void fitscreen(boolean fit, int x, int y) { fitscreen(fit,x,y,undoredo) ; }
-   void fitscreen(boolean fit, int x, int y, boolean undoredo) 
+   void fitscreen(int x, int y) { fitscreen(true,x,y,undoredo,false) ; }
+   void fitscreen(boolean fit, int x, int y) { fitscreen(fit,x,y,undoredo,false) ; }
+   void fitscreen(boolean fit, int x, int y, boolean undoredo, boolean scaletofit) 
    {
       if (config == null) return ;
       suspendEvents() ;
@@ -3735,7 +3745,7 @@ final class PanelFrame extends JPanel
       float sy = ((float) y) / size.height ;
       newsf = Math.min(sx,sy) ;
       if (newsf < 0.01f) newsf = 0.01f ;
-      if (OptionsDialog.getScaleDownOnly() && newsf > 1.0f) newsf = 1.0f ;
+      if (scaletofit && OptionsDialog.getScaleDownOnly() && newsf > 1.0f) newsf = 1.0f ;
       if (!fit) newsf = 1.0f ;
       if (OptionsDialog.getDebugEdit() && newsf != 1.0f)
          System.out.println("Edit: Scale to fit screen by " + newsf) ;
@@ -3990,7 +4000,13 @@ final class PanelFrame extends JPanel
    }
 
 
+   // We need to retain our background color when we change it through
+   // an FKissAction for proper drawing of the panel.
 
+   public void setBackgroundColor(Color c)
+   { background = c ; }
+
+   
    // When we paint the screen, we want to draw only within the
    // bounding box for the cels that are being dragged.  This is a
    // smaller area to fill and can improve the graphic performance.
@@ -5478,9 +5494,14 @@ final class PanelFrame extends JPanel
       int i = s.indexOf(' ') ;
       if (i >= 0) s = s.substring(0,i) ;
       parent.setTitle(s.trim()) ;
-		if (OptionsDialog.getDebugControl() && config != null)
-  			System.out.println("PanelFrame close frame for configuration \"" + config.getName() + "\" (" + config.getID() + ")") ;
-
+		if (OptionsDialog.getDebugControl())
+      {
+         if (config != null)
+            System.out.println("PanelFrame close frame for configuration \"" + config.getName() + "\" (" + config.getID() + ")") ;
+         else
+            System.out.println("PanelFrame close frame for unknown configuration.") ;
+      }
+         
 		// Flush all image data.  This cleans up our memory allocation.
 /*
       if (cels != null)
@@ -5522,6 +5543,9 @@ final class PanelFrame extends JPanel
 
       if (clipboard != null) clipboard.setContents(null,this) ;
       if (undo != null) undo.discardAllEdits() ;
+      clipboard = null ;
+      popup = null ;
+      undo = null ;
 
       // Remove all added components.
 

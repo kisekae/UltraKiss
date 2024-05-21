@@ -98,6 +98,7 @@ final class PageSet extends KissObject
 	private Integer multipalette = null ;	// Default multipalette
 	private Vector positions = null ;		// Group positions in set
 	private Vector groups = null ;			// All group objects on this page
+	private Integer rgbcolor = null ;		// The fixed border color 
    private boolean changed = false ;		// If true, page positions changed
    private boolean visible = true ;		   // If true, page is visible
 	private int line = 0 ;						// The configuration file line
@@ -207,6 +208,10 @@ final class PageSet extends KissObject
    // Set the page visibility flag.
 
    void setVisible(boolean b) { visible = b ; }
+
+   // Set the page manditory border color.
+
+   void setBorderColor(Integer rgb) { rgbcolor = rgb ; }
 
 	// Set the initial multipalette for this page.
 
@@ -361,6 +366,10 @@ final class PageSet extends KissObject
 	// Return the page default palette.
 
 	Integer getMultiPalette() { return multipalette ; }
+
+	// Return the manditory border color.
+
+	Integer getBorderColor() { return rgbcolor ; }
 
 	// Return the initial multipalette for this page.
 

@@ -158,7 +158,7 @@ final class FileLoader extends KissFrame
       {
          expansion = true ;
          if (OptionsDialog.getDebugControl())
-            System.out.println("Loading expansion configuration " + config) ;
+            System.out.println("File Loader loading expansion configuration \"" + config.getName() + "\" (" + config.getID() + ")") ;
       }
 	}
 
@@ -285,8 +285,11 @@ final class FileLoader extends KissFrame
 		{ 
          public void run() 
          { 
-            me.toFront() ;
-            me.requestFocus();
+            if (me != null)
+            {
+               me.toFront() ;
+               me.requestFocus();
+            }
          }	
       } ;
 		javax.swing.SwingUtilities.invokeLater(tofront) ;
@@ -361,7 +364,7 @@ final class FileLoader extends KissFrame
             // objects are used for cels when loaded and fixes a memory leak.
             
             if (stop) thread.interrupt() ;
-            if (reference != null)
+            if (reload && reference != null)
             {
                Vector includefiles = reference.getIncludeFiles() ;
                config.setIncludeFiles(includefiles) ;              
@@ -423,13 +426,15 @@ final class FileLoader extends KissFrame
             j1 = s.indexOf(']') ;
             if (i1 >= 0 && j1 > i1)
                s = s.substring(0,i1) + name + s.substring(j1+1) ;
+            s += " (" + config.getID() + ")" ;
 				setTitle(s) ;
 				config.setLoader(null) ;
             
             // If we had a reference configuration release all objects.
             // This prevents a memory leak from a load-edit-load cycle.
             
-            if (reference != null && !expansion) 
+//          if (reference != null && !expansion) 
+            if (reference != null) 
             {
                reference.close(false,false) ;
                reference.flush() ;
@@ -438,7 +443,7 @@ final class FileLoader extends KissFrame
 			}
          else
          {
-            if (config.isAppended())
+            if (config != null && config.isAppended())
                throw new KissException("Unable to reload an appended configuration.") ;
             else
                throw new KissException("FileLoader: Internal error. Configuration ArchiveEntry is null.") ;
@@ -746,9 +751,10 @@ final class FileLoader extends KissFrame
 	public void windowDeactivated(WindowEvent evt) { active = false ; }
 	public void windowClosing(WindowEvent evt)
 	{
-   	System.out.println("Load cancelled ...") ;
       stop = true ;
+   	System.out.println("Load cancelled ...") ;
 		if (config != null) config.close() ;
+		if (parent != null) parent.initframe(null) ;
       Kisekae.setLoaded(false) ;
 		close() ;
 	}
@@ -767,7 +773,7 @@ final class FileLoader extends KissFrame
 		if (source == PLAY)
 		{
    		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
-			parent.initframe(config) ;
+			if (parent != null) parent.initframe(config) ;
 			close() ;
          return ;
 		}
@@ -781,7 +787,7 @@ final class FileLoader extends KissFrame
          stop = true ;
 	   	System.out.println("Load cancelled ...") ;
 			if (config != null) config.close() ;
-			parent.initframe(null) ;
+			if (parent != null) parent.initframe(null) ;
          Kisekae.setLoaded(false) ;
 			close() ;
          return ;

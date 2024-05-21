@@ -685,12 +685,12 @@ final class ToolBar extends JPanel
 	// start and color start indexes.  This must run on the AWT thread.
 
 	void updateButtons(Configuration c) { updateButtons(c,-1,-1) ; }
-	void updateButtons(final Configuration c, final int pstart, final int cstart)
+	void updateButtons(final Configuration c1, final int pstart, final int cstart)
 	{
 		if (!SwingUtilities.isEventDispatchThread())
       {
 			Runnable runner = new Runnable()
-			{ public void run() { updateButtons(c,pstart,cstart) ; } } ;
+			{ public void run() { updateButtons(c1,pstart,cstart) ; } } ;
 			javax.swing.SwingUtilities.invokeLater(runner) ;
          return ;
       }
@@ -699,6 +699,8 @@ final class ToolBar extends JPanel
 		nseparators = 0 ;
 		if (toolbar == null) return ;
       MainMenu mm = (parent != null) ? parent.getMainMenu() : null ;
+      Configuration c = c1 ;
+      if (c != null && c.isClosed()) c = null ;
       
 		for (int i = toolbar.getComponentCount()-1 ; i >= 0 ; i--)
 		{

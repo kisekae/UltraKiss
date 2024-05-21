@@ -72,7 +72,7 @@ import javax.swing.filechooser.FileFilter ;
 import java.text.MessageFormat;
 
 
-final public class FileOpen
+final public class FileOpen implements Cloneable
 {
 	// Class attributes
 
@@ -106,6 +106,7 @@ final public class FileOpen
    private boolean dirs = false ;            // Directories only
    private boolean silent = false ;          // No show exceptions
    private boolean error = false ;           // Error if no find
+   private boolean closed = false ;          // True if closed
 
    // File Filters
 
@@ -969,6 +970,7 @@ final public class FileOpen
          // If a file is open and it is the same file that this fileopen
          // object applies to, then simply access any required zip element.
 
+         closed = false ;
          if (zipFileURL != null && zip != null)
          {
 	         if (newFileURL.equals(zipFileURL))
@@ -1015,7 +1017,7 @@ final public class FileOpen
 			{
            	elementname = f.getPath() ;
             ze = zip.getEntry(elementname) ;
-			}
+         }
       }
 
 		// Catch file error exceptions.
@@ -1041,6 +1043,16 @@ final public class FileOpen
 				parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
 		}
    }
+
+   // Clone this object for the case where we need to copy it. Note this
+   // is a shallow clone so closing the cloned object also closes the 
+   // FileOpen zip file in the original zip file.
+   
+   public Object clone()
+   {
+      try { return super.clone() ; }
+      catch (CloneNotSupportedException e) { return null ; }     
+   }
   
 
 	// Method to close the zip file and erase all record of the file content
@@ -1065,7 +1077,7 @@ final public class FileOpen
 
 		// Clear references.
 
-//      parent = null ;
+      parent = null ;
       allfiles = null ;
       archives = null ;
       kissarchives = null ;
@@ -1081,6 +1093,7 @@ final public class FileOpen
       entries = null ;
       zip = null ;
       ze = null ;
+      closed = true ;
 	}
 
 

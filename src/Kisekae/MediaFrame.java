@@ -77,6 +77,8 @@ import javax.sound.midi.* ;
 final class MediaFrame extends KissFrame
 	implements WindowListener, ActionListener, ItemListener, MenuListener
 {
+   private static MediaFrame unique = null ;       // Reference to unique player
+   
 	// Dialog attributes
 
    private MediaFrame me = null ;						// Reference to ourselves
@@ -220,8 +222,17 @@ final class MediaFrame extends KissFrame
 	{ me = this ; ko = v ; init() ; play() ; }
 
    public MediaFrame(ArchiveEntry ze)
+	{ me = this ; init() ; play(ze) ; }
+  
+   // Constructor for a unique Media Player.  Attempts to create a 
+   // new Media Player should first examine if a previous unique
+   // player exists through a getUniquePlayer() call and reuse this 
+   // object if it exists.  
+   
+   public MediaFrame(ArchiveEntry ze, Object source)
    {
 		me = this ;
+      if (source != null && unique == null) unique = me ;
 		init() ;
       play(ze) ;
 	}
@@ -886,6 +897,11 @@ final class MediaFrame extends KissFrame
    }
 
 
+   // Method to return the unique media player if such exists.
+
+   static public MediaFrame getUniquePlayer() { return unique ; }
+   
+
    // Method to set minimized state.
 
    public void setMinimized(boolean b) { minimize.setState(b) ; }
@@ -1361,6 +1377,7 @@ final class MediaFrame extends KissFrame
       MainFrame mf = Kisekae.getMainFrame() ;
       Configuration config = (mf != null) ? mf.getConfig() : null ;
       if (config != null) config.setMediaFrame(null) ;
+      if (unique == me) unique = null ;
       play.removeActionListener(this);
       reset.removeActionListener(this);
 		list1.removeListSelectionListener(listListener);
@@ -1427,8 +1444,36 @@ final class MediaFrame extends KissFrame
    	Object player = null ;
 		if (audio != null) 
       {
-         if (!audio.isOpen()) audio.open() ;
          player = audio.getPlayer() ;
+         if (!audio.isOpen())
+         {
+            audio.open() ;
+            player = audio.getPlayer() ;
+            currentmedia = player ;
+      
+            // Add listeners.
+
+           	if (audio != null && player instanceof Sequencer)
+            {
+               audiolistener = new SequencerListener() ;
+              	audio.addListener(audiolistener) ;
+            }
+          	if (audio != null && player instanceof Clip)
+            {
+               audiolistener = new ClipListener() ;
+              	audio.addListener(audiolistener) ;
+            }
+            if (Kisekae.isMediaInstalled())
+            {
+               medialistener = new MediaListener() ;
+              	if (audio != null && player instanceof Player)
+                 	audio.addListener(medialistener) ;
+               else if (video != null && player instanceof Player)
+                 	video.addListener(medialistener) ;
+               else 
+                  medialistener = null ;
+            }
+         }
       }
 		if (video != null) 
       {
@@ -1449,7 +1494,10 @@ final class MediaFrame extends KissFrame
          long duration = p.getMicrosecondLength() ;
          long diff = Math.abs(p.getMicrosecondPosition() - duration) ;
          if (diff <= (int) (duration * 0.02))
+         {
             p.setMicrosecondPosition(0) ;
+            progress.setValue(0) ;
+         }
 			p.start() ;
          updateStatus() ;  // required as no media start event for sequencer
          if (timer != null) timer.start() ;
@@ -1460,7 +1508,10 @@ final class MediaFrame extends KissFrame
          long duration = p.getFrameLength() ;
          long diff = Math.abs(p.getFramePosition() - duration) ;
          if (diff <= (int) (duration * 0.02))
+         {
             p.setFramePosition(0) ;
+            progress.setValue(0) ;
+         }
          FloatControl fc = (FloatControl) p.getControl(FloatControl.Type.MASTER_GAIN) ;
          if (fc != null && volume.isSelected())
             fc.setValue(20f * (float) Math.log10(volumeadjust)) ;

@@ -720,9 +720,9 @@ final public class WebFrame extends KissFrame
    {
       if (!javax.swing.SwingUtilities.isEventDispatchThread())
       {
-      	Runnable runner = new Runnable()
+      	Runnable awt = new Runnable()
 			{ public void run() { update() ; } } ;
-   		javax.swing.SwingUtilities.invokeLater(runner) ;
+   		javax.swing.SwingUtilities.invokeLater(awt) ;
       }
       
       back.setEnabled(getBack() != null) ;
@@ -1089,7 +1089,7 @@ final public class WebFrame extends KissFrame
             // for an LZH element in the archive and unpack it.
 
             ArchiveEntry ze = fdnew.getZipEntry() ;
-//   			ze = fdnew.showConfig(me) ;
+   			if (ze == null) ze = fdnew.showConfig(me) ;
    	      if (ze == null)
    	      {
                ze = fdnew.findEntry(".lzh") ;
@@ -1097,20 +1097,26 @@ final public class WebFrame extends KissFrame
                {
                   if (fdnew.unpack(ze)) ze = fdnew.showConfig(me) ;
                }
+               if (ze == null)
+               {
+      	      	fdnew.close() ;
+      	         return ;
+      	      }
    	      }
 
             // Load the URL file.  Close this frame.
 
             close() ;
+            urlloader = null ;
             MainFrame mf = Kisekae.getMainFrame() ;
             MainMenu menu = (mf != null) ? mf.getMainMenu() : null ;
-   	      if (menu != null && ze != null)
+   	      if (menu != null)
             {
-               ze.setName(filename) ;
-               menu.setNoCopy(nocopy) ;
+               menu.setNoCopy(nocopy);
                menu.openContext(fdnew,ze) ;
             }
-            fdnew.close() ;
+            else
+               fdnew.close() ;
          }
 		}
 
@@ -1517,7 +1523,7 @@ final public class WebFrame extends KissFrame
       if (parent != null)         
       {
          MainMenu mm = parent.getMainMenu() ;
-         if (mm != null) mm.clearWebFrame() ;
+         if (mm != null) mm.setWebFrame(null) ;
       }
       
       super.close() ;
@@ -1533,10 +1539,20 @@ final public class WebFrame extends KissFrame
 
    private void flush()
    {
+      history = new Vector() ;         // URL History list
+      currentlocation = 0 ;            // Current history index
+      currentweb = null ;              // Last valid web
+      runner = null ;
       if (statusbar != null) statusbar.setStatusBar(false) ;
       statusbar = null ;
+      toolbar = null ;
+      editor = null ;
+      aboutdialog = null ;
+      helper = null ;
+      parent = null ;
 		me = null ;
 		setVisible(false) ;
+		setJMenuBar(null) ;
 		removeWindowListener(this);
 		getContentPane().removeAll() ;
 		getContentPane().removeNotify() ;
@@ -1607,9 +1623,9 @@ final public class WebFrame extends KissFrame
       {
          if (!javax.swing.SwingUtilities.isEventDispatchThread())
          {
-         	Runnable runner = new Runnable()
+         	Runnable awt = new Runnable()
     			{ public void run() { setEndConnection() ; } } ;
-        		javax.swing.SwingUtilities.invokeLater(runner) ;
+        		javax.swing.SwingUtilities.invokeLater(awt) ;
          }
          if (me != null)
             me.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;

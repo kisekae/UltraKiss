@@ -264,6 +264,12 @@ final class ZipAdd extends KissDialog
 
 			Vector contents = new Vector() ;
 			FileOpen fileopen = zip.getFileOpen() ;
+         if (fileopen == null) 
+         {
+            fileopen = new FileOpen(getParentFrame(),zip.pathname,"r") ;
+            fileopen.setFileFilter("kissarchives") ;
+            fileopen.setZipFile(zip) ;
+         }
 			fileopen.open() ;
 			zip = fileopen.getZipFile() ;
 			if (zip == null) return ;

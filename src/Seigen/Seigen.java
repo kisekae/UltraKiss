@@ -69,7 +69,7 @@ import java.text.DateFormat ;
 public final class Seigen extends Authenticator
 {
    private static String copyright =            	// Copyright text
-      "Kisekae UltraKiss V3.7.2 (c) 2002-2024 William Miles" ;
+      "Kisekae UltraKiss V3.7.3 (c) 2002-2024 William Miles" ;
 
    private static Calendar warningdate = Calendar.getInstance() ;
    private static Calendar restrictdate = Calendar.getInstance() ;

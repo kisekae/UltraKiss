@@ -115,12 +115,16 @@ final class PkzEntry extends ArchiveEntry
 	}
 
 	// Return an input stream to read this element in uncompressed form.
+   // If the PkzFile was closed then on a reopen a new zipfile is created.
+   // This PkzEntry will have a reference to the old zipfile that was closed.
 
 	public InputStream getInputStream() throws IOException
 	{
       if (ze == null) return null ;
 		if (archive == null) return null ;
       if (memfile == null && !archive.isOpen()) return null ;
+      ZipFile zf = (archive instanceof PkzFile) ? ((PkzFile) archive).getZipFile() : null ;
+      if (zf != zip) zip = zf ;
 		if (zip != null)
       {
          try 

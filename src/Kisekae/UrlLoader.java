@@ -388,7 +388,7 @@ class UrlLoader extends KissFrame
                s1 = s1.substring(0,i1+1) + s + s1.substring(j1) ;
             showStatus(s1) ;
 
-            byte[] buffer = new byte[2048];
+            byte[] buffer = new byte[1024*10];
             while (!stop && (n = is.read(buffer)) >= 0)
             {
             	bytes = bytes + n ;

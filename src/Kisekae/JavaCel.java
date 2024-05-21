@@ -103,6 +103,7 @@ final class JavaCel extends Cel
    private boolean show = true ;                // If true, component can show
    private boolean imported = false ;           // If true, component was added
    private boolean readonly = false ;           // If true, component is read
+   private boolean flushed = false ;            // If true, component is flushed
 
 
    // Listeners for events on the component
@@ -234,8 +235,12 @@ final class JavaCel extends Cel
 
          // If the link is to an archive, load it.
 
+         if (webframe == null) 
+         {
+            webframe = new WebFrame(mf,currentweb) ;
+            if (menu != null) menu.setWebFrame(webframe) ;
+         }
          String urlname = evturl.toExternalForm() ;
-         if (webframe == null) webframe = new WebFrame(mf,currentweb) ;
          System.out.println("JavaCel: " + getName() + " hyperlink to " + urlname) ;
          if (ArchiveFile.isArchive(urlname))
             { webframe.loadArchive(evturl,true) ; return ; }
@@ -1451,6 +1456,15 @@ final class JavaCel extends Cel
          }
       }
 
+      if ((i = s1.indexOf("trans")) >= 0)      // set transparent background
+      {
+         char c = (i > 0) ? s1.charAt(i-1) : ' ' ;
+         boolean onoff = (c == '-') ? true : false ;
+         component.setOpaque(onoff); 
+         if (component instanceof JButton)
+            ((JButton) component).setContentAreaFilled(false);
+      }
+      
       if ((i = s1.indexOf("fontname")) >= 0)    // set the font
       {
          char c = (i > 0) ? s1.charAt(i-1) : ' ' ;
@@ -2775,6 +2789,16 @@ final class JavaCel extends Cel
   		Graphics gc = g.create(x,y,w,h) ;
   		gc.translate(-x,-y) ;
       Image img = getImage() ;
+      
+      // Set the transparency.
+
+      if (transparency < 255) 
+      {
+         float t = transparency / 255.0f ;
+         if (t > 1) t = 1 ; else if (t < 0) t = 0 ;
+         AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER,t) ;
+         if (gc instanceof Graphics2D) ((Graphics2D) gc).setComposite(ac) ;
+      }
   		if (img != null) gc.drawImage(img,cx,cy,null) ;
       
       // Scrolling components do not paint. In this case we identify the
@@ -2797,6 +2821,78 @@ final class JavaCel extends Cel
          }
       }
   		gc.dispose() ;
+	}
+
+
+	// Method to change the cel transparency.  The change is relative
+	// to the current transparency.  We create a new color model for
+	// palette cels.  The relative change uses the KiSS model of transparency.
+   // Positive values make the object more transparent.  Negative values make
+   // the object more opaque.
+
+	void changeTransparency(int t, boolean bounded, boolean ambiguous)
+	{
+		if (error) return ;
+
+      // Limit transparency between 0 and 255 if this is a bounded change.
+
+      int adjust = t ;
+      if (bounded)
+      {
+         if (transparency < 0) transparency = 0 ;
+         if (transparency > 255) transparency = 255 ;
+   		int n1 = 255 - transparency ;
+         int n2 = n1 + t ;
+         if (n2 < 0) n2 = 0 ;
+         if (n2 > 255) n2 = 255 ;
+         adjust = n2 - n1 ;
+      }
+
+		// Update the cel transparency value.
+
+		int kisstransparency = 255 - transparency ;
+      kisstransparency += adjust ;
+		setTransparency(255 - kisstransparency,(OptionsDialog.getAllAmbiguous() && ambiguous),this) ;
+		if (image == null) return ;
+
+		// Identify the image to filter.
+/*
+		filteredimage = null ;
+      Image img = getScaledImage() ;
+      if (img == null) img = getBaseImage() ;
+      if (img == null) return ;
+
+		// Palette cels require a new color model.  Truecolor cels use the
+      // same color model with a new transparency.
+
+		if (!truecolor)
+		{
+			Palette p = getPalette() ;
+			if (p == null) return ;
+			cm = p.createColorModel(transparency,multipalette) ;
+      }
+
+		// Construct an image filter.
+      
+		PaletteFilter pf = new PaletteFilter(cm,basecm,transparency,transparentcolor) ;
+		ImageProducer ip = new FilteredImageSource(img.getSource(),pf) ;
+		filteredimage = Toolkit.getDefaultToolkit().createImage(ip) ;
+      MediaTracker tracker = new MediaTracker(Kisekae.getKisekae()) ;
+      tracker.addImage(filteredimage,0) ;
+      try { tracker.waitForAll(500) ; }
+      catch (InterruptedException e) { }
+/*
+		// This is approximately twice as fast.
+
+      int w = img.getWidth(null) ;
+      int h = img.getHeight(null) ;
+      BufferedImage bi = new BufferedImage(w,h,BufferedImage.TYPE_INT_ARGB) ;
+      AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC,transparency/255.0f) ;
+      Graphics2D gc = (Graphics2D) bi.getGraphics() ;
+      gc.setComposite(ac) ;
+      gc.drawImage(img,0,0,null) ;
+      filteredimage = bi ;
+*/
 	}
 
 
@@ -2891,6 +2987,37 @@ final class JavaCel extends Cel
       cel.setUpdated(true) ;
       v.addElement(cel) ;
       return cel ;
+   }
+   
+   
+   // Flush the JavaCel to get rid of all objects.
+   
+   void flush()
+   {
+		if (!SwingUtilities.isEventDispatchThread())
+      {
+			Runnable runner = new Runnable()
+			{ public void run() { flush() ; } } ;
+         try { javax.swing.SwingUtilities.invokeAndWait(runner) ; }
+         catch (InterruptedException e) { }
+         catch (Exception e) { e.printStackTrace(); }
+      }
+      removeComponent() ;
+      if (list != null) list.removeListSelectionListener(listListener);
+      if (combobox != null) combobox.removeItemListener(itemListener);
+
+      component = null ;
+      showcomponent = null ;   
+      text = null ;         // Text component
+      pane = null ;         // HTML text component
+      list = null ;         // List component
+      combobox = null ;     // ComboBox component
+      scroll = null ;       // Scroll pane
+      borderpanel = null ;  // Border panel
+      insets = null ;       // Border insets
+      ref = null ;          // Load reference
+      panel = null ;
+      flushed = true ;
    }
    
    

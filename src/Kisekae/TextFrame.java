@@ -139,6 +139,7 @@ final class TextFrame extends KissFrame
 	private ArchiveEntry ze = null ;				// The zip file entry
 	private ArchiveEntry originalze = null ; 	// The original zip file entry
 	private String file = null ;					// The file being edited
+	private String extension = null ;			// The file extension being edited
 	private String type = null ;					// The type of file being edited
 	private String originalfile = null ;		// The original file name
 	private String directory = null ;			// The file directory
@@ -576,6 +577,8 @@ final class TextFrame extends KissFrame
 		this.zip = (ze == null) ? null : ze.getZipFile() ;
       this.showline = showline ;
 		file = (ze == null) ? null : ze.getPath() ;
+      extension = (file == null) ? null : file.substring(file.lastIndexOf('.')) ;
+      if (".cnf".equals(extension)) this.showline = true ;
       this.type = (type != null) ? type : file ;
 		directory = (zip == null) ? null : zip.getDirectoryName() ;
 		memorysource = updateable ;
@@ -671,7 +674,7 @@ final class TextFrame extends KissFrame
 		fileMenu.addSeparator();
 		fileMenu.add((wordwrap = new JCheckBoxMenuItem(Kisekae.getCaptions().getString("MenuFileWordWrap")))) ;
 		wordwrap.addItemListener(this) ;
-      wordwrap.setSelected(false);
+      wordwrap.setSelected(!(".cnf".equals(extension)));
 		fileMenu.add((linenum = new JCheckBoxMenuItem(Kisekae.getCaptions().getString("MenuFileLineNumber")))) ;
 		linenum.setState(showline) ;
 		linenum.addItemListener(this) ;
@@ -2422,6 +2425,16 @@ final class TextFrame extends KissFrame
          textobject.setZipEntry(zenew) ;
          ze = null ; 
       }
+      
+      // Save this element.  Make sure our zip file is closed,
+      // otherwise the write can fail.
+
+      if (zip != null && zip.isOpen()) 
+      {
+         try { zip.close() ; }
+         catch (IOException e) { }       
+      }
+      
    	textobject.setUpdated(true);
       FileSave fs = new FileSave(this,textobject) ;
       fs.addWriteListener(writelistener) ;

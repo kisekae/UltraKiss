@@ -1345,6 +1345,8 @@ final class FKissAction extends KissObject
                      kiss = (Audio) Audio.getByKey(Audio.getKeyTable(),cid,s1) ;
                      if (kiss != null) 
                      {
+                        ArchiveFile af = config.getZipFile() ;
+                        if (!af.isOpen()) af.open();
                         Audio audio = (Audio) kiss ;
                         audio.load(config.getIncludeFiles()) ;
                         audio.init() ;
@@ -3418,6 +3420,8 @@ final class FKissAction extends KissObject
                         if ("importcnf".equalsIgnoreCase(vs2)) pm.importcnf.doClick() ;
                         // invokes a dialog to append a CNF from the set INCLUDE files
                         if ("appendcnf".equalsIgnoreCase(vs2)) pm.appendcnf.doClick() ;
+                        // invokes a dialog to add an expansion set 
+                        if ("expand".equalsIgnoreCase(vs2)) mm.expand.doClick() ;
                         // invokes a dialog to clear the download cache 
                         if ("clearcache".equalsIgnoreCase(vs2)) mm.clearcache.doClick() ;
                      }
@@ -3459,7 +3463,10 @@ final class FKissAction extends KissObject
                      if (fd.isError())
                      {
                         String openpath = mm.getOpenPath() ;
-                        if (openpath != null) openpath = new File(openpath).getParent() ;
+                        if (openpath == null) 
+                           openpath = Kisekae.getBaseDir() ;
+                        else
+                           openpath = new File(openpath).getParent() ;
                         f = new File(openpath,vs2) ;
                         fd = new FileOpen(mf,f.getPath(),"r") ;
                         fd.setSilent(true) ;
@@ -3539,6 +3546,15 @@ final class FKissAction extends KissObject
                               fd.close() ;
                            }
                         }
+                        
+                        // Look for a generic view documents request.
+                        
+                        if (vs2 != null && "documents".equalsIgnoreCase(vs2))
+                        {
+                           String [] ext = ArchiveFile.getDocExt() ;
+                           String title = Kisekae.getCaptions().getString("DocumentationListTitle") ;
+                           if (pm != null) pm.eventTextEdit(title,ext,false) ;
+                        }
                      }
 
                      if (tf == null) return ;
@@ -3563,7 +3579,7 @@ final class FKissAction extends KissObject
                      for (int i = 1 ; i < parameters.size() ; )
                      {
                         Object o1 = variable.getValue((String) parameters.elementAt(i),event) ;
-                        if (!(o1 instanceof String)) continue ;
+                        if (!(o1 instanceof String)) { i++ ; continue ; }
                         String s = (String) o1 ;
                         i = i + 1 ;
                         if (i < parameters.size())
@@ -3575,14 +3591,14 @@ final class FKissAction extends KissObject
                         }
                      }
                      mf.setToolBar(false) ;
-                     mf.setStatusBar(false) ;
+//                   mf.setStatusBar(false) ;
                      mf.setMenu(usermenu);
                   }
                   else if ("restoremenu".equalsIgnoreCase(vs1))
                   {
                      if (mf == null) return ;
                      mf.setToolBar(OptionsDialog.getInitToolbar()) ;
-                     mf.setStatusBar(OptionsDialog.getInitStatusbar()) ;
+//                   mf.setStatusBar(OptionsDialog.getInitStatusbar()) ;
                      mf.setMenu((pm != null) ? pm : mm);
                   }
                   else if ("seticon".equalsIgnoreCase(vs1))
@@ -3590,7 +3606,30 @@ final class FKissAction extends KissObject
                      Object o2 = findGroupOrCel((String) parameters.elementAt(1),event) ;
                      if (o2 instanceof Cel)
                      {
-                        Image image = ((Cel) o2).getImage() ;
+                        Cel c = (Cel) o2 ;
+                        if (!c.isLoaded()) 
+                        {  // The cel may not be loaded if images are not cached.
+                           if (config != null)
+                           {
+                              try
+                              {                              
+                                 boolean opened = false ;
+                                 ArchiveFile af = c.getZipFile() ;
+                                 if (!af.isOpen()) 
+                                 {
+                                    af.open() ; 
+                                    opened = true ; 
+                                 }
+                                 c.load(config.getIncludeFiles()) ;
+                                 if (opened) af.close() ;
+                              }
+                              catch (IOException e) 
+                              { 
+                                 System.out.println("FKissAction: viewer(\"seticon\",\""+o2+"\")" + e.getMessage()) ;
+                              }
+                           }
+                        }
+                        Image image = c.getImage() ;
                         if (mf != null && image != null)
                            mf.setIconImage(image) ;
                      }
@@ -3631,6 +3670,21 @@ final class FKissAction extends KissObject
                               redirectevents.addElement(event) ;
                         }                    
                         WebFrame.redirect(vs2,redirectevents) ;
+                     }
+                  }
+                  else if ("backcolor".equalsIgnoreCase(vs1))
+                  {
+                     Integer rgb = null ;
+                     try { rgb = new Integer(vs2) ; }
+                     catch (NumberFormatException e) { }
+                     if (rgb == null && config != null && config.isBorderRgb())
+                        rgb = new Integer(config.getBorder()) ;
+                     if (pageset != null && panel != null && rgb != null) 
+                     {
+                        Color c = new Color(rgb.intValue()) ;
+                        pageset.setBorderColor(rgb) ;
+                        panel.setBackgroundColor(c);
+                        panel.setBackground(c) ;
                      }
                   }
                }

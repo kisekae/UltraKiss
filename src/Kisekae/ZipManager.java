@@ -1218,6 +1218,13 @@ public class ZipManager extends KissFrame
 
 		Vector contents = new Vector() ;
 		FileOpen fileopen = zip.getFileOpen() ;
+      if (fileopen == null) 
+      {
+         fileopen = new FileOpen(frame,zip.pathname,"r") ;
+         fileopen.setFileFilter("kissarchives") ;
+         fileopen.setZipFile(zip) ;
+      }
+      else if (fileopen == null) return ;
 		fileopen.open() ;
 		if (fileopen.getZipFile() == null) return ;
 

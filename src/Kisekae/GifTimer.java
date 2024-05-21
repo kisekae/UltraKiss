@@ -168,8 +168,6 @@ final class GifTimer extends Thread
          KissObject cel = (KissObject) o ;
          if (cel.getFrameCount() <= 1)
             { v.removeElementAt(i) ;  continue ; }
-         if (!cel.getAnimate())
-            { v.removeElementAt(i) ;  continue ; }
       }
 
       // Add the new objects to the animation list. Objects

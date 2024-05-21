@@ -67,12 +67,8 @@ final class StatusBar extends JPanel
 	// Class attributes
 
    static private int period = 5000 ;        // Update period
-	static boolean statusBarOn = false ;      // Status bar view state
+	private boolean statusBarOn = false ;     // Status bar view state
    private Thread thread = null ;            // Periodic mem update
-
-	// Status bar attributes
-
-	private Frame parent = null ;				   // The parent frame
 
    // User interface components
 
@@ -85,7 +81,6 @@ final class StatusBar extends JPanel
 
 	public StatusBar(Frame parent)
 	{
-//		this.parent = parent ;
       try { jbInit() ; }
       catch(Exception e)
       { e.printStackTrace() ; }
@@ -114,6 +109,9 @@ final class StatusBar extends JPanel
          setBackground(Color.LIGHT_GRAY) ;
   }
 
+   
+   public boolean getState() { return statusBarOn ; }
+   
 
 	// Method to display a status message.
 
@@ -161,7 +159,6 @@ final class StatusBar extends JPanel
                   try
                   {
                      showMem() ;
-                     if (!statusBarOn && thread != null) thread.interrupt() ;
                      sleep(period) ;
                   }
                   catch (InterruptedException e) { break ; }

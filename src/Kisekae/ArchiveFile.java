@@ -77,6 +77,7 @@ abstract class ArchiveFile
    protected long compressedsize = 0 ;			// Total compressed bytes
 	protected int connections = 0 ;				// Media file use count
 	protected int opencount = 0 ;					// File open count
+   protected boolean open = false ;          // True if archive is open
    protected Hashtable key = new Hashtable(200,0.855f) ; // Entry index
 
 

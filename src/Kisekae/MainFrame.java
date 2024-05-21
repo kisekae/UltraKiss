@@ -60,6 +60,7 @@ import java.awt.print.* ;
 import java.awt.datatransfer.Clipboard ;
 import java.util.Vector ;
 import java.util.ResourceBundle ;
+import java.util.Hashtable ;
 import java.util.Enumeration ;
 import java.util.Scanner ;
 import java.util.prefs.* ;
@@ -110,6 +111,7 @@ final public class MainFrame extends KissFrame
    private Object newconfigid = null ;    // The new configuration ID
    private FileLoader loader = null ;		// The file loader object
 	private FileOpen fileopen = null ;		// The current file open object
+   private Vector expandfiles = null ;    // Configuration expansion files
    private String preappendlru = null ;   // Reference for LRU list
    private String preappendpath = null ;  // Reference for LRU list
 	private Color background = null ;		// The panel background color
@@ -124,6 +126,8 @@ final public class MainFrame extends KissFrame
 	private boolean restart = false ;		// True if configuration is reloaded
 	private boolean append = false ;       // True if configuration being appended
 	private boolean firstback = true ;		// True if window not deactivated  
+	private boolean expansion = false ;		// True if loading expansion set  
+   private boolean silentclose = false ;  // True if viewer(open) doing close
    
 
 	// Our file load callback button that other components can attach
@@ -319,7 +323,7 @@ final public class MainFrame extends KissFrame
       KissMenu m = (menu instanceof UserMenu) ? panelmenu : menu ;
 		fileopen = (m != null) ? m.getFileOpen() : null ;
 		if (fileopen == null) return ;
-		FileOpen temp = fileopen ;
+		FileOpen temp = (FileOpen) fileopen.clone() ;
 		if (OptionsDialog.getLoadCloseOn())
 		{
 			closeconfig() ;
@@ -341,6 +345,7 @@ final public class MainFrame extends KissFrame
 		loader = new FileLoader(this,config,zip,ze) ;
 		Thread loadthread = new Thread(loader) ;
 		loadthread.start() ;
+      config = null ;
 	}
 
 
@@ -352,6 +357,7 @@ final public class MainFrame extends KissFrame
 	void init(Configuration config)
 	{
       closeframe() ;
+      silentclose = false ;
 		fileopen = config.getFileOpen() ;
 		if (fileopen == null) return ;
 		loader = new FileLoader(this,config) ;
@@ -363,9 +369,13 @@ final public class MainFrame extends KissFrame
 	// Expansion.  This method is called when we expand the current data set.
    // An expansion retains existing object references and event definitions
    // unless they are replaced within the expansion set.  The file loader is
-   // run as a separate thread to track the load progress.
+   // run as a separate thread to track the load progress.  The expand switch
+   // is true if this is an expansion from a user action rather than FKiSS.
 
 	void expand()
+   { expand(false) ; }
+   
+	void expand(boolean expand)
 	{
 		if (!callreturn)
 		{
@@ -375,6 +385,7 @@ final public class MainFrame extends KissFrame
 
 		// Run the file load as a separate thread.
 
+      expansion = expand ;
       KissMenu m = (menu instanceof UserMenu) ? panelmenu : menu ;
 		fileopen = (m != null) ? m.getFileOpen() : null ;
 		if (fileopen == null) return ;
@@ -383,14 +394,29 @@ final public class MainFrame extends KissFrame
 		ArchiveEntry ze = fileopen.getZipEntry() ;
       if (zip != null && zip.getFileOpen() == null) 
          zip.setFileOpen(fileopen) ;
+      
+      if (expansion)
+      {
+         Vector v = config.getExpandFiles() ;
+         if (v != null)
+            expandfiles = v ;
+      }
+      
+      // Appended configurations reload the current configuration.  Expanded
+      // configurations load a new CNF.
+      
       if (config.isAppended())
       {
          if (zip != null) config.setZipFile(zip) ;
          if (ze != null) config.setZipEntry(ze) ;
+   		System.out.println("Expansion reloading appended configuration \"" + config.getName() + "\" (" + config.getID() + ")") ;
          loader = new FileLoader(this,config) ;
       }
-      else   
+      else  
+      {
+   		System.out.println("Expansion reloading new configuration \"" + config.getName() + "\" (" + config.getID() + ")") ;
          loader = new FileLoader(this,config,zip,ze) ;
+      }
 		Thread loadthread = new Thread(loader) ;
 		loadthread.start() ;
 	}
@@ -403,6 +429,7 @@ final public class MainFrame extends KissFrame
 
    void initframe()
    {
+      silentclose = false ;
    	if (loader == null) return ;
       Configuration c = loader.getNewConfiguration() ;
       newconfigid = (c != null) ? c.getID() : null ;
@@ -430,12 +457,79 @@ final public class MainFrame extends KissFrame
                loader.setNewConfiguration(null) ;
                loader.close() ;
             }
-		      KissObject.setLoader(null) ;
             config = null ;
             loader = null ;			
             return ;
 			}
       
+         // If APPEND files exist and we are expanding this configuration
+         // we need to revert to the preappend configuration and then add
+         // the expansion configuration.  
+
+         Vector includefiles = c.getIncludeFiles() ;
+         if (c.isAppended() && expansion && includefiles != null)
+         {
+            String cnf = "" ;
+            String archive = "" ;
+            String s = preappendlru + preappendpath ;
+            int i = s.lastIndexOf(File.pathSeparatorChar) ;
+            if (i > 0) 
+            {
+               cnf = s.substring(i+1) ;
+               archive = s.substring(0,i) ;
+            }
+
+      		// Close the configuration if loading a new config.
+
+     			closeconfig() ;
+               
+            // Load the LRU file.  When loaded we return to the init()
+            // routine and will restart here.  Our includefiles which
+            // includes the expansion file will initiate the load of
+            // the expansion configuration.
+            
+    			if (ArchiveFile.isArchive(archive))
+     				System.out.println("Open LRU archive " + archive) ;
+            final String archive1 = archive ;
+            final String cnf1 = cnf ;
+   			Runnable awt = new Runnable()
+   			{ public void run() { loadfile(archive1,cnf1) ; } } ;
+   			SwingUtilities.invokeLater(awt) ;
+            if (loader != null) loader.close() ;
+            return ;
+         }
+
+         // If we are expanding this configuration apply the expansion CNF.
+         
+         if (expansion && expandfiles != null)
+         {
+            boolean b = false ;
+            for (int i = expandfiles.size()-1 ; i >= 0 ; i--)
+            {
+               Vector entries = c.searchInclude(expandfiles.elementAt(i)) ;
+               if (entries == null || entries.size() == 0) continue ;
+               Object o = entries.firstElement() ;
+               if (!(o instanceof ArchiveEntry)) continue ;
+               ArchiveEntry ze = (ArchiveEntry) o ;
+               System.out.println("Configuration element found: " + ze.getName());
+               b = c.appendInclude(ze) ;
+               break ;
+            }
+   
+            // If we found an expansion file then process the updated configuration.
+            // If no file was found continue with normal initialization.
+            
+            if (loader != null) loader.close() ;       
+            if (b) 
+            {
+               expansion = false ;
+               expandfiles = null ;
+               c.setRestartable(true) ;
+               init(c) ;
+               return ; 
+            }           
+         }
+                  
          // If APPEND files exist we must open the INCLUDE files and append   
          // any CNF elements found in these files to this configuration.   
          // The new cel declarations and event code become an addition to  
@@ -443,7 +537,6 @@ final public class MainFrame extends KissFrame
          // file is used.  Retain the original source references for the 
          // LRU list.
    
-         Vector includefiles = c.getIncludeFiles() ;
          if (c.hasAppendFiles() && !c.isAppended() && includefiles != null)
          {
             boolean b = false ;
@@ -460,10 +553,10 @@ final public class MainFrame extends KissFrame
             // Search each APPEND file for a CNF element.  If we find one
             // then append the text at the location of the APPEND statement.
             
-            for (int i = 0 ; i < includefiles.size() ; i++)
+            for (int i = includefiles.size()-1 ; i >= 0 ; i--)
             {
                Vector entries = c.searchInclude(includefiles.elementAt(i)) ;
-               if (entries == null) continue ;
+               if (entries == null || entries.size() == 0) continue ;
                Object o = entries.firstElement() ;
                if (!(o instanceof ArchiveEntry)) continue ;
                ArchiveEntry ze = (ArchiveEntry) o ;
@@ -483,7 +576,7 @@ final public class MainFrame extends KissFrame
                return ; 
             }
          }
-            
+
          // If this initialization is due to a restart request where we
          // actually loaded a new configuration, rather than restarting
          // from our existing CNF, then we can lose audio and video objects
@@ -549,8 +642,9 @@ final public class MainFrame extends KissFrame
 
 			// Initialize the panel frame.
 
-			setBackground(config.getBorderColor()) ;
-			panel.setBackground(config.getBorderColor()) ;
+         Color bc = config.getBorderColor() ;
+			getContentPane().setBackground(bc) ;
+			panel.setBackground(bc) ;
          panel.setVisible(false) ;
 
          // Activate the configuration and notify any listeners
@@ -827,10 +921,10 @@ final public class MainFrame extends KissFrame
 
 		// Close our frame.
 
-      config = null ;
       title = null ;
       WebFrame.clearRedirect() ;
 		closeframe() ;
+      config = null ;
  		setIconImage(Kisekae.getIconImage()) ;
 		showStatus(null) ;
 		repaint() ;
@@ -844,71 +938,89 @@ final public class MainFrame extends KissFrame
 
 	void closeframe()
 	{
-		if (SwingUtilities.isEventDispatchThread())
-		{
-			// Close all KissDialog windows that may be open.
-
-			try
-			{
-				Window [] windows = getOwnedWindows() ;
-				if (windows != null)
-				{
-					for (int i = 0 ; i < windows.length ; i++)
-					{
-						if (windows[i] instanceof KissDialog)
-						{
-							KissDialog kd = (KissDialog) windows[i] ;
-							kd = kd.getVisibleDialog() ;
-							if (kd != null) kd.close() ;
-						}
-					}
-				}
-			}
-			catch (Exception e) { } 				// Java 1.2 bug 4252492
-
-         // Notify any listeners waiting on configuration changes.
-
-			callback.doClick() ;
-
-			// Close the panel frame.
-
-			if (panel != null) panel.close() ;
-			panel = null ;
-         trace = null ;
-			fileopen = null ;
-			setSplashPane() ;
-
-			// Re-establish the main menu bar for the main frame.
-
-         KissMenu m = (menu instanceof UserMenu) ? panelmenu : menu ;
-			if (m != null) m.setFileOpen(null) ;
-         setMenu(null) ;
-			mainmenu.setFileOpen(null) ;
-			mainmenu.createMenu() ;
-         panelmenu = null ;
-         loadtext = null ;
-			menu = mainmenu ;
-         setTitle("UltraKiss") ;
-         if (OptionsDialog.getInitMenubar())
-         {
-            setJMenuBar(menu.getMenuBar()) ;
-            updateMenuOptions() ;
-            menu.updateRunState() ;
-         }
-			if (toolBar != null) toolBar.updateButtons(null,0,0) ;
-
-			// Reclaim memory.
-
-         validate() ;
-			Runtime.getRuntime().gc() ;
-         setFocus() ;
-		}
-		else
+		if (!SwingUtilities.isEventDispatchThread())
 		{
 			Runnable awt = new Runnable()
 			{ public void run() { closeframe() ; } } ;
-			SwingUtilities.invokeLater(awt) ;
+         try { SwingUtilities.invokeAndWait(awt) ; }
+         catch (InterruptedException e) { }
+         catch (Exception e) { e.printStackTrace(); }
+			return ;
 		}
+
+      // Close all KissDialog windows that may be open.
+
+		try
+		{
+			Window [] windows = getOwnedWindows() ;
+			if (windows != null)
+			{
+				for (int i = 0 ; i < windows.length ; i++)
+				{
+					if (windows[i] instanceof KissDialog)
+					{
+						KissDialog kd = (KissDialog) windows[i] ;
+						kd = kd.getVisibleDialog() ;
+						if (kd != null) kd.close() ;
+					}
+				}
+			}
+		}
+		catch (Exception e) { } 				// Java 1.2 bug 4252492
+
+      // Notify any listeners waiting on configuration changes.
+
+		callback.doClick() ;
+      callback = new CallbackButton(this,"MainFrame Callback") ;
+
+		// Close the panel frame.
+
+		if (panel != null) panel.close() ;
+		panel = null ;
+      trace = null ;
+   	fileopen = null ;
+		setSplashPane() ;
+
+		// Re-establish the main menu bar for the main frame.
+
+      KissMenu m = (menu instanceof UserMenu) ? panelmenu : menu ;
+		if (m != null) m.setFileOpen(null) ;
+      setMenu(null) ;
+      WebFrame wf = mainmenu.getWebFrame() ;
+      if (wf != null) wf.close() ;
+   	mainmenu.setFileOpen(null) ;
+      mainmenu.setWebFrame(null) ;
+		mainmenu.createMenu() ;
+      panelmenu = null ;
+      loadtext = null ;
+		menu = mainmenu ;
+      setTitle("UltraKiss") ;
+      if (OptionsDialog.getInitMenubar())
+      {
+         setJMenuBar(menu.getMenuBar()) ;
+         updateMenuOptions() ;
+         menu.updateRunState() ;
+      }
+   	if (toolBar != null) toolBar.updateButtons(null,0,0) ;
+      
+      Hashtable ht = Configuration.getKeyTable() ;
+      Enumeration e = ht.elements() ;
+      while (e.hasMoreElements())
+      {
+         Object o = e.nextElement() ;
+         if (!(o instanceof Configuration)) continue ;
+         Configuration c = (Configuration) o ;
+         if (c.isClosed())
+         {
+            c.flush() ;
+         }
+      }
+      
+		// Reclaim memory.
+
+      validate() ;
+		Runtime.getRuntime().gc() ;
+      setFocus() ;
 	}
 
 
@@ -1018,8 +1130,19 @@ final public class MainFrame extends KissFrame
 									System.out.println("Save: Write Page " + page) ;
                      }
                   }
+      
+                  // Save this element.  Make sure our zip file is closed,
+                  // otherwise the write can fail.
+
+                  if (zip != null && zip.isOpen()) 
+                  {
+                     try { zip.close() ; }
+                     catch (IOException e) { }       
+                  }
+      
 						FileSave fs = new FileSave(this,config) ;
 				      fs.showall() ;
+                  changed = false ;
 	               return true ;
 					}
 
@@ -1291,11 +1414,15 @@ final public class MainFrame extends KissFrame
 
 	public JTextPane getLoadText() { return loadtext ; }
 
+	// Return a reference to our file loader.
+
+	public FileLoader getLoader() { return loader ; }
+
 	// Return a reference to our main menu.
 
 	public MainMenu getMainMenu() { return mainmenu ; }
 
-	// Return a reference to our original panel menu.
+   // Return a reference to our original panel menu.
 
 	PanelMenu getPanelMenu() { return panelmenu ; }
 
@@ -1403,18 +1530,22 @@ final public class MainFrame extends KissFrame
 
 	void setStatusBar(boolean state)
 	{
-		StatusBar.statusBarOn = state ;
 		if (statusBar == null && state)
 		{
 			statusBar = new StatusBar(this) ;
 			southpanel.add(statusBar,BorderLayout.SOUTH) ;
-         statusBar.setStatusBar(StatusBar.statusBarOn) ;
+         statusBar.setStatusBar(state) ;
 			showStatus(Kisekae.getCopyright()) ;
 		}
 		else if (statusBar != null && !state)
 		{
          southpanel.remove(statusBar) ;
+         statusBar.setStatusBar(state) ;
          statusBar = null ;
+      }
+		else if (statusBar != null && state)
+		{
+         statusBar.setStatusBar(state) ;
 		}
 	}
 
@@ -1436,6 +1567,7 @@ final public class MainFrame extends KissFrame
 			northpanel.remove(toolBar) ;
 			toolBar = null ;
 		}
+      OptionsDialog.setInitToolbar(state) ;
 	}
 
 
@@ -1491,7 +1623,7 @@ final public class MainFrame extends KissFrame
             mainmenu.toolbar.setState(OptionsDialog.getInitToolbar()) ;
       
       StatusBar sb = getStatusBar() ;
-      b = (sb != null) ? sb.statusBarOn : false ;
+      b = (sb != null) ? sb.getState() : false ;
       setStatusBar(OptionsDialog.getInitStatusbar()) ;
       if (OptionsDialog.getInitStatusbar() != b)
          if (mainmenu != null) 
@@ -1530,7 +1662,7 @@ final public class MainFrame extends KissFrame
       if (mainmenu != null) mainmenu.statusbar.setState(false) ;
       ToolBar.toolBarOn = false ;
       StatusBar sb = getStatusBar() ;
-      if (sb != null) sb.statusBarOn = false ;
+      if (sb != null) sb.setStatusBar(false) ;
       mainmenu = new MainMenu(this) ;
       mainmenu.toolbar.setState(options.getInitToolbar()) ;
       mainmenu.statusbar.setState(options.getInitStatusbar()) ;
@@ -1719,7 +1851,7 @@ final public class MainFrame extends KissFrame
       if (vsb != null && vsb.isVisible()) v.width += vsb.getSize().width ;
 		int x = v.width - insets.left - insets.right ;
 		int y = v.height - insets.top - insets.bottom ;
-      panel.fitscreen(fit,x,y,!undoable) ;
+      panel.fitscreen(fit,x,y,!undoable,true) ;
 	}
 
 
@@ -1911,6 +2043,14 @@ final public class MainFrame extends KissFrame
 
 	void setSplashPane()
 	{
+		if (!SwingUtilities.isEventDispatchThread())
+		{
+			Runnable runner = new Runnable()
+			{ public void run() { setSplashPane() ; } } ;
+			javax.swing.SwingUtilities.invokeLater(runner) ;
+         return ;
+      }
+
 		if (splash == null) splash = new SplashPane(this) ;
 		if (scrollpane != null) getContentPane().remove(scrollpane) ;
 		getContentPane().add(splash,BorderLayout.CENTER) ;
@@ -1923,6 +2063,14 @@ final public class MainFrame extends KissFrame
 
 	void setNewSplashPane(boolean reset)
 	{
+		if (!SwingUtilities.isEventDispatchThread())
+		{
+			Runnable runner = new Runnable()
+			{ public void run() { setNewSplashPane(reset) ; } } ;
+			javax.swing.SwingUtilities.invokeLater(runner) ;
+         return ;
+      }
+
       if (reset) 
       {
          images = -1 ;
@@ -1939,10 +2087,28 @@ final public class MainFrame extends KissFrame
 
    // Set the main frame cursor.  This overloads the default method
    // to ensure the panel frame maintains the same cursor state as
-   // the main frame.
+   // the main frame.  In general we want to restore the default cursor
+   // at many places but if we are doing a silent close then we keep any
+   // wait cursor showing until such time as the silent close is complete.
+   // This happens when a new set is loaded, typically through a viewer(open) 
+   // FKiSS action command.
 
    public void setCursor(Cursor c)
    {
+      if (c.equals(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR))) 
+      {
+         if (mainmenu != null)
+         {
+            FileOpen fd = mainmenu.getFileOpen() ;
+            if (fd != null && fd.isSilent()) 
+            {
+               silentclose = true;
+               return ;
+            }
+         }
+         if (silentclose) 
+            return ;
+      }
       super.setCursor(c) ;
       if (panel == null) return ;
       panel.setCursor(c) ;
@@ -2332,18 +2498,20 @@ final public class MainFrame extends KissFrame
    }
 
    
-	// Close the panel frame.
+	// Close the panel frame.  This also closes the configuration and the
+   // main frame.
 
 	void closepanel()
 	{
-		if (SwingUtilities.isEventDispatchThread())
-		{
+		if (!SwingUtilities.isEventDispatchThread())
+      {
 			Runnable runner = new Runnable()
 			{ public void run() { closepanel() ; } } ;
-         Thread thread = new Thread(runner) ;
-         thread.start() ;
-         return ;
+         try { javax.swing.SwingUtilities.invokeAndWait(runner) ; }
+         catch (InterruptedException e) { }
+         catch (Exception e) { e.printStackTrace(); }
       }
+      
       if (!callreturn)
       {
 	      savecallback = "closepanel" ;
@@ -2352,8 +2520,12 @@ final public class MainFrame extends KissFrame
 
 		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
 		closeconfig() ;
+      closeframe() ;
 		setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
-      if (OptionsDialog.getRandomSplash()) setNewSplashPane(true) ;
+      if (OptionsDialog.getRandomSplash()) setNewSplashPane(true) ;      
+      if (scrollpane != null) scrollpane.setViewport(null) ;
+      scrollpane = null ;
+      panel = null ;
  		repaint() ;
    }
 

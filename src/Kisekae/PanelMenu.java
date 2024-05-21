@@ -1439,17 +1439,20 @@ final class PanelMenu extends KissMenu
       {
          Configuration ref = config.getReference() ;
          String s = (ref != null) ? ref.getName() : config.getName() ;
-         System.out.println("Attempt to append \"" + s + "\", already done.") ;
+         System.out.println("Cycle detected, attempt to append \"" + s + "\", already done.") ;
          return ;
       }
 
-      System.out.println("Expanding configuration \"" + config.getName() + "\"") ;
       Vector files = new Vector() ;
       String originalpath = fd.getPath() ;
       for (int n = v.size()-1 ; n >= 0 ; n--)
       {
          Vector entries = config.searchInclude(v.elementAt(n)) ;
-         if (entries != null) files.addAll(entries) ;
+         if (entries != null && entries.size() > 0) 
+         {
+            files.addAll(entries) ;
+            break ;
+         }
       }
          
       // Show the identified .CNF elements for selection.
@@ -1460,6 +1463,7 @@ final class PanelMenu extends KissMenu
 
       if (ze == null)
       {
+         System.out.println("No configuration selected to expand configuration \"" + config.getName() + "\"") ;
          parent.closeframe();
          return ;
       }
@@ -1467,17 +1471,25 @@ final class PanelMenu extends KissMenu
       // Our config is the original configuration.  The archive entry is the
       // configuration to append.  
 
+      System.out.println("Expanding configuration \"" + config.getName() + "\" with \"" + ze.getName() + "\"") ;
       ArchiveFile preappendzip = config.getZipFile() ;
       ArchiveEntry preappendze = config.getZipEntry() ;
       String preappendlru = (preappendzip != null) ? preappendzip.getPath() : null ;
       String preappendpath = (preappendze != null) ? preappendze.getPath() : null ;
       String lruname = (preappendlru != null) ? preappendlru + File.pathSeparator : null ;
       if (parent != null) parent.setNewPreAppend(lruname,preappendpath) ;
-      config.appendInclude(ze) ;
-      setFileOpen(fd) ;
-      parent.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
-      parent.expand() ;
-      parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
+      boolean b = config.appendInclude(ze) ;
+      if (b)
+      {
+         setFileOpen(fd) ;
+         parent.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
+         parent.expand() ;
+         parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
+      }
+      else
+      {
+         eventSelect(true) ;
+      }
    }
 
    // Save the current data set being referenced by our main frame.
@@ -1568,8 +1580,16 @@ final class PanelMenu extends KissMenu
          }
       }
 
-      // Save all updated elements.
+      // Save all updated elements.  Make sure our zip file is closed,
+      // otherwise the write can fail.
 
+      ArchiveFile af = config.getZipFile() ;
+      if (af.isOpen()) 
+      {
+         try { af.close() ; }
+         catch (IOException e) { }       
+      }
+      
       if (type == 0)        // Save As request
       {
          FileSave fd = new FileSave(parent,config) ;

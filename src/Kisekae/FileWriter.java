@@ -1149,7 +1149,7 @@ final class FileWriter extends KissFrame
                if (destination != null)
                {
                   File f = new File(destination) ;
-                  newname = f.getName() ;	
+                  if (!f.isDirectory()) newname = f.getName() ;	
                }
 					File newfile = new File(pathname,newname) ;
 					if (newfile.exists())

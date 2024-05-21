@@ -204,6 +204,7 @@ final public class MainMenu extends KissMenu
       help = new JMenuItem(Kisekae.getCaptions().getString("MenuHelpContents")) ;
       help.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F1,0)) ;
       if (!applemac) help.setMnemonic(KeyEvent.VK_C) ;
+      help.setEnabled(false) ;
       tutorial = new JMenuItem(Kisekae.getCaptions().getString("MenuHelpTutorials")) ;
       tutorial.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T,accelerator+ActionEvent.SHIFT_MASK)) ;
       if (!applemac) tutorial.setMnemonic(KeyEvent.VK_T) ;
@@ -222,9 +223,9 @@ final public class MainMenu extends KissMenu
          tutorial.addActionListener(this) ;
          helper = new HelpLoader(parent,helpset,helpsection) ;
          if (helper.isLoaded()) helper.addActionListener(help) ;
-//       help.setEnabled(helper.isLoaded()) ;
+         help.setEnabled(helper.isLoaded()) ;
       }
-      if (!Kisekae.isHelpInstalled() || helper == null || !helper.isLoaded())
+       if (!Kisekae.isHelpInstalled() || helper == null || !helper.isLoaded())
       {
          help.addActionListener(this) ;
       }
@@ -324,7 +325,7 @@ final public class MainMenu extends KissMenu
       if (!applemac) toolbar.setMnemonic(KeyEvent.VK_T) ;
       viewMenu.add((statusbar = new JCheckBoxMenuItem(Kisekae.getCaptions().getString("MenuViewStatusBar")))) ;
       StatusBar sb = parent.getStatusBar() ;
-      if (sb != null) statusbar.setState(sb.statusBarOn) ;
+      if (sb != null) statusbar.setState(sb.getState()) ;
       statusbar.addItemListener(this) ;
       statusbar.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F3,0)) ;
       if (!applemac) statusbar.setMnemonic(KeyEvent.VK_S) ;
@@ -510,13 +511,13 @@ final public class MainMenu extends KissMenu
    
    void setWebURL(String s) { webURL = s ; }
    
-   // Clear our active portal reference.
-   
-   void clearWebFrame() { webframe = null ; }
-   
    // Get our active portal reference.
    
    WebFrame getWebFrame() { return webframe ; }
+   
+   // Set our active portal reference.
+   
+   void setWebFrame(WebFrame wf) { webframe = wf ; }
    
    // Get our last Open event FileOpen path.
    
@@ -1399,12 +1400,12 @@ final public class MainMenu extends KissMenu
       
       // The added file is an INCLUDE file.
      
-      Vector includefiles = c.getIncludeFiles() ;
-      if (includefiles == null) includefiles = new Vector() ;
+      Vector expandfiles = c.getExpandFiles() ;
+      if (expandfiles == null) expandfiles = new Vector() ;
       File f = fdnew.getFileObject() ;
       if (f == null) return ; 
-      includefiles.add(f) ;
-      c.setIncludeFiles(includefiles) ;
+      expandfiles.add(f) ;
+      c.setExpandFiles(expandfiles) ;
       
       // If there is a CNF in the INCLUDE file use it.  If not, use the
       // current configuration file.  
@@ -1421,7 +1422,7 @@ final public class MainMenu extends KissMenu
       if (ze.isConfiguration())
       {
          parent.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
-         parent.expand() ;
+         parent.expand(true) ;
          parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
       }
    }
@@ -1600,7 +1601,15 @@ final public class MainMenu extends KissMenu
 
    void openContext(FileOpen fd, ArchiveEntry ze)
    {
-      this.fd = fd ;
+		if (!SwingUtilities.isEventDispatchThread())
+		{
+			Runnable awt = new Runnable()
+			{ public void run() { openContext(fd,ze) ; } } ;
+			SwingUtilities.invokeLater(awt) ;
+			return ;
+		}
+      
+      setFileOpen(fd) ;
       if (ze == null) 
       {
          ArchiveFile zip = (fd == null) ? null : fd.getZipFile() ;
@@ -1613,11 +1622,17 @@ final public class MainMenu extends KissMenu
          }
          return ;
       }
+      
+      // Configuration elements open a KiSS set.  Any existing set must be
+      // closed.
 
       if (fd != null && !viewastext.isSelected() && ze.isConfiguration())
       {
          parent.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
          parent.setNewPreAppend(null,null) ;
+         parent.closepanel() ;
+         setFileOpen(fd) ;
+         System.out.println("MainMenu: openContext initialize " + ze.getName());
          parent.init() ;
          parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
          return ;
@@ -1650,7 +1665,11 @@ final public class MainMenu extends KissMenu
       if ((ze.isAudio() || ze.isVideo() || ze.isList()))
       {
          parent.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
-         MediaFrame mf = new MediaFrame(ze) ;
+         MediaFrame mf = MediaFrame.getUniquePlayer() ;
+         if (mf == null) 
+            mf = new MediaFrame(ze,ze) ;
+         else
+            mf.play(ze) ;
          parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
          mf.setVisible(true) ;
          return ;

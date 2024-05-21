@@ -751,6 +751,13 @@ abstract class KissObject
 
 	static void setLoader(KissFrame f) { loader = f ; }
 
+	// Get the object loader frame.
+
+	static FileLoader getLoader() 
+   { 
+      return (loader instanceof FileLoader) ? (FileLoader) loader : null ;      
+   }
+
 	// Set the configuration load reference.
 
 	void setReference(Configuration c) { ref = c ; }

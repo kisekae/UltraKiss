@@ -73,6 +73,7 @@ import java.util.Date ;
 import java.util.Properties ;
 import javax.swing.Timer ;
 import java.net.URL ;
+import javax.swing.SwingUtilities;
 
 
 final class Configuration extends KissObject
@@ -103,7 +104,8 @@ final class Configuration extends KissObject
 	// Configuration objects
 
 	private Dimension screen = null ;		// Dimension of the current screen
-   private Vector includefiles = null ;   // Set of expansion base files
+   private Vector includefiles = null ;   // Set of include or append files
+   private Vector expandfiles = null ;    // Set of expansion files
 	private Vector palettes = null ;			// Set of palettes
 	private Vector cels = null ;				// Set of cels
 	private Vector pages = null ;				// Set of pages
@@ -264,6 +266,10 @@ final class Configuration extends KissObject
 	// Method to return the list of INCLUDE files.
 
 	Vector getIncludeFiles() { return includefiles ; }
+
+	// Method to return the list of INCLUDE files.
+
+	Vector getExpandFiles() { return expandfiles ; }
 
 	// Method to return our variable object.
 
@@ -507,7 +513,12 @@ final class Configuration extends KissObject
 		if (p == null || rgbborder) 
       {
          if (!OptionsDialog.getPlayFKissCompatibility())
-            return new Color(border) ;
+         {
+            int r = (border & 0xff0000) >> 16 ;
+            int g = (border & 0x00ff00) >> 8 ;
+            int b = (border & 0x0000ff) ;
+            return new Color(r,g,b) ;
+         }
          int r = (((border % 1024) / 32) * 36) % 256 ;
          int g = (((border % 32) / 4) * 36) % 256 ;
          int b = (((border % 4)) * 85) % 256 ;
@@ -606,7 +617,11 @@ final class Configuration extends KissObject
    
    // Method to set our include files list.
    
-   void setIncludeFiles(Vector v) {includefiles = v ; }
+   void setIncludeFiles(Vector v) { includefiles = v ; }
+   
+   // Method to set our expansion files list.
+   
+   void setExpandFiles(Vector v) { expandfiles = v ; }
 
 	// Method to set our edit change indicator.
 
@@ -712,7 +727,11 @@ final class Configuration extends KissObject
 
 	boolean hasIncludeFiles() { return (includefiles != null && includefiles.size() > 0) ; }
 
-	// Return an indicator if the configuration uses INCLUDE files.
+	// Return an indicator if the configuration uses expansion files.
+
+	boolean hasExpandFiles() { return (expandfiles != null && expandfiles.size() > 0) ; }
+
+	// Return an indicator if the configuration has an appended CNF.
 
 	boolean hasAppendFiles() { return appendcnf ; }
    
@@ -899,6 +918,11 @@ final class Configuration extends KissObject
 
 			if (zip != null && ze != null)
 			{
+            if (!zip.isOpen()) 
+            {
+               zip.open() ;
+               ze.setZipFile(zip) ;
+            }
 				file = ze.getPath() ;
 				bytes = (int) ze.getSize() ;
 				is = zip.getInputStream(ze) ;
@@ -1117,10 +1141,9 @@ final class Configuration extends KissObject
       {
   		   System.out.println("Search " + s + " file " + ((ArchiveFile) include).getName()) ;
          entries = ((ArchiveFile) include).getEntryType(".cnf") ;
-         if (entries == null)
+         if (entries == null || entries.size() == 0)
             System.out.println("No configuration element found in " + ((ArchiveFile) include).getName()) ;
       }
-
       return entries ;
    }
    
@@ -1179,11 +1202,18 @@ final class Configuration extends KissObject
             String [] parts = findAppend(s,zip.getFileName()) ;
             
             // If no APPEND directive add the new configuration to the end.
+            // This will occur on FKiSS viewer(appendcnf) action command to
+            // merge an INCLUDE file CNF with the loaded configuration. 
+            // 
+            // The loaded configuration is typically from a wrapper file that
+            // contains menu and event code corrections to the included set.
+            // In this case we use the INCLUDE file cnf page set definitions
+            // and discard any page set definitions from the wrapper file.
             
             if (parts == null) 
             {
                parts = new String [2] ;
-               parts[0] = s ;
+               parts[0] = eliminatePageSet(s) ;
                parts[1] = null ;
             }
 
@@ -1207,7 +1237,7 @@ final class Configuration extends KissObject
 
       if (memfile != null)
       {
-//       String s = memfile.getString() ;
+         String s = memfile.getString() ;
          setAppended(true) ;
          setMemoryFile(memfile.getBuffer(),ze);
          setName(originalpath) ;
@@ -1230,8 +1260,10 @@ final class Configuration extends KissObject
          af.setFileOpen(fd) ;
          return true ;
       }
-      else         
+      else      
+      {
          System.out.println("No expansion configuration selected.") ; 
+      }
       return false ;
    }
 
@@ -1266,7 +1298,7 @@ final class Configuration extends KissObject
             if (s1.startsWith("APPEND"))
             {
                Vector v = includefiles ;
-               includefiles = new Vector() ;
+               if (includefiles == null) includefiles = new Vector() ;
                s1 = s1.substring("APPEND".length()) ;
                char c = (s1.length() > 0) ? s1.charAt(0) : 0 ;
                if (Character.isWhitespace(c)) parseIncludeFiles(s1) ;
@@ -1538,7 +1570,7 @@ final class Configuration extends KissObject
 
                border = n1 ;
                rgbborder = (n1 >= 0 && n2 >= 0 && n3 >= 0) ;
-               if (rgbborder) border = ((n1&0xFF) << 16) + ((n2&0xFF) << 8) + (n3&0xFF) ;
+               if (rgbborder) border = ((n1&0xFF) << 16) | ((n2&0xFF) << 8) | (n3&0xFF) ;
                if (n1 > 255 & !rgbborder) rgbborder = true ;
                if (border < 0) border = 0 ;
 					trailingtext.removeAllElements() ;
@@ -1589,6 +1621,10 @@ final class Configuration extends KissObject
 					// Cel file specifications.
 
 				case '#':
+    if (s.contains("bleg-l.cel"))
+       s = s ;
+               file = file ;
+
 					Cel cel = parseCel(s) ;
                if (cel == null) break ;
 					cel.setIdentifier(new Integer(celCount++)) ;
@@ -1729,6 +1765,61 @@ final class Configuration extends KissObject
 //         setRestartable(false) ;
       }
 	}
+    
+   
+	// Method to read and parse the configuration file to eliminate any
+	// page set declarations.  This method is used when appending a new
+   // configuration file to a wrapper set configuration.   In this case
+   // we only want one set of pages defined.
+
+	private String eliminatePageSet(String cnf) 
+	{
+		BufferedReader reader = null ;
+      StringBuilder result = null ;
+
+		if (cnf == null) return null ;
+		reader = new BufferedReader(new StringReader(cnf)) ;
+      result = new StringBuilder(cnf.length()) ;
+
+		// Read the configuration file.  We read one line at a time and
+		// decode it.  There are times when the parse will fail and we
+		// must re-read the last line.
+
+		try
+		{
+			while (true)
+			{
+				newline = true ;
+				String s = reader.readLine() ;
+				if (s == null) break ;
+            String s1 = s.trim() ;
+            if (s1.length() == 0) s1 = " " ;
+
+				// Parse the configuration statements.
+
+				switch (s1.charAt(0))
+				{
+				case '$':
+					PageSet page = parsePage(s1,reader) ;
+               if (trailtoken != null)
+               {
+                  for (int i = 0; i < trailtoken.size() ; i++)
+                  {
+                     String s2 = trailtoken.elementAt(i).toString() ;
+                     result.append(s2 + System.getProperty("line.separator")) ;
+                  }
+               }
+					break ;               
+               
+            default:
+               result.append(s + System.getProperty("line.separator")) ;
+               break ;
+            }
+         }
+      }
+      catch (IOException e) { }
+      return result.toString() ;
+   }
 
 
 	// Method to load all files in the configuration.  Palette files must be
@@ -2978,6 +3069,16 @@ final class Configuration extends KissObject
    void close() { close(false,true) ; }
 	void close(boolean restart, boolean resetoptions)
 	{
+		if (!SwingUtilities.isEventDispatchThread())
+		{
+			Runnable awt = new Runnable()
+			{ public void run() { close(restart,resetoptions) ; } } ;
+         try { SwingUtilities.invokeAndWait(awt) ; }
+         catch (InterruptedException e) { }
+         catch (Exception e) { e.printStackTrace(); }
+			return ;
+		}
+      
       if (isClosed()) return ;
 		String s = (file == null) ? "" : file ;
 		if (OptionsDialog.getDebugControl())
@@ -2990,18 +3091,15 @@ final class Configuration extends KissObject
 
 		// Shut down the timer and the event handler.
 
-      if (activated)
-      {
-         stopTimer() ;
-			if (animator != null) animator.stopTimer() ;
-	      if (scenetimer != null) scenetimer.stopTimer() ;
-	      if (closetimer != null) closetimer.stopTimer() ;
-			EventHandler.stopEventHandler() ;
-         EventHandler.clearEventQueue() ;
-	      EventHandler.setPanelFrame(null);
-	      GifTimer.setPanelFrame(null);
-         activated = false ;
-      }
+      stopTimer() ;
+   	if (animator != null) animator.stopTimer() ;
+      if (scenetimer != null) scenetimer.stopTimer() ;
+      if (closetimer != null) closetimer.stopTimer() ;
+		EventHandler.stopEventHandler() ;
+      EventHandler.clearEventQueue() ;
+      EventHandler.setPanelFrame(null);
+      GifTimer.setPanelFrame(null);
+      activated = false ;
 
 		// Flush all image data.  This cleans up our memory allocation
 		// and seems to stop odd things from happening.  Note: this
@@ -3020,10 +3118,9 @@ final class Configuration extends KissObject
 
       // Terminate any configuration mediaplayer that is active.
 
-      if (mediaframe != null) 
-      {
-         mediaframe.stop() ;
-      }
+      MediaFrame unique = MediaFrame.getUniquePlayer() ;
+      if (unique != null && unique != mediaframe) unique.stop() ;
+      if (mediaframe != null) mediaframe.stop() ;
       mediaframe = null ;
 		timer = null ;
       animator = null ;
@@ -3131,6 +3228,15 @@ final class Configuration extends KissObject
       saveValuepoolProperties() ;
       propertypool.clear() ;
 
+      // Flush JavaCel instances to clear memory.
+      
+      for (int i = 0 ; i < comps.size() ; i++)
+      {
+         JavaCel c = (JavaCel) comps.elementAt(i) ;
+         c.flush() ;
+      }
+      
+      
 		// Release our current object storage.
 
 		cels.removeAllElements() ;
@@ -3201,6 +3307,7 @@ final class Configuration extends KissObject
          ze = null ;
 
          // Close any INCLUDE files that were opened.
+         // Expansion files remain as they are required after reload of base CNF.
 
          if (includefiles != null)
          {
@@ -3236,7 +3343,8 @@ final class Configuration extends KissObject
       is = null ;             // The file input stream
       f = null;               // The buffered input stream
       screen = null ;         // Dimension of the current screen
-      includefiles = null ;   // Set of expansion base files
+      includefiles = null ;   // Set of include files
+      expandfiles = null ;    // Set of expansion files
       palettes = null ;			// Set of palettes
       cels = null ;				// Set of cels
       pages = null ;				// Set of pages
@@ -4135,7 +4243,8 @@ final class Configuration extends KissObject
             // Watch for 0123456789 type page entries on older KiSS sets.
             // If we see these parse the individual digits as page numbers.
 
-            if (value.length() > 1 && !ultrakiss)
+            boolean isPlayFKiss = OptionsDialog.getPlayFKissCompatibility() ;
+            if (value.length() > 1 && (!ultrakiss || isPlayFKiss))
             {
                for (int digit = 0 ; digit < value.length() ; digit++)
                {
@@ -4184,7 +4293,8 @@ final class Configuration extends KissObject
             // Watch for 0123456789 type page entries on older KiSS sets.
             // If we see these parse the individual digits as page numbers.
 
-            if (value.length() > 1 && !ultrakiss)
+            boolean isPlayFKiss = OptionsDialog.getPlayFKissCompatibility() ;
+            if (value.length() > 1 && (!ultrakiss || isPlayFKiss))
             {
                for (int digit = 0 ; digit < value.length() ; digit++)
                {
@@ -4700,7 +4810,7 @@ final class Configuration extends KissObject
 	// Method to parse expansion set INCLUDE files.  Each token is an INCLUDE
    // file name.  These are path specifiers to a compressed archive file or
    // a configuration file.  File names must be delimited with quotes if they
-   // contain spaces.
+   // contain spaces.  Use reference includefiles if they exist.
 
 	private void parseIncludeFiles(String s)
 	{
@@ -4709,6 +4819,8 @@ final class Configuration extends KissObject
       s = trim(s) + " " ;
       s = s.replaceAll("[,\\s]+", " ") ;
 		StringTokenizer st = new StringTokenizer(s," \t,") ;
+      if (includefiles == null && ref != null)
+         includefiles = ref.getIncludeFiles() ;
       if (includefiles == null) includefiles = new Vector() ;
 
       // Extract file names.
@@ -4754,7 +4866,25 @@ final class Configuration extends KissObject
                if (!((File) o).isAbsolute()) 
                   o = new File(zip.getDirectoryName(),file) ;
             }
-            includefiles.add(o) ;
+            
+            // Retain this file if it does not currently exist in the list.
+            // INCLUDE files may have been preprocessed in the reference
+            // configuration and replaced with a cached file reference.
+
+            boolean found = false ;
+            File f = new File(s1) ;
+            String filename = f.getName() ;
+            int i = filename.lastIndexOf('.') ;
+            if (i > 0) filename = filename.substring(0,i) ;
+            for (i = 0 ; i < includefiles.size(); i++)
+            {
+               Object entry = includefiles.elementAt(i) ;
+               String s2 = entry.toString().toLowerCase() ;
+               if (s2.contains(filename)) found = true ;
+            }
+            
+            if (!found) 
+               includefiles.add(o) ;
          }
          catch (Exception e)
          {
@@ -5028,34 +5158,37 @@ final class Configuration extends KissObject
       MainFrame mf = Kisekae.getMainFrame() ;
 		if ("EventHandler".equals(token))
       {
-         String compatibility = OptionsDialog.getCompatibilityMode() ;
-         if (OptionsDialog.getStrictSyntax() && compatibility != null)
+         if (loader != null)
          {
-           	loader.showText(" ") ;
-           	loader.showText(compatibility + " compatibility on.") ;
-           	System.out.println(compatibility + " compatibility on.") ;
-         }
-         else if (directkiss && compatibility == null)
-         {
-           	loader.showText(" ") ;
-           	loader.showText("DirectKiss compatibility set.") ;
-           	System.out.println("DirectKiss compatibility set.") ;
-            OptionsDialog.setDirectKissCompatibility("true") ;
-         }
-         else if (playfkiss && compatibility == null)
-         {
-           	loader.showText(" ") ;
-           	loader.showText("PlayFKiss compatibility set.") ;
-           	System.out.println("PlayFKiss compatibility set.") ;
-            OptionsDialog.setPlayFKissCompatibility("true") ;
-         }
-         else if (!ultrakiss && compatibility == null && 
-            !mf.isRestart() && OptionsDialog.getDefaultPlayFKiss())
-         {
-            loader.showText(" ") ;
-            loader.showText("PlayFKiss compatibility assumed.") ;
-            System.out.println("PlayFKiss compatibility assumed.") ;
-            OptionsDialog.setPlayFKissCompatibility("true") ;
+            String compatibility = OptionsDialog.getCompatibilityMode() ;
+            if (OptionsDialog.getStrictSyntax() && compatibility != null)
+            {
+              	loader.showText(" ") ;
+              	loader.showText(compatibility + " compatibility on.") ;
+              	System.out.println(compatibility + " compatibility on.") ;
+            }
+            else if (directkiss && compatibility == null)
+            {
+              	loader.showText(" ") ;
+              	loader.showText("DirectKiss compatibility set.") ;
+              	System.out.println("DirectKiss compatibility set.") ;
+               OptionsDialog.setDirectKissCompatibility("true") ;
+            }
+            else if (playfkiss && compatibility == null)
+            {
+              	loader.showText(" ") ;
+              	loader.showText("PlayFKiss compatibility set.") ;
+              	System.out.println("PlayFKiss compatibility set.") ;
+               OptionsDialog.setPlayFKissCompatibility("true") ;
+            }
+            else if (!ultrakiss && compatibility == null && 
+               !mf.isRestart() && OptionsDialog.getDefaultPlayFKiss())
+            {
+               loader.showText(" ") ;
+               loader.showText("PlayFKiss compatibility assumed.") ;
+               System.out.println("PlayFKiss compatibility assumed.") ;
+               OptionsDialog.setPlayFKissCompatibility("true") ;
+            }
          }
       }
       

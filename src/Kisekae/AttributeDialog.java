@@ -148,6 +148,8 @@ class AttributeDialog extends KissDialog
    private JLabel jLabel25 = new JLabel();
    private JTextField jTextField9 = new JTextField();
    private JLabel jLabel26 = new JLabel();
+   private JCheckBox opaque = new JCheckBox();
+   private JLabel jLabel27 = new JLabel();
   
    // State variables
    
@@ -526,6 +528,8 @@ class AttributeDialog extends KissDialog
       jLabel25.setToolTipText("Sets the raised or lowered shape of the border");
       jLabel26.setText("Title:");
       jLabel26.setToolTipText("The title for the border");
+      jLabel27.setText("Transparent background:");
+      jLabel27.setToolTipText("Enable a transparent background");
       jTextField1.setOpaque(true);
       jTextField1.setPreferredSize(new Dimension(100, 21));
       jTextField1.setRequestFocusEnabled(true);
@@ -708,6 +712,10 @@ class AttributeDialog extends KissDialog
             ,GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(5, 5, 5, 5), 0, 0));
       jPanel4.add(noforecolor,  new GridBagConstraints(2, 1, 1, 1, 0.0, 0.0
             ,GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(5, 30, 5, 5), 0, 0));
+     jPanel4.add(jLabel27,      new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0
+            ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(5, 5, 5, 5), 0, 0));
+      jPanel4.add(opaque,  new GridBagConstraints(1, 2, 1, 1, 0.0, 0.0
+            ,GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(5, 30, 5, 5), 0, 0));
       
       panel1.add(jPanel5,  BorderLayout.SOUTH);
       jPanel5.add(Box.createGlue()) ;
@@ -851,12 +859,14 @@ class AttributeDialog extends KissDialog
                d.width += insets.left + insets.right ;
                d.height += insets.top + insets.bottom ;
             }
-            else if (o[1] instanceof JTextPane)
+            else if (o[1] instanceof JEditorPane)
             {
-               input = new JTextPane() ;
+               input = new JEditorPane() ;
+               ((JEditorPane) input).setContentType("text/html");
+               ((JEditorPane) input).setEditorKit(new WebHTMLEditor());
                String s = substitute(jTextField1.getText(), "\\n", "\n") ;
-               ((JTextPane) input).setMargin(((JTextPane) o[1]).getMargin()) ;
-               ((JTextPane) input).setText(s) ;
+               ((JEditorPane) input).setMargin(((JEditorPane) o[1]).getMargin()) ;
+               ((JEditorPane) input).setText(s) ;
                scroll = new JScrollPane(input) ;
                Insets insets = scroll.getInsets() ;
                d.width += insets.left + insets.right ;
@@ -891,7 +901,7 @@ class AttributeDialog extends KissDialog
                s = substitute(input.getText(),"\n","\\n") ;
                jTextField1.setText(s) ;
             }
-            else if (input instanceof JTextPane)
+            else if (input instanceof JEditorPane)
             {
                s = substitute(input.getText(),"\n","\\n") ;
                jTextField1.setText(s) ;
@@ -1025,6 +1035,13 @@ class AttributeDialog extends KissDialog
             }
             catch (Exception e) { }
          }
+		}
+      
+		if ((i = s1.indexOf("trans")) >= 0)        // transparent background
+		{
+         char c = (i > 0) ? s1.charAt(i-1) : ' ' ;
+         boolean onoff = (c == '-') ? false : true ;
+         opaque.setSelected(onoff); 
 		}
 
 		if ((i = s1.indexOf("fontname=")) >= 0)    // set the font
@@ -1296,6 +1313,7 @@ class AttributeDialog extends KissDialog
       c = borderswath.getBackground() ;
       if (initbdc != null) sb.append("bdc="+(c.getRGB()&0xffffff)+",") ;
       if (initbdc == null) sb.append("-bdc,") ;
+      if (opaque.isSelected()) sb.append("trans,") ;
 
       // Border attributes
 
