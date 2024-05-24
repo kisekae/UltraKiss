@@ -993,7 +993,7 @@ final class Configuration extends KissObject
       // On a restart we created a new zip file.  The old one should be
       // flushed to discard the old content entries.
       
-      if (zip != null && zip != newzip) zip.flush() ;
+      if (zip != null && zip != newzip && !ref.isAppended()) zip.flush() ;
       zip = newzip ;
       ze = newze ;
       fileopen.setZipFile(zip) ;

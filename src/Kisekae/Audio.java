@@ -601,6 +601,27 @@ abstract class Audio extends KissObject
                setFromInclude(true) ;
             }
          }
+         
+         // If still not found, it is possibly an appended configuration.
+         // The audio may be contained in the parent file.
+
+         if (ze == null && ref != null)
+         {
+            Vector sounds = (ref == null) ? null : ref.getSounds() ;
+            if (sounds != null && name != null)
+            {
+               for (int i = 0; i < sounds.size(); i++)
+               {
+                  Object o = sounds.elementAt(i );
+                  if (!(o instanceof Audio)) continue ;
+                  Audio a1 = (Audio) o ;
+                  if (!(name.equalsIgnoreCase(a1.getRelativeName()))) continue ;
+                  zip = a1.getZipFile() ;
+                  ze = a1.getZipEntry() ;
+                  break ;
+               }
+            }
+         }
 
 			// Determine the uncompressed file size.
 
