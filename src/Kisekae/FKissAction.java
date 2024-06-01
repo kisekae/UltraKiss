@@ -3533,7 +3533,7 @@ final class FKissAction extends KissObject
                         // If still no find and we are an appended configuration
                         // then look in the preappended archive.  
                         
-                        else if (config.isAppended() && mf != null)
+                        if (tf == null && config.isAppended() && mf != null)
                         {
                            String s = mf.getPreAppendLru() ;
                            if (s != null) s = s.replace(File.pathSeparatorChar,' ').trim() ;
@@ -3547,6 +3547,27 @@ final class FKissAction extends KissObject
                            }
                         }
                         
+                        // If still no find and we are an expanded configuration
+                        // then look in the expansion archive.  
+                        
+                        if (tf == null && config.isExpanded() && mf != null)
+                        {
+                           Object o = config.getExpandFiles().elementAt(0) ;
+                           if (o instanceof ArchiveFile) 
+                           {
+                              String s = ((ArchiveFile) o).getPath() ;
+                              if (s != null) s = s.replace(File.pathSeparatorChar,' ').trim() ;
+                              fd = new FileOpen(mf,s,"r") ;
+                              fd.open(vs2) ;
+                              ze = fd.getZipEntry() ;
+                              if (ze != null) 
+                              {
+                                 tf = new TextFrame(ze) ;
+                                 fd.close() ;
+                              }
+                           }
+                        }
+                        
                         // Look for a generic view documents request.
                         
                         if (vs2 != null && "documents".equalsIgnoreCase(vs2))
@@ -3554,6 +3575,7 @@ final class FKissAction extends KissObject
                            String [] ext = ArchiveFile.getDocExt() ;
                            String title = Kisekae.getCaptions().getString("DocumentationListTitle") ;
                            if (pm != null) pm.eventTextEdit(title,ext,false) ;
+                           return ;
                         }
                      }
 

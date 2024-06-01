@@ -711,11 +711,10 @@ abstract class Audio extends KissObject
    }
    
    // Release critical resources.  We must retain the zip and ze entries
-   // from the KissObject to re-open the audio object.
+   // and the 'me' reference from the KissObject to re-open the audio object.
 
    void flush()
    {
-      me = null ;
       is = null ;
       b = null ;
    }
@@ -751,9 +750,13 @@ abstract class Audio extends KissObject
       {
          Vector p = (Vector) players.clone() ;
          long time = System.currentTimeMillis() - Configuration.getTimestamp() ;
+     		if (OptionsDialog.getDebugSound())
+            System.out.println("[" + time + "] Audio: stop, player size "+p.size()+" audio to stop="+a) ;
    		for (int i = p.size()-1 ; i >= 0 ; i--)
    		{
     			Audio audio = (Audio) p.elementAt(i) ;
+       		if (OptionsDialog.getDebugSound())
+               System.out.println("[" + time + "] Audio: stop, index="+i+" player is "+audio) ;
    			if (a != null && a != audio) continue ;
    			if (audio instanceof AudioMedia)
             {

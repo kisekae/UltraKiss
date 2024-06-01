@@ -379,9 +379,17 @@ final class AudioMedia extends Audio
          
          open() ;
 			if (error) throw new KissException("audio object in error on open") ;
+         long time = System.currentTimeMillis() - Configuration.getTimestamp() ;
 
          lock.lock() ;
-			try { if (!players.contains(me)) players.addElement(me) ; }
+			try { 
+            if (!players.contains(me)) 
+            {
+          		if (OptionsDialog.getDebugSound())
+          		   System.out.println("[" + time + "] AudioMedia: " + getName()  + " adding myself to players") ;
+               players.addElement(me) ;
+            } 
+         }
          finally { lock.unlock() ; }
 
 			// For JMF sound, identify the player state for debug output.
@@ -403,7 +411,6 @@ final class AudioMedia extends Audio
             state = "Started" ;
  			if (playerstate == Player.Unrealized)
             state = "Unrealized" ;
-         long time = System.currentTimeMillis() - Configuration.getTimestamp() ;
          if (OptionsDialog.getDebugSound())
             System.out.println("[" + time + "] AudioMedia: " + getName() + " [" + playcount + "]" + " Play request, current state is " + state) ;
          
@@ -520,6 +527,8 @@ final class AudioMedia extends Audio
 //          if (a != null) a.doCallback() ;
             audio.setRepeat(0) ;
             audio.setType(null) ;
+        		if (OptionsDialog.getDebugSound())
+        		   System.out.println("[" + time + "] AudioMedia: " + audio.getName()  + " removing from players") ;
             removeplayer.add(audio) ;
          }
         players.removeAll(removeplayer) ;

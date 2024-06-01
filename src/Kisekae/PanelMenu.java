@@ -1735,20 +1735,31 @@ final class PanelMenu extends KissMenu
       if (!config.isAppended())
       {
          fileopen = config.getFileOpen() ;
-         if (fileopen == null) return ;
       }
-      else
+      
+      if (config.isExpanded())
+      {
+         Object o = config.getExpandFiles().elementAt(0) ;
+         if (o instanceof ArchiveFile) 
+         {
+            String s = ((ArchiveFile) o).getPath() ;
+            if (s != null) s = s.replace(File.pathSeparatorChar,' ').trim() ;
+            fileopen = new FileOpen(parent,s,"r") ;
+         }
+      }
+      
+      if (fileopen == null)
       {
          String preappendlru = parent.getPreAppendLru() ;
          String s = preappendlru ;
          if (s != null) s = s.replace(File.pathSeparatorChar,' ').trim() ;
          fileopen = new FileOpen(parent,s,"r") ;
       }
-      fileopen.open() ;
-
+      
       // Search for the appropriate entries in our archive.
       // New configurations will not yet exist as files.
 
+      fileopen.open() ;
       ArchiveEntry ze = fileopen.showConfig(parent,title,ext) ;
       if (ze == null) { fileopen.close() ; return ; }
       parent.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;

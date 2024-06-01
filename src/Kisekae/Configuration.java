@@ -621,7 +621,10 @@ final class Configuration extends KissObject
    
    // Method to set our expansion files list.
    
-   void setExpandFiles(Vector v) { expandfiles = v ; }
+   void setExpandFiles(Vector v) 
+   { 
+      expandfiles = v ; 
+   }
 
 	// Method to set our edit change indicator.
 
@@ -706,6 +709,10 @@ final class Configuration extends KissObject
 	// Return our appended indicator.
 
 	boolean isAppended() { return appended ; }
+
+	// Return our expansion indicator.
+
+	boolean isExpanded() { return (expandfiles != null && expandfiles.size() > 0) ; }
 
 	// Return our flushed indicator.
 
@@ -992,7 +999,7 @@ final class Configuration extends KissObject
       
       // On a restart we created a new zip file.  The old one should be
       // flushed to discard the old content entries.
-      
+
       if (zip != null && zip != newzip && !ref.isAppended()) zip.flush() ;
       zip = newzip ;
       ze = newze ;
@@ -1011,6 +1018,7 @@ final class Configuration extends KissObject
       setOptionsChanged(ref.isOptionChanged()) ;
       setRestartable(ref.isRestartable()) ;
       setAppended(ref.isAppended()) ;
+      setExpandFiles(ref.getExpandFiles()) ;
 		file = zip.getPath() ;
 		bytes = ref.getBytes() ;
       if (isAppended() && getReference() != null) file = ref.getPath() ;
@@ -3203,25 +3211,6 @@ final class Configuration extends KissObject
 			System.out.println("Restarted configuration \"" + s + "\" (" + getID() + ") as (" + newID + ")") ;
          return ;
       }
-
-		// Terminate any audio in progress.
-
-		for (int i = 0 ; i < sounds.size() ; i++)
-		{
-			Audio a = (Audio) sounds.elementAt(i) ;
-			a.close() ;
-		}
-
-		// Terminate any video in progress.
-
-		for (int i = 0 ; i < movies.size() ; i++)
-		{
-         if (Kisekae.isMediaInstalled())
-         {
-   			Video v = (Video) movies.elementAt(i) ;
-   			v.close() ;
-         }
-		}
       
       // Save any valuepool property settings.
       

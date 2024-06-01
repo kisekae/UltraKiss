@@ -1398,16 +1398,16 @@ final public class MainMenu extends KissMenu
       fdnew.show(Kisekae.getCaptions().getString("OpenExpansionTitle")) ;
       ArchiveEntry ze = fdnew.getZipEntry() ;
       
-      // The added file is an INCLUDE file.
+      // The added file is an expansion file.
      
       Vector expandfiles = c.getExpandFiles() ;
       if (expandfiles == null) expandfiles = new Vector() ;
       File f = fdnew.getFileObject() ;
       if (f == null) return ; 
-      expandfiles.add(f) ;
+      expandfiles.add(fdnew.getZipFile()) ;
       c.setExpandFiles(expandfiles) ;
       
-      // If there is a CNF in the INCLUDE file use it.  If not, use the
+      // If there is a CNF in the expansion file use it.  If not, use the
       // current configuration file.  
       
       if (ze == null)

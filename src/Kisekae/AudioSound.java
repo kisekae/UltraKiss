@@ -594,7 +594,12 @@ final class AudioSound extends Audio
 		{
 			if (format) throw new KissException("unknown media format") ;
 			if (error) throw new KissException("audio object in error") ;
-			if (!players.contains(me)) players.addElement(me) ;
+			if (!players.contains(me)) 
+         {
+       		if (OptionsDialog.getDebugSound())
+       		   System.out.println("[" + time + "] AudioSound: " + getName()  + " adding myself to players") ;
+            players.addElement(me) ;
+         }
          
          // Open the audio file.  This will reset the audio position if the
          // file has been previously opened, or establish the appropriate 
@@ -690,6 +695,8 @@ final class AudioSound extends Audio
                Vector sounds = (config != null) ? config.getSounds() : null ;
                int n = (sounds != null) ? sounds.indexOf(this) : -1 ;
                if (n >= 0) sounds.setElementAt(a1,n) ;
+          		if (OptionsDialog.getDebugSound())
+          		   System.out.println("[" + time + "] AudioSound: " + getName()  + " removing from players") ;
       			players.remove(o) ;
                a1.init() ;
                o = a1 ;

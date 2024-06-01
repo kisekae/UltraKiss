@@ -433,6 +433,7 @@ final public class MainFrame extends KissFrame
    	if (loader == null) return ;
       Configuration c = loader.getNewConfiguration() ;
       newconfigid = (c != null) ? c.getID() : null ;
+      if (expansion) c.setExpandFiles(expandfiles) ;
    	initframe(c) ;
    }
 
@@ -1395,9 +1396,9 @@ final public class MainFrame extends KissFrame
 
 	void showStatus(String s)
 	{
-      if (OptionsDialog.getDebugControl() && s != null)
-      	System.out.println("Status " + s) ;
 		if (s == null) s = Kisekae.getCopyright() ;
+      if (OptionsDialog.getDebugControl())
+      	System.out.println("Status " + s) ;
 		if (statusBar != null) statusBar.showStatus(s) ;
 	}
 
