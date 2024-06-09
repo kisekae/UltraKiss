@@ -3126,6 +3126,7 @@ final class Configuration extends KissObject
 
       // Terminate any configuration mediaplayer that is active.
 
+      Audio.stop() ;
       MediaFrame unique = MediaFrame.getUniquePlayer() ;
       if (unique != null && unique != mediaframe) unique.stop() ;
       if (mediaframe != null) mediaframe.stop() ;

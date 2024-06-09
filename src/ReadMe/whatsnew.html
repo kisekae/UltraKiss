@@ -21,13 +21,17 @@
 	web. I will also place notices here regarding product updates, scheduled 
 	releases, or problems and work-arounds that may affect you.&nbsp;</p>
                                         <p>&nbsp;</p>
-					<p><B>July, 2024</B></p>
 					<P>UltraKiss V3.7.4 is in development. This release fixes bugs related to the web distribution of the Scarecrow sets.</P>
 					<h3><FONT face=Arial>Updates to V3.7.4&nbsp; </FONT></h3>
 					<BLOCKQUOTE>
-                      <p><font face="Arial">1. New sounds included in a wrapper file that loaded an appended configuration failed to play.  The sound was not referenced correctly from the original archive file.</font></p>
-                      <p><font face="Arial">2. The FKiSS viewer("view","documents") or viewer("view","somefile.txt") failed to show documents contained in expansion sets.  This is corrected. </font></p>
-                      <p><font face="Arial">3. Corrected an issue where audio sounds transitioned to the mediaplayer would not be terminated after a restart and a new sound was played. Both sounds played concurrently. </font></p>
+                      <p><font face="Arial">1. A new UltraKiss visual application "TheOwl.zip" is distributed with UltraKiss 3.7.3.  This application enables downloads and execution of all Scarecrow sets.</font></p>
+                      <p><font face="Arial">2. New sounds included in a wrapper file that loaded an appended configuration failed to play.  The sound was not referenced correctly from the original archive file.</font></p>
+                      <p><font face="Arial">3. The FKiSS viewer("view","documents") or viewer("view","somefile.txt") failed to show documents contained in expansion sets.  This is corrected. </font></p>
+                      <p><font face="Arial">4. Corrected an issue where audio sounds transitioned to the mediaplayer would not be terminated after a restart and a new sound was played. Both sounds played concurrently. </font></p>
+                      <p><font face="Arial">5. Corrected a null pointer exception when specifying an expansion file that did not include a configuration element.</font></p>
+                      <p><font face="Arial">6. Corrected a String index out of bounds fault in the FKiSS Editor when creating a new event with File-New Event menu command.</font></p>
+                      <p><font face="Arial">7. Implemented a multiple selection dialog to delete only selected cached files from the download cache directory.</font></p>
+                      <p><font face="Arial">8. Corrected the 32-bit architecture distribution of UltraKiss to actually use a 32 bit JVM.  Previously, a 64-bit JVM was packaged.</font></p>
           				</BLOCKQUOTE>
                                         <p>&nbsp;</p>
 					<p><B>May 21, 2024</B></p>
@@ -47,7 +51,7 @@
                       <p><font face="Arial">11. Introduced a new TextPane component that is like a TextArea component but allows for styled text.  This enables HTML text display in a component cel.</font></p>                      
                       <p><font face="Arial">12. A new FKiSS action command setPage(component,url) is created to facilitate loading of HTML text into a TextPane component.</font></p>                      
                       <p><font face="Arial">13. Non-input type components such as buttons and labels and textboxes and menu items can now be made fully transparent with a KiSS transparent() command. </font></p>                      
-                      <p><font face="Arial">14. A new FKiSS 5 viewer("redirect","url","event","parameter",...) command is created to redirect a Portal hyperlink to a KiSS event.</font></p>                      
+                      <p><font face="Arial">14. A new FKiSS 5 viewer("redirect","url","event","parameter",...) command is created to redirect a Portal hyperlink to an FKiSS event.</font></p>                      
                       <p><font face="Arial">15. A new transparent background attribute is defined for components.  Text components can now be displayed with a transparent background.</font></p>                      
                       <p><font face="Arial">16. The MediaPlayer would not restart the progress bar and adjust status if the media played to the end and was restarted.  This is corrected.</font></p>                      
                       <p><font face="Arial">17. Corrected a problem where ambiguous animated GIF image cels would not animate if changed through the animate() FKiSS command.</font></p>                      

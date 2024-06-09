@@ -577,7 +577,8 @@ final class TextFrame extends KissFrame
 		this.zip = (ze == null) ? null : ze.getZipFile() ;
       this.showline = showline ;
 		file = (ze == null) ? null : ze.getPath() ;
-      extension = (file == null) ? null : file.substring(file.lastIndexOf('.')) ;
+      int n = file.lastIndexOf('.') ;
+      extension = (file == null || n < 0) ? null : file.substring(n) ;
       if (".cnf".equals(extension)) this.showline = true ;
       this.type = (type != null) ? type : file ;
 		directory = (zip == null) ? null : zip.getDirectoryName() ;

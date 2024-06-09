@@ -1397,15 +1397,16 @@ final public class MainMenu extends KissMenu
       FileOpen fdnew = new FileOpen(parent) ;
       fdnew.show(Kisekae.getCaptions().getString("OpenExpansionTitle")) ;
       ArchiveEntry ze = fdnew.getZipEntry() ;
+      ArchiveFile zip = fdnew.getZipFile() ;
       
       // The added file is an expansion file.
      
-      Vector expandfiles = c.getExpandFiles() ;
-      if (expandfiles == null) expandfiles = new Vector() ;
       File f = fdnew.getFileObject() ;
       if (f == null) return ; 
-      expandfiles.add(fdnew.getZipFile()) ;
+      Vector expandfiles = new Vector() ;
+      expandfiles.add(zip) ;
       c.setExpandFiles(expandfiles) ;
+      System.out.println("Add expansion file " + zip.getFileName());
       
       // If there is a CNF in the expansion file use it.  If not, use the
       // current configuration file.  
@@ -1419,7 +1420,7 @@ final public class MainMenu extends KissMenu
 
       // Configuration elements initialize the main frame.
 
-      if (ze.isConfiguration())
+      if (ze != null && ze.isConfiguration())
       {
          parent.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
          parent.expand(true) ;

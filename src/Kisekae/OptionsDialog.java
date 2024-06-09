@@ -5100,10 +5100,11 @@ final public class OptionsDialog extends KissDialog
                File [] files = directory.listFiles() ;
                int n = (files == null) ? 0 : files.length ;
                String s = Kisekae.getCaptions().getString("OptionsDialogCacheClearText1") + n;
-     				int opt = JOptionPane.showConfirmDialog(getParentFrame(), s,
+               Object [] options = { "Yes", "No", "Select" } ;
+     				int opt = JOptionPane.showOptionDialog(getParentFrame(), s,
                   Kisekae.getCaptions().getString("OptionsDialogCacheClearTitle"),
-                  JOptionPane.YES_NO_OPTION,
-                  JOptionPane.INFORMATION_MESSAGE) ;
+                  JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
+                  null, options, options[1]) ;
                
                if (opt == JOptionPane.YES_OPTION)
                {
@@ -5120,6 +5121,13 @@ final public class OptionsDialog extends KissDialog
         				JOptionPane.showMessageDialog(getParentFrame(), s,
                      Kisekae.getCaptions().getString("OptionsDialogCacheClearTitle"),
                      JOptionPane.INFORMATION_MESSAGE) ;
+               }
+               
+               if (opt == 2)
+               {
+                  CacheManager cache = new CacheManager(Kisekae.getMainFrame(),
+                     Kisekae.getCaptions().getString("OptionsDialogCacheClearTitle"),files) ;
+                  cache.setVisible(true) ;                  
                }
             }
             return ;
