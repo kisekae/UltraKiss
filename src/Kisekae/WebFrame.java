@@ -1250,6 +1250,7 @@ final public class WebFrame extends KissFrame
             if (name == null) break ;
   		      if (ArchiveFile.isArchive(name)) break ;
   		      if (ArchiveFile.isImage(name)) break ;
+  		      if (ArchiveFile.isAudio(name)) break ;
             String s = Kisekae.getCaptions().getString("InvalidFileNameText") ;
             int i1 = s.indexOf('[') ;
             int j1 = s.indexOf(']') ;

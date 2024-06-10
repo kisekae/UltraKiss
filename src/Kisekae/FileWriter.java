@@ -1146,7 +1146,8 @@ final class FileWriter extends KissFrame
 
 				if (ArchiveFile.isDirectory(extension))
 				{
-               if (destination != null)
+               String s = (sourcezip != null) ? sourcezip.getPath() : null ;
+               if (destination != null && s != null && s.equalsIgnoreCase(Kisekae.getCachePath()))
                {
                   File f = new File(destination) ;
                   if (!f.isDirectory()) newname = f.getName() ;	
@@ -1196,7 +1197,7 @@ final class FileWriter extends KissFrame
 						{
                      int i = JOptionPane.NO_OPTION ;
 				      	ErrorText.setText("Error: Unable to create " + de.getPath()) ;
-				  	      String s = "Write exception, unable to create file " + de.getPath() ;
+				  	      s = "Write exception, unable to create file " + de.getPath() ;
 				         System.out.println(s);
                      if (!Kisekae.isBatch()) 
                         i = JOptionPane.showConfirmDialog(this,
@@ -1504,6 +1505,12 @@ final class FileWriter extends KissFrame
                      i1 = s.lastIndexOf('.') ;
                      if (i1 > 0) s = s.substring(0,i1) + type ;
                      ze.setPath(s) ;
+                     
+                     // Update the directory entry filesize as the path
+                     // was changed and the new file may not exist.
+                     
+                     if (ze instanceof DirEntry)
+                        ((DirEntry) ze).setFileSize(cel.getBytes()) ;
                   }
                }
                catch (IOException e) 
