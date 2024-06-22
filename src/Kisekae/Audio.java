@@ -84,6 +84,8 @@ abstract class Audio extends KissObject
 	static private Hashtable key = new Hashtable(300,0.855f) ;
 	static protected Vector players = new Vector() ;
    static protected final Lock lock = new ReentrantLock();
+   static boolean stoppedmedia = false ;
+   static boolean stoppedsound = false ;
 
 	// Audio attributes
 
@@ -717,6 +719,7 @@ abstract class Audio extends KissObject
    {
       is = null ;
       b = null ;
+      ref = null ;
    }
 
 
@@ -743,8 +746,6 @@ abstract class Audio extends KissObject
 	static void stop(Configuration c, String t) { stop(c,null,t) ; }
 	static void stop(Configuration c, Audio a, String t)
 	{
-      boolean stoppedmedia = false ;
-      boolean stoppedsound = false ;
       lock.lock() ;
       try
       {
@@ -762,23 +763,49 @@ abstract class Audio extends KissObject
             {
          		if (OptionsDialog.getDebugSound())
          		   System.out.println("[" + time + "] Audio: about to stop media " + ((AudioMedia) audio).getName()) ;
-   				if (!stoppedmedia) ((AudioMedia) audio).stop(c,a,t) ;
+   				((AudioMedia) audio).stopMedia(c,a,t) ;
                stoppedmedia = true ;
             }
    			if (audio instanceof AudioSound)
             {
          		if (OptionsDialog.getDebugSound())
          		   System.out.println("[" + time + "] Audio: about to stop sound " + ((AudioSound) audio).getName()) ;
-   				if (!stoppedsound) ((AudioSound) audio).stop(c,a,t) ;
+   				((AudioSound) audio).stopSound(c,a,t) ;
                 stoppedsound = true ;
             }
    		}
-   		if (OptionsDialog.getDebugSound() && !(stoppedsound || stoppedmedia))
-   		   System.out.println("[" + time + "] Audio: no sounds stopped.") ;
+   		if (!(stoppedsound || stoppedmedia))
+         {
+      		if (OptionsDialog.getDebugSound())
+      		   System.out.println("[" + time + "] Audio: no sounds stopped.") ;
+            if (a != null) a.setStopping(false) ;
+         }
       }
-      finally { lock.unlock() ; }
+      finally 
+      { 
+         stoppedmedia = false ;
+         stoppedsound = false ;
+         lock.unlock() ; 
+      }
 	}
-
+   
+   // Method to determine if the audio system for the specified configuration
+   // has stopped playing.  If it has stopped a boolean object with a true
+   // value is returned. If not stopped an audio object currently in the
+   // process of stopping is returned.  
+   
+   static Object isStopped(Configuration c)
+   {
+      boolean b = true ;
+      if (c == null) return new Boolean(true) ;
+      Vector sounds = c.getSounds() ;
+      for (int i = 0 ; i < sounds.size() ; i++)
+      {
+         Audio a = (Audio) sounds.elementAt(i) ;
+         if (a.isStopping()) return a ;
+      }
+      return new Boolean(!(stoppedmedia || stoppedsound)) ;
+   }
 
 	// Function to display a syntax error message.
 

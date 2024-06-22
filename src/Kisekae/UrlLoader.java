@@ -171,7 +171,9 @@ class UrlLoader extends KissFrame
       boolean b1 = (f instanceof WebSearch.WebSearchFrame)
          ? !((WebSearch.WebSearchFrame) f).isLocalSearch() : true ;
       if (OptionsDialog.getUseDefaultWS()) b = b1 ;
-      if (!Kisekae.isBatch() || b) setVisible(true) ;
+      if (parent instanceof WebFrame)
+         stop = ((WebFrame) parent).getCancel(url) ;
+      if ((!Kisekae.isBatch() || b) && !stop) setVisible(true) ;
 	}
 
    // User interface initialization.
@@ -232,6 +234,15 @@ class UrlLoader extends KissFrame
 			System.out.println("URL loader " + threadname + " active.") ;
 		thread.setPriority(Thread.MIN_PRIORITY) ;
       try { thread.sleep(500) ; } catch (Exception e) { }
+      if (parent instanceof WebFrame)
+         ((WebFrame) parent).closeWaitDialog() ;
+       if (interrupted || stop)
+      {
+   		if (OptionsDialog.getDebugControl())
+   			System.out.println("URL loader " + threadname + " interrupted.") ;
+         close() ;
+         return ;
+      }         
 		toFront() ;
       requestFocus();
 
@@ -416,6 +427,14 @@ class UrlLoader extends KissFrame
          showStatus(Kisekae.getCaptions().getString("TransferCompleteStatus")) ;
          if (OptionsDialog.getDebugLoad())
 	         System.out.println("Open URL data transfer bytes " + bytes) ;
+      }
+      
+      catch (InterruptedException e)
+      {
+         stopload() ;
+         interrupted = true ;
+         if (OptionsDialog.getDebugControl())
+   			System.out.println("URL loader " + threadname + " interrupted.") ;
       }
 
 		catch (OutOfMemoryError e)
@@ -671,6 +690,10 @@ class UrlLoader extends KissFrame
 
    String getUrlName() { return urlname ; }
 
+   // Method to return the load thread.
+
+   Thread getLoadThread() { return thread ; }
+
    // Method to return our URL.
 
    URL getURL() { return openurl ; }
@@ -694,6 +717,15 @@ class UrlLoader extends KissFrame
    // Method to set an action state for callback review.
 
    void setAction(String s) { action = s ; }
+
+   // Method to set an interrupt state to stop loading.
+
+   void setInterrupted(boolean b) 
+   { 
+      interrupted = b ; 
+      if (b && thread != null)
+         stopload() ;
+   }
 
    // Method to retrieve the action state.
 

@@ -84,6 +84,9 @@ final public class WebFrame extends KissFrame
    private String location = null ;                // Requested location
    private Thread runner = null ;                  // Our connection thread
    private Vector localhistory = null ;            // Local URL History list
+   private URL loadarchive = null ;                // Wait notify dialog
+   private NotifyDialog nd = null ;                // Wait notify dialog
+   private Hashtable cancel = new Hashtable() ;    // Cancel load 
    private int locallocation = 0 ;                 // Local history index
    private boolean connecting = false ;            // If true, connecting
    private boolean nocopy = false ;                // If true, no save of file
@@ -801,6 +804,15 @@ final public class WebFrame extends KissFrame
    
    void setHosted(String s) { editor.setHosted(s); }
    
+   // Get the archive load cancel indicator.
+   
+   boolean getCancel(String url) 
+   {  
+      Object o = cancel.get(url) ;
+      if (!(o instanceof Boolean)) return false ;
+      return ((Boolean) o).booleanValue() ; 
+   }
+   
 
 	// Action event listener.  We only process menu item actions.
 
@@ -1117,6 +1129,23 @@ final public class WebFrame extends KissFrame
             }
             else
                fdnew.close() ;
+            return ;
+         }
+         
+         // Notify dialog cancel request if archive load takes too long.
+         
+   		if ("NotifyDialog Cancel".equals(evt.getActionCommand()))
+   		{
+            if (OptionsDialog.getDebugControl())
+               System.out.println("WebFrame: NotifyDialog Cancel, urlloader=" + urlloader) ;
+            if (urlloader != null) urlloader.setInterrupted(true) ;
+            String urlname = (loadarchive != null) ? loadarchive.toExternalForm() : null;
+            if (urlname != null)
+            {
+               cancel.put(urlname, new Boolean(true)) ;
+               if (OptionsDialog.getDebugControl())
+                  System.out.println("WebFrame: interrupt archive load " + urlname) ;
+            }
          }
 		}
 
@@ -1373,15 +1402,17 @@ final public class WebFrame extends KissFrame
             { loadArchive(evturl,true) ; return ; }
 
          // If our current web is on our local file system and we link to
-         // a remote HTML page, then we adjust our current web site to point
-         // to the new remote web.
+         // a remote HTML page, or if our url has a fragment "#currentweb" 
+         // then adjust the current website to point to the new remote web.
 
+         boolean inframe = false ;
          String s = currentweb ;
          if (s == null) s = "" ;
          int n = s.lastIndexOf('/') ;
          if (n > 0) s = s.substring(0,n) ;
          if ((s.startsWith("file:") || s.startsWith("jar:")) && 
-                 (urlname.startsWith("http:") || urlname.startsWith("https:")))
+                 (urlname.startsWith("http:") || urlname.startsWith("https:"))
+               || (urlname.toLowerCase().contains("#currentweb")))
          {
             currentweb = urlname ;
             s = currentweb ;
@@ -1389,11 +1420,10 @@ final public class WebFrame extends KissFrame
             if (n > 0) s = s.substring(0,n) ;
             editor.setHosted(s);
          }
-      
+                        
          // Not all internal links on remote URL's start with www.  If it is 
          // missing we correct the URL.
       
-         boolean inframe = false ;
          String authority = evturl.getAuthority() ;
          n = (authority != null) ? s.indexOf(authority) : -1 ;
          if (n >= 0) 
@@ -1408,8 +1438,7 @@ final public class WebFrame extends KissFrame
 
          if (urlname.startsWith("file:")) inframe = true ;
          if (urlname.startsWith("jar:")) inframe = true ;
-//         if (urlname.startsWith(s)) inframe = true ;
-//         if (!urlname.startsWith(s)) inframe = true ;
+         if (urlname.startsWith(s)) inframe = true ;
          if (inframe)
          {
             Vector v = getHistory() ;
@@ -1445,11 +1474,22 @@ final public class WebFrame extends KissFrame
 
    // A function to load an archive file.  Download prompts are not
    // shown for local files.
-
+   //
+   // If the download is requested a non-modal wait dialog can be shown.
+   // This dialog confirms that the connection request may take some time.
+   // The wait dialog allows the request to be cancelled if it has not started.
+   //
+   // The actual download proceeds in a new thread to release the AWT thread.
+   // The wait dialog, being non-modal, did not properly construct the screen
+   // if it was created on the current AWT thread.
+   
    void loadArchive(URL url, boolean showrun)
    {
-      boolean open = true ;
+      if (url == null) return ;
       String s = url.toExternalForm() ;
+      cancel.remove(s) ;
+      loadarchive = url ;
+      boolean open = true ;
       if (!(s.startsWith("file:") || s.startsWith("jar:")))
       {
          if (WebDloadDialog.showDialog())
@@ -1460,18 +1500,18 @@ final public class WebFrame extends KissFrame
             if (dd.cancel) return ;
          }
       }
+      
+      // Open the wait dialog on a new ATW thread.  The modeless dialog
+      // does not draw otherwise.  The worker also has to be on a new thread.
 
-      // Determine the download type.
-
-      String urlname = url.toExternalForm() ;
-      urlloader = new UrlLoader(this,urlname) ;
-      urlloader.callback.addActionListener(this) ;
-      urlloader.setConnectionID(Kisekae.getConnectionID());
-      urlloader.setAction(open ? "open" : "save") ;
- 		Thread loadthread = new Thread(urlloader) ;
-      loadthread.start() ;
-      close() ;
-      return ;
+      Runnable runner = new Runnable()
+      { public void run() 
+        { showWaitDialog("Wait!\nRemote access can be slow.") ; } 
+      } ;
+		SwingUtilities.invokeLater(runner) ;
+      
+      LoadArchive loadarchive = new LoadArchive(this,url,open) ;
+      new Thread(loadarchive).start() ;
    }
 
    // Implementation of the menu item update of our state when we become
@@ -1527,6 +1567,8 @@ final public class WebFrame extends KissFrame
          if (mm != null) mm.setWebFrame(null) ;
       }
       
+      if (nd != null) nd.close() ; 
+      
       super.close() ;
 		flush() ;
       dispose() ;
@@ -1559,6 +1601,40 @@ final public class WebFrame extends KissFrame
 		getContentPane().removeNotify() ;
 	}
 
+   
+   // This function shows a non-modal dialog to advise that the user wait
+   // for a URL download connection.  We have seen where this wait can be
+   // up to 10 seconds before the download starts.  As the dialog is 
+   // modeless is can be used to cancel the download request at any time.
+   //
+   // A one second delay is programmed before the dialog becomes visible.
+   // Not all download requests show the lengthy delay.
+   // 
+   // If the download proceeds in UrlLoader this dialog is closed with a 
+   // call to closeWaitDialog().
+   
+   private void showWaitDialog(String text)
+   {
+      nd = new NotifyDialog(me,"Notify",text,null,2,false) ;
+     	Runnable awt = new Runnable()
+		{ 
+         public void run() 
+         { 
+            try { Thread.sleep(1000) ; }
+            catch (InterruptedException e) { }
+            if (nd != null) nd.setVisible(true) ; 
+         } 
+      } ;
+  		Thread t = new Thread(awt) ;
+      t.start() ;
+   }
+
+ 
+   void closeWaitDialog()
+   {      
+      if (nd != null) nd.close() ; 
+      nd = null ;
+   }
 
    // Inner class to define a connection thread activity.  This is an
    // independent thread to load our first web page.  By loading the
@@ -1582,7 +1658,7 @@ final public class WebFrame extends KissFrame
             int j1 = s.indexOf(']') ;
             if (i1 >= 0 && j1 > i1)
                s = s.substring(0,i1) + location + s.substring(j1+1) ;
-            parent.showStatus(s) ;
+            if (parent != null) parent.showStatus(s) ;
             activebtn.setEnabled(true) ;
             if (OptionsDialog.getDebugControl())
                System.out.println("WebFrame: setPage " + location) ;
@@ -1630,11 +1706,46 @@ final public class WebFrame extends KissFrame
          }
          if (me != null)
             me.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
-         parent.showStatus(null);
+         if (parent != null) parent.showStatus(null);
          connecting = false ;
          activebtn.setEnabled(false) ;
       }
    }
+ 
+   // This class initiates a new URL archive file download.  The download is
+   // started on this thread to release the AWT thread.  A non-modal dialog
+   // can be shown to advise of connection delays and the AWT thread does not
+   // want to be delayed.
+   
+   private class LoadArchive implements Runnable
+   {
+      private WebFrame parent ;
+      private URL url ;
+      private boolean open ;
+      
+      public LoadArchive(WebFrame parent, URL url, boolean open) 
+      {
+         this.parent = parent ;
+         this.url = url ;
+         this.open = open ;
+      }
+
+      // Determine the download type.
+      
+      public void run()
+      {
+         if (url == null) return ;
+         String urlname = url.toExternalForm() ;
+         Object o = cancel.get(urlname) ;
+         if ((o instanceof Boolean) && ((Boolean) o).booleanValue()) return ;
+         if (OptionsDialog.getDebugControl())
+            System.out.println("WebFrame: LoadArchive " + urlname) ;
+         urlloader = new UrlLoader(parent,urlname) ;
+         urlloader.callback.addActionListener(parent) ;
+         urlloader.setConnectionID(Kisekae.getConnectionID());
+         urlloader.setAction(open ? "open" : "save") ;
+    		Thread loadthread = new Thread(urlloader) ;
+         loadthread.start() ;
+      }
+   }
 }
-
-

@@ -81,7 +81,7 @@ public class Kisekae extends Applet
    // Security variables
 
    private static String copyright = 
-      "Kisekae UltraKiss V3.7.3 (c) 2002-2024 William Miles" ;
+      "Kisekae UltraKiss V3.7.4 (c) 2002-2024 William Miles" ;
    private static Object authorize = null ;        // Seigen module
    private static Calendar warningdate = null ;    // Secure warning
    private static Calendar expiredate = null ;     // Licence expire
@@ -174,7 +174,7 @@ public class Kisekae extends Applet
 
       LogFile.start() ;
       builddate = Calendar.getInstance() ;
-      builddate.set(2024,6-1,10) ;
+      builddate.set(2024,6-1,21) ;
       
       // Restore the properties.
       

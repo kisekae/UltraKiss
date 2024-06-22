@@ -103,7 +103,6 @@ final class AudioSound extends Audio
    private Object listener = null ;			// Last listener added
    private Object metalistener = null ;	// Internal sequencer listener
    private Object linelistener = null ;	// Internal line listener
-   private InputStream is = null ;        // Audio input data stream
    private final Object waithold = new Object() ; 
 
 	// Constructor for when we do not have a configuration.
@@ -264,6 +263,7 @@ final class AudioSound extends Audio
 	{
       playcount = 0 ;
 		started = false ;
+      stopping = false ;
 		if (error || (cache && b == null)) return ;
 		if ("".equals(getPath())) return ;
       if (!OptionsDialog.getCacheAudio() && zip != null) 
@@ -577,9 +577,10 @@ final class AudioSound extends Audio
                time = System.currentTimeMillis() - Configuration.getTimestamp() ;
          		if (OptionsDialog.getDebugSound())
          		   System.out.println("[" + time + "] AudioSound: " + getName() + " [" + playcount + "]" + " Waiting for stop to complete") ;
-               waithold.wait() ; 
+               waithold.wait(500) ; 
             }
-            catch (InterruptedException e) { }       
+            catch (InterruptedException e) { }  
+            setStopping(false) ;
             time = System.currentTimeMillis() - Configuration.getTimestamp() ;
        		if (OptionsDialog.getDebugSound())
        		   System.out.println("[" + time + "] AudioSound: " + getName()  + " [" + playcount + "]" + " Resuming play request") ;
@@ -725,126 +726,117 @@ final class AudioSound extends Audio
 	}
 
 
-	// Static method to stop playing any active audio files.  If this
-	// method is called with no parameter all audio files are stopped.
-	// If called with a configuration then all audio files associated
-	// with the configuration are stopped.  If called with an audio object
-	// then only that audio object is stopped.  The type parameter filters
-   // by sound, music, or mediaplayer classes.
+	// Method to stop this audio sound from playing.  The audio paramater
+   // must equal this sound.  If called with a configuration then this
+	// sound must be associated with the configuration.  The type parameter 
+   // filters by sound, music, or mediaplayer classes.
 
-	static void stop(Configuration c, Audio a, String type)
+	void stopSound(Configuration c, Audio a, String type)
 	{
+      if (a != null && !this.equals(a)) return ;
+
+      // Check for configuration archive file agreement.  If the object
+      // configuration reference equals the specified configuration
+      // reference the the audio object was established at configuration
+      // load time.  This would exclude media player objects.
+
+      if (c != null)
+      {
+         Object o1 = c.cid ;
+         Object o2 = cid ;
+         if (o1 != null && !(o1.equals(o2))) return ;
+      }
+
+      // Check for type agreement.
+
+      if (type != null)
+      {  
+         String audiotype = getType() ;
+         if (audiotype != null && !type.equals(audiotype)) return ;
+      }
+      
       // Run the sound stop activity in a separate thread so as to not
       // interfere with the event handler FKissAction processing.  
-   
+      
       Runnable runner = new Runnable()
       { public void run() { stop1(c,a,type) ; } } ;
       Thread runthread = new Thread(runner) ;
-      runthread.setName("AudioSound stop");
+      runthread.setName("AudioSound " + getName() + " stop");
       runthread.start() ;
    }
    
-   static void stop1(Configuration c, Audio a, String type)
+   void stop1(Configuration c, Audio a, String type)
    {
       lock.lock() ;
       try 
       {
-         Vector stoppedplayers = new Vector() ;
-         Vector p = (Vector) players.clone() ;
-         for (int i = p.size()-1 ; i >= 0 ; i--)
+         stopping = true ;
+         long time = System.currentTimeMillis() - Configuration.getTimestamp() ;
+         if (OptionsDialog.getDebugSound())
+            System.out.println("[" + time + "] AudioSound: " + getName() + " Stop request.") ;
+
+         // Shut the sequencer down.  We have to do a manual callback request
+         // as the sequencer event listener does not recognize stop events.
+
+         if (currentsound instanceof Sequencer)
          {
-            Audio audio = (Audio) p.elementAt(i) ;
-            if (a != null && a != audio) continue ;
-            if (!(audio instanceof AudioSound)) continue ;
-
-            // Check for configuration archive file agreement.  If the object
-            // configuration reference equals the specified configuration
-            // reference the the audio object was established at configuration
-            // load time.  This would exclude media player objects.
-
-            if (c != null)
+            try
             {
-               Object o1 = c.cid ;
-               Object o2 = audio.cid ;
-               if (o1 != null && !(o1.equals(o2))) continue ;
-            }
-
-            // Check for type agreement.
-
-            if (type != null)
-            {  
-               String audiotype = audio.getType() ;
-               if (audiotype != null && !type.equals(audiotype)) continue ;
-            }
-
-            // Get the player and/or midi sequencer.
-
-            long time = System.currentTimeMillis() - Configuration.getTimestamp() ;
-            if (OptionsDialog.getDebugSound())
-               System.out.println("[" + time + "] AudioSound: " + audio.getName() + " Stop request.") ;
-            Object currentsound = audio.getPlayer() ;
-
-            // Shut the sequencer down.  We have to do a manual callback request
-            // as the sequencer event listener does not recognize stop events.
-
-            if (currentsound instanceof Sequencer)
-            {
-               try
-               {
-                  Sequencer sequencer = (Sequencer) currentsound ;
-                  if (sequencer.isRunning()) 
-                  {
-                     time = System.currentTimeMillis() - Configuration.getTimestamp() ;
-                     if (OptionsDialog.getDebugSound())
-                        System.out.println("[" + time + "] AudioSound: " + audio.getName() + " Sequencer stopped") ;
-                     sequencer.stop() ;
-                     audio.doCallback() ;
-                  }
-               }
-               catch (Exception e)
+               Sequencer sequencer = (Sequencer) currentsound ;
+               if (sequencer.isRunning()) 
                {
                   time = System.currentTimeMillis() - Configuration.getTimestamp() ;
-                  System.out.println("[" + time + "] AudioSound: " + audio.getName() +  "Audio sequencer stop fault.");
-                  if (!(e instanceof KissException)) e.printStackTrace();
+                  if (OptionsDialog.getDebugSound())
+                     System.out.println("[" + time + "] AudioSound: " + getName() + " Sequencer stopped") ;
+                  sequencer.stop() ;
+                  doCallback() ;
                }
             }
-
-            // Shut the sound clip down.  The sound clip event listener will
-            // fire any callback events when the clip stops.  Clip resources
-            // and input stream are freed on a periodic basis by the AudioTimer 
-            // activity if audio is not cached.
-
-            if (currentsound instanceof Clip)
+            catch (Exception e)
             {
-               try
-               {
-                  Clip clip = (Clip) currentsound ;
-                  if (clip.isRunning())
-                  {
-                     time = System.currentTimeMillis() - Configuration.getTimestamp() ;
-                     if (OptionsDialog.getDebugSound())
-                        System.out.println("[" + time + "] AudioSound: " + audio.getName() + " Sound clip stopped") ;
-                     clip.stop() ;
-                  }
-               }
-               catch (Exception e)
-               {
-                  time = System.currentTimeMillis() - Configuration.getTimestamp() ;
-                  System.out.println("[" + time + "] AudioSound: " + audio.getName() + "Audio clip stop fault.");
-                  if (!(e instanceof KissException)) e.printStackTrace();
-               }
+               time = System.currentTimeMillis() - Configuration.getTimestamp() ;
+               System.out.println("[" + time + "] AudioSound: " + getName() +  "Audio sequencer stop fault.");
+               if (!(e instanceof KissException)) e.printStackTrace();
             }
-
-            // Remove the player from our active list.
-
-            audio.setRepeat(0) ;
-            audio.setType(null) ;
-            stoppedplayers.add(audio) ;
          }
-         players.removeAll(stoppedplayers) ;
+
+         // Shut the sound clip down.  The sound clip event listener will
+         // fire any callback events when the clip stops.  Clip resources
+         // and input stream are freed on a periodic basis by the AudioTimer 
+         // activity if audio is not cached.
+
+         if (currentsound instanceof Clip)
+         {
+            try
+            {
+               Clip clip = (Clip) currentsound ;
+               if (clip.isRunning())
+               {
+                  time = System.currentTimeMillis() - Configuration.getTimestamp() ;
+                  if (OptionsDialog.getDebugSound())
+                     System.out.println("[" + time + "] AudioSound: " + getName() + " Sound clip stopped") ;
+                  clip.stop() ;
+               }
+            }
+            catch (Exception e)
+            {
+               time = System.currentTimeMillis() - Configuration.getTimestamp() ;
+               System.out.println("[" + time + "] AudioSound: " + getName() + "Audio clip stop fault.");
+               if (!(e instanceof KissException)) e.printStackTrace();
+            }
+         }
+
+         // Remove the player from our active list.
+
+         setRepeat(0) ;
+         setType(null) ;
+         players.remove(this) ;
       }
-      finally { lock.unlock() ; }
-	}
+      finally 
+      {
+         lock.unlock() ; 
+      }
+   }
 
 
 	// Method to close down our audio player.
@@ -993,9 +985,8 @@ final class AudioSound extends Audio
 			{
             setStopTime(time) ;      
 				if (OptionsDialog.getDebugSound())
-					System.out.println("[" + time + "] AudioSound: " + getName() + " [" + playcount + "]" + " ClipStopEvent") ;
+					System.out.println("[" + time + "] AudioSound: " + getName() + " [" + playcount + "]" + " ClipStopEvent, stopping=" + stopping) ;
 
-            stopping = false ;
             synchronized (waithold)
             {
                time = System.currentTimeMillis() - Configuration.getTimestamp() ;
@@ -1003,6 +994,8 @@ final class AudioSound extends Audio
          		   System.out.println("[" + time + "] AudioSound: " + getName() + " [" + playcount + "]" + " Notify stop is complete") ;
                waithold.notify() ;
             }
+            stopping = false ;
+            setStopTime(time) ;      
 
 				// The repeat count is a count of the number of times to play the 
             // sound.  If zero this is a request to stop playing the sound.
@@ -1054,13 +1047,6 @@ final class AudioSound extends Audio
                if (mediaevents.size() > 0)
             		EventHandler.fireEvents(mediaevents,panel,Thread.currentThread(),null) ;
             }
-/*
-            // Close the audio stream at the end of playback.
-
-            Runnable runner = new Runnable()
-            { public void run() { stop(me) ; } } ;
-            javax.swing.SwingUtilities.invokeLater(runner) ;        
-*/
          }
 
 			// The Close Event occurs when a clip is closed.
@@ -1069,7 +1055,7 @@ final class AudioSound extends Audio
 			{
 				opened = false ;
 				if (OptionsDialog.getDebugSound())
-					System.out.println("[" + time + "] AudioSound: " + getName() + " [" + playcount + "]" + " ClipCloseEvent") ;
+					System.out.println("[" + time + "] AudioSound: " + getName() + " [" + playcount + "]" + " ClipCloseEvent, stopping=" + stopping) ;
             lock.lock() ;
             try 
             { 
@@ -1084,7 +1070,6 @@ final class AudioSound extends Audio
             catch (IOException e) { }     
             finally { lock.unlock() ; }
             is = null ;
-            stopping = false ;
             synchronized (waithold)
             {
                time = System.currentTimeMillis() - Configuration.getTimestamp() ;
@@ -1092,6 +1077,7 @@ final class AudioSound extends Audio
          		   System.out.println("[" + time + "] AudioSound: " + getName() + " [" + playcount + "]" + " Notify stop is complete") ;
                waithold.notify() ;
             }
+            stopping = false ;
   			}
 
 			else if (event.getType() == LineEvent.Type.START)

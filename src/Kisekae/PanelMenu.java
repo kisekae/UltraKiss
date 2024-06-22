@@ -88,6 +88,7 @@ final class PanelMenu extends KissMenu
    private static final String MENUITEM = "menuitem" ;
 
    private MainMenu menu = null ;			// Reference to the main menu
+   private boolean enableRestart = true ;	
 
    // MenuBar definitions
 
@@ -452,6 +453,7 @@ final class PanelMenu extends KissMenu
       reset.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F7,0)) ;
       m[2].add((restart = new JMenuItem(Kisekae.getCaptions().getString("MenuViewRestart")))) ;
       restart.addActionListener(this) ;
+      restart.setEnabled(enableRestart) ;
       if (!applemac) restart.setMnemonic(KeyEvent.VK_S) ;
       restart.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F8,0)) ;
       m[2].addSeparator() ;
@@ -752,6 +754,21 @@ final class PanelMenu extends KissMenu
 
    Action getRedoAction() { return redoAction ; }
 
+   // Enable or disable set restarts.  
+
+   void setEnableRestart(boolean b) 
+   { 
+		if (!SwingUtilities.isEventDispatchThread())
+		{
+			Runnable awt = new Runnable()
+			{ public void run() { setEnableRestart(b) ; } } ;
+			SwingUtilities.invokeLater(awt) ;
+			return ;
+		}
+      enableRestart = b ; 
+      restart.setEnabled(b) ;
+   }
+
 
 
    // The action method is used to process control menu events.
@@ -777,6 +794,7 @@ final class PanelMenu extends KissMenu
 
          if (restart == source)
          {
+            if (!enableRestart) return ;
             parent.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
             parent.restart() ;
             return ;

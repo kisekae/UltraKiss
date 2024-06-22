@@ -3089,8 +3089,7 @@ final class Configuration extends KissObject
       
       if (isClosed()) return ;
 		String s = (file == null) ? "" : file ;
-		if (OptionsDialog.getDebugControl())
-			System.out.println("Configuration \"" + s + "\" (" + getID() + ")" + " begin close.") ;
+		System.out.println("Close configuration \"" + s + "\" (" + getID() + ")") ;
 
       // Ensure that we can have no breakpoint restarts.
 
@@ -3127,6 +3126,7 @@ final class Configuration extends KissObject
       // Terminate any configuration mediaplayer that is active.
 
       Audio.stop() ;
+      if (Kisekae.isMediaInstalled()) Video.stop() ;
       MediaFrame unique = MediaFrame.getUniquePlayer() ;
       if (unique != null && unique != mediaframe) unique.stop() ;
       if (mediaframe != null) mediaframe.stop() ;
@@ -3144,8 +3144,6 @@ final class Configuration extends KissObject
       if (restart)
       {
          sf = 1.0f ;
-         Audio.stop() ;
-         if (Kisekae.isMediaInstalled()) Video.stop() ;
 
          // Remove any internal objects.
 
@@ -3193,6 +3191,21 @@ final class Configuration extends KissObject
             c.reset() ;
          }
 
+         // Reset all audio.  Watch for format errors where sound files were
+         // transitioned to media files for JMF playback.
+
+         for (int i = 0 ; i < sounds.size() ; i++)
+         {
+            Audio a = (Audio) sounds.elementAt(i) ;
+            if (a.format && Kisekae.isMediaInstalled())
+            {
+               Object o = Audio.getByKey(Audio.getKeyTable(),cid,getPath().toUpperCase()) ;
+               if (!(o instanceof Audio)) continue ;
+               a = (Audio) o ;
+            }
+            a.init() ;
+         }
+         
          // Reset all movies.
 
          for (int i = 0 ; i < movies.size() ; i++)
@@ -3224,6 +3237,34 @@ final class Configuration extends KissObject
       {
          JavaCel c = (JavaCel) comps.elementAt(i) ;
          c.flush() ;
+      }
+
+      // Close audio instances to clear memory.
+
+      int n = 0 ;
+  		if (OptionsDialog.getDebugControl())
+        System.out.println("Configuration (" + getID() + ")" + " checking for stopped audio.") ;
+      while (true)
+      {
+         String s1 = "" ;
+         Object o = Audio.isStopped(this) ;
+         if (o instanceof Boolean && ((Boolean) o).booleanValue()) 
+         {
+      		if (OptionsDialog.getDebugControl())
+               System.out.println("Configuration (" + getID() + ")" + " all audio stopped.") ;
+            break ;
+         }
+         if (o instanceof Audio) s1 = ((Audio) o).getName() ;
+   		if (OptionsDialog.getDebugControl())
+            System.out.println("Configuration (" + getID() + ")" + " waiting for audio \"" + s1 + "\" to stop.") ;
+         try { Thread.sleep(100) ; }
+         catch (InterruptedException e) { n = 10 ;}
+         if (++n > 10) break ;
+      } 
+      for (int i = 0 ; i < sounds.size() ; i++)
+      {
+         Audio a = (Audio) sounds.elementAt(i) ;
+         a.close() ;
       }
       
       
@@ -3318,10 +3359,10 @@ final class Configuration extends KissObject
 
 		// Invoke the garbage collector.
 
-		System.out.println("Close configuration \"" + s + "\" (" + getID() + ")") ;
 		Runtime.getRuntime().gc() ;
 		try { Thread.currentThread().sleep(300) ; }
 		catch (InterruptedException ex) { }
+      System.out.println("Configuration (" + getID() + ")" + " closed.") ;
       closed = true ;
 	}
    

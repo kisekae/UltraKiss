@@ -84,11 +84,11 @@ abstract class KissDialog extends JDialog
 
 	// Constructor
 
-   public KissDialog(JDialog f, String s, boolean b)
-   { super(f,s,b) ; parent = f ; }
+   public KissDialog(JDialog f, String s, boolean modal)
+   { super(f,s,modal) ; parent = f ; }
 
-   public KissDialog(JFrame f, String s, boolean b)
-   { super(f,s,b) ; parent = f ; }
+   public KissDialog(JFrame f, String s, boolean modal)
+   { super(f,s,modal) ; parent = f ; }
 
 
    // Close method to dispose of this dialog and all parent dialogs.
@@ -109,6 +109,7 @@ abstract class KissDialog extends JDialog
          else
          	((JFrame) parent).dispose() ;
       callback.removeActionListener(null) ;
+      callback = null ;
       parent = null ;
    }
 

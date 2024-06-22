@@ -909,6 +909,7 @@ final public class MainFrame extends KissFrame
 
          if (endtimer != null) endtimer.stop() ;
 			if (config != null) config.close(restart,resetoptions) ;
+			if (config != null && !restart) config.flush() ;
          endtimer = null ;
 
          // Close any established trace window.

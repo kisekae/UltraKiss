@@ -1511,6 +1511,12 @@ final class FileWriter extends KissFrame
                      
                      if (ze instanceof DirEntry)
                         ((DirEntry) ze).setFileSize(cel.getBytes()) ;
+                     
+                     // Disable set restarts.
+                     
+                     MainFrame mf = Kisekae.getMainFrame() ;
+                     PanelMenu pm = (mf != null) ? mf.getPanelMenu() : null ;
+                     if (pm != null) pm.setEnableRestart(false) ;
                   }
                }
                catch (IOException e) 

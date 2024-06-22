@@ -21,19 +21,29 @@
 	web. I will also place notices here regarding product updates, scheduled 
 	releases, or problems and work-arounds that may affect you.&nbsp;</p>
                                         <p>&nbsp;</p>
-					<P>UltraKiss V3.7.4 is in development. This release fixes bugs related to the web distribution of the Scarecrow sets.</P>
+					<P>UltraKiss V4.0 is in development. UltraKiss 4.0 will provide a standard browser based interface to UltraKiss.</P>
+                                        <p>&nbsp;</p>
+					<p><B>June 18, 2024</B></p>
+					<P>UltraKiss V3.7.4 is released. This release fixes bugs and adds new features to support the web distribution of the OtakuWorld sets.</P>
 					<h3><FONT face=Arial>Updates to V3.7.4&nbsp; </FONT></h3>
 					<BLOCKQUOTE>
-                      <p><font face="Arial">1. A new UltraKiss visual application "TheOwl.zip" is distributed with UltraKiss 3.7.3.  This application enables downloads and execution of all Scarecrow sets.</font></p>
+                                            <p><font face="Arial">1. A new UltraKiss visual application <b>"TheOwl.zip"</b> is distributed with UltraKiss 3.7.4.  This application enables downloads and execution of all Scarecrow sets.</font></p>
                       <p><font face="Arial">2. New sounds included in a wrapper file that loaded an appended configuration failed to play.  The sound was not referenced correctly from the original archive file.</font></p>
                       <p><font face="Arial">3. The FKiSS viewer("view","documents") or viewer("view","somefile.txt") failed to show documents contained in expansion sets.  This is corrected. </font></p>
                       <p><font face="Arial">4. Corrected an issue where audio sounds transitioned to the mediaplayer would not be terminated after a restart and a new sound was played. Both sounds played concurrently. </font></p>
                       <p><font face="Arial">5. Corrected a null pointer exception when specifying an expansion file that did not include a configuration element.</font></p>
-                      <p><font face="Arial">6. Corrected a String index out of bounds fault in the FKiSS Editor when creating a new event with File-New Event menu command. Issue 2 on GitHub.</font></p>
+                      <p><font face="Arial">6. Corrected a String index out of bounds fault in the FKiSS Editor when creating a new event with File-New Event menu command. <b>Issue 2 on GitHub.</b></font></p>
                       <p><font face="Arial">7. Implemented a multiple selection dialog to delete only selected cached files from the download cache directory.</font></p>
                       <p><font face="Arial">8. Corrected the 32-bit architecture distribution of UltraKiss to actually use a 32 bit JVM.  Previously, a 64-bit JVM was packaged.</font></p>
-                      <p><font face="Arial">9. Corrected the output filename for image cels when updated or exported cels are saved in non-archive files. Issue 3 on GitHub.</font></p>
+                      <p><font face="Arial">9. Corrected the output filename for image cels when updated or exported cels are saved in non-archive files. <b>Issue 3 on GitHub.</b></font></p>
                       <p><font face="Arial">10. Enabled audio file types as a type of file that can be saved on download.  Previously, only image files or archive files could be saved.</font></p>
+                      <p><font face="Arial">11. Disabled the set restart capabilities if cels are exported during a set save.  The set must be reloaded as the cels have changed.</font></p>
+                      <p><font face="Arial">12. Corrected a memory leak related to audio files not releasing the sound listener when the configuration was closed.</font></p>
+                      <p><font face="Arial">13. The viewer("backcolor","rgb") command was not adjusting the background color if invoked through a hyperlink action.  This is corrected.</font></p>
+                      <p><font face="Arial">14. The Portal will now recognize a "#currentweb" url fragment so that the current website for download of KiSS sets by the Portal can be dynamically changed.</font></p>
+                      <p><font face="Arial">15. Added the OtakuWorld website to the online Portal for downloading KiSS sets to UltraKiss.  OtakuWorld provides access to over 4500 KiSS sets.</font></p>
+                      <p><font face="Arial">16. A new wait dialog is shown for archive file downloads in the Portal.  Some connection requests can be slow.  This dialog advises of the issue. <b>Issue 1 on GitHub.</b></font></p>
+                      <p><font face="Arial">17. Corrected the 32-bit distribution of UltraKiss.  The previous distribution was compiled with a version 11 Java that was not compatible with the version 8 JVM.</font></p>
           				</BLOCKQUOTE>
                                         <p>&nbsp;</p>
 					<p><B>May 21, 2024</B></p>

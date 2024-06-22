@@ -68,10 +68,11 @@ import javax.swing.JViewport;
 final class NotifyDialog extends KissDialog
    implements ActionListener, WindowListener
 {
+   private JFrame parent = null ;
    private Image image = null ;
    private String hyperlink = null ;
    private int state = 0 ;
-   private boolean confirm = false ;
+   private int confirm = 0 ;
 
    // User interface objects
 
@@ -86,16 +87,21 @@ final class NotifyDialog extends KissDialog
    private JButton OK = new JButton();
    private JButton YES = new JButton();
    private JButton NO = new JButton();
+   private JButton CANCEL = new JButton();
    private FlowLayout flowLayout1 = new FlowLayout();
 
 
-   // Constructor
+   // Constructor.  
 
    public NotifyDialog(JFrame frame, String title, String text, Image img, boolean conf)
+   { this(frame,title,text,img,(conf) ? 1 : 0,true) ; }
+   
+   public NotifyDialog(JFrame frame, String title, String text, Image img, int conf, boolean modal)
    {
       // Call the base class constructor to set up our frame.
-
-      super(frame, title, true);
+      
+      super(frame, title, modal);
+      parent = frame ;
       confirm = conf ;
       image = img ;
       hyperlink = text ;
@@ -119,21 +125,24 @@ final class NotifyDialog extends KissDialog
       // Put the text into the TEXT object.
 
       int i = 0 ;
-      int j = text.indexOf("\\n",i) ;
-      StringBuffer sb = new StringBuffer("") ;
-      while (j >= 0)
+      if (text != null)
       {
-         sb.append(text.substring(i,j)) ;
-         sb.append('\n') ;
-         i = j + 2 ;
-         j = text.indexOf("\\n",i) ;
+         int j = text.indexOf("\\n",i) ;
+         StringBuffer sb = new StringBuffer("") ;
+         while (j >= 0)
+         {
+            sb.append(text.substring(i,j)) ;
+            sb.append('\n') ;
+            i = j + 2 ;
+            j = text.indexOf("\\n",i) ;
+        }
+         sb.append(text.substring(i)) ;
+         TEXT.setText(sb.toString()) ;
+         TEXT.setLineWrap(true) ;
+         TEXT.setWrapStyleWord(true) ;
+         TEXT.setCaretPosition(0);
+         TEXT.setEditable(false) ;
       }
-      sb.append(text.substring(i)) ;
-      TEXT.setText(sb.toString()) ;
-      TEXT.setLineWrap(true) ;
-      TEXT.setWrapStyleWord(true) ;
-      TEXT.setCaretPosition(0);
-      TEXT.setEditable(false) ;
 
       // Center the frame in the panel space
 
@@ -146,6 +155,7 @@ final class NotifyDialog extends KissDialog
       OK.addActionListener(this);
       YES.addActionListener(this);
       NO.addActionListener(this);
+      CANCEL.addActionListener(this);
       addWindowListener(this);
    }
 
@@ -162,20 +172,26 @@ final class NotifyDialog extends KissDialog
       OK.setText(Kisekae.getCaptions().getString("OkMessage"));
       YES.setText(Kisekae.getCaptions().getString("YesMessage"));
       NO.setText(Kisekae.getCaptions().getString("NoMessage"));
+      CANCEL.setText(Kisekae.getCaptions().getString("CancelMessage"));
 
       getContentPane().add(panel1);
       panel1.add(jPanel1, BorderLayout.SOUTH);
       jPanel1.add(Box.createGlue()) ;
-      if (!confirm)
+      if (confirm == 0)
       {
          jPanel1.add(OK, null);
          jPanel1.add(Box.createGlue()) ;
       }
-      else
+      else if (confirm == 1)
       {
          jPanel1.add(YES, null);
          jPanel1.add(Box.createGlue()) ;
          jPanel1.add(NO, null);
+         jPanel1.add(Box.createGlue()) ;
+      }
+      else if (confirm == 2)
+      {
+         jPanel1.add(CANCEL, null);
          jPanel1.add(Box.createGlue()) ;
       }
       panel1.add(jPanel2, BorderLayout.CENTER);
@@ -203,6 +219,18 @@ final class NotifyDialog extends KissDialog
       if (OK == source) { close() ; }
       if (YES == source) { state = 1 ; close() ; }
       if (NO == source) { close() ; }
+      if (CANCEL == source) 
+      { 
+         state = 2 ; 
+         if (parent instanceof WebFrame)
+         {
+            if (OptionsDialog.getDebugControl())
+               System.out.println("NotifyDialog: cancel WebFrame load archive.") ;
+            ActionEvent event = new ActionEvent(CANCEL,0,"NotifyDialog Cancel") ;
+            ((WebFrame) parent).actionPerformed(event) ;
+         }
+         close() ; 
+      }
    }
 
 
@@ -254,6 +282,7 @@ final class NotifyDialog extends KissDialog
 
    private void flush()
    {
+      parent = null ;
       TEXT = null ;
       setVisible(false) ;
       OK.removeActionListener(this);

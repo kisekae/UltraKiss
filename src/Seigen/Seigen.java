@@ -43,12 +43,6 @@ package Seigen ;
 */
 
 
-/**
- * @(#)Kisekae.java	96/09/12 
- *
- * Copyright (c) WSM Information Systems Inc.  All Rights Reserved.
- *
- */
 
 
 import java.net.* ;
@@ -69,7 +63,7 @@ import java.text.DateFormat ;
 public final class Seigen extends Authenticator
 {
    private static String copyright =            	// Copyright text
-      "Kisekae UltraKiss V3.7.3 (c) 2002-2024 William Miles" ;
+      "Kisekae UltraKiss V3.7.4 (c) 2002-2024 William Miles" ;
 
    private static Calendar warningdate = Calendar.getInstance() ;
    private static Calendar restrictdate = Calendar.getInstance() ;

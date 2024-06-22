@@ -3707,11 +3707,13 @@ final class FKissAction extends KissObject
                         pageset.setBorderColor(rgb) ;
                         panel.setBackgroundColor(c);
                         panel.setBackground(c) ;
+                        panel.setRedraw(true) ;
+                        panel.redraw(new Rectangle()) ;
                      }
                   }
                }
             } ;
-            javax.swing.SwingUtilities.invokeLater(runner);
+            javax.swing.SwingUtilities.invokeLater(runner);           
             
             if ("restart".equalsIgnoreCase(vs1))            
                exception = "exitevent" ;
