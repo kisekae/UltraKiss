@@ -1448,7 +1448,7 @@ final class PanelMenu extends KissMenu
       if (fd == null) return ;
       Vector v = config.getIncludeFiles() ;
       if (v == null) return ;
-      
+            
       // If we triggered this expansion automatically on an viewer("menu","appendcnf") 
       // event or similar we may be restarting the expanded configuration.  This would 
       // be a loop.  

@@ -284,7 +284,7 @@ final class Scheduler
 
    long getCount() { return firecount ; }
 
-	
+
 	// Static method to suspend the event handler.   Suspension causes all
    // threads in the event handler to enter the wait state.  One must be
    // notified to restart execution.  The suspend flag is global to all
@@ -349,7 +349,9 @@ final class Scheduler
 					}
 
 					// Fire the event.  We can wake up with an empty queue.
-	            // We yield control after every event.
+	            // We yield control after every event.  At no time should 
+               // a previously processed event be on the queue as they
+               // are not added.  No circular searches.
 
 					wait = false ;
 	 	 			Object qentry = Scheduler.dequeueEvent() ;
@@ -357,14 +359,14 @@ final class Scheduler
 					{
 						Object [] queueobject = (Object []) qentry ;
 						GetLinks event = (GetLinks) queueobject[0] ;
-						ThreadGroup threadgroup = (ThreadGroup) queueobject[1] ;
+                  ThreadGroup threadgroup = (ThreadGroup) queueobject[1] ;
                   int n = threadgroup.activeCount() ;
                   if (n < 3)
                   {
                      processed.addElement(event) ;
                      Thread newthread = new Thread(threadgroup,event) ;
                      newthread.start() ;
-   	               firecount++ ;
+                     firecount++ ;
                   }
                   else
                   {
@@ -380,7 +382,7 @@ final class Scheduler
                      t.setRepeats(false) ;
                      t.start() ;
                   }
-	               me.yield() ;
+                  me.yield() ;
                }
             }
 

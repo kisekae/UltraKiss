@@ -286,7 +286,7 @@ class UrlLoader extends KissFrame
          String cachepath = Kisekae.getCachePath() ;
          File directory = (cachepath != null) ? new File(cachepath) : null ;
          if (!OptionsDialog.getCacheInclude()) directory = null ;
-         if (directory != null)
+         if (directory != null && !Kisekae.isBatch())
          {
             Vector v = new Vector() ;
             File [] files = directory.listFiles() ;
@@ -333,7 +333,7 @@ class UrlLoader extends KissFrame
          // cannot create a file.  Load to memory.  Otherwise cache
          // the file in the cache directory.
 
-         if (!incache)
+         if (!incache && !Kisekae.isBatch())
          {
             try
             {  

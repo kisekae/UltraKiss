@@ -795,7 +795,11 @@ final public class WebSearchFrame extends KissFrame
             Scheduler.stopScheduler() ;
             scheduler = null ;
                
-            // Activate a Portal
+            // Activate a Portal.  When this search form is closed
+            // a new invocation of the Kisekae program is started.
+            // The web portal is opened in a new thread after a 2
+            // second delay.
+            
             if (absoluteformname != null)
             {
                int i = JOptionPane.showConfirmDialog(this,
@@ -804,14 +808,32 @@ final public class WebSearchFrame extends KissFrame
                   JOptionPane.YES_NO_OPTION) ;
                if (i == JOptionPane.YES_OPTION)
                {
+                  Runnable showportal = new Runnable()
+                  {
+                     public void run()
+                     {
+                        try { Thread.sleep(2000) ; }
+                        catch (InterruptedException e) { }
+                        
+               			Runnable awt = new Runnable()
+               			{ 
+                           public void run() 
+                           { 
+                              String s = absoluteformname ;
+                              if (!s.startsWith(File.separator)) s = File.separator + s ;
+                              s = ("file://"+s).replace('\\','/') ;
+                              MainFrame mf = Kisekae.getMainFrame() ;
+                              WebFrame.setCurrentWeb(s) ;
+                              WebFrame wf = new WebFrame(mf) ; 
+                              wf.setVisible(true) ;
+                              wf.toFront() ;
+                           } 
+                        } ;
+               			SwingUtilities.invokeLater(awt) ;
+                     }
+                  } ;
+                  new Thread(showportal).start() ;
                   close() ;
-                  String s = absoluteformname ;
-                  if (!s.startsWith(File.separator)) s = File.separator + s ;
-                  s = ("file://"+s).replace('\\','/') ;
-                  WebFrame.setCurrentWeb(s) ;
-                  WebFrame wf = new WebFrame(parent) ; 
-                  wf.setVisible(true) ;
-                  return ;
                }
             }
          }

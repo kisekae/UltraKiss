@@ -3738,6 +3738,13 @@ final public class OptionsDialog extends KissDialog
 
 	void resetOptions()
 	{
+		if (!SwingUtilities.isEventDispatchThread())
+		{
+			Runnable awt = new Runnable()
+			{ public void run() { resetOptions() ; } } ;
+			SwingUtilities.invokeLater(awt) ;
+			return ;
+		}
 //		sound = initsound ;
 //		movie = initmovie ;
 //    systemlf = initsystemlf ;

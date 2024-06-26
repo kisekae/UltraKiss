@@ -441,7 +441,11 @@ final public class MainFrame extends KissFrame
 	{
 		try
 		{
+         if (Kisekae.isBatch() && c != null && c.hasViewerAppend())
+            c = null ;
+         
 			// If the load was cancelled restore our old fileopen object.
+         // Search loads are cancelled if the cnf was to be appended.
 
 			if (c == null)
 			{

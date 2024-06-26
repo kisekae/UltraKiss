@@ -581,6 +581,8 @@ final public class WebFrame extends KissFrame
 
    void back()
    {
+      boolean b = (location.contains("#currentweb")) ;
+      
       Vector v = getHistory() ;
       int i = getHistoryLocation() - 1 ;
       if (i < 0 || i >= v.size()) 
@@ -589,7 +591,7 @@ final public class WebFrame extends KissFrame
          return ;
       }
       location = (String) v.elementAt(i) ;
-      setHistoryLocation(i) ;
+      setHistoryLocation(i) ;        
 
       // If our current web is on a remote host and we link back to our
       // local file system, then we adjust our current web site to point
@@ -599,7 +601,8 @@ final public class WebFrame extends KissFrame
       if (s == null) s = "" ;
       int n = s.lastIndexOf('/') ;
       if (n > 0) s = s.substring(0,n) ;
-      if ((s.startsWith("http:") || s.startsWith("https:")) && (location.startsWith("file:") || location.startsWith("jar:")))
+      if (b || ((s.startsWith("http:") || s.startsWith("https:")) && 
+          (location.startsWith("file:") || location.startsWith("jar:"))))
       {
          currentweb = location ;
          s = currentweb ;
@@ -617,6 +620,8 @@ final public class WebFrame extends KissFrame
       if (i < 0 || i >= v.size()) return ;
       location = (String) v.elementAt(i) ;
       setHistoryLocation(i) ;
+      
+      boolean b = (location.contains("#currentweb")) ;
 
       // If our current web is on a local file system and we link forward to
       // a remote host, then we adjust our current web site to point to the
@@ -626,7 +631,8 @@ final public class WebFrame extends KissFrame
       if (s == null) s = "" ;
       int n = s.lastIndexOf('/') ;
       if (n > 0) s = s.substring(0,n) ;
-      if ((location.startsWith("http:") || location.startsWith("https:")) && (s.startsWith("file:") || s.startsWith("jar:")))
+      if (b || ((location.startsWith("http:") || location.startsWith("https:")) && 
+          (s.startsWith("file:") || s.startsWith("jar:"))))
       {
          currentweb = location ;
          s = currentweb ;
@@ -796,7 +802,7 @@ final public class WebFrame extends KissFrame
    {
       if (localhistory != null) localhistory = new Vector() ;
       if (homepage == null) homepage = OptionsDialog.getKissWeb() ;
-      localhistory.addElement(homepage) ;
+      if (localhistory != null) localhistory.addElement(homepage) ;
       setHistoryLocation(0) ;
    }
    
@@ -1582,9 +1588,9 @@ final public class WebFrame extends KissFrame
 
    private void flush()
    {
-      history = new Vector() ;         // URL History list
-      currentlocation = 0 ;            // Current history index
-      currentweb = null ;              // Last valid web
+//      history = new Vector() ;         // URL History list
+//      currentlocation = 0 ;            // Current history index
+//      currentweb = null ;              // Last valid web
       runner = null ;
       if (statusbar != null) statusbar.setStatusBar(false) ;
       statusbar = null ;

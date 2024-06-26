@@ -1264,6 +1264,26 @@ final class EventHandler extends KissObject
    }
 
 
+   // Static methods to determine if an action is a viewer("menu","appendcnf")
+   // command.  The append command extends the loaded configuration.  This
+   // means the configuration as loaded is not complete.  The Search module
+   // cannot use the load status as a valid completion indicator.
+
+   static boolean isViewerAppendAction(FKissAction a)
+   {
+      if (a == null) return false ;
+      int code = a.getCode() ;
+		if (code != 110) return false ;
+      String s1 = a.getFirstParameter() ;
+      s1 = Variable.getStringLiteralValue(s1) ;
+      if (!"menu".equals(s1)) return false ;
+      String s2 = a.getSecondParameter() ;
+      s2 = Variable.getStringLiteralValue(s2) ;
+      if (!"appendcnf".equals(s2)) return false ;      
+      return true ;
+   }
+
+
 
 	// Static method to directly fire a series of events without queuing them.
    // The event is associated with the indicated thread.  Note that multiple

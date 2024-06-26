@@ -168,6 +168,7 @@ final class Configuration extends KissObject
    private boolean rgbborder = false ;    // True if border is rgb value
    private boolean restartable = true ;   // True if configuration can restart
    private boolean appendcnf = false ;    // True if have APPEND directive
+   private boolean viewerappend = false ; // True if viewer("menu","appendcnf") exists
    private boolean appended = false ;     // True if APPEND files appended
    private boolean optionchange = false ; // True if options have changed
    private boolean ckiss = false ;        // True if any cel is truecolor
@@ -741,6 +742,10 @@ final class Configuration extends KissObject
 	// Return an indicator if the configuration has an appended CNF.
 
 	boolean hasAppendFiles() { return appendcnf ; }
+
+	// Return an indicator if the configuration has a viewer("menu","appendcnf") action command.
+
+	boolean hasViewerAppend() { return viewerappend ; }
    
    // Method to add unreferenced sound files to our configuration.  This method 
    // is used on configuration restarts to retain newly imported audio objects
@@ -977,6 +982,7 @@ final class Configuration extends KissObject
 
 	void openref(Configuration r) throws Exception
 	{
+      if (r == null) return ;
 		ref = r ;
       ref.ref = null ;
 		FileOpen fileopen = ref.getFileOpen() ;
@@ -5683,7 +5689,7 @@ final class Configuration extends KissObject
             ifnestlevel++ ;
             inifsequence = true ;
             if (ifnestlevel > 1) fkisslevel = 5 ;
-         }       
+         }  
 
          // The action is valid.
 
@@ -5725,6 +5731,12 @@ final class Configuration extends KissObject
 					}
 				}
 			}
+         
+         // Capture a viewer("menu","appendcnf") action command.  This
+         // action modifies the set after load.  A Search operation 
+         // cannot process these types of sets.
+         
+         if (EventHandler.isViewerAppendAction(a)) viewerappend = true ;
 		}
 
       // On exit we may be missing a final endif().  If the immediate

@@ -318,19 +318,43 @@ final class FileLoader extends KissFrame
             int j1 = s.indexOf(']') ;
             if (i1 >= 0 && j1 > i1)
                s = s.substring(0,i1) + name + s.substring(j1+1) ;
-				setTitle(s) ;
+            String awttitle = s ;
             s = Kisekae.getCaptions().getString("KissSetText") ;
             i1 = s.indexOf('[') ;
             j1 = s.indexOf(']') ;
             if (i1 >= 0 && j1 > i1)
                s = s.substring(0,i1) + file + s.substring(j1+1) ;
-				showText(s) ;
+            String awttext = s ;
             s = Kisekae.getCaptions().getString("FileNameText") ;
             i1 = s.indexOf('[') ;
             j1 = s.indexOf(']') ;
             if (i1 >= 0 && j1 > i1)
                s = s.substring(0,i1) + name + s.substring(j1+1) ;
-				showFile(s) ;
+            String awtfile = s ;
+
+            // Update the window on the AWT thread.
+            
+      		if (!SwingUtilities.isEventDispatchThread())
+            {
+         		Runnable runner = new Runnable()
+           		{ 
+                  public void run() 
+                  { 
+                     setTitle(awttitle) ; 
+                     showText(awttext) ;
+                     showFile(awtfile) ;
+                  } 
+               } ;
+               try { javax.swing.SwingUtilities.invokeAndWait(runner) ; }
+               catch (InterruptedException e) { }
+               catch (Exception e) { e.printStackTrace(); }
+            }
+            else
+            {
+               setTitle(awttitle) ; 
+               showText(awttext) ;
+               showFile(awtfile) ;
+            }
 
 				// Open the data set configuration.  We always create a new
             // configuration object, but if the configuration was edited
@@ -352,8 +376,7 @@ final class FileLoader extends KissFrame
             if (stop) thread.interrupt() ;
             MainFrame mf = Kisekae.getMainFrame() ;
             OptionsDialog options = mf.getOptionsDialog() ;
-            if (!reload && !expansion && options != null) 
-               options.resetOptions() ;
+            if (!reload && !expansion && options != null) options.resetOptions() ;
 				config.setLoader(this) ;
 				showStatus(Kisekae.getCaptions().getString("ReadConfigStatus")) ;
 				config.read() ;
@@ -415,7 +438,7 @@ final class FileLoader extends KissFrame
 
             if (stop) thread.interrupt() ;
 				showStatus(Kisekae.getCaptions().getString("InitializeStatus")) ;
-				FileName.setText("") ;
+//				FileName.setText("") ;
 				config.init() ;
 
 				// Finished.
@@ -427,8 +450,23 @@ final class FileLoader extends KissFrame
             if (i1 >= 0 && j1 > i1)
                s = s.substring(0,i1) + name + s.substring(j1+1) ;
             s += " (" + config.getID() + ")" ;
-				setTitle(s) ;
+            String awttitle2 = s ;
 				config.setLoader(null) ;
+
+            // Update the window on the AWT thread.
+            
+      		if (!SwingUtilities.isEventDispatchThread())
+            {
+         		Runnable runner = new Runnable()
+           		{ public void run() { setTitle(awttitle2) ; } } ;
+               try { javax.swing.SwingUtilities.invokeAndWait(runner) ; }
+               catch (InterruptedException e) { }
+               catch (Exception e) { e.printStackTrace(); }
+            }
+            else
+            {
+               setTitle(awttitle2) ; 
+            }
             
             // If we had a reference configuration release all objects.
             // This prevents a memory leak from a load-edit-load cycle.
@@ -986,12 +1024,26 @@ final class FileLoader extends KissFrame
 
 	void showStatus(String s)
 	{ 
+		if (!SwingUtilities.isEventDispatchThread())
+		{
+			Runnable awt = new Runnable()
+			{ public void run() { showStatus(s) ; } } ;
+			SwingUtilities.invokeLater(awt) ;
+			return ;
+		}
       Status.setText(s) ; 
       notifyWebSearch(s) ;
    }
 
 	void showFile(String s)
 	{
+		if (!SwingUtilities.isEventDispatchThread())
+		{
+			Runnable awt = new Runnable()
+			{ public void run() { showFile(s) ; } } ;
+			SwingUtilities.invokeLater(awt) ;
+			return ;
+		}
 		FileName.setText(s) ;
 		if (OptionsDialog.getDebugLoad()) System.out.println("Load: " + s) ;
  	}

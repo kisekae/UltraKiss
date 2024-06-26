@@ -1540,7 +1540,10 @@ final public class MainMenu extends KissMenu
       
       if (webframe == null)
       {
-         webframe = new WebFrame(parent,webURL,website) ;
+         if (webURL == null && website == null)
+            webframe = new WebFrame(parent) ;
+         else
+            webframe = new WebFrame(parent,webURL,website) ;
          parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
          parent.showStatus(null);
          webframe.setVisible(true) ;
