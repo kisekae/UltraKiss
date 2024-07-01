@@ -1512,7 +1512,7 @@ final public class WebFrame extends KissFrame
 
       Runnable runner = new Runnable()
       { public void run() 
-        { showWaitDialog("Wait!\nRemote access can be slow.") ; } 
+        { showWaitDialog("Wait!\nRemote access can be slow.\n\n") ; } 
       } ;
 		SwingUtilities.invokeLater(runner) ;
       
@@ -1626,9 +1626,20 @@ final public class WebFrame extends KissFrame
 		{ 
          public void run() 
          { 
-            try { Thread.sleep(1000) ; }
-            catch (InterruptedException e) { }
-            if (nd != null) nd.setVisible(true) ; 
+            while (true)
+            {
+               try { Thread.sleep(1000) ; }
+               catch (InterruptedException e) { break ; }
+               if (nd == null) break ;
+               if (!nd.isVisible())
+               {
+                  nd.setVisible(true) ;
+                  continue ;
+               } 
+               String s = nd.getText() ;
+               s += ". " ;
+               nd.setText(s) ;
+            }
          } 
       } ;
   		Thread t = new Thread(awt) ;

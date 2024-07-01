@@ -48,7 +48,7 @@ import java.awt.event.*;
 import java.io.* ;
 import java.util.* ;
 import java.net.URL ;
-import java.net.MalformedURLException ;
+import java.util.prefs.* ;
 import javax.swing.*;
 import javax.swing.event.* ;
 import javax.swing.border.*;
@@ -5452,6 +5452,16 @@ final public class OptionsDialog extends KissDialog
                setInitOptions() ;
                setControls() ;
                CANCEL.setEnabled(false);
+               
+               // Reset preferences for each package class.
+               
+               Preferences prefs = Preferences.userNodeForPackage(Kisekae.class) ;
+               try { prefs.clear() ; prefs.flush() ; }
+               catch (Exception e) { }
+               prefs = Preferences.userNodeForPackage(WebSearch.WebSearchFrame.class) ;
+               try { prefs.clear() ; prefs.flush() ; }
+               catch (Exception e) { }
+               
          	   apply(this) ;
             }
    			return ;

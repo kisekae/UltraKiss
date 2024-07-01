@@ -174,7 +174,7 @@ public class Kisekae extends Applet
 
       LogFile.start() ;
       builddate = Calendar.getInstance() ;
-      builddate.set(2024,6-1,26) ;
+      builddate.set(2024,7-1,1) ;
       
       // Restore the properties.
       
@@ -835,13 +835,17 @@ public class Kisekae extends Applet
    // This closes a silent execution of UltraKiss and reinitializes our state.  
    // This interface is used by the WebSearch tool.
    
-   public void close()
+   public void close() 
    {
       batch = false ;
       batchframe = null ;
       if (mainframe != null)
+      {
          mainframe.closeconfig() ;
-      init() ;
+         mainframe.dispose() ;
+      }      
+      mainframe = new MainFrame(this) ;
+//    init() ;
    }
 
 

@@ -181,7 +181,7 @@ class ValidateLinks implements Runnable, ActionListener
       if (activecount == 0)
       {
          String s = (bytes  / 1024) + "K" ;
-         webframe.addTrace("End Archive Validation. Pages: " + count + " Bytes: " + s,1) ;
+         webframe.addTrace("End Archive Validation. Pages: " + count + ". Bytes: " + s,1) ;
          webframe.vallinkactive = false ;
          webframe.valcallback.doClick() ;
       }
@@ -291,6 +291,8 @@ class ValidateLinks implements Runnable, ActionListener
          {
             savedataset = false ;
             System.out.println(ioex) ;
+            webframe.addTrace("IOException, unable to write "+directory,2) ;
+            webframe.addTrace("Ensure "+OptionsDialog.getDataDirectory()+" is write enabled.",2) ;
          }
          if (savedataset)
             kisekae.saveSet(this,directory,writename);
@@ -333,6 +335,8 @@ class ValidateLinks implements Runnable, ActionListener
          catch (IOException ioex)
          {
             System.out.println(ioex) ;
+            webframe.addTrace("IOException, unable to write "+directory,2) ;
+            webframe.addTrace("Ensure "+OptionsDialog.getImageDirectory()+" is write enabled.",2) ;
          }
          if (savethumbnail)
             kisekae.saveThumbnail(this,directory,thumbname,

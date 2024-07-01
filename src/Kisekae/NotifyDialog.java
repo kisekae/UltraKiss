@@ -249,6 +249,16 @@ final class NotifyDialog extends KissDialog
    int getConfirmValue() { return state ; }
 
 
+   // Return our text value.
+
+   String getText() { return TEXT.getText() ; }
+   
+   
+   // Set our text value.
+   
+   void setText(String text) { TEXT.setText(text) ; }
+
+
    // Redraw the panel frame.
 
    private void redraw()

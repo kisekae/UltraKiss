@@ -284,13 +284,23 @@ class BuildForm implements Runnable, ActionListener
          if (s.endsWith(".html") || s.endsWith(".htm"))
             formname = formname.substring(0,formname.lastIndexOf('.')) ;
          formname += ".txt" ;
-         File f = new File(directory) ;
-         f.mkdirs() ;
-         f = new File(f,formname) ;
-         if (f.exists()) f.delete() ;
-         boolean savehtmlform = f.createNewFile() ;
-         if (savehtmlform) kisekae.saveText(this,directory,formname,text) ;
-         return savehtmlform ;
+         try
+         {
+            File f = new File(directory) ;
+            f.mkdirs() ;
+            f = new File(f,formname) ;
+            if (f.exists()) f.delete() ;
+            boolean savehtmlform = f.createNewFile() ;
+            if (savehtmlform) kisekae.saveText(this,directory,formname,text) ;
+            return savehtmlform ;
+         }
+         catch (IOException ioex)
+         {
+            System.out.println(ioex) ;
+            webframe.addTrace("IOException, unable to write "+directory,2) ;
+            webframe.addTrace("Ensure "+OptionsDialog.getHtmlDirectory()+" is write enabled.",2) ;
+            return false ;
+         }
       }
       catch (Exception e)
       {

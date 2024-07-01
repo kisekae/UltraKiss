@@ -58,7 +58,7 @@ import java.awt.* ;
 import javax.swing.* ;
 import java.util.prefs.* ;
 
-final class KissPreferences
+final public class KissPreferences
 {
 
 	// Constructor
@@ -69,7 +69,7 @@ final class KissPreferences
 	// Close method to dispose of this frame. We update the preferences
    // unless the Tutorial help is on display.
 
-	static void closePreferences(JFrame frame) 
+	static public void closePreferences(JFrame frame) 
    {  
       MainFrame mf = Kisekae.getMainFrame() ;
       if (mf != null)
@@ -98,7 +98,7 @@ final class KissPreferences
    
    // Open method to set frame size and location preferences.
    
-   static void openPreferences(JFrame frame)
+   static public void openPreferences(JFrame frame)
    {
       Dimension screenArea = Toolkit.getDefaultToolkit().getScreenSize() ;
       int xd = 0 ;

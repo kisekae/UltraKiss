@@ -757,6 +757,7 @@ final public class MainMenu extends KissMenu
          {
             ZipManager manager = new ZipManager() ;
             manager.setVisible(true) ;
+            manager.toFront() ;
             return ;
          }
 
@@ -767,6 +768,7 @@ final public class MainMenu extends KissMenu
          {
             TextFrame editor = new TextFrame() ;
             editor.setVisible(true) ;
+            editor.toFront() ;
             return ;
          }
 
@@ -777,6 +779,7 @@ final public class MainMenu extends KissMenu
          {
             ColorFrame editor = new ColorFrame() ;
             editor.setVisible(true) ;
+            editor.toFront() ; 
             return ;
          }
 
@@ -787,6 +790,7 @@ final public class MainMenu extends KissMenu
          {
             ImageFrame editor = new ImageFrame() ;
             editor.setVisible(true) ;
+            editor.toFront() ;
             return ;
          }
 
@@ -798,6 +802,7 @@ final public class MainMenu extends KissMenu
             MediaFrame player = new MediaFrame() ;
             player.setMinimized(false) ;
             player.setVisible(true) ;
+            player.toFront() ;
             return ;
          }
 
@@ -831,6 +836,7 @@ final public class MainMenu extends KissMenu
             {
                WebFrame wf = new WebFrame(parent,helpurl+onlinehelp) ;
                wf.setVisible(true) ;
+               wf.toFront() ;
             }
             else
             {
@@ -931,6 +937,7 @@ final public class MainMenu extends KissMenu
             parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
             parent.showStatus(null);
             wf.setVisible(true) ;
+            wf.toFront() ;
             return ;
          }
 
@@ -954,6 +961,7 @@ final public class MainMenu extends KissMenu
             parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
             parent.showStatus(null);
             wf.setVisible(true) ;
+            wf.toFront() ;
          }
 
          // An Exit request closes our frame.  We process end events prior
@@ -1062,6 +1070,7 @@ final public class MainMenu extends KissMenu
                TextFrame tf = new TextFrame(ze,is,false) ;
                parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
                tf.setVisible(true) ;
+               tf.toFront() ;
             }
             return ;
          }
@@ -1547,6 +1556,7 @@ final public class MainMenu extends KissMenu
          parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
          parent.showStatus(null);
          webframe.setVisible(true) ;
+         webframe.toFront() ;
          return ;
       }
       
@@ -1579,6 +1589,7 @@ final public class MainMenu extends KissMenu
       parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
       parent.showStatus(null);
       wf.setVisible(true) ;
+      wf.toFront() ;
    }
 
 
@@ -1623,6 +1634,7 @@ final public class MainMenu extends KissMenu
             ZipManager zm = new ZipManager(zip) ;
             parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
             zm.setVisible(true) ;
+            zm.toFront() ;
          }
          return ;
       }
@@ -1650,6 +1662,7 @@ final public class MainMenu extends KissMenu
          TextFrame tf = new TextFrame(ze) ;
          parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
          tf.setVisible(true) ;
+         tf.toFront() ;
          return ;
       }
 
@@ -1661,6 +1674,7 @@ final public class MainMenu extends KissMenu
          ColorFrame cf = new ColorFrame(ze) ;
          parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
          cf.setVisible(true) ;
+         cf.toFront() ;
          return ;
       }
 
@@ -1676,6 +1690,7 @@ final public class MainMenu extends KissMenu
             mf.play(ze) ;
          parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
          mf.setVisible(true) ;
+         mf.toFront() ;
          return ;
       }
 
@@ -1687,6 +1702,7 @@ final public class MainMenu extends KissMenu
          ImageFrame cf = new ImageFrame(ze) ;
          parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
          cf.setVisible(true) ;
+         cf.toFront() ;
          return ;
       }
 
@@ -1707,6 +1723,7 @@ final public class MainMenu extends KissMenu
          TextFrame tf = new TextFrame(ze) ;
          parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
          tf.setVisible(true) ;
+         tf.toFront() ;
          return ;
       }
 
