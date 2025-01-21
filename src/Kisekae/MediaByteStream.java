@@ -78,7 +78,7 @@ final class MediaByteStream
 		this.name = name ;
 		index = 0 ;
 		debug = OptionsDialog.getDebugMedia() ;
-		if (debug) System.out.println("MediaByteStream: new bytestream, length "
+		if (debug) PrintLn.println("MediaByteStream: new bytestream, length "
 			+ length + " for " + name) ;
 	}
 
@@ -91,21 +91,21 @@ final class MediaByteStream
 	{
 		started = true ;
 		debug = OptionsDialog.getDebugMedia() ;
-		if (debug) System.out.println("MediaByteStream: start " + name) ;
+		if (debug) PrintLn.println("MediaByteStream: start " + name) ;
 	}
 
 	public void stop()
 	{
 		started = false ;
 		debug = OptionsDialog.getDebugMedia() ;
-		if (debug) System.out.println("MediaByteStream: stop " + name) ;
+		if (debug) PrintLn.println("MediaByteStream: stop " + name) ;
 	}
 
 	public void close() throws IOException
 	{
 		started = false ;
 		debug = OptionsDialog.getDebugMedia() ;
-		if (debug) System.out.println("MediaByteStream: close " + name) ;
+		if (debug) PrintLn.println("MediaByteStream: close " + name) ;
       length = 0 ;
       index = 0 ;
       data = new byte [0] ;
@@ -140,7 +140,7 @@ final class MediaByteStream
 	public int read(byte[] buffer, int offset, int nToRead) throws IOException
 	{
 		debug = OptionsDialog.getDebugMedia() ;
-		if (debug) System.out.println("MediaByteStream: read(" + nToRead + ")"
+		if (debug) PrintLn.println("MediaByteStream: read(" + nToRead + ")"
 			+ " for " + name);
 		if (nToRead == 0) return 0 ;
 		if (endOfStream()) return -1 ;
@@ -167,7 +167,7 @@ final class MediaByteStream
 	public long seek(long where)
 	{
 		debug = OptionsDialog.getDebugMedia() ;
-		if (debug) System.out.println("MediaByteStream: seek(" + where + ")"
+		if (debug) PrintLn.println("MediaByteStream: seek(" + where + ")"
 			+ " for " + name);
 		if (where < length)
 			index = where ;

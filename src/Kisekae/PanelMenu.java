@@ -200,7 +200,6 @@ final class PanelMenu extends KissMenu
       color = new JMenuItem[0] ;
       edit = new JMenuItem[3] ;
       int n = OptionsDialog.getUndoLimit() ;
-      if (n > 0) undo.setLimit(n) ;
       if (menu.getNoCopy()) OptionsDialog.setSecurityEnable(true) ;
       createMenu() ;
    }
@@ -278,16 +277,16 @@ final class PanelMenu extends KissMenu
       m[0].add((pagesetup = new JMenuItem(Kisekae.getCaptions().getString("MenuFilePageSetup")))) ;
       pagesetup.addActionListener(this) ;
       if (!applemac) pagesetup.setMnemonic(KeyEvent.VK_U) ;
-      pagesetup.setEnabled(Kisekae.isPrintInstalled() && !Kisekae.isSecure()) ;
+      pagesetup.setEnabled(Kisekae.isPrintInstalled() && !Kisekae.isSecure() && !Kisekae.isExpired()) ;
       m[0].add((preview = new JMenuItem(Kisekae.getCaptions().getString("MenuFilePrintPreview")))) ;
       preview.addActionListener(this) ;
       if (!applemac) preview.setMnemonic(KeyEvent.VK_V) ;
-      preview.setEnabled(Kisekae.isPrintInstalled() && !Kisekae.isSecure()) ;
+      preview.setEnabled(Kisekae.isPrintInstalled() && !Kisekae.isSecure() && !Kisekae.isExpired()) ;
       m[0].add((print = new JMenuItem(Kisekae.getCaptions().getString("MenuFilePrint")))) ;
       print.addActionListener(this) ;
       if (!applemac) print.setMnemonic(KeyEvent.VK_P) ;
       print.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, accelerator));
-      print.setEnabled(Kisekae.isPrintInstalled() && !Kisekae.isSecure()) ;
+      print.setEnabled(Kisekae.isPrintInstalled() && !Kisekae.isSecure() && !Kisekae.isExpired()) ;
       m[0].addSeparator() ;
       m[0].add((export = new JMenuItem(Kisekae.getCaptions().getString("MenuFileExport")))) ;
       export.addActionListener(this) ;
@@ -654,12 +653,12 @@ final class PanelMenu extends KissMenu
       boolean b = OptionsDialog.getEditEnable() ;
       ArchiveFile zip = config.getZipFile() ;
       String directory = (zip != null) ? zip.getDirectoryName() : null ;
-      save.setEnabled(directory != null && !Kisekae.isSecure() && !menu.getNoCopy()) ;
-      saveas.setEnabled(!Kisekae.isSecure() && !menu.getNoCopy()) ;
+      save.setEnabled(directory != null && !Kisekae.isSecure() && !Kisekae.isExpired() && !menu.getNoCopy()) ;
+      saveas.setEnabled(!Kisekae.isSecure() && !Kisekae.isExpired() && !menu.getNoCopy()) ;
       saveasarchive.setVisible(zip != null && zip instanceof DirFile && !Kisekae.isSecure()) ;
-      saveasarchive.setEnabled(!config.isUpdated() && !menu.getNoCopy()) ;
+      saveasarchive.setEnabled(!config.isUpdated() && !Kisekae.isExpired() && !menu.getNoCopy()) ;
       saveasfiles.setVisible(zip != null && !(zip instanceof DirFile) && !Kisekae.isSecure()) ;
-      saveasfiles.setEnabled(!config.isUpdated() && !config.hasIncludeFiles() && !menu.getNoCopy()) ;
+      saveasfiles.setEnabled(!config.isUpdated() && !config.hasIncludeFiles() && !Kisekae.isExpired() && !menu.getNoCopy()) ;
       undoall.setEnabled(b && undo.canUndo()) ;
       cut.setEnabled(b && panel.isEditOn()) ;
       copy.setEnabled(b && panel.isEditOn()) ;
@@ -709,7 +708,7 @@ final class PanelMenu extends KissMenu
 
       // Adjust the state of our tools menu.
       
-      menu.options.setEnabled(!Kisekae.isExpired() && !OptionsDialog.getSecurityEnable()) ;
+      menu.options.setEnabled(!OptionsDialog.getSecurityEnable()) ;
       menu.coloreditor.setEnabled(b) ;
       menu.imageeditor.setEnabled(b) ;
       menu.texteditor.setEnabled(b) ;
@@ -1003,7 +1002,7 @@ final class PanelMenu extends KissMenu
 	            int n = page.updateInitialPositions(cid);
 	            page.setChanged(false) ;
 					if (n > 0 && OptionsDialog.getDebugControl())
-						System.out.println("PanelMenu: Update page initial positions " + page) ;
+						PrintLn.println("PanelMenu: Update page initial positions " + page) ;
             }
             
             // Write the current configuration to memory.
@@ -1013,7 +1012,7 @@ final class PanelMenu extends KissMenu
             catch (IOException e)
             {
                parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
-               System.out.println("PanelMenu: view active configuration, " + e.toString()) ;
+               PrintLn.println("PanelMenu: view active configuration, " + e.toString()) ;
                return ;
             }
             
@@ -1069,7 +1068,7 @@ final class PanelMenu extends KissMenu
             try {	text.write(null,out,null) ; }
             catch (IOException e)
             {
-               System.out.println("PanelMenu: I/O Exception: " + e.toString()) ;
+               PrintLn.println("PanelMenu: I/O Exception: " + e.toString()) ;
                e.printStackTrace() ;
                return ;
             }
@@ -1078,7 +1077,7 @@ final class PanelMenu extends KissMenu
                try { out.close() ; }
                catch (IOException e)
                {
-                  System.out.println("PanelMenu: I/O Exception: " + e.toString()) ;
+                  PrintLn.println("PanelMenu: I/O Exception: " + e.toString()) ;
                   e.printStackTrace() ;
                   return ;
                }
@@ -1254,7 +1253,7 @@ final class PanelMenu extends KissMenu
          Runtime.getRuntime().gc() ;
          try { Thread.currentThread().sleep(300) ; }
          catch (InterruptedException ex) { }
-         System.out.println("PanelMenu: Out of memory.") ;
+         PrintLn.println("PanelMenu: Out of memory.") ;
          parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
          JOptionPane.showMessageDialog(Kisekae.getMainFrame(),
             Kisekae.getCaptions().getString("LowMemoryFault") + " - " +
@@ -1268,7 +1267,7 @@ final class PanelMenu extends KissMenu
       catch (Throwable e)
       {
          EventHandler.stopEventHandler() ;
-         System.out.println("PanelMenu: Internal fault, action " + evt.getActionCommand()) ;
+         PrintLn.println("PanelMenu: Internal fault, action " + evt.getActionCommand()) ;
          e.printStackTrace() ;
          String s = Kisekae.getCaptions().getString("InternalError") + ". " ;
          s += Kisekae.getCaptions().getString("KissSetClosed") ;
@@ -1448,7 +1447,7 @@ final class PanelMenu extends KissMenu
       if (fd == null) return ;
       Vector v = config.getIncludeFiles() ;
       if (v == null) return ;
-      
+            
       // If we triggered this expansion automatically on an viewer("menu","appendcnf") 
       // event or similar we may be restarting the expanded configuration.  This would 
       // be a loop.  
@@ -1457,7 +1456,7 @@ final class PanelMenu extends KissMenu
       {
          Configuration ref = config.getReference() ;
          String s = (ref != null) ? ref.getName() : config.getName() ;
-         System.out.println("Cycle detected, attempt to append \"" + s + "\", already done.") ;
+         PrintLn.println("Cycle detected, attempt to append \"" + s + "\", already done.") ;
          return ;
       }
 
@@ -1481,7 +1480,7 @@ final class PanelMenu extends KissMenu
 
       if (ze == null)
       {
-         System.out.println("No configuration selected to expand configuration \"" + config.getName() + "\"") ;
+         PrintLn.println("No configuration selected to expand configuration \"" + config.getName() + "\"") ;
          parent.closeframe();
          return ;
       }
@@ -1489,7 +1488,7 @@ final class PanelMenu extends KissMenu
       // Our config is the original configuration.  The archive entry is the
       // configuration to append.  
 
-      System.out.println("Expanding configuration \"" + config.getName() + "\" with \"" + ze.getName() + "\"") ;
+      PrintLn.println("Expanding configuration \"" + config.getName() + "\" with \"" + ze.getName() + "\"") ;
       ArchiveFile preappendzip = config.getZipFile() ;
       ArchiveEntry preappendze = config.getZipEntry() ;
       String preappendlru = (preappendzip != null) ? preappendzip.getPath() : null ;
@@ -1571,7 +1570,7 @@ final class PanelMenu extends KissMenu
             int n = page.updateInitialPositions(cid);
             page.setChanged(false) ;
             if (n > 0 && OptionsDialog.getDebugControl())
-               System.out.println("Save: Update page initial positions " + page) ;
+               PrintLn.println("Save: Update page initial positions " + page) ;
          }
       }
 
@@ -1593,7 +1592,7 @@ final class PanelMenu extends KissMenu
          }
          catch (IOException e)
          {
-            System.out.println("PanelMenu: eventSave, " + e.getMessage()) ;
+            PrintLn.println("PanelMenu: eventSave, " + e.getMessage()) ;
             return ;
          }
       }
@@ -1663,7 +1662,7 @@ final class PanelMenu extends KissMenu
       try { configtext = config.write() ; }
       catch (IOException e)
       {
-         System.out.println("PanelMenu: eventWrite, " + e.getMessage()) ;
+         PrintLn.println("PanelMenu: eventWrite, " + e.getMessage()) ;
          return ;
       }
 
@@ -1691,7 +1690,7 @@ final class PanelMenu extends KissMenu
          try { pj.print() ; }
          catch (PrinterException e)
          {
-            System.out.println("PanelMenu: eventPrint, " + e.getMessage()) ;
+            PrintLn.println("PanelMenu: eventPrint, " + e.getMessage()) ;
          }
          finally
          {
@@ -2266,7 +2265,7 @@ final class PanelMenu extends KissMenu
          if (newcel != null && !(".cel".equals(ze.getExtension())))
          {
             if (OptionsDialog.getDebugEdit())
-               System.out.println("Edit: Import " + ze.getName() + " convert to Cel") ;
+               PrintLn.println("Edit: Import " + ze.getName() + " convert to Cel") ;
 
             // Create a cel file from the loaded KiSS image.               
 
@@ -2476,8 +2475,15 @@ final class PanelMenu extends KissMenu
 
       // Load the audio object.
 
-      if (ze.isAudioSound()) newaudio = new AudioSound(pe.getZipFile(),pe.getPath()) ;
-      if (ze.isAudioMedia()) newaudio = new AudioMedia(pe.getZipFile(),pe.getPath()) ;
+      if (ze.isAudioSound()) 
+      {
+         if (Kisekae.isWebswing())
+            newaudio = new AudioWebswing(pe.getZipFile(),pe.getPath()) ;
+         else
+            newaudio = new AudioSound(pe.getZipFile(),pe.getPath()) ;
+      }
+      if (ze.isAudioMedia()) 
+         newaudio = new AudioMedia(pe.getZipFile(),pe.getPath()) ;
       if (newaudio != null)
       {
          newaudio.setIdentifier(new Integer(-1)) ;
@@ -2666,7 +2672,7 @@ final class PanelMenu extends KissMenu
       }
       catch (Exception e)
       {
-         System.err.println(e) ;
+         PrintLn.printErr(e.toString()) ;
       }
       
       if (menu != null) menu.updateRunState() ;
@@ -2692,7 +2698,7 @@ final class PanelMenu extends KissMenu
          catch (CannotUndoException ex)
          {
             parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
-            System.out.println("PanelMenu: Unable to undo edit") ;
+            PrintLn.println("PanelMenu: Unable to undo edit") ;
             ex.printStackTrace();
             JOptionPane.showMessageDialog(parent,
                Kisekae.getCaptions().getString("UndoErrorText") + "\n" + ex.toString(),
@@ -2746,7 +2752,7 @@ final class PanelMenu extends KissMenu
          catch (CannotRedoException ex)
          {
             parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
-            System.out.println("PanelMenu: Unable to redo edit") ;
+            PrintLn.println("PanelMenu: Unable to redo edit") ;
             ex.printStackTrace() ;
             JOptionPane.showMessageDialog(parent,
                Kisekae.getCaptions().getString("UndoErrorText") + "\n" + ex.toString(),

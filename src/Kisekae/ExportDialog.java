@@ -433,7 +433,7 @@ final class ExportDialog extends KissDialog implements ActionListener, WindowLis
       }
       catch (IOException e)
       {
-         System.out.println("ExportDialog: " + e) ;
+         PrintLn.println("ExportDialog: " + e) ;
       }
 	}
 

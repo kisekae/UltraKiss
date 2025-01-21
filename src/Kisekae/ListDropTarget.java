@@ -187,7 +187,7 @@ public class ListDropTarget
 		}
 		catch (Exception exception)
       {
-			System.err.println("ListDropTarget: Exception " + exception.getMessage());
+			PrintLn.printErr("ListDropTarget: Exception " + exception.getMessage());
 			exception.printStackTrace();
 			event.rejectDrop();
 		}

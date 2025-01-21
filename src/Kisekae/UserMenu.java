@@ -231,7 +231,7 @@ final class UserMenu extends KissMenu
 			Runtime.getRuntime().gc() ;
 			try { Thread.currentThread().sleep(300) ; }
 			catch (InterruptedException ex) { }
-			System.out.println("UserMenu: Out of memory.") ;
+			PrintLn.println("UserMenu: Out of memory.") ;
 			parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
 			JOptionPane.showMessageDialog(parent,
 				"Insufficient memory.  Action not completed.",
@@ -243,7 +243,7 @@ final class UserMenu extends KissMenu
 		catch (Throwable e)
 		{
 			EventHandler.stopEventHandler() ;
-			System.out.println("UserMenu: Internal fault, action " + evt.getActionCommand()) ;
+			PrintLn.println("UserMenu: Internal fault, action " + evt.getActionCommand()) ;
 			e.printStackTrace() ;
 			parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
 			JOptionPane.showMessageDialog(parent,

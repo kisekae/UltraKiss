@@ -636,7 +636,7 @@ final class Video extends Cel
       if (isVisible() && show) 
       { 
          if (OptionsDialog.getDebugMovie() && window != null)
-            System.out.println("Video: " + getName() + " Show component.") ;
+            PrintLn.println("Video: " + getName() + " Show component.") ;
          draw(null,null) ; 
          if (window != null) window.setVisible(true) ; 
          if (panel != null) panel.showpage() ;
@@ -960,7 +960,7 @@ final class Video extends Cel
 
       if (!OptionsDialog.getCacheVideo() && zip != null) zip.connect() ;
 		if (OptionsDialog.getDebugMovie())
-      	System.out.println("Video: " + getName() + " Initialization request.") ;
+      	PrintLn.println("Video: " + getName() + " Initialization request.") ;
 
 		try
 		{
@@ -981,7 +981,7 @@ final class Video extends Cel
 			error = true ;
 			showError("Unable to establish data source for " + file) ;
 			if (!(e instanceof KissException)) 
-            System.out.println(e.getMessage());
+            PrintLn.println(e.getMessage());
 		}
 
 		// Create an instance of a player for this data source.
@@ -996,7 +996,7 @@ final class Video extends Cel
 				error = true ;
 				showError("Unable to create media player for " + file) ;
 				if (!(e instanceof KissException)) 
-               System.out.println(e.getMessage());
+               PrintLn.println(e.getMessage());
 			}
 		}
 
@@ -1072,7 +1072,7 @@ final class Video extends Cel
          if (playerstate == Player.Started) state = "Started" ;
          if (playerstate == Player.Unrealized) state = "Unrealized" ;
       	if (OptionsDialog.getDebugMovie())
-         	System.out.println("Video: " + getName() + " Play request, state " + state) ;
+         	PrintLn.println("Video: " + getName() + " Play request, state " + state) ;
 
 			// Start the player. If it is currently playing stop it and restart.
          // The stop request reinvokes this play() method.
@@ -1153,7 +1153,7 @@ final class Video extends Cel
          if (playerstate == Player.Started) state = "Started" ;
          if (playerstate == Player.Unrealized) state = "Unrealized" ;
       	if (OptionsDialog.getDebugMovie())
-         	System.out.println("Video: " + getName() + " Realize request, state " + state) ;
+         	PrintLn.println("Video: " + getName() + " Realize request, state " + state) ;
 
 			// Realize the player.
          
@@ -1225,7 +1225,7 @@ final class Video extends Cel
 		window = createWindow(visual,controls) ;
       if (frame != null) frame.showStatus(null) ;
      	if (OptionsDialog.getDebugMovie())
-        	System.out.println("Video: " + getName() + " Movie window created") ;
+        	PrintLn.println("Video: " + getName() + " Movie window created") ;
    }
 
 
@@ -1235,7 +1235,7 @@ final class Video extends Cel
    private void stopmovie()
    {
      	if (OptionsDialog.getDebugMovie())
-      	System.out.println("Video: " + getName() + " Stop request.") ;
+      	PrintLn.println("Video: " + getName() + " Stop request.") ;
 		try
 		{
          if (window != null && started) 
@@ -1245,7 +1245,7 @@ final class Video extends Cel
       }
 		catch (Exception e)
 		{
-			System.out.println("Video: player stop fault.") ;
+			PrintLn.println("Video: player stop fault.") ;
 			if (!(e instanceof KissException)) e.printStackTrace();
 		}
    }
@@ -1310,7 +1310,7 @@ final class Video extends Cel
       // remove it and close the player down.
 
      	if (OptionsDialog.getDebugMovie())
-      	System.out.println("Video: " + getName() + " Close request.") ;
+      	PrintLn.println("Video: " + getName() + " Close request.") ;
 		players.removeElement(me) ;
 		closeWindow() ;
 
@@ -1603,7 +1603,7 @@ final class Video extends Cel
 		if (line > 0) s = "Line [" + line + "] " + s ;
 		if (loader != null) loader.showError(s) ;
       else frame.showStatus(errormessage) ;
-		System.out.println(s) ;
+		PrintLn.println(s) ;
 	}
 
    
@@ -1660,7 +1660,7 @@ final class Video extends Cel
 			{
 				realized = true ;
 	      	if (OptionsDialog.getDebugMovie())
-					System.out.println("Video: " + getName() + " RealizeCompleteEvent") ;
+					PrintLn.println("Video: " + getName() + " RealizeCompleteEvent") ;
            	try { startmovie() ; }
             catch (Exception e)
 				{
@@ -1676,7 +1676,7 @@ final class Video extends Cel
 			else if (ce instanceof PrefetchCompleteEvent)
 			{
 	      	if (OptionsDialog.getDebugMovie())
-	         	System.out.println("Video: " + getName() + " PrefetchCompleteEvent") ;
+	         	PrintLn.println("Video: " + getName() + " PrefetchCompleteEvent") ;
             doPrefetchCallback() ;
 			}
 
@@ -1687,14 +1687,14 @@ final class Video extends Cel
 			else if (ce instanceof EndOfMediaEvent)
 			{
 	      	if (OptionsDialog.getDebugMovie())
-	         	System.out.println("Video: " + getName() + " EndOfMediaEvent") ;
+	         	PrintLn.println("Video: " + getName() + " EndOfMediaEvent") ;
 
 				// Start the player again if repeating.
 
 	         if (repeat)
 	         {
 		      	if (OptionsDialog.getDebugMovie())
-						System.out.println("Video: " + getName() + " Repeat " + repeatcount) ;
+						PrintLn.println("Video: " + getName() + " Repeat " + repeatcount) ;
 					if (repeatcount > 0) repeatcount-- ;
 					repeat = (repeatcount != 0) ;
 					player.setMediaTime(new Time(0)) ;
@@ -1716,7 +1716,7 @@ final class Video extends Cel
 			else if (ce instanceof ControllerErrorEvent)
 			{
 				error = true ;
-	        	System.out.println("Video: " + getName() + " ControllerErrorEvent") ;
+	        	PrintLn.println("Video: " + getName() + " ControllerErrorEvent") ;
 				showError("Unable to play media file " + file) ;
 			}
 
@@ -1725,7 +1725,7 @@ final class Video extends Cel
 			else if (ce instanceof ControllerClosedEvent)
 	      {
 	      	if (OptionsDialog.getDebugMovie())
-	         	System.out.println("Video: " + getName() + " ControllerClosedEvent") ;
+	         	PrintLn.println("Video: " + getName() + " ControllerClosedEvent") ;
 	      }
 
 			// DurationUpdateEvent occurs when the player's duration changes or is
@@ -1734,7 +1734,7 @@ final class Video extends Cel
 			else if (ce instanceof DurationUpdateEvent)
 	      {
 	      	if (OptionsDialog.getDebugMovie())
-	         	System.out.println("Video: " + getName() + " DurationUpdateEvent") ;
+	         	PrintLn.println("Video: " + getName() + " DurationUpdateEvent") ;
 	      }
 
 			// Caching control.
@@ -1742,7 +1742,7 @@ final class Video extends Cel
 			else if (ce instanceof CachingControlEvent)
 	      {
 	      	if (OptionsDialog.getDebugMovie())
-	         	System.out.println("Video: " + getName() + " CachingControlEvent") ;
+	         	PrintLn.println("Video: " + getName() + " CachingControlEvent") ;
 	      }
 
 			// Start event.
@@ -1750,7 +1750,7 @@ final class Video extends Cel
 			else if (ce instanceof StartEvent)
 	      {
 	      	if (OptionsDialog.getDebugMovie())
-	         	System.out.println("Video: " + getName() + " StartEvent") ;
+	         	PrintLn.println("Video: " + getName() + " StartEvent") ;
 				doStartCallback() ;
 				started = true ;
             wasstarted = false ;
@@ -1761,7 +1761,7 @@ final class Video extends Cel
 			else if (ce instanceof StopEvent)
 	      {
 	      	if (OptionsDialog.getDebugMovie())
-	         	System.out.println("Video: " + getName() + " StopEvent") ;
+	         	PrintLn.println("Video: " + getName() + " StopEvent") ;
 
 				// Start the player in a new thread as player initiation can take
 	         // time.  This frees the Player thread.
@@ -1770,7 +1770,7 @@ final class Video extends Cel
 	         {
             	restart = false ;
 					if (OptionsDialog.getDebugMovie())
-               	System.out.println("Video: " + getName() + " Restart") ;
+               	PrintLn.println("Video: " + getName() + " Restart") ;
 					Runnable runner = new Runnable()
 					{ public void run() { play() ; } } ;
 					javax.swing.SwingUtilities.invokeLater(runner) ;
@@ -1785,7 +1785,7 @@ final class Video extends Cel
 			else if (ce instanceof MediaTimeSetEvent)
 	      {
 	      	if (OptionsDialog.getDebugMovie())
-	         	System.out.println("Video: " + getName() + " MediaTimeEvent") ;
+	         	PrintLn.println("Video: " + getName() + " MediaTimeEvent") ;
 			}
 
 			// Transition to new state event.
@@ -1793,7 +1793,7 @@ final class Video extends Cel
 			else if (ce instanceof TransitionEvent)
 	      {
 	      	if (OptionsDialog.getDebugMovie())
-	         	System.out.println("Video: " + getName() + " TransitionEvent") ;
+	         	PrintLn.println("Video: " + getName() + " TransitionEvent") ;
 			}
 
 			// Change play rate event.
@@ -1801,7 +1801,7 @@ final class Video extends Cel
 			else if (ce instanceof RateChangeEvent)
 	      {
 	      	if (OptionsDialog.getDebugMovie())
-	         	System.out.println("Video: " + getName() + " RateChangeEvent") ;
+	         	PrintLn.println("Video: " + getName() + " RateChangeEvent") ;
 			}
 
 			// Change Stop Time event.
@@ -1809,7 +1809,7 @@ final class Video extends Cel
 			else if (ce instanceof StopTimeChangeEvent)
 	      {
 	      	if (OptionsDialog.getDebugMovie())
-	         	System.out.println("Video: " + getName() + " StopTimeChangeEvent") ;
+	         	PrintLn.println("Video: " + getName() + " StopTimeChangeEvent") ;
 	      }
 		}
    }

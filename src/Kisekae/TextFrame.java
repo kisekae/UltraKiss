@@ -577,7 +577,7 @@ final class TextFrame extends KissFrame
 		this.zip = (ze == null) ? null : ze.getZipFile() ;
       this.showline = showline ;
 		file = (ze == null) ? null : ze.getPath() ;
-      int n = file.lastIndexOf('.') ;
+      int n = (file == null) ? -1 : file.lastIndexOf('.') ;
       extension = (file == null || n < 0) ? null : file.substring(n) ;
       if (".cnf".equals(extension)) this.showline = true ;
       this.type = (type != null) ? type : file ;
@@ -630,7 +630,7 @@ final class TextFrame extends KissFrame
 		setTitle(s) ;
 		setIconImage(Kisekae.getIconImage()) ;
 		if (OptionsDialog.getDebugControl())
-      	System.out.println("TextFrame active " + s) ;
+      	PrintLn.println("TextFrame active " + s) ;
 
 		// Find the HelpSet file and create the HelpSet broker.
 
@@ -659,6 +659,7 @@ final class TextFrame extends KissFrame
       if (!applemac) newdoc.setMnemonic(KeyEvent.VK_N) ;
 		newdoc.addActionListener(this) ;
       newdoc.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, accelerator));
+		newdoc.setEnabled(!Kisekae.isSecure() && !Kisekae.isExpired()) ;
 		fileMenu.add((open = new JMenuItem(Kisekae.getCaptions().getString("MenuFileOpen")))) ;
 		open.addActionListener(this) ;
       if (!applemac) open.setMnemonic(KeyEvent.VK_O) ;
@@ -687,16 +688,16 @@ final class TextFrame extends KissFrame
 		fileMenu.add((pagesetup = new JMenuItem(Kisekae.getCaptions().getString("MenuFilePageSetup")))) ;
 		pagesetup.addActionListener(this) ;
       if (!applemac) pagesetup.setMnemonic(KeyEvent.VK_U) ;
-      pagesetup.setEnabled(Kisekae.isPrintInstalled() && !Kisekae.isSecure()) ;
+      pagesetup.setEnabled(Kisekae.isPrintInstalled() && !Kisekae.isSecure() && !Kisekae.isExpired()) ;
 		fileMenu.add((printpreview = new JMenuItem(Kisekae.getCaptions().getString("MenuFilePrintPreview")))) ;
 		printpreview.addActionListener(this) ;
       printpreview.setMnemonic(KeyEvent.VK_V) ;
-      printpreview.setEnabled(Kisekae.isPrintInstalled() && !Kisekae.isSecure()) ;
+      printpreview.setEnabled(Kisekae.isPrintInstalled() && !Kisekae.isSecure() && !Kisekae.isExpired()) ;
 		fileMenu.add((print = new JMenuItem(Kisekae.getCaptions().getString("MenuFilePrint")))) ;
 		print.addActionListener(this) ;
       if (!applemac) print.setMnemonic(KeyEvent.VK_P) ;
       print.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, accelerator));
-      print.setEnabled(Kisekae.isPrintInstalled() && !Kisekae.isSecure()) ;
+      print.setEnabled(Kisekae.isPrintInstalled() && !Kisekae.isSecure() && !Kisekae.isExpired()) ;
 		fileMenu.addSeparator() ;
 		fileMenu.add((properties = new JMenuItem(Kisekae.getCaptions().getString("MenuFileProperties")))) ;
 		properties.setEnabled(false) ;
@@ -1168,7 +1169,7 @@ final class TextFrame extends KissFrame
 
 			int bytes = (ze == null) ? 0 : (int) ze.getSize() ;
 			if (OptionsDialog.getDebugLoad())
-				System.out.println("TextFrame: read " + file + " [" + bytes + " bytes]") ;
+				PrintLn.println("TextFrame: read " + file + " [" + bytes + " bytes]") ;
 			if (in == null && ze != null)
 				in = (zip == null) ? null : zip.getInputStream(ze) ;
 
@@ -1206,14 +1207,15 @@ final class TextFrame extends KissFrame
 			}
          else
    			if (OptionsDialog.getDebugLoad())
-   				System.out.println("TextFrame: unable to obtain input stream for " + file) ;
+   				PrintLn.println("TextFrame: unable to obtain input stream for " + file) ;
 
 			// Wrap our text object in a KiSS TextObject.
 
 			text.setBorder(new LineNumberBorder(Color.gray)) ;
 			text.setCaretPosition(caret) ;
          text.setEnabled(!Kisekae.isExpired());
-			textobject = new TextObject(ze,text,kit) ;
+         text.setDisabledTextColor(Color.BLACK) ;
+         textobject = new TextObject(ze,text,kit) ;
 			FileOpen fd = (ze == null) ? null : ze.getFileOpen() ;
 			if (fd != null) fd.close() ;
 
@@ -1236,7 +1238,7 @@ final class TextFrame extends KissFrame
 			Runtime.getRuntime().gc() ;
 			try { Thread.currentThread().sleep(300) ; }
 			catch (InterruptedException ex) { }
-			System.out.println("TextFrame: Out of memory.") ;
+			PrintLn.println("TextFrame: Out of memory.") ;
          JOptionPane.showMessageDialog(this,
             Kisekae.getCaptions().getString("LowMemoryFault") + " - " +
             Kisekae.getCaptions().getString("ActionNotCompleted") + "\n" +
@@ -1250,7 +1252,7 @@ final class TextFrame extends KissFrame
       catch (SecurityException e)
       {
 			error = true ;
-			System.out.println("TextFrame: Security exception. " + e.toString()) ;
+			PrintLn.println("TextFrame: Security exception. " + e.toString()) ;
          JOptionPane.showMessageDialog(this,
             Kisekae.getCaptions().getString("SecurityException") + "\n" +
             Kisekae.getCaptions().getString("FileOpenSecurityMessage1"),
@@ -1263,7 +1265,7 @@ final class TextFrame extends KissFrame
 		catch (IOException e)
 		{
 			error = true ;
-			System.out.println("TextFrame: Initialization fault.") ;
+			PrintLn.println("TextFrame: Initialization fault.") ;
 			e.printStackTrace() ;
          JOptionPane.showMessageDialog(this,
             Kisekae.getCaptions().getString("FileOpenException") + "\n" +
@@ -1314,31 +1316,37 @@ final class TextFrame extends KissFrame
       cut.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, accelerator));
       if (!applemac) cut.setMnemonic(KeyEvent.VK_T) ;
       cut.addActionListener(this);
+		cut.setEnabled(!Kisekae.isSecure()) ;
 		menu.add((copy = new JMenuItem(Kisekae.getCaptions().getString("MenuEditCopy")))) ;
 		a = getActionByName("Copy") ;
 		if (a != null) copy.addActionListener(a) ;
       copy.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, accelerator));
       if (!applemac) copy.setMnemonic(KeyEvent.VK_C) ;
       copy.addActionListener(this);
+		copy.setEnabled(!Kisekae.isSecure()) ;
 		menu.add((paste = new JMenuItem(Kisekae.getCaptions().getString("MenuEditPaste")))) ;
 		a = getActionByName("Paste") ;
 		if (a != null) paste.addActionListener(a) ;
       paste.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, accelerator));
       if (!applemac) paste.setMnemonic(KeyEvent.VK_P) ;
       paste.addActionListener(this);
+		paste.setEnabled(!Kisekae.isSecure()) ;
 		menu.addSeparator() ;
 		menu.add((find = new JMenuItem(Kisekae.getCaptions().getString("MenuEditFind")))) ;
 		find.addActionListener(this) ;
       if (!applemac) find.setMnemonic(KeyEvent.VK_F) ;
       find.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F, accelerator));
+		find.setEnabled(!Kisekae.isSecure()) ;
 		menu.add((replace = new JMenuItem(Kisekae.getCaptions().getString("MenuEditReplace")))) ;
 		replace.addActionListener(this) ;
       if (!applemac) replace.setMnemonic(KeyEvent.VK_E) ;
       replace.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_H, accelerator));
+		replace.setEnabled(!Kisekae.isSecure()) ;
 		menu.addSeparator() ;
 		menu.add((selectall = new JMenuItem(Kisekae.getCaptions().getString("MenuEditSelectAll")))) ;
 		a = getActionByName("Select All") ;
       selectall.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, accelerator));
+		selectall.setEnabled(!Kisekae.isSecure()) ;
       if (!applemac) selectall.setMnemonic(KeyEvent.VK_A) ;
 		if (a != null) selectall.addActionListener(a) ;
 		return menu;
@@ -2095,7 +2103,7 @@ final class TextFrame extends KissFrame
 					try { pj.print() ; }
 					catch (PrinterException ex)
 					{
-						System.err.println("Printing error: " + ex.toString()) ;
+						PrintLn.printErr("Printing error: " + ex.toString()) ;
 						ex.printStackTrace() ;
                   JOptionPane.showMessageDialog(this,
                      Kisekae.getCaptions().getString("PrinterError") + " - " +
@@ -2212,7 +2220,7 @@ final class TextFrame extends KissFrame
 			Runtime.getRuntime().gc() ;
 			try { Thread.currentThread().sleep(300) ; }
 			catch (InterruptedException ex) { }
-			System.out.println("TextFrame: Out of memory.") ;
+			PrintLn.println("TextFrame: Out of memory.") ;
          setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
          JOptionPane.showMessageDialog(this,
             Kisekae.getCaptions().getString("LowMemoryFault") + " - " +
@@ -2226,7 +2234,7 @@ final class TextFrame extends KissFrame
 		catch (Throwable e)
 		{
 			EventHandler.stopEventHandler() ;
-			System.out.println("TextFrame: Internal fault, action " + evt.getActionCommand()) ;
+			PrintLn.println("TextFrame: Internal fault, action " + evt.getActionCommand()) ;
 			e.printStackTrace() ;
          setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
          JOptionPane.showMessageDialog(this,
@@ -2313,6 +2321,7 @@ final class TextFrame extends KissFrame
 
 			text = textobject.getTextComponent() ;
          text.setEnabled(!Kisekae.isExpired());
+         text.setDisabledTextColor(Color.BLACK) ;
 			kit = textobject.getEditorKit() ;
 			doc = textobject.getDocument() ;
 			doc.addUndoableEditListener(this) ;
@@ -2533,7 +2542,7 @@ final class TextFrame extends KissFrame
 	public void close()
 	{
 		if (OptionsDialog.getDebugControl())
-      	System.out.println("TextFrame terminates") ;
+      	PrintLn.println("TextFrame terminates") ;
       callback.removeActionListener(null) ;
 		super.close() ;
       flush() ;
@@ -2646,7 +2655,7 @@ final class TextFrame extends KissFrame
 			try { undo.undo(); }
 			catch (CannotUndoException ex)
 			{
-				System.out.println("TextFrame: Unable to undo edit") ;
+				PrintLn.println("TextFrame: Unable to undo edit") ;
 				ex.printStackTrace();
             JOptionPane.showMessageDialog(me,
                Kisekae.getCaptions().getString("EditUndoError") + " - " +
@@ -2697,7 +2706,7 @@ final class TextFrame extends KissFrame
 			try { undo.redo() ; }
 			catch (CannotRedoException ex)
 			{
-				System.out.println("TextFrame: Unable to redo edit") ;
+				PrintLn.println("TextFrame: Unable to redo edit") ;
 				ex.printStackTrace() ;
             JOptionPane.showMessageDialog(me,
                Kisekae.getCaptions().getString("EditUndoError") + " - " +

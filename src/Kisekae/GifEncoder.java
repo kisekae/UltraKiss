@@ -357,12 +357,12 @@ public class GifEncoder extends ImageEncoder
 		}
 		catch (KissException e)
 		{
-			System.out.println("GifEncoder: exception during encoding, " + e.getMessage()) ;
+			PrintLn.println("GifEncoder: exception during encoding, " + e.getMessage()) ;
 			throw new IOException(e.getMessage()) ;
 		}
 		catch (Exception e)
 		{
-			System.out.println("GifEncoder: exception during encoding") ;
+			PrintLn.println("GifEncoder: exception during encoding") ;
 			e.printStackTrace() ;
 			throw new IOException("Internal exception during GIF encoding") ;
 		}

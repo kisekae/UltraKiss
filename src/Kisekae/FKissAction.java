@@ -366,7 +366,7 @@ final class FKissAction extends KissObject
       if (OptionsDialog.getDebugAction() && (!getNoBreakpoint() || OptionsDialog.getDebugDisabled()))
       {
          String bp = (nobreakpoint) ? "*" : " " ;
-         System.out.println(" >"+bp+"[" + currentthread.getName() + "] Event action " + toString()) ;
+         PrintLn.println(" >"+bp+"[" + currentthread.getName() + "] Event action " + toString()) ;
       }
 
       // Determine the class of the action object.  Action commands expect
@@ -425,7 +425,7 @@ final class FKissAction extends KissObject
                      code = 93 ;
                      a.setBackground(true) ;
                      if (OptionsDialog.getDebugSound())
-                        System.out.println("FKissAction: " + getName() + " converted to MediaPlayer, duration " + n + " seconds");
+                        PrintLn.println("FKissAction: " + getName() + " converted to MediaPlayer, duration " + n + " seconds");
                   }
                }
             }
@@ -1323,7 +1323,7 @@ final class FKissAction extends KissObject
             if (OptionsDialog.getSoundSingle() && !OptionsDialog.getLongSoundMedia())
             {
          		if (OptionsDialog.getDebugSound())
-         			System.out.println("FKissAction: SoundSingle about to play " + o1 + " stopping any sound") ;
+         			PrintLn.println("FKissAction: SoundSingle about to play " + o1 + " stopping any sound") ;
                if ("sound".equals(audiotype)) Audio.stop(config,audiotype) ;
             }
 
@@ -1569,6 +1569,7 @@ final class FKissAction extends KissObject
          // Run an operating system command.  shell(command,exitcode)
 
          case 24:		// "shell"
+            if (Kisekae.isWebswing()) break ;
             if (parameters.size() < 1) break ;
             o1 = variable.getValue((String) parameters.elementAt(0),event) ;
             s1 = (o1 != null) ? o1.toString() : "" ;
@@ -1593,8 +1594,8 @@ final class FKissAction extends KissObject
             catch (IOException e)
             {
                s = "[" + Thread.currentThread().getName() + "] " + "Exception, Event action: " + toString() ;
-               System.out.println("Line [" + line + "] " + s) ;
-               System.out.println(e) ;
+               PrintLn.println("Line [" + line + "] " + s) ;
+               PrintLn.println(e.toString()) ;
             }
             break ;
 
@@ -1915,7 +1916,7 @@ final class FKissAction extends KissObject
                if (OptionsDialog.getDebugAction() && (!getNoBreakpoint() || OptionsDialog.getDebugDisabled()))
                {
                    String bp = (nobreakpoint) ? "*" : " " ;
-                   System.out.println("  > [" + Thread.currentThread().getName() + "]"+bp+"gosub(" + kiss.getIdentifier() + ") returns") ;
+                   PrintLn.println("  > [" + Thread.currentThread().getName() + "]"+bp+"gosub(" + kiss.getIdentifier() + ") returns") ;
                }
             }
             break ;
@@ -3494,17 +3495,52 @@ final class FKissAction extends KissObject
                   {
                      if (vs2 == null) return ;
                      if (mf == null || mm == null) return ;
-                     ArchiveEntry ze = (config != null) ? config.getZipEntry() : null ;
-                     String path = (ze != null) ? ze.getPathName() : null ;
-                     String dir = (config != null) ? config.getDirectory() : null ;
-                     if (dir == null && path != null) dir = new File(path).getParent() ;
-                     File f = new File(dir,vs2) ;
-                     String filename = f.getName() ;
-            			int i = filename.lastIndexOf(".") ;
-            			String ext = (i < 0) ? "" : filename.substring(i).toLowerCase() ;  
-                     FileOpen fdnew = new FileOpen(mf) ;
-                     ze = fdnew.validateFile(f.getPath(), filename, f.getParent(), ext);
-                     menu.openContext(fdnew, ze) ;
+                     
+                     // If our configuration was downloaded, open the archive
+                     // relative to the URL from which it was downloaded.
+                     
+                     URL downloadurl = mm.getDownloadURL() ;
+                     if (downloadurl != null)
+                     {
+                        try
+                        {
+                           String protocol = downloadurl.getProtocol() ;
+                           String host = downloadurl.getHost() ;
+                           String path = downloadurl.getPath() ;
+                           File f = new File(path) ;
+                           String p = f.getParent() ;
+                           path = (p != null) ? p + File.separator + vs2 : vs2 ;
+                           URL archive = new URL(protocol,host,path) ;
+                           String url = archive.toExternalForm() ;
+                           UrlLoader urlloader = new UrlLoader(mf,url) ;
+                           urlloader.callback.addActionListener(mm) ;
+                           mm.setUrlLoader(urlloader) ;
+                           Thread loadthread = new Thread(urlloader) ;
+                           loadthread.start() ;   
+                        }
+                        catch (MalformedURLException e)
+                        { 
+                           PrintLn.println("FKissAction: openarchive \""+vs2+"\") " + e.getMessage()) ;
+                        }
+                     }
+                     
+                     // Open the archive relative to the directory from which
+                     // the current configuration was loaded.
+
+                     else
+                     {
+                        ArchiveEntry ze = (config != null) ? config.getZipEntry() : null ;
+                        String path = (ze != null) ? ze.getPathName() : null ;
+                        String dir = (config != null) ? config.getDirectory() : null ;
+                        if (dir == null && path != null) dir = new File(path).getParent() ;
+                        File f = new File(dir,vs2) ;
+                        String filename = f.getName() ;
+               			int i = filename.lastIndexOf(".") ;
+               			String ext = (i < 0) ? "" : filename.substring(i).toLowerCase() ;  
+                        FileOpen fdnew = new FileOpen(mf) ;
+                        ze = fdnew.validateFile(f.getPath(), filename, f.getParent(), ext);
+                        if (menu != null) menu.openContext(fdnew, ze) ;
+                     }
                   }
                   else if ("view".equalsIgnoreCase(vs1))
                   {
@@ -3647,7 +3683,7 @@ final class FKissAction extends KissObject
                               }
                               catch (IOException e) 
                               { 
-                                 System.out.println("FKissAction: viewer(\"seticon\",\""+o2+"\")" + e.getMessage()) ;
+                                 PrintLn.println("FKissAction: viewer(\"seticon\",\""+o2+"\") " + e.getMessage()) ;
                               }
                            }
                         }
@@ -4066,12 +4102,12 @@ final class FKissAction extends KissObject
                   f = new File(dir,s1) ;
                   s1 = f.getPath() ;
                   if (OptionsDialog.getDebugLoad())
-                     System.out.println("FKiSS open file " + s1) ;
+                     PrintLn.println("FKiSS open file " + s1) ;
                }
                else
                {
                   if (OptionsDialog.getDebugLoad())
-                     System.out.println("FKiSS open archive entry " + s1) ;
+                     PrintLn.println("FKiSS open archive entry " + s1) ;
                }
 
                // If the Text Object does not exist, create it.  If it does
@@ -4241,12 +4277,12 @@ final class FKissAction extends KissObject
                   OutputStream os = new FileOutputStream(f) ;
                   n1 = text.write(null,os,".txt") ;
                   if (OptionsDialog.getDebugLoad())
-                     System.out.println("FKiSS write file " + text.getPath() + " bytes " + n1);
+                     PrintLn.println("FKiSS write file " + text.getPath() + " bytes " + n1);
                }
                catch (IOException e)
                {
                   n1 = -1 ;
-                  System.out.println("[" + Thread.currentThread().getName() + "] " + "FKissAction: write " + text.getPath() + " " + e);
+                  PrintLn.println("[" + Thread.currentThread().getName() + "] " + "FKissAction: write " + text.getPath() + " " + e);
                }
             }
             variable.setIntValue((String) parameters.elementAt(0),n1,event) ;
@@ -4844,14 +4880,14 @@ final class FKissAction extends KissObject
       catch (SecurityException e)
       {
          s = "[" + Thread.currentThread().getName() + "] " + "Event action security exception " + toString() ;
-         System.out.println("Line [" + line + "] " + s) ;
+         PrintLn.println("Line [" + line + "] " + s) ;
          if (panel != null) panel.showStatus(s) ;
       }
 
       catch (Exception e)
       {
          s = "[" + Thread.currentThread().getName() + "] " + "Exception, Event action: " + toString() ;
-         System.out.println("Line [" + line + "] " + s) ;
+         PrintLn.println("Line [" + line + "] " + s) ;
          if (panel != null) panel.showStatus(s) ;
          e.printStackTrace() ;
       }

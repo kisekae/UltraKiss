@@ -225,7 +225,7 @@ final class NotifyDialog extends KissDialog
          if (parent instanceof WebFrame)
          {
             if (OptionsDialog.getDebugControl())
-               System.out.println("NotifyDialog: cancel WebFrame load archive.") ;
+               PrintLn.println("NotifyDialog: cancel WebFrame load archive.") ;
             ActionEvent event = new ActionEvent(CANCEL,0,"NotifyDialog Cancel") ;
             ((WebFrame) parent).actionPerformed(event) ;
          }
@@ -247,6 +247,16 @@ final class NotifyDialog extends KissDialog
    // Return our confirm value.
 
    int getConfirmValue() { return state ; }
+
+
+   // Return our text value.
+
+   String getText() { return TEXT.getText() ; }
+   
+   
+   // Set our text value.
+   
+   void setText(String text) { TEXT.setText(text) ; }
 
 
    // Redraw the panel frame.
@@ -320,7 +330,7 @@ final class NotifyDialog extends KissDialog
          }
          catch (Exception e)
          {
-            System.out.println(e) ;
+            PrintLn.println(e.toString()) ;
          }
       }
       

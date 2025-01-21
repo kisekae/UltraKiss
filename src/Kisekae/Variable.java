@@ -127,7 +127,7 @@ final class Variable
 			if (OptionsDialog.getDebugVariable() && (!event.getNoBreakpoint() || OptionsDialog.getDebugDisabled()))
          {
             String bp = (event.getNoBreakpoint()) ? "*" : " " ;
-				System.out.println("  > [" + Thread.currentThread().getName() + "]"+bp+"Variable " + v + " removed.") ;
+				PrintLn.println("  > [" + Thread.currentThread().getName() + "]"+bp+"Variable " + v + " removed.") ;
          }
 		}
 		else
@@ -136,7 +136,7 @@ final class Variable
 			if (OptionsDialog.getDebugVariable() && (!event.getNoBreakpoint() || OptionsDialog.getDebugDisabled()))
          {
             String bp = (event.getNoBreakpoint()) ? "*" : " " ;
-				System.out.println("  > [" + Thread.currentThread().getName() + "]"+bp+"Variable " + v + " set to " + o.toString()) ;
+				PrintLn.println("  > [" + Thread.currentThread().getName() + "]"+bp+"Variable " + v + " set to " + o.toString()) ;
          }
 		}
 	}
@@ -383,7 +383,7 @@ final class Variable
 		if (OptionsDialog.getDebugVariable() && (!event.getNoBreakpoint() || OptionsDialog.getDebugDisabled())) 
       {
          String bp = (event.getNoBreakpoint()) ? "*" : " " ;
-			System.out.println("  > [" + Thread.currentThread().getName() + "]"+bp+"Variable " + v + " set to " + n) ;
+			PrintLn.println("  > [" + Thread.currentThread().getName() + "]"+bp+"Variable " + v + " set to " + n) ;
       }
 	}
 
@@ -426,7 +426,7 @@ final class Variable
 		if (OptionsDialog.getDebugVariable() && (!event.getNoBreakpoint() || OptionsDialog.getDebugDisabled())) 
       {
          String bp = (event.getNoBreakpoint()) ? "*" : " " ;
-			System.out.println("  > [" + Thread.currentThread().getName() + "]"+bp+"Variable " + v + " set to " + n) ;
+			PrintLn.println("  > [" + Thread.currentThread().getName() + "]"+bp+"Variable " + v + " set to " + n) ;
       }
 	}
 
@@ -469,7 +469,7 @@ final class Variable
 		if (OptionsDialog.getDebugVariable() && (!event.getNoBreakpoint() || OptionsDialog.getDebugDisabled())) 
       {
          String bp = (event.getNoBreakpoint()) ? "*" : " " ;
-			System.out.println("  > [" + Thread.currentThread().getName() + "]"+bp+"Variable " + v + " set to " + n) ;
+			PrintLn.println("  > [" + Thread.currentThread().getName() + "]"+bp+"Variable " + v + " set to " + n) ;
       }
 	}
 

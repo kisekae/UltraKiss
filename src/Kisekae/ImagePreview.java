@@ -164,7 +164,7 @@ class ImagePreview extends JPanel
       }
       catch (Exception e)
       {
-         System.out.println("ImagePreview: unable to create custom cursors.") ;
+         PrintLn.println("ImagePreview: unable to create custom cursors.") ;
          e.printStackTrace() ;
       }
 
@@ -528,7 +528,7 @@ class ImagePreview extends JPanel
 			Runtime.getRuntime().gc() ;
          try { Thread.currentThread().sleep(300) ; }
          catch (InterruptedException ex) { }
-			System.out.println("ImagePreview: Out of memory.") ;
+			PrintLn.println("ImagePreview: Out of memory.") ;
          nomemory = true ;
          showstate = true ;
 		}
@@ -542,7 +542,7 @@ class ImagePreview extends JPanel
          Runtime.getRuntime().gc() ;
          try { Thread.currentThread().sleep(300) ; }
          catch (InterruptedException ex) { }
-         System.out.println("ImagePreview: Exception " + e.toString()) ;
+         PrintLn.println("ImagePreview: Exception " + e.toString()) ;
          e.printStackTrace() ;
          showstate = true ;
       }
@@ -1074,7 +1074,7 @@ class ImagePreview extends JPanel
          }
      		catch (Exception e) 
          { 
-            System.out.println("ImagePreview: lazy thread failure") ;
+            PrintLn.println("ImagePreview: lazy thread failure") ;
             e.printStackTrace();
          }
          

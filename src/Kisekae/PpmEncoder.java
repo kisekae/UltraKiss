@@ -183,7 +183,7 @@ public class PpmEncoder extends ImageEncoder
 		}
 		catch (Exception e)
 		{
-			System.out.println("PpmEncoder: exception during encoding") ;
+			PrintLn.println("PpmEncoder: exception during encoding") ;
 			e.printStackTrace() ;
 			throw new IOException("Internal exception during PPM encoding") ;
 		}

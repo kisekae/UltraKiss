@@ -112,7 +112,7 @@ final class AlarmTimer extends Thread
       if (thread != null)
       {
          if (OptionsDialog.getDebugControl())
-			   System.out.println("Stop alarm timer.") ;
+			   PrintLn.println("Stop alarm timer.") ;
    	   thread.interrupt() ;
       }
       alarms = null ;
@@ -136,7 +136,7 @@ final class AlarmTimer extends Thread
 	static void suspendTimer(boolean manual)
    {
 		if (OptionsDialog.getDebugControl() && !manualsuspend)
-			System.out.println("Suspend alarm timer. " + ((manual) ? "Manual" : "")) ;
+			PrintLn.println("Suspend alarm timer. " + ((manual) ? "Manual" : "")) ;
    	if (manual) manualsuspend = true ;
    	suspend = true ;
    }
@@ -152,7 +152,7 @@ final class AlarmTimer extends Thread
       synchronized (suspendlock)
       {
 			if (OptionsDialog.getDebugControl())
-				System.out.println("Resume alarm timer.") ;
+				PrintLn.println("Resume alarm timer.") ;
    		suspend = false ;
 		   suspendlock.notify() ;
       }
@@ -271,7 +271,7 @@ final class AlarmTimer extends Thread
             {
                long time = System.currentTimeMillis() - Configuration.getTimestamp() ;
                long triggertime = alarm.getTriggerTime() - Configuration.getTimestamp() ;
-               System.out.println("[" + time + "] [" + Thread.currentThread().getName() + "] schedule " + evt.getName() + " in AlarmTimer, trigger time " + triggertime + " delay " + alarm.getInterval()) ;
+               PrintLn.println("[" + time + "] [" + Thread.currentThread().getName() + "] schedule " + evt.getName() + " in AlarmTimer, trigger time " + triggertime + " delay " + alarm.getInterval()) ;
             }
          }      
       }
@@ -330,7 +330,7 @@ final class AlarmTimer extends Thread
 		thread = Thread.currentThread() ;
 		thread.setName("AlarmTimer-" + id) ;
 		if (OptionsDialog.getDebugControl())
-			System.out.println(thread.getName() + " started.") ;
+			PrintLn.println(thread.getName() + " started.") ;
 //    thread.setPriority(Thread.MAX_PRIORITY) ;
       long period = OptionsDialog.getTimerPeriod() ;
       if (period <= 0) period = defaultperiod ;
@@ -355,10 +355,10 @@ final class AlarmTimer extends Thread
 					{
 						active = false ;
               		if (OptionsDialog.getDebugControl())
-                     System.out.println(thread.getName() + " suspended.") ;
+                     PrintLn.println(thread.getName() + " suspended.") ;
 						suspendlock.wait() ;
               		if (OptionsDialog.getDebugControl())
-                     System.out.println(thread.getName() + " resumed.") ;
+                     PrintLn.println(thread.getName() + " resumed.") ;
 					}
    			}
 
@@ -456,7 +456,7 @@ final class AlarmTimer extends Thread
 		}
 
 		if (OptionsDialog.getDebugControl())
-	      System.out.println(thread.getName() + " terminated.");
+	      PrintLn.println(thread.getName() + " terminated.");
       thread = null ;
       active = false ;
       suspend = false ;

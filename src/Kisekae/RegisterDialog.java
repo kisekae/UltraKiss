@@ -235,7 +235,7 @@ public class RegisterDialog extends KissDialog
 
 		catch (Throwable e)
 		{
-			System.out.println("RegisterDialog: Internal fault, action " + evt.getActionCommand()) ;
+			PrintLn.println("RegisterDialog: Internal fault, action " + evt.getActionCommand()) ;
 			e.printStackTrace() ;
          JOptionPane.showMessageDialog(this,
             Kisekae.getCaptions().getString("InternalError") +

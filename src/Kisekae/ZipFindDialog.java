@@ -102,7 +102,7 @@ final class ZipFindDialog extends KissDialog
 		try { jbInit(); pack(); }
       catch(Exception ex)
       {
-         System.out.println("ZipFindDialog: jbInit constructor " + ex.toString()) ;
+         PrintLn.println("ZipFindDialog: jbInit constructor " + ex.toString()) ;
          ex.printStackTrace();
          JOptionPane.showMessageDialog(null,
             Kisekae.getCaptions().getString("InternalError") +

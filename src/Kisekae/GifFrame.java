@@ -810,7 +810,7 @@ final class GifFrame
 			error = true ;
          String s = e.getMessage() ;
 			if (s == null) s = e.toString() ;
-			System.out.println("GIF Exception, Cel " + cel.getPath()
+			PrintLn.println("GIF Exception, Cel " + cel.getPath()
          	+ " frame " + frame + ", " + s) ;
 		}
 
@@ -821,7 +821,7 @@ final class GifFrame
 			error = true ;
          String s = e.getMessage() ;
 			if (s == null) s = e.toString() ;
-			System.out.println("Exception, Cel " + cel.getPath()
+			PrintLn.println("Exception, Cel " + cel.getPath()
          	+ " frame " + frame + ", " + s) ;
 			e.printStackTrace() ;
 		}
@@ -837,7 +837,7 @@ final class GifFrame
       if (scaledimage != null) scaledimage.flush();
       image = filteredimage = scaledimage = null ;
       if (OptionsDialog.getDebugLoad())
-         System.out.println("Unload: " + toString());
+         PrintLn.println("Unload: " + toString());
       cel = null ;
    }
 
@@ -1080,7 +1080,7 @@ final class GifFrame
       }
       catch (CloneNotSupportedException e)
       {
-      	System.out.println("GifFrame: Clone failure") ;
+      	PrintLn.println("GifFrame: Clone failure") ;
       	e.printStackTrace();
          return null ;
       }

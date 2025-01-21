@@ -87,11 +87,11 @@ final class MediaFileStream
 		try { datastream = ze.getInputStream() ; }
 		catch (IOException e)
 		{
-			System.out.println("MediaFileStream: Unable to allocate input stream for " + name) ;
+			PrintLn.println("MediaFileStream: Unable to allocate input stream for " + name) ;
 		}
 
 		if (datastream != null)
-			if (debug) System.out.println("MediaFileStream: new datastream " + datastream
+			if (debug) PrintLn.println("MediaFileStream: new datastream " + datastream
 				+ " length " + length + " for " + name) ;
 	}
 
@@ -104,21 +104,21 @@ final class MediaFileStream
 	{
    	started = true ;
 		debug = OptionsDialog.getDebugMedia() ;
-		if (debug) System.out.println("MediaFileStream: start " + name) ;
+		if (debug) PrintLn.println("MediaFileStream: start " + name) ;
 	}
 
 	public void stop()
 	{
    	started = false ;
 		debug = OptionsDialog.getDebugMedia() ;
-		if (debug) System.out.println("MediaFileStream: stop " + name) ;
+		if (debug) PrintLn.println("MediaFileStream: stop " + name) ;
 	}
 
 	public void close() throws IOException
 	{
    	started = false ;
 		debug = OptionsDialog.getDebugMedia() ;
-		if (debug) System.out.println("MediaFileStream: close datastream "
+		if (debug) PrintLn.println("MediaFileStream: close datastream "
 			 + datastream + " for " + name) ;
 		if (datastream != null) datastream.close() ;
 		datastream = null ;
@@ -154,7 +154,7 @@ final class MediaFileStream
 	public int read(byte[] buffer, int offset, int nToRead) throws IOException
 	{
 		debug = OptionsDialog.getDebugMedia() ;
-		if (debug) System.out.println("MediaFileStream: read(" + nToRead + ")"
+		if (debug) PrintLn.println("MediaFileStream: read(" + nToRead + ")"
 			+ " for " + name) ;
 		if (nToRead == 0) return 0 ;
 		if (endOfStream()) return -1 ;
@@ -163,7 +163,7 @@ final class MediaFileStream
 
 		if (datastream == null)
 		{
-			System.out.println("MediaFileStream: Unable to access media file " + name);
+			PrintLn.println("MediaFileStream: Unable to access media file " + name);
 			throw new IOException("Media " + name + " null datastream") ;
 		}
 
@@ -201,7 +201,7 @@ final class MediaFileStream
 	public long seek(long where)
 	{
 		debug = OptionsDialog.getDebugMedia() ;
-		if (debug) System.out.println("MediaFileStream: seek(" + where + ")"
+		if (debug) PrintLn.println("MediaFileStream: seek(" + where + ")"
 			+ " for " + name);
 		if (where >= length) where = length ;
 		if (where < 0) where = 0;
@@ -223,7 +223,7 @@ final class MediaFileStream
 		catch (IOException e)
 		{
       	where = 0 ;
-			System.out.println("MediaFileStream: Unable to allocate input stream for " + name) ;
+			PrintLn.println("MediaFileStream: Unable to allocate input stream for " + name) ;
 		}
 
       index = where ;

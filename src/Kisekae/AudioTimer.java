@@ -102,7 +102,7 @@ final class AudioTimer extends Thread
 		if (thread != null)
       {
          if (OptionsDialog.getDebugControl())
-			   System.out.println("Stop audio timer.") ;
+			   PrintLn.println("Stop audio timer.") ;
    	   thread.interrupt() ;
       }
       audio = null ;
@@ -120,7 +120,7 @@ final class AudioTimer extends Thread
 
       if (audio.size() == 0) audio = null ;
 	   if (OptionsDialog.getDebugControl())
-		   System.out.println("Start audio timer.") ;
+		   PrintLn.println("Start audio timer.") ;
       if (audio != null) start() ;
    }
 
@@ -168,12 +168,12 @@ final class AudioTimer extends Thread
          Configuration config = (mf != null) ? mf.getConfig() : null ;
          if (config != null) config.setAudioTimer(this) ;
    		if (OptionsDialog.getDebugControl() && !manualsuspend)
-   			System.out.println("Started audio timer through update. ") ;
+   			PrintLn.println("Started audio timer through update. ") ;
       }
       else
       {
    		if (OptionsDialog.getDebugControl() && !manualsuspend)
-   			System.out.println("Update audio timer. " + ((reset) ? "(Reset queue)" : "")) ;
+   			PrintLn.println("Update audio timer. " + ((reset) ? "(Reset queue)" : "")) ;
          
       }
    }
@@ -187,7 +187,7 @@ final class AudioTimer extends Thread
    {
       if (thread == null) return ;
 		if (OptionsDialog.getDebugControl() && !manualsuspend)
-			System.out.println("Suspend audio timer. " + ((manual) ? "Manual" : "")) ;
+			PrintLn.println("Suspend audio timer. " + ((manual) ? "Manual" : "")) ;
    	if (manual) manualsuspend = true ;
    	suspend = true ;
    }
@@ -204,7 +204,7 @@ final class AudioTimer extends Thread
       synchronized (suspendlock)
       {
 			if (OptionsDialog.getDebugControl())
-				System.out.println("Resume audio timer. " + ((manual) ? "Manual" : "")) ;
+				PrintLn.println("Resume audio timer. " + ((manual) ? "Manual" : "")) ;
    		suspend = false ;
 		   suspendlock.notify() ;
       }
@@ -248,7 +248,7 @@ final class AudioTimer extends Thread
 		thread = Thread.currentThread() ;
 		thread.setName("AudioTimer-" + id) ;
 		if (OptionsDialog.getDebugControl())
-			System.out.println(thread.getName() + " started.") ;
+			PrintLn.println(thread.getName() + " started.") ;
 
 		// Run the timer loop until this activity is terminated.  
 
@@ -270,10 +270,10 @@ final class AudioTimer extends Thread
 						{
 							active = false ;
                		if (OptionsDialog.getDebugControl())
-                        System.out.println(thread.getName() + " suspended.") ;
+                        PrintLn.println(thread.getName() + " suspended.") ;
 							suspendlock.wait() ;
                		if (OptionsDialog.getDebugControl())
-                        System.out.println(thread.getName() + " resumed.") ;
+                        PrintLn.println(thread.getName() + " resumed.") ;
                      restart = true ;
 						}
                   if (restart) break ;
@@ -297,7 +297,7 @@ final class AudioTimer extends Thread
                   if (stoptime == 0) continue ;
                   if (time - stoptime < period) continue ;
                   if (OptionsDialog.getDebugSound())
-                     System.out.println("AudioTimer: close " + a.getWriteName()) ;                            
+                     PrintLn.println("AudioTimer: close " + a.getWriteName()) ;                            
                   a.close() ;                  
                   count++ ;
                }
@@ -321,7 +321,7 @@ final class AudioTimer extends Thread
 				Runtime.getRuntime().gc() ;
 	         try { Thread.currentThread().sleep(300) ; }
 	         catch (InterruptedException ex) { }
-				System.out.println("AudioTimer: Out of memory.") ;
+				PrintLn.println("AudioTimer: Out of memory.") ;
 				JOptionPane.showMessageDialog(Kisekae.getMainFrame(),
 	           	"Insufficient memory.  Audio timer thread is suspended.",
 	           	"Low Memory Fault",
@@ -332,7 +332,7 @@ final class AudioTimer extends Thread
       // Shut down.
 
 		if (OptionsDialog.getDebugControl())
-	      System.out.println(thread.getName() + " terminated.");
+	      PrintLn.println(thread.getName() + " terminated.");
       thread = null ;
       audio = null ;
       active = false ;

@@ -90,9 +90,9 @@ final class WebHTMLEditor extends HTMLEditorKit
    public Document createDefaultDocument()
    {
       AbstractDocument doc = (AbstractDocument) super.createDefaultDocument() ;
-//    doc.setAsynchronousLoadPriority(-1);
       int priority = Thread.MIN_PRIORITY ;
       doc.setAsynchronousLoadPriority(priority) ;
+//      doc.setAsynchronousLoadPriority(-1);
       return doc ;
    }
 }

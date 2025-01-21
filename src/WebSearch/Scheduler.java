@@ -67,6 +67,7 @@ import java.io.IOException ;
 import java.io.OutputStream ;
 import java.awt.event.* ;
 import Kisekae.OptionsDialog ;
+import Kisekae.PrintLn ;
 
 final class Scheduler
 	implements Runnable
@@ -188,7 +189,7 @@ final class Scheduler
 	{
    	stop = false ;
       if (OptionsDialog.getDebugSearch())
-         System.out.println("Start Scheduler.") ;
+         PrintLn.println("Start Scheduler.") ;
       if (threadgroup == null || threadgroup.isDestroyed())
       {
       	threadgroup = new ThreadGroup("Scheduler") ;
@@ -206,7 +207,7 @@ final class Scheduler
 	{
       stop = true ;
       if (OptionsDialog.getDebugSearch())
-         System.out.println("Stop Scheduler.") ;
+         PrintLn.println("Stop Scheduler.") ;
       clearEventQueue() ;
       if (threadgroup == null || threadgroup.isDestroyed()) return ;
       threadgroup.interrupt() ;
@@ -226,7 +227,7 @@ final class Scheduler
 
       threadgroup = null ;
       if (i == 5)
-         System.out.println("Scheduler: Thread termination timeout.");
+         PrintLn.println("Scheduler: Thread termination timeout.");
 	}
 
 
@@ -284,7 +285,7 @@ final class Scheduler
 
    long getCount() { return firecount ; }
 
-	
+
 	// Static method to suspend the event handler.   Suspension causes all
    // threads in the event handler to enter the wait state.  One must be
    // notified to restart execution.  The suspend flag is global to all
@@ -327,7 +328,7 @@ final class Scheduler
 		me.setPriority(Thread.MIN_PRIORITY) ;
 		me.setName(threadname) ;
       if (OptionsDialog.getDebugSearch())
-         System.out.println(me.getName() + " started.") ;
+         PrintLn.println(me.getName() + " started.") ;
 
 		// The handler suspends itself until it is notified.  Once
 		// notified the handler performs all event actions on the queue
@@ -349,7 +350,9 @@ final class Scheduler
 					}
 
 					// Fire the event.  We can wake up with an empty queue.
-	            // We yield control after every event.
+	            // We yield control after every event.  At no time should 
+               // a previously processed event be on the queue as they
+               // are not added.  No circular searches.
 
 					wait = false ;
 	 	 			Object qentry = Scheduler.dequeueEvent() ;
@@ -357,14 +360,14 @@ final class Scheduler
 					{
 						Object [] queueobject = (Object []) qentry ;
 						GetLinks event = (GetLinks) queueobject[0] ;
-						ThreadGroup threadgroup = (ThreadGroup) queueobject[1] ;
+                  ThreadGroup threadgroup = (ThreadGroup) queueobject[1] ;
                   int n = threadgroup.activeCount() ;
                   if (n < 3)
                   {
                      processed.addElement(event) ;
                      Thread newthread = new Thread(threadgroup,event) ;
                      newthread.start() ;
-   	               firecount++ ;
+                     firecount++ ;
                   }
                   else
                   {
@@ -380,7 +383,7 @@ final class Scheduler
                      t.setRepeats(false) ;
                      t.start() ;
                   }
-	               me.yield() ;
+                  me.yield() ;
                }
             }
 
@@ -394,7 +397,7 @@ final class Scheduler
 					Runtime.getRuntime().gc() ;
 		         try { Thread.currentThread().sleep(300) ; }
 		         catch (InterruptedException ex) { }
-					System.out.println("Scheduler: Out of memory.") ;
+					PrintLn.println("Scheduler: Out of memory.") ;
 				}
 			}
       }
@@ -408,7 +411,7 @@ final class Scheduler
 		catch (Throwable e)
 		{
          stopScheduler() ;
-			System.out.println("Scheduler: Throwable " + e) ;
+			PrintLn.println("Scheduler: Throwable " + e) ;
 		}
 
       // Clear critical resource references.
@@ -418,6 +421,6 @@ final class Scheduler
       this.wait = false ;
       firecount = 0 ;
       if (OptionsDialog.getDebugSearch())
-         System.out.println(me.getName() + " terminated.");
+         PrintLn.println(me.getName() + " terminated.");
 	}
 }

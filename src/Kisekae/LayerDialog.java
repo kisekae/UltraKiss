@@ -452,7 +452,7 @@ final class LayerDialog extends KissDialog
 
       catch (Exception e)
       {
-         System.out.println("LayerDialog: Exception " + e.toString());
+         PrintLn.println("LayerDialog: Exception " + e.toString());
          e.printStackTrace() ;
   			JOptionPane.showMessageDialog(me,
             e.toString(),

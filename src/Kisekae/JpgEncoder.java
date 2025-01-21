@@ -147,7 +147,7 @@ public class JpgEncoder extends ImageEncoder
 
       catch (Exception e)
 		{
-			System.out.println("JpgEncoder: exception during encoding") ;
+			PrintLn.println("JpgEncoder: exception during encoding") ;
 			e.printStackTrace() ;
 			throw new IOException("Internal exception during JPG encoding") ;
 		}

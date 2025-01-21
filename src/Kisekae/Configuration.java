@@ -168,6 +168,7 @@ final class Configuration extends KissObject
    private boolean rgbborder = false ;    // True if border is rgb value
    private boolean restartable = true ;   // True if configuration can restart
    private boolean appendcnf = false ;    // True if have APPEND directive
+   private boolean viewerappend = false ; // True if viewer("menu","appendcnf") exists
    private boolean appended = false ;     // True if APPEND files appended
    private boolean optionchange = false ; // True if options have changed
    private boolean ckiss = false ;        // True if any cel is truecolor
@@ -741,6 +742,10 @@ final class Configuration extends KissObject
 	// Return an indicator if the configuration has an appended CNF.
 
 	boolean hasAppendFiles() { return appendcnf ; }
+
+	// Return an indicator if the configuration has a viewer("menu","appendcnf") action command.
+
+	boolean hasViewerAppend() { return viewerappend ; }
    
    // Method to add unreferenced sound files to our configuration.  This method 
    // is used on configuration restarts to retain newly imported audio objects
@@ -939,7 +944,7 @@ final class Configuration extends KissObject
 
 			// Read the entire file contents into memory.
 
-			System.out.println("Open configuration \"" + file + "\" (" + getID() + ")") ;
+			PrintLn.println("Open configuration \"" + file + "\" (" + getID() + ")") ;
 			int n = 0, len = 0 ;
 			b = new byte[bytes] ;
 			while (n < bytes && (len = is.read(b,n,bytes-n)) >= 0)
@@ -977,6 +982,7 @@ final class Configuration extends KissObject
 
 	void openref(Configuration r) throws Exception
 	{
+      if (r == null) return ;
 		ref = r ;
       ref.ref = null ;
 		FileOpen fileopen = ref.getFileOpen() ;
@@ -1022,7 +1028,7 @@ final class Configuration extends KissObject
 		file = zip.getPath() ;
 		bytes = ref.getBytes() ;
       if (isAppended() && getReference() != null) file = ref.getPath() ;
-		System.out.println("Open configuration \"" + file + "\" (" + getID() + ")") ;
+		PrintLn.println("Open configuration \"" + file + "\" (" + getID() + ")") ;
 
 		// Open the memory copy of our reference configuration file.
 
@@ -1070,7 +1076,7 @@ final class Configuration extends KissObject
          File f = (File) include ;
          if (!f.isFile()) 
          {
-            System.out.println("No " + s + " file found: " + f.getPath()) ;
+            PrintLn.println("No " + s + " file found: " + f.getPath()) ;
             return null ;
          }
 
@@ -1111,7 +1117,7 @@ final class Configuration extends KissObject
          }
          catch (IOException e)
          {
-     		   System.out.println("Exception: Search " + s + " file " + e) ;
+     		   PrintLn.println("Exception: Search " + s + " file " + e) ;
          }
       }
 
@@ -1139,7 +1145,7 @@ final class Configuration extends KissObject
          }
          catch (IOException e)
          {
-     		   System.out.println("Exception: Search " + s + " memory file " + e) ;
+     		   PrintLn.println("Exception: Search " + s + " memory file " + e) ;
          }
       }
 
@@ -1147,10 +1153,10 @@ final class Configuration extends KissObject
 
       if (include instanceof ArchiveFile)
       {
-  		   System.out.println("Search " + s + " file " + ((ArchiveFile) include).getName()) ;
+  		   PrintLn.println("Search " + s + " file " + ((ArchiveFile) include).getName()) ;
          entries = ((ArchiveFile) include).getEntryType(".cnf") ;
          if (entries == null || entries.size() == 0)
-            System.out.println("No configuration element found in " + ((ArchiveFile) include).getName()) ;
+            PrintLn.println("No configuration element found in " + ((ArchiveFile) include).getName()) ;
       }
       return entries ;
    }
@@ -1185,7 +1191,7 @@ final class Configuration extends KissObject
 
          	// Read the entire file contents into memory.
 
-            System.out.println("Append configuration \"" + file + "\" to configuration \"" + getName() + "\"") ;
+            PrintLn.println("Append configuration \"" + file + "\" to configuration \"" + getName() + "\"") ;
             newname = getName()+"+"+file ;
    			int n = 0, len = 0 ;
    			byte [] b2 = new byte[bytes] ;
@@ -1236,7 +1242,7 @@ final class Configuration extends KissObject
          }
          catch (IOException e)
          {
-     		   System.out.println("Exception: Append INCLUDE file " + e) ;
+     		   PrintLn.println("Exception: Append INCLUDE file " + e) ;
          }
       }
 
@@ -1270,7 +1276,7 @@ final class Configuration extends KissObject
       }
       else      
       {
-         System.out.println("No expansion configuration selected.") ; 
+         PrintLn.println("No expansion configuration selected.") ; 
       }
       return false ;
    }
@@ -2926,7 +2932,7 @@ final class Configuration extends KissObject
 	{
   		createtime = System.currentTimeMillis() ;
 		if (OptionsDialog.getDebugControl())
-			System.out.println("Configuration \"" + file + "\" (" + getID() + ")" + " begin activation.") ;
+			PrintLn.println("Configuration \"" + file + "\" (" + getID() + ")" + " begin activation.") ;
 
 		// Retain the initial states for all cels, groups, and pages.
 
@@ -3066,7 +3072,7 @@ final class Configuration extends KissObject
       if (mf != null) mf.updateMenuOptions() ;
 
 		if (OptionsDialog.getDebugControl())
-			System.out.println("Configuration \"" + file + "\" (" + getID() + ")" + " activated.") ;
+			PrintLn.println("Configuration \"" + file + "\" (" + getID() + ")" + " activated.") ;
 	}
 
 
@@ -3089,7 +3095,7 @@ final class Configuration extends KissObject
       
       if (isClosed()) return ;
 		String s = (file == null) ? "" : file ;
-		System.out.println("Close configuration \"" + s + "\" (" + getID() + ")") ;
+		PrintLn.println("Close configuration \"" + s + "\" (" + getID() + ")") ;
 
       // Ensure that we can have no breakpoint restarts.
 
@@ -3222,7 +3228,7 @@ final class Configuration extends KissObject
          MainFrame mf = Kisekae.getMainFrame() ;
          Object newconfigid = (mf != null) ? mf.getNewConfigID() : null ;
          String newID = (newconfigid != null) ? newconfigid.toString() : "unknown" ;
-			System.out.println("Restarted configuration \"" + s + "\" (" + getID() + ") as (" + newID + ")") ;
+			PrintLn.println("Restarted configuration \"" + s + "\" (" + getID() + ") as (" + newID + ")") ;
          return ;
       }
       
@@ -3243,7 +3249,7 @@ final class Configuration extends KissObject
 
       int n = 0 ;
   		if (OptionsDialog.getDebugControl())
-        System.out.println("Configuration (" + getID() + ")" + " checking for stopped audio.") ;
+        PrintLn.println("Configuration (" + getID() + ")" + " checking for stopped audio.") ;
       while (true)
       {
          String s1 = "" ;
@@ -3251,12 +3257,12 @@ final class Configuration extends KissObject
          if (o instanceof Boolean && ((Boolean) o).booleanValue()) 
          {
       		if (OptionsDialog.getDebugControl())
-               System.out.println("Configuration (" + getID() + ")" + " all audio stopped.") ;
+               PrintLn.println("Configuration (" + getID() + ")" + " all audio stopped.") ;
             break ;
          }
          if (o instanceof Audio) s1 = ((Audio) o).getName() ;
    		if (OptionsDialog.getDebugControl())
-            System.out.println("Configuration (" + getID() + ")" + " waiting for audio \"" + s1 + "\" to stop.") ;
+            PrintLn.println("Configuration (" + getID() + ")" + " waiting for audio \"" + s1 + "\" to stop.") ;
          try { Thread.sleep(100) ; }
          catch (InterruptedException e) { n = 10 ;}
          if (++n > 10) break ;
@@ -3362,7 +3368,7 @@ final class Configuration extends KissObject
 		Runtime.getRuntime().gc() ;
 		try { Thread.currentThread().sleep(300) ; }
 		catch (InterruptedException ex) { }
-      System.out.println("Configuration (" + getID() + ")" + " closed.") ;
+      PrintLn.println("Configuration (" + getID() + ")" + " closed.") ;
       closed = true ;
 	}
    
@@ -5196,20 +5202,20 @@ final class Configuration extends KissObject
             {
               	loader.showText(" ") ;
               	loader.showText(compatibility + " compatibility on.") ;
-              	System.out.println(compatibility + " compatibility on.") ;
+              	PrintLn.println(compatibility + " compatibility on.") ;
             }
             else if (directkiss && compatibility == null)
             {
               	loader.showText(" ") ;
               	loader.showText("DirectKiss compatibility set.") ;
-              	System.out.println("DirectKiss compatibility set.") ;
+              	PrintLn.println("DirectKiss compatibility set.") ;
                OptionsDialog.setDirectKissCompatibility("true") ;
             }
             else if (playfkiss && compatibility == null)
             {
               	loader.showText(" ") ;
               	loader.showText("PlayFKiss compatibility set.") ;
-              	System.out.println("PlayFKiss compatibility set.") ;
+              	PrintLn.println("PlayFKiss compatibility set.") ;
                OptionsDialog.setPlayFKissCompatibility("true") ;
             }
             else if (!ultrakiss && compatibility == null && 
@@ -5217,7 +5223,7 @@ final class Configuration extends KissObject
             {
                loader.showText(" ") ;
                loader.showText("PlayFKiss compatibility assumed.") ;
-               System.out.println("PlayFKiss compatibility assumed.") ;
+               PrintLn.println("PlayFKiss compatibility assumed.") ;
                OptionsDialog.setPlayFKissCompatibility("true") ;
             }
          }
@@ -5505,7 +5511,7 @@ final class Configuration extends KissObject
 			String token = (st.hasMoreTokens()) ? st.nextToken() : " " ;
          name = token ;
 			int actioncode = EventHandler.getActionNameKey(token) ;
-         if (actioncode < 0 && (!strictsyntax || compatibility != null))
+         if (actioncode < 0 && !strictsyntax)
          {
             String s1 = EventHandler.findPartialActionName(token) ;
             actioncode = EventHandler.getActionNameKey(s1) ;
@@ -5683,7 +5689,7 @@ final class Configuration extends KissObject
             ifnestlevel++ ;
             inifsequence = true ;
             if (ifnestlevel > 1) fkisslevel = 5 ;
-         }       
+         }  
 
          // The action is valid.
 
@@ -5725,6 +5731,12 @@ final class Configuration extends KissObject
 					}
 				}
 			}
+         
+         // Capture a viewer("menu","appendcnf") action command.  This
+         // action modifies the set after load.  A Search operation 
+         // cannot process these types of sets.
+         
+         if (EventHandler.isViewerAppendAction(a)) viewerappend = true ;
 		}
 
       // On exit we may be missing a final endif().  If the immediate
@@ -5909,7 +5921,12 @@ final class Configuration extends KissObject
 
       File f = new File(this.getDirectory(),file) ;
 		if (ArchiveFile.isAudioSound(file))
-			audio = new AudioSound(zip,f.getPath(),ref) ;
+      {
+         if (Kisekae.isWebswing())
+            audio = new AudioWebswing(zip,f.getPath(),ref) ;
+         else
+            audio = new AudioSound(zip,f.getPath(),ref) ;
+      }
 		if (ArchiveFile.isAudioMedia(file))
          if (Kisekae.isMediaInstalled())
    			audio = new AudioMedia(zip,f.getPath(),ref) ;
@@ -6196,7 +6213,7 @@ final class Configuration extends KissObject
          else
          {
             if (OptionsDialog.getDebugControl())
-               System.out.println("Kisekae: Unable to load properties " + poolname 
+               PrintLn.println("Kisekae: Unable to load properties " + poolname 
                + ", configuration path is " + config.getPath()) ;
          }
       }
@@ -6232,13 +6249,13 @@ final class Configuration extends KissObject
             catch (Exception ex)
             {  
                if (OptionsDialog.getDebugControl())
-                  System.out.println("Kisekae: Unable to load archive properties " + poolname) ;
+                  PrintLn.println("Kisekae: Unable to load archive properties " + poolname) ;
             }
          }
          else
          {
             if (OptionsDialog.getDebugControl())
-               System.out.println("Kisekae: Unable to load properties " + poolname) ;
+               PrintLn.println("Kisekae: Unable to load properties " + poolname) ;
          }
       }
       
@@ -6284,7 +6301,7 @@ final class Configuration extends KissObject
          }
          catch (IOException e)
          {
-            System.out.println("Configuration: write valuepool " + key.toString() + " " + e);
+            PrintLn.println("Configuration: write valuepool " + key.toString() + " " + e);
          }
       }
    }
@@ -6301,7 +6318,7 @@ final class Configuration extends KissObject
 		if (loader != null && !Kisekae.isBatch())
 			loader.showError("[" + linetext + " " + line + "] " + s,highlite) ;
 		else
-			System.out.println("[" + linetext + " " + line + "] " + s) ;
+			PrintLn.println("[" + linetext + " " + line + "] " + s) ;
 	}
 
 
@@ -6314,7 +6331,7 @@ final class Configuration extends KissObject
 		if (loader != null)
 			loader.showWarning(s,highlite) ;
 		else
-			System.out.println(s) ;
+			PrintLn.println(s) ;
 	}
 
 
@@ -6325,7 +6342,7 @@ final class Configuration extends KissObject
 		if (loader != null)
 			loader.showStatus(s) ;
 		else
-			System.out.println(s) ;
+			PrintLn.println(s) ;
 	}
 
 
@@ -6336,7 +6353,7 @@ final class Configuration extends KissObject
 		if (loader != null)
 			loader.showFile(s) ;
 		else
-			System.out.println(s) ;
+			PrintLn.println(s) ;
 	}
 
 

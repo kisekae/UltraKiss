@@ -501,7 +501,7 @@ final class KissCel extends Cel
 			showError("Cel " + file + " is not a valid KiSS cel.") ;
          int calcsize = size.width * size.height ;
          if (bits == 4) calcsize = (calcsize + 1) / 2 ;
-			System.out.println("Size Exception, Cel " + file
+			PrintLn.println("Size Exception, Cel " + file
          	+ ", Width: " + size.width + ", Height: " + size.height
 				+ ", Bits: " + bits + ", Expected size: " + calcsize
             + ", Actual size: " + (bytes-start)) ;
@@ -515,7 +515,7 @@ final class KissCel extends Cel
 			showError("Cel " + file + " is not a valid KiSS cel.") ;
          int calcsize = size.width * size.height ;
          if (bits == 4) calcsize = (calcsize + 1) / 2 ;
-			System.out.println("Size Exception, Cel " + file
+			PrintLn.println("Size Exception, Cel " + file
          	+ ", Width: " + size.width + ", Height: " + size.height
 				+ ", Bits: " + bits + ", Expected size: " + calcsize
             + ", Actual size: " + (bytes-start)) ;
@@ -861,6 +861,6 @@ final class KissCel extends Cel
    	int line = getLine() ;
 		if (line > 0) s = "[Line " + line + "] " + s ;
 		if (loader != null) loader.showError(s) ;
-		else if (!nopalette) System.out.println(s) ;
+		else if (!nopalette) PrintLn.println(s) ;
 	}
 }

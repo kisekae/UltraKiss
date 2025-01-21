@@ -216,7 +216,7 @@ final class Lzhuf
 		int c;
 		int i, j;
 
-		//	System.out.println("INSERTNODE=" + r);
+		//	PrintLn.println("INSERTNODE=" + r);
 		cmp = 1;
 		key = r;
 		i = (text_buf(key+1)) ^ (text_buf(key+2));
@@ -347,7 +347,7 @@ final class Lzhuf
 	{
 		int  q;
 
-		//	System.out.println("DELETENODE=" + p);
+		//	PrintLn.println("DELETENODE=" + p);
 
 		if (dad[p] == NIL)
 			return;      /* has no linked */
@@ -427,11 +427,11 @@ final class Lzhuf
 		if ((len += l) >= 8) 
 		{
 			out.write (b >>> 8);
-			// System.out.println(l + "," + c + "=" + ((b>>8)&0xff) + "-");
+			// PrintLn.println(l + "," + c + "=" + ((b>>8)&0xff) + "-");
 			if ((len -= 8) >= 8) 
 			{
 				out.write (b);
-				//	  System.out.println("+" + (b&0xff) + "-");
+				//	  PrintLn.println("+" + (b&0xff) + "-");
 				codesize += 2;
 				len -= 8;
 				b = c << (l - len);
@@ -459,7 +459,7 @@ final class Lzhuf
 		j = 0;
 		k = prnt[c + T];
 
-		//      System.out.println("k="+k);
+		//      PrintLn.println("k="+k);
 		/* trace links from leaf node to root */
 		do 
 		{
@@ -471,7 +471,7 @@ final class Lzhuf
 			j++;
 		} while ((k = prnt[k]) != R) ;
 		i = -i;
-		//      System.out.println("i="+(int)i+"k="+k);
+		//      PrintLn.println("i="+(int)i+"k="+k);
 		if (j > 16) 
 		{
 			putcode(16, (int)(i >>> 16));
@@ -496,7 +496,7 @@ final class Lzhuf
 
 	private final void encodeEnd ()   throws IOException
 	{
-		//      System.out.println(putlen);
+		//      PrintLn.println(putlen);
 		if (putlen > 0) 
 		{
 			out.write(putbuf >>> 8);

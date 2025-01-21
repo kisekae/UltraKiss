@@ -453,7 +453,7 @@ abstract class KissObject
             File f = (File) include ;
             if (!f.isFile())
             {
-               System.out.println(s + " file " + f.getPath() + " does not exist.") ;
+               PrintLn.println(s + " file " + f.getPath() + " does not exist.") ;
                v.removeElementAt(n) ;
                continue ;
             }
@@ -476,7 +476,7 @@ abstract class KissObject
   			   try { zipFileURL = new URL(protocol,host,port,pathname) ; }
             catch (MalformedURLException e)
             {
-               System.out.println(s + " file " + pathname + " is an invalid name.") ;
+               PrintLn.println(s + " file " + pathname + " is an invalid name.") ;
                v.removeElementAt(n) ;
                continue ;
             }
@@ -496,13 +496,13 @@ abstract class KissObject
      			   else if (".lzh".equals(extension))
               	   zip = new LhaFile(null,zipFileURL.getFile()) ;
      	         if (zip == null) continue ;
-        		   System.out.println("Open " + s + " file " + zipFileURL.toExternalForm()) ;
+        		   PrintLn.println("Open " + s + " file " + zipFileURL.toExternalForm()) ;
                v.setElementAt(zip,n) ;
                include = zip ;
             }
             catch (IOException e)
             {
-        		   System.out.println("Exception: Open " + s + " file " + e) ;
+        		   PrintLn.println("Exception: Open " + s + " file " + e) ;
             }
          }
 
@@ -526,13 +526,13 @@ abstract class KissObject
      			   else if (".lzh".equals(extension))
               	   zip = new LhaFile(null,filename,(MemFile) include) ;
      	         if (zip == null) continue ;
-        		   System.out.println("Open " + s + " memory file " + name) ;
+        		   PrintLn.println("Open " + s + " memory file " + name) ;
                v.setElementAt(zip,n) ;
                include = zip ;
             }
             catch (IOException e)
             {
-        		   System.out.println("Exception: Open " + s + " memory file " + e) ;
+        		   PrintLn.println("Exception: Open " + s + " memory file " + e) ;
             }
          }
 
@@ -1575,7 +1575,7 @@ abstract class KissObject
 	   try { return super.clone() ; }
       catch (CloneNotSupportedException e)
       {
-      	System.out.println("KissObject: Clone failure, " + this.toString()) ;
+      	PrintLn.println("KissObject: Clone failure, " + this.toString()) ;
       	e.printStackTrace();
          return null ;
       }

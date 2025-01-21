@@ -110,6 +110,9 @@ public class BrowserControl
 
       try
       {
+         if (Kisekae.isWebswing())
+            throw new KissException("Unable to launch browser in Webswing.") ;
+         
          // Apply known exec() command.
          
          if (execcmd != null)
@@ -126,13 +129,13 @@ public class BrowserControl
             if (browser != null && !"".equals(browser.toString()))
             {
                if (OptionsDialog.getDebugControl())
-                  System.out.println("BrowserControl: apple cmd = [open,-a,"+browser.toString()+"," + url + "]");
+                  PrintLn.println("BrowserControl: apple cmd = [open,-a,"+browser.toString()+"," + url + "]");
                String[] commandLine3 = { "open", "-a", browser.toString(), url };
                try { p = Runtime.getRuntime().exec(commandLine3); }
                catch (Throwable x)
                {
                   if (OptionsDialog.getDebugControl())
-                      System.out.println("BrowserControl: error starting browser, " + x) ;
+                      PrintLn.println("BrowserControl: error starting browser, " + x) ;
                   p = null ;
                }
                exitCode = (p != null) ? p.waitFor() : -1 ;
@@ -143,7 +146,7 @@ public class BrowserControl
                try
                {
                   if (OptionsDialog.getDebugControl())
-                     System.out.println("BrowserControl: apple command FileManager.OpenURL()") ;
+                     PrintLn.println("BrowserControl: apple command FileManager.OpenURL()") ;
                   Class fileMgr = Class.forName("com.apple.eio.FileManager") ;
                   Method openURL = fileMgr.getDeclaredMethod("OpenURL",new Class[] {String.class}) ;
                   openURL.invoke(null,new Object[] {url}) ;
@@ -152,7 +155,7 @@ public class BrowserControl
                catch (Throwable e1)
                {
                   if (OptionsDialog.getDebugControl())
-                     System.out.println("BrowserControl: error starting browser, " + e1) ;
+                     PrintLn.println("BrowserControl: error starting browser, " + e1) ;
                }
             }
             
@@ -161,7 +164,7 @@ public class BrowserControl
                try
                {
                   if (OptionsDialog.getDebugControl())
-                     System.out.println("BrowserControl: apple command MRJFileUtils.OpenURL()") ;
+                     PrintLn.println("BrowserControl: apple command MRJFileUtils.OpenURL()") ;
                   Class fileMgr = Class.forName("com.apple.mrj.MRJFileUtils") ;
                   Method openURL = fileMgr.getDeclaredMethod("OpenURL",new Class[] {String.class}) ;
                   openURL.invoke(null,new Object[] {url}) ;
@@ -170,20 +173,20 @@ public class BrowserControl
                catch (Throwable e2)
                {
                   if (OptionsDialog.getDebugControl())
-                     System.out.println("BrowserControl: error starting browser, " + e2) ;
+                     PrintLn.println("BrowserControl: error starting browser, " + e2) ;
                }
             }
                
             if (exitCode != 0)
             {
                if (OptionsDialog.getDebugControl())
-                  System.err.println("BrowserControl: apple cmd = [open,-a,Safari.app," + url + "]");
+                  PrintLn.printErr("BrowserControl: apple cmd = [open,-a,Safari.app," + url + "]");
                String[] commandLine1 = { "open", "-a", "Safari.app", url };
                try { p = Runtime.getRuntime().exec(commandLine1); }
                catch (Throwable x)
                {
                   if (OptionsDialog.getDebugControl())
-                     System.err.println("BrowserControl: error starting browser, " + x) ;
+                     PrintLn.printErr("BrowserControl: error starting browser, " + x) ;
                   p = null ;
                }
                exitCode = (p != null) ? p.waitFor() : -1 ;
@@ -192,13 +195,13 @@ public class BrowserControl
             if (exitCode != 0)
             {
                if (OptionsDialog.getDebugControl())
-                  System.err.println("BrowserControl: apple cmd = [open,-a,Firefox.app," + url + "]");
+                  PrintLn.printErr("BrowserControl: apple cmd = [open,-a,Firefox.app," + url + "]");
                String[] commandLine2 = { "open", "-a", "Firefox.app", url };
                try { p = Runtime.getRuntime().exec(commandLine2); }
                catch (Throwable x)
                {
                   if (OptionsDialog.getDebugControl())
-                     System.err.println("BrowserControl: error starting browser, " + x) ;
+                     PrintLn.printErr("BrowserControl: error starting browser, " + x) ;
                   p = null ;
                }
                exitCode = (p != null) ? p.waitFor() : -1 ;
@@ -207,13 +210,13 @@ public class BrowserControl
             if (exitCode != 0)
             {
                if (OptionsDialog.getDebugControl())
-                  System.err.println("BrowserControl: apple cmd = [open,-a,Internet Explorer.app," + url + "]");
+                  PrintLn.printErr("BrowserControl: apple cmd = [open,-a,Internet Explorer.app," + url + "]");
                String[] commandLine3 = { "open", "-a", "Internet Explorer.app", url };
                try { p = Runtime.getRuntime().exec(commandLine3); }
                catch (Throwable x)
                {
                   if (OptionsDialog.getDebugControl())
-                     System.err.println("BrowserControl: error starting browser, " + x) ;
+                     PrintLn.printErr("BrowserControl: error starting browser, " + x) ;
                   p = null ;
                }
                exitCode = (p != null) ? p.waitFor() : -1 ;
@@ -225,7 +228,7 @@ public class BrowserControl
                // cmd = 'safari http://www.javaworld.com'
                cmd = SAFARI_PATH + " " + url ;
                if (OptionsDialog.getDebugControl())
-                  System.err.println("BrowserControl: apple cmd = " + cmd);
+                  PrintLn.printErr("BrowserControl: apple cmd = " + cmd);
                exitCode = applyCommand(cmd) ;
             }
          }
@@ -331,7 +334,7 @@ public class BrowserControl
 
          else 
          {
-            System.out.println("BrowserControl: unknown OS " + System.getProperty("os.name"));
+            PrintLn.println("BrowserControl: unknown OS " + System.getProperty("os.name"));
          }
          
          // All done.  If it worked, retain the working command.
@@ -348,8 +351,8 @@ public class BrowserControl
       catch (SecurityException e)
       {
          secure = true ;
-         System.out.println("BrowserControl: Security exception. Unable to open browser.") ;
-         System.out.println(e.getMessage()) ;
+         PrintLn.println("BrowserControl: Security exception. Unable to open browser.") ;
+         PrintLn.println(e.getMessage()) ;
          JOptionPane.showMessageDialog(null,
             Kisekae.getCaptions().getString("SecurityException") + "\n" +
             Kisekae.getCaptions().getString("BrowserNotAvailable"),
@@ -359,14 +362,14 @@ public class BrowserControl
       catch(Exception x)
       {
          // couldn't exec browser
-         System.out.println("BrowserControl: Exception " + x);
+         PrintLn.println("BrowserControl: Exception " + x);
          if (OptionsDialog.getDebugControl()) x.printStackTrace() ;
       }
    }
 
    /**
    * Try to determine whether this application is running under Windows
-   * or some other platform by examing the "os.name" property.
+   * or some other platform by examining the "os.name" property.
    *
    * @return true if this application is running under a Windows OS
    */
@@ -386,8 +389,8 @@ public class BrowserControl
       catch (SecurityException e)
       {
          secure = true ;
-         System.out.println("BrowserControl: Security exception. Unable to access system properties.") ;
-         System.out.println(e.getMessage()) ;
+         PrintLn.println("BrowserControl: Security exception. Unable to access system properties.") ;
+         PrintLn.println(e.getMessage()) ;
          JOptionPane.showMessageDialog(null,
             Kisekae.getCaptions().getString("SecurityException") + "\n" +
             Kisekae.getCaptions().getString("BrowserNotAvailable"),
@@ -399,7 +402,7 @@ public class BrowserControl
 
    /**
    * Try to determine whether this application is running under Apple
-   * or some other platform by examing the "os.name" property.
+   * or some other platform by examining the "os.name" property.
    *
    * @return true if this application is running under an Apple OS
    */
@@ -420,8 +423,8 @@ public class BrowserControl
       catch (SecurityException e)
       {
          secure = true ;
-         System.out.println("BrowserControl: Security exception. Unable to access system properties.") ;
-         System.out.println(e.getMessage()) ;
+         PrintLn.println("BrowserControl: Security exception. Unable to access system properties.") ;
+         PrintLn.println(e.getMessage()) ;
          JOptionPane.showMessageDialog(null,
             Kisekae.getCaptions().getString("SecurityException") + "\n" +
             Kisekae.getCaptions().getString("BrowserNotAvailable"),
@@ -449,12 +452,12 @@ public class BrowserControl
       Process p = null ;
       
       if (OptionsDialog.getDebugControl())
-         System.out.println("BrowserControl: command " + cmd) ;
+         PrintLn.println("BrowserControl: command " + cmd) ;
       try { p = Runtime.getRuntime().exec(cmd) ; }
       catch (IOException x)
       {
          if (OptionsDialog.getDebugControl())
-            System.out.println("BrowserControl: error starting browser, " + x) ;
+            PrintLn.println("BrowserControl: error starting browser, " + x) ;
          p = null ;
       }
       

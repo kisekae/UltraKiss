@@ -380,7 +380,7 @@ public class ZipManager extends KissFrame
 		try { jbInit() ; pack() ; }
 		catch(Exception ex)
 		{ 
-         System.out.println("ZipManager: jbInit constructor " + ex.toString()) ;
+         PrintLn.println("ZipManager: jbInit constructor " + ex.toString()) ;
          ex.printStackTrace(); 
       }
 
@@ -766,7 +766,7 @@ public class ZipManager extends KissFrame
       }
       catch (IOException e)
 		{
-         System.out.println("ZipManager: Archive file creation exception, " + e.getMessage()) ;
+         PrintLn.println("ZipManager: Archive file creation exception, " + e.getMessage()) ;
 			JOptionPane.showMessageDialog(this, e.getMessage(),
             Kisekae.getCaptions().getString("FileOpenException"),
             JOptionPane.ERROR_MESSAGE) ;
@@ -837,7 +837,7 @@ public class ZipManager extends KissFrame
 
 		catch (IOException e)
 		{
-         System.out.println("ZipManager: Open " + filename + " " + e.getMessage()) ;
+         PrintLn.println("ZipManager: Open " + filename + " " + e.getMessage()) ;
 			JOptionPane.showMessageDialog(this, filename + "\n" + e.getMessage(),
             Kisekae.getCaptions().getString("FileOpenException"),
             JOptionPane.ERROR_MESSAGE) ;
@@ -1003,7 +1003,7 @@ public class ZipManager extends KissFrame
 
       catch (SecurityException e)
       {
-         System.out.println("ZipManager: Archive file open exception, " + e.getMessage()) ;
+         PrintLn.println("ZipManager: Archive file open exception, " + e.getMessage()) ;
          JOptionPane.showMessageDialog(this,
             Kisekae.getCaptions().getString("SecurityException") + "\n" +
             Kisekae.getCaptions().getString("FileOpenSecurityMessage1"),
@@ -1840,7 +1840,7 @@ public class ZipManager extends KissFrame
 
 		catch (Throwable ex)
 		{
-			System.out.println("ZipManager: Internal fault, action " + evt.getActionCommand()) ;
+			PrintLn.println("ZipManager: Internal fault, action " + evt.getActionCommand()) ;
 			ex.printStackTrace() ;
          String s = Kisekae.getCaptions().getString("InternalError") + " - " ;
          s += Kisekae.getCaptions().getString("ActionNotCompleted") ;

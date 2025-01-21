@@ -295,7 +295,7 @@ final class ToolBar extends JPanel
 				Runtime.getRuntime().gc() ;
 				try { Thread.currentThread().sleep(300) ; }
 				catch (InterruptedException ex) { }
-				System.out.println("ToolBar: Out of memory.") ;
+				PrintLn.println("ToolBar: Out of memory.") ;
 				parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
 				JOptionPane.showMessageDialog(parent,
                Kisekae.getCaptions().getString("LowMemoryFault") + " - " +
@@ -1603,7 +1603,7 @@ final class ToolBar extends JPanel
 			Runtime.getRuntime().gc() ;
          try { Thread.currentThread().sleep(300) ; }
          catch (InterruptedException ex) { }
-			System.out.println("ToolBar: Out of memory.") ;
+			PrintLn.println("ToolBar: Out of memory.") ;
 			parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
          JOptionPane.showMessageDialog(parent,
             Kisekae.getCaptions().getString("LowMemoryFault") + " - " +
@@ -1617,7 +1617,7 @@ final class ToolBar extends JPanel
 		catch (Throwable e)
 		{
          EventHandler.stopEventHandler() ;
-	      System.out.println("ToolBar: Internal fault, action " + evt.getActionCommand()) ;
+	      PrintLn.println("ToolBar: Internal fault, action " + evt.getActionCommand()) ;
          e.printStackTrace() ;
 			parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
 			JOptionPane.showMessageDialog(parent,

@@ -79,7 +79,7 @@ final class JarLoader extends UrlLoader
 		time = System.currentTimeMillis() ;
 		threadname = thread.getName() ;
 		if (OptionsDialog.getDebugControl())
-			System.out.println("JAR loader " + threadname + " active.") ;
+			PrintLn.println("JAR loader " + threadname + " active.") ;
 
 		// Initialization.  We are given a KiSS configuration file name
 		// and we construct the window panel environment to properly
@@ -100,7 +100,7 @@ final class JarLoader extends UrlLoader
 
          openurl = Kisekae.getResource(urlname) ;
 			if (openurl == null) throw new MalformedURLException("JAR resource not found: " + urlname) ;
-			System.out.println("Open JAR " + openurl.toExternalForm()) ;
+			PrintLn.println("Open JAR " + openurl.toExternalForm()) ;
 
 			// Establish a temporary file of the correct type.
 
@@ -126,13 +126,13 @@ final class JarLoader extends UrlLoader
 				f = File.createTempFile("UltraKiss-"+file,extension) ;
 				pathname = f.getPath() ;
 				if (OptionsDialog.getDebugLoad())
-					System.out.println("Open JAR temp file " + pathname) ;
+					PrintLn.println("Open JAR temp file " + pathname) ;
 			}
 			catch (SecurityException e)
 			{
 				pathname = null ;
 				if (OptionsDialog.getDebugLoad())
-					System.out.println("Open JAR memory file") ;
+					PrintLn.println("Open JAR memory file") ;
 			}
 
 			// Open the URL session.
@@ -194,7 +194,7 @@ final class JarLoader extends UrlLoader
 			if (stop) throw new Exception("Load " + openurl.toExternalForm() + " stopped") ;
          showStatus(Kisekae.getCaptions().getString("TransferCompleteStatus")) ;
 			if (OptionsDialog.getDebugLoad())
-				System.out.println("Open JAR data transfer bytes " + bytes) ;
+				PrintLn.println("Open JAR data transfer bytes " + bytes) ;
 
 		}
 
@@ -205,7 +205,7 @@ final class JarLoader extends UrlLoader
 			memfile = null ;
          showStatus(Kisekae.getCaptions().getString("LoadTerminatedStatus")) ;
          showMsg(Kisekae.getCaptions().getString("LowMemoryFault")) ;
-			System.out.println("JarLoader: Out of memory.") ;
+			PrintLn.println("JarLoader: Out of memory.") ;
 		}
 
 		catch (MalformedURLException e)
@@ -226,7 +226,7 @@ final class JarLoader extends UrlLoader
 			memfile = null ;
          showStatus(Kisekae.getCaptions().getString("LoadTerminatedStatus")) ;
          showMsg(Kisekae.getCaptions().getString("SecurityException")) ;
-         System.out.println("KiSS file open exception, " + e.getMessage()) ;
+         PrintLn.println("KiSS file open exception, " + e.getMessage()) ;
          JOptionPane.showMessageDialog(parent,
             Kisekae.getCaptions().getString("SecurityException") + "\n" +
             Kisekae.getCaptions().getString("FileOpenSecurityMessage1"),
@@ -243,7 +243,7 @@ final class JarLoader extends UrlLoader
 			showMsg(e.toString()) ;
 			if (!stop)
 			{
-				System.out.println("JarLoader: " + threadname + " exception " + e) ;
+				PrintLn.println("JarLoader: " + threadname + " exception " + e) ;
 				e.printStackTrace() ;
 			}
 		}

@@ -48,7 +48,7 @@ import java.awt.event.*;
 import java.io.* ;
 import java.util.* ;
 import java.net.URL ;
-import java.net.MalformedURLException ;
+import java.util.prefs.* ;
 import javax.swing.*;
 import javax.swing.event.* ;
 import javax.swing.border.*;
@@ -3738,6 +3738,15 @@ final public class OptionsDialog extends KissDialog
 
 	void resetOptions()
 	{
+		if (!SwingUtilities.isEventDispatchThread())
+		{
+			Runnable awt = new Runnable()
+			{ public void run() { resetOptions() ; } } ;
+         try { SwingUtilities.invokeAndWait(awt) ; }
+         catch (InterruptedException e) { }
+         catch (Exception e) { e.printStackTrace(); }
+			return ;
+		}
 //		sound = initsound ;
 //		movie = initmovie ;
 //    systemlf = initsystemlf ;
@@ -4880,13 +4889,13 @@ final public class OptionsDialog extends KissDialog
          }
          catch (SecurityException e) 
          { 
-            System.err.println("OptionsDialog: Security exception accessing properties, " + e.getMessage()) ;
+            PrintLn.printErr("OptionsDialog: Security exception accessing properties, " + e.getMessage()) ;
          }
          catch (Exception e)
          {
             if (!(e instanceof FileNotFoundException))
             {
-               System.err.println("OptionsDialog: loadPropertyOptions failure, " + e.getMessage()) ;
+               PrintLn.printErr("OptionsDialog: loadPropertyOptions failure, " + e.getMessage()) ;
             }
          }
          finally
@@ -5020,7 +5029,7 @@ final public class OptionsDialog extends KissDialog
    				JOptionPane.showMessageDialog(getParentFrame(), s,
                   Kisekae.getCaptions().getString("OptionsDialogClearLogTitle"),
                   JOptionPane.INFORMATION_MESSAGE) ;
-   	         System.out.println(Kisekae.getCopyright()) ;
+   	         PrintLn.println(Kisekae.getCopyright()) ;
    			}
    			return ;
    		}
@@ -5116,7 +5125,7 @@ final public class OptionsDialog extends KissDialog
                      if (b) m++ ;
                   }
                   
-                  System.out.println("Cache is cleared, " + m + " files deleted out of " + n) ;
+                  PrintLn.println("Cache is cleared, " + m + " files deleted out of " + n) ;
                   s = Kisekae.getCaptions().getString("OptionsDialogCacheClearText2") + m ;
         				JOptionPane.showMessageDialog(getParentFrame(), s,
                      Kisekae.getCaptions().getString("OptionsDialogCacheClearTitle"),
@@ -5445,6 +5454,16 @@ final public class OptionsDialog extends KissDialog
                setInitOptions() ;
                setControls() ;
                CANCEL.setEnabled(false);
+               
+               // Reset preferences for each package class.
+               
+               Preferences prefs = Preferences.userNodeForPackage(Kisekae.class) ;
+               try { prefs.clear() ; prefs.flush() ; }
+               catch (Exception e) { }
+               prefs = Preferences.userNodeForPackage(WebSearch.WebSearchFrame.class) ;
+               try { prefs.clear() ; prefs.flush() ; }
+               catch (Exception e) { }
+               
          	   apply(this) ;
             }
    			return ;
@@ -5480,7 +5499,7 @@ final public class OptionsDialog extends KissDialog
 
       catch (SecurityException e)
       {
-         System.out.println("OptionDialog security exception, " + e.toString()) ;
+         PrintLn.println("OptionDialog security exception, " + e.toString()) ;
          JOptionPane.showMessageDialog(getParentFrame(),
             Kisekae.getCaptions().getString("SecurityException") + "\n" +
             Kisekae.getCaptions().getString("FileOpenSecurityMessage1"),
@@ -5492,7 +5511,7 @@ final public class OptionsDialog extends KissDialog
 
       catch (IOException e)
       {
-         System.out.println("OptionDialog exception, " + e.toString()) ;
+         PrintLn.println("OptionDialog exception, " + e.toString()) ;
          JOptionPane.showMessageDialog(getParentFrame(),
             Kisekae.getCaptions().getString("FileWriteError") + "\n" + e.toString(),
             Kisekae.getCaptions().getString("FileSaveException"),
@@ -5728,7 +5747,7 @@ final public class OptionsDialog extends KissDialog
       }
       catch (Exception e) 
       { 
-         System.err.println("OptionsDialog: apply language error, " + e.getMessage()) ;
+         PrintLn.printErr("OptionsDialog: apply language error, " + e.getMessage()) ;
       }
          
       // Apply look and feel changes
@@ -5753,7 +5772,7 @@ final public class OptionsDialog extends KissDialog
       }
       catch (Exception e) 
       { 
-         System.err.println("OptionsDialog: apply look and feel error, " + e.getMessage()) ;
+         PrintLn.printErr("OptionsDialog: apply look and feel error, " + e.getMessage()) ;
       }
    
       // Update the toolbar state and the configuration option changed state.
@@ -6328,7 +6347,7 @@ final public class OptionsDialog extends KissDialog
       catch (Exception e)
       {
          String s = "Unable to save UltraKiss Properties, " + e.getMessage() ;
-         System.err.println(s) ;
+         PrintLn.printErr(s) ;
          if (mf != null) mf.showStatus(s) ;
       }
       return false ;

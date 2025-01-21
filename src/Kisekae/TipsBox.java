@@ -244,7 +244,7 @@ final class TipsBox extends KissDialog
       }
       catch (Exception e) 
       {
-         System.out.println("TipsBox: setValue " + e.toString()) ;
+         PrintLn.println("TipsBox: setValue " + e.toString()) ;
       }
       finally
       {
@@ -279,7 +279,7 @@ final class TipsBox extends KissDialog
       }
       catch (Exception e) 
       {
-         System.out.println("TipsBox: setTip " + e.toString()) ;
+         PrintLn.println("TipsBox: setTip " + e.toString()) ;
       }
       finally
       {

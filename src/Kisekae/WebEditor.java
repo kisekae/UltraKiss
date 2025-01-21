@@ -130,7 +130,7 @@ final class WebEditor extends JEditorPane
          if (hosted != null && !urlname.startsWith(hosted))
             throw new IOException("URL not found, " + urlname) ;
       if (OptionsDialog.getDebugControl())
-         System.out.println("WebEditor: set page " + page.toString()) ;
+         PrintLn.println("WebEditor: set page " + page.toString()) ;
       super.setPage(page) ;
    }
    

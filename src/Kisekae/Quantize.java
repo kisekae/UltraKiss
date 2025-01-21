@@ -448,7 +448,7 @@ public class Quantize {
 
             // a hard limit on the number of nodes in the tree
             if (nodes > MAX_NODES) {
-               System.out.println("pruning");
+               PrintLn.println("pruning");
                root.pruneLevel();
                --depth;
             }

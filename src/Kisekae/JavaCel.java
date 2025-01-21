@@ -241,7 +241,7 @@ final class JavaCel extends Cel
             if (menu != null) menu.setWebFrame(webframe) ;
          }
          String urlname = evturl.toExternalForm() ;
-         System.out.println("JavaCel: " + getName() + " hyperlink to " + urlname) ;
+         PrintLn.println("JavaCel: " + getName() + " hyperlink to " + urlname) ;
          if (ArchiveFile.isArchive(urlname))
             { webframe.loadArchive(evturl,true) ; return ; }
 
@@ -376,7 +376,7 @@ final class JavaCel extends Cel
       }
       if (c != null) c.addMouseListener(mouseListener);
       if (OptionsDialog.getDebugComponent())
-          System.out.println("JavaCel: constructor for "+getName()+" result=\""+c+"\""+" on thread "+Thread.currentThread());               
+          PrintLn.println("JavaCel: constructor for "+getName()+" result=\""+c+"\""+" on thread "+Thread.currentThread());               
 	}
 
 
@@ -543,7 +543,7 @@ final class JavaCel extends Cel
       }
       
       if (OptionsDialog.getDebugComponent())
-          System.out.println("JavaCel: createComponent for "+getName()+" result=\""+type+"\""+" on thread "+Thread.currentThread());               
+          PrintLn.println("JavaCel: createComponent for "+getName()+" result=\""+type+"\""+" on thread "+Thread.currentThread());               
 	}
 
 
@@ -646,7 +646,7 @@ final class JavaCel extends Cel
       if (component instanceof AbstractButton)
          ((AbstractButton) component).setSelected(false) ;
       if (OptionsDialog.getDebugComponent())
-          System.out.println("JavaCel: reset for "+getName()+" on thread "+Thread.currentThread());               
+          PrintLn.println("JavaCel: reset for "+getName()+" on thread "+Thread.currentThread());               
    }
 
 
@@ -682,7 +682,7 @@ final class JavaCel extends Cel
       setAttributes(attributes) ;
       currentattr = null ;
       if (OptionsDialog.getDebugComponent())
-          System.out.println("JavaCel: resetAttributes for "+getName()+" on thread "+Thread.currentThread());               
+          PrintLn.println("JavaCel: resetAttributes for "+getName()+" on thread "+Thread.currentThread());               
    }
 
 
@@ -830,7 +830,7 @@ final class JavaCel extends Cel
       loaded = true ;
       
       if (OptionsDialog.getDebugComponent())
-          System.out.println("JavaCel: load for "+getName()+" result=\""+c+"\""+" on thread "+Thread.currentThread());               
+          PrintLn.println("JavaCel: load for "+getName()+" result=\""+c+"\""+" on thread "+Thread.currentThread());               
    }
 
 
@@ -919,7 +919,7 @@ final class JavaCel extends Cel
   		g.dispose() ;
       
       if (OptionsDialog.getDebugComponent())
-          System.out.println("JavaCel: createImage for "+getName()+" result=\""+image+"\""+" on thread "+Thread.currentThread());               
+          PrintLn.println("JavaCel: createImage for "+getName()+" result=\""+image+"\""+" on thread "+Thread.currentThread());               
    }
    
          
@@ -1036,7 +1036,7 @@ final class JavaCel extends Cel
       if (list != null) list.setSize(d) ;
       if (borderpanel != null) borderpanel.setSize(d) ;
       if (OptionsDialog.getDebugComponent())
-          System.out.println("JavaCel: setSize for "+getName()+" result=\""+d+"\""+" on thread "+Thread.currentThread());               
+          PrintLn.println("JavaCel: setSize for "+getName()+" result=\""+d+"\""+" on thread "+Thread.currentThread());               
    }
 
 
@@ -1069,7 +1069,7 @@ final class JavaCel extends Cel
       rgb = (rgb ^ 0) | 0xFF000000 ;
       ((JLabel) component).setForeground(new Color(rgb)) ;
       if (OptionsDialog.getDebugComponent())
-          System.out.println("JavaCel: setPanel for "+getName()+" on thread "+Thread.currentThread());               
+          PrintLn.println("JavaCel: setPanel for "+getName()+" on thread "+Thread.currentThread());               
    }
 
 
@@ -1094,7 +1094,7 @@ final class JavaCel extends Cel
       super.setVisible(b) ;
       showComponent(show) ;
       if (OptionsDialog.getDebugComponent())
-          System.out.println("JavaCel: setVisible for "+getName()+" result=\""+b+"\""+" on thread "+Thread.currentThread());               
+          PrintLn.println("JavaCel: setVisible for "+getName()+" result=\""+b+"\""+" on thread "+Thread.currentThread());               
 	}
 
 
@@ -1136,7 +1136,7 @@ final class JavaCel extends Cel
       if (component == null) return ;
       component.setVisible(b) ;
       if (OptionsDialog.getDebugComponent())
-          System.out.println("JavaCel: setVisibility for "+getName()+" result=\""+b+"\""+" on thread "+Thread.currentThread());               
+          PrintLn.println("JavaCel: setVisibility for "+getName()+" result=\""+b+"\""+" on thread "+Thread.currentThread());               
 	}
 
 
@@ -1163,7 +1163,7 @@ final class JavaCel extends Cel
       if (isVisible() && show && input) addComponent() ;
       else removeComponent() ;
       if (OptionsDialog.getDebugComponent())
-          System.out.println("JavaCel: showComponent for "+getName()+" result=\""+b+"\""+" on thread "+Thread.currentThread());               
+          PrintLn.println("JavaCel: showComponent for "+getName()+" result=\""+b+"\""+" on thread "+Thread.currentThread());               
    }
 
 
@@ -1191,7 +1191,7 @@ final class JavaCel extends Cel
       if (combobox != null) combobox.setEditable(b) ;
       if (component != null) component.setEnabled(b) ;
       if (OptionsDialog.getDebugComponent())
-          System.out.println("JavaCel: setEditable for "+getName()+" result=\""+b+"\""+" on thread "+Thread.currentThread());               
+          PrintLn.println("JavaCel: setEditable for "+getName()+" result=\""+b+"\""+" on thread "+Thread.currentThread());               
    }
 
 
@@ -1221,7 +1221,7 @@ final class JavaCel extends Cel
       super.setInput(b) ;
       if (b) addComponent() ; else removeComponent() ;
       if (OptionsDialog.getDebugComponent())
-          System.out.println("JavaCel: setInput for "+getName()+" result=\""+b+"\""+" on thread "+Thread.currentThread());               
+          PrintLn.println("JavaCel: setInput for "+getName()+" result=\""+b+"\""+" on thread "+Thread.currentThread());               
    }
 
 
@@ -1246,7 +1246,7 @@ final class JavaCel extends Cel
       attributes = s ;
       setAttributes(s) ;
       if (OptionsDialog.getDebugComponent())
-          System.out.println("JavaCel: setInitAttributes for "+getName()+" result=\""+s+"\""+" on thread "+Thread.currentThread());               
+          PrintLn.println("JavaCel: setInitAttributes for "+getName()+" result=\""+s+"\""+" on thread "+Thread.currentThread());               
    }
 
 
@@ -1785,7 +1785,7 @@ final class JavaCel extends Cel
          showComponent(showing) ;
       }
       if (OptionsDialog.getDebugComponent())
-          System.out.println("JavaCel: setAttributes for "+getName()+" result=\""+s+"\""+" on thread "+Thread.currentThread());               
+          PrintLn.println("JavaCel: setAttributes for "+getName()+" result=\""+s+"\""+" on thread "+Thread.currentThread());               
    }
 
    
@@ -1886,7 +1886,7 @@ final class JavaCel extends Cel
       component.setEnabled(b) ;
       invalidateImage() ;
       if (OptionsDialog.getDebugComponent())
-          System.out.println("JavaCel: setEnabled for "+getName()+" result=\""+b+"\""+" on thread "+Thread.currentThread());               
+          PrintLn.println("JavaCel: setEnabled for "+getName()+" result=\""+b+"\""+" on thread "+Thread.currentThread());               
    }
 
 
@@ -2033,7 +2033,7 @@ final class JavaCel extends Cel
          if (!((JTextArea) text).isEditable())
             ((JTextArea) text).setCaretPosition(s.length()) ;
       if (OptionsDialog.getDebugComponent())
-          System.out.println("JavaCel: setText for "+getName()+" result=\""+s+"\""+" on thread "+Thread.currentThread());               
+          PrintLn.println("JavaCel: setText for "+getName()+" result=\""+s+"\""+" on thread "+Thread.currentThread());               
    }
 
 
@@ -2109,7 +2109,7 @@ final class JavaCel extends Cel
       }
       catch (Exception e)
       {
-         System.out.println("Error Loading URL " + url + " Message: " + e.toString());         
+         PrintLn.println("Error Loading URL " + url + " Message: " + e.toString());         
       }
    }
 
@@ -2163,7 +2163,7 @@ final class JavaCel extends Cel
          combobox.setSelectedItem(value) ;
       }
       if (OptionsDialog.getDebugComponent())
-         System.out.println("JavaCel: setSelectedValue for "+getName()+" result=\""+value+"\""+" on thread "+Thread.currentThread());               
+         PrintLn.println("JavaCel: setSelectedValue for "+getName()+" result=\""+value+"\""+" on thread "+Thread.currentThread());               
    }
 
 
@@ -2243,7 +2243,7 @@ final class JavaCel extends Cel
          combobox.setSelectedIndex(n) ;
       }
       if (OptionsDialog.getDebugComponent())
-         System.out.println("JavaCel: setSelectedIndex for "+getName()+" result=\""+n+"\""+" on thread "+Thread.currentThread());               
+         PrintLn.println("JavaCel: setSelectedIndex for "+getName()+" result=\""+n+"\""+" on thread "+Thread.currentThread());               
    }
 
 
@@ -2299,7 +2299,7 @@ final class JavaCel extends Cel
       if (combobox != null) 
          combobox.setSelectedItem(value) ;
       if (OptionsDialog.getDebugComponent())
-         System.out.println("JavaCel: setSelectedItem for "+getName()+" result=\""+value+"\""+" on thread "+Thread.currentThread());               
+         PrintLn.println("JavaCel: setSelectedItem for "+getName()+" result=\""+value+"\""+" on thread "+Thread.currentThread());               
    }
 
 
@@ -2351,7 +2351,7 @@ final class JavaCel extends Cel
          }
       }
       if (OptionsDialog.getDebugComponent())
-         System.out.println("JavaCel: setSelected for "+getName()+" result=\""+value+"\""+" on thread "+Thread.currentThread());               
+         PrintLn.println("JavaCel: setSelected for "+getName()+" result=\""+value+"\""+" on thread "+Thread.currentThread());               
    }
 
 
@@ -2409,7 +2409,7 @@ final class JavaCel extends Cel
          dlm.setElementAt(value,n) ;
       }
       if (OptionsDialog.getDebugComponent())
-         System.out.println("JavaCel: setValueAt for "+getName()+" result=\""+value+"\""+" on thread "+Thread.currentThread());               
+         PrintLn.println("JavaCel: setValueAt for "+getName()+" result=\""+value+"\""+" on thread "+Thread.currentThread());               
    }
 
 
@@ -2464,7 +2464,7 @@ final class JavaCel extends Cel
          dlm.addElement(value) ;
       }
       if (OptionsDialog.getDebugComponent())
-         System.out.println("JavaCel: addItem for "+getName()+"  result=\""+value+"\""+" on thread "+Thread.currentThread());               
+         PrintLn.println("JavaCel: addItem for "+getName()+"  result=\""+value+"\""+" on thread "+Thread.currentThread());               
    }
 
 
@@ -2503,7 +2503,7 @@ final class JavaCel extends Cel
       }
       setSelectedIndex(-1) ;
       if (OptionsDialog.getDebugComponent())
-         System.out.println("JavaCel: removeItem for "+getName()+" result=\""+value+"\""+" on thread "+Thread.currentThread());               
+         PrintLn.println("JavaCel: removeItem for "+getName()+" result=\""+value+"\""+" on thread "+Thread.currentThread());               
    }
 
 
@@ -2564,7 +2564,7 @@ final class JavaCel extends Cel
          list.addListSelectionListener(listListener);
       }
       if (OptionsDialog.getDebugComponent())
-         System.out.println("JavaCel: removeAll for "+getName()+"  result=\""+"DONE"+"\""+" on thread "+Thread.currentThread());               
+         PrintLn.println("JavaCel: removeAll for "+getName()+"  result=\""+"DONE"+"\""+" on thread "+Thread.currentThread());               
    }
 
 
@@ -2613,7 +2613,7 @@ final class JavaCel extends Cel
          ((JButton) component).setIcon(icon) ;
       }
       if (OptionsDialog.getDebugComponent())
-         System.out.println("JavaCel: setIcon for "+getName()+" result=\""+"DONE"+"\""+" on thread "+Thread.currentThread());               
+         PrintLn.println("JavaCel: setIcon for "+getName()+" result=\""+"DONE"+"\""+" on thread "+Thread.currentThread());               
    }
 
 

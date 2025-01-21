@@ -505,8 +505,8 @@ final class FKissFrame extends KissFrame
       }
       if (OptionsDialog.getDebugFKiss())
       {
-         System.out.println("FKissFrame: new breakpoint event  " + event) ;
-         System.out.println("FKissFrame: new breakpoint action " + action) ;
+         PrintLn.println("FKissFrame: new breakpoint event  " + event) ;
+         PrintLn.println("FKissFrame: new breakpoint action " + action) ;
       }
 
       // Initialize the frame.
@@ -573,16 +573,16 @@ final class FKissFrame extends KissFrame
 		fileMenu.add((pagesetup = new JMenuItem(Kisekae.getCaptions().getString("MenuFilePageSetup")))) ;
 		pagesetup.addActionListener(this) ;
       if (!applemac) pagesetup.setMnemonic(KeyEvent.VK_U) ;
-      pagesetup.setEnabled(Kisekae.isPrintInstalled() && !Kisekae.isSecure()) ;
+      pagesetup.setEnabled(Kisekae.isPrintInstalled() && !Kisekae.isSecure() && !Kisekae.isExpired()) ;
 		fileMenu.add((printpreview = new JMenuItem(Kisekae.getCaptions().getString("MenuFilePrintPreview")))) ;
 		printpreview.addActionListener(this) ;
       if (!applemac) printpreview.setMnemonic(KeyEvent.VK_V) ;
-      printpreview.setEnabled(Kisekae.isPrintInstalled() && !Kisekae.isSecure()) ;
+      printpreview.setEnabled(Kisekae.isPrintInstalled() && !Kisekae.isSecure() && !Kisekae.isExpired()) ;
 		fileMenu.add((print = new JMenuItem(Kisekae.getCaptions().getString("MenuFilePrint")))) ;
 		print.addActionListener(this) ;
       if (!applemac) print.setMnemonic(KeyEvent.VK_P) ;
       print.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, accelerator));
-      print.setEnabled(Kisekae.isPrintInstalled() && !Kisekae.isSecure()) ;
+      print.setEnabled(Kisekae.isPrintInstalled() && !Kisekae.isSecure() && !Kisekae.isExpired()) ;
 		fileMenu.addSeparator() ;
 		fileMenu.add((properties = new JMenuItem(Kisekae.getCaptions().getString("MenuFileProperties")))) ;
 		properties.addActionListener(this) ;
@@ -1590,8 +1590,8 @@ final class FKissFrame extends KissFrame
       }
       if (OptionsDialog.getDebugFKiss())
       {
-         System.out.println("FKissFrame: breakpoint event  " + event) ;
-         System.out.println("FKissFrame: breakpoint action " + action) ;
+         PrintLn.println("FKissFrame: breakpoint event  " + event) ;
+         PrintLn.println("FKissFrame: breakpoint action " + action) ;
       }
 
       // Search the tree to find the current event or action entry.
@@ -2226,7 +2226,7 @@ final class FKissFrame extends KissFrame
 					try { pj.print() ; }
 					catch (PrinterException ex)
 					{
-						System.err.println("Printing error: " + ex.toString()) ;
+						PrintLn.printErr("Printing error: " + ex.toString()) ;
 						ex.printStackTrace() ;
                   JOptionPane.showMessageDialog(this,
                      Kisekae.getCaptions().getString("PrinterError") + " - " +
@@ -2345,7 +2345,7 @@ final class FKissFrame extends KissFrame
 			Runtime.getRuntime().gc() ;
 			try { Thread.currentThread().sleep(300) ; }
 			catch (InterruptedException ex) { }
-			System.out.println("FKissFrame: Out of memory.") ;
+			PrintLn.println("FKissFrame: Out of memory.") ;
          setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
          JOptionPane.showMessageDialog(this,
             Kisekae.getCaptions().getString("LowMemoryFault") + " - " +
@@ -2359,7 +2359,7 @@ final class FKissFrame extends KissFrame
 		catch (Throwable e)
 		{
 			EventHandler.stopEventHandler() ;
-			System.out.println("FKissFrame: Internal fault, action " + evt.getActionCommand()) ;
+			PrintLn.println("FKissFrame: Internal fault, action " + evt.getActionCommand()) ;
 			e.printStackTrace() ;
          setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
          JOptionPane.showMessageDialog(this,
@@ -2449,7 +2449,7 @@ final class FKissFrame extends KissFrame
 		try {	if (text != null) text.write(null,out,null) ; }
 		catch (IOException e)
 		{
-			System.out.println("I/O Exception: " + e.toString()) ;
+			PrintLn.println("I/O Exception: " + e.toString()) ;
 			e.printStackTrace() ;
 		}
 		finally
@@ -2457,7 +2457,7 @@ final class FKissFrame extends KissFrame
 			try { if (out != null) out.close() ; }
 			catch (IOException e)
 			{
-				System.out.println("I/O Exception: " + e.toString()) ;
+				PrintLn.println("I/O Exception: " + e.toString()) ;
 				e.printStackTrace() ;
 			}
 		}
@@ -2640,11 +2640,11 @@ final class FKissFrame extends KissFrame
       if (OptionsDialog.getDebugFKiss())
       {
          if (identifier == null)
-            System.out.println("FKissFrame: add new event " + e) ;
+            PrintLn.println("FKissFrame: add new event " + e) ;
          else if (e.getIdentifier() == null)
-            System.out.println("FKissFrame: delete event " + identifier) ;
+            PrintLn.println("FKissFrame: delete event " + identifier) ;
          else
-            System.out.println("FKissFrame: update event " + e) ;
+            PrintLn.println("FKissFrame: update event " + e) ;
       }
    }
 
@@ -2816,7 +2816,7 @@ final class FKissFrame extends KissFrame
 			try { undo.undo(); }
 			catch (CannotUndoException ex)
 			{
-				System.out.println("FKissFrame: Unable to undo edit") ;
+				PrintLn.println("FKissFrame: Unable to undo edit") ;
 				ex.printStackTrace();
             JOptionPane.showMessageDialog(me,
                Kisekae.getCaptions().getString("EditUndoError") + " - " +
@@ -3037,7 +3037,7 @@ final class FKissFrame extends KissFrame
 			try { undo.redo() ; }
 			catch (CannotRedoException ex)
 			{
-				System.out.println("FKissFrame: Unable to redo edit") ;
+				PrintLn.println("FKissFrame: Unable to redo edit") ;
 				ex.printStackTrace() ;
             JOptionPane.showMessageDialog(me,
                Kisekae.getCaptions().getString("EditUndoError") + " - " +
@@ -3226,7 +3226,7 @@ final class FKissFrame extends KissFrame
          // Show a debug trace.
 
          if (OptionsDialog.getDebugFKiss())
-            System.out.println("FKissFrame: change variable " + vd.name + " from " + oldvalue + " to " + value) ;
+            PrintLn.println("FKissFrame: change variable " + vd.name + " from " + oldvalue + " to " + value) ;
       }
    }
 

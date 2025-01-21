@@ -145,18 +145,18 @@ final class MediaDataSource extends PullDataSource
 	{
    	if (sourceStream == null)
       {
-      	System.out.println("MediaDataSource: connection attempt on disconnected source stream.") ;
+      	PrintLn.println("MediaDataSource: connection attempt on disconnected source stream.") ;
          return ;
       }
 		debug = OptionsDialog.getDebugMedia() ;
-		if (debug) System.out.println("MediaDataSource: connect() " + name) ;
+		if (debug) PrintLn.println("MediaDataSource: connect() " + name) ;
 		ArchiveFile zip = (ze == null) ? null : ze.getZipFile() ;
 	}
 
 	public void disconnect()
    {
 		debug = OptionsDialog.getDebugMedia() ;
-		if (debug) System.out.println("MediaDataSource: disconnect() " + name) ;
+		if (debug) PrintLn.println("MediaDataSource: disconnect() " + name) ;
 		ArchiveFile zip = (ze == null) ? null : ze.getZipFile() ;
 		try
 		{
@@ -180,7 +180,7 @@ final class MediaDataSource extends PullDataSource
 	public void start() 
 	{
 		debug = OptionsDialog.getDebugMedia() ;
-		if (debug) System.out.println("MediaDataSource: start() " + name) ;
+		if (debug) PrintLn.println("MediaDataSource: start() " + name) ;
 		if (sourceStream instanceof MediaByteStream)
 			((MediaByteStream) sourceStream).start() ;
 		else if (sourceStream instanceof MediaFileStream)
@@ -190,7 +190,7 @@ final class MediaDataSource extends PullDataSource
 	public void stop() throws IOException 
 	{
 		debug = OptionsDialog.getDebugMedia() ;
-		if (debug) System.out.println("MediaDataSource: stop() " + name) ;
+		if (debug) PrintLn.println("MediaDataSource: stop() " + name) ;
 		if (sourceStream instanceof MediaByteStream)
 			((MediaByteStream) sourceStream).stop() ;
 		else if (sourceStream instanceof MediaFileStream)
@@ -212,7 +212,7 @@ final class MediaDataSource extends PullDataSource
 	public Time setPosition(Time where, int rounding) 
 	{
 		debug = OptionsDialog.getDebugMedia() ;
-		if (debug) System.out.println("MediaDataSource: setPosition("
+		if (debug) PrintLn.println("MediaDataSource: setPosition("
 			+ where.getSeconds() + ")" + " for " + name) ;
 		return where ;
 	}

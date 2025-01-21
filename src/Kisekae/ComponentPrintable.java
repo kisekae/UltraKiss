@@ -119,7 +119,7 @@ public class ComponentPrintable
       }
       catch (Exception e)
       {
-      	System.out.println("Print Component exception: " + e.getMessage()) ;
+      	PrintLn.println("Print Component exception: " + e.getMessage()) ;
          e.printStackTrace() ;
 			JOptionPane.showMessageDialog(null,
            	"Print error.  Printing terminated." + "\n" + e.toString(),

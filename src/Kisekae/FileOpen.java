@@ -379,7 +379,7 @@ final public class FileOpen implements Cloneable
 
       catch (SecurityException e)
       {
-         System.out.println("KiSS file open exception, " + e.toString()) ;
+         PrintLn.println("KiSS file open exception, " + e.toString()) ;
          if (!silent)
          {
    			JOptionPane.showMessageDialog(parent,
@@ -399,7 +399,7 @@ final public class FileOpen implements Cloneable
 		catch (Exception e)
 		{
          error = true ;
-         System.out.println("KiSS file open exception, " + e.toString()) ;
+         PrintLn.println("KiSS file open exception, " + e.toString()) ;
          if (!silent)
          {
    			JOptionPane.showMessageDialog(parent, e.toString(),
@@ -437,10 +437,10 @@ final public class FileOpen implements Cloneable
 			if (ArchiveFile.isArchive(filename) || ArchiveFile.isConfiguration(filename))
          {
             String s = (ArchiveFile.isArchive(filename)) ? "archive" : "directory" ;
-				System.out.println("Open " + s + " " + zipFileURL.toExternalForm()) ;
+				PrintLn.println("Open " + s + " " + zipFileURL.toExternalForm()) ;
          }
          else
- 				System.out.println("Open " + zipFileURL.toExternalForm()) ;
+ 				PrintLn.println("Open " + zipFileURL.toExternalForm()) ;
 
 			// Regretfully, we must treat each file type separately as Java's
 			// zip file class does not appear designed for subclassing.
@@ -513,7 +513,7 @@ final public class FileOpen implements Cloneable
 
       catch (SecurityException e)
       {
-         System.out.println("KiSS file open exception, " + e.toString()) ;
+         PrintLn.println("KiSS file open exception, " + e.toString()) ;
          if (!silent)
          {
    			JOptionPane.showMessageDialog(parent,
@@ -537,7 +537,7 @@ final public class FileOpen implements Cloneable
 		catch (IOException e)
 		{
          error = true ;
-         System.out.println("KiSS file open exception, " + e.toString()) ;
+         PrintLn.println("KiSS file open exception, " + e.toString()) ;
          if (!silent)
          {
    			JOptionPane.showMessageDialog(parent, e.toString(),
@@ -559,7 +559,7 @@ final public class FileOpen implements Cloneable
 		catch (Exception e)
 		{
          error = true ;
-         System.out.println("KiSS file open exception, " + e.toString()) ;
+         PrintLn.println("KiSS file open exception, " + e.toString()) ;
          if (!silent)
          {
    			JOptionPane.showMessageDialog(parent, e.toString(),
@@ -599,7 +599,7 @@ final public class FileOpen implements Cloneable
 		if (entries.size() == 0)
 		{
 			String s = "File " + filename + " " + type + " element not found." ;
-         System.out.println(s) ;
+         PrintLn.println(s) ;
 //       s = captions.getString("FileOpenFileOpenMessage1") ;
 //       int i1 = s.indexOf('[') ;
 //       int j1 = s.indexOf(']') ;
@@ -883,7 +883,7 @@ final public class FileOpen implements Cloneable
       try
       {
          if (OptionsDialog.getDebugLoad())
-  	         System.out.println("Extracting " + lzhentry + " from " + zip) ;
+  	         PrintLn.println("Extracting " + lzhentry + " from " + zip) ;
          InputStream is = lzhentry.getInputStream() ;
          ByteArrayOutputStream os = new ByteArrayOutputStream() ;
 
@@ -908,7 +908,7 @@ final public class FileOpen implements Cloneable
       }
       catch (IOException e)
       {
-         System.out.println("FileOpen: unpack exception " + e) ;
+         PrintLn.println("FileOpen: unpack exception " + e) ;
          return false ;
       }
       return true ;
@@ -1025,7 +1025,7 @@ final public class FileOpen implements Cloneable
 		catch (Exception e)
 		{
          error = true ;
-         System.out.println("KiSS file open exception, " + e.toString()) ;
+         PrintLn.println("KiSS file open exception, " + e.toString()) ;
          String msg = e.getMessage() ;
          if (msg.contains("zip END header")) msg += "\nCheck download protocol, use https" ;
          if (!Kisekae.isBatch() && !silent)
@@ -1065,7 +1065,7 @@ final public class FileOpen implements Cloneable
 		catch (IOException e)
 		{
          error = true ;
-			System.out.println("KiSS file close exception, " + e.toString()) ;
+			PrintLn.println("KiSS file close exception, " + e.toString()) ;
          if (!silent)
          if (!Kisekae.isBatch() && !silent)
          {

@@ -409,12 +409,12 @@ final public class MainFrame extends KissFrame
       {
          if (zip != null) config.setZipFile(zip) ;
          if (ze != null) config.setZipEntry(ze) ;
-   		System.out.println("Expansion reloading appended configuration \"" + config.getName() + "\" (" + config.getID() + ")") ;
+   		PrintLn.println("Expansion reloading appended configuration \"" + config.getName() + "\" (" + config.getID() + ")") ;
          loader = new FileLoader(this,config) ;
       }
       else  
       {
-   		System.out.println("Expansion reloading new configuration \"" + config.getName() + "\" (" + config.getID() + ")") ;
+   		PrintLn.println("Expansion reloading new configuration \"" + config.getName() + "\" (" + config.getID() + ")") ;
          loader = new FileLoader(this,config,zip,ze) ;
       }
 		Thread loadthread = new Thread(loader) ;
@@ -441,7 +441,11 @@ final public class MainFrame extends KissFrame
 	{
 		try
 		{
+         if (Kisekae.isBatch() && c != null && c.hasViewerAppend())
+            c = null ;
+         
 			// If the load was cancelled restore our old fileopen object.
+         // Search loads are cancelled if the cnf was to be appended.
 
 			if (c == null)
 			{
@@ -490,7 +494,7 @@ final public class MainFrame extends KissFrame
             // the expansion configuration.
             
     			if (ArchiveFile.isArchive(archive))
-     				System.out.println("Open LRU archive " + archive) ;
+     				PrintLn.println("Open LRU archive " + archive) ;
             final String archive1 = archive ;
             final String cnf1 = cnf ;
    			Runnable awt = new Runnable()
@@ -512,7 +516,7 @@ final public class MainFrame extends KissFrame
                Object o = entries.firstElement() ;
                if (!(o instanceof ArchiveEntry)) continue ;
                ArchiveEntry ze = (ArchiveEntry) o ;
-               System.out.println("Configuration element found: " + ze.getName());
+               PrintLn.println("Configuration element found: " + ze.getName());
                b = c.appendInclude(ze) ;
                break ;
             }
@@ -561,7 +565,7 @@ final public class MainFrame extends KissFrame
                Object o = entries.firstElement() ;
                if (!(o instanceof ArchiveEntry)) continue ;
                ArchiveEntry ze = (ArchiveEntry) o ;
-               System.out.println("Configuration element found: " + ze.getName());
+               PrintLn.println("Configuration element found: " + ze.getName());
                b = c.appendInclude(ze) ;
                if (!b) break ;
             }
@@ -654,7 +658,7 @@ final public class MainFrame extends KissFrame
 
          restart = false ;
 			showStatus("Activating \"" + config.getName() + "\" (" + config.getID() + ")" + " ...") ;
-			System.out.println("Activating \"" + config.getName() + "\" (" + config.getID() + ")") ;
+			PrintLn.println("Activating \"" + config.getName() + "\" (" + config.getID() + ")") ;
          traceFKiss(mainmenu.tracefkiss.isSelected()) ;
 			config.activate(panel) ;
 			callback.doClick() ;
@@ -726,7 +730,7 @@ final public class MainFrame extends KissFrame
 			Runtime.getRuntime().gc() ;
 			try { Thread.currentThread().sleep(300) ; }
 			catch (InterruptedException ex) { }
-			System.out.println("MainFrame: Out of memory.") ;
+			PrintLn.println("MainFrame: Out of memory.") ;
          String s = Kisekae.getCaptions().getString("LowMemoryFault") + " - " +
 				Kisekae.getCaptions().getString("KissSetClosed") ;
    		setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
@@ -747,7 +751,7 @@ final public class MainFrame extends KissFrame
       {
 			EventHandler.stopEventHandler() ;
 			Runtime.getRuntime().gc() ;
-			System.out.println("MainFrame: stack overflow.") ;
+			PrintLn.println("MainFrame: stack overflow.") ;
          String s = Kisekae.getCaptions().getString("StackOverflowFault") + " - " +
             Kisekae.getCaptions().getString("KissSetClosed") ;
    		setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
@@ -770,7 +774,7 @@ final public class MainFrame extends KissFrame
 			Runtime.getRuntime().gc() ;
 			try { Thread.currentThread().sleep(300) ; }
 			catch (InterruptedException ex) { }
-			System.out.println("MainFrame: Internal fault, " + e.toString()) ;
+			PrintLn.println("MainFrame: Internal fault, " + e.toString()) ;
 			e.printStackTrace() ;
          String s = Kisekae.getCaptions().getString("InternalError") + " - " +
             Kisekae.getCaptions().getString("KissSetClosed") + "\n" + e.toString() ;
@@ -1129,7 +1133,7 @@ final public class MainFrame extends KissFrame
 
 								page.setState(cid,"initial",newstate) ;
 								if (OptionsDialog.getDebugControl())
-									System.out.println("Save: Write Page " + page) ;
+									PrintLn.println("Save: Write Page " + page) ;
                      }
                   }
       
@@ -1335,7 +1339,7 @@ final public class MainFrame extends KissFrame
 			try { Thread.currentThread().sleep(300) ; }
 			catch (InterruptedException ex) { }
 			String s = evt.getActionCommand() ;
-			System.out.println("MainFrame: Out of memory. " + s) ;
+			PrintLn.println("MainFrame: Out of memory. " + s) ;
    		setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
          JOptionPane.showMessageDialog(this,
             Kisekae.getCaptions().getString("LowMemoryFault") + " - " +
@@ -1399,7 +1403,7 @@ final public class MainFrame extends KissFrame
 	{
 		if (s == null) s = Kisekae.getCopyright() ;
       if (OptionsDialog.getDebugControl())
-      	System.out.println("Status " + s) ;
+      	PrintLn.println("Status " + s) ;
 		if (statusBar != null) statusBar.showStatus(s) ;
 	}
 
@@ -1719,7 +1723,7 @@ final public class MainFrame extends KissFrame
 			catch (IOException e)
          {
 				setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
-         	System.out.println("MainFrame: set new configuration IOexception") ;
+         	PrintLn.println("MainFrame: set new configuration IOexception") ;
             e.printStackTrace() ;
          }
 
@@ -1967,7 +1971,7 @@ final public class MainFrame extends KissFrame
          validate() ;
          centerpanel() ;
 		}
-      System.out.println("debug: " + message) ;
+      PrintLn.println("debug: " + message) ;
    }
 
 
@@ -2179,7 +2183,7 @@ final public class MainFrame extends KissFrame
 	            int n = page.updateInitialPositions(cid);
 	            page.setChanged(false) ;
 					if (n > 0 && OptionsDialog.getDebugControl())
-						System.out.println("Restart: Update page initial positions " + page) ;
+						PrintLn.println("Restart: Update page initial positions " + page) ;
             }
 			}
 
@@ -2197,7 +2201,7 @@ final public class MainFrame extends KissFrame
          }
 			catch (IOException e)
 			{
-				System.out.println("MainFrame: restart, " + e.getMessage()) ;
+				PrintLn.println("MainFrame: restart, " + e.getMessage()) ;
 				return ;
 			}
 		}
@@ -2227,7 +2231,7 @@ final public class MainFrame extends KissFrame
       if (config != null)
       {
          showStatus("Restart \"" + config.getName() + "\" (" + config.getID() + ")" + " ...") ;
-   		System.out.println("Restart configuration \"" + config.getName() + "\" (" + config.getID() + ")") ;
+   		PrintLn.println("Restart configuration \"" + config.getName() + "\" (" + config.getID() + ")") ;
          if (!config.isRestartable())
             init(config) ;
          else
@@ -2461,7 +2465,7 @@ final public class MainFrame extends KissFrame
          // Terminate.
 
          if (options != null) options.resetOptions() ;
-   		System.out.println("Program terminating.") ;
+   		PrintLn.println("Program terminating.") ;
          OptionsDialog.saveFinalProperties() ; 
          if (kisekae.inApplet())
             LogFile.delete() ;
@@ -2707,7 +2711,7 @@ final public class MainFrame extends KissFrame
 			}
 			catch (Exception e)
          {
-            if (!(e instanceof KissException)) System.out.println(e.getMessage()) ;
+            if (!(e instanceof KissException)) PrintLn.println(e.getMessage()) ;
          }
 
          Dimension d = parent.getSize() ;

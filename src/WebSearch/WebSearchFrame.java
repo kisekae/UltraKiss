@@ -108,6 +108,8 @@ import Kisekae.LogFile ;
 import Kisekae.BrowserControl ; 
 import Kisekae.WebFrame ;
 import Kisekae.FileOpen ;
+import Kisekae.KissPreferences ;
+import Kisekae.PrintLn ;
 
 
 final public class WebSearchFrame extends KissFrame
@@ -278,7 +280,7 @@ final public class WebSearchFrame extends KissFrame
       try { jbInit() ; }
       catch(Exception ex)
       { 
-         System.out.println("WebSearchFrame: jbInit constructor " + ex.toString()) ;
+         PrintLn.println("WebSearchFrame: jbInit constructor " + ex.toString()) ;
          ex.printStackTrace() ; 
       }
 
@@ -399,7 +401,7 @@ final public class WebSearchFrame extends KissFrame
       }
       catch (Exception e) 
       { 
-         System.out.println("WebSearch: " + e) ;
+         PrintLn.println("WebSearch: " + e) ;
       }
    }
 
@@ -421,7 +423,7 @@ final public class WebSearchFrame extends KissFrame
          // Initiate the parse.
 
          addTrace("Begin WebSearch",1) ;
-         System.out.println("WebSearch: begins for " + location) ;
+         PrintLn.println("WebSearch: begins for " + location) ;
          group = new ThreadGroup("SearchThreads") ;
          Scheduler.reset() ;
          GetLinks.reset() ;
@@ -743,13 +745,13 @@ final public class WebSearchFrame extends KissFrame
                if (f2.exists()) f2.delete() ;
                f1.renameTo(f2) ;
                if (OptionsDialog.getDebugSearch())
-                  System.out.println("WebSearch: rename " + f1.getName() + " to " + f2.getPath()) ;
+                  PrintLn.println("WebSearch: rename " + f1.getName() + " to " + f2.getPath()) ;
                formname = f2.getName() ;
                absoluteformname = f2.getAbsolutePath() ;
             }
             catch (Exception e)
             {
-               System.out.println("WebSearch: rename " + s1 + " to " + s2 + " failed.") ;
+               PrintLn.println("WebSearch: rename " + s1 + " to " + s2 + " failed.") ;
             }
                
             addTrace("Begin Index Form Generation",1) ;
@@ -780,22 +782,26 @@ final public class WebSearchFrame extends KissFrame
                if (f2.exists()) f2.delete() ;
                f1.renameTo(f2) ;
                if (OptionsDialog.getDebugSearch())
-                  System.out.println("WebSearch: rename " + f1.getName() + " to " + f2.getPath()) ;
+                  PrintLn.println("WebSearch: rename " + f1.getName() + " to " + f2.getPath()) ;
             }
             catch (Exception e)
             {
-               System.out.println("WebSearch: rename " + s1 + " to " + f2.getPath() + " failed.") ;
+               PrintLn.println("WebSearch: rename " + s1 + " to " + f2.getPath() + " failed.") ;
             }
                
             showStatus("") ;
             activated = false ;
             activebtn.setEnabled(false) ;
-            System.out.println("WebSearch: ends") ;
+            PrintLn.println("WebSearch: ends") ;
             addTrace("End WebSearch",1) ;
             Scheduler.stopScheduler() ;
             scheduler = null ;
                
-            // Activate a Portal
+            // Activate a Portal.  When this search form is closed
+            // a new invocation of the Kisekae program is started.
+            // The web portal is opened in a new thread after a 2
+            // second delay.
+            
             if (absoluteformname != null)
             {
                int i = JOptionPane.showConfirmDialog(this,
@@ -804,14 +810,32 @@ final public class WebSearchFrame extends KissFrame
                   JOptionPane.YES_NO_OPTION) ;
                if (i == JOptionPane.YES_OPTION)
                {
+                  Runnable showportal = new Runnable()
+                  {
+                     public void run()
+                     {
+                        try { Thread.sleep(1000) ; }
+                        catch (InterruptedException e) { }
+                        
+               			Runnable awt = new Runnable()
+               			{ 
+                           public void run() 
+                           { 
+                              String s = absoluteformname ;
+                              if (!s.startsWith(File.separator)) s = File.separator + s ;
+                              s = ("file://"+s).replace('\\','/') ;
+                              MainFrame mf = Kisekae.getMainFrame() ;
+                              WebFrame.setCurrentWeb(s) ;
+                              WebFrame wf = new WebFrame(mf) ; 
+                              wf.setVisible(true) ;
+                              wf.toFront() ;
+                           } 
+                        } ;
+               			SwingUtilities.invokeLater(awt) ;
+                     }
+                  } ;
+                  new Thread(showportal).start() ;
                   close() ;
-                  String s = absoluteformname ;
-                  if (!s.startsWith(File.separator)) s = File.separator + s ;
-                  s = ("file://"+s).replace('\\','/') ;
-                  WebFrame.setCurrentWeb(s) ;
-                  WebFrame wf = new WebFrame(parent) ; 
-                  wf.setVisible(true) ;
-                  return ;
                }
             }
          }
@@ -825,7 +849,7 @@ final public class WebSearchFrame extends KissFrame
          Runtime.getRuntime().gc() ;
          try { Thread.currentThread().sleep(300) ; }
          catch (InterruptedException ex) { }
-         System.out.println("WebSearchFrame: Out of memory.") ;
+         PrintLn.println("WebSearchFrame: Out of memory.") ;
          setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
          JOptionPane.showMessageDialog(this,
             "Insufficiant memory.  Action not completed.",
@@ -836,78 +860,77 @@ final public class WebSearchFrame extends KissFrame
 
       catch (Throwable e)
       {
-         System.out.println("WebFrame: Internal fault, action " + evt.getActionCommand()) ;
+         PrintLn.println("WebFrame: Internal fault, action " + evt.getActionCommand()) ;
          e.printStackTrace() ;
          setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
          JOptionPane.showMessageDialog(this,
             "Internal fault.  Action not completed." + "\n" + e.toString(),
             "Internal Fault", JOptionPane.ERROR_MESSAGE) ;
       }
-  }
+   }
 
 
-  // Window Events
+   // Window Events
 
-  public void windowOpened(WindowEvent evt) { }
-  public void windowClosed(WindowEvent evt) { }
-  public void windowIconified(WindowEvent evt) { }
-  public void windowDeiconified(WindowEvent evt) { }
-  public void windowActivated(WindowEvent evt) { }
-  public void windowDeactivated(WindowEvent evt) { }
-  public void windowClosing(WindowEvent evt) { close() ; }
+   public void windowOpened(WindowEvent evt) { }
+   public void windowClosed(WindowEvent evt) { }
+   public void windowIconified(WindowEvent evt) { }
+   public void windowDeiconified(WindowEvent evt) { }
+   public void windowActivated(WindowEvent evt) { }
+   public void windowDeactivated(WindowEvent evt) { }
+   public void windowClosing(WindowEvent evt) { close() ; }
 
 
 
-  // Close this main window frame.  This terminates the program.
-  // We need to interrupt any validation load in progress.  
+   // Close this main window frame.  This terminates the Search.
+   // We need to interrupt any validation load in progress.  
 
-  public void close()
-  {
-     if (!activated || terminating)
-     {
-        if (timer != null) timer.stop() ;
-        Kisekae.getKisekae().close() ;
-        statusbar.setStatusBar(false) ;
-        parent.setVisible(true) ;
-        activated = false ;
-		  super.close() ;
-        dispose() ;
-        return ;
-     }
+   public void close()
+   {
+      if (!activated || terminating)
+      {
+         if (timer != null) timer.stop() ;
+         statusbar.setStatusBar(false) ;
+         activated = false ;
+		   super.close() ;
+         dispose() ;
+         Kisekae.getKisekae().close() ;
+         return ;
+      }
         
-     // If we are running, cancel execution.  This can take some time.
+      // If we are running, cancel execution.  This can take some time.
        
-     stop = true ;
-     terminating = true ;
-     showStatus("Terminating ...") ;
-     GetLinks.stopsearch() ;
-     ValidateLinks.stopsearch() ;
-     BuildForm.stopsearch() ;
-     Scheduler.stopScheduler() ;
-     activebtn.setEnabled(false) ;
-     scheduler = null ;
+      stop = true ;
+      terminating = true ;
+      showStatus("Terminating ...") ;
+      GetLinks.stopsearch() ;
+      ValidateLinks.stopsearch() ;
+      BuildForm.stopsearch() ;
+      Scheduler.stopScheduler() ;
+      activebtn.setEnabled(false) ;
+      scheduler = null ;
 
-     timer = new Timer(5000,this) ;
-     timer.setRepeats(false) ;
-     timer.start() ;
-     waitbox = new WaitDialog(this,"Search terminating, please wait ...") ;
-     waitbox.setVisible(true) ;
-  }
+      timer = new Timer(5000,this) ;
+      timer.setRepeats(false) ;
+      timer.start() ;
+      waitbox = new WaitDialog(this,"Search terminating, please wait ...") ;
+      waitbox.setVisible(true) ;
+   }
      
      
-  // Function to exit the search.
+   // Function to exit the search.
      
-  private void exitsearch(String s) 
-  {
-     addTrace(s,3) ;
-     showStatus("") ;
-     activated = false ;
-     activebtn.setEnabled(false) ;
-     System.out.println("WebSearch: ends") ;
-     addTrace("End WebSearch",1) ;
-     Scheduler.stopScheduler() ;
-     scheduler = null ;
-  }
+   private void exitsearch(String s) 
+   {
+      addTrace(s,3) ;
+      showStatus("") ;
+      activated = false ;
+      activebtn.setEnabled(false) ;
+      PrintLn.println("WebSearch: ends") ;
+      addTrace("End WebSearch",1) ;
+      Scheduler.stopScheduler() ;
+      scheduler = null ;
+   }
      
      
   // Function to exit the search.
@@ -924,23 +947,23 @@ final public class WebSearchFrame extends KissFrame
            s = s.substring(0,n) + " " + s.substring(n+3) ;
      }
      return s ;
-  }
+   }
      
      
-  // Inner class for a Status Bar
+   // Inner class for a Status Bar
      
-  /**
-  * StatusBar Class
-  *
-  * Purpose:
-  *
-  * This object encapsulates the main program status bar.  It is a
-  * panel that resides in the main frame window.
-  *
-  */
+   /**
+   * StatusBar Class
+   *
+   * Purpose:
+   *
+   * This object encapsulates the main program status bar.  It is a
+   * panel that resides in the main frame window.
+   *
+   */
 
-  class StatusBar extends JPanel
-  {
+   class StatusBar extends JPanel
+   {
    	boolean statusBarOn = false ;             // Status bar view state
       private Thread thread = null ;            // Periodic mem update
       private int period = 5000 ;               // Update period
@@ -964,7 +987,7 @@ final public class WebSearchFrame extends KissFrame
          try { jbInit() ; }
          catch(Exception e)
          { 
-            System.out.println("WebSearchFrame: jbInit StatusBar constructor " + e.toString()) ;
+            PrintLn.println("WebSearchFrame: jbInit StatusBar constructor " + e.toString()) ;
             e.printStackTrace() ; 
          }
       }

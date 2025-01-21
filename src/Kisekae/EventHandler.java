@@ -952,7 +952,7 @@ final class EventHandler extends KissObject
                      n = n ;
                   if (n > 0) n -= Configuration.getTimestamp() ;
                   String s = (n != 0) ? " triggered time " + n.toString() : "" ;
-                  System.out.println("[" + time + "] [" + Thread.currentThread().getName() + "] queue " + evt.getName() + " on EventHandler, source " + qentry[2] + " queue size " + queue.size() + s) ;
+                  PrintLn.println("[" + time + "] [" + Thread.currentThread().getName() + "] queue " + evt.getName() + " on EventHandler, source " + qentry[2] + " queue size " + queue.size() + s) ;
                   stats.put(qentry[0],new Long(System.currentTimeMillis())) ;  // Java 1.5
                }
             }
@@ -988,7 +988,7 @@ final class EventHandler extends KissObject
                Long n = (o instanceof Alarm) ? ((Alarm) o).getTriggeredTime() : 0 ;
                if (n > 0) n -= Configuration.getTimestamp() ;
                String s = (n != 0) ? " triggered time " + n.toString() : "" ;
-               System.out.println("[" + time + "] [" + Thread.currentThread().getName() + "] queue single " + evt.getName() + " on EventHandler, source " + qentry[2] + " queue size " + queue.size() + s) ;
+               PrintLn.println("[" + time + "] [" + Thread.currentThread().getName() + "] queue single " + evt.getName() + " on EventHandler, source " + qentry[2] + " queue size " + queue.size() + s) ;
                stats.put(qentry[0],new Long(System.currentTimeMillis())) ; // Java 1.5
             }
          }
@@ -1264,6 +1264,26 @@ final class EventHandler extends KissObject
    }
 
 
+   // Static methods to determine if an action is a viewer("menu","appendcnf")
+   // command.  The append command extends the loaded configuration.  This
+   // means the configuration as loaded is not complete.  The Search module
+   // cannot use the load status as a valid completion indicator.
+
+   static boolean isViewerAppendAction(FKissAction a)
+   {
+      if (a == null) return false ;
+      int code = a.getCode() ;
+		if (code != 110) return false ;
+      String s1 = a.getFirstParameter() ;
+      s1 = Variable.getStringLiteralValue(s1) ;
+      if (!"menu".equals(s1)) return false ;
+      String s2 = a.getSecondParameter() ;
+      s2 = Variable.getStringLiteralValue(s2) ;
+      if (!"appendcnf".equals(s2)) return false ;      
+      return true ;
+   }
+
+
 
 	// Static method to directly fire a series of events without queuing them.
    // The event is associated with the indicated thread.  Note that multiple
@@ -1287,7 +1307,7 @@ final class EventHandler extends KissObject
          {
          	event = (FKissEvent) v.elementAt(i) ;
             if (isBeginningEvent(event))
-               System.out.println("EventHandler: firing event " + event + " actions " + event.getActionList().size());
+               PrintLn.println("EventHandler: firing event " + event + " actions " + event.getActionList().size());
 				event.fireEvent(f,t,source) ;
             if (!OptionsDialog.getMultipleEvents() && !isBeginningEvent(event)) break ;            
          }
@@ -1303,7 +1323,7 @@ final class EventHandler extends KissObject
 			Runtime.getRuntime().gc() ;
          try { Thread.currentThread().sleep(300) ; }
          catch (InterruptedException ex) { }
-			System.out.println("EventHandler: Out of memory.") ;
+			PrintLn.println("EventHandler: Out of memory.") ;
          MainFrame mf = Kisekae.getMainFrame() ;
 			mf.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
          JOptionPane.showMessageDialog(mf,
@@ -1322,7 +1342,7 @@ final class EventHandler extends KissObject
 
       catch (StackOverflowError e)
       {
-			System.out.println("EventHandler: " + e.toString()) ;
+			PrintLn.println("EventHandler: " + e.toString()) ;
          JOptionPane.showMessageDialog(Kisekae.getMainFrame(),
             Kisekae.getCaptions().getString("StackOverflowFault") + " - " +
             Kisekae.getCaptions().getString("ActionNotCompleted") +
@@ -1344,14 +1364,14 @@ final class EventHandler extends KissObject
          String s2 = (action == null) ? "unknown" : action.toString() ;
          int currentline = (action == null) ? 0 : action.getLine() ;
          String s = "EventHandler: Internal fault,  event " + s1 ;
-	      System.out.println(s) ;
+	      PrintLn.println(s) ;
          String s3 = "Failing action " + s2 ;
-         System.out.println(s3) ;
+         PrintLn.println(s3) ;
          s += "\n" + s3 ;
          s3 = "Configuration source line " + currentline ;
-         System.out.println(s3) ;
+         PrintLn.println(s3) ;
          s3 = "Exception " + e.toString() ;
-         System.out.println(s3) ;
+         PrintLn.println(s3) ;
 
          // Build the language sensitive display string.
 
@@ -1426,7 +1446,7 @@ final class EventHandler extends KissObject
    	stop = false ;
   		createtime = Configuration.getTimestamp() ;
 		if (OptionsDialog.getDebugControl())
-			System.out.println("Start EventHandler.") ;
+			PrintLn.println("Start EventHandler.") ;
       if (threadgroup == null || threadgroup.isDestroyed())
       {
       	threadgroup = new ThreadGroup("EventHandler") ;
@@ -1446,7 +1466,7 @@ final class EventHandler extends KissObject
       int i = 0 ;
       stop = true ;
 		if (OptionsDialog.getDebugControl())
-			System.out.println("Stop EventHandler.") ;
+			PrintLn.println("Stop EventHandler.") ;
 
       try
       {
@@ -1477,14 +1497,14 @@ final class EventHandler extends KissObject
       }
       catch (Exception e)
       {
-//         System.out.println("EventHandler: Thread termination " + e);
+//         PrintLn.println("EventHandler: Thread termination " + e);
       }
 
       // Release critical references.
 
       threadgroup = null ;
 //      if (i == 5)
-//         System.out.println("EventHandler: Thread termination timeout.");
+//         PrintLn.println("EventHandler: Thread termination timeout.");
 	}
 
 
@@ -1554,7 +1574,7 @@ final class EventHandler extends KissObject
 	static void suspendEventHandler(boolean manual)
    {
 		if (OptionsDialog.getDebugControl() && !manualsuspend)
-			System.out.println("Suspend EventHandler. " + ((manual) ? "Manual" : "")) ;
+			PrintLn.println("Suspend EventHandler. " + ((manual) ? "Manual" : "")) ;
    	if (manual) manualsuspend = true ;
    	suspend = true ;
    }
@@ -1572,7 +1592,7 @@ final class EventHandler extends KissObject
       synchronized (eventlock)
       {
 			if (OptionsDialog.getDebugControl())
-				System.out.println("Resume EventHandler.") ;
+				PrintLn.println("Resume EventHandler.") ;
    		suspend = false ;
 		   eventlock.notify() ;
       }
@@ -1599,7 +1619,7 @@ final class EventHandler extends KissObject
 		me.setPriority(Thread.NORM_PRIORITY) ;
 		me.setName(threadname) ;
 		if (OptionsDialog.getDebugControl())
-			System.out.println(me.getName() + " started.") ;
+			PrintLn.println(me.getName() + " started.") ;
 
 		// The handler suspends itself until it is notified.  Once
 		// notified the handler performs all event actions on the queue
@@ -1639,7 +1659,7 @@ final class EventHandler extends KissObject
                         long time = System.currentTimeMillis() - Configuration.getTimestamp() ;  
                         Object o = stats.get(event) ;
                         long diff = (o instanceof Long) ? (System.currentTimeMillis() - ((Long) o).longValue()) : 0 ; // Java 1.5
-                        System.out.println("[" + time + "] [" + Thread.currentThread().getName() + "] fire " + event.getName() + " for FKissEvent processing, wait on queue " + diff + " ms") ;
+                        PrintLn.println("[" + time + "] [" + Thread.currentThread().getName() + "] fire " + event.getName() + " for FKissEvent processing, wait on queue " + diff + " ms") ;
                         stats.remove(event) ;
                      }
                   }
@@ -1659,7 +1679,7 @@ final class EventHandler extends KissObject
 					Runtime.getRuntime().gc() ;
 		         try { Thread.currentThread().sleep(300) ; }
 		         catch (InterruptedException ex) { }
-					System.out.println("EventHandler: Out of memory.") ;
+					PrintLn.println("EventHandler: Out of memory.") ;
                MainFrame mf = Kisekae.getMainFrame() ;
      				mf.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
                JOptionPane.showMessageDialog(mf,
@@ -1678,7 +1698,7 @@ final class EventHandler extends KissObject
 
 		      catch (StackOverflowError e)
 		      {
-					System.out.println("EventHandler: " + e.toString()) ;
+					PrintLn.println("EventHandler: " + e.toString()) ;
                JOptionPane.showMessageDialog(Kisekae.getMainFrame(),
                   Kisekae.getCaptions().getString("StackOverflowFault") + " - " +
                   Kisekae.getCaptions().getString("ActionNotCompleted") +
@@ -1706,14 +1726,14 @@ final class EventHandler extends KissObject
          String s2 = (action == null) ? "unknown" : action.toString() ;
          int currentline = (action == null) ? 0 : action.getLine() ;
          String s = "EventHandler: Internal fault,  event " + s1 ;
-	      System.out.println(s) ;
+	      PrintLn.println(s) ;
          String s3 = "Failing action " + s2 ;
-         System.out.println(s3) ;
+         PrintLn.println(s3) ;
          s += "\n" + s3 ;
          s3 = "Configuration source line " + currentline ;
-         System.out.println(s3) ;
+         PrintLn.println(s3) ;
          s3 = "Exception " + e.toString() ;
-         System.out.println(s3) ;
+         PrintLn.println(s3) ;
 
          // Build the language sensitive display string.
 
@@ -1766,6 +1786,6 @@ final class EventHandler extends KissObject
       this.wait = false ;
       firecount = 0 ;
 		if (OptionsDialog.getDebugControl())
-	      System.out.println(me.getName() + " terminated.");
+	      PrintLn.println(me.getName() + " terminated.");
 	}
 }

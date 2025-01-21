@@ -401,7 +401,7 @@ final class FileWriter extends KissFrame
 
 		catch (SecurityException e)
 		{
-			System.out.println("KiSS file write exception, " + e.getMessage()) ;
+			PrintLn.println("KiSS file write exception, " + e.getMessage()) ;
 			JOptionPane.showMessageDialog(null,
             captions.getString("SecurityException") + "\n" +
 				captions.getString("FileOpenSecurityMessage1"),
@@ -497,7 +497,7 @@ final class FileWriter extends KissFrame
 	public void windowDeactivated(WindowEvent evt) { }
 	public void windowClosing(WindowEvent evt)
 	{
-		System.out.println("Write cancelled ...") ;
+		PrintLn.println("Write cancelled ...") ;
 		Status.setText("Save cancelled.") ;
       if (Kisekae.isBatch()) callback.doClick() ;
 		interrupted = true ;
@@ -516,7 +516,7 @@ final class FileWriter extends KissFrame
 
 		if (source == CANCEL)
 		{
-			System.out.println("Write cancelled ...") ;
+			PrintLn.println("Write cancelled ...") ;
 			Status.setText("Save cancelled.") ;
          if (Kisekae.isBatch()) callback.doClick() ;
 			interrupted = true ;
@@ -546,7 +546,7 @@ final class FileWriter extends KissFrame
 
       if (Kisekae.isRestricted())
       {
-			System.out.println("FileWriter: Product license has expired.") ;
+			PrintLn.println("FileWriter: Product license has expired.") ;
       	ErrorText.setText("Product license has expired.  File output is restricted.") ;
          error = true ;
       }
@@ -556,17 +556,17 @@ final class FileWriter extends KissFrame
       if (!error)
       {
          if (ArchiveFile.isArchive(filename))
-            System.out.println("Save archive " + destination) ;
+            PrintLn.println("Save archive " + destination) ;
          else if (!ArchiveFile.isArchive(destination))
          {
             File f = new File(directory,filename) ;
             if (f.isDirectory())
-               System.out.println("Extract " + source + " to directory " + f.getPath()) ; 
+               PrintLn.println("Extract " + source + " to directory " + f.getPath()) ; 
             else
-               System.out.println("Save file " + f.getPath()) ;
+               PrintLn.println("Save file " + f.getPath()) ;
          }
          else
-            System.out.println("Save file " + filename + " to archive " + destination) ;
+            PrintLn.println("Save file " + filename + " to archive " + destination) ;
 
          // Determine the destination file extension.  This is used to establish
          // the output file type.
@@ -712,7 +712,7 @@ final class FileWriter extends KissFrame
                   }
                   catch (IOException e) 
                   {
-                     System.out.println("FileWriter: new DirFile Archive " + e) ;
+                     PrintLn.println("FileWriter: new DirFile Archive " + e) ;
                   }
                }
                if (ArchiveFile.isArchive(destination))
@@ -727,7 +727,7 @@ final class FileWriter extends KissFrame
             }
 			}
 
-         System.out.println("Write complete to " + destination) ;
+         PrintLn.println("Write complete to " + destination) ;
 			Status.setText("Save complete.") ;
 
 
@@ -1007,7 +1007,7 @@ final class FileWriter extends KissFrame
                // We have a file error on the original zip file.
                
                int i = JOptionPane.NO_OPTION ;
-					System.out.println("Save: Unable to read file " + element) ;
+					PrintLn.println("Save: Unable to read file " + element) ;
                if (!Kisekae.isBatch())
                   i = JOptionPane.showConfirmDialog(this,
                      captions.getString("FileReadError") +
@@ -1198,7 +1198,7 @@ final class FileWriter extends KissFrame
                      int i = JOptionPane.NO_OPTION ;
 				      	ErrorText.setText("Error: Unable to create " + de.getPath()) ;
 				  	      s = "Write exception, unable to create file " + de.getPath() ;
-				         System.out.println(s);
+				         PrintLn.println(s);
                      if (!Kisekae.isBatch()) 
                         i = JOptionPane.showConfirmDialog(this,
                            captions.getString("FileWriteError") +
@@ -1256,7 +1256,7 @@ final class FileWriter extends KissFrame
             {
             	String s = "Save: " + element + " [" + bytes + " bytes]" ;
                if (ko != null) s += " (" + ko.getClass().getName() + ")";
-            	System.out.println(s) ;
+            	PrintLn.println(s) ;
             }
          }
       }
@@ -1288,7 +1288,7 @@ final class FileWriter extends KissFrame
          error = !(ex.toString().contains("duplicate entry")) ;
   			ErrorText.setText("Error: " + ex.toString()) ;
   			String s = "Write exception, write file " + ((element == null) ? "" : element) ;
-  			System.out.println(s) ;
+  			PrintLn.println(s) ;
          if (error) ex.printStackTrace() ;
          if (!Kisekae.isBatch()) JOptionPane.showMessageDialog(this,
             captions.getString("FileWriteError") +
@@ -1304,7 +1304,7 @@ final class FileWriter extends KissFrame
          error = true ;
 			ErrorText.setText("Error: " + ex.toString()) ;
 			String s = "Write exception, write file " + ((element == null) ? "" : element) ;
-			System.out.println(s) ;
+			PrintLn.println(s) ;
 			ex.printStackTrace() ;
          if (!Kisekae.isBatch()) JOptionPane.showMessageDialog(this,
             captions.getString("FileWriteError") +
@@ -1331,7 +1331,7 @@ final class FileWriter extends KissFrame
 	         error = true ;
 	      	ErrorText.setText("Error: " + e.toString()) ;
 				String s = "Write exception, close file " + ((element == null) ? "" : element) ;
-	         System.out.println(s);
+	         PrintLn.println(s);
             if (!Kisekae.isBatch()) JOptionPane.showMessageDialog(this,
                captions.getString("FileWriteError") +
                "\n" + element + "\n" + e.toString(),
@@ -1473,7 +1473,7 @@ final class FileWriter extends KissFrame
                      String type = "." + s.toLowerCase() ;
                      exportcel = true ;
                      if (OptionsDialog.getDebugLoad())
-                        System.out.println("FileWriter: saveset export " + cel + " to " + s);
+                        PrintLn.println("FileWriter: saveset export " + cel + " to " + s);
                     
                      // Load the cel if necessary.
                     
@@ -1521,7 +1521,7 @@ final class FileWriter extends KissFrame
                }
                catch (IOException e) 
                { 
-                  System.out.println("FileWriter: prepare export cel, " + e) ;
+                  PrintLn.println("FileWriter: prepare export cel, " + e) ;
                }
             }
             
@@ -1574,7 +1574,7 @@ final class FileWriter extends KissFrame
          {
             try { opened.close() ; }
             catch (IOException e)
-            { System.out.println("FileWriter: load cel for export, " + e) ; }
+            { PrintLn.println("FileWriter: load cel for export, " + e) ; }
          }
  
 	      // Add the palette object entries to the contents vector.
@@ -1843,7 +1843,7 @@ final class FileWriter extends KissFrame
          else
 				fd = File.createTempFile("Kisekae",null,new File(directory)) ;
 	      if (OptionsDialog.getDebugLoad())
-            System.out.println("Save: Create temporary file " + fd.getPath());
+            PrintLn.println("Save: Create temporary file " + fd.getPath());
          fd.deleteOnExit() ;
       }
       catch (IOException ex)
@@ -1875,7 +1875,7 @@ final class FileWriter extends KissFrame
 	{
       if (fd == null || error) return null ;
 		if (OptionsDialog.getDebugLoad())
-			System.out.println("Save: Close output file " + fd.getPath()) ;
+			PrintLn.println("Save: Close output file " + fd.getPath()) ;
 
 		// Create an alternate output file name.  This is used if we cannot
 		// cannot rename the saved file to the original source name.  The
@@ -1894,7 +1894,7 @@ final class FileWriter extends KissFrame
       {
       	fsb.delete() ;
 	      if (OptionsDialog.getDebugLoad())
-				System.out.println("Save: Delete old backup file " + fsb.getPath()) ;
+				PrintLn.println("Save: Delete old backup file " + fsb.getPath()) ;
       }
 
       // Create a source backup file if the source file exists.  The file
@@ -1907,8 +1907,8 @@ final class FileWriter extends KissFrame
 				alternate = true ;
 				String s = "Save: Unable to create backup file " + fsb.getName() ;
 	      	ErrorText.setText(s) ;
-				System.out.println(s) ;
-				System.out.println("Save: File will be saved as " + fsalt.getName()) ;
+				PrintLn.println(s) ;
+				PrintLn.println("Save: File will be saved as " + fsalt.getName()) ;
             String s1 = captions.getString("FileCreateErrorText1") ;
             int i1 = s1.indexOf('[') ;
             int j1 = s1.indexOf(']') ;
@@ -1933,7 +1933,7 @@ final class FileWriter extends KissFrame
 			}
 			if (OptionsDialog.getDebugLoad()  && !alternate)
 			{
-				System.out.println("Save: New backup file name is " + fsb.getPath()) ;
+				PrintLn.println("Save: New backup file name is " + fsb.getPath()) ;
          }
       }
 
@@ -1945,7 +1945,7 @@ final class FileWriter extends KissFrame
 			String s = "Save: Unable to rename file "
            	+ fd.getName() + " to " + fs.getName() ;
       	ErrorText.setText(s) ;
-  	      System.out.println(s) ;
+  	      PrintLn.println(s) ;
          String s1 = captions.getString("FileCreateErrorText4") ;
          int i1 = s1.indexOf('[') ;
          int j1 = s1.indexOf(']') ;
@@ -1967,7 +1967,7 @@ final class FileWriter extends KissFrame
 		// Trace the name of the output file.
 
 		if (OptionsDialog.getDebugLoad())
-			System.out.println("Save: New output file is " + fs.getPath()) ;
+			PrintLn.println("Save: New output file is " + fs.getPath()) ;
 
       // Delete the source backup file.
 
@@ -1977,7 +1977,7 @@ final class FileWriter extends KissFrame
          {
          	fsb.delete() ;
 		      if (OptionsDialog.getDebugLoad())
-		         System.out.println("Save: Delete backup file " + fsb.getPath()) ;
+		         PrintLn.println("Save: Delete backup file " + fsb.getPath()) ;
          }
 		}
 		return fsoriginal ;

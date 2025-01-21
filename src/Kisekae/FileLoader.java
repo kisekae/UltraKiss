@@ -158,7 +158,7 @@ final class FileLoader extends KissFrame
       {
          expansion = true ;
          if (OptionsDialog.getDebugControl())
-            System.out.println("File Loader loading expansion configuration \"" + config.getName() + "\" (" + config.getID() + ")") ;
+            PrintLn.println("File Loader loading expansion configuration \"" + config.getName() + "\" (" + config.getID() + ")") ;
       }
 	}
 
@@ -277,7 +277,7 @@ final class FileLoader extends KissFrame
 		TextWindow.setText("") ;
 		TextWindow.setCaretPosition(0);
 		if (OptionsDialog.getDebugControl())
-			System.out.println("Configuration loader " + thread.getName() + " active.") ;
+			PrintLn.println("Configuration loader " + thread.getName() + " active.") ;
       
       // Bring the load window to the front on the AWT thread
       
@@ -318,19 +318,43 @@ final class FileLoader extends KissFrame
             int j1 = s.indexOf(']') ;
             if (i1 >= 0 && j1 > i1)
                s = s.substring(0,i1) + name + s.substring(j1+1) ;
-				setTitle(s) ;
+            String awttitle = s ;
             s = Kisekae.getCaptions().getString("KissSetText") ;
             i1 = s.indexOf('[') ;
             j1 = s.indexOf(']') ;
             if (i1 >= 0 && j1 > i1)
                s = s.substring(0,i1) + file + s.substring(j1+1) ;
-				showText(s) ;
+            String awttext = s ;
             s = Kisekae.getCaptions().getString("FileNameText") ;
             i1 = s.indexOf('[') ;
             j1 = s.indexOf(']') ;
             if (i1 >= 0 && j1 > i1)
                s = s.substring(0,i1) + name + s.substring(j1+1) ;
-				showFile(s) ;
+            String awtfile = s ;
+
+            // Update the window on the AWT thread.
+            
+      		if (!SwingUtilities.isEventDispatchThread())
+            {
+         		Runnable runner = new Runnable()
+           		{ 
+                  public void run() 
+                  { 
+                     setTitle(awttitle) ; 
+                     showText(awttext) ;
+                     showFile(awtfile) ;
+                  } 
+               } ;
+               try { javax.swing.SwingUtilities.invokeAndWait(runner) ; }
+               catch (InterruptedException e) { }
+               catch (Exception e) { e.printStackTrace(); }
+            }
+            else
+            {
+               setTitle(awttitle) ; 
+               showText(awttext) ;
+               showFile(awtfile) ;
+            }
 
 				// Open the data set configuration.  We always create a new
             // configuration object, but if the configuration was edited
@@ -352,8 +376,7 @@ final class FileLoader extends KissFrame
             if (stop) thread.interrupt() ;
             MainFrame mf = Kisekae.getMainFrame() ;
             OptionsDialog options = mf.getOptionsDialog() ;
-            if (!reload && !expansion && options != null) 
-               options.resetOptions() ;
+            if (!reload && !expansion && options != null) options.resetOptions() ;
 				config.setLoader(this) ;
 				showStatus(Kisekae.getCaptions().getString("ReadConfigStatus")) ;
 				config.read() ;
@@ -415,7 +438,7 @@ final class FileLoader extends KissFrame
 
             if (stop) thread.interrupt() ;
 				showStatus(Kisekae.getCaptions().getString("InitializeStatus")) ;
-				FileName.setText("") ;
+//				FileName.setText("") ;
 				config.init() ;
 
 				// Finished.
@@ -427,8 +450,23 @@ final class FileLoader extends KissFrame
             if (i1 >= 0 && j1 > i1)
                s = s.substring(0,i1) + name + s.substring(j1+1) ;
             s += " (" + config.getID() + ")" ;
-				setTitle(s) ;
+            String awttitle2 = s ;
 				config.setLoader(null) ;
+
+            // Update the window on the AWT thread.
+            
+      		if (!SwingUtilities.isEventDispatchThread())
+            {
+         		Runnable runner = new Runnable()
+           		{ public void run() { setTitle(awttitle2) ; } } ;
+               try { javax.swing.SwingUtilities.invokeAndWait(runner) ; }
+               catch (InterruptedException e) { }
+               catch (Exception e) { e.printStackTrace(); }
+            }
+            else
+            {
+               setTitle(awttitle2) ; 
+            }
             
             // If we had a reference configuration release all objects.
             // This prevents a memory leak from a load-edit-load cycle.
@@ -542,7 +580,7 @@ final class FileLoader extends KissFrame
       javax.swing.SwingUtilities.invokeLater(complete) ;
 
 		if (OptionsDialog.getDebugControl())
-         System.out.println("Configuration loader " + thread.getName() + " terminates.") ;
+         PrintLn.println("Configuration loader " + thread.getName() + " terminates.") ;
 	}
    
    
@@ -571,7 +609,7 @@ final class FileLoader extends KissFrame
 		String extension = (n < 0) ? "" : file.substring(n).toLowerCase() ;
       if (n > 0) file = file.substring(0,n) ;
       showText("Download INCLUDE file " + url) ;
-      System.out.println("Download INCLUDE file " + url.toExternalForm()) ;
+      PrintLn.println("Download INCLUDE file " + url.toExternalForm()) ;
 
       // Determine if the file exists in our download cache directory.
       // Check based on filename and last date modified.  Natural sort
@@ -619,7 +657,7 @@ final class FileLoader extends KissFrame
                f = new File(cachepath+parts[0]) ;
                pathname = f.getPath() ;
                incache = true ;
-               System.out.println("URL File " + pathname + " located in cache.") ;
+               PrintLn.println("URL File " + pathname + " located in cache.") ;
                break ;
             }
          }
@@ -635,7 +673,7 @@ final class FileLoader extends KissFrame
             f = File.createTempFile("UltraKiss-"+file,extension,directory) ;
             if (!OptionsDialog.getCacheInclude()) f.deleteOnExit() ;
             pathname = f.getPath() ;
-            System.out.println("Create URL file " + pathname + " in cache.") ;
+            PrintLn.println("Create URL file " + pathname + " in cache.") ;
             String s = Kisekae.getCaptions().getString("OpenURLFile") ;
             int i1 = s.indexOf('[') ;
             int j1 = s.indexOf(']') ;
@@ -646,7 +684,7 @@ final class FileLoader extends KissFrame
          catch (Exception e)
          {
             pathname = null ;
-            System.out.println("Create URL memory file, cache exception " + e.getMessage()) ;
+            PrintLn.println("Create URL memory file, cache exception " + e.getMessage()) ;
      	      showText(Kisekae.getCaptions().getString("OpenMemoryFile")) ;
          }
       }
@@ -673,7 +711,7 @@ final class FileLoader extends KissFrame
       // Open the stream and read the data.  Read the stream if not cached  
       // or the content size differs from cached file size.
       
-      if (!incache || size != f.length())
+      if (!incache || (size > 0 && size != f.length()))
       {
          String s = (size / 1024) + "K" ;
          String s1 = Kisekae.getCaptions().getString("TransferText") ;
@@ -722,7 +760,7 @@ final class FileLoader extends KissFrame
 
    	showText(Kisekae.getCaptions().getString("TransferCompleteStatus")) ;
       if (OptionsDialog.getDebugLoad())
-         System.out.println("Open URL data transfer bytes " + bytes) ;
+         PrintLn.println("Open URL data transfer bytes " + bytes) ;
 
       // Create a memory byte array if we are in a secure environment.
 
@@ -752,7 +790,7 @@ final class FileLoader extends KissFrame
 	public void windowClosing(WindowEvent evt)
 	{
       stop = true ;
-   	System.out.println("Load cancelled ...") ;
+   	PrintLn.println("Load cancelled ...") ;
 		if (config != null) config.close() ;
 		if (parent != null) parent.initframe(null) ;
       Kisekae.setLoaded(false) ;
@@ -785,7 +823,7 @@ final class FileLoader extends KissFrame
 		if (source == CANCEL)
 		{
          stop = true ;
-	   	System.out.println("Load cancelled ...") ;
+	   	PrintLn.println("Load cancelled ...") ;
 			if (config != null) config.close() ;
 			if (parent != null) parent.initframe(null) ;
          Kisekae.setLoaded(false) ;
@@ -876,7 +914,7 @@ final class FileLoader extends KissFrame
 				try {	if (text != null) text.write(null,out,null) ; }
 				catch (IOException e)
 				{
-	            System.out.println("I/O Exception: " + e.toString()) ;
+	            PrintLn.println("I/O Exception: " + e.toString()) ;
 	            e.printStackTrace() ;
                return ;
 	         }
@@ -885,7 +923,7 @@ final class FileLoader extends KissFrame
 					try { if (out != null) out.close() ; }
 					catch (IOException e)
 					{
-	               System.out.println("I/O Exception: " + e.toString()) ;
+	               PrintLn.println("I/O Exception: " + e.toString()) ;
 	               e.printStackTrace() ;
                   return ;
 	            }
@@ -986,20 +1024,34 @@ final class FileLoader extends KissFrame
 
 	void showStatus(String s)
 	{ 
+		if (!SwingUtilities.isEventDispatchThread())
+		{
+			Runnable awt = new Runnable()
+			{ public void run() { showStatus(s) ; } } ;
+			SwingUtilities.invokeLater(awt) ;
+			return ;
+		}
       Status.setText(s) ; 
       notifyWebSearch(s) ;
    }
 
 	void showFile(String s)
 	{
+		if (!SwingUtilities.isEventDispatchThread())
+		{
+			Runnable awt = new Runnable()
+			{ public void run() { showFile(s) ; } } ;
+			SwingUtilities.invokeLater(awt) ;
+			return ;
+		}
 		FileName.setText(s) ;
-		if (OptionsDialog.getDebugLoad()) System.out.println("Load: " + s) ;
+		if (OptionsDialog.getDebugLoad()) PrintLn.println("Load: " + s) ;
  	}
 
 	void showText(String s)
 	{
       appendText(s + "\n") ;
-		if (OptionsDialog.getDebugLoad()) System.out.println("Load: " + s) ;
+		if (OptionsDialog.getDebugLoad()) PrintLn.println("Load: " + s) ;
 	}
 
 	void showError(String s) { showError(s,null) ; }
@@ -1037,7 +1089,7 @@ final class FileLoader extends KissFrame
          else
             appendText(s + "\n",showset) ;
       }
-		System.out.println("Load: " + s) ;
+		PrintLn.println("Load: " + s) ;
 	}
 
 	void showWarning(String s) { showWarning(s,null) ; }
@@ -1076,7 +1128,7 @@ final class FileLoader extends KissFrame
          else
             appendText(s + "\n",warnset) ;
       }
-		System.out.println("Load: " + s) ;
+		PrintLn.println("Load: " + s) ;
 	}
    
    // Find a highlight in a string. This method assumes numbers

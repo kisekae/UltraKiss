@@ -21,13 +21,37 @@
 	web. I will also place notices here regarding product updates, scheduled 
 	releases, or problems and work-arounds that may affect you.&nbsp;</p>
                                         <p>&nbsp;</p>
-					<P>UltraKiss V4.0 is in development. UltraKiss 4.0 will provide a standard browser based interface to UltraKiss.</P>
+					<p><B>January 21, 2025</B></p>
+					<P>UltraKiss V4.0 is released. UltraKiss 4.0 will provide a standard browser based interface to UltraKiss using the Webswing server product.</P>
                                         <p>&nbsp;</p>
-					<p><B>June 18, 2024</B></p>
+					<h3><FONT face=Arial>Updates to V4.0&nbsp; </FONT></h3>
+					<BLOCKQUOTE>
+                      <p><font face="Arial">1. The Search function was downloading files for validation to cache.  Validation files should not be cached.</font></p>
+                      <p><font face="Arial">2. Corrected a null pointer exception when opening the text editor to view an appended configuration file.</font></p>
+                      <p><font face="Arial">3. Corrected the Search function to display the Portal after search.  The portal was not being launched correctly.</font></p>
+                      <p><font face="Arial">4. The Portal, when started, now shows the last page accessed.  It would previously open to the KiSS Online Library.</font></p>
+                      <p><font face="Arial">5. Indicated that all tools should show at the front of the window hierarchy when invoked.  Linux systems did not always do this.</font></p>
+                      <p><font face="Arial">6. Ensured that the user preferences for screen sizes were reset when options were restored to factory options.</font></p>
+                      <p><font face="Arial">7. Established a new main Kisekae frame when the Search frame was closed.  Linux systems were not sizing the main frame properly.</font></p>
+                      <p><font face="Arial">8. Report exceptions in the Search frame if the WebSearch directory is not writable.  Installation directories can be restricted on Windows systems.</font></p>
+                      <p><font face="Arial">9. The Help and Tutorial menu items were not always enabled after a Search operation completed.  This is corrected.</font></p>
+                      <p><font face="Arial">10. Enabled the use of the @-character ("@map") on all single line FKiSS commands.  Previously this was permitted only in compatiblity mode.</font></p>
+                      <p><font face="Arial">11. A set exit() command was not resetting all options to their initial values.  This is corrected.</font></p>
+                      <p><font face="Arial">12. Cached INCLUDE files were not being used if a connection to the original download website is refused.  This is corrected.</font></p>
+                      <p><font face="Arial">13. Defined a sixth application parameter "webswing" which if set to "webswing" indicates that UltraKiss is a webswing application.</font></p>
+                      <p><font face="Arial">14. Numerous changes were made to implement webswing specific operation based on invokation on a webswing server.</font></p>
+                      <p><font face="Arial">15. New PrintLn.java and AudioWebswing.java classes are defined for webswing specific printing and sound processing functions.</font></p>
+                      <p><font face="Arial">16. A seventh application parameter is defined to launch the portal for webswing on start with the specified initial URL.</font></p>
+                      <p><font face="Arial">17. The UltraKiss Portal was enhanced to display the time taken to retrieve a page in the portal status bar.</font></p>
+                      <p><font face="Arial">18. The Owl Kiss set packaged with demonstration sets failed to load remote application files.  This is corrected.</font></p>
+                      <p><font face="Arial">19. UltraKiss 4.0 is now compiled and released with Open Java 17.</font></p>
+          				</BLOCKQUOTE>
+                                        <p>&nbsp;</p>
+					<p><B>June 21, 2024</B></p>
 					<P>UltraKiss V3.7.4 is released. This release fixes bugs and adds new features to support the web distribution of the OtakuWorld sets.</P>
 					<h3><FONT face=Arial>Updates to V3.7.4&nbsp; </FONT></h3>
 					<BLOCKQUOTE>
-                                            <p><font face="Arial">1. A new UltraKiss visual application <b>"TheOwl.zip"</b> is distributed with UltraKiss 3.7.4.  This application enables downloads and execution of all Scarecrow sets.</font></p>
+                      <p><font face="Arial">1. A new UltraKiss visual application <b>"TheOwl.zip"</b> is distributed with UltraKiss 3.7.4.  This application enables downloads and execution of all Scarecrow sets.</font></p>
                       <p><font face="Arial">2. New sounds included in a wrapper file that loaded an appended configuration failed to play.  The sound was not referenced correctly from the original archive file.</font></p>
                       <p><font face="Arial">3. The FKiSS viewer("view","documents") or viewer("view","somefile.txt") failed to show documents contained in expansion sets.  This is corrected. </font></p>
                       <p><font face="Arial">4. Corrected an issue where audio sounds transitioned to the mediaplayer would not be terminated after a restart and a new sound was played. Both sounds played concurrently. </font></p>
@@ -2044,7 +2068,7 @@
 	<table border="0" cellpadding="0" cellspacing="0" width="100%">
 	  <tr>
 	    <td><p align="center"><font face="Arial" size="2" color="#800000">Kisekae UltraKiss and UltraKiss are trademarks of William Miles.&nbsp;<br>
-         Copyright &#169; 2002-2018 William Miles. All rights reserved..</font></p></td>
+         Copyright &#169; 2002-2025 William Miles. All rights reserved..</font></p></td>
       </tr>
 	  <!--msnavigation-->
     </table>

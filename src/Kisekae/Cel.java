@@ -1900,7 +1900,7 @@ abstract class Cel extends KissObject
       if (scaledimage != null) scaledimage.flush();
       image = baseimage = scaledimage = null ;
       if (OptionsDialog.getDebugLoad())
-         System.out.println("Unload: " + toString());
+         PrintLn.println("Unload: " + toString());
    }
 
 
@@ -2205,7 +2205,7 @@ abstract class Cel extends KissObject
 
       catch (Exception e)
       {
-         System.out.println("Cel: makepalette exception " + e) ;
+         PrintLn.println("Cel: makepalette exception " + e) ;
          return null ;
       }
 

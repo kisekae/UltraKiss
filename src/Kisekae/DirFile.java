@@ -112,7 +112,7 @@ final class DirFile extends ArchiveFile
 		File [] files = file.listFiles() ;
 		if (files == null) return ;
 		if (OptionsDialog.getDebugControl())
-      	System.out.println("Open DirFile file " + pathname + ", Open count " + ++opencount) ;
+      	PrintLn.println("Open DirFile file " + pathname + ", Open count " + ++opencount) ;
 
 		// Construct an index of the elements in the file directory.
 
@@ -159,7 +159,7 @@ final class DirFile extends ArchiveFile
 	{
       if (opencount <= 0) return ;
 		if (OptionsDialog.getDebugControl() && pathname != null)
-      	System.out.println("Close DirFile file " + pathname + ", Open count " + --opencount) ;
+      	PrintLn.println("Close DirFile file " + pathname + ", Open count " + --opencount) ;
 		file = null ;
       open = false ;
 	}

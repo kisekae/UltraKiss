@@ -262,7 +262,7 @@ public class BmpEncoder extends ImageEncoder
 		}
 		catch (Exception e)
       {
-			System.out.println("BmpEncoder: exception during encoding") ;
+			PrintLn.println("BmpEncoder: exception during encoding") ;
 			e.printStackTrace() ;
 			throw new IOException("Internal exception during BMP encoding") ;
 		}

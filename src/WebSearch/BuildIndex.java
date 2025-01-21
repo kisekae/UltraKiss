@@ -98,6 +98,7 @@ import javax.swing.text.html.parser.* ;
 import java.text.DateFormat ;
 import Kisekae.Kisekae ;
 import Kisekae.OptionsDialog ;
+import Kisekae.PrintLn ;
 
 
 class BuildIndex implements ActionListener
@@ -149,7 +150,7 @@ class BuildIndex implements ActionListener
             {
                entries.add(entry) ;
                if (OptionsDialog.getDebugSearch())
-                  System.out.println("BuildIndex: add old entry " + entry + " "
+                  PrintLn.println("BuildIndex: add old entry " + entry + " "
                      + entry.sitename + " " + entry.entrycount) ;
             }
             entry = new ListEntry() ;
@@ -208,13 +209,13 @@ class BuildIndex implements ActionListener
             String s1 = OptionsDialog.getKissIndex() ;
             s1 = convertSeparator(s1) ;
             if (OptionsDialog.getDebugSearch())
-               System.out.println("BuildIndex: parse started. " + s1) ;
+               PrintLn.println("BuildIndex: parse started. " + s1) ;
             File f1 = new File(s1) ;
             File f2 = new File(s) ;
             if (f2.exists()) f2.delete() ;
             f1.renameTo(f2) ;
             if (OptionsDialog.getDebugSearch())
-               System.out.println("BuildIndex: rename " + f1.getName() + " to " + f2.getPath()) ;
+               PrintLn.println("BuildIndex: rename " + f1.getName() + " to " + f2.getPath()) ;
             if (!OptionsDialog.getClearMaster())
             {
                Reader rd = getReader(s) ;
@@ -224,8 +225,8 @@ class BuildIndex implements ActionListener
          }
          catch (FileNotFoundException e) 
          { 
-            System.out.println("BuildIndex: rename " + OptionsDialog.getKissIndex() + " to " + s + " failed.") ;
-            System.out.println(e) ;
+            PrintLn.println("BuildIndex: rename " + OptionsDialog.getKissIndex() + " to " + s + " failed.") ;
+            PrintLn.println(e.toString()) ;
          }
 
          // Add or replace the new entry to our list.
@@ -234,7 +235,7 @@ class BuildIndex implements ActionListener
          {
             entries.add(entry) ;
             if (OptionsDialog.getDebugSearch())
-               System.out.println("BuildIndex: add old entry " + entry + " '"
+               PrintLn.println("BuildIndex: add old entry " + entry + " '"
                   + entry.sitename + "' " + entry.entrycount) ;
          }
          entry = new ListEntry() ;
@@ -246,7 +247,7 @@ class BuildIndex implements ActionListener
          if (n < entries.size())
          {
             if (OptionsDialog.getDebugSearch())
-               System.out.println("BuildIndex: replace entry " + n
+               PrintLn.println("BuildIndex: replace entry " + n
                   + " with " + entry + " '" + entry.sitename + "' " + entry.entrycount) ;
             entries.setElementAt(entry,n) ;
          }
@@ -254,7 +255,7 @@ class BuildIndex implements ActionListener
          {
             entries.add(entry) ;
             if (OptionsDialog.getDebugSearch())
-               System.out.println("BuildIndex: add new entry " + entry + " '"
+               PrintLn.println("BuildIndex: add new entry " + entry + " '"
                   + entry.sitename + "' " + entry.entrycount) ;
          }
 
@@ -262,14 +263,14 @@ class BuildIndex implements ActionListener
 
          Collections.sort(entries) ;
          if (OptionsDialog.getDebugSearch())
-            System.out.println("BuildIndex: parse ends. Entries = " + entries.size()) ;
+            PrintLn.println("BuildIndex: parse ends. Entries = " + entries.size()) ;
       }
 
       // Watch for exceptions.
 
       catch (Exception e)
       {
-         System.out.println(Thread.currentThread().getName() + " " + e) ;
+         PrintLn.println(Thread.currentThread().getName() + " " + e) ;
          e.printStackTrace() ;
       }
    }
@@ -280,7 +281,7 @@ class BuildIndex implements ActionListener
       try
       {
          if (OptionsDialog.getDebugSearch())
-            System.out.println("BuildIndex: buildform started.") ;
+            PrintLn.println("BuildIndex: buildform started.") ;
          
          // Open the HTML page.
 
@@ -327,7 +328,7 @@ class BuildIndex implements ActionListener
             text.append(newline(" <td align=\"center\">"+count+"</td>")) ;
             text.append(newline("</tr>")) ;
             if (OptionsDialog.getDebugSearch())
-               System.out.println("BuildIndex: index for " + urlstring + " to " + title2) ;
+               PrintLn.println("BuildIndex: index for " + urlstring + " to " + title2) ;
          }
 
          // Close the HTML page.
@@ -361,12 +362,12 @@ class BuildIndex implements ActionListener
          boolean savehtmlform = f1.createNewFile() ;
          if (savehtmlform) kisekae.saveText(this,directory,formname,text) ;
          if (OptionsDialog.getDebugSearch())
-            System.out.println("BuildIndex: buildform ends. " + f1.getPath()) ; 
+            PrintLn.println("BuildIndex: buildform ends. " + f1.getPath()) ; 
          return savehtmlform ;
       }
       catch (Exception e)
       {
-         System.out.println("BuildIndex: " + e) ;
+         PrintLn.println("BuildIndex: " + e) ;
          e.printStackTrace() ;
          return false ;
       }
@@ -427,7 +428,7 @@ class BuildIndex implements ActionListener
          try
          {
             String s = "Index Form " + formname + " saved" ;
-            System.out.println("BuildIndex: " + s) ;
+            PrintLn.println("BuildIndex: " + s) ;
             webframe.addTrace(s) ;
          }
 
@@ -436,7 +437,7 @@ class BuildIndex implements ActionListener
          catch (Throwable ex)
          {
             Thread thread = Thread.currentThread() ;
-            System.out.println(thread.getName() + " " + ex) ;
+            PrintLn.println(thread.getName() + " " + ex) ;
             ex.printStackTrace() ;
          }
 

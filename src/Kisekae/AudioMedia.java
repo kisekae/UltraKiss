@@ -249,11 +249,11 @@ final class AudioMedia extends Audio
          catch (IOException e)
          {
             error = true ;
-            System.out.println("[" + time + "] AudioMedia: " + getName() + " Unable to open " + zip + " on initialization");
+            PrintLn.println("[" + time + "] AudioMedia: " + getName() + " Unable to open " + zip + " on initialization");
          }
       }
 		if (OptionsDialog.getDebugSound())
-			System.out.println("[" + time + "] AudioMedia: " + getName() + " [" + playcount+1 + "]" + " Initialization request.") ;
+			PrintLn.println("[" + time + "] AudioMedia: " + getName() + " [" + playcount+1 + "]" + " Initialization request.") ;
 	}
 
 
@@ -269,7 +269,7 @@ final class AudioMedia extends Audio
       setOpenTime(time) ;
       setCloseTime(0) ;
 		if (OptionsDialog.getDebugSound())
-			System.out.println("[" + time + "] AudioMedia: " + getName() + " [" + playcount + "]" + " Open request.") ;
+			PrintLn.println("[" + time + "] AudioMedia: " + getName() + " [" + playcount + "]" + " Open request.") ;
 
       if (opened)
       {
@@ -281,7 +281,7 @@ final class AudioMedia extends Audio
                player.setMediaTime(new Time(0)) ;
             time = System.currentTimeMillis() - Configuration.getTimestamp() ;
             if (OptionsDialog.getDebugSound())
-               System.out.println("[" + time + "] AudioMedia: " + getName() + " [" + playcount + "]" + " player reset to start") ;
+               PrintLn.println("[" + time + "] AudioMedia: " + getName() + " [" + playcount + "]" + " player reset to start") ;
             return ;
          }
       }
@@ -379,14 +379,14 @@ final class AudioMedia extends Audio
             try 
             { 
          		if (OptionsDialog.getDebugSound())
-         		   System.out.println("[" + time + "] AudioMedia: " + getName() + " [" + playcount + "]" + " Waiting for stop to complete") ;
+         		   PrintLn.println("[" + time + "] AudioMedia: " + getName() + " [" + playcount + "]" + " Waiting for stop to complete") ;
                waithold.wait(500) ; 
             }
             catch (InterruptedException e) { }  
             setStopping(false) ;
             time = System.currentTimeMillis() - Configuration.getTimestamp() ;
        		if (OptionsDialog.getDebugSound())
-       		   System.out.println("[" + time + "] AudioMedia: " + getName()  + " [" + playcount + "]" + " Resuming play request") ;
+       		   PrintLn.println("[" + time + "] AudioMedia: " + getName()  + " [" + playcount + "]" + " Resuming play request") ;
          }
       }
       
@@ -409,7 +409,7 @@ final class AudioMedia extends Audio
             if (!players.contains(me)) 
             {
           		if (OptionsDialog.getDebugSound())
-          		   System.out.println("[" + time + "] AudioMedia: " + getName()  + " adding myself to players") ;
+          		   PrintLn.println("[" + time + "] AudioMedia: " + getName()  + " adding myself to players") ;
                players.addElement(me) ;
             } 
          }
@@ -435,7 +435,7 @@ final class AudioMedia extends Audio
  			if (playerstate == Player.Unrealized)
             state = "Unrealized" ;
          if (OptionsDialog.getDebugSound())
-            System.out.println("[" + time + "] AudioMedia: " + getName() + " [" + playcount + "]" + " Play request, current state is " + state) ;
+            PrintLn.println("[" + time + "] AudioMedia: " + getName() + " [" + playcount + "]" + " Play request, current state is " + state) ;
          
   			// Start the player.
 
@@ -515,7 +515,7 @@ final class AudioMedia extends Audio
          stopping = true ;
          long time = System.currentTimeMillis() - Configuration.getTimestamp() ;
          if (OptionsDialog.getDebugSound())
-            System.out.println("[" + time + "] AudioMedia: " + getName() + " Stop request.") ;
+            PrintLn.println("[" + time + "] AudioMedia: " + getName() + " Stop request.") ;
 
          // Shut the player down.
 
@@ -531,7 +531,7 @@ final class AudioMedia extends Audio
             }
             catch (Exception e)
             {
-               System.out.println("Audio player stop fault.");
+               PrintLn.println("Audio player stop fault.");
                if (!(e instanceof KissException)) e.printStackTrace();
             }
          }
@@ -541,7 +541,7 @@ final class AudioMedia extends Audio
          setRepeat(0) ;
          setType(null) ;
     		if (OptionsDialog.getDebugSound())
-     		   System.out.println("[" + time + "] AudioMedia: " + getName()  + " removing from players") ;
+     		   PrintLn.println("[" + time + "] AudioMedia: " + getName()  + " removing from players") ;
          players.remove(this) ;
       }
       finally 
@@ -558,11 +558,11 @@ final class AudioMedia extends Audio
       long time = System.currentTimeMillis() - Configuration.getTimestamp() ;
       setCloseTime(time) ;
       if (OptionsDialog.getDebugSound())
-         System.out.println("[" + time + "] AudioMedia: " + getName() + " [" + playcount + "]" + " Close request.") ;
+         PrintLn.println("[" + time + "] AudioMedia: " + getName() + " [" + playcount + "]" + " Close request.") ;
       if (!OptionsDialog.getCacheAudio() && zip != null)
       {
          if (OptionsDialog.getDebugSound())
-         	System.out.println("[" + time + "] AudioMedia: " + getName() + " [" + playcount + "]" + " call zip.disconnect()") ;
+         	PrintLn.println("[" + time + "] AudioMedia: " + getName() + " [" + playcount + "]" + " call zip.disconnect()") ;
             zip.disconnect() ;
       }
 		if (currentsound == null) return ;
@@ -604,7 +604,7 @@ final class AudioMedia extends Audio
                }
                time = System.currentTimeMillis() - Configuration.getTimestamp() ;
                if (OptionsDialog.getDebugSound())
-                  System.out.println("[" + time + "] AudioMedia: " + getName() + " [" + playcount + "]" + " Media player closed.") ;
+                  PrintLn.println("[" + time + "] AudioMedia: " + getName() + " [" + playcount + "]" + " Media player closed.") ;
             }
 			}
 		}
@@ -677,7 +677,7 @@ final class AudioMedia extends Audio
 			{
             long time = System.currentTimeMillis() - Configuration.getTimestamp() ;
             if (OptionsDialog.getDebugSound())
-               System.out.println("[" + time + "] AudioMedia: " + getName() + " [" + playcount + "]" + " RealizeCompleteEvent") ;
+               PrintLn.println("[" + time + "] AudioMedia: " + getName() + " [" + playcount + "]" + " RealizeCompleteEvent") ;
 				realized = true ;
 
 	         // Try to increase the buffer size to stop choppy midi sound.
@@ -688,7 +688,7 @@ final class AudioMedia extends Audio
 //				if (bc != null)
 //				{
 //            	bc.setBufferLength(1000000) ;
-//					System.out.println("AudioMedia: " + me.toString() + " buffer size set") ;
+//					PrintLn.println("AudioMedia: " + me.toString() + " buffer size set") ;
 //				}
 			}
 
@@ -700,7 +700,7 @@ final class AudioMedia extends Audio
 			{
             long time = System.currentTimeMillis() - Configuration.getTimestamp() ;
             if (OptionsDialog.getDebugSound())
-               System.out.println("[" + time + "] AudioMedia: " + getName() + " [" + playcount + "]" + " PrefetchCompleteEvent") ;
+               PrintLn.println("[" + time + "] AudioMedia: " + getName() + " [" + playcount + "]" + " PrefetchCompleteEvent") ;
 			}
 
 			// EndOfMediaEvent occurs when the media file has played till the end.
@@ -710,7 +710,7 @@ final class AudioMedia extends Audio
 			{
             long time = System.currentTimeMillis() - Configuration.getTimestamp() ;
             if (OptionsDialog.getDebugSound())
-               System.out.println("[" + time + "] AudioMedia: " + getName() + " [" + playcount + "]" + " EndOfMediaEvent") ;
+               PrintLn.println("[" + time + "] AudioMedia: " + getName() + " [" + playcount + "]" + " EndOfMediaEvent") ;
 
 				// Start the player in a new thread as player initiation can take
 				// time.  This frees the Player thread.
@@ -723,7 +723,7 @@ final class AudioMedia extends Audio
                {
                   time = System.currentTimeMillis() - Configuration.getTimestamp() ;
                   if (OptionsDialog.getDebugSound())
-                     System.out.println("[" + time + "] AudioMedia: " + getName() + " [" + playcount + "]" + " repeat " + repeatcount) ;
+                     PrintLn.println("[" + time + "] AudioMedia: " + getName() + " [" + playcount + "]" + " repeat " + repeatcount) ;
                   Runnable runner = new Runnable()
                   { public void run() { play() ; } } ;
                   javax.swing.SwingUtilities.invokeLater(runner) ;
@@ -747,7 +747,7 @@ final class AudioMedia extends Audio
 			{
             long time = System.currentTimeMillis() - Configuration.getTimestamp() ;
             if (OptionsDialog.getDebugSound())
-               System.out.println("[" + time + "] AudioMedia: " + getName() + " [" + playcount + "]" + " ControllerErrorEvent " + ce.toString()) ;
+               PrintLn.println("[" + time + "] AudioMedia: " + getName() + " [" + playcount + "]" + " ControllerErrorEvent " + ce.toString()) ;
 				showError("AudioMedia: Unable to play media file " + file) ;
             lock.lock() ;
             try { players.removeElement(me) ; }
@@ -761,7 +761,7 @@ final class AudioMedia extends Audio
 			{
             long time = System.currentTimeMillis() - Configuration.getTimestamp() ;
             if (OptionsDialog.getDebugSound())
-               System.out.println("[" + time + "] AudioMedia: " + getName() + " [" + playcount + "]" + " ControllerClosedEvent") ;
+               PrintLn.println("[" + time + "] AudioMedia: " + getName() + " [" + playcount + "]" + " ControllerClosedEvent") ;
             lock.lock() ;
             try { players.removeElement(me) ; }
             finally { lock.unlock() ; }
@@ -769,7 +769,7 @@ final class AudioMedia extends Audio
             {
                time = System.currentTimeMillis() - Configuration.getTimestamp() ;
          		if (OptionsDialog.getDebugSound())
-         		   System.out.println("[" + time + "] AudioMedia: " + getName() + " [" + playcount + "]" + " Notify stop is complete") ;
+         		   PrintLn.println("[" + time + "] AudioMedia: " + getName() + " [" + playcount + "]" + " Notify stop is complete") ;
                waithold.notify() ;
             }
             stopping = false ;
@@ -783,7 +783,7 @@ final class AudioMedia extends Audio
 			{
             long time = System.currentTimeMillis() - Configuration.getTimestamp() ;
             if (OptionsDialog.getDebugSound())
-               System.out.println("[" + time + "] AudioMedia: " + getName() + " [" + playcount + "]" + " DurationUpdateEvent") ;
+               PrintLn.println("[" + time + "] AudioMedia: " + getName() + " [" + playcount + "]" + " DurationUpdateEvent") ;
 			}
 
 			// Caching control.
@@ -792,7 +792,7 @@ final class AudioMedia extends Audio
 			{
             long time = System.currentTimeMillis() - Configuration.getTimestamp() ;
             if (OptionsDialog.getDebugSound())
-               System.out.println("[" + time + "] AudioMedia: " + getName() + " [" + playcount + "]" + " CachingControlEvent") ;
+               PrintLn.println("[" + time + "] AudioMedia: " + getName() + " [" + playcount + "]" + " CachingControlEvent") ;
 			}
 
 			else if (ce instanceof StartEvent)
@@ -801,7 +801,7 @@ final class AudioMedia extends Audio
 				started = true ;
             long time = System.currentTimeMillis() - Configuration.getTimestamp() ;
             if (OptionsDialog.getDebugSound())
-               System.out.println("[" + time + "] AudioMedia: " + getName() + " [" + playcount + "]" + " StartEvent") ;
+               PrintLn.println("[" + time + "] AudioMedia: " + getName() + " [" + playcount + "]" + " StartEvent") ;
 
             // Fire any generic mediastart() events.
       
@@ -829,13 +829,13 @@ final class AudioMedia extends Audio
 			{
             long time = System.currentTimeMillis() - Configuration.getTimestamp() ;
             if (OptionsDialog.getDebugSound())
-               System.out.println("[" + time + "] AudioMedia: " + getName() + " [" + playcount + "]" + " StopEvent") ;
+               PrintLn.println("[" + time + "] AudioMedia: " + getName() + " [" + playcount + "]" + " StopEvent") ;
 
             synchronized (waithold)
             {
                time = System.currentTimeMillis() - Configuration.getTimestamp() ;
          		if (OptionsDialog.getDebugSound())
-         		   System.out.println("[" + time + "] AudioMedia: " + getName() + " [" + playcount + "]" + " Notify stop is complete") ;
+         		   PrintLn.println("[" + time + "] AudioMedia: " + getName() + " [" + playcount + "]" + " Notify stop is complete") ;
                waithold.notify() ;
             }
             stopping = false ;
@@ -852,7 +852,7 @@ final class AudioMedia extends Audio
                {
                   time = System.currentTimeMillis() - Configuration.getTimestamp() ;
                   if (OptionsDialog.getDebugSound())
-                     System.out.println("[" + time + "] AudioMedia: " + getName() + " [" + playcount + "]" + " Restart") ;
+                     PrintLn.println("[" + time + "] AudioMedia: " + getName() + " [" + playcount + "]" + " Restart") ;
    					Runnable runner = new Runnable()
    					{ public void run() { play() ; } } ;
         				javax.swing.SwingUtilities.invokeLater(runner) ;
@@ -890,27 +890,27 @@ final class AudioMedia extends Audio
 	      {
             long time = System.currentTimeMillis() - Configuration.getTimestamp() ;
             if (OptionsDialog.getDebugSound())
-               System.out.println("[" + time + "] AudioMedia: " + getName() + " [" + playcount + "]" + " MediaTimeEvent") ;
+               PrintLn.println("[" + time + "] AudioMedia: " + getName() + " [" + playcount + "]" + " MediaTimeEvent") ;
 	      }
 
 			else if (ce instanceof TransitionEvent)
 	      {
             long time = System.currentTimeMillis() - Configuration.getTimestamp() ;
             if (OptionsDialog.getDebugSound())
-               System.out.println("[" + time + "] AudioMedia: " + getName() + " [" + playcount + "]" + " TransitionEvent") ;
+               PrintLn.println("[" + time + "] AudioMedia: " + getName() + " [" + playcount + "]" + " TransitionEvent") ;
 	      }
 			else if (ce instanceof RateChangeEvent)
 	      {
             long time = System.currentTimeMillis() - Configuration.getTimestamp() ;
             if (OptionsDialog.getDebugSound())
-               System.out.println("AudioMedia: " + "[" + time + "] " + getName() + " [" + playcount + "]" + " RateChangeEvent") ;
+               PrintLn.println("AudioMedia: " + "[" + time + "] " + getName() + " [" + playcount + "]" + " RateChangeEvent") ;
 	      }
 
 			else if (ce instanceof StopTimeChangeEvent)
 	      {
             long time = System.currentTimeMillis() - Configuration.getTimestamp() ;
             if (OptionsDialog.getDebugSound())
-               System.out.println("[" + time + "] AudioMedia: " + getName() + " [" + playcount + "]" + " StopTimeChangeEvent") ;
+               PrintLn.println("[" + time + "] AudioMedia: " + getName() + " [" + playcount + "]" + " StopTimeChangeEvent") ;
 	      }
 		}
    }

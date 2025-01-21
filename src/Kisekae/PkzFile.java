@@ -116,7 +116,7 @@ final class PkzFile extends ArchiveFile
       if (contents == null) init() ;
       if (pathname == null) return ;
 		if (OptionsDialog.getDebugControl())
-      	System.out.println("Open PkzFile file " + pathname + ", Open count " + ++opencount) ;
+      	PrintLn.println("Open PkzFile file " + pathname + ", Open count " + ++opencount) ;
 
       // Construct the zip file object.
 
@@ -132,7 +132,7 @@ final class PkzFile extends ArchiveFile
       {
          if (memfile == null) memfile = UrlLoader.getMemoryFile() ;
          if (memfile == null) throw(new IOException(e.toString())) ;
-         System.out.println("PkzFile: Open memory file " + memfile.getFileName()) ;
+         PrintLn.println("PkzFile: Open memory file " + memfile.getFileName()) ;
       }
 
 		// Construct an index of the elements in the file.
@@ -210,7 +210,7 @@ final class PkzFile extends ArchiveFile
 	{
 		if (connections > 0) return ;
 		if (OptionsDialog.getDebugControl() && pathname != null)
-      	System.out.println("Close PkzFile file " + pathname + ", Open count " + --opencount) ;
+      	PrintLn.println("Close PkzFile file " + pathname + ", Open count " + --opencount) ;
 		if (zipfile != null) zipfile.close() ;
 		if (memfile != null) memfile.close() ;
 		zipfile = null ;

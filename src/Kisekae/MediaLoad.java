@@ -98,7 +98,7 @@ final class MediaLoad extends Thread
 	{
       active = true ;
       if (OptionsDialog.getDebugSound())
-         System.out.println("MediaLoad: loading " + ko) ;
+         PrintLn.println("MediaLoad: loading " + ko) ;
 
       // Ensure the file is open.
 
@@ -149,18 +149,18 @@ final class MediaLoad extends Thread
          
          callback.doClick() ;
          if (OptionsDialog.getDebugSound())
-            System.out.println("MediaLoad: complete " + ko + " file " + zip) ;         
+            PrintLn.println("MediaLoad: complete " + ko + " file " + zip) ;         
    	}
       
       catch (InterruptedException e)
       {
          if (OptionsDialog.getDebugSound())
-            System.out.println("MediaLoad: interrupted " + ko + " file " + zip) ;         
+            PrintLn.println("MediaLoad: interrupted " + ko + " file " + zip) ;         
       }
 
       catch (IOException e)
       {
-         System.out.println("MediaLoad: IOException loading " + ko + " file " + zip) ;
+         PrintLn.println("MediaLoad: IOException loading " + ko + " file " + zip) ;
          e.printStackTrace() ;
       }
       

@@ -290,7 +290,7 @@ public class KissEncoder extends ImageEncoder
   	               {
                      String s = "CEL pixel at [" + row + "," + col +
   								"] image color (" + r + "," + g + "," + b + ") not in palette" ;
-                     System.out.println("KissEncoder: " + s) ;
+                     PrintLn.println("KissEncoder: " + s) ;
                      palette = null ;
   						}
 
@@ -339,7 +339,7 @@ public class KissEncoder extends ImageEncoder
 		}
 		catch (Exception e)
 		{
-			System.out.println("KissEncoder: exception during encoding") ;
+			PrintLn.println("KissEncoder: exception during encoding") ;
 			e.printStackTrace() ;
 			throw new IOException("Internal fault during CEL encoding") ;
 		}

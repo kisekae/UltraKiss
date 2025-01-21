@@ -108,7 +108,7 @@ final class GifTimer extends Thread
 		if (thread != null)
       {
          if (OptionsDialog.getDebugControl())
-			   System.out.println("Stop animation timer.") ;
+			   PrintLn.println("Stop animation timer.") ;
    	   thread.interrupt() ;
       }
       gifs = null ;
@@ -141,7 +141,7 @@ final class GifTimer extends Thread
 
       if (gifs.size() == 0) gifs = null ;
 	   if (OptionsDialog.getDebugControl())
-		   System.out.println("Start animation timer.") ;
+		   PrintLn.println("Start animation timer.") ;
       start() ;
    }
 
@@ -200,7 +200,7 @@ final class GifTimer extends Thread
    {
       if (thread == null) return ;
 		if (OptionsDialog.getDebugControl() && !manualsuspend)
-			System.out.println("Suspend animation timer. " + ((manual) ? "Manual" : "")) ;
+			PrintLn.println("Suspend animation timer. " + ((manual) ? "Manual" : "")) ;
    	if (manual) manualsuspend = true ;
    	suspend = true ;
    }
@@ -217,7 +217,7 @@ final class GifTimer extends Thread
       synchronized (suspendlock)
       {
 			if (OptionsDialog.getDebugControl())
-				System.out.println("Resume animation timer." + ((manual) ? "Manual" : "")) ;
+				PrintLn.println("Resume animation timer." + ((manual) ? "Manual" : "")) ;
    		suspend = false ;
 		   suspendlock.notify() ;
       }
@@ -344,7 +344,7 @@ final class GifTimer extends Thread
 		thread = Thread.currentThread() ;
 		thread.setName("GifTimer-" + id) ;
 		if (OptionsDialog.getDebugControl())
-			System.out.println(thread.getName() + " started.") ;
+			PrintLn.println(thread.getName() + " started.") ;
 
 		// Run the timer loop until this activity is terminated.
 
@@ -365,10 +365,10 @@ final class GifTimer extends Thread
 						{
 							active = false ;
                		if (OptionsDialog.getDebugControl())
-                        System.out.println(thread.getName() + " suspended.") ;
+                        PrintLn.println(thread.getName() + " suspended.") ;
 							suspendlock.wait() ;
                		if (OptionsDialog.getDebugControl())
-                        System.out.println(thread.getName() + " resumed.") ;
+                        PrintLn.println(thread.getName() + " resumed.") ;
                      restart = true ;
 						}
                   if (restart) break ;
@@ -406,7 +406,7 @@ final class GifTimer extends Thread
   					{
                	c.setTime(0) ;
                	try { c.setNextFrame() ; }
-                  catch (Exception e) { System.out.println(e.getMessage()) ; }
+                  catch (Exception e) { PrintLn.println(e.getMessage()) ; }
 						Rectangle r = c.getBoundingBox() ;
 						if (box == null) box = r ;
 						if (r != null) box = box.union(r) ;
@@ -437,7 +437,7 @@ final class GifTimer extends Thread
 				Runtime.getRuntime().gc() ;
 	         try { Thread.currentThread().sleep(300) ; }
 	         catch (InterruptedException ex) { }
-				System.out.println("GifTimer: Out of memory.") ;
+				PrintLn.println("GifTimer: Out of memory.") ;
 				JOptionPane.showMessageDialog(Kisekae.getMainFrame(),
 	           	"Insufficient memory.  Animator thread is suspended.",
 	           	"Low Memory Fault",
@@ -448,7 +448,7 @@ final class GifTimer extends Thread
       // Shut down.
 
 		if (OptionsDialog.getDebugControl())
-	      System.out.println(thread.getName() + " terminated.");
+	      PrintLn.println(thread.getName() + " terminated.");
       thread = null ;
       panel = null ;
       gifs = null ;

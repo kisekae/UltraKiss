@@ -737,7 +737,8 @@ final class Palette extends KissObject
 			// Check for a valid palette load.
 
 			if (red == null || green == null || blue == null)
-				throw new KissException("Invalid palette format") ;
+				throw new KissException("Invalid palette format, encoding="+encoding+
+                    " colors="+colors+" groups="+groups+" bits="+bits+" offset="+offset) ;
 		}
 
 		// Watch for file size errors.
@@ -746,7 +747,7 @@ final class Palette extends KissObject
 		{
 			error = true ;
 			showError("Palette " + file + " is not valid, string exception.") ;
-			System.out.println("Palette String Exception, " + file + " size = " + bytes) ;
+			PrintLn.println("Palette String Exception, " + file + " size = " + bytes) ;
 		}
 
 		// Watch for file size errors.
@@ -755,7 +756,7 @@ final class Palette extends KissObject
 		{
 			error = true ;
 			showError("Palette " + file + " is not valid, size exception.") ;
-			System.out.println("Palette Size Exception, " + file + " size = " + bytes) ;
+			PrintLn.println("Palette Size Exception, " + file + " size = " + bytes) ;
 		}
 
 		// Watch for I/O errors
@@ -959,8 +960,8 @@ final class Palette extends KissObject
 		{
 			error = true ;
 			showError("Palette " + importfile + " is not valid, size exception.") ;
-			System.out.println("Palette Size Exception, " + importfile + " size = " + bytes) ;
-			System.out.println(ex.getMessage()) ;
+			PrintLn.println("Palette Size Exception, " + importfile + " size = " + bytes) ;
+			PrintLn.println(ex.getMessage()) ;
 		}
 
 		// Watch for numeric parse errors.
@@ -969,8 +970,8 @@ final class Palette extends KissObject
 		{
 			error = true ;
 			showError("Palette " + importfile + " is not valid, number format exception.") ;
-			System.out.println("Palette NumberFormatException, " + importfile + " " + s) ;
-			System.out.println(ex.getMessage()) ;
+			PrintLn.println("Palette NumberFormatException, " + importfile + " " + s) ;
+			PrintLn.println(ex.getMessage()) ;
 		}
 
 		// Watch for general KiSS exceptions.
@@ -1887,7 +1888,7 @@ final class Palette extends KissObject
    	errormessage = s ;
 		if (line > 0) s = "Line [" + line + "] " + s ;
 		if (loader != null) loader.showError(s) ;
-		else System.out.println(s) ;
+		else PrintLn.println(s) ;
 	}
 
 

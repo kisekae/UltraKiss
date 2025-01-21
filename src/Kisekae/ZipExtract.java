@@ -161,7 +161,7 @@ final class ZipExtract extends KissDialog
 		try { jbInit(); pack(); }
       catch(Exception ex)
       {
-         System.out.println("ZipExtract: jbInit constructor " + ex.toString()) ;
+         PrintLn.println("ZipExtract: jbInit constructor " + ex.toString()) ;
          ex.printStackTrace();
          JOptionPane.showMessageDialog(null,
             Kisekae.getCaptions().getString("InternalError") +
@@ -199,7 +199,7 @@ final class ZipExtract extends KissDialog
 		}
 		catch (Throwable e)
 		{
-			System.out.println("HelpSet " + helpset + " " + e.getMessage()) ;
+			PrintLn.println("HelpSet " + helpset + " " + e.getMessage()) ;
 		}
 
 		// Register for events.

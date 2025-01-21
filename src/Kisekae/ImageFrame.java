@@ -517,20 +517,20 @@ final class ImageFrame extends KissFrame
 		close.addActionListener(this) ;
 		fileMenu.add((save = new JMenuItem(Kisekae.getCaptions().getString("MenuFileSave")))) ;
 		save.addActionListener(this) ;
-		save.setEnabled((cel != null && cel.getName() != null) && !Kisekae.isSecure()) ;
+		save.setEnabled((cel != null && cel.getName() != null) && !Kisekae.isSecure() && !Kisekae.isExpired()) ;
 		fileMenu.add((saveas = new JMenuItem(Kisekae.getCaptions().getString("MenuFileSaveAs")))) ;
 		saveas.addActionListener(this) ;
-		saveas.setEnabled(cel != null && !Kisekae.isSecure()) ;
+		saveas.setEnabled(cel != null && !Kisekae.isSecure() && !Kisekae.isExpired()) ;
 		fileMenu.addSeparator() ;
 		fileMenu.add((pagesetup = new JMenuItem(Kisekae.getCaptions().getString("MenuFilePageSetup")))) ;
 		pagesetup.addActionListener(this) ;
-      pagesetup.setEnabled(Kisekae.isPrintInstalled() && !Kisekae.isSecure()) ;
+      pagesetup.setEnabled(Kisekae.isPrintInstalled() && !Kisekae.isSecure() && !Kisekae.isExpired()) ;
 		fileMenu.add((printpreview = new JMenuItem(Kisekae.getCaptions().getString("MenuFilePrintPreview")))) ;
 		printpreview.addActionListener(this) ;
-      printpreview.setEnabled(Kisekae.isPrintInstalled() && !Kisekae.isSecure()) ;
+      printpreview.setEnabled(Kisekae.isPrintInstalled() && !Kisekae.isSecure() && !Kisekae.isExpired()) ;
 		fileMenu.add((print = new JMenuItem(Kisekae.getCaptions().getString("MenuFilePrint")))) ;
 		print.addActionListener(this) ;
-      print.setEnabled(Kisekae.isPrintInstalled() && !Kisekae.isSecure()) ;
+      print.setEnabled(Kisekae.isPrintInstalled() && !Kisekae.isSecure() && !Kisekae.isExpired()) ;
 		fileMenu.addSeparator() ;
 		fileMenu.add((properties = new JMenuItem(Kisekae.getCaptions().getString("MenuFileProperties")))) ;
 		properties.setEnabled(false) ;
@@ -1634,7 +1634,7 @@ final class ImageFrame extends KissFrame
       }
       catch (Exception e)
       {
-         System.out.println("ImageFrame: rotate exception " + e);
+         PrintLn.println("ImageFrame: rotate exception " + e);
       }
    }
 
@@ -1669,7 +1669,7 @@ final class ImageFrame extends KissFrame
       }
       catch (Exception e)
       {
-         System.out.println("ImageFrame: shear exception " + e);
+         PrintLn.println("ImageFrame: shear exception " + e);
       }
    }
 
@@ -1716,7 +1716,7 @@ final class ImageFrame extends KissFrame
       }
       catch (Exception e)
       {
-         System.out.println("ImageFrame: scale exception " + e);
+         PrintLn.println("ImageFrame: scale exception " + e);
       }
    }
 
@@ -2216,7 +2216,7 @@ final class ImageFrame extends KissFrame
 					try { pj.print() ; }
 					catch (PrinterException ex)
 					{
-						System.err.println("Printing error: " + ex.toString()) ;
+						PrintLn.printErr("Printing error: " + ex.toString()) ;
 						ex.printStackTrace() ;
 						JOptionPane.showMessageDialog(null,
 							"Printer exception.  Printing terminated." + "\n" + ex.toString(),
@@ -2373,7 +2373,7 @@ final class ImageFrame extends KissFrame
 			Runtime.getRuntime().gc() ;
 			try { Thread.currentThread().sleep(300) ; }
 			catch (InterruptedException ex) { }
-			System.out.println("ImageFrame: Out of memory.") ;
+			PrintLn.println("ImageFrame: Out of memory.") ;
          setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
          JOptionPane.showMessageDialog(null,
             Kisekae.getCaptions().getString("LowMemoryFault") + " - " +
@@ -2387,7 +2387,7 @@ final class ImageFrame extends KissFrame
 		catch (Throwable e)
 		{
          setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
-			System.out.println("ImageFrame: Internal fault, action " + evt.getActionCommand()) ;
+			PrintLn.println("ImageFrame: Internal fault, action " + evt.getActionCommand()) ;
 			e.printStackTrace() ;
          JOptionPane.showMessageDialog(null,
             Kisekae.getCaptions().getString("InternalError") + " - " +
@@ -3465,7 +3465,7 @@ final class ImageFrame extends KissFrame
 			try { undo.undo(); }
 			catch (CannotUndoException ex)
 			{
-				System.out.println("ImageFrame: Unable to undo edit") ;
+				PrintLn.println("ImageFrame: Unable to undo edit") ;
 				ex.printStackTrace();
             JOptionPane.showMessageDialog(null,
                Kisekae.getCaptions().getString("EditUndoError") + " - " +
@@ -3521,7 +3521,7 @@ final class ImageFrame extends KissFrame
 			try { undo.redo() ; }
 			catch (CannotRedoException ex)
 			{
-				System.out.println("ImageFrame: Unable to redo edit") ;
+				PrintLn.println("ImageFrame: Unable to redo edit") ;
 				ex.printStackTrace() ;
             JOptionPane.showMessageDialog(null,
                Kisekae.getCaptions().getString("EditUndoError") + " - " +

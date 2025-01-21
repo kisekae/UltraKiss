@@ -53,17 +53,20 @@ package Kisekae ;
 
 import java.awt.* ;
 import java.awt.event.* ;
-import java.awt.print.* ; 
 import java.awt.image.* ;
 import java.applet.* ;
 import java.io.* ;
 import java.net.Authenticator ;
 import java.util.* ;
+import java.util.prefs.* ;
 import java.text.DateFormat ;
 import java.net.URL ;
 import java.net.MalformedURLException ;
+import java.net.URISyntaxException ;
 import javax.swing.* ;
 import javax.swing.text.* ;
+import javax.swing.event.HyperlinkEvent ;
+import javax.swing.event.HyperlinkListener ;
 
 
 /**                     Kisekae UltraKiss Version 3.4
@@ -81,7 +84,7 @@ public class Kisekae extends Applet
    // Security variables
 
    private static String copyright = 
-      "Kisekae UltraKiss V3.7.4 (c) 2002-2024 William Miles" ;
+      "Kisekae UltraKiss V4.0 (c) 2002-2025 William Miles" ;
    private static Object authorize = null ;        // Seigen module
    private static Calendar warningdate = null ;    // Secure warning
    private static Calendar expiredate = null ;     // Licence expire
@@ -130,6 +133,7 @@ public class Kisekae extends Applet
    private static String language = "" ;           // Our command line lang arg
    private static String kissweb = "http://" ;     // Our command line web arg
    private static int maxdownload = 1024 ;         // Maximum download size KB
+   private static int globalexception = 0 ;        // Global exception count
 
    // State variables
 
@@ -142,13 +146,15 @@ public class Kisekae extends Applet
    private static boolean jlayerinstalled = true ;	// True if mp3 installed
    private static boolean registered = false ;		// True if registered
    private static boolean inapplet = true ;			// True if run as applet
-   private static boolean secure = false ;		   // True if in sandbox
+   private static boolean webswing = false ;			// True if run webswing
+   private static boolean secure = false ;         // True if in sandbox
    private static boolean debug = false ;		      // True if debug required
    private static boolean batch = false ;          // True if run batch mode
    private static boolean accept = false ;         // True if cnf errors OK
    private static boolean loaded = false ;         // True if set was loaded
    private static boolean manualexpire = false ;   // True if set is expired
    private static boolean tipsinstalled = true ;   // True if tips system
+   private static boolean showtips = true ;        // True if tips allowed
    private boolean suspended = false ;					// True if applet suspended
    private boolean error = false ;						// True if error occured
 
@@ -174,7 +180,7 @@ public class Kisekae extends Applet
 
       LogFile.start() ;
       builddate = Calendar.getInstance() ;
-      builddate.set(2024,6-1,21) ;
+      builddate.set(2025,1-1,21) ;
       
       // Restore the properties.
       
@@ -187,6 +193,21 @@ public class Kisekae extends Applet
       initCodeBase() ;
       initEncoding() ;
       callback = new JButton("Kisekae Callback") ;
+      
+      // Webswing resets to factory options.
+      
+      if (Kisekae.isWebswing())
+      {
+         OptionsDialog.setFactoryOptions() ;
+         OptionsDialog.setInitOptions() ;
+               
+         // Reset preferences for each package class.
+               
+         Preferences prefs = Preferences.userNodeForPackage(Kisekae.class) ;
+         try { prefs.clear() ; prefs.flush() ; }
+         catch (Exception e) { }         
+         PrintLn.println("Options set to factory values for webswing session.") ;
+      }     
    }
 
 
@@ -216,11 +237,11 @@ public class Kisekae extends Applet
                System.setProperty(jver.startsWith("1.3")?
                   "com.apple.macos.useScreenMenuBar"
                   : "apple.laf.useScreenMenuBar", "true");
-               System.out.println("Apple system useScreenMenuBar set") ;
+               PrintLn.println("Apple system useScreenMenuBar set") ;
             }
             catch (Exception ex) 
             { 
-               System.err.println("Kisekae: Unable to set Apple system useScreenMenuBar") ;
+               PrintLn.printErr("Kisekae: Unable to set Apple system useScreenMenuBar") ;
             }
          }
          if (s.indexOf("linux") >= 0)
@@ -230,7 +251,7 @@ public class Kisekae extends Applet
       }
       catch (Throwable e) 
       { 
-         System.err.println("Kisekae: Unable to determine host OS") ;
+         PrintLn.printErr("Kisekae: Unable to determine host OS") ;
       }
 
       // Set the user interface to come up in the required Look and Feel.
@@ -284,7 +305,7 @@ public class Kisekae extends Applet
          catch (Throwable e)
          {
             String s = ((splashImageURL != null) ? splashImageURL.toExternalForm() : "") ;
-            System.err.println("Kisekae: Error loading splash image " + s) ;
+            PrintLn.printErr("Kisekae: Error loading splash image " + s) ;
          }
       }
 
@@ -297,7 +318,7 @@ public class Kisekae extends Applet
       }
       catch (Throwable e)
       {
-         System.err.println("Kisekae: Error setting language font for locale " + locale.toString()) ;
+         PrintLn.printErr("Kisekae: Error setting language font for locale " + locale.toString()) ;
       }
 
       // Determine if UltraKiss is registered.
@@ -345,7 +366,7 @@ public class Kisekae extends Applet
       catch (Throwable e)
       {
          String s = ((iconImageURL != null) ? iconImageURL.toExternalForm() : "") ;
-         System.err.println("Kisekae: Error loading icon " + s + " " + e.getMessage()) ;
+         PrintLn.printErr("Kisekae: Error loading icon " + s + " " + e.getMessage()) ;
       }
 
       // Get the small product icon image.  
@@ -380,7 +401,7 @@ public class Kisekae extends Applet
       catch (Throwable e)
       {
          String s = ((iconImage16URL != null) ? iconImage16URL.toExternalForm() : "") ;
-         System.err.println("Kisekae: Error loading icon " + s + " " + e.getMessage()) ;
+         PrintLn.printErr("Kisekae: Error loading icon " + s + " " + e.getMessage()) ;
       }
 
       // Determine if Java 1.4 hardware image acceleration is available.
@@ -389,7 +410,7 @@ public class Kisekae extends Applet
       catch (Throwable e)
       {
          volatileimages = false ;
-         System.err.println("Java Volatile Images are not available.") ;
+         PrintLn.printErr("Java Volatile Images are not available.") ;
       }
 
       // Determine if the Web Search extensions are available.
@@ -401,13 +422,13 @@ public class Kisekae extends Applet
           if (websearch == null) 
           {
               searchinstalled = false ;
-              System.err.println("Web Search package not found.") ;
+              PrintLn.printErr("Web Search package not found.") ;
           }
       }
       catch (Throwable e)
       {
          searchinstalled = false ;
-         System.err.println("Web Search extensions are not installed.") ;
+         PrintLn.printErr("Web Search extensions are not installed.") ;
       }
 
       // Determine if the Help extension package is available.
@@ -419,13 +440,13 @@ public class Kisekae extends Applet
           if (help == null) 
           {
               helpinstalled = false ;
-              System.err.println("Java Help package not found.") ;
+              PrintLn.printErr("Java Help package not found.") ;
           }
       }
       catch (Throwable e)
       {
          helpinstalled = false ;
-         System.err.println("Java Help extensions are not installed.") ;
+         PrintLn.printErr("Java Help extensions are not installed.") ;
       }
 
       // Determine if the MP3 extension package is available.
@@ -437,13 +458,13 @@ public class Kisekae extends Applet
           if (jlayer == null) 
           {
               jlayerinstalled = false ;
-              System.err.println("JLayer MP3 package not found.") ;
+              PrintLn.printErr("JLayer MP3 package not found.") ;
           }
       }
       catch (Throwable e)
       {
          jlayerinstalled = false ;
-         System.err.println("JLayer MP3 extensions are not installed.") ;
+         PrintLn.printErr("JLayer MP3 extensions are not installed.") ;
       }
 
       // Determine if the Advanced Imaging extension package is available.
@@ -455,13 +476,13 @@ public class Kisekae extends Applet
           if (imaging == null) 
           {
               jaiinstalled = false ;
-//            System.err.println("Java Advanced Imaging package not found.") ;
+//            PrintLn.printErr("Java Advanced Imaging package not found.") ;
           }
       }
       catch (Throwable e)
       {
          jaiinstalled = false ;
-//       System.err.println("Java Advanced Imaging extensions are not installed.") ;
+//       PrintLn.printErr("Java Advanced Imaging extensions are not installed.") ;
       }
 
       // Determine if the Media Framework extension package is available.
@@ -473,13 +494,13 @@ public class Kisekae extends Applet
           if (media == null) 
           {
               mediainstalled = false ;
-              System.err.println("Java Media Framework package not found.") ;
+              PrintLn.printErr("Java Media Framework package not found.") ;
           }
       }
       catch (Throwable e)
       {
          mediainstalled = false ;
-         System.err.println("Java Media Framework extensions are not installed.") ;
+         PrintLn.printErr("Java Media Framework extensions are not installed.") ;
       }
 
       // Determine the Portal Web start page.
@@ -494,7 +515,7 @@ public class Kisekae extends Applet
       }
       catch (Throwable e)
       {
-         System.err.println("Application web portal is not available.") ;
+         PrintLn.printErr("Application web portal is not available.") ;
       }
 
       // Determine if the background splash image exists.
@@ -530,7 +551,7 @@ public class Kisekae extends Applet
       catch (Throwable e)
       {
          tipsinstalled = false ;
-         System.err.println("Tips system is not available.") ;
+         PrintLn.printErr("Tips system is not available.") ;
       }
 
       // Determine if the demo system is available.
@@ -544,7 +565,7 @@ public class Kisekae extends Applet
       catch (Throwable e)
       {
          demoindex = null ;
-         System.err.println("Demonstration system is not available.") ;
+         PrintLn.printErr("Demonstration system is not available.") ;
       }
 
       // Determine if the ReadMe system is available.
@@ -558,7 +579,7 @@ public class Kisekae extends Applet
       catch (Throwable e)
       {
          readmeindex = null ;
-         System.err.println("UltraKiss ReadMe files are not available.") ;
+         PrintLn.printErr("UltraKiss ReadMe files are not available.") ;
       }
 
       // Determine if printing is possible.  This can hang trying to reach
@@ -582,13 +603,13 @@ public class Kisekae extends Applet
       catch (Throwable e)
       {
          printinstalled = false ;
-         System.err.println("Kisekae: Java system printer is not available.") ;
+         PrintLn.printErr("Kisekae: Java system printer is not available.") ;
       }
 
       // Show a dialog if we are in debug mode.
 
       String s = "Kisekae UltraKiss program build date: " + getBuildDate() + "\n" ;
-      System.out.print(s) ;
+      PrintLn.print(s) ;
       if (debug && (!helpinstalled || !mediainstalled || !jaiinstalled ||
           !printinstalled || !volatileimages || !jlayerinstalled))
       {
@@ -660,7 +681,7 @@ public class Kisekae extends Applet
             }
             catch (MalformedURLException e) 
             { 
-               System.out.println("Invalid URL for application website: " + s) ;
+               PrintLn.println("Invalid URL for application website: " + s) ;
             }
          }
          
@@ -671,24 +692,24 @@ public class Kisekae extends Applet
             {
                website = s ;
                URL testURL = new URL(s) ;
-               System.out.println("System website is " + s) ;
+               PrintLn.println("System website is " + s) ;
             }
             catch (MalformedURLException e) 
             {
                if (s.trim().length() > 0)
-                  System.out.println("Invalid URL for system website: " + s) ;
+                  PrintLn.println("Invalid URL for system website: " + s) ;
             }
          }
          
          s = getParameter("splash") ;
          if (s != null) { splashdir = s ; OptionsDialog.setSplashDir(s) ; }
-         System.out.println("This application is running as an applet.") ;
+         PrintLn.println("This application is running as an applet.") ;
          if (secure)
-            System.out.println("This applet is running in a secure environment.") ;
+            PrintLn.println("This applet is running in a secure environment.") ;
          if (file != null && file.length() > 0)
-            System.out.println("Application start file is " + file) ;
+            PrintLn.println("Application start file is " + file) ;
          if (kissweb != null)
-            System.out.println("Application web site is " + kissweb) ;
+            PrintLn.println("Application web site is " + kissweb) ;
          language = getParameter("language") ;
          if (language != null) setLanguage(language) ;
 
@@ -751,17 +772,17 @@ public class Kisekae extends Applet
          File f = new File(cachepath) ;
          if (!f.exists())
          {
-            System.out.println("Creating cache directory " + cachepath) ;
+            PrintLn.println("Creating cache directory " + cachepath) ;
             if (!f.mkdir())
-               System.out.println("Cache directory " + cachepath + " not created.") ;
+               PrintLn.println("Cache directory " + cachepath + " not created.") ;
          }
          else
-            System.out.println("Cache directory " + cachepath + " exists.") ;
+            PrintLn.println("Cache directory " + cachepath + " exists.") ;
       }
       catch (Throwable e)
       {
-         System.out.println("Unable to create cache directory " + cachepath);
-         System.out.println("Exception " + e.getMessage()) ;         
+         PrintLn.println("Unable to create cache directory " + cachepath);
+         PrintLn.println("Exception " + e.getMessage()) ;         
       }
    }
 
@@ -782,6 +803,10 @@ public class Kisekae extends Applet
          // Create and register an Authenticator.
 
          Authenticator.setDefault((Authenticator) authorize);
+         
+         // If webswing run as if expired
+         
+         if (Kisekae.isWebswing()) manualexpire = true ;
       }
 
       catch (Throwable e)
@@ -835,13 +860,17 @@ public class Kisekae extends Applet
    // This closes a silent execution of UltraKiss and reinitializes our state.  
    // This interface is used by the WebSearch tool.
    
-   public void close()
+   public void close() 
    {
       batch = false ;
       batchframe = null ;
       if (mainframe != null)
+      {
          mainframe.closeconfig() ;
-      init() ;
+         mainframe.dispose() ;
+      }      
+      mainframe = new MainFrame(this) ;
+//    init() ;
    }
 
 
@@ -875,8 +904,8 @@ public class Kisekae extends Applet
       catch (SecurityException e)
       {
          secure = true ;
-         System.out.println("Kisekae: Security exception. Unable to access system properties.") ;
-         System.out.println(e.getMessage()) ;
+         PrintLn.println("Kisekae: Security exception. Unable to access system properties.") ;
+         PrintLn.println(e.getMessage()) ;
       }
       finally
       {
@@ -893,7 +922,7 @@ public class Kisekae extends Applet
              ? encoding : "unknown" ;
          if (!initlocale.equals(localename) || !initencoding.equals(encoding))
          {
-            System.out.println("Default language is " + localename
+            PrintLn.println("Default language is " + localename
                + " with file encoding " + encodingname) ;
          }
       }
@@ -929,20 +958,20 @@ public class Kisekae extends Applet
       catch (SecurityException e)
       {
          secure = true ;
-         System.out.println("Kisekae: Security exception. Unable to obtain codebase.") ;
-         System.out.println(e.toString()) ;
+         PrintLn.println("Kisekae: Security exception. Unable to obtain codebase.") ;
+         PrintLn.println(e.toString()) ;
       }
 
       catch (MalformedURLException e)
       {
-         System.out.println("Kisekae: Codebase directory is invalid. " + directory) ;
-         System.out.println(e.toString()) ;
+         PrintLn.println("Kisekae: Codebase directory is invalid. " + directory) ;
+         PrintLn.println(e.toString()) ;
       }
 
       finally
       {
          String cbname = (codebase == null) ? "unknown" : codebase.toString() ;
-         if (!cbname.equals(initcbname)) System.out.println("Application codebase is " + cbname) ;
+         if (!cbname.equals(initcbname)) PrintLn.println("Application codebase is " + cbname) ;
       }
    }
 
@@ -953,8 +982,10 @@ public class Kisekae extends Applet
    public static Kisekae getKisekae() { return kisekae ; }
    public static MainFrame getMainFrame() { return mainframe ; }
    public static KissFrame getBatchFrame() { return batchframe ; }
+   public static OutputStream getLogFile() { return LogFile.getLogFile() ; }
    public static boolean inApplet() { return inapplet ; }
    public static boolean isSecure() { return secure ; }
+   public static boolean isWebswing() { return webswing ; }
    public static boolean isBatch() { return batch ; }
    public static boolean isAccept() { return accept ; }
    public static boolean isLoaded() { return loaded ; }
@@ -1082,8 +1113,8 @@ public class Kisekae extends Applet
       }
       catch (SecurityException e)
       {
-         System.out.println("Kisekae: Security exception. Unable to set language locale.") ;
-         System.out.println(e.getMessage()) ;
+         PrintLn.println("Kisekae: Security exception. Unable to set language locale.") ;
+         PrintLn.println(e.getMessage()) ;
          JOptionPane.showMessageDialog(null,
             captions.getString("SecurityException") + "\n" +
             captions.getString("LocaleNotAvailable"),
@@ -1098,7 +1129,7 @@ public class Kisekae extends Applet
                String s0 = locale.getLanguage() ;
                String s1 = getLanguageName(s0) ;
                if (s1 == null) s1 = s0 ;
-               System.out.println("Language is " + s1 + " with file encoding " + encoding) ;
+               PrintLn.println("Language is " + s1 + " with file encoding " + encoding) ;
             }
       }
    }
@@ -1117,8 +1148,8 @@ public class Kisekae extends Applet
       }
       catch (SecurityException e)
       {
-         System.out.println("Kisekae: Security exception. Unable to set default file encoding.") ;
-         System.out.println(e.getMessage()) ;
+         PrintLn.println("Kisekae: Security exception. Unable to set default file encoding.") ;
+         PrintLn.println(e.getMessage()) ;
          JOptionPane.showMessageDialog(null,
             captions.getString("SecurityException") + "\n" +
             captions.getString("LocaleNotAvailable"),
@@ -1132,7 +1163,7 @@ public class Kisekae extends Applet
             String s0 = locale.getLanguage() ;
             String s1 = getLanguageName(s0) ;
             if (s1 == null) s1 = s0 ;
-            System.out.println("Language is " + s1 + " with file encoding " + encoding) ;
+            PrintLn.println("Language is " + s1 + " with file encoding " + encoding) ;
          }
       }
    }
@@ -1210,10 +1241,10 @@ public class Kisekae extends Applet
          String s2 = getLanguageName(s0) ;
          if (s2 == null) s2 = s0 ;
          if (f != null)
-            System.out.println("Language is " + s2 + " with font " + f.getName()) ;
+            PrintLn.println("Language is " + s2 + " with font " + f.getName()) ;
          else
          {
-            System.out.println("Language is " + s2 + " with no font installed.") ;
+            PrintLn.println("Language is " + s2 + " with no font installed.") ;
             return ;
          }
 
@@ -1250,10 +1281,10 @@ public class Kisekae extends Applet
          if (s2 == null) s2 = s0 ;
 
          if (fe12 != null && fems12 != null)
-            System.out.println("Language is " + s2 + " with font " + fe12.getName()) ;
+            PrintLn.println("Language is " + s2 + " with font " + fe12.getName()) ;
          else
          {
-            System.out.println("Language is " + s2 + " with no font installed.") ;
+            PrintLn.println("Language is " + s2 + " with no font installed.") ;
             return ;
          }
 
@@ -1350,11 +1381,11 @@ public class Kisekae extends Applet
          UIManager.setLookAndFeel(lookAndFeelName) ;
          int i = lookAndFeelName.lastIndexOf('.') ;
          String s = (i < 0) ? lookAndFeelName : lookAndFeelName.substring(i+1) ;
-         System.out.println("Look & Feel installed successfully, " + s);
+         PrintLn.println("Look & Feel installed successfully, " + s);
       }
       catch (Exception e)
       {
-         System.err.println("Kisekae: could not install Look & Feel " + lookAndFeelName + ", " + e.getMessage());
+         PrintLn.printErr("Kisekae: could not install Look & Feel " + lookAndFeelName + ", " + e.getMessage());
       }
    }
    
@@ -1393,7 +1424,7 @@ public class Kisekae extends Applet
       }
       catch (Exception e)
       {
-         System.out.println("Kisekae: unable to obtain resource: " + name) ;
+         PrintLn.println("Kisekae: unable to obtain resource: " + name) ;
          e.printStackTrace() ;
       }
       return null ;
@@ -1445,7 +1476,7 @@ public class Kisekae extends Applet
       icon = icn ;
       if (icon != null) iconimage = icon.getImage() ;
       if (OptionsDialog.getDebugControl())
-         System.out.println("Kisekae: new Icon Image set.") ;
+         PrintLn.println("Kisekae: new Icon Image set.") ;
    }
    
    static void setImageIcon16(ImageIcon icn)
@@ -1474,7 +1505,9 @@ public class Kisekae extends Applet
    
    static void setSecure(boolean b) 
    {
-      manualexpire = b ; 
+//      manualexpire = b ; 
+      secure = b ;
+      OptionsDialog.setSecurityEnable(b);
    }
    
    static void setAccept(boolean b) 
@@ -1610,7 +1643,7 @@ public class Kisekae extends Applet
       }
       catch (Exception e)
       {
-         System.out.println("Kisekae: getState " + e.toString()) ;
+         PrintLn.println("Kisekae: getState " + e.toString()) ;
          e.printStackTrace() ;
       }
       finally
@@ -1620,7 +1653,7 @@ public class Kisekae extends Applet
             try { zip.close() ; }
             catch (IOException e)
             {
-               System.out.println("Kisekae: getState " + e.toString()) ;
+               PrintLn.println("Kisekae: getState " + e.toString()) ;
                e.printStackTrace() ;
             }
          }
@@ -1650,7 +1683,7 @@ public class Kisekae extends Applet
 
       catch (Exception e)
       {
-         System.out.println("Kisekae: saveSet " + e.toString()) ;
+         PrintLn.println("Kisekae: saveSet " + e.toString()) ;
          e.printStackTrace() ;
          ActionEvent ae = new ActionEvent(this,0,"FileWriter Callback") ;
          listener.actionPerformed(ae) ;
@@ -1732,7 +1765,7 @@ public class Kisekae extends Applet
 
       catch (Exception e)
       {
-         System.out.println("Kisekae: saveThumbnail " + e.toString()) ;
+         PrintLn.println("Kisekae: saveThumbnail " + e.toString()) ;
          e.printStackTrace() ;
          ActionEvent ae = new ActionEvent(this,0,"FileWriter Callback") ;
          listener.actionPerformed(ae) ;
@@ -1767,7 +1800,7 @@ public class Kisekae extends Applet
 
       catch (Exception e)
       {
-         System.out.println("Kisekae: saveTextFile " + e.toString()) ;
+         PrintLn.println("Kisekae: saveTextFile " + e.toString()) ;
          e.printStackTrace() ;
          ActionEvent ae = new ActionEvent(this,0,"FileWriter Callback") ;
          listener.actionPerformed(ae) ;
@@ -1826,7 +1859,7 @@ public class Kisekae extends Applet
 
       catch (IOException e)
       {
-         System.out.println("Kisekae: getDescription " + e.toString()) ;
+         PrintLn.println("Kisekae: getDescription " + e.toString()) ;
          fileopen.close() ;
       }
       return null ;
@@ -1907,7 +1940,7 @@ public class Kisekae extends Applet
       if (inapplet)
          super.showStatus(s) ;
       else
-         System.out.println(s) ;
+         PrintLn.println(s) ;
    }
 
 
@@ -1940,7 +1973,7 @@ public class Kisekae extends Applet
       }
       if (mainframe != null && suspended)
       {
-         System.out.println("Kisekae: resumed.") ;
+         PrintLn.println("Kisekae: resumed.") ;
          mainframe.resume() ;
          suspended = false ;
       }
@@ -1961,17 +1994,17 @@ public class Kisekae extends Applet
          if (mainframe != null)
          {
             EventHandler.stopEventHandler() ;
-            System.out.println("Kisekae: destroyed.") ;
+            PrintLn.println("Kisekae: destroyed.") ;
             try { Thread.currentThread().sleep(2000) ; }
             catch (InterruptedException e) { }
-            System.out.println("Kisekae: disposed.") ;
+            PrintLn.println("Kisekae: disposed.") ;
             mainframe.dispose() ;
          }
       }
       catch (Throwable e)
       {
-         System.out.println("Kisekae: destroy applet exception.") ;
-         System.out.println(e.toString()) ;
+         PrintLn.println("Kisekae: destroy applet exception.") ;
+         PrintLn.println(e.toString()) ;
       }
 
       // Free storage allocations.
@@ -1990,7 +2023,7 @@ public class Kisekae extends Applet
    {
       if (mainframe != null)
       {
-         System.out.println("Kisekae: suspended.") ;
+         PrintLn.println("Kisekae: suspended.") ;
          mainframe.suspend() ;
          Audio.stop() ;
          if (mediainstalled) Video.stop() ;
@@ -2071,7 +2104,7 @@ public class Kisekae extends Applet
       }
       
       MainFrame mainframe1 = mainframe ;
-      System.out.println("Application restarted.") ;
+      PrintLn.println("Application restarted.") ;
       HelpLoader.clearTables() ;
       mainframe = new MainFrame(kisekae,file,true) ;
       if (mainframe1 != null) mainframe1.dispose() ;
@@ -2087,16 +2120,79 @@ public class Kisekae extends Applet
    {
       Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() 
       {
-        @Override
-        public void uncaughtException(Thread t, Throwable e) 
-        {
+         @Override
+         public void uncaughtException(Thread t, Throwable e) 
+         {
+            if (globalexception > 0)  System.exit(-1) ; 
             String message = e.getMessage();
             if (message == null || message.length() == 0) 
                message = "Java Runtime Environment: " + e.getClass();
             if (t != null) message += " on thread " + t.getName() ;
-            System.out.println("Kisekae: Uncaught Exception " + message);
+            PrintLn.println("Kisekae: Uncaught Exception " + message);
             e.printStackTrace();
-        }
+            
+            // Terminate
+            
+            globalexception++ ;
+            if (globalexception > 0)
+            {
+               EventHandler.stopEventHandler() ;
+               PrintLn.println("Kisekae: Uncaught exception.") ;
+               String s = "InternalError" + " - " ;
+               s += "ExecutionTerminates" ;
+               if (captions != null)
+               {
+                  s = captions.getString("InternalError") + " - " ;
+                  s += captions.getString("ExecutionTerminates") ;
+               }
+               s += "\n" + e.toString() ;
+
+               // Catch the stack trace.
+
+               try
+               {
+                  File f = File.createTempFile("Kisekae","debug") ;
+                  OutputStream os = new FileOutputStream(f) ;
+                  PrintStream ps = new PrintStream(os) ;
+                  e.printStackTrace(ps) ;
+                  os.close() ;
+         			s += "\n" + "Host Operating System " + System.getProperty("os.name") ;
+                  s += "\n" + "Java Virtual Machine " + System.getProperty("java.version") ;
+                  s += "\n" + "UltraKiss build date: " + Kisekae.getBuildDate() ;
+                  FileReader is = new FileReader(f) ;
+                  LineNumberReader lr = new LineNumberReader(is) ;
+                  String s1 = lr.readLine() ;
+                  s1 = lr.readLine() ;
+                  int traceline = 0 ;
+                  while (s1 != null)
+                  {
+                     s += "\n" + s1.trim() ;
+                     s1 = lr.readLine() ;
+                     if (traceline++ > 10) break ;
+                  }
+               }
+               catch (EOFException eof) { }
+               catch (Exception ex) { s += "\n" + "Stack trace unavailable." ; }
+
+               try
+               {
+                  if (captions != null)
+                  {
+                     JOptionPane.showMessageDialog(Kisekae.getMainFrame(), s,
+                         captions.getString("InternalError"),
+                         JOptionPane.ERROR_MESSAGE) ;
+                  }
+                  else
+                  {
+                     JOptionPane.showMessageDialog(Kisekae.getMainFrame(), s,
+                         "InternalError",
+                         JOptionPane.ERROR_MESSAGE) ;
+                  }
+               }
+               catch (Exception ex) { }
+               System.exit(-1) ;
+            }
+         }
       });
    }
 
@@ -2106,21 +2202,36 @@ public class Kisekae extends Applet
 
    // Main program to run this applet as an application.
    // java -jar UltraKiss.jar [file] [basedir] [kissweb] [language] 
-   //    [splashdir] [website]
+   //    [splashdir] [website] [webswing] [portal]
 
    public static void main(String[] args)
    {
       inapplet = false ;
+      if (args.length > 6)
+      {
+         String s = Configuration.trim(args[6]) ;
+         if (s.length() > 0)
+         {
+            s = s.toLowerCase() ;
+            webswing = (s.contains("webswing")) ;
+         }
+      }
+      
       kisekae = new Kisekae() ;
       if (args.length > 0) file = Configuration.trim(args[0]) ;
       if (args.length > 1) directory = Configuration.trim(args[1]) ;
       if (args.length > 3) language = Configuration.trim(args[3]) ;
+      
+      if (file != null && file.length() == 0) file = null ;
+      if (directory != null && directory.length() == 0) directory = null ;
+      if (language != null && language.length() == 0) language = null ;
+      if (file != null) showtips = false ;
 
       if (directory != null) kisekae.initCodeBase() ;
       if (secure)
-         System.out.println("This application is running in a secure environment.") ;
+         PrintLn.println("This application is running in a secure environment.") ;
       if (file != null && file.length() > 0)
-         System.out.println("Application start file is " + file) ;
+         PrintLn.println("Application start file is " + file) ;
       if (language != null && language.length() > 0)
          setLanguage(language) ;
       
@@ -2156,11 +2267,11 @@ public class Kisekae extends Applet
                   
                   kissweb = s ;
                   OptionsDialog.setKissWeb(kissweb) ;
-                  System.out.println("Application website is " + kissweb) ;
+                  PrintLn.println("Application website is " + kissweb) ;
                }
                catch (MalformedURLException e) 
                { 
-                  System.out.println("Invalid URL for application website: " + s) ;
+                  PrintLn.println("Invalid URL for application website: " + s) ;
                }
             }
          }
@@ -2171,24 +2282,24 @@ public class Kisekae extends Applet
             {
                splashdir = s ;
                OptionsDialog.setSplashDir(s) ;
-               System.out.println("Application splash image is " + s) ;
+               PrintLn.println("Application splash image is " + s) ;
             }
          }
          if (args.length > 5)
          {
-            String s = Configuration.trim(args[4]) ;
+            String s = Configuration.trim(args[5]) ;
             if (s.length() > 0)
             {
                try
                {
-                  website = s ;
                   URL testURL = new URL(s) ;
-                  System.out.println("System website is " + s) ;
+                  PrintLn.println("System website is " + s) ;
+                  website = s ;
                }
                catch (MalformedURLException e) 
                { 
                   if (s.trim().length() > 0)
-                     System.out.println("Invalid URL for system website: " + s) ;
+                     PrintLn.println("Invalid URL for system website: " + s) ;
                }
             }
          }
@@ -2206,9 +2317,90 @@ public class Kisekae extends Applet
          }
          mainframe.toFront() ;
          
-         // Show tips if first time.
+         // Start the portal.  A space for the parameter value opens
+         // the portal with the default Web Portal option value.
+         // A non-space is the initial URL to open.
+
+         if (args.length > 7)
+         {
+            try
+            {
+               String s = Configuration.trim(args[7]) ;
+               if (args[7].length() > 0)
+               {
+                  MainMenu mm = mainframe.getMainMenu() ;
+                  if (mm != null) 
+                  {
+                     if (s.length() > 0) 
+                     {
+                        URL u = new URL(s) ; // this would check for the protocol
+                        u.toURI() ; 
+                        mm.setWebURL(s) ;
+                     }
+                     if (s.length() == 0) s = webstart ;
+                     PrintLn.println("Open portal, URL argument is " + s) ;
+                     mm.openportal.doClick() ;
+                     showtips = false ;
+                  }
+               }
+            }
+            catch (URISyntaxException e) 
+            { 
+               PrintLn.println("Open portal argument \"" + args[7] + "\" exception. " + e.getMessage()) ;
+            }
+         }
          
-         if (OptionsDialog.getShowTips() && file == null && tipsinstalled)
+         // Provide a Webswing prompt.
+
+         if (webswing) 
+         {
+            showtips = false ;
+            
+            // for copying style
+            JLabel label = new JLabel();
+            Font font = label.getFont();
+
+            // create some css from the label's font
+            StringBuffer style = new StringBuffer("font-family:" + font.getFamily() + ";");
+            style.append("font-weight:" + (font.isBold() ? "bold" : "normal") + ";");
+            style.append("font-size:" + font.getSize() + "pt;");
+
+            // html content
+            JEditorPane ep = new JEditorPane("text/html", "<html><body style=\"" + style + "\">" 
+                + "<p>This application provides browser access to KiSS files through a Webswing server.<br>"
+                + "Your browser can only play WAV and MP3 files when running through Webswing.<br><br>"
+                + "MIDI and AU sound support is not available on your browser with this application.<br><br>"
+                + "Due to network performance dragging KiSS objects on the browser with the mouse may be slow.<br><br>"
+                + "You are not permitted to SAVE files to the network server when running through Webswing.<br><br>"
+                + "For full features without these limitations <a href=\"https://github.com/kisekae/UltraKiss/releases\">download and install UltraKiss</a> from GitHub.<br>"
+                + "To report bugs or provide suggestions for improvement <a href=\"https://github.com/kisekae/UltraKiss/issues\">file an issue report</a> on GitHub.</p>"
+                + "<p style=\"text-align: center;\"><a href=\"" + Kisekae.getWebSite() + "\">" + Kisekae.getWebSite() + "</a></p>"
+                + "</body></html>");
+
+            // handle link events
+            ep.addHyperlinkListener(new HyperlinkListener()
+            {
+               public void hyperlinkUpdate(HyperlinkEvent e)
+               {
+                  try
+                  {
+                  if (e.getEventType().equals(HyperlinkEvent.EventType.ACTIVATED))
+                     Desktop.getDesktop().browse(e.getURL().toURI()); // roll your own link launcher or use Desktop if J6+
+                  }
+                  catch (Exception ex) { }
+               }
+            });
+            ep.setEditable(false);
+            ep.setBackground(label.getBackground());
+
+            JOptionPane.showMessageDialog(null,ep,
+                captions.getString("Webswing"),
+                JOptionPane.INFORMATION_MESSAGE) ; 
+         }
+        
+         // Show tips if first time.
+
+         if (OptionsDialog.getShowTips() && tipsinstalled && showtips)
          {
             tips = new TipsBox(mainframe,Kisekae.getCaptions().getString("TipsBoxTitle"),true) ;
             tips.show() ;
@@ -2224,7 +2416,7 @@ public class Kisekae extends Applet
          Runtime.getRuntime().gc() ;
          try { Thread.currentThread().sleep(300) ; }
          catch (InterruptedException ex) { }
-         System.out.println("Kisekae: Out of memory.") ;
+         PrintLn.println("Kisekae: Out of memory.") ;
          e.printStackTrace() ;
          if (captions != null)
          {
@@ -2249,7 +2441,7 @@ public class Kisekae extends Applet
       catch (Throwable e)
       {
          EventHandler.stopEventHandler() ;
-         System.out.println("Kisekae: Internal fault.") ;
+         PrintLn.println("Kisekae: Internal fault.") ;
          e.printStackTrace() ;
          String s = "InternalError" + " - " ;
          s += "ExecutionTerminates" ;

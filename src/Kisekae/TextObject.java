@@ -260,7 +260,7 @@ final class TextObject extends KissObject
       try { return text.getText() ; }
       catch (Exception e)
       {
-         System.out.println("TextObject: " + toString() + " " + e.toString());
+         PrintLn.println("TextObject: " + toString() + " " + e.toString());
          e.printStackTrace() ;
          return "" ;
       }
@@ -290,7 +290,7 @@ final class TextObject extends KissObject
       try { text.setText(s) ; }
       catch (Exception e)
       {
-         System.out.println("TextObject: setText " + e.toString()) ;
+         PrintLn.println("TextObject: setText " + e.toString()) ;
       }
    }
 
@@ -362,7 +362,7 @@ final class TextObject extends KissObject
             styledtext.setEditorKit(k) ;
             try { doc.insertString(0,text.getText(),new SimpleAttributeSet()) ; }
             catch (BadLocationException e)
-            { System.out.println("TextObject: " + e.getMessage()) ; }
+            { PrintLn.println("TextObject: " + e.getMessage()) ; }
             styledtext.setDocument(doc) ;
          }
       }
@@ -402,7 +402,7 @@ final class TextObject extends KissObject
       String encoding = Kisekae.getLanguageEncoding() ;
 		int bytes = (ze == null) ? 0 : (int) ze.getSize() ;
 		if (OptionsDialog.getDebugLoad())
-			System.out.println("TextObject: read " + file + " [" + bytes + " bytes]") ;
+			PrintLn.println("TextObject: read " + file + " [" + bytes + " bytes]") ;
 		if (ze != null)
 			in = (zip == null) ? null : zip.getInputStream(ze) ;
 
@@ -417,7 +417,7 @@ final class TextObject extends KissObject
       {
          bytes = -1 ;
   			if (OptionsDialog.getDebugLoad())
-  				System.out.println("TextObject: unable to obtain input stream for " + file) ;
+  				PrintLn.println("TextObject: unable to obtain input stream for " + file) ;
       }
       return bytes ;
    }
@@ -490,14 +490,14 @@ final class TextObject extends KissObject
 			Runtime.getRuntime().gc() ;
 			try { Thread.currentThread().sleep(300) ; }
 			catch (InterruptedException ex) { }
-			System.out.println("TextObject: Out of memory during print.") ;
+			PrintLn.println("TextObject: Out of memory during print.") ;
 		}
 
 		// Watch for internal faults while printing.
 
 		catch (Throwable e)
 		{
-			System.out.println("TextObject: Internal print fault.") ;
+			PrintLn.println("TextObject: Internal print fault.") ;
 			e.printStackTrace() ;
 		}
 		return Printable.NO_SUCH_PAGE ;
@@ -521,7 +521,7 @@ final class TextObject extends KissObject
       try { text.setText(s1) ; }
       catch (Exception e)
       {
-         System.out.println("TextObject: append " + e.toString()) ;
+         PrintLn.println("TextObject: append " + e.toString()) ;
       }
    }
 

@@ -149,7 +149,7 @@ public class Mp3Player extends Thread
       try { play(Integer.MAX_VALUE); }
       catch (Exception e) 
       {
-         System.out.println("Mp3Player: exception, " + e) ;
+         PrintLn.println("Mp3Player: exception, " + e) ;
       }
       audiosound.stopThread() ;
 	}
@@ -178,7 +178,7 @@ public class Mp3Player extends Thread
       catch (InterruptedException e ) 
       {
           if (OptionsDialog.getDebugMedia()) 
-              System.out.println("Mp3Player: interrupted playback for " + audiosound.getName() + " at " + getPosition()) ;
+              PrintLn.println("Mp3Player: interrupted playback for " + audiosound.getName() + " at " + getPosition()) ;
       }
 		
 		// last frame, ensure all data flushed to the audio device. 
@@ -351,7 +351,7 @@ public class Mp3Player extends Thread
 				{		
                int n = output.getBufferLength() ;
                if (OptionsDialog.getDebugMedia()) 
-                  System.out.println("Mp3Player: write(" + n + ") for " + audiosound.getName()) ;
+                  PrintLn.println("Mp3Player: write(" + n + ") for " + audiosound.getName()) ;
 					out.write(output.getBuffer(), 0, n);
 				}				
 			}
@@ -365,17 +365,17 @@ public class Mp3Player extends Thread
 /*
 		catch (IOException ex)
 		{
-			System.out.println("exception decoding audio frame: "+ex);
+			PrintLn.println("exception decoding audio frame: "+ex);
 			return false;	
 		}
 		catch (BitstreamException bitex)
 		{
-			System.out.println("exception decoding audio frame: "+bitex);
+			PrintLn.println("exception decoding audio frame: "+bitex);
 			return false;	
 		}
 		catch (DecoderException decex)
 		{
-			System.out.println("exception decoding audio frame: "+decex);
+			PrintLn.println("exception decoding audio frame: "+decex);
 			return false;				
 		}
 */		

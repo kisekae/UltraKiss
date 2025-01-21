@@ -644,7 +644,13 @@ abstract class Audio extends KissObject
 
 			is = (zip == null) ? null : zip.getInputStream(ze) ;
 			if (is == null) throw new IOException("file not found") ;
-			if (!cache) { loaded = false ; return ; }
+			if (!cache) 
+         { 
+            loaded = false ; 
+        		if (OptionsDialog.getDebugSound())
+               PrintLn.println("Audio: load, "+getName()+" is not cached.") ;
+            return ; 
+         }
 
 			// Read the entire contents.
 
@@ -652,6 +658,8 @@ abstract class Audio extends KissObject
 			b = new byte[bytes] ;
 			while (n < bytes && (len = is.read(b,n,bytes-n)) >= 0) n += len ;
 			loaded = true ;
+     		if (OptionsDialog.getDebugSound())
+            PrintLn.println("Audio: load, "+getName()+" is cached, bytes = "+bytes) ;
 		}
 
 		// Watch for I/O errors
@@ -721,7 +729,7 @@ abstract class Audio extends KissObject
       b = null ;
       ref = null ;
    }
-
+   
 
 	// Abstract methods
 	// ----------------
@@ -751,25 +759,26 @@ abstract class Audio extends KissObject
       {
          Vector p = (Vector) players.clone() ;
          long time = System.currentTimeMillis() - Configuration.getTimestamp() ;
+         String s = (a == null) ? "all" : a.toString() ;
      		if (OptionsDialog.getDebugSound())
-            System.out.println("[" + time + "] Audio: stop, player size "+p.size()+" audio to stop="+a) ;
+            PrintLn.println("[" + time + "] Audio: stop, player size "+p.size()+" audio to stop = "+s) ;
    		for (int i = p.size()-1 ; i >= 0 ; i--)
    		{
     			Audio audio = (Audio) p.elementAt(i) ;
        		if (OptionsDialog.getDebugSound())
-               System.out.println("[" + time + "] Audio: stop, index="+i+" player is "+audio) ;
+               PrintLn.println("[" + time + "] Audio: stop, index="+i+" player is "+audio) ;
    			if (a != null && a != audio) continue ;
    			if (audio instanceof AudioMedia)
             {
          		if (OptionsDialog.getDebugSound())
-         		   System.out.println("[" + time + "] Audio: about to stop media " + ((AudioMedia) audio).getName()) ;
+         		   PrintLn.println("[" + time + "] Audio: about to stop media " + ((AudioMedia) audio).getName()) ;
    				((AudioMedia) audio).stopMedia(c,a,t) ;
                stoppedmedia = true ;
             }
    			if (audio instanceof AudioSound)
             {
          		if (OptionsDialog.getDebugSound())
-         		   System.out.println("[" + time + "] Audio: about to stop sound " + ((AudioSound) audio).getName()) ;
+         		   PrintLn.println("[" + time + "] Audio: about to stop sound " + ((AudioSound) audio).getName()) ;
    				((AudioSound) audio).stopSound(c,a,t) ;
                 stoppedsound = true ;
             }
@@ -777,7 +786,7 @@ abstract class Audio extends KissObject
    		if (!(stoppedsound || stoppedmedia))
          {
       		if (OptionsDialog.getDebugSound())
-      		   System.out.println("[" + time + "] Audio: no sounds stopped.") ;
+      		   PrintLn.println("[" + time + "] Audio: no sounds stopped.") ;
             if (a != null) a.setStopping(false) ;
          }
       }
@@ -818,7 +827,7 @@ abstract class Audio extends KissObject
       {
          MainFrame frame = Kisekae.getMainFrame() ;
          frame.showStatus(errormessage) ;
-         System.out.println(errormessage) ;
+         PrintLn.println(errormessage) ;
       }
 	}
 

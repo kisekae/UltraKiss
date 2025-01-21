@@ -64,7 +64,9 @@ final public class LogFile extends PrintStream
 	// Constructor
 	
 	public LogFile(PrintStream ps) 
-	{	super(ps) ; }
+	{	
+      super(ps) ; 
+   }
 
 
    // Logfile open state.
@@ -121,8 +123,15 @@ final public class LogFile extends PrintStream
          s = "Maximum Java Memory: " + maxMem + " (" + maxMem/(1024*1024) + " MB)" ;
 			logfile.write(s.getBytes()) ;
 			if (ls != null) logfile.write(ls.getBytes()) ;         
+         if (Kisekae.isWebswing()) 
+         {
+            s = "Webswing option is set." ;
+   			logfile.write(s.getBytes()) ;
+   			if (ls != null) logfile.write(ls.getBytes()) ;    
+         }
 
-			// Start redirecting the output.
+			// Start redirecting the output.  If we are running in webswing 
+         // redirection does not seem to work.  The log file is not written.
 
 			System.setOut(new LogFile(System.out)) ;
 			System.setErr(new LogFile(System.err)) ;
@@ -132,8 +141,8 @@ final public class LogFile extends PrintStream
 
 		catch (SecurityException e)
 		{
-	      System.out.println("LogFile: Security exception opening logfile " + logfilename) ;
-         System.out.println(e.getMessage()) ;
+	      PrintLn.println("LogFile: Security exception opening logfile " + logfilename) ;
+         PrintLn.println(e.getMessage()) ;
 			try { if (logfile != null) logfile.close() ; }
          catch (Exception ex) { }
 			logfile = null ;
@@ -141,8 +150,8 @@ final public class LogFile extends PrintStream
 
 		catch (Exception e)
 		{
-	      System.out.println("LogFile: Exception opening logfile " + logfilename) ;
-         System.out.println(e.getMessage()) ;
+	      PrintLn.println("LogFile: Exception opening logfile " + logfilename) ;
+         PrintLn.println(e.getMessage()) ;
 			try { if (logfile != null) logfile.close() ; }
          catch (IOException ex) { }
 			logfile = null ;
@@ -169,6 +178,16 @@ final public class LogFile extends PrintStream
 	static String getLogFileName() { return logfilename ; }
 
 
+	// Return our log file.
+
+	static OutputStream getLogFile() { return logfile ; }
+
+
+	// Set our trace indicator.
+
+	static void setTraceWrite(boolean b) { tracewrite = b ; }
+
+
 	// Restores the original settings.
 	
 	public static void stop() 
@@ -184,7 +203,7 @@ final public class LogFile extends PrintStream
 		}
 		catch (Exception e)
 		{
-			System.out.println("LogFile: Exception closing log file " + logfilename) ;
+			PrintLn.println("LogFile: Exception closing log file " + logfilename) ;
 			e.printStackTrace() ;
 		}
 	}
@@ -207,13 +226,13 @@ final public class LogFile extends PrintStream
 
 		catch (SecurityException e)
 		{
-			System.out.println("LogFile: Security exception deleting logfile " + logfilename) ;
-			System.out.println(e.getMessage()) ;
+			PrintLn.println("LogFile: Security exception deleting logfile " + logfilename) ;
+			PrintLn.println(e.getMessage()) ;
 		}
       
       catch (Exception e)
 		{
-			System.out.println("LogFile: Exception deleting log file " + logfilename) ;
+			PrintLn.println("LogFile: Exception deleting log file " + logfilename) ;
 			e.printStackTrace() ;
 		}
    }
@@ -246,7 +265,7 @@ final public class LogFile extends PrintStream
 		catch (Exception e)
 		{
          stop() ;
-			System.out.println("LogFile: Exception writing log file " + logfilename) ;
+			PrintLn.println("LogFile: Exception writing log file " + logfilename) ;
 			e.printStackTrace() ;
   			setError();
 		}
@@ -315,7 +334,7 @@ final public class LogFile extends PrintStream
 		catch (Exception e)
 		{
          stop() ;
-			System.out.println("LogFile: Exception writing log file " + logfilename) ;
+			PrintLn.println("LogFile: Exception writing log file " + logfilename) ;
 			e.printStackTrace() ;
   			setError();
 		}

@@ -534,7 +534,7 @@ final class PanelFrame extends JPanel
 
       catch (OutOfMemoryError e)
       {
-         System.out.println("PanelFrame: Out of memory on size change " + d2) ;
+         PrintLn.println("PanelFrame: Out of memory on size change " + d2) ;
          JOptionPane.showMessageDialog(parent,
             Kisekae.getCaptions().getString("LowMemoryFault") + " - " +
             Kisekae.getCaptions().getString("ActionNotCompleted"),
@@ -544,7 +544,7 @@ final class PanelFrame extends JPanel
       }
       catch (Exception e)
       {
-         System.out.println("PanelFrame: Size change exception " + e.toString()) ;
+         PrintLn.println("PanelFrame: Size change exception " + e.toString()) ;
          e.printStackTrace() ;
          JOptionPane.showMessageDialog(this,
             Kisekae.getCaptions().getString("InternalError") +
@@ -620,7 +620,7 @@ final class PanelFrame extends JPanel
          if (marked && !edit.isMarked(i)) continue ;
          if (pasted && !edit.isPasted(i)) continue ;
          if (OptionsDialog.getDebugEdit())
-            System.out.println("Edit: cut begin for element " + kiss + " on page " + page) ;
+            PrintLn.println("Edit: cut begin for element " + kiss + " on page " + page) ;
          newselection.remove(kiss) ;
 
          // Cuts of group objects occur for grouped items.
@@ -640,7 +640,7 @@ final class PanelFrame extends JPanel
 
             page.removeGroup(g) ;
             if (OptionsDialog.getDebugEdit())
-               System.out.println("Edit: cut remove group " + g + " on page " + page) ;
+               PrintLn.println("Edit: cut remove group " + g + " on page " + page) ;
 
             // We must determine if the group is active on any other page.
 
@@ -709,7 +709,7 @@ final class PanelFrame extends JPanel
             c.setAllPages(false) ;
             if (pages.size() == 0) c.setInternal(true) ;
             if (OptionsDialog.getDebugEdit())
-               System.out.println("Edit: cut " + c + " remove from page " + pid) ;
+               PrintLn.println("Edit: cut " + c + " remove from page " + pid) ;
             if (c instanceof JavaCel) 
                ((JavaCel) c).showComponent(false) ;
             if (c instanceof Video)
@@ -731,7 +731,7 @@ final class PanelFrame extends JPanel
                {
                   page.removeGroup(g) ;
                   if (OptionsDialog.getDebugEdit())
-                     System.out.println("Edit: cut remove group " + g + " on page " + page) ;
+                     PrintLn.println("Edit: cut remove group " + g + " on page " + page) ;
                }
                else
                {
@@ -825,7 +825,7 @@ final class PanelFrame extends JPanel
       if (OptionsDialog.getDebugEdit())
       {
          for (int i = 0 ; i < edit.size() ; i++)
-            System.out.println("Edit: copy " + edit.elementAt(i) + " on page " + page) ;
+            PrintLn.println("Edit: copy " + edit.elementAt(i) + " on page " + page) ;
       }
 
       // Update our menu state.
@@ -880,7 +880,7 @@ final class PanelFrame extends JPanel
          KissObject kiss = (KissObject) edit.elementAt(i) ;
          if (marked && !edit.isMarked(i)) continue ;
          if (OptionsDialog.getDebugEdit())
-            System.out.println("Edit: paste begin for element " + kiss + " on page " + page) ;
+            PrintLn.println("Edit: paste begin for element " + kiss + " on page " + page) ;
 
          // Pastes of group objects.
 
@@ -914,7 +914,7 @@ final class PanelFrame extends JPanel
                g.setIdentifier(groupnumber) ;
                g.setKey(g.getKeyTable(),config.getID(),groupnumber) ;
                if (OptionsDialog.getDebugEdit())
-                  System.out.println("Edit: paste create " + g + " on page " + page) ;
+                  PrintLn.println("Edit: paste create " + g + " on page " + page) ;
 
                // Construct new cels for the group.  The only cels created
                // are those that exist on the selection source page.  Cels
@@ -996,7 +996,7 @@ final class PanelFrame extends JPanel
                   g.addCel(c1) ;
                   c1.saveState(cid,"initial") ;
                   if (OptionsDialog.getDebugEdit())
-                     System.out.println("Edit: paste create " + c1 + " on page " + page) ;
+                     PrintLn.println("Edit: paste create " + c1 + " on page " + page) ;
                }
 
                // Position the new group.  Correct the group level as the
@@ -1035,7 +1035,7 @@ final class PanelFrame extends JPanel
             g.setContext((Integer) page.getIdentifier()) ;
             page.addGroup(g) ;
             if (OptionsDialog.getDebugEdit())
-               System.out.println("Edit: paste add group " + g + " on page " + page) ;
+               PrintLn.println("Edit: paste add group " + g + " on page " + page) ;
             newselection.addElement(g) ;
             Integer newgid = (Integer) g.getIdentifier() ;
             Point grouplocation = editpage.getGroupPosition(newgid) ;
@@ -1101,7 +1101,7 @@ final class PanelFrame extends JPanel
             {
                v.addElement(pid) ;
                if (OptionsDialog.getDebugEdit())
-                  System.out.println("Edit: paste add " + c + " to page " + page) ;
+                  PrintLn.println("Edit: paste add " + c + " to page " + page) ;
             }
             else
             {
@@ -1166,7 +1166,7 @@ final class PanelFrame extends JPanel
                pages.addElement(pid) ;
                c1.saveState(cid,"initial") ;
                if (OptionsDialog.getDebugEdit())
-                  System.out.println("Edit: paste create " + c1 + " on page " + page) ;
+                  PrintLn.println("Edit: paste create " + c1 + " on page " + page) ;
                if (marked) newselection.setMarked(c,false) ;
                c = c1 ;
             }
@@ -1198,7 +1198,7 @@ final class PanelFrame extends JPanel
                {
                   page.addGroup(g) ;
                   if (OptionsDialog.getDebugEdit())
-                     System.out.println("Edit: paste add group " + g + " on page " + page) ;
+                     PrintLn.println("Edit: paste add group " + g + " on page " + page) ;
 
                   // Position the group.
                   // Compute the relative placement offset necessary to move the
@@ -1764,7 +1764,7 @@ final class PanelFrame extends JPanel
       newpage.setKey(newpage.getKeyTable(),cid,newpage.getUniqueID()) ;
       pages.insertElementAt(newpage,pagenumber) ;
       if (OptionsDialog.getDebugEdit())
-         System.out.println("Edit: insert page " + newpage) ;
+         PrintLn.println("Edit: insert page " + newpage) ;
 
       // Capture this edit for undo/redo processing.
 
@@ -1886,7 +1886,7 @@ final class PanelFrame extends JPanel
 
       pages.removeElementAt(pagenumber) ;
       if (OptionsDialog.getDebugEdit())
-         System.out.println("Edit: delete page " + deletepage) ;
+         PrintLn.println("Edit: delete page " + deletepage) ;
 
       // All groups on the deleted page must be examined.  If the group is
       // internal then it was created through a paste operation.  We must
@@ -1976,7 +1976,7 @@ final class PanelFrame extends JPanel
 
       writepage.setState(cid,"initial",newstate) ;
       if (OptionsDialog.getDebugEdit())
-         System.out.println("Edit: write page " + writepage) ;
+         PrintLn.println("Edit: write page " + writepage) ;
 
       // Capture this edit for undo/redo processing.
 
@@ -2234,7 +2234,7 @@ final class PanelFrame extends JPanel
          newgroup = true ;
          showStatus("Object group " + g + " created for image cel " + cel) ;
          if (OptionsDialog.getDebugEdit())
-            System.out.println("Edit: import create " + g) ;
+            PrintLn.println("Edit: import create " + g) ;
       }
 
       // Add the cel to the configuration. The cel is placed at the front
@@ -2263,7 +2263,7 @@ final class PanelFrame extends JPanel
       cels.addElement(cel) ;
       if (cel instanceof Video && movies != null) movies.addElement(cel) ;
       if (OptionsDialog.getDebugEdit())
-         System.out.println("Edit: import create " + cel + " on page " + page) ;
+         PrintLn.println("Edit: import create " + cel + " on page " + page) ;
 
       // Add the new cel palette to the configuration if it does not exist.
       // If the cel palette duplicates a loaded palette in the configuration,
@@ -2306,7 +2306,7 @@ final class PanelFrame extends JPanel
             palettes.addElement(p) ;
             paletteadded = true ;
             if (OptionsDialog.getDebugEdit())
-               System.out.println("Edit: import create " + p) ;
+               PrintLn.println("Edit: import create " + p) ;
          }
          cel.setPaletteID(p.getIdentifier()) ;
          cel.setInitPaletteID(p.getIdentifier()) ;
@@ -2321,7 +2321,7 @@ final class PanelFrame extends JPanel
       {
          showStatus("Image cel " + cel + " added to object group " + g) ;
          if (OptionsDialog.getDebugEdit())
-            System.out.println("Edit: import add " + cel + " to group " + g) ;
+            PrintLn.println("Edit: import add " + cel + " to group " + g) ;
       }
 
       // Attach the group to the page.
@@ -2344,7 +2344,7 @@ final class PanelFrame extends JPanel
          g.drop() ;
          page.setInitialGroupPosition(newgid,grouplocation) ;
          if (OptionsDialog.getDebugEdit())
-            System.out.println("Edit: import add " + g + " to page " + page) ;
+            PrintLn.println("Edit: import add " + g + " to page " + page) ;
       }
 
       // Add this group to any existing group set.
@@ -2441,7 +2441,7 @@ final class PanelFrame extends JPanel
             palettes.addElement(p) ;
             paletteadded = true ;
             if (OptionsDialog.getDebugEdit())
-               System.out.println("Edit: import create " + p) ;
+               PrintLn.println("Edit: import create " + p) ;
          }
       }
 
@@ -2499,7 +2499,7 @@ final class PanelFrame extends JPanel
             a.setKey(a.getKeyTable(),cid,"Import "+a.getName().toUpperCase()) ;
             sounds.addElement(a) ;
             if (OptionsDialog.getDebugEdit())
-               System.out.println("Edit: import create " + a) ;
+               PrintLn.println("Edit: import create " + a) ;
             String s = Kisekae.getCaptions().getString("AudioImported") ;
             int i1 = s.indexOf('[') ;
             int j1 = s.indexOf(']') ;
@@ -2521,7 +2521,7 @@ final class PanelFrame extends JPanel
                ze.setImported(true) ;
                ze.setUpdated(true) ;
                if (OptionsDialog.getDebugEdit())
-                  System.out.println("Edit: import " + a + " audio already exists, sound replaced.") ;
+                  PrintLn.println("Edit: import " + a + " audio already exists, sound replaced.") ;
                String s = Kisekae.getCaptions().getString("AudioExists") ;
                int i1 = s.indexOf('[') ;
                int j1 = s.indexOf(']') ;
@@ -2544,7 +2544,7 @@ final class PanelFrame extends JPanel
                ze.setUpdated(true) ;
                zip.addEntry(ze) ;
                if (OptionsDialog.getDebugEdit())
-                  System.out.println("Edit: import " + a + " existing audio now loaded.") ;
+                  PrintLn.println("Edit: import " + a + " existing audio now loaded.") ;
                String s = Kisekae.getCaptions().getString("AudioImported") ;
                int i1 = s.indexOf('[') ;
                int j1 = s.indexOf(']') ;
@@ -2630,7 +2630,7 @@ final class PanelFrame extends JPanel
       // as cel levels have changed.
 
       if (OptionsDialog.getDebugEdit())
-         System.out.println("Edit: " + page + " image cel layering adjusted") ;
+         PrintLn.println("Edit: " + page + " image cel layering adjusted") ;
       page.setContext() ;
       Integer pid = (Integer) page.getIdentifier() ;
       if (groupset != null) groupset.setContext(pid) ;
@@ -2788,7 +2788,7 @@ final class PanelFrame extends JPanel
          cels = config.getCels() ;
          groups = config.getGroups() ;
    		if (OptionsDialog.getDebugControl())
-   			System.out.println("PanelFrame initialize frame for configuration \"" + name + "\" (" + config.getID() + ")") ;
+   			PrintLn.println("PanelFrame initialize frame for configuration \"" + name + "\" (" + config.getID() + ")") ;
       }
 
       // Allocate the panel frame image buffers.
@@ -2870,7 +2870,7 @@ final class PanelFrame extends JPanel
       if (page != null && config.getPage(pageset) == page)
       {
          if (OptionsDialog.getDebugControl())
-            System.out.println("PanelFrame reactivate page " + pageset) ;
+            PrintLn.println("PanelFrame reactivate page " + pageset) ;
 
          // Create our current cel display list.
 
@@ -2956,7 +2956,7 @@ final class PanelFrame extends JPanel
       parent.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
       suspendEvents() ;
       if (OptionsDialog.getDebugControl())
-         System.out.println("PanelFrame initialize page " + pageset) ;
+         PrintLn.println("PanelFrame initialize page " + pageset) ;
 
       // Stop any audio and video in progress if we have a prior page.
 
@@ -3000,7 +3000,7 @@ final class PanelFrame extends JPanel
       if (baseList != null && !OptionsDialog.getCacheImage())
       {
          if (OptionsDialog.getDebugLoad())
-            System.out.println("PanelFrame unload cels not on page " + pageset) ;
+            PrintLn.println("PanelFrame unload cels not on page " + pageset) ;
          unloadCels(pageset) ;
       }
 
@@ -3016,7 +3016,7 @@ final class PanelFrame extends JPanel
       // Load all unloaded cel images that are on our new page.
 
       if (OptionsDialog.getDebugLoad())
-         System.out.println("PanelFrame load unloaded cels on page " + pageset) ;
+         PrintLn.println("PanelFrame load unloaded cels on page " + pageset) ;
       loadCels(pageset) ;
 
       // Set the initial colors for this page.  These are the colors defined
@@ -3142,7 +3142,7 @@ final class PanelFrame extends JPanel
       if (page == null || multipalette == null) return ;
       Integer priormultipalette = page.getMultiPalette() ;
       if (OptionsDialog.getDebugControl())
-         System.out.println("PanelFrame initialize palette group " + multipalette) ;
+         PrintLn.println("PanelFrame initialize palette group " + multipalette) ;
 
       // Convert all cels to the new palette colors.  The multipalette
       // number is now an offset into the cel palette file.  Note that
@@ -3411,7 +3411,7 @@ final class PanelFrame extends JPanel
       }
       catch (Exception e)
       {
-         System.out.println("PanelFrame: initPage load cels, " + e) ;
+         PrintLn.println("PanelFrame: initPage load cels, " + e) ;
          e.printStackTrace();
       }
    }
@@ -3449,7 +3449,7 @@ final class PanelFrame extends JPanel
       }
       catch (Exception e)
       {
-         System.out.println("PanelFrame: initPage unload cels, " + e) ;
+         PrintLn.println("PanelFrame: initPage unload cels, " + e) ;
       }
    }
 
@@ -3466,7 +3466,7 @@ final class PanelFrame extends JPanel
       {
          String s = "Load: (page " + pageset + ") " + c ;
          if (c.isCopy()) s += " [copy]" ;
-         System.out.println(s) ;
+         PrintLn.println(s) ;
       }
    }
 
@@ -3490,7 +3490,7 @@ final class PanelFrame extends JPanel
       {
          String s = "Unload: (page " + pageset + ") " + c ;
          if (c.isCopy()) s += " [copy]" ;
-         System.out.println(s) ;
+         PrintLn.println(s) ;
       }
    }
 
@@ -3555,7 +3555,7 @@ final class PanelFrame extends JPanel
       // Show a diagnostic trace.
 
       if (OptionsDialog.getDebugEdit())
-         System.out.println("Edit: Reset " + page) ;
+         PrintLn.println("Edit: Reset " + page) ;
 
       // The reset request must perform all page initialization
       // events to ensure that objects are placed at their initial
@@ -3748,7 +3748,7 @@ final class PanelFrame extends JPanel
       if (scaletofit && OptionsDialog.getScaleDownOnly() && newsf > 1.0f) newsf = 1.0f ;
       if (!fit) newsf = 1.0f ;
       if (OptionsDialog.getDebugEdit() && newsf != 1.0f)
-         System.out.println("Edit: Scale to fit screen by " + newsf) ;
+         PrintLn.println("Edit: Scale to fit screen by " + newsf) ;
 
       // We must scale input type JavaCel and Video components.  Scaling 
       // will resize the component and position it properly within the
@@ -3773,7 +3773,7 @@ final class PanelFrame extends JPanel
 
       catch (KissException e)
       {
-         System.out.println("PanelFrame: Scaling fault " + e.getMessage()) ;
+         PrintLn.println("PanelFrame: Scaling fault " + e.getMessage()) ;
          Runtime.getRuntime().gc() ;
          try { Thread.currentThread().sleep(300) ; }
          catch (InterruptedException ex) { }
@@ -3855,7 +3855,7 @@ final class PanelFrame extends JPanel
          Runtime.getRuntime().gc() ;
          try { Thread.currentThread().sleep(300) ; }
          catch (InterruptedException ex) { }
-         System.out.println("PanelFrame: Image scaling.  Out of memory. ") ;
+         PrintLn.println("PanelFrame: Image scaling.  Out of memory. ") ;
          JOptionPane.showMessageDialog(parent,
             Kisekae.getCaptions().getString("LowMemoryFault") + " - " +
             Kisekae.getCaptions().getString("ActionNotCompleted"),
@@ -3877,8 +3877,8 @@ final class PanelFrame extends JPanel
          Runtime.getRuntime().gc() ;
          try { Thread.currentThread().sleep(300) ; }
          catch (InterruptedException ex) { }
-         System.out.println("PanelFrame: Internal scaling fault, factor = " + sf) ;
-         System.out.println(e.toString()) ;
+         PrintLn.println("PanelFrame: Internal scaling fault, factor = " + sf) ;
+         PrintLn.println(e.toString()) ;
          JOptionPane.showMessageDialog(parent,
             e.getMessage(),
             Kisekae.getCaptions().getString("ScalingFault"),
@@ -4319,7 +4319,7 @@ final class PanelFrame extends JPanel
                Integer page = (Integer) o ;
                int p = page.intValue() ;
                if (OptionsDialog.getDebugLoad())
-                  System.out.println("PanelFrame: unloaded cel is "+drawcel+", loading scene page "+p) ;
+                  PrintLn.println("PanelFrame: unloaded cel is "+drawcel+", loading scene page "+p) ;
                SceneTimer.setPage(page) ;
                if (p > 0) loadCels(p,true) ;
                o = drawcel.getGroup() ;
@@ -5497,9 +5497,9 @@ final class PanelFrame extends JPanel
 		if (OptionsDialog.getDebugControl())
       {
          if (config != null)
-            System.out.println("PanelFrame close frame for configuration \"" + config.getName() + "\" (" + config.getID() + ")") ;
+            PrintLn.println("PanelFrame close frame for configuration \"" + config.getName() + "\" (" + config.getID() + ")") ;
          else
-            System.out.println("PanelFrame close frame for unknown configuration.") ;
+            PrintLn.println("PanelFrame close frame for unknown configuration.") ;
       }
          
 		// Flush all image data.  This cleans up our memory allocation.
@@ -6100,7 +6100,7 @@ final class PanelFrame extends JPanel
 
       catch (StackOverflowError ex)
       {
-         System.out.println("PanelFrame: mouse pressed " + ex.toString()) ;
+         PrintLn.println("PanelFrame: mouse pressed " + ex.toString()) ;
          JOptionPane.showMessageDialog(parent,
             Kisekae.getCaptions().getString("StackOverflowFault") + " - " +
             Kisekae.getCaptions().getString("ActionNotCompleted") +
@@ -6114,7 +6114,7 @@ final class PanelFrame extends JPanel
 
       catch (Throwable ex)
       {
-         System.out.println("PanelFrame: Internal fault, mouse pressed.") ;
+         PrintLn.println("PanelFrame: Internal fault, mouse pressed.") ;
          ex.printStackTrace() ;
          String s = Kisekae.getCaptions().getString("InternalError")
             + " - " + Kisekae.getCaptions().getString("ActionNotCompleted")
@@ -6432,7 +6432,7 @@ final class PanelFrame extends JPanel
 
       catch (StackOverflowError ex)
       {
-         System.out.println("PanelFrame: mouse released " + ex.toString()) ;
+         PrintLn.println("PanelFrame: mouse released " + ex.toString()) ;
          JOptionPane.showMessageDialog(parent,
             Kisekae.getCaptions().getString("StackOverflowFault") + " - " +
             Kisekae.getCaptions().getString("ActionNotCompleted") +
@@ -6446,7 +6446,7 @@ final class PanelFrame extends JPanel
 
       catch (Throwable ex)
       {
-         System.out.println("PanelFrame: Internal fault, mouse released.") ;
+         PrintLn.println("PanelFrame: Internal fault, mouse released.") ;
          ex.printStackTrace() ;
          String s = Kisekae.getCaptions().getString("InternalError")
             + " - " + Kisekae.getCaptions().getString("ActionNotCompleted")
@@ -6967,7 +6967,7 @@ final class PanelFrame extends JPanel
 
       catch (Throwable ex)
       {
-         System.out.println("PanelFrame: Internal fault, mouse dragged.") ;
+         PrintLn.println("PanelFrame: Internal fault, mouse dragged.") ;
          ex.printStackTrace() ;
          String s = Kisekae.getCaptions().getString("InternalError")
             + " - " + Kisekae.getCaptions().getString("ActionNotCompleted")
@@ -7703,9 +7703,9 @@ final class PanelFrame extends JPanel
       
       if (OptionsDialog.getDebugEdit())
       {
-         System.out.println("Edit: selection environment " + " (ctrl)=" + ctrldown + " (meta)=" + metadown + " ungrouped=" + ungrouped) ;
+         PrintLn.println("Edit: selection environment " + " (ctrl)=" + ctrldown + " (meta)=" + metadown + " ungrouped=" + ungrouped) ;
          for (int i = 0 ; i < selectset.size() ; i++)
-            System.out.println("Edit: selection set contains element " + selectset.elementAt(i)) ;
+            PrintLn.println("Edit: selection set contains element " + selectset.elementAt(i)) ;
       }
       
       // If the control key was down on a left mouse press add the
@@ -8285,8 +8285,8 @@ final class PanelFrame extends JPanel
          try { flavors[0] = new DataFlavor(df) ; }
          catch (ClassNotFoundException e)
          {
-            System.out.println("PanelFrame: PanelEdit DataFlavor fault, " + df) ;
-            System.out.println(e.getMessage()) ;
+            PrintLn.println("PanelFrame: PanelEdit DataFlavor fault, " + df) ;
+            PrintLn.println(e.getMessage()) ;
          }
          return flavors ;
       }
@@ -8688,7 +8688,7 @@ final class PanelFrame extends JPanel
          }
          catch (OutOfMemoryError e)
          {
-            System.out.println("PanelFrame: Out of memory performing undo, type " + type) ;
+            PrintLn.println("PanelFrame: Out of memory performing undo, type " + type) ;
             JOptionPane.showMessageDialog(parent,
                Kisekae.getCaptions().getString("LowMemoryFault") + " - " +
                Kisekae.getCaptions().getString("ActionNotCompleted"),
@@ -8697,7 +8697,7 @@ final class PanelFrame extends JPanel
          }
          catch (Exception e)
          {
-            System.out.println("PanelFrame: Undo exception " + e.toString()) ;
+            PrintLn.println("PanelFrame: Undo exception " + e.toString()) ;
             JOptionPane.showMessageDialog(parent,
                Kisekae.getCaptions().getString("EditUndoError") + " - " +
                Kisekae.getCaptions().getString("ActionNotCompleted") +
@@ -8738,7 +8738,7 @@ final class PanelFrame extends JPanel
          }
          catch (OutOfMemoryError e)
          {
-            System.out.println("PanelFrame: Out of memory performing redo, type " + type) ;
+            PrintLn.println("PanelFrame: Out of memory performing redo, type " + type) ;
             JOptionPane.showMessageDialog(parent,
                Kisekae.getCaptions().getString("LowMemoryFault") + " - " +
                Kisekae.getCaptions().getString("ActionNotCompleted"),
@@ -8747,7 +8747,7 @@ final class PanelFrame extends JPanel
          }
          catch (Exception e)
          {
-            System.out.println("PanelFrame: Redo exception " + e.toString()) ;
+            PrintLn.println("PanelFrame: Redo exception " + e.toString()) ;
             JOptionPane.showMessageDialog(parent,
                Kisekae.getCaptions().getString("EditUndoError") + " - " +
                Kisekae.getCaptions().getString("ActionNotCompleted") +
@@ -8868,7 +8868,7 @@ final class PanelFrame extends JPanel
                   while ((c = ((Group) kiss).getCel(j++)) != null)
                   {
                      if (OptionsDialog.getDebugEdit())
-                        System.out.println("Edit: import remove cel " + c) ;
+                        PrintLn.println("Edit: import remove cel " + c) ;
                      cels.remove(c) ;
                      if (c instanceof JavaCel) 
                         ((JavaCel) c).showComponent(false) ;
@@ -8878,7 +8878,7 @@ final class PanelFrame extends JPanel
                if (kiss instanceof Cel)
                {
                   if (OptionsDialog.getDebugEdit())
-                     System.out.println("Edit: import remove cel " + kiss) ;
+                     PrintLn.println("Edit: import remove cel " + kiss) ;
                   cels.remove(kiss) ;
                   if (kiss instanceof JavaCel) 
                      ((JavaCel) kiss).showComponent(false) ;
@@ -8895,7 +8895,7 @@ final class PanelFrame extends JPanel
                if (kiss instanceof Palette)
                {
                   if (OptionsDialog.getDebugEdit())
-                     System.out.println("Edit: import remove palette " + kiss) ;
+                     PrintLn.println("Edit: import remove palette " + kiss) ;
                   palettes.remove(kiss) ;
                   Object cid = config.getID() ;
                   kiss.removeObject(Palette.getKeyTable(),cid,kiss.getIdentifier(),kiss) ;
@@ -8925,7 +8925,7 @@ final class PanelFrame extends JPanel
                if (kiss instanceof Palette)
                {
                   if (OptionsDialog.getDebugEdit())
-                     System.out.println("Edit: import restore palette " + kiss) ;
+                     PrintLn.println("Edit: import restore palette " + kiss) ;
                   palettes.add(kiss) ;
                   Object cid = config.getID() ;
                   kiss.setKey(Palette.getKeyTable(),cid,kiss.getIdentifier()) ;
@@ -8935,7 +8935,7 @@ final class PanelFrame extends JPanel
                if (kiss instanceof Cel)
                {
                   if (OptionsDialog.getDebugEdit())
-                     System.out.println("Edit: import restore cel " + kiss) ;
+                     PrintLn.println("Edit: import restore cel " + kiss) ;
                   cels.add(kiss) ;
                   if (kiss instanceof JavaCel) 
                      ((JavaCel) kiss).showComponent(true) ;
@@ -8958,7 +8958,7 @@ final class PanelFrame extends JPanel
                   while ((c = ((Group) kiss).getCel(j++)) != null)
                   {
                      if (OptionsDialog.getDebugEdit())
-                        System.out.println("Edit: import restore cel " + c) ;
+                        PrintLn.println("Edit: import restore cel " + c) ;
                      cels.add(c) ;
                      if (c instanceof JavaCel) 
                         ((JavaCel) c).showComponent(true) ;
@@ -8984,7 +8984,7 @@ final class PanelFrame extends JPanel
                if (kiss instanceof Palette)
                {
                   if (OptionsDialog.getDebugEdit())
-                     System.out.println("Edit: import remove palette " + kiss) ;
+                     PrintLn.println("Edit: import remove palette " + kiss) ;
                   palettes.remove(kiss) ;
                   Object cid = config.getID() ;
                   kiss.removeObject(Palette.getKeyTable(),cid,kiss.getIdentifier(),kiss) ;
@@ -9020,7 +9020,7 @@ final class PanelFrame extends JPanel
                if (kiss instanceof Palette)
                {
                   if (OptionsDialog.getDebugEdit())
-                     System.out.println("Edit: import restore palette " + kiss) ;
+                     PrintLn.println("Edit: import restore palette " + kiss) ;
                   palettes.add(kiss) ;
                   Object cid = config.getID() ;
                   kiss.setKey(Palette.getKeyTable(),cid,kiss.getIdentifier()) ;

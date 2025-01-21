@@ -154,7 +154,7 @@ public class Mp3Clip implements Clip
      }
      catch (Exception e) 
      { 
-        System.out.println("Mp3Clip: " + audiosound + " setMicrosecondPosition("+microseconds+") input stream exception, " + e) ;
+        PrintLn.println("Mp3Clip: " + audiosound + " setMicrosecondPosition("+microseconds+") input stream exception, " + e) ;
      }
   }
     
@@ -199,7 +199,7 @@ public class Mp3Clip implements Clip
       }
       catch (Exception e) 
       {
-         System.out.println("Mp3Clip: unable to start player, " + e) ;
+         PrintLn.println("Mp3Clip: unable to start player, " + e) ;
       }
         
       // Signal player has started.

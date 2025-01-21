@@ -144,7 +144,7 @@ final class Lhhuf
 		int ch;
 		while (count-- != 0) 
 		{
-			// System.out.println(">" + b[start]);
+			// PrintLn.println(">" + b[start]);
 			out.write(ch = b[start++]);
 			//	updatecrc(ch);
 			crc = LhaCrc16.crctable[(crc ^ (ch)) & 0xFF] ^ (crc >> CHAR_BIT);
@@ -209,10 +209,10 @@ final class Lhhuf
 		this.origsize = origsize ;
 		maxmatch = MAXMATCH;
 		dicsiz = 1 << dicbit;
-		//    System.out.println(dicsiz);
+		//    PrintLn.println(dicsiz);
     
 		max_hash_val = 3 * dicsiz + (dicsiz / 512 + 1) * UCHAR_MAX;
-		//    System.out.println(max_hash_val);
+		//    PrintLn.println(max_hash_val);
     
 		text = new byte[dicsiz * 2 + maxmatch];
 		level = new int[(dicsiz + UCHAR_MAX + 1)];
@@ -272,7 +272,7 @@ final class Lhhuf
 		//      h = HASH(q, c);
 		h = (((q) + ((c) << hash1) + hash2)) & 0xffff; 
       
-		//      System.out.println(k++ + "makechild:(" + q + "," + c + "," + r + ")" + h + "," + childcount[q]);
+		//      PrintLn.println(k++ + "makechild:(" + q + "," + c + "," + r + ")" + h + "," + childcount[q]);
       
 		t = next[h];
 		next[h] = r;
@@ -287,7 +287,7 @@ final class Lhhuf
 	{
 		int newval, t;
       
-		//      System.out.println("split(" + old + ") " + avail);
+		//      PrintLn.println("split(" + old + ") " + avail);
       
 		newval = avail;
 		avail = next[newval];
@@ -456,7 +456,7 @@ final class Lhhuf
 		remainder--;
 		if (++pos == dicsiz * 2) 
 		{
-		//        System.out.println("get_next_match");
+		//        PrintLn.println("get_next_match");
 	
 			System.arraycopy(text, dicsiz, text, 0, dicsiz + maxmatch);
 			n = fread_crc(text, dicsiz + maxmatch, dicsiz, in);
@@ -488,13 +488,13 @@ final class Lhhuf
 		encoded_origsize = remainder;
 		matchlen = 0;
 		insert_node();
-//		      System.out.println("Lhhuf: remainder="+remainder + unpackable);
+//		      PrintLn.println("Lhhuf: remainder="+remainder + unpackable);
 		while (remainder > 0 && !unpackable) 
 		{
 			lastmatchlen = matchlen;
 			lastmatchpos = matchpos;
 			get_next_match();
-//				System.out.println("Lhhuf: here");
+//				PrintLn.println("Lhhuf: here");
 	
 			int x, y;
 			if (matchlen > remainder)
@@ -502,7 +502,7 @@ final class Lhhuf
 			if (matchlen > lastmatchlen || lastmatchlen < THRESHOLD) 
 			{
 				encode_output(x = textbuf(pos - 1), y = 0);
-//				          System.out.println("Lhhuf: -x=" + x + "y=" + y);
+//				          PrintLn.println("Lhhuf: -x=" + x + "y=" + y);
 				count++;
 			}
 			else 
@@ -510,7 +510,7 @@ final class Lhhuf
 				//        encode_output
 				output_st1(x = lastmatchlen + (UCHAR_MAX + 1 - THRESHOLD),
 				y = (pos - lastmatchpos - 2) & dicsiz1);
-//				          System.out.println("Lhhuf: +x=" + x + "y=" + y);
+//				          PrintLn.println("Lhhuf: +x=" + x + "y=" + y);
 	  
 				while (--lastmatchlen > 0) 
 				{
@@ -522,7 +522,7 @@ final class Lhhuf
 				if (matchlen > remainder)
 					matchlen = remainder;
 			}
-//				System.out.println("Lhhuf: remainder=" + remainder);
+//				PrintLn.println("Lhhuf: remainder=" + remainder);
             if (remainder == 479)
                remainder = remainder ;
 		}
@@ -560,7 +560,7 @@ final class Lhhuf
 		int  start[] = new int[17];	/* start code */
 		int  j, k;
 		int             i;
-		//        System.out.println("make_code(" + n + ")");
+		//        PrintLn.println("make_code(" + n + ")");
       
       j = 0;
       k = 1 << (16 - 1);
@@ -582,7 +582,7 @@ final class Lhhuf
   
 	private final void count_len(int i)			/* call with i = root */
 	{
-		//        System.out.println("count_len("+i+")");
+		//        PrintLn.println("count_len("+i+")");
 		if (i < n)
 			len_cnt[depth < 16 ? depth : 16]++;
 		else 
@@ -598,7 +598,7 @@ final class Lhhuf
 	{
 		int i, k;
 		int cum;
-		//        System.out.println("make_len(" + root + ")");
+		//        PrintLn.println("make_len(" + root + ")");
       
 		for (i = 0; i <= 16; i++)
 			len_cnt[i] = 0;
@@ -646,7 +646,7 @@ final class Lhhuf
 		int j, k;
       
 		k = heap[i];
-		//      System.out.println("downheap(" + i + ")->"+k);
+		//      PrintLn.println("downheap(" + i + ")->"+k);
       
 		while ((j = 2 * i) <= heapsize) 
 		{
@@ -658,7 +658,7 @@ final class Lhhuf
 			i = j;
 		}
 		heap[i] = k;
-		//      System.out.println("downheap(" + i + ")<-"+k);
+		//      PrintLn.println("downheap(" + i + ")<-"+k);
 	}
   
 	private final int make_tree(int nparm, int freqparm[], int lenparm[], int codeparm[])
@@ -666,7 +666,7 @@ final class Lhhuf
 	{
 		int  i, j, k, available;
       
-		//      System.out.println("nparm=" + nparm);
+		//      PrintLn.println("nparm=" + nparm);
 		n = nparm;
 		freq = freqparm;
 		len = lenparm;
@@ -696,9 +696,9 @@ final class Lhhuf
 			if (i < n)
 				sorta[sort++] = i;
 			heap[1] = heap[heapsize--];
-			//        System.out.println("heapsize=" + heapsize + "," + heap[heapsize+1]);
+			//        PrintLn.println("heapsize=" + heapsize + "," + heap[heapsize+1]);
 			downheap(1);
-			//        System.out.println("=" + heap[1]);
+			//        PrintLn.println("=" + heap[1]);
 			j = heap[1];	/* next least-freq entry */
 			if (j < n)
 				sorta[sort++] = j;
@@ -706,7 +706,7 @@ final class Lhhuf
 			freq[k] = freq[i] + freq[j];
 			heap[1] = k;
 			downheap(1);	/* put into queue */
-			//        System.out.println("k="+k+"i="+i+"j="+j);
+			//        PrintLn.println("k="+k+"i="+i+"j="+j);
 			left[k] = i;
 			right[k] = j;
 		} while (heapsize > 1);
@@ -843,7 +843,7 @@ final class Lhhuf
 	{
 		int  i, k, n, count;
       
-		//      System.out.println("count_t_freq>");
+		//      PrintLn.println("count_t_freq>");
       
 		for (i = 0; i < NT; i++)
 			t_freq[i] = 0;
@@ -877,12 +877,12 @@ final class Lhhuf
 			else
 				t_freq[k + 2]++;
 		}
-		//      System.out.println("count_t_freq<");
+		//      PrintLn.println("count_t_freq<");
 	}
   
 	private final void write_pt_len(int n, int nbit, int i_special) throws IOException
 	{
-		//      System.out.println("write_pt_len("+n+","+nbit+","+i_special+")");
+		//      PrintLn.println("write_pt_len("+n+","+nbit+","+i_special+")");
       
 		int i, k;
       
@@ -905,12 +905,12 @@ final class Lhhuf
 			}
 		}
       
-		//      System.out.println("write_pt_len<");
+		//      PrintLn.println("write_pt_len<");
 	}
   
 	private final void write_c_len(/*void*/) throws IOException
 	{
-		//      System.out.println("write_c_len>");
+		//      PrintLn.println("write_c_len>");
       
 		int i, k, n, count;
       
@@ -957,19 +957,19 @@ final class Lhhuf
 				putcode(pt_len[k + 2], pt_code[k + 2]);
 			}
 		}
-		//      System.out.println("write_c_len<");
+		//      PrintLn.println("write_c_len<");
 	}
   
 	private final void encode_c(int c) throws IOException
 	{
-		//      System.out.println("encode_c>");
+		//      PrintLn.println("encode_c>");
 		putcode(c_len[c], c_code[c]);
-		//      System.out.println("encode_c<");
+		//      PrintLn.println("encode_c<");
 	}
   
 	private final void encode_p(int p) throws IOException
 	{
-		//      System.out.println("encode_p>" + p);
+		//      PrintLn.println("encode_p>" + p);
 		int c, q;
       
 		c = 0;
@@ -983,18 +983,18 @@ final class Lhhuf
 		if (c > 1)
 			putbits(c - 1, p);
       
-		//      System.out.println("encode_p<");
+		//      PrintLn.println("encode_p<");
 	}
   
 	private final void send_block() throws IOException
 	{
-		//      System.out.println("send_block>");
+		//      PrintLn.println("send_block>");
       
 		int flags = 0;
 		int i, k, root, pos, size;
       
 		root = make_tree(NC, c_freq, c_len, c_code);
-		//      System.out.println("root="+root);
+		//      PrintLn.println("root="+root);
       
 		size = c_freq[root];
 		putbits(16, size);
@@ -1054,7 +1054,7 @@ final class Lhhuf
 			c_freq[i] = 0;
 		for (i = 0; i < NP; i++)
 			p_freq[i] = 0;
-		//      System.out.println("send_block<");
+		//      PrintLn.println("send_block<");
 	}
 
 	private int cpos;
@@ -1077,7 +1077,7 @@ final class Lhhuf
 		}
 		buf[output_pos++] = (byte) c;
 		c_freq[c]++;
-		//      System.out.println("c_freq[" + c + "]=" + (c_freq[c]-1));
+		//      PrintLn.println("c_freq[" + c + "]=" + (c_freq[c]-1));
 
 		if (c >= (1 << CHAR_BIT)) 
 		{
@@ -1169,7 +1169,7 @@ final class Lhhuf
 					}
 				}
 				fillbuf((c < 7) ? 3 : c - 3);
-				//	    System.out.println(pt_len.length + " " + i);
+				//	    PrintLn.println(pt_len.length + " " + i);
 				pt_len[i++] = c;
 				if (i == i_special) 
 				{
@@ -1342,7 +1342,7 @@ final class Lhhuf
              fw.updateProgress(progress) ;
              lastbytes = bytes ;
          }
-			//	    System.out.println(ch);
+			//	    PrintLn.println(ch);
 			subbitbuf = ch;
 	//	  }
 	//	  else {
@@ -1355,7 +1355,7 @@ final class Lhhuf
 		bitbuf &= 0xffff;
 		subbitbuf <<= n;
 		subbitbuf &= 0xff;
-		//	System.out.println(bitbuf);
+		//	PrintLn.println(bitbuf);
 	}
 
 
@@ -1366,15 +1366,15 @@ final class Lhhuf
 		x = bitbuf >>> (2 * CHAR_BIT - n);
 		//      x &= 0xffff;
 		fillbuf(n);
-		//      System.out.println("<-getbits " + x);
+		//      PrintLn.println("<-getbits " + x);
 		return x;
 	}
 
 	/* Write rightmost n bits of x */
 	private final void putcode(int n, int x) throws IOException	
 	{
-		//      System.out.println("putcode(" + n + "," + x + ")");
-		//      System.out.println(bitcount);
+		//      PrintLn.println("putcode(" + n + "," + x + ")");
+		//      PrintLn.println(bitcount);
 
 		while (n >= bitcount) 
 		{
@@ -1384,7 +1384,7 @@ final class Lhhuf
 			x &= 0xffff;
 
 			//	if (compsize < origsize) {
-			//          System.out.println("putcode(" + n + "," + x + ")->" + (subbitbuf&0xff));
+			//          PrintLn.println("putcode(" + n + "," + x + ")->" + (subbitbuf&0xff));
 			out.write(subbitbuf);
 			compsize++;
 			//	}
@@ -1400,7 +1400,7 @@ final class Lhhuf
 	/* Write rightmost n bits of x */
 	private final void putbits(int n, int x) throws IOException
 	{
-		//      System.out.println("putbits(" + n + "," + x + ") "+bitcount);
+		//      PrintLn.println("putbits(" + n + "," + x + ") "+bitcount);
 		x <<= USHRT_BIT - n;
 		x &= 0xffff;
 		while (n >= bitcount) 
@@ -1411,7 +1411,7 @@ final class Lhhuf
 			x &= 0xffff;
 			//	if (compsize < origsize) {
 			out.write(subbitbuf);
-			//          System.out.println("putbits(" + n + "," + x + ")->"+(subbitbuf&0xff));
+			//          PrintLn.println("putbits(" + n + "," + x + ")->"+(subbitbuf&0xff));
 			compsize++;
 			//	}
 			//	else
@@ -1466,7 +1466,7 @@ final class Lhhuf
 		this.out = out;
 
 		int i, j, k, c, dicsiz1, offset;
-		//      System.out.println("decode");
+		//      PrintLn.println("decode");
 
 		crc = 0;
 		prev_char = -1;
@@ -1482,7 +1482,7 @@ final class Lhhuf
 		while (count < origsize)
 		{
 			c = decode_c();
-			//        System.out.println(loc + "=" + c);
+			//        PrintLn.println(loc + "=" + c);
 
 			if (c <= UCHAR_MAX) 
 			{

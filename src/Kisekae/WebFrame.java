@@ -57,19 +57,18 @@ import java.io.* ;
 import java.net.* ;
 import java.awt.* ;
 import java.awt.event.* ;
-import java.util.Hashtable ;
-import java.util.Enumeration ;
 import java.util.Vector ;
 import java.util.Hashtable ;
 import javax.swing.* ;
 import javax.swing.event.* ;
 import javax.swing.text.* ;
-import javax.swing.text.html.* ;
 import javax.jnlp.* ;
+import java.beans.PropertyChangeListener ;
+import java.beans.PropertyChangeEvent ;
 
 
 final public class WebFrame extends KissFrame
-	implements WindowListener, ActionListener, HyperlinkListener
+	implements WindowListener, ActionListener, HyperlinkListener, PropertyChangeListener
 {
 	// Dialog attributes
 
@@ -90,6 +89,9 @@ final public class WebFrame extends KissFrame
    private int locallocation = 0 ;                 // Local history index
    private boolean connecting = false ;            // If true, connecting
    private boolean nocopy = false ;                // If true, no save of file
+   private long setpagetime = 0 ;                  // Time when setPage() called
+   private long hyperlinktime = 0 ;                // Time when hyperlink pressed
+   private long pageloadtime = 0 ;                 // Time to load page 
 
 	// HelpSet interface objects.
 
@@ -121,7 +123,6 @@ final public class WebFrame extends KissFrame
    private StatusBar statusbar = null ;
 
 	// Menu items
-
 
 	private JMenu fileMenu ;
    private JMenu optionMenu ;
@@ -156,6 +157,7 @@ final public class WebFrame extends KissFrame
       statusbar = new StatusBar(this) ;
       statusbar.setStatusBar(true) ;
       editor.setEditorKit(new WebHTMLEditor());
+      editor.addPropertyChangeListener("page", this);
       runner = new WebConnect() ;
       init() ;
    }
@@ -278,7 +280,7 @@ final public class WebFrame extends KissFrame
 		try { jbInit() ; pack() ; }
 		catch(Exception ex)
 		{ 
-         System.out.println("WebFrame: jbInit constructor " + ex.toString()) ;
+         PrintLn.println("WebFrame: jbInit constructor " + ex.toString()) ;
          ex.printStackTrace() ; 
       }
 
@@ -543,7 +545,7 @@ final public class WebFrame extends KissFrame
             if (pf != null)
             {
                if (OptionsDialog.getDebugControl())
-                  System.out.println("WebFrame: redirect " + s + " to event \"" + ((Vector) o).elementAt(0) + "\"") ;
+                  PrintLn.println("WebFrame: redirect " + s + " to event \"" + ((Vector) o).elementAt(0) + "\"") ;
                setVisible(false) ;
                EventHandler.fireEvents((Vector) o,pf,Thread.currentThread(),s) ;
                fireWindowClose() ;
@@ -581,15 +583,20 @@ final public class WebFrame extends KissFrame
 
    void back()
    {
+      boolean b = (location.contains("#currentweb")) ;
+      
       Vector v = getHistory() ;
       int i = getHistoryLocation() - 1 ;
       if (i < 0 || i >= v.size()) 
       {
-         me.toBack() ;
+         if (Kisekae.isWebswing())
+            close() ;
+         else
+            me.toBack() ;
          return ;
       }
       location = (String) v.elementAt(i) ;
-      setHistoryLocation(i) ;
+      setHistoryLocation(i) ;        
 
       // If our current web is on a remote host and we link back to our
       // local file system, then we adjust our current web site to point
@@ -599,7 +606,8 @@ final public class WebFrame extends KissFrame
       if (s == null) s = "" ;
       int n = s.lastIndexOf('/') ;
       if (n > 0) s = s.substring(0,n) ;
-      if ((s.startsWith("http:") || s.startsWith("https:")) && (location.startsWith("file:") || location.startsWith("jar:")))
+      if (b || ((s.startsWith("http:") || s.startsWith("https:")) && 
+          (location.startsWith("file:") || location.startsWith("jar:"))))
       {
          currentweb = location ;
          s = currentweb ;
@@ -617,6 +625,8 @@ final public class WebFrame extends KissFrame
       if (i < 0 || i >= v.size()) return ;
       location = (String) v.elementAt(i) ;
       setHistoryLocation(i) ;
+      
+      boolean b = (location.contains("#currentweb")) ;
 
       // If our current web is on a local file system and we link forward to
       // a remote host, then we adjust our current web site to point to the
@@ -626,7 +636,8 @@ final public class WebFrame extends KissFrame
       if (s == null) s = "" ;
       int n = s.lastIndexOf('/') ;
       if (n > 0) s = s.substring(0,n) ;
-      if ((location.startsWith("http:") || location.startsWith("https:")) && (s.startsWith("file:") || s.startsWith("jar:")))
+      if (b || ((location.startsWith("http:") || location.startsWith("https:")) && 
+          (s.startsWith("file:") || s.startsWith("jar:"))))
       {
          currentweb = location ;
          s = currentweb ;
@@ -796,7 +807,7 @@ final public class WebFrame extends KissFrame
    {
       if (localhistory != null) localhistory = new Vector() ;
       if (homepage == null) homepage = OptionsDialog.getKissWeb() ;
-      localhistory.addElement(homepage) ;
+      if (localhistory != null) localhistory.addElement(homepage) ;
       setHistoryLocation(0) ;
    }
    
@@ -1086,7 +1097,7 @@ final public class WebFrame extends KissFrame
                   }
                   catch (Exception e)
                   {
-                     System.out.println("WebFrame: JNLP FileSaveService is not available.");
+                     PrintLn.println("WebFrame: JNLP FileSaveService is not available.");
                      JOptionPane.showMessageDialog(me,
                         Kisekae.getCaptions().getString("FileWriteError")
                         + "\n" + e.toString(),
@@ -1125,6 +1136,7 @@ final public class WebFrame extends KissFrame
    	      if (menu != null)
             {
                menu.setNoCopy(nocopy);
+               menu.setDownloadURL(sourceURL) ;
                menu.openContext(fdnew,ze) ;
             }
             else
@@ -1137,14 +1149,14 @@ final public class WebFrame extends KissFrame
    		if ("NotifyDialog Cancel".equals(evt.getActionCommand()))
    		{
             if (OptionsDialog.getDebugControl())
-               System.out.println("WebFrame: NotifyDialog Cancel, urlloader=" + urlloader) ;
+               PrintLn.println("WebFrame: NotifyDialog Cancel, urlloader=" + urlloader) ;
             if (urlloader != null) urlloader.setInterrupted(true) ;
             String urlname = (loadarchive != null) ? loadarchive.toExternalForm() : null;
             if (urlname != null)
             {
                cancel.put(urlname, new Boolean(true)) ;
                if (OptionsDialog.getDebugControl())
-                  System.out.println("WebFrame: interrupt archive load " + urlname) ;
+                  PrintLn.println("WebFrame: interrupt archive load " + urlname) ;
             }
          }
 		}
@@ -1157,7 +1169,7 @@ final public class WebFrame extends KissFrame
 			Runtime.getRuntime().gc() ;
 			try { Thread.currentThread().sleep(300) ; }
 			catch (InterruptedException ex) { }
-			System.out.println("WebFrame: Out of memory.") ;
+			PrintLn.println("WebFrame: Out of memory.") ;
 			setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
          JOptionPane.showMessageDialog(this,
             Kisekae.getCaptions().getString("LowMemoryFault") + " - " +
@@ -1170,7 +1182,7 @@ final public class WebFrame extends KissFrame
 
 		catch (Throwable ex)
 		{
-			System.out.println("WebFrame: Internal fault, action " + evt.getActionCommand()) ;
+			PrintLn.println("WebFrame: Internal fault, action " + evt.getActionCommand()) ;
 			ex.printStackTrace() ;
          String s = Kisekae.getCaptions().getString("InternalError") + " - " ;
          s += Kisekae.getCaptions().getString("ActionNotCompleted") ;
@@ -1205,6 +1217,17 @@ final public class WebFrame extends KissFrame
             Kisekae.getCaptions().getString("InternalError"),
             JOptionPane.ERROR_MESSAGE) ;
 		}
+	}
+   
+   
+   public void propertyChange(PropertyChangeEvent e)
+	{
+      pageloadtime = System.currentTimeMillis() - Configuration.getTimestamp() ;
+      long loadtime = pageloadtime - setpagetime ;
+      String s = "Time to load: " + loadtime + " ms" ;
+      statusbar.showStatus(s) ;
+      if (OptionsDialog.getDebugControl())
+         PrintLn.println("WebFrame: Page Loaded, location " + location + ", time to load = " + loadtime + " ms");
 	}
 
 
@@ -1298,7 +1321,7 @@ final public class WebFrame extends KissFrame
 
       catch (SecurityException e)
       {
-         System.out.println("WebFrame: Archive file open exception, " + e.getMessage()) ;
+         PrintLn.println("WebFrame: Archive file open exception, " + e.getMessage()) ;
          JOptionPane.showMessageDialog(this,
             Kisekae.getCaptions().getString("SecurityException") + "\n" +
             Kisekae.getCaptions().getString("FileOpenSecurityMessage1"),
@@ -1356,11 +1379,12 @@ final public class WebFrame extends KissFrame
       
       if (evt.getEventType() == HyperlinkEvent.EventType.ACTIVATED) 
       {
+         hyperlinktime = System.currentTimeMillis() - Configuration.getTimestamp() ;
          statusbar.showStatus("") ;
          URL evturl = evt.getURL() ;
          String description = evt.getDescription() ;
          if (OptionsDialog.getDebugControl())
-            System.out.println("WebFrame: hyperlink to " + description) ;
+            PrintLn.println("WebFrame: hyperlink to " + description) ;
 
 
          // If the URL could not be decoded, parse the description.
@@ -1492,7 +1516,7 @@ final public class WebFrame extends KissFrame
       boolean open = true ;
       if (!(s.startsWith("file:") || s.startsWith("jar:")))
       {
-         if (WebDloadDialog.showDialog())
+         if (WebDloadDialog.showDialog() && !Kisekae.isWebswing())
          {
             WebDloadDialog dd = new WebDloadDialog(this,url,showrun) ;
             dd.setVisible(true) ;
@@ -1506,7 +1530,7 @@ final public class WebFrame extends KissFrame
 
       Runnable runner = new Runnable()
       { public void run() 
-        { showWaitDialog("Wait!\nRemote access can be slow.") ; } 
+        { showWaitDialog("Wait!\nRemote access can be slow.\n\n") ; } 
       } ;
 		SwingUtilities.invokeLater(runner) ;
       
@@ -1582,9 +1606,9 @@ final public class WebFrame extends KissFrame
 
    private void flush()
    {
-      history = new Vector() ;         // URL History list
-      currentlocation = 0 ;            // Current history index
-      currentweb = null ;              // Last valid web
+//      history = new Vector() ;         // URL History list
+//      currentlocation = 0 ;            // Current history index
+//      currentweb = null ;              // Last valid web
       runner = null ;
       if (statusbar != null) statusbar.setStatusBar(false) ;
       statusbar = null ;
@@ -1620,9 +1644,20 @@ final public class WebFrame extends KissFrame
 		{ 
          public void run() 
          { 
-            try { Thread.sleep(1000) ; }
-            catch (InterruptedException e) { }
-            if (nd != null) nd.setVisible(true) ; 
+            while (true)
+            {
+               try { Thread.sleep(1000) ; }
+               catch (InterruptedException e) { break ; }
+               if (nd == null) break ;
+               if (!nd.isVisible())
+               {
+                  nd.setVisible(true) ;
+                  continue ;
+               } 
+               String s = nd.getText() ;
+               s += ". " ;
+               nd.setText(s) ;
+            }
          } 
       } ;
   		Thread t = new Thread(awt) ;
@@ -1661,7 +1696,8 @@ final public class WebFrame extends KissFrame
             if (parent != null) parent.showStatus(s) ;
             activebtn.setEnabled(true) ;
             if (OptionsDialog.getDebugControl())
-               System.out.println("WebFrame: setPage " + location) ;
+               PrintLn.println("WebFrame: setPage " + location) ;
+            setpagetime = System.currentTimeMillis() - Configuration.getTimestamp() ;
             editor.setPage(location);
             enterurl.setText(location) ;
             if (location.equals(OptionsDialog.getKissWeb()))
@@ -1739,7 +1775,7 @@ final public class WebFrame extends KissFrame
          Object o = cancel.get(urlname) ;
          if ((o instanceof Boolean) && ((Boolean) o).booleanValue()) return ;
          if (OptionsDialog.getDebugControl())
-            System.out.println("WebFrame: LoadArchive " + urlname) ;
+            PrintLn.println("WebFrame: LoadArchive " + urlname) ;
          urlloader = new UrlLoader(parent,urlname) ;
          urlloader.callback.addActionListener(parent) ;
          urlloader.setConnectionID(Kisekae.getConnectionID());

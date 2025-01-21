@@ -568,7 +568,7 @@ final class CelGroupDialog extends KissDialog
 			try { Thread.currentThread().sleep(300) ; }
 			catch (InterruptedException ex) { }
          setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
-			System.out.println("CelGroupDialog: Out of memory.") ;
+			PrintLn.println("CelGroupDialog: Out of memory.") ;
          JOptionPane.showMessageDialog(this,
             Kisekae.getCaptions().getString("LowMemoryFault") + " - " +
             Kisekae.getCaptions().getString("ActionNotCompleted"),
@@ -581,7 +581,7 @@ final class CelGroupDialog extends KissDialog
 		catch (Throwable e)
 		{
          setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
-			System.out.println("CelGroupDialog: Internal fault, action " + evt.getActionCommand()) ;
+			PrintLn.println("CelGroupDialog: Internal fault, action " + evt.getActionCommand()) ;
 			e.printStackTrace() ;
          JOptionPane.showMessageDialog(this,
             Kisekae.getCaptions().getString("InternalError") +
@@ -1058,7 +1058,7 @@ final class CelGroupDialog extends KissDialog
 
          catch (Exception e)
          {
-            System.out.println("CelGroupDialog: exception " + e.toString()) ;
+            PrintLn.println("CelGroupDialog: exception " + e.toString()) ;
             e.printStackTrace() ;
             JOptionPane.showMessageDialog(parent,
                Kisekae.getCaptions().getString("InternalError") +

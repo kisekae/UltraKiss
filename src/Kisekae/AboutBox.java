@@ -330,7 +330,7 @@ final public class AboutBox extends KissDialog
          }
          catch ( Exception e)
          {
-            System.out.println("AboutBox: license agreement exception " + e) ;
+            PrintLn.println("AboutBox: license agreement exception " + e) ;
          }
          return ;
       }

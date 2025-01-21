@@ -232,7 +232,7 @@ final class CacheManager extends KissDialog
          if (b) m++ ;
       }
                   
-      System.out.println("Cache is cleared, " + m + " files deleted out of " + n + " selected.") ;
+      PrintLn.println("Cache is cleared, " + m + " files deleted out of " + n + " selected.") ;
       String s = Kisekae.getCaptions().getString("OptionsDialogCacheClearText2") + m ;
 		JOptionPane.showMessageDialog(getParentFrame(), s,
          Kisekae.getCaptions().getString("OptionsDialogCacheClearTitle"),

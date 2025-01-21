@@ -187,7 +187,7 @@ final class Alarm extends KissObject implements Comparable
 /*      
       if (delay == Integer.MAX_VALUE && t > 0) 
       { 
-         System.out.println("Alarm: setInterval for "+toString()+" to " + t + " but delay = " + delay) ;
+         PrintLn.println("Alarm: setInterval for "+toString()+" to " + t + " but delay = " + delay) ;
          return ;
       }
 */

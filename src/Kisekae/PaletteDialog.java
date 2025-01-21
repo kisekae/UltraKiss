@@ -539,7 +539,7 @@ final class PaletteDialog extends KissDialog
 			try { Thread.currentThread().sleep(300) ; }
 			catch (InterruptedException ex) { }
          setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
-			System.out.println("PaletteDialog: Out of memory.") ;
+			PrintLn.println("PaletteDialog: Out of memory.") ;
          JOptionPane.showMessageDialog(this,
             Kisekae.getCaptions().getString("LowMemoryFault") + " - " +
             Kisekae.getCaptions().getString("ActionNotCompleted"),
@@ -552,7 +552,7 @@ final class PaletteDialog extends KissDialog
 		catch (Throwable e)
 		{
          setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
-			System.out.println("PaletteDialog: Internal fault, action " + evt.getActionCommand()) ;
+			PrintLn.println("PaletteDialog: Internal fault, action " + evt.getActionCommand()) ;
 			e.printStackTrace() ;
          JOptionPane.showMessageDialog(this,
             Kisekae.getCaptions().getString("InternalError") +

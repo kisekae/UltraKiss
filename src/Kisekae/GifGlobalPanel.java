@@ -401,7 +401,7 @@ final class GifGlobalPanel extends JPanel
 		catch (Throwable e)
 		{
          if (parent != null) parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
-			System.out.println("GifGlobalPanel: Internal fault, action " + evt.getActionCommand()) ;
+			PrintLn.println("GifGlobalPanel: Internal fault, action " + evt.getActionCommand()) ;
 			e.printStackTrace() ;
 			JOptionPane.showMessageDialog(parent,
 				"Internal fault.  Action not completed." + "\n" + e.toString(),

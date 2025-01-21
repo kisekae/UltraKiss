@@ -120,7 +120,7 @@ final class LhaFile extends ArchiveFile
          if (memfile == null) throw(new IOException(e.getMessage())) ;
       }
 		if (OptionsDialog.getDebugControl())
-      	System.out.println("Open LhaFile file " + pathname + ", Open count " + ++opencount) ;
+      	PrintLn.println("Open LhaFile file " + pathname + ", Open count " + ++opencount) ;
 
 		// Constructs an index of the elements in the archive file.
 		// LHA files do not have a directory block so the file is
@@ -232,7 +232,7 @@ final class LhaFile extends ArchiveFile
 	{
 		if (connections > 0) return ;
 		if (OptionsDialog.getDebugControl() && pathname != null)
-      	System.out.println("Close LhaFile file " + pathname + ", Open count " + --opencount) ;
+      	PrintLn.println("Close LhaFile file " + pathname + ", Open count " + --opencount) ;
 		if (file != null) file.close() ;
 		if (memfile != null) memfile.close() ;
 		file = null ;

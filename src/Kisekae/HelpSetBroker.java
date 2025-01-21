@@ -90,7 +90,7 @@ final class HelpSetBroker extends DefaultHelpBroker
       }
       catch (Throwable e)
       {
-         System.out.println("HelpSetBroker: Exception " + e.toString()) ;
+         PrintLn.println("HelpSetBroker: Exception " + e.toString()) ;
          e.printStackTrace() ;
       }
    }

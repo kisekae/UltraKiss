@@ -426,7 +426,7 @@ final class BmpCel extends Cel
 			showError("Cel " + file + " is not a valid BMP cel.") ;
          int calcsize = size.width * size.height ;
          if (bits == 4) calcsize = (calcsize + 1) / 2 ;
-			System.out.println("Size Exception, Cel " + file
+			PrintLn.println("Size Exception, Cel " + file
          	+ ", Width: " + size.width + ", Height: " + size.height
 				+ e.toString()) ;
 		}
@@ -1146,6 +1146,6 @@ final class BmpCel extends Cel
    	int line = getLine() ;
 		if (line > 0) s = "[Line " + line + "] " + s ;
 		if (loader != null) loader.showError(s) ;
-		else System.out.println(s) ;
+		else PrintLn.println(s) ;
 	}
 }

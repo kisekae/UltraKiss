@@ -163,7 +163,7 @@ final class PrintPreview extends KissFrame
       hPage = (int) (pageFormat.getHeight()) ;
       if (wPage == 0 || hPage == 0)
       {
-         System.err.println("PrintPreview: Unable to determine default page size") ;
+         PrintLn.printErr("PrintPreview: Unable to determine default page size") ;
          return;
       }
 
@@ -220,7 +220,7 @@ final class PrintPreview extends KissFrame
 
 			catch (PrinterException ex)
 			{
-				System.err.println("Printing error: " + ex.toString()) ;
+				PrintLn.printErr("Printing error: " + ex.toString()) ;
 				ex.printStackTrace() ;
             JOptionPane.showMessageDialog(this,
                Kisekae.getCaptions().getString("PrinterError") + " - " +
@@ -238,7 +238,7 @@ final class PrintPreview extends KissFrame
 				Runtime.getRuntime().gc() ;
 	         try { Thread.currentThread().sleep(300) ; }
 	         catch (InterruptedException ex) { }
-				System.out.println("PrintPreview: Out of memory.") ;
+				PrintLn.println("PrintPreview: Out of memory.") ;
             JOptionPane.showMessageDialog(this,
                Kisekae.getCaptions().getString("LowMemoryFault") + " - " +
                Kisekae.getCaptions().getString("ActionNotCompleted"),
@@ -548,7 +548,7 @@ final class PrintPreview extends KissFrame
 
          			catch (Exception ex)
          			{
-         				System.err.println("Printing error: " + ex.toString()) ;
+         				PrintLn.printErr("Printing error: " + ex.toString()) ;
                       JOptionPane.showMessageDialog(me,
                          Kisekae.getCaptions().getString("PrinterError") + " - " +
                          Kisekae.getCaptions().getString("PrintingTerminated")
@@ -717,7 +717,7 @@ final class PrintPreview extends KissFrame
 								Runtime.getRuntime().gc() ;
 					         try { Thread.currentThread().sleep(300) ; }
 					         catch (InterruptedException ex) { }
-								System.out.println("PrintPreview: Out of memory.") ;
+								PrintLn.println("PrintPreview: Out of memory.") ;
                         JOptionPane.showMessageDialog(me,
                            Kisekae.getCaptions().getString("LowMemoryFault") + " - " +
                            Kisekae.getCaptions().getString("ActionNotCompleted"),
@@ -762,7 +762,7 @@ final class PrintPreview extends KissFrame
 							Runtime.getRuntime().gc() ;
 				         try { Thread.currentThread().sleep(300) ; }
 				         catch (InterruptedException ex) { }
-							System.out.println("PrintPreview: Out of memory.") ;
+							PrintLn.println("PrintPreview: Out of memory.") ;
                      JOptionPane.showMessageDialog(me,
                         Kisekae.getCaptions().getString("LowMemoryFault") + " - " +
                         Kisekae.getCaptions().getString("ActionNotCompleted"),
@@ -780,7 +780,7 @@ final class PrintPreview extends KissFrame
 
 	      catch (PrinterException e)
 	      {
-	         System.err.println("Printing error: " + e.toString()) ;
+	         PrintLn.printErr("Printing error: " + e.toString()) ;
 	         e.printStackTrace() ;
             JOptionPane.showMessageDialog(me,
                Kisekae.getCaptions().getString("PrinterError") + " - " +
@@ -799,7 +799,7 @@ final class PrintPreview extends KissFrame
 				Runtime.getRuntime().gc() ;
 	         try { Thread.currentThread().sleep(300) ; }
 	         catch (InterruptedException ex) { }
-				System.out.println("PrintPreview: Out of memory.") ;
+				PrintLn.println("PrintPreview: Out of memory.") ;
             JOptionPane.showMessageDialog(me,
                Kisekae.getCaptions().getString("LowMemoryFault") + " - " +
                Kisekae.getCaptions().getString("ActionNotCompleted"),

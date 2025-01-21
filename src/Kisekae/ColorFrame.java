@@ -787,16 +787,16 @@ final class ColorFrame extends KissFrame
 		fileMenu.add((pagesetup = new JMenuItem(Kisekae.getCaptions().getString("MenuFilePageSetup")))) ;
 		if (!applemac) pagesetup.setMnemonic(KeyEvent.VK_U) ;
 		pagesetup.addActionListener(this) ;
-      pagesetup.setEnabled(Kisekae.isPrintInstalled() && !Kisekae.isSecure()) ;
+      pagesetup.setEnabled(Kisekae.isPrintInstalled() && !Kisekae.isSecure() && !Kisekae.isExpired()) ;
 		fileMenu.add((printpreview = new JMenuItem(Kisekae.getCaptions().getString("MenuFilePrintPreview")))) ;
 		if (!applemac) printpreview.setMnemonic(KeyEvent.VK_V) ;
 		printpreview.addActionListener(this) ;
-      printpreview.setEnabled(Kisekae.isPrintInstalled() && !Kisekae.isSecure()) ;
+      printpreview.setEnabled(Kisekae.isPrintInstalled() && !Kisekae.isSecure() && !Kisekae.isExpired()) ;
 		fileMenu.add((print = new JMenuItem(Kisekae.getCaptions().getString("MenuFilePrint")))) ;
 		if (!applemac) print.setMnemonic(KeyEvent.VK_P) ;
 		print.addActionListener(this) ;
       print.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, accelerator));
-      print.setEnabled(Kisekae.isPrintInstalled() && !Kisekae.isSecure()) ;
+      print.setEnabled(Kisekae.isPrintInstalled() && !Kisekae.isSecure() && !Kisekae.isExpired()) ;
 		fileMenu.addSeparator() ;
 		fileMenu.add((properties = new JMenu(Kisekae.getCaptions().getString("MenuFileProperties")))) ;
       properties.add((paletteproperties = new JMenuItem(Kisekae.getCaptions().getString("MenuFilePropertiesPalette")))) ;
@@ -2683,7 +2683,7 @@ final class ColorFrame extends KissFrame
 					try { pj.print() ; }
 					catch (PrinterException ex)
 					{
-						System.err.println("Printing error: " + ex.toString()) ;
+						PrintLn.printErr("Printing error: " + ex.toString()) ;
 						ex.printStackTrace() ;
                   JOptionPane.showMessageDialog(this,
                      Kisekae.getCaptions().getString("PrinterError") + " - " +
@@ -2763,7 +2763,7 @@ final class ColorFrame extends KissFrame
 			Runtime.getRuntime().gc() ;
 			try { Thread.currentThread().sleep(300) ; }
 			catch (InterruptedException ex) { }
-			System.out.println("ColorFrame: Out of memory.") ;
+			PrintLn.println("ColorFrame: Out of memory.") ;
          setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
          JOptionPane.showMessageDialog(this,
             Kisekae.getCaptions().getString("LowMemoryFault") + " - " +
@@ -2776,7 +2776,7 @@ final class ColorFrame extends KissFrame
 
 		catch (Throwable e)
 		{
-			System.out.println("ColorFrame: Internal fault, action " + evt.getActionCommand()) ;
+			PrintLn.println("ColorFrame: Internal fault, action " + evt.getActionCommand()) ;
 			e.printStackTrace() ;
          setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
          JOptionPane.showMessageDialog(this,
@@ -4762,7 +4762,7 @@ final class ColorFrame extends KissFrame
 			try { undo.undo(); }
 			catch (CannotUndoException ex)
 			{
-				System.out.println("ColorFrame: Unable to undo edit") ;
+				PrintLn.println("ColorFrame: Unable to undo edit") ;
 				ex.printStackTrace();
             JOptionPane.showMessageDialog(me,
                Kisekae.getCaptions().getString("EditUndoError") + " - " +
@@ -4839,7 +4839,7 @@ final class ColorFrame extends KissFrame
 			try { undo.redo() ; }
 			catch (CannotRedoException ex)
 			{
-				System.out.println("ColorFrame: Unable to redo edit") ;
+				PrintLn.println("ColorFrame: Unable to redo edit") ;
 				ex.printStackTrace() ;
             JOptionPane.showMessageDialog(me,
                Kisekae.getCaptions().getString("EditUndoError") + " - " +
@@ -5328,8 +5328,8 @@ final class ColorFrame extends KissFrame
 			try { flavors[0] = new DataFlavor(df) ; }
 			catch (ClassNotFoundException e)
 			{
-				System.out.println("ColorFrame: DataFlavor " + df) ;
-				System.out.println(e.getMessage()) ;
+				PrintLn.println("ColorFrame: DataFlavor " + df) ;
+				PrintLn.println(e.getMessage()) ;
 			}
 			return flavors ;
 		}

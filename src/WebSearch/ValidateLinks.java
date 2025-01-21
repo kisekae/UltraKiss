@@ -93,6 +93,7 @@ import javax.swing.text.*;
 import javax.swing.text.html.*;
 import Kisekae.Kisekae ;
 import Kisekae.OptionsDialog ;
+import Kisekae.PrintLn ;
 
 
 class ValidateLinks implements Runnable, ActionListener
@@ -152,7 +153,7 @@ class ValidateLinks implements Runnable, ActionListener
       Thread thread = Thread.currentThread() ;
       thread.setName("ValidateLinks-" + count) ;
       if (OptionsDialog.getDebugSearch())
-         System.out.println(thread.getName() + " started.") ;
+         PrintLn.println(thread.getName() + " started.") ;
       webframe.vallinkactive = true ;
       kisekae = Kisekae.getKisekae() ;
       kisekae.setCallback(this) ;
@@ -178,17 +179,18 @@ class ValidateLinks implements Runnable, ActionListener
       catch (Throwable e) { }
       
       activecount-- ;
-      if (activecount == 0)
+      if (activecount <= 0)
       {
          String s = (bytes  / 1024) + "K" ;
-         webframe.addTrace("End Archive Validation. Pages: " + count + " Bytes: " + s,1) ;
+         webframe.addTrace("End Archive Validation. Pages: " + count + ". Bytes: " + s,1) ;
          webframe.vallinkactive = false ;
          webframe.valcallback.doClick() ;
+         activecount = 0 ;
       }
       
       kisekae.removeCallback(this) ;
       if (OptionsDialog.getDebugSearch())
-         System.out.println(thread.getName() + " ends.") ;
+         PrintLn.println(thread.getName() + " ends.") ;
   }
 
 
@@ -201,14 +203,14 @@ class ValidateLinks implements Runnable, ActionListener
       try
       {
          if (OptionsDialog.getDebugSearch())
-            System.out.println("ValidateLinks: begin validation for " + s) ;
+            PrintLn.println("ValidateLinks: begin validation for " + s) ;
          kisekae.init(s,OptionsDialog.getDownloadSize(),webframe) ;
          return true ;
       }
       catch (Throwable e)
       {
          Thread thread = Thread.currentThread() ;
-         System.out.println(thread.getName() + " " + e) ;
+         PrintLn.println(thread.getName() + " " + e) ;
          e.printStackTrace();
          return false ;
       }
@@ -290,7 +292,9 @@ class ValidateLinks implements Runnable, ActionListener
          catch (IOException ioex)
          {
             savedataset = false ;
-            System.out.println(ioex) ;
+            PrintLn.println(ioex.toString()) ;
+            webframe.addTrace("IOException, unable to write "+directory,2) ;
+            webframe.addTrace("Ensure "+OptionsDialog.getDataDirectory()+" is write enabled.",2) ;
          }
          if (savedataset)
             kisekae.saveSet(this,directory,writename);
@@ -298,7 +302,7 @@ class ValidateLinks implements Runnable, ActionListener
       catch (Throwable e)
       {
          Thread thread = Thread.currentThread() ;
-         System.out.println(thread.getName() + " " + e) ;
+         PrintLn.println(thread.getName() + " " + e) ;
          e.printStackTrace();
       }
    }
@@ -327,12 +331,14 @@ class ValidateLinks implements Runnable, ActionListener
             f = new File(f,thumbname) ;
             if (f.exists()) f.delete() ;
             if (OptionsDialog.getDebugSearch())
-               System.out.println("ValidateLinks: createNewFile " + f.getPath()) ;
+               PrintLn.println("ValidateLinks: createNewFile " + f.getPath()) ;
             savethumbnail = f.createNewFile() ; 
          }
          catch (IOException ioex)
          {
-            System.out.println(ioex) ;
+            PrintLn.println(ioex.toString()) ;
+            webframe.addTrace("IOException, unable to write "+directory,2) ;
+            webframe.addTrace("Ensure "+OptionsDialog.getImageDirectory()+" is write enabled.",2) ;
          }
          if (savethumbnail)
             kisekae.saveThumbnail(this,directory,thumbname,
@@ -342,7 +348,7 @@ class ValidateLinks implements Runnable, ActionListener
       catch (Throwable e)
       {
          Thread thread = Thread.currentThread() ;
-         System.out.println(thread.getName() + " " + e) ;
+         PrintLn.println(thread.getName() + " " + e) ;
          e.printStackTrace();
       }
    }
@@ -354,6 +360,10 @@ class ValidateLinks implements Runnable, ActionListener
    {
       stop = true ;
 //      synchronized (queue) { queue.notify() ; }
+      count = 0 ;                  // Count of invokations
+      bytes = 0 ;                  // Total bytes loaded
+      activecount = 0 ;            // Active threads
+      setstate = new Vector() ;    // State result returned
    }
 
    // A method to return our result.
@@ -430,7 +440,7 @@ class ValidateLinks implements Runnable, ActionListener
                s2 = convertSeparator(s2) ;
                String s = "Archive " + setname + " saved to " + s2 ;
                if (OptionsDialog.getDebugSearch())
-                  System.out.println("ValidateLinks: " + s) ;
+                  PrintLn.println("ValidateLinks: " + s) ;
                webframe.addTrace(s) ;
                if (OptionsDialog.getSaveImage()) saveimage() ;
                if (savethumbnail && !stop) return ;
@@ -445,7 +455,7 @@ class ValidateLinks implements Runnable, ActionListener
                s2 = convertSeparator(s2) ;
                String s = "Thumbnail image " + thumbname + " saved to " + s2 ;
                if (OptionsDialog.getDebugSearch())
-                  System.out.println("ValidateLinks: " + s) ;
+                  PrintLn.println("ValidateLinks: " + s) ;
                webframe.addTrace(s) ;
                
                // Get the directories
@@ -477,7 +487,7 @@ class ValidateLinks implements Runnable, ActionListener
          catch (Throwable ex)
          {
             Thread thread = Thread.currentThread() ;
-            System.out.println(thread.getName() + " " + ex) ;
+            PrintLn.println(thread.getName() + " " + ex) ;
             ex.printStackTrace() ;
             savedataset = false ;
             savethumbnail = false ;

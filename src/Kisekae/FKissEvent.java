@@ -859,7 +859,7 @@ final class FKissEvent extends KissObject
                String bp = (event.getNoBreakpoint()) ? "*" : " " ;
    				long time = System.currentTimeMillis() - createtime ;
                if (!("label".equals(identifier)))
-                  System.out.println("[" + time + "]"+bp+"[" + currentthread.getName() + "] FKissEvent begin event " + event.getName()) ;
+                  PrintLn.println("[" + time + "]"+bp+"[" + currentthread.getName() + "] FKissEvent begin event " + event.getName()) ;
    			}
 
             // If we have a breakpoint set on this event suspend processing
@@ -1256,7 +1256,7 @@ final class FKissEvent extends KissObject
    	{
          String bp = (event.getNoBreakpoint()) ? "*" : " " ;
    		long time = System.currentTimeMillis() - createtime ;
-   		System.out.println("[" + time + "]"+bp+"[" + currentthread.getName() + "] FKissEvent end event " + event.getName() + " processing time " + runtime + " ms") ;
+   		PrintLn.println("[" + time + "]"+bp+"[" + currentthread.getName() + "] FKissEvent end event " + event.getName() + " processing time " + runtime + " ms") ;
       }
       if (terminate) 
       {
@@ -1311,8 +1311,8 @@ final class FKissEvent extends KissObject
             if (topbreak == null) topbreak = breakevent ;
             if (OptionsDialog.getDebugControl())
             {
-      			System.out.println("FKissEvent: breakpoint " + getName()) ;
-      			System.out.println("FKissEvent: breakpoint on object " + o) ;
+      			PrintLn.println("FKissEvent: breakpoint " + getName()) ;
+      			PrintLn.println("FKissEvent: breakpoint on object " + o) ;
             }
 
             // Establish the breakpoint FKiSS Editor frame.  Issue a breakpoint
@@ -1359,7 +1359,7 @@ final class FKissEvent extends KissObject
       synchronized (queue)
       {
 			if (OptionsDialog.getDebugControl())
-     			System.out.println("FKissEvent: breakpoint resume " + getName()) ;
+     			PrintLn.println("FKissEvent: breakpoint resume " + getName()) ;
          EventHandler.resumeEventHandler(true) ;
          AlarmTimer.resumeTimer(true) ;
          debugframe.clear() ;
@@ -1383,7 +1383,7 @@ final class FKissEvent extends KissObject
       synchronized (queue)
       {
 			if (OptionsDialog.getDebugControl())
-   		  	System.out.println("FKissEvent: breakpoint single step processing " + getName()) ;
+   		  	PrintLn.println("FKissEvent: breakpoint single step processing " + getName()) ;
          timerbreak = false ;
          stepbreak = true ;
          enterbreak = false ;
@@ -1401,7 +1401,7 @@ final class FKissEvent extends KissObject
       synchronized (queue)
       {
 			if (OptionsDialog.getDebugControl())
-   		  	System.out.println("FKissEvent: breakpoint step into processing " + getName()) ;
+   		  	PrintLn.println("FKissEvent: breakpoint step into processing " + getName()) ;
          timerbreak = false ;
          stepbreak = false ;
          enterbreak = true ;
@@ -1419,7 +1419,7 @@ final class FKissEvent extends KissObject
       synchronized (queue)
       {
 			if (OptionsDialog.getDebugControl())
-   		  	System.out.println("FKissEvent: breakpoint run to return processing " + getName()) ;
+   		  	PrintLn.println("FKissEvent: breakpoint run to return processing " + getName()) ;
          timerbreak = false ;
          stepbreak = false ;
          enterbreak = false ;
@@ -1438,8 +1438,8 @@ final class FKissEvent extends KissObject
       {
 			if (OptionsDialog.getDebugControl())
          {
-   		  	System.out.println("FKissEvent: breakpoint run to cursor processing " + getName()) ;
-   		  	System.out.println("FKissEvent: breakpoint cursor object is " + o) ;
+   		  	PrintLn.println("FKissEvent: breakpoint run to cursor processing " + getName()) ;
+   		  	PrintLn.println("FKissEvent: breakpoint cursor object is " + o) ;
          }
          timerbreak = false ;
          stepbreak = false ;
@@ -1460,7 +1460,7 @@ final class FKissEvent extends KissObject
       synchronized (queue)
       {
 			if (OptionsDialog.getDebugControl())
-     			System.out.println("FKissEvent: breakpoint timer step into " + getName()) ;
+     			PrintLn.println("FKissEvent: breakpoint timer step into " + getName()) ;
          timerbreak = true ;
          stepbreak = false ;
          enterbreak = false ;

@@ -917,7 +917,7 @@ class AttributeDialog extends KissDialog
 
 		catch (Throwable e)
 		{
-			System.out.println("AttributeDialog: Internal fault, action " + evt.getActionCommand()) ;
+			PrintLn.println("AttributeDialog: Internal fault, action " + evt.getActionCommand()) ;
 			e.printStackTrace() ;
          JOptionPane.showMessageDialog(this,
             Kisekae.getCaptions().getString("InternalError") +

@@ -1169,7 +1169,7 @@ final class ImageColorPanel extends JPanel implements ActionListener
       }
       catch (Exception e)
       {
-         System.out.println("ImageColorPanel: transform exception " + e) ;
+         PrintLn.println("ImageColorPanel: transform exception " + e) ;
       }
       return image ;
    }

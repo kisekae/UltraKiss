@@ -373,7 +373,7 @@ final class CelLocalPanel extends JPanel
 
 		catch (Throwable e)
 		{
-			System.out.println("GroupLocalPanel: Internal fault, action " + evt.getActionCommand()) ;
+			PrintLn.println("GroupLocalPanel: Internal fault, action " + evt.getActionCommand()) ;
 			e.printStackTrace() ;
 			JOptionPane.showMessageDialog(parent,
 				"Internal fault.  Action not completed." + "\n" + e.toString(),

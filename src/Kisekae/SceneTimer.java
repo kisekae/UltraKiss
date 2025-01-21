@@ -119,7 +119,7 @@ final class SceneTimer extends Thread
 		if (thread != null)
       {
          if (OptionsDialog.getDebugControl())
-			   System.out.println("Stop scene timer.") ;
+			   PrintLn.println("Stop scene timer.") ;
    	   thread.interrupt() ;
       }
       cels = null ;
@@ -155,7 +155,7 @@ final class SceneTimer extends Thread
 
       if (cels.size() == 0) cels = null ;
 	   if (OptionsDialog.getDebugControl())
-		   System.out.println("Start scene timer.") ;
+		   PrintLn.println("Start scene timer.") ;
       if (cels != null) start() ;
    }
 
@@ -218,7 +218,7 @@ final class SceneTimer extends Thread
    {
       if (thread == null) return ;
 		if (OptionsDialog.getDebugControl() && !manualsuspend)
-			System.out.println("Suspend scene timer. " + ((manual) ? "Manual" : "")) ;
+			PrintLn.println("Suspend scene timer. " + ((manual) ? "Manual" : "")) ;
    	if (manual) manualsuspend = true ;
    	suspend = true ;
    }
@@ -235,7 +235,7 @@ final class SceneTimer extends Thread
       synchronized (suspendlock)
       {
 			if (OptionsDialog.getDebugControl())
-				System.out.println("Resume scene timer." + ((manual) ? "Manual" : "")) ;
+				PrintLn.println("Resume scene timer." + ((manual) ? "Manual" : "")) ;
    		suspend = false ;
 		   suspendlock.notify() ;
       }
@@ -279,7 +279,7 @@ final class SceneTimer extends Thread
 		thread = Thread.currentThread() ;
 		thread.setName("SceneTimer-" + id) ;
 		if (OptionsDialog.getDebugControl())
-			System.out.println(thread.getName() + " started.") ;
+			PrintLn.println(thread.getName() + " started.") ;
 
 		// Run the timer loop until this activity is terminated.  Each time
       // through the loop we identify the current scene on display.
@@ -307,10 +307,10 @@ final class SceneTimer extends Thread
 						{
 							active = false ;
                		if (OptionsDialog.getDebugControl())
-                        System.out.println(thread.getName() + " suspended.") ;
+                        PrintLn.println(thread.getName() + " suspended.") ;
 							suspendlock.wait() ;
                		if (OptionsDialog.getDebugControl())
-                        System.out.println(thread.getName() + " resumed.") ;
+                        PrintLn.println(thread.getName() + " resumed.") ;
                      restart = true ;
 						}
                   if (restart) break ;
@@ -372,7 +372,7 @@ final class SceneTimer extends Thread
 				Runtime.getRuntime().gc() ;
 	         try { Thread.currentThread().sleep(300) ; }
 	         catch (InterruptedException ex) { }
-				System.out.println("SceneTimer: Out of memory.") ;
+				PrintLn.println("SceneTimer: Out of memory.") ;
 				JOptionPane.showMessageDialog(Kisekae.getMainFrame(),
 	           	"Insufficient memory.  Scene thread is suspended.",
 	           	"Low Memory Fault",
@@ -383,7 +383,7 @@ final class SceneTimer extends Thread
       // Shut down.
 
 		if (OptionsDialog.getDebugControl())
-	      System.out.println(thread.getName() + " terminated.");
+	      PrintLn.println(thread.getName() + " terminated.");
       thread = null ;
       cels = null ;
       active = false ;

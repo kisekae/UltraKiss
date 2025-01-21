@@ -633,7 +633,7 @@ final class ConfigDialog extends KissDialog
    			try {	if (text != null) text.write(null,out,null) ; }
    			catch (IOException e)
    			{
-   				System.out.println("I/O Exception: " + e.toString()) ;
+   				PrintLn.println("I/O Exception: " + e.toString()) ;
    				e.printStackTrace() ;
    			}
    			finally
@@ -641,7 +641,7 @@ final class ConfigDialog extends KissDialog
    				try { if (out != null) out.close() ; }
    				catch (IOException e)
    				{
-   					System.out.println("I/O Exception: " + e.toString()) ;
+   					PrintLn.println("I/O Exception: " + e.toString()) ;
    					e.printStackTrace() ;
    				}
    			}
@@ -669,7 +669,7 @@ final class ConfigDialog extends KissDialog
 			try { Thread.currentThread().sleep(300) ; }
 			catch (InterruptedException ex) { }
          setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
-			System.out.println("ConfigDialog: Out of memory.") ;
+			PrintLn.println("ConfigDialog: Out of memory.") ;
          JOptionPane.showMessageDialog(this,
             Kisekae.getCaptions().getString("LowMemoryFault") + " - " +
             Kisekae.getCaptions().getString("ActionNotCompleted"),
@@ -682,7 +682,7 @@ final class ConfigDialog extends KissDialog
 		catch (Throwable e)
 		{
          setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
-			System.out.println("ConfigDialog: Internal fault, action " + evt.getActionCommand()) ;
+			PrintLn.println("ConfigDialog: Internal fault, action " + evt.getActionCommand()) ;
 			e.printStackTrace() ;
          JOptionPane.showMessageDialog(this,
             Kisekae.getCaptions().getString("InternalError") +

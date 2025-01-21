@@ -142,7 +142,7 @@ class UrlLoader extends KissFrame
 		try { jbInit(); }
 		catch(Exception e)
 		{
-         System.out.println("UrlLoader: jbInit constructor " + e.toString()) ;
+         PrintLn.println("UrlLoader: jbInit constructor " + e.toString()) ;
          e.printStackTrace(); 
       }
 
@@ -231,7 +231,7 @@ class UrlLoader extends KissFrame
 		time = System.currentTimeMillis() ;
       threadname = thread.getName() ;
 		if (OptionsDialog.getDebugControl())
-			System.out.println("URL loader " + threadname + " active.") ;
+			PrintLn.println("URL loader " + threadname + " active.") ;
 		thread.setPriority(Thread.MIN_PRIORITY) ;
       try { thread.sleep(500) ; } catch (Exception e) { }
       if (parent instanceof WebFrame)
@@ -239,7 +239,7 @@ class UrlLoader extends KissFrame
        if (interrupted || stop)
       {
    		if (OptionsDialog.getDebugControl())
-   			System.out.println("URL loader " + threadname + " interrupted.") ;
+   			PrintLn.println("URL loader " + threadname + " interrupted.") ;
          close() ;
          return ;
       }         
@@ -261,7 +261,7 @@ class UrlLoader extends KissFrame
             s = s.substring(0,i1) + urlname + s.substring(j1+1) ;
          setTitle(s) ;
    		openurl = new URL(urlname) ;
-         System.out.println("Download file " + openurl.toExternalForm()) ;
+         PrintLn.println("Download file " + openurl.toExternalForm()) ;
 
          // Establish a temporary file of the correct type.
 
@@ -286,7 +286,7 @@ class UrlLoader extends KissFrame
          String cachepath = Kisekae.getCachePath() ;
          File directory = (cachepath != null) ? new File(cachepath) : null ;
          if (!OptionsDialog.getCacheInclude()) directory = null ;
-         if (directory != null)
+         if (directory != null && !Kisekae.isBatch())
          {
             Vector v = new Vector() ;
             File [] files = directory.listFiles() ;
@@ -323,7 +323,7 @@ class UrlLoader extends KissFrame
                   f = new File(cachepath+parts[0]) ;
                   pathname = f.getPath() ;
                   incache = true ;
-                  System.out.println("URL File " + pathname + " located in cache.") ;
+                  PrintLn.println("URL File " + pathname + " located in cache.") ;
                   break ;
                }
             }
@@ -333,19 +333,19 @@ class UrlLoader extends KissFrame
          // cannot create a file.  Load to memory.  Otherwise cache
          // the file in the cache directory.
 
-         if (!incache)
+         if (!incache && !Kisekae.isBatch())
          {
             try
             {  
                f = File.createTempFile("UltraKiss-"+file,extension,directory) ;
                if (!OptionsDialog.getCacheInclude()) f.deleteOnExit() ;
                pathname = f.getPath() ;
-               System.out.println("Create URL file " + pathname + " in cache.") ;
+               PrintLn.println("Create URL file " + pathname + " in cache.") ;
             }
             catch (Exception e)
             {
                pathname = null ;
-               System.out.println("Create URL memory file, cache exception " + e.getMessage()) ;
+               PrintLn.println("Create URL memory file, cache exception " + e.getMessage()) ;
             }
          }
             
@@ -426,7 +426,7 @@ class UrlLoader extends KissFrame
          if (stop) throw new Exception("Load " + openurl.toExternalForm() + " stopped") ;
          showStatus(Kisekae.getCaptions().getString("TransferCompleteStatus")) ;
          if (OptionsDialog.getDebugLoad())
-	         System.out.println("Open URL data transfer bytes " + bytes) ;
+	         PrintLn.println("Open URL data transfer bytes " + bytes) ;
       }
       
       catch (InterruptedException e)
@@ -434,7 +434,7 @@ class UrlLoader extends KissFrame
          stopload() ;
          interrupted = true ;
          if (OptionsDialog.getDebugControl())
-   			System.out.println("URL loader " + threadname + " interrupted.") ;
+   			PrintLn.println("URL loader " + threadname + " interrupted.") ;
       }
 
 		catch (OutOfMemoryError e)
@@ -444,7 +444,7 @@ class UrlLoader extends KissFrame
          memfile = null ;
          showStatus(Kisekae.getCaptions().getString("LoadTerminatedStatus")) ;
          showMsg(Kisekae.getCaptions().getString("LowMemoryFault")) ;
-			System.out.println("UrlLoader: Out of memory.") ;
+			PrintLn.println("UrlLoader: Out of memory.") ;
 		}
 
       catch (MalformedURLException e)
@@ -475,7 +475,7 @@ class UrlLoader extends KissFrame
          memfile = null ;
          showStatus(Kisekae.getCaptions().getString("LoadTerminatedStatus")) ;
          showMsg(Kisekae.getCaptions().getString("SecurityException")) ;
-         System.out.println("KiSS file open exception, " + e.getMessage()) ;
+         PrintLn.println("KiSS file open exception, " + e.getMessage()) ;
          JOptionPane.showMessageDialog(parent,
             Kisekae.getCaptions().getString("SecurityException") + "\n" +
             Kisekae.getCaptions().getString("FileOpenSecurityMessage1"),
@@ -495,10 +495,10 @@ class UrlLoader extends KissFrame
          showMsg(e.toString()) ;
          if (!stop) 
          {
-            System.out.println("UrlLoader: " + threadname + " exception " + e) ;
+            PrintLn.println("UrlLoader: " + threadname + " exception " + e) ;
             if (!(e instanceof FileNotFoundException))
             {
-               System.out.println("UrlLoader: " + threadname + " URL " + urlname) ;
+               PrintLn.println("UrlLoader: " + threadname + " URL " + urlname) ;
                if (!(e instanceof KissException)) e.printStackTrace() ;
             }
          }
@@ -570,8 +570,8 @@ class UrlLoader extends KissFrame
       catch (Exception e)
       {
          fatal = true ;
-         System.out.println("UrlLoader: " + threadname + " exception " + e) ;
-         System.out.println("UrlLoader: " + threadname + " URL " + urlname) ;
+         PrintLn.println("UrlLoader: " + threadname + " exception " + e) ;
+         PrintLn.println("UrlLoader: " + threadname + " URL " + urlname) ;
          e.printStackTrace() ;
          return ;
       }
@@ -590,7 +590,7 @@ class UrlLoader extends KissFrame
 	public void windowClosing(WindowEvent evt)
 	{
       String s = (openurl != null) ? openurl.toExternalForm() + " " : "" ;
-   	System.out.println("URL Load " + s + "cancelled ...") ;
+   	PrintLn.println("URL Load " + s + "cancelled ...") ;
 		if (activeloader == this) activeloader.stopload() ;
       if (Kisekae.isBatch()) callback.doClick();
       pathname = null ;
@@ -612,7 +612,7 @@ class UrlLoader extends KissFrame
 	      pathname = null ;
          memfile = null ;
          String s = (openurl != null) ? openurl.toExternalForm() + " " : "" ;
-      	System.out.println("URL Load " + s + "cancelled ...") ;
+      	PrintLn.println("URL Load " + s + "cancelled ...") ;
    		if (activeloader == this) activeloader.stopload() ;
          if (Kisekae.isBatch()) callback.doClick();
 			close() ;
@@ -653,7 +653,7 @@ class UrlLoader extends KissFrame
       if (s == null) return ;
       s = s.replaceFirst("[\\#\\?].*$","") ;  // remove query and ref from url
 		FileName.setText(s) ;
-		if (OptionsDialog.getDebugLoad()) System.out.println("URL Load: " + s) ;
+		if (OptionsDialog.getDebugLoad()) PrintLn.println("URL Load: " + s) ;
 	}
 
 	// Method to intialize the progress bar display.

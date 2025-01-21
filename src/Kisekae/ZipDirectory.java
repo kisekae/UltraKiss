@@ -85,7 +85,7 @@ final class ZipDirectory extends KissDialog
 		try { jbInit(); pack(); }
       catch(Exception ex)
       {
-         System.out.println("ZipDirectory: jbInit constructor " + ex.toString()) ;
+         PrintLn.println("ZipDirectory: jbInit constructor " + ex.toString()) ;
          ex.printStackTrace();
          JOptionPane.showMessageDialog(null,
             Kisekae.getCaptions().getString("InternalError") +

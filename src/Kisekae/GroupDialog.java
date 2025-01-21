@@ -978,7 +978,7 @@ final class GroupDialog extends KissDialog
 			try { Thread.currentThread().sleep(300) ; }
 			catch (InterruptedException ex) { }
          setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
-			System.out.println("GroupDialog: Out of memory.") ;
+			PrintLn.println("GroupDialog: Out of memory.") ;
          JOptionPane.showMessageDialog(this,
             Kisekae.getCaptions().getString("LowMemoryFault") + " - " +
             Kisekae.getCaptions().getString("ActionNotCompleted"),
@@ -991,7 +991,7 @@ final class GroupDialog extends KissDialog
 		catch (Throwable e)
 		{
          setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
-			System.out.println("GroupDialog: Internal fault, action " + evt.getActionCommand()) ;
+			PrintLn.println("GroupDialog: Internal fault, action " + evt.getActionCommand()) ;
 			e.printStackTrace() ;
          JOptionPane.showMessageDialog(this,
             Kisekae.getCaptions().getString("InternalError") +
@@ -1053,7 +1053,7 @@ final class GroupDialog extends KissDialog
                   {
                      String s = "Load: (object properties) " + cel ;
                      if (cel.isCopy()) s += " [copy]" ;
-                     System.out.println(s) ;
+                     PrintLn.println(s) ;
                   }
                }
             }
@@ -1778,7 +1778,7 @@ final class GroupDialog extends KissDialog
             }
             catch (Exception e)
             {
-      			System.out.println("GroupDialog: exception " + e.toString()) ;
+      			PrintLn.println("GroupDialog: exception " + e.toString()) ;
                e.printStackTrace() ;
                JOptionPane.showMessageDialog(parent,
                   Kisekae.getCaptions().getString("InternalError") +
@@ -2020,7 +2020,7 @@ final class GroupDialog extends KissDialog
             }
             catch (Exception e)
             {
-      			System.out.println("GroupDialog: exception " + e.toString()) ;
+      			PrintLn.println("GroupDialog: exception " + e.toString()) ;
                e.printStackTrace() ;
                JOptionPane.showMessageDialog(parent,
                   Kisekae.getCaptions().getString("InternalError") +

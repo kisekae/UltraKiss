@@ -191,7 +191,7 @@ final class GroupGlobalPanel extends JPanel
 
 		catch (Throwable e)
 		{
-			System.out.println("GroupGlobalPanel: Internal fault, action " + evt.getActionCommand()) ;
+			PrintLn.println("GroupGlobalPanel: Internal fault, action " + evt.getActionCommand()) ;
 			e.printStackTrace() ;
 			JOptionPane.showMessageDialog(parent,
 				"Internal fault.  Action not completed." + "\n" + e.toString(),

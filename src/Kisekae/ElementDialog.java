@@ -361,7 +361,7 @@ final class ElementDialog extends KissDialog
          // Read the file into memory.
        
          parent.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
-         System.out.println("Import configuration file: " + selected.getPath());
+         PrintLn.println("Import configuration file: " + selected.getPath());
          int b = 0 ;
          InputStream is = new FileInputStream(selected) ;
          OutputStream os = new ByteArrayOutputStream((int) selected.length()) ;
@@ -382,7 +382,7 @@ final class ElementDialog extends KissDialog
 
       catch (SecurityException e)
       {
-         System.out.println("KiSS file open exception, " + e.toString()) ;
+         PrintLn.println("KiSS file open exception, " + e.toString()) ;
 			JOptionPane.showMessageDialog(null,
             Kisekae.getCaptions().getString("SecurityException") + "\n" +
             Kisekae.getCaptions().getString("FileOpenSecurityMessage1"),
@@ -394,7 +394,7 @@ final class ElementDialog extends KissDialog
 
 		catch (IOException e)
 		{
-         System.out.println("KiSS file open exception, " + e.toString()) ;
+         PrintLn.println("KiSS file open exception, " + e.toString()) ;
 			JOptionPane.showMessageDialog(null, e.toString(),
          	Kisekae.getCaptions().getString("FileOpenException"),
             JOptionPane.ERROR_MESSAGE) ;
@@ -404,7 +404,7 @@ final class ElementDialog extends KissDialog
 
 		catch (Exception e)
 		{
-         System.out.println("ElementDialog exception, " + e.toString()) ;
+         PrintLn.println("ElementDialog exception, " + e.toString()) ;
 			JOptionPane.showMessageDialog(null, e.toString(),
          	Kisekae.getCaptions().getString("FileOpenException"),
             JOptionPane.ERROR_MESSAGE) ;

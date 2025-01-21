@@ -152,7 +152,7 @@ public class PngEncoder extends ImageEncoder
 		}
 		catch (Exception e)
 		{
-			System.out.println("PngEncoder: exception during encoding") ;
+			PrintLn.println("PngEncoder: exception during encoding") ;
 			e.printStackTrace() ;
 			throw new IOException("Internal exception during PNG encoding") ;
 		}

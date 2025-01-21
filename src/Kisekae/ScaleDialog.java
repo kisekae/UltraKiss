@@ -271,7 +271,7 @@ class ScaleDialog extends KissDialog
 		catch (Throwable e)
 		{
       	cancel = true ;
-			System.out.println("ScaleDialog: " + e.toString()) ;
+			PrintLn.println("ScaleDialog: " + e.toString()) ;
 			Runtime.getRuntime().gc() ;
          try { Thread.currentThread().sleep(300) ; }
          catch (InterruptedException ex) { }

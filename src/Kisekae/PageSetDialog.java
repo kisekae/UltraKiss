@@ -562,7 +562,7 @@ final class PageSetDialog extends KissDialog
          try { Thread.currentThread().sleep(300) ; }
          catch (InterruptedException ex) { }
          setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
-         System.out.println("PageSetDialog: Out of memory.") ;
+         PrintLn.println("PageSetDialog: Out of memory.") ;
          JOptionPane.showMessageDialog(this,
             Kisekae.getCaptions().getString("LowMemoryFault") + " - " +
             Kisekae.getCaptions().getString("ActionNotCompleted"),
@@ -575,7 +575,7 @@ final class PageSetDialog extends KissDialog
       catch (Throwable e)
       {
          setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
-         System.out.println("PageSetDialog: Internal fault, action " + evt.getActionCommand()) ;
+         PrintLn.println("PageSetDialog: Internal fault, action " + evt.getActionCommand()) ;
          e.printStackTrace() ;
          JOptionPane.showMessageDialog(this,
             Kisekae.getCaptions().getString("InternalError") +
@@ -1062,7 +1062,7 @@ final class PageSetDialog extends KissDialog
             }
             catch (Exception e)
             {
-      			System.out.println("PageSetDialog: exception " + e.toString()) ;
+      			PrintLn.println("PageSetDialog: exception " + e.toString()) ;
                e.printStackTrace() ;
                JOptionPane.showMessageDialog(parent,
                   Kisekae.getCaptions().getString("InternalError") +

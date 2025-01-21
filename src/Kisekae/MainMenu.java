@@ -72,9 +72,10 @@ final public class MainMenu extends KissMenu
 {
    private FileOpen fd = null ;							// Our file open list
    private UrlLoader urlloader = null ;	 			// Our active url load
+   private URL downloadurl = null ;                // The original download
    private WebFrame webframe = null ;              // Our active portal
    private boolean nocopy = false ;                // Our URL nocopy indicator
-   private String webURL = null ;                  // Initial URL on launch
+   private String webURL = null ;                  // Initial URL for portal
    private String openpath = null ;                // FileOpen path on open
 
    private static final int NEWFILE = 0 ;
@@ -284,7 +285,7 @@ final public class MainMenu extends KissMenu
       expand.addActionListener(this) ;
       fileMenu.add((websearch = new JMenuItem(Kisekae.getCaptions().getString("MenuFileWebSearch")))) ;
       websearch.addActionListener(this) ;
-      websearch.setEnabled(!Kisekae.isSecure() && Kisekae.isSearchInstalled());
+      websearch.setEnabled(!Kisekae.isSecure() && Kisekae.isSearchInstalled() && !Kisekae.isExpired());
       websearch.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, accelerator));
       if (!applemac) websearch.setMnemonic(KeyEvent.VK_S) ;
       fileMenu.addSeparator() ;
@@ -295,7 +296,7 @@ final public class MainMenu extends KissMenu
       if (!applemac) openurl.setMnemonic(KeyEvent.VK_R) ;
       fileMenu.add((openweb = new JMenuItem(Kisekae.getCaptions().getString("MenuFileOpenWeb")))) ;
       openweb.addActionListener(this) ;
-      openweb.setEnabled(!Kisekae.isSecure());
+      openweb.setEnabled(!Kisekae.isSecure() && !Kisekae.isWebswing());
       openweb.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_B, accelerator+ActionEvent.SHIFT_MASK));
       if (!applemac) openweb.setMnemonic(KeyEvent.VK_B) ;
       fileMenu.add((openportal = new JMenuItem(Kisekae.getCaptions().getString("MenuFileOpenPortal")))) ;
@@ -332,6 +333,7 @@ final public class MainMenu extends KissMenu
       priorviewastext = (viewastext != null) ? viewastext.getState() : false ;
       viewMenu.add((viewastext = new JCheckBoxMenuItem(Kisekae.getCaptions().getString("MenuViewAsText")))) ;
       viewastext.setState(priorviewastext) ;
+      viewastext.setEnabled(!Kisekae.isSecure()) ;
 
       // Create the Tools menu
 
@@ -342,22 +344,27 @@ final public class MainMenu extends KissMenu
       toolsMenu.add((texteditor = new JMenuItem(Kisekae.getCaptions().getString("MenuToolsTextEditor")))) ;
       texteditor.addActionListener(this) ;
       texteditor.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, accelerator+ActionEvent.SHIFT_MASK));
+      texteditor.setEnabled(!Kisekae.isSecure()) ;
       if (!applemac) texteditor.setMnemonic(KeyEvent.VK_T) ;
       toolsMenu.add((coloreditor = new JMenuItem(Kisekae.getCaptions().getString("MenuToolsColorEditor")))) ;
       coloreditor.addActionListener(this) ;
       coloreditor.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, accelerator+ActionEvent.SHIFT_MASK));
+      coloreditor.setEnabled(!Kisekae.isSecure()) ;
       if (!applemac) coloreditor.setMnemonic(KeyEvent.VK_C) ;
       toolsMenu.add((imageeditor = new JMenuItem(Kisekae.getCaptions().getString("MenuToolsImageEditor")))) ;
       imageeditor.addActionListener(this) ;
       imageeditor.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I, accelerator+ActionEvent.SHIFT_MASK));
+      imageeditor.setEnabled(!Kisekae.isSecure()) ;
       if (!applemac) imageeditor.setMnemonic(KeyEvent.VK_I) ;
       toolsMenu.add((archive = new JMenuItem(Kisekae.getCaptions().getString("MenuToolsArchiveManager")))) ;
       archive.addActionListener(this) ;
       archive.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, accelerator+ActionEvent.SHIFT_MASK));
+      archive.setEnabled(!Kisekae.isSecure()) ;
       if (!applemac) archive.setMnemonic(KeyEvent.VK_A) ;
       toolsMenu.add((mediaplayer = new JMenuItem(Kisekae.getCaptions().getString("MenuToolsMediaPlayer")))) ;
       mediaplayer.addActionListener(this) ;
       mediaplayer.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_M, accelerator+ActionEvent.SHIFT_MASK));
+      mediaplayer.setEnabled(!Kisekae.isSecure() && !Kisekae.isWebswing()) ;
       if (!applemac) mediaplayer.setMnemonic(KeyEvent.VK_M) ;
       mediaplayer.setVisible(true) ;
 
@@ -370,6 +377,7 @@ final public class MainMenu extends KissMenu
       optionsMenu.add((options = new JMenuItem(Kisekae.getCaptions().getString("MenuOptionsOptions")))) ;
       options.addActionListener(this) ;
       options.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, accelerator+ActionEvent.SHIFT_MASK));
+      options.setEnabled(!Kisekae.isSecure()) ;
       if (!applemac) options.setMnemonic(KeyEvent.VK_O) ;
       optionsMenu.add((memory = new JMenuItem(Kisekae.getCaptions().getString("MenuOptionsMemory")))) ;
       memory.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_M, accelerator+ActionEvent.SHIFT_MASK));
@@ -443,7 +451,7 @@ final public class MainMenu extends KissMenu
       if (!applemac) showtips.setMnemonic(KeyEvent.VK_S) ;
       showtips.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F1, ActionEvent.SHIFT_MASK));
       showtips.addActionListener(this);
-      showtips.setEnabled(!Kisekae.isSecure() && Kisekae.isTipsInstalled());
+      showtips.setEnabled(Kisekae.isTipsInstalled());
       helpMenu.add((rundemo = new JMenuItem(Kisekae.getCaptions().getString("MenuHelpDemo")))) ;
       if (!applemac) rundemo.setMnemonic(KeyEvent.VK_D) ;
       rundemo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, accelerator+ActionEvent.SHIFT_MASK));
@@ -463,7 +471,7 @@ final public class MainMenu extends KissMenu
 //    helpMenu.addSeparator() ;
       helpMenu.add((bugreport = new JMenuItem(Kisekae.getCaptions().getString("MenuHelpBugReport")))) ;
       bugreport.addActionListener(this);
-      bugreport.setEnabled(!Kisekae.isSecure());
+      bugreport.setEnabled(!Kisekae.isSecure() && !Kisekae.isWebswing());
       helpMenu.add((clearcache = new JMenuItem(Kisekae.getCaptions().getString("MenuHelpClearCache")))) ;
       clearcache.addActionListener(this);
       clearcache.setEnabled(!Kisekae.isSecure());
@@ -494,6 +502,11 @@ final public class MainMenu extends KissMenu
 
    void setUrlLoader(UrlLoader loader) { urlloader = loader ; }
    
+   // Set the original download URL (not the cache file)
+   // the menu Save and Save As menu items.
+   
+   void setDownloadURL(URL url) { downloadurl = url ; }
+   
    // Retain the nocopy indicator from a URL load. This is used to disable
    // the menu Save and Save As menu items.
    
@@ -522,6 +535,10 @@ final public class MainMenu extends KissMenu
    // Get our last Open event FileOpen path.
    
    String getOpenPath() { return openpath ; }
+   
+   // Get our original not cached download URL from UrlLoader.
+   
+   URL getDownloadURL() { return downloadurl ; }
    
    // Set our last open event FileOpen path.
    
@@ -757,6 +774,7 @@ final public class MainMenu extends KissMenu
          {
             ZipManager manager = new ZipManager() ;
             manager.setVisible(true) ;
+            manager.toFront() ;
             return ;
          }
 
@@ -767,6 +785,7 @@ final public class MainMenu extends KissMenu
          {
             TextFrame editor = new TextFrame() ;
             editor.setVisible(true) ;
+            editor.toFront() ;
             return ;
          }
 
@@ -777,6 +796,7 @@ final public class MainMenu extends KissMenu
          {
             ColorFrame editor = new ColorFrame() ;
             editor.setVisible(true) ;
+            editor.toFront() ; 
             return ;
          }
 
@@ -787,6 +807,7 @@ final public class MainMenu extends KissMenu
          {
             ImageFrame editor = new ImageFrame() ;
             editor.setVisible(true) ;
+            editor.toFront() ;
             return ;
          }
 
@@ -798,6 +819,7 @@ final public class MainMenu extends KissMenu
             MediaFrame player = new MediaFrame() ;
             player.setMinimized(false) ;
             player.setVisible(true) ;
+            player.toFront() ;
             return ;
          }
 
@@ -831,6 +853,7 @@ final public class MainMenu extends KissMenu
             {
                WebFrame wf = new WebFrame(parent,helpurl+onlinehelp) ;
                wf.setVisible(true) ;
+               wf.toFront() ;
             }
             else
             {
@@ -931,6 +954,7 @@ final public class MainMenu extends KissMenu
             parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
             parent.showStatus(null);
             wf.setVisible(true) ;
+            wf.toFront() ;
             return ;
          }
 
@@ -954,6 +978,7 @@ final public class MainMenu extends KissMenu
             parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
             parent.showStatus(null);
             wf.setVisible(true) ;
+            wf.toFront() ;
          }
 
          // An Exit request closes our frame.  We process end events prior
@@ -1062,6 +1087,7 @@ final public class MainMenu extends KissMenu
                TextFrame tf = new TextFrame(ze,is,false) ;
                parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
                tf.setVisible(true) ;
+               tf.toFront() ;
             }
             return ;
          }
@@ -1094,7 +1120,7 @@ final public class MainMenu extends KissMenu
                // entry on the menu list. 
                
       			if (ArchiveFile.isArchive(archive))
-      				System.out.println("Open LRU archive " + archive) ;
+      				PrintLn.println("Open LRU archive " + archive) ;
                parent.loadfile(archive,cnf) ; 
                if (fd == null)
                {
@@ -1115,6 +1141,7 @@ final public class MainMenu extends KissMenu
             String urlname = urlloader.getUrlName() ;
             String setname = urlloader.getSetName() ;
             String cnfname = urlloader.getCnfName() ;
+            downloadurl = urlloader.getURL() ;
             urlloader = null ;
             if (pathname == null)
             {
@@ -1154,7 +1181,7 @@ final public class MainMenu extends KissMenu
          Runtime.getRuntime().gc() ;
          try { Thread.currentThread().sleep(300) ; }
          catch (InterruptedException ex) { }
-         System.out.println("MainMenu: Out of memory.") ;
+         PrintLn.println("MainMenu: Out of memory.") ;
          parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
          Kisekae.setLoaded(false) ;
          if (!Kisekae.isBatch())
@@ -1169,7 +1196,7 @@ final public class MainMenu extends KissMenu
 
       catch (Throwable e)
       {
-         System.out.println("MainMenu: Internal fault, action " + evt.getActionCommand()) ;
+         PrintLn.println("MainMenu: Internal fault, action " + evt.getActionCommand()) ;
          e.printStackTrace() ;
          String s = Kisekae.getCaptions().getString("InternalError") + " - " ;
          s += Kisekae.getCaptions().getString("KissSetClosed") ;
@@ -1367,7 +1394,7 @@ final public class MainMenu extends KissMenu
          }
          catch (Throwable e)
          {
-            System.out.println("MainMenu: JNLP FileOpenService is not available.");
+            PrintLn.println("MainMenu: JNLP FileOpenService is not available.");
             JOptionPane.showMessageDialog(parent,
                Kisekae.getCaptions().getString("FileReadError")
                + "\n" + e.toString(),
@@ -1406,7 +1433,7 @@ final public class MainMenu extends KissMenu
       Vector expandfiles = new Vector() ;
       expandfiles.add(zip) ;
       c.setExpandFiles(expandfiles) ;
-      System.out.println("Add expansion file " + zip.getFileName());
+      PrintLn.println("Add expansion file " + zip.getFileName());
       
       // If there is a CNF in the expansion file use it.  If not, use the
       // current configuration file.  
@@ -1540,10 +1567,14 @@ final public class MainMenu extends KissMenu
       
       if (webframe == null)
       {
-         webframe = new WebFrame(parent,webURL,website) ;
+         if (webURL == null && website == null)
+            webframe = new WebFrame(parent) ;
+         else
+            webframe = new WebFrame(parent,webURL,website) ;
          parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
          parent.showStatus(null);
          webframe.setVisible(true) ;
+         webframe.toFront() ;
          return ;
       }
       
@@ -1576,6 +1607,7 @@ final public class MainMenu extends KissMenu
       parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
       parent.showStatus(null);
       wf.setVisible(true) ;
+      wf.toFront() ;
    }
 
 
@@ -1620,6 +1652,7 @@ final public class MainMenu extends KissMenu
             ZipManager zm = new ZipManager(zip) ;
             parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
             zm.setVisible(true) ;
+            zm.toFront() ;
          }
          return ;
       }
@@ -1633,7 +1666,7 @@ final public class MainMenu extends KissMenu
          parent.setNewPreAppend(null,null) ;
          parent.closepanel() ;
          setFileOpen(fd) ;
-         System.out.println("MainMenu: openContext initialize " + ze.getName());
+         PrintLn.println("MainMenu: openContext initialize " + ze.getName());
          parent.init() ;
          parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
          return ;
@@ -1647,6 +1680,7 @@ final public class MainMenu extends KissMenu
          TextFrame tf = new TextFrame(ze) ;
          parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
          tf.setVisible(true) ;
+         tf.toFront() ;
          return ;
       }
 
@@ -1658,6 +1692,7 @@ final public class MainMenu extends KissMenu
          ColorFrame cf = new ColorFrame(ze) ;
          parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
          cf.setVisible(true) ;
+         cf.toFront() ;
          return ;
       }
 
@@ -1673,6 +1708,7 @@ final public class MainMenu extends KissMenu
             mf.play(ze) ;
          parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
          mf.setVisible(true) ;
+         mf.toFront() ;
          return ;
       }
 
@@ -1684,6 +1720,7 @@ final public class MainMenu extends KissMenu
          ImageFrame cf = new ImageFrame(ze) ;
          parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
          cf.setVisible(true) ;
+         cf.toFront() ;
          return ;
       }
 
@@ -1704,6 +1741,7 @@ final public class MainMenu extends KissMenu
          TextFrame tf = new TextFrame(ze) ;
          parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
          tf.setVisible(true) ;
+         tf.toFront() ;
          return ;
       }
 

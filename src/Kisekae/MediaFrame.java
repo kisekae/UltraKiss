@@ -737,7 +737,7 @@ final class MediaFrame extends KissFrame
 			Runtime.getRuntime().gc() ;
 			try { Thread.currentThread().sleep(300) ; }
 			catch (InterruptedException ex) { }
-			System.out.println("MediaFrame: Out of memory.") ;
+			PrintLn.println("MediaFrame: Out of memory.") ;
          setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
          JOptionPane.showMessageDialog(this,
             Kisekae.getCaptions().getString("LowMemoryFault") + " - " +
@@ -751,7 +751,7 @@ final class MediaFrame extends KissFrame
 		catch (Throwable e)
 		{
 			EventHandler.stopEventHandler() ;
-			System.out.println("MediaFrame: Internal fault, action " + evt.getActionCommand()) ;
+			PrintLn.println("MediaFrame: Internal fault, action " + evt.getActionCommand()) ;
 			e.printStackTrace() ;
          setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
          JOptionPane.showMessageDialog(this,
@@ -953,7 +953,7 @@ final class MediaFrame extends KissFrame
 		if (ko instanceof Audio) audio = (Audio) ko ;
 		if (ko instanceof Video) video = (Video) ko ;
       if (OptionsDialog.getDebugSound() && ko != null)
-	      System.out.println("MediaPlayer: play " + ko) ;
+	      PrintLn.println("MediaPlayer: play " + ko) ;
       
       // If we are loading from a previous play() request then interrupt 
       // the load and continue with this request.
@@ -1170,7 +1170,12 @@ final class MediaFrame extends KissFrame
       // Not an active file.  Load and play.
 
 		if (ze.isAudioSound())
-         ko = new AudioSound(ze.getZipFile(),ze.getPath()) ;
+      {
+         if (Kisekae.isWebswing())
+            ko = new AudioWebswing(ze.getZipFile(),ze.getPath()) ;
+         else
+            ko = new AudioSound(ze.getZipFile(),ze.getPath()) ;
+      }
 		if (ze.isAudioMedia())
          ko = new AudioMedia(ze.getZipFile(),ze.getPath()) ;
 		if (ze.isVideo())
@@ -1193,7 +1198,12 @@ final class MediaFrame extends KissFrame
       if (ze == null) return ;
       
 		if (ze.isAudioSound())
-         ko = new AudioSound(ze.getZipFile(),ze.getPath()) ;
+      {
+         if (Kisekae.isWebswing())
+            ko = new AudioWebswing(ze.getZipFile(),ze.getPath()) ;
+         else
+            ko = new AudioSound(ze.getZipFile(),ze.getPath()) ;
+      }
 		if (ze.isAudioMedia())
          ko = new AudioMedia(ze.getZipFile(),ze.getPath()) ;
 		if (ze.isVideo())
@@ -1306,7 +1316,7 @@ final class MediaFrame extends KissFrame
             {
             	errors++ ;
                s = "MediaPlayer: Playlist element not found, " + token ;
-               if (OptionsDialog.getDebugMedia()) System.out.println(s) ;
+               if (OptionsDialog.getDebugMedia()) PrintLn.println(s) ;
                s = Kisekae.getCaptions().getString("FileOpenFileOpenMessage1") ;
                int i1 = s.indexOf('[') ;
                int j1 = s.indexOf(']') ;
@@ -1321,8 +1331,8 @@ final class MediaFrame extends KissFrame
 
       catch (IOException e)
       {
-      	System.out.println("MediaPlayer: playlist exception, " + ze.getName()) ;
-         System.out.println(e.getMessage()) ;
+      	PrintLn.println("MediaPlayer: playlist exception, " + ze.getName()) ;
+         PrintLn.println(e.getMessage()) ;
          JOptionPane.showMessageDialog(me, ze.getName() + "\n" + e.getMessage(),
             Kisekae.getCaptions().getString("MediaPlayerFault"),
             JOptionPane.ERROR_MESSAGE) ;
@@ -1372,7 +1382,7 @@ final class MediaFrame extends KissFrame
 		}
 
       if (OptionsDialog.getDebugControl())
-         System.out.println("Media Player " + me.getTitle() + " is closed.");       
+         PrintLn.println("Media Player " + me.getTitle() + " is closed.");       
       closecheck(false) ;
       MainFrame mf = Kisekae.getMainFrame() ;
       Configuration config = (mf != null) ? mf.getConfig() : null ;
@@ -1935,7 +1945,7 @@ final class MediaFrame extends KissFrame
 	void showFile(String s)
 	{
 		if (OptionsDialog.getDebugLoad())
-			System.out.println("Load: " + s) ;
+			PrintLn.println("Load: " + s) ;
 	}
 
 
@@ -1980,7 +1990,7 @@ final class MediaFrame extends KissFrame
 			if (ce instanceof RealizeCompleteEvent)
 			{
 	      	if (OptionsDialog.getDebugSound() || OptionsDialog.getDebugMovie())
-					System.out.println("MediaPlayer: " + getName() + " RealizeCompleteEvent") ;
+					PrintLn.println("MediaPlayer: " + getName() + " RealizeCompleteEvent") ;
 				realized = true ;
 				Runnable callback = new Runnable()
 				{ public void run() { updateLayout() ; } } ;
@@ -1995,8 +2005,8 @@ final class MediaFrame extends KissFrame
 			if (ce instanceof ControllerErrorEvent)
 			{
 	      	error = true ;
-				System.out.println("MediaPlayer: " + getName() + " ControllerErrorEvent") ;
-				System.out.println(ce.toString()) ;
+				PrintLn.println("MediaPlayer: " + getName() + " ControllerErrorEvent") ;
+				PrintLn.println(ce.toString()) ;
 				statelabel.setText("Media file " + getName() + " " + ce.toString()) ;
 				return ;
 			}
@@ -2008,7 +2018,7 @@ final class MediaFrame extends KissFrame
 			if (ce instanceof EndOfMediaEvent)
 			{
 	      	if (OptionsDialog.getDebugSound() || OptionsDialog.getDebugMovie())
-					System.out.println("MediaPlayer: " + getName() + " EndOfMediaEvent") ;
+					PrintLn.println("MediaPlayer: " + getName() + " EndOfMediaEvent") ;
 
             // If we have a playlist start the next item in the list.
 
@@ -2029,7 +2039,7 @@ final class MediaFrame extends KissFrame
 					if (audio != null && audio.isRepeating()) return ;
 					if (video != null && video.isRepeating()) return ;
 		      	if (OptionsDialog.getDebugSound() || OptionsDialog.getDebugMovie())
-                  System.out.println("MediaPlayer: " + getName() + " Repeat count = " + repeatcount) ;
+                  PrintLn.println("MediaPlayer: " + getName() + " Repeat count = " + repeatcount) ;
                if (repeatcount > 0) repeatcount-- ;
                if (repeatcount == 0) loopcontrol.setState(false) ;
 					Runnable runner = new Runnable()
@@ -2051,7 +2061,7 @@ final class MediaFrame extends KissFrame
 			if (ce instanceof TransitionEvent)
 	      {
 	      	if (OptionsDialog.getDebugSound() || OptionsDialog.getDebugMovie())
-	         	System.out.println("MediaPlayer: " + getName() + " TransitionEvent") ;
+	         	PrintLn.println("MediaPlayer: " + getName() + " TransitionEvent") ;
 				updateStatus() ;
 				return ;
 	      }
@@ -2069,7 +2079,7 @@ final class MediaFrame extends KissFrame
 			if (event.getType() == LineEvent.Type.STOP)
 			{
 				if (OptionsDialog.getDebugSound())
-					System.out.println("MediaPlayer: " + getName() + " ClipStopEvent") ;
+					PrintLn.println("MediaPlayer: " + getName() + " ClipStopEvent") ;
 
             // Determine if we completed the current media file.
 
@@ -2102,7 +2112,7 @@ final class MediaFrame extends KissFrame
 				{
 					if (audio != null && audio.isLooping()) return ;
 		      	if (OptionsDialog.getDebugSound() || OptionsDialog.getDebugMovie())
-                  System.out.println("MediaPlayer: " + getName() + " Repeat count = " + repeatcount) ;
+                  PrintLn.println("MediaPlayer: " + getName() + " Repeat count = " + repeatcount) ;
                if (audio != null) audio.stop(audio) ;
                if (repeatcount > 0) repeatcount-- ;
                if (repeatcount == 0) return ;
@@ -2126,7 +2136,7 @@ final class MediaFrame extends KissFrame
 			else if (event.getType() == LineEvent.Type.START)
 			{
 				if (OptionsDialog.getDebugSound())
-					System.out.println("MediaPlayer: " + getName() + " ClipStartEvent") ;
+					PrintLn.println("MediaPlayer: " + getName() + " ClipStartEvent") ;
             updateStatus() ;
 			}
       }
@@ -2147,7 +2157,7 @@ final class MediaFrame extends KissFrame
          {  // 47 is end of track (manditory)
          	started = false ;
 				if (OptionsDialog.getDebugSound())
-					System.out.println("MediaPlayer: " + getName() + " MidiEndTrackEvent " + message.getType()) ;
+					PrintLn.println("MediaPlayer: " + getName() + " MidiEndTrackEvent " + message.getType()) ;
 
             // Determine if we completed the current media file.
             // End of track is always true.
@@ -2172,7 +2182,7 @@ final class MediaFrame extends KissFrame
 				{
 					if (audio != null && audio.isRepeating()) return ;
 		      	if (OptionsDialog.getDebugSound() || OptionsDialog.getDebugMovie())
-                  System.out.println("MediaPlayer: " + getName() + " Repeat count = " + repeatcount) ;
+                  PrintLn.println("MediaPlayer: " + getName() + " Repeat count = " + repeatcount) ;
                if (repeatcount > 0) repeatcount-- ;
                if (repeatcount == 0) loopcontrol.setState(false) ;
                if (audio != null) audio.stop(audio) ;
@@ -2204,7 +2214,7 @@ final class MediaFrame extends KissFrame
 	         // 04 is instrument name (optional)
 	         if (started) return ;
 				if (OptionsDialog.getDebugSound())
-					System.out.println("MediaPlayer: " + getName() + " MidiStartTrackEvent " + message.getType()) ;
+					PrintLn.println("MediaPlayer: " + getName() + " MidiStartTrackEvent " + message.getType()) ;
 	         updateStatus() ;
 	         started = true ;
          }

@@ -106,7 +106,7 @@ final public class HelpLoader
 		}
 		catch (Throwable e)
 		{
-			System.out.println("HelpSet " + helpset + " " + e.getMessage()) ;
+			PrintLn.println("HelpSet " + helpset + " " + e.getMessage()) ;
          return ;
 		}
 

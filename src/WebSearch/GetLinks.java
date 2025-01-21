@@ -92,6 +92,7 @@ import javax.swing.text.*;
 import javax.swing.text.html.*;
 import javax.swing.text.html.parser.*;
 import Kisekae.OptionsDialog ;
+import Kisekae.PrintLn ;
 
 
 class GetLinks implements Runnable
@@ -125,7 +126,7 @@ class GetLinks implements Runnable
 
       public void handleStartTag(HTML.Tag t, MutableAttributeSet a, int pos)
       {
-//       System.out.println(Thread.currentThread().getName() + " [" + location + "] HTML start tag " + t) ;
+//       PrintLn.println(Thread.currentThread().getName() + " [" + location + "] HTML start tag " + t) ;
          // Anchor href
          if (t == HTML.Tag.A && a != null)
             v.add(a.getAttribute(HTML.Attribute.HREF)) ;
@@ -178,7 +179,7 @@ class GetLinks implements Runnable
       try { parseurl = new URL(s) ; }
       catch (MalformedURLException e)
       {
-         System.out.println("GetLinks: invalid URL " + s);
+         PrintLn.println("GetLinks: invalid URL " + s);
       }
    }
 
@@ -193,13 +194,13 @@ class GetLinks implements Runnable
       Thread thread = Thread.currentThread() ;
       thread.setName("GetLinks-" + count) ;
       if (OptionsDialog.getDebugSearch())
-   		System.out.println(thread.getName() + " started.") ;
+   		PrintLn.println(thread.getName() + " started.") ;
       webframe.showStatus("GetLinks-" + count + " searching " + location) ;
       webframe.getlinkactive = true ;
       if (!stop) parse() ;
       checkend() ;
       if (OptionsDialog.getDebugSearch())
-    		System.out.println(thread.getName() + " ends.") ;
+    		PrintLn.println(thread.getName() + " ends.") ;
   }
 
    
@@ -208,14 +209,14 @@ class GetLinks implements Runnable
    synchronized void checkend()
    {
       activecount-- ;
-      if (scheduled) return ;
-      if (Scheduler.getQueueSize() == 0 && activecount == 0)
+      if (Scheduler.getQueueSize() == 0 && activecount <= 0)
       {
          scheduled = true ;
          String s = (bytes  / 1024) + "K" ;
          webframe.addTrace("End URL Scan. Pages accessed: " + count + " Bytes downloaded: " + s,1) ;
          webframe.getlinkactive = false ;
          webframe.urlcallback.doClick() ;
+         activecount = 0 ;
       }
    }
 
@@ -231,7 +232,7 @@ class GetLinks implements Runnable
          // thread is started for every file directory or link directory.
 
          if (OptionsDialog.getDebugSearch())
-            System.out.println(Thread.currentThread().getName() + " search " + location);
+            PrintLn.println(Thread.currentThread().getName() + " search " + location);
          Reader rd = getReader(location);
          if (rd == null) return ;
          new ParserDelegator().parse(rd, callback, true);
@@ -297,7 +298,7 @@ class GetLinks implements Runnable
             {
                if (archives.contains(o.toString())) continue ;
                if (OptionsDialog.getDebugSearch())
-                  System.out.println(thread.getName() + " Archive found: " + o) ;
+                  PrintLn.println(thread.getName() + " Archive found: " + o) ;
                webframe.addTrace("Archive: " + o) ;
                archives.addElement(o.toString()) ;
                continue ;
@@ -346,7 +347,7 @@ class GetLinks implements Runnable
                         s = f2.getAbsolutePath() ;
                         if (archives.contains(s)) continue ;
                         if (OptionsDialog.getDebugSearch())
-                           System.out.println(thread.getName() + " Archive found: " + s) ;
+                           PrintLn.println(thread.getName() + " Archive found: " + s) ;
                         webframe.addTrace("Archive: " + s) ;
                         if (!s.startsWith(File.separator)) s = File.separator + s ;
                         s = "file://" + s.replace('\\','/') ;
@@ -362,7 +363,7 @@ class GetLinks implements Runnable
 
       catch (Exception e)
       {
-         System.out.println(Thread.currentThread().getName() + " " + e) ;
+         PrintLn.println(Thread.currentThread().getName() + " " + e) ;
          e.printStackTrace() ;
       }
    }
@@ -392,7 +393,7 @@ class GetLinks implements Runnable
       catch (Exception e)
       {
          if (e instanceof FileNotFoundException) return null ;
-         System.out.println("GetLinks: uri '" + uri + "' " + e);
+         PrintLn.println("GetLinks: uri '" + uri + "' " + e);
       }
       return null ;
    }
@@ -400,7 +401,14 @@ class GetLinks implements Runnable
 
    // A method to shut us down.
 
-   static void stopsearch() { stop = true ; }
+   static void stopsearch() 
+   { 
+      stop = true ; 
+      count = 0 ;
+      bytes = 0 ;
+      activecount = 0 ;
+      scheduled = false ;   
+   }
 
    // A method to return our URL string.
 
