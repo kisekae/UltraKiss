@@ -55,7 +55,9 @@ package Kisekae ;
 */
 
 
+import java.awt.Desktop;
 import java.io.* ;
+import java.net.URL ;
 import java.lang.reflect.Method ;
 import javax.swing.JOptionPane ;
 
@@ -111,7 +113,20 @@ public class BrowserControl
       try
       {
          if (Kisekae.isWebswing())
-            throw new KissException("Unable to launch browser in Webswing.") ;
+         {
+            try
+            {
+               String s = url.trim() ;
+               if (s.length() == 0) url = "https://www.google.com" ;
+               URL testURL = new URL(url) ;
+               Desktop.getDesktop().browse(testURL.toURI()); // roll your own link launcher or use Desktop if J6+
+               return ;
+            }
+            catch (Exception ex) 
+            { 
+               throw new KissException("Unable to launch browser in Webswing, "+ ex.getMessage()) ;
+            }
+         }
          
          // Apply known exec() command.
          

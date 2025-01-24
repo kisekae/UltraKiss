@@ -296,7 +296,7 @@ final public class MainMenu extends KissMenu
       if (!applemac) openurl.setMnemonic(KeyEvent.VK_R) ;
       fileMenu.add((openweb = new JMenuItem(Kisekae.getCaptions().getString("MenuFileOpenWeb")))) ;
       openweb.addActionListener(this) ;
-      openweb.setEnabled(!Kisekae.isSecure() && !Kisekae.isWebswing());
+      openweb.setEnabled(!Kisekae.isSecure());
       openweb.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_B, accelerator+ActionEvent.SHIFT_MASK));
       if (!applemac) openweb.setMnemonic(KeyEvent.VK_B) ;
       fileMenu.add((openportal = new JMenuItem(Kisekae.getCaptions().getString("MenuFileOpenPortal")))) ;
@@ -471,7 +471,7 @@ final public class MainMenu extends KissMenu
 //    helpMenu.addSeparator() ;
       helpMenu.add((bugreport = new JMenuItem(Kisekae.getCaptions().getString("MenuHelpBugReport")))) ;
       bugreport.addActionListener(this);
-      bugreport.setEnabled(!Kisekae.isSecure() && !Kisekae.isWebswing());
+      bugreport.setEnabled(!Kisekae.isSecure());
       helpMenu.add((clearcache = new JMenuItem(Kisekae.getCaptions().getString("MenuHelpClearCache")))) ;
       clearcache.addActionListener(this);
       clearcache.setEnabled(!Kisekae.isSecure());
@@ -1477,7 +1477,10 @@ final public class MainMenu extends KissMenu
                try
                {
                   parent.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
-                  BrowserControl.displayURL(kissweb) ;
+                  if (Kisekae.isWebswing())
+                     BrowserControl.displayURL("") ;
+                  else
+                     BrowserControl.displayURL(kissweb) ;
                   parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
                }
                catch (Exception ex) { }

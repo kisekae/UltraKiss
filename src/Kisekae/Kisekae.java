@@ -180,7 +180,7 @@ public class Kisekae extends Applet
 
       LogFile.start() ;
       builddate = Calendar.getInstance() ;
-      builddate.set(2025,1-1,21) ;
+      builddate.set(2025,1-1,23) ;
       
       // Restore the properties.
       
@@ -2339,7 +2339,19 @@ public class Kisekae extends Applet
                      }
                      if (s.length() == 0) s = webstart ;
                      PrintLn.println("Open portal, URL argument is " + s) ;
-                     mm.openportal.doClick() ;
+
+                     // Update the window on the AWT thread.  Make sure the
+                     // portal opens before we continue.
+            
+               		Runnable runner = new Runnable()
+                 		{ 
+                        public void run() 
+                        { 
+                           mm.openportal.doClick() ;
+                        } 
+                     } ;
+                     try { javax.swing.SwingUtilities.invokeAndWait(runner) ; }
+                     catch (InterruptedException e) { }
                      showtips = false ;
                   }
                }
@@ -2367,10 +2379,10 @@ public class Kisekae extends Applet
 
             // html content
             JEditorPane ep = new JEditorPane("text/html", "<html><body style=\"" + style + "\">" 
-                + "<p>This application provides browser access to KiSS files through a Webswing server.<br>"
-                + "Your browser can only play WAV and MP3 files when running through Webswing.<br><br>"
-                + "MIDI and AU sound support is not available on your browser with this application.<br><br>"
-                + "Due to network performance dragging KiSS objects on the browser with the mouse may be slow.<br><br>"
+                + "<p>This application provides browser access to KiSS files through a <a href=\"https://www.webswing.org/\">Webswing</a> server.<br><br>"
+                + "Your browser can only play WAV and MP3 files when running through Webswing.<br>"
+                + "MIDI and AU sound is not available. <br><br>"
+                + "Due to network performance mouse dragging of KiSS objects on the browser may be slow.<br><br>"
                 + "You are not permitted to SAVE files to the network server when running through Webswing.<br><br>"
                 + "For full features without these limitations <a href=\"https://github.com/kisekae/UltraKiss/releases\">download and install UltraKiss</a> from GitHub.<br>"
                 + "To report bugs or provide suggestions for improvement <a href=\"https://github.com/kisekae/UltraKiss/issues\">file an issue report</a> on GitHub.</p>"
