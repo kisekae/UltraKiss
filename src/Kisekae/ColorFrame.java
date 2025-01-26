@@ -766,11 +766,11 @@ final class ColorFrame extends KissFrame
 		if (!applemac) save.setMnemonic(KeyEvent.VK_S) ;
 		save.addActionListener(this) ;
       save.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, accelerator));
-		save.setEnabled((palette != null || cel != null) && !Kisekae.isSecure()) ;
+		save.setEnabled((palette != null || cel != null) && !Kisekae.isSecure() && !Kisekae.isExpired()) ;
 		fileMenu.add((saveas = new JMenuItem(Kisekae.getCaptions().getString("MenuFileSaveAs")))) ;
 		if (!applemac) saveas.setMnemonic(KeyEvent.VK_A) ;
 		saveas.addActionListener(this) ;
-		saveas.setEnabled((palette != null || cel != null) && !Kisekae.isSecure()) ;
+		saveas.setEnabled((palette != null || cel != null) && !Kisekae.isSecure() && !Kisekae.isExpired()) ;
 		fileMenu.addSeparator() ;
 		fileMenu.add((importp = new JMenuItem(Kisekae.getCaptions().getString("MenuFileImport")))) ;
 		importp.addActionListener(this) ;
@@ -928,7 +928,7 @@ final class ColorFrame extends KissFrame
 		SAVE.setAlignmentY(0.5f) ;
 		SAVE.addActionListener(this) ;
 		SAVE.setToolTipText(Kisekae.getCaptions().getString("ToolTipSave"));
-		SAVE.setEnabled((palette != null && palette.getName() != null) && !Kisekae.isSecure());
+		SAVE.setEnabled((palette != null && palette.getName() != null) && !Kisekae.isSecure() && !Kisekae.isExpired());
 		toolbar.add(NEW, null);
 		toolbar.add(OPEN, null);
 		toolbar.add(CLOSE, null);
@@ -1377,9 +1377,9 @@ final class ColorFrame extends KissFrame
       celproperties.setEnabled(cel != null) ;
 		close.setEnabled(palette != null || cel != null) ;
 		CLOSE.setEnabled(palette != null || cel != null) ;
-		saveas.setEnabled((palette != null || cel != null) && !Kisekae.isSecure()) ;
-		save.setEnabled((palette != null || cel != null) && !Kisekae.isSecure()) ;
-		SAVE.setEnabled((palette != null || cel != null) && !Kisekae.isSecure()) ;
+		saveas.setEnabled((palette != null || cel != null) && !Kisekae.isSecure() && !Kisekae.isExpired()) ;
+		save.setEnabled((palette != null || cel != null) && !Kisekae.isSecure() && !Kisekae.isExpired()) ;
+		SAVE.setEnabled((palette != null || cel != null) && !Kisekae.isSecure() && !Kisekae.isExpired()) ;
 		newmulti.setEnabled(palette != null && !palette.isInternal()) ;
 		deletemp.setEnabled(palette != null && !palette.isInternal()) ;
 		insertmp.setEnabled(palette != null && !palette.isInternal()) ;
@@ -3813,8 +3813,8 @@ final class ColorFrame extends KissFrame
 
 			updateColorInterface(active,true) ;
 			if (memorysource) update.setEnabled(true) ;
-			save.setEnabled(palette != null && !Kisekae.isSecure()) ;
-			SAVE.setEnabled(palette != null && !Kisekae.isSecure()) ;
+			save.setEnabled(palette != null && !Kisekae.isSecure() && !Kisekae.isExpired()) ;
+			SAVE.setEnabled(palette != null && !Kisekae.isSecure() && !Kisekae.isExpired()) ;
 			changed = true ;
 			ce.end() ;
 
@@ -4284,8 +4284,8 @@ final class ColorFrame extends KissFrame
 
 			updateColorInterface(changecolor,active.getIndex()) ;
 			if (memorysource) update.setEnabled(true) ;
-			save.setEnabled(palette != null && !Kisekae.isSecure()) ;
-			SAVE.setEnabled(palette != null && !Kisekae.isSecure()) ;
+			save.setEnabled(palette != null && !Kisekae.isSecure() && !Kisekae.isExpired()) ;
+			SAVE.setEnabled(palette != null && !Kisekae.isSecure() && !Kisekae.isExpired()) ;
 			changed = true ;
 			ce.end() ;
 

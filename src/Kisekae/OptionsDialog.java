@@ -3461,7 +3461,7 @@ final public class OptionsDialog extends KissDialog
 //    Disable SAVE function if we have a loaded configuration
       MainFrame mf = Kisekae.getMainFrame() ;
       Configuration config = (mf != null) ? mf.getConfig() : null ;
-      SAVE.setEnabled(config == null);
+      SAVE.setEnabled(config == null && !Kisekae.isExpired());
 
       
       // WebSearch extensions
@@ -6296,7 +6296,7 @@ final public class OptionsDialog extends KissDialog
    
    static boolean savePropertiesOptions() throws IOException
    {
-      if (Kisekae.isSecure()) return false ;
+      if (Kisekae.isSecure() || Kisekae.isExpired()) return false ;
       Properties p = new Properties() ;
       putPropertyOptions(p) ;
       return savePropertiesOptions(p) ;
@@ -6307,7 +6307,7 @@ final public class OptionsDialog extends KissDialog
       MainFrame mf = Kisekae.getMainFrame() ;
       try
       {
-         if (Kisekae.isSecure()) return false ;
+         if (Kisekae.isSecure() || Kisekae.isExpired()) return false ;
          if (p == null) return false ;
          FileOutputStream out = null ;
          String pathname ;
@@ -6362,7 +6362,7 @@ final public class OptionsDialog extends KissDialog
    {
       try
       {
-         if (Kisekae.isSecure()) return ;
+         if (Kisekae.isSecure() || Kisekae.isExpired()) return ;
          loadPropertyOptions() ;
          if (playfkiss) clearCompatibilityOptions() ;
          if (directkiss) clearCompatibilityOptions() ;

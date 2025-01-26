@@ -779,7 +779,7 @@ final class ImageFrame extends KissFrame
 		SAVE.setAlignmentY(0.5f) ;
 		SAVE.addActionListener(this) ;
 		SAVE.setToolTipText(Kisekae.getCaptions().getString("ToolTipSave"));
-		SAVE.setEnabled((cel != null && cel.getName() != null) && !Kisekae.isSecure());
+		SAVE.setEnabled((cel != null && cel.getName() != null) && !Kisekae.isSecure() && !Kisekae.isExpired());
 		toolbar.add(NEW, null);
 		toolbar.add(OPEN, null);
 		toolbar.add(CLOSE, null);
@@ -960,9 +960,9 @@ final class ImageFrame extends KissFrame
       colorMenu.setEnabled(cel != null || group != null);
       geometryMenu.setEnabled(cel != null || group != null);
       filterMenu.setEnabled(cel != null || group != null);
-		saveas.setEnabled(cel != null && !Kisekae.isSecure()) ;
-		save.setEnabled(cel != null && !Kisekae.isSecure()) ;
-		SAVE.setEnabled(cel != null && !Kisekae.isSecure()) ;
+		saveas.setEnabled(cel != null && !Kisekae.isSecure() && !Kisekae.isExpired()) ;
+		save.setEnabled(cel != null && !Kisekae.isSecure() && !Kisekae.isExpired()) ;
+		SAVE.setEnabled(cel != null && !Kisekae.isSecure() && !Kisekae.isExpired()) ;
 		properties.setEnabled(cel != null || group != null) ;
 		close.setEnabled(cel != null) ;
 		CLOSE.setEnabled(cel != null) ;

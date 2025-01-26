@@ -1128,6 +1128,7 @@ final public class WebFrame extends KissFrame
    	      }
 
             // Load the URL file.  Close this frame.
+            // Retain the sourceURL for basing future FKiSS open commands in CNF.
 
             close() ;
             urlloader = null ;
@@ -1136,7 +1137,7 @@ final public class WebFrame extends KissFrame
    	      if (menu != null)
             {
                menu.setNoCopy(nocopy);
-               menu.setDownloadURL(sourceURL) ;
+               if (ze.isConfiguration()) menu.setDownloadURL(sourceURL) ;
                menu.openContext(fdnew,ze) ;
             }
             else

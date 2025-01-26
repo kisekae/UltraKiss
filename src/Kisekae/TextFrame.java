@@ -811,7 +811,7 @@ final class TextFrame extends KissFrame
 		SAVE.setAlignmentY(0.5f) ;
 		SAVE.addActionListener(this) ;
 		SAVE.setToolTipText(Kisekae.getCaptions().getString("ToolTipSave"));
-		SAVE.setEnabled(!Kisekae.isSecure());
+		SAVE.setEnabled(!Kisekae.isSecure() && !Kisekae.isExpired());
 		toolbar.add(NEW, null);
 		toolbar.add(OPEN, null);
 		toolbar.add(CLOSE, null);
@@ -1819,8 +1819,8 @@ final class TextFrame extends KissFrame
 
 	void setChanged()
    {
-   	save.setEnabled(directory != null && !Kisekae.isSecure()) ;
-   	SAVE.setEnabled(directory != null && !Kisekae.isSecure()) ;
+   	save.setEnabled(directory != null && !Kisekae.isSecure() && !Kisekae.isExpired()) ;
+   	SAVE.setEnabled(directory != null && !Kisekae.isSecure() && !Kisekae.isExpired()) ;
       update.setEnabled(memorysource) ;
       if (textobject != null)
 	      textobject.setLastModified(System.currentTimeMillis()) ;
@@ -1879,8 +1879,8 @@ final class TextFrame extends KissFrame
 				// Initialize state variables.
 
 				setTitle(Kisekae.getCaptions().getString("TextEditorTitle")) ;
-				save.setEnabled(directory != null && !Kisekae.isSecure()) ;
-				SAVE.setEnabled(directory != null && !Kisekae.isSecure()) ;
+				save.setEnabled(directory != null && !Kisekae.isSecure() && !Kisekae.isExpired()) ;
+				SAVE.setEnabled(directory != null && !Kisekae.isSecure() && !Kisekae.isExpired()) ;
 				setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
 				changed = false ;
 				return ;
@@ -1930,8 +1930,8 @@ final class TextFrame extends KissFrame
 
 				changed = false ;
             memorysource = false ;
-				save.setEnabled(directory != null && !Kisekae.isSecure()) ;
-				SAVE.setEnabled(directory != null && !Kisekae.isSecure()) ;
+				save.setEnabled(directory != null && !Kisekae.isSecure() && !Kisekae.isExpired()) ;
+				SAVE.setEnabled(directory != null && !Kisekae.isSecure() && !Kisekae.isExpired()) ;
 				setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
 				return ;
 			}
@@ -2052,8 +2052,8 @@ final class TextFrame extends KissFrame
 				// Retain our new file name.
 
 				file = newname ;
-				save.setEnabled(directory != null && !Kisekae.isSecure()) ;
-				SAVE.setEnabled(directory != null && !Kisekae.isSecure()) ;
+				save.setEnabled(directory != null && !Kisekae.isSecure() && !Kisekae.isExpired()) ;
+				SAVE.setEnabled(directory != null && !Kisekae.isSecure() && !Kisekae.isExpired()) ;
 				changed = false ;
 				return ;
 			}
@@ -2666,8 +2666,8 @@ final class TextFrame extends KissFrame
 			}
 			updateUndoState() ;
 			redoAction.updateRedoState() ;
-			save.setEnabled(directory != null && !Kisekae.isSecure()) ;
-	   	SAVE.setEnabled(directory != null && !Kisekae.isSecure()) ;
+			save.setEnabled(directory != null && !Kisekae.isSecure() && !Kisekae.isExpired()) ;
+	   	SAVE.setEnabled(directory != null && !Kisekae.isSecure() && !Kisekae.isExpired()) ;
 		}
 
 		protected void updateUndoState()
@@ -2717,8 +2717,8 @@ final class TextFrame extends KissFrame
 			}
 			updateRedoState() ;
 			undoAction.updateUndoState() ;
-			save.setEnabled(directory != null && !Kisekae.isSecure()) ;
-	   	SAVE.setEnabled(directory != null && !Kisekae.isSecure()) ;
+			save.setEnabled(directory != null && !Kisekae.isSecure() && !Kisekae.isExpired()) ;
+	   	SAVE.setEnabled(directory != null && !Kisekae.isSecure() && !Kisekae.isExpired()) ;
 		}
 
 		protected void updateRedoState()

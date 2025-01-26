@@ -283,7 +283,7 @@ final class MediaFrame extends KissFrame
 		fileMenu.add((saveas = new JMenuItem(Kisekae.getCaptions().getString("MenuFileSaveAs")))) ;
 		if (!applemac) saveas.setMnemonic(KeyEvent.VK_A) ;
 		saveas.addActionListener(this) ;
-      saveas.setEnabled(!Kisekae.isSecure());
+      saveas.setEnabled(!Kisekae.isSecure() && !Kisekae.isExpired());
 		fileMenu.addSeparator();
 		fileMenu.add((queue = new JMenuItem(Kisekae.getCaptions().getString("MenuFileQueue")))) ;
 		if (!applemac) queue.setMnemonic(KeyEvent.VK_Q) ;
@@ -881,7 +881,7 @@ final class MediaFrame extends KissFrame
 		if (video != null) title += " - " + video.toString() ;
 		setTitle(title) ;
       select.setEnabled(fd != null) ;
-      saveas.setEnabled(playlist != null && !Kisekae.isSecure()) ;
+      saveas.setEnabled(playlist != null && !Kisekae.isSecure() && !Kisekae.isExpired()) ;
       close.setEnabled(ko != null || playlist != null) ;
       delete.setEnabled(playlist != null) ;
 	}
@@ -1229,7 +1229,7 @@ final class MediaFrame extends KissFrame
       // Start a playlist.
 
       playze = ze ;
-     	save.setEnabled(!Kisekae.isSecure()) ;
+     	save.setEnabled(!Kisekae.isSecure() && !Kisekae.isExpired()) ;
 		list1 = new JList(playlist) ;
 		scrollpane = new JScrollPane(list1) ;
       playindex = 0 ;

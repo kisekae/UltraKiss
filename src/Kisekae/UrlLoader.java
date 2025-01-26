@@ -83,6 +83,7 @@ class UrlLoader extends KissFrame
    protected boolean interrupted = false ; // True if load is interrupted
    protected boolean fatal = false ;		// True if fatal error
    protected boolean stop = false ;			// True if load must stop
+	protected boolean autoload = false ;	// True if force auto load
    protected int bytes = 0 ;					// Number of bytes loaded
 	protected int progress = 0 ;				// Progress bar value
 	protected long time = 0 ;					// Duration of load
@@ -260,6 +261,8 @@ class UrlLoader extends KissFrame
          if (i1 >= 0 && j1 > i1)
             s = s.substring(0,i1) + urlname + s.substring(j1+1) ;
          setTitle(s) ;
+         // Windows requires !/ in URL
+         urlname = urlname.replace("\\","/") ;
    		openurl = new URL(urlname) ;
          PrintLn.println("Download file " + openurl.toExternalForm()) ;
 
@@ -453,7 +456,8 @@ class UrlLoader extends KissFrame
          pathname = null ;
          memfile = null ;
          showStatus(Kisekae.getCaptions().getString("LoadTerminatedStatus")) ;
-         showMsg(Kisekae.getCaptions().getString("InvalidURL") + " " + urlname) ;
+         showMsg(Kisekae.getCaptions().getString("InvalidURLError") + " " + urlname + " " + e.getMessage()) ;
+         e.printStackTrace();
       }
 
       catch (IOException e)
@@ -552,7 +556,7 @@ class UrlLoader extends KissFrame
 
          if (!stop) activeloader = null ;
          if (fatal && !Kisekae.isBatch()) return ;
-   		if (active || Kisekae.isBatch())
+   		if (active || autoload || Kisekae.isBatch())
    		{
             Runnable awt = new Runnable()
             { public void run() { callback.doClick() ; close() ; } } ;
@@ -717,6 +721,10 @@ class UrlLoader extends KissFrame
    // Method to set an action state for callback review.
 
    void setAction(String s) { action = s ; }
+
+   // Method to set the force autoload switch.
+
+   void setAutoLoad(boolean b) { autoload = b ; }
 
    // Method to set an interrupt state to stop loading.
 

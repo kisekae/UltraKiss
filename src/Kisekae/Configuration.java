@@ -6268,6 +6268,8 @@ final class Configuration extends KissObject
    
    void saveValuepoolProperties()
    {
+      if (Kisekae.isExpired()) return ;
+      
       Enumeration keys = propertypool.keys() ;
       while (keys.hasMoreElements())
       {

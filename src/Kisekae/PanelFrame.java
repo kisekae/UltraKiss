@@ -2699,7 +2699,8 @@ final class PanelFrame extends JPanel
          for (int j = 0 ; j < selected.size() ; j++)
          {
             Object kiss = selected.elementAt(j) ;
-            if (kiss instanceof Cel)
+            boolean marked = ((PanelEdit) selected).isMarked(j) ;
+            if (kiss instanceof Cel && marked)
                if (celID.equals(((Cel) kiss).getIdentifier())) adjust = true ;
             if (kiss instanceof Group)
             {

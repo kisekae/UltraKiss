@@ -26,6 +26,13 @@
 					<h3><FONT face=Arial>Updates to V4.0&nbsp; </FONT></h3>
 					<BLOCKQUOTE>
                       <p><font face="Arial">1. Invoking the Portal on webswing startup is synchronized to ensure the portal loads before the webswing notification is displayed. </font></p>
+                      <p><font face="Arial">2. Corrected a MissingResourceException for an invalid URL resource key in the UrlLoader. </font></p>
+                      <p><font face="Arial">3. Converted all URLs on Windows systems to use the forward slash character.  The jar file specifier !\ was invalid. </font></p>
+                      <p><font face="Arial">4. Corrected a null pointer fault when repositioning a movie when centering the panel frame. </font></p>
+                      <p><font face="Arial">5. Retain the download archive path so a viewer("open") command is relative to the downloaded file path. </font></p>
+                      <p><font face="Arial">6. Fixed a layering issue where all object cels in the object were moved forward or backward rather than just the selected cels. </font></p>
+                      <p><font face="Arial">7. Introduced a new viewer("resetportal") FKiSS5 command to reset the portal to open the default URL when started. </font></p>
+                      <p><font face="Arial">8. Ensured that all menu commands and internal functions to save files were disabled for webswing operation. </font></p>
           				</BLOCKQUOTE>
                                         <p>&nbsp;</p>
 					<p><B>January 21, 2025</B></p>

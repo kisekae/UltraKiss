@@ -1041,6 +1041,8 @@ final public class MainFrame extends KissFrame
 		// a new configuration we should ask the user if the current
 		// configuration should be saved.
 
+      if (Kisekae.isExpired()) return false ;
+      
 		if (config != null)
 		{
 			ArchiveFile zip = config.getZipFile() ;
@@ -2433,19 +2435,25 @@ final public class MainFrame extends KissFrame
 
       if (config == null) return ;
       Vector movies = config.getMovies() ;
-      for (int i = 0 ; i < movies.size() ; i++)
+      if (movies != null)
       {
-      	Video video = (Video) movies.elementAt(i) ;
-        	video.draw(null,null) ;
+         for (int i = 0 ; i < movies.size() ; i++)
+         {
+         	Video video = (Video) movies.elementAt(i) ;
+           	video.draw(null,null) ;
+         }
       }
 
       // We must reposition any active components.
 
       Vector components = config.getComponents() ;
-      for (int i = 0 ; i < components.size() ; i++)
+      if (components != null)
       {
-      	Cel comp = (Cel) components.elementAt(i) ;
-        	comp.draw(null,null) ;
+         for (int i = 0 ; i < components.size() ; i++)
+         {
+         	Cel comp = (Cel) components.elementAt(i) ;
+           	comp.draw(null,null) ;
+         }
       }
 	}
 

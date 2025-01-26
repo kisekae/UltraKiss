@@ -3435,6 +3435,10 @@ final class FKissAction extends KissObject
                   {
                      if (mf != null) mf.restart() ;
                   }
+                  else if ("resetportal".equalsIgnoreCase(vs1))
+                  {
+                     if (mm != null) mm.setWebURL(Kisekae.getKissWeb()) ;
+                  }
                   else if ("select".equalsIgnoreCase(vs1))
                   {
                      if (menu == null) return ;
@@ -3460,7 +3464,8 @@ final class FKissAction extends KissObject
 
                      fd.setSilent(true) ;
                      fd.open(vs2) ;
-                     
+
+                     boolean openurl = false ;
                      if (fd.isError())
                      {
                         String openpath = mm.getOpenPath() ;
@@ -3469,24 +3474,45 @@ final class FKissAction extends KissObject
                         else
                            openpath = new File(openpath).getParent() ;
                         f = new File(openpath,vs2) ;
-                        fd = new FileOpen(mf,f.getPath(),"r") ;
-                        fd.setSilent(true) ;
-                        fd.open(vs2) ;
+                        
+                        // If our openpath was a URL then open with UrlLoader
+
+                        openpath = f.getPath() ;
+                        if (openpath != null && openpath.contains(":"))
+                        {
+                           openurl = true ;
+                           UrlLoader urlloader = new UrlLoader(mf,openpath) ;
+                           urlloader.callback.addActionListener(mm) ;
+                           urlloader.setAutoLoad(true) ;
+                           mm.setUrlLoader(urlloader) ;
+                           Thread loadthread = new Thread(urlloader) ;
+                           loadthread.start() ;                           
+                        }
+                        else
+                        {
+                           fd = new FileOpen(mf,f.getPath(),"r") ;
+                           fd.setSilent(true) ;
+                           fd.open(vs2) ;
+                        }
                      }
-                     
-                     if (ArchiveFile.isArchive(vs2))
-                        ze = fd.validateFile(fd.getPath(), fd.getFile(), f.getParent(), fd.getExtension()) ;
-                     else
-                        ze = fd.getZipEntry() ;
-                     if (ze == null) return ;
-                     mm.setFileOpen(fd) ;
-                     mm.openContext(fd,ze) ;
+
+                     if (!openurl)
+                     {
+                        if (ArchiveFile.isArchive(vs2))
+                           ze = fd.validateFile(fd.getPath(), fd.getFile(), f.getParent(), fd.getExtension()) ;
+                        else
+                           ze = fd.getZipEntry() ;
+                        if (ze == null) return ;
+                        mm.setFileOpen(fd) ;
+                        mm.openContext(fd,ze) ;
+                     }
                   }
                   else if ("openurl".equalsIgnoreCase(vs1))
                   {
                      if (mf == null || mm == null) return ;
                      UrlLoader urlloader = new UrlLoader(mf,vs2) ;
                      urlloader.callback.addActionListener(mm) ;
+                     urlloader.setAutoLoad(true) ;
                      mm.setUrlLoader(urlloader) ;
                      Thread loadthread = new Thread(urlloader) ;
                      loadthread.start() ;
@@ -3515,6 +3541,7 @@ final class FKissAction extends KissObject
                            UrlLoader urlloader = new UrlLoader(mf,url) ;
                            urlloader.callback.addActionListener(mm) ;
                            mm.setUrlLoader(urlloader) ;
+                           mm.setOpenPath(url) ;
                            Thread loadthread = new Thread(urlloader) ;
                            loadthread.start() ;   
                         }

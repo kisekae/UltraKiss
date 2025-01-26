@@ -692,60 +692,75 @@ final class FileLoader extends KissFrame
       // Open the URL session.
 
       int bytes = 0 ;
-		showStatus(Kisekae.getCaptions().getString("OpenConnectionStatus")) ;
-      URLConnection c = url.openConnection() ;
-      // HTTP Response code 403 for URL
-//      c.addRequestProperty("User-Agent", "UltraKiss");      
-
-      // Authorize the session if necessary.
-
+      int completed = 0 ;
       InputStream is = null ;
       OutputStream os = null ;
-      String connid = Kisekae.getConnectionID() ;
-      if (connid != null)
-         c.setRequestProperty("Authorization", "Basic " + connid);
-      int completed = 0 ;
-      int size = c.getContentLength() ;
-      initProgress(size) ;
       
-      // Open the stream and read the data.  Read the stream if not cached  
-      // or the content size differs from cached file size.
-      
-      if (!incache || (size > 0 && size != f.length()))
+      try
       {
-         String s = (size / 1024) + "K" ;
-         String s1 = Kisekae.getCaptions().getString("TransferText") ;
-         int i1 = s1.indexOf('[') ;
-         int j1 = s1.indexOf(']') ;
-         if (i1 >= 0 && j1 > i1)
-            s1 = s1.substring(0,i1) + s + s1.substring(j1+1) ;
-         showText(s1) ;
-         is = c.getInputStream();
-         if (pathname != null)
-            os = new FileOutputStream(f) ;
-         else
-            os = new ByteArrayOutputStream(size) ;
+   		showStatus(Kisekae.getCaptions().getString("OpenConnectionStatus")) ;
+         URLConnection c = url.openConnection() ;
+         // HTTP Response code 403 for URL
+//       c.addRequestProperty("User-Agent", "UltraKiss");      
 
-         // Read the data.
+         // Authorize the session if necessary.
 
-         int b = 0 ;
-         s1 = Kisekae.getCaptions().getString("ReadDataStatus") ;
-         i1 = s1.indexOf('[') ;
-         j1 = s1.indexOf(']') ;
-         if (i1 >= 0 && j1 > i1)
-            s1 = s1.substring(0,i1+1) + s + s1.substring(j1) ;
-      	showStatus(s1) ;
-
-         while (!stop && (b = is.read()) >= 0)
+         String connid = Kisekae.getConnectionID() ;
+         if (connid != null)
+            c.setRequestProperty("Authorization", "Basic " + connid);
+         int size = c.getContentLength() ;
+         initProgress(size) ;
+      
+         // Open the stream and read the data.  Read the stream if not cached  
+         // or the content size differs from cached file size.
+      
+         if (!incache || (size > 0 && size != f.length()))
          {
-           	bytes++ ;
-            completed++ ;
-            os.write(b) ;
-            if (completed >= 2048)
+            String s = (size / 1024) + "K" ;
+            String s1 = Kisekae.getCaptions().getString("TransferText") ;
+            int i1 = s1.indexOf('[') ;
+            int j1 = s1.indexOf(']') ;
+            if (i1 >= 0 && j1 > i1)
+               s1 = s1.substring(0,i1) + s + s1.substring(j1+1) ;
+            showText(s1) ;
+            is = c.getInputStream();
+            if (pathname != null)
+               os = new FileOutputStream(f) ;
+            else
+               os = new ByteArrayOutputStream(size) ;
+
+            // Read the data.
+
+            int b = 0 ;
+            s1 = Kisekae.getCaptions().getString("ReadDataStatus") ;
+            i1 = s1.indexOf('[') ;
+            j1 = s1.indexOf(']') ;
+            if (i1 >= 0 && j1 > i1)
+               s1 = s1.substring(0,i1+1) + s + s1.substring(j1) ;
+         	showStatus(s1) ;
+
+            while (!stop && (b = is.read()) >= 0)
             {
-               completed -= 2048 ;
-               updateProgress(2048) ;
+              	bytes++ ;
+               completed++ ;
+               os.write(b) ;
+               if (completed >= 2048)
+               {
+                  completed -= 2048 ;
+                  updateProgress(2048) ;
+               }
             }
+         }
+      }
+      catch (FileNotFoundException e)
+      {
+         PrintLn.println("I/O Exception: " + "File not found, " + url.toExternalForm()) ; 
+         if (f != null)
+         {
+            if (f.delete()) 
+               PrintLn.println("Cache file deleted: " + f.getPath()) ;   
+            else
+               PrintLn.println("Cache file not deleted: " + f.getPath()) ;   
          }
       }
 
@@ -768,7 +783,6 @@ final class FileLoader extends KissFrame
       {
          ByteArrayOutputStream bos = (ByteArrayOutputStream) os ;
          memfile = new MemFile(url.getFile(),bos.toByteArray()) ;
-         os = null ;
       }
 
       // Return the appropriate file object.
