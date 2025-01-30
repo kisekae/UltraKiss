@@ -180,7 +180,7 @@ public class Kisekae extends Applet
 
       LogFile.start() ;
       builddate = Calendar.getInstance() ;
-      builddate.set(2025,1-1,26) ;
+      builddate.set(2025,1-1,30) ;
       
       // Restore the properties.
       
@@ -2202,7 +2202,7 @@ public class Kisekae extends Applet
 
    // Main program to run this applet as an application.
    // java -jar UltraKiss.jar [file] [basedir] [kissweb] [language] 
-   //    [splashdir] [website] [webswing] [portal]
+   //    [splashdir] [website] [webswing] 
 
    public static void main(String[] args)
    {
@@ -2316,53 +2316,11 @@ public class Kisekae extends Applet
             splash = null ;
          }
          mainframe.toFront() ;
-         
-         // Start the portal.  A space for the parameter value opens
-         // the portal with the default Web Portal option value.
-         // A non-space is the initial URL to open.
 
-         if (args.length > 7)
-         {
-            try
-            {
-               String s = Configuration.trim(args[7]) ;
-               if (args[7].length() > 0)
-               {
-                  MainMenu mm = mainframe.getMainMenu() ;
-                  if (mm != null) 
-                  {
-                     if (s.length() > 0) 
-                     {
-                        URL u = new URL(s) ; // this would check for the protocol
-                        u.toURI() ; 
-                        mm.setWebURL(s) ;
-                     }
-                     if (s.length() == 0) s = webstart ;
-                     PrintLn.println("Open portal, URL argument is " + s) ;
-
-                     // Update the window on the AWT thread.  Make sure the
-                     // portal opens before we continue.
-            
-               		Runnable runner = new Runnable()
-                 		{ 
-                        public void run() 
-                        { 
-                           mm.openportal.doClick() ;
-                        } 
-                     } ;
-                     try { javax.swing.SwingUtilities.invokeAndWait(runner) ; }
-                     catch (InterruptedException e) { }
-                     showtips = false ;
-                  }
-               }
-            }
-            catch (URISyntaxException e) 
-            { 
-               PrintLn.println("Open portal argument \"" + args[7] + "\" exception. " + e.getMessage()) ;
-            }
-         }
-         
-         // Provide a Webswing prompt.
+         // Provide a Webswing prompt.  Webswing, when it starts, can timeout
+         // on a 10 second no-response fault.  The "openportal" hyperlink on
+         // this prompt attempts to put any web access delay to another time
+         // unrelated to the startup time for UltraKiss.
 
          if (webswing) 
          {
@@ -2385,8 +2343,8 @@ public class Kisekae extends Applet
                 + "Due to network performance mouse dragging of KiSS objects on the browser may be slow.<br><br>"
                 + "You are not permitted to SAVE files to the network server when running through Webswing.<br><br>"
                 + "For full features without these limitations <a href=\"https://github.com/kisekae/UltraKiss/releases\">download and install UltraKiss</a> from GitHub.<br>"
-                + "To report bugs or provide suggestions for improvement <a href=\"https://github.com/kisekae/UltraKiss/issues\">file an issue report</a> on GitHub.</p>"
-                + "<p style=\"text-align: center;\"><a href=\"" + Kisekae.getWebSite() + "\">" + Kisekae.getWebSite() + "</a></p>"
+                + "To report bugs or provide suggestions for improvement <a href=\"https://github.com/kisekae/UltraKiss/issues\">file an issue report</a> on GitHub.<br><br>"
+                + "To browse online KiSS sets available on OtakuWorld and elsewhere use the <a href=\"file://openportal\">UltraKiss Portal</a>.</p>"
                 + "</body></html>");
 
             // handle link events
@@ -2396,10 +2354,35 @@ public class Kisekae extends Applet
                {
                   try
                   {
-                  if (e.getEventType().equals(HyperlinkEvent.EventType.ACTIVATED))
-                     Desktop.getDesktop().browse(e.getURL().toURI()); // roll your own link launcher or use Desktop if J6+
+                     if (e.getEventType().equals(HyperlinkEvent.EventType.ACTIVATED))
+                     {
+                        URL url = e.getURL() ;
+                        String s = url.toExternalForm() ;
+                        
+                        // Internal hyperlink to open portal
+                        
+                        if (s.contains("openportal"))
+                        {
+                           JOptionPane.getRootFrame().dispose();
+                  			Runnable awt = new Runnable()
+                  			{ 
+                              public void run() 
+                              { 
+                                 PrintLn.println("Webswing open portal.") ;
+                                 MainMenu mm = mainframe.getMainMenu() ;
+                                 mm.openportal.doClick() ;
+                              } 
+                           } ;
+                  			SwingUtilities.invokeLater(awt) ;
+                        }
+                        else
+                           Desktop.getDesktop().browse(e.getURL().toURI()); // roll your own link launcher or use Desktop if J6+
+                     }
                   }
-                  catch (Exception ex) { }
+                  catch (Exception ex) 
+                  { 
+                     PrintLn.println("Webswing prompt hyperlink exception " + ex.getMessage()) ;
+                  }
                }
             });
             ep.setEditable(false);

@@ -113,17 +113,25 @@ final class StatusBar extends JPanel
    public boolean getState() { return statusBarOn ; }
    
 
-	// Method to display a status message.
+	// Method to display a status message.  This must run on the AWT thread.
 
 	void showStatus(String s)
 	{
       if (!statusBarOn) return ;
+      if (!SwingUtilities.isEventDispatchThread())
+		{
+			Runnable runner = new Runnable()
+			{ public void run() { showStatus(s) ; } } ;
+			javax.swing.SwingUtilities.invokeLater(runner) ;
+         return ;
+      }
+      
 		statuslabel.setText(new String(s)) ;
 		repaint() ;
 	}
 
 
-	// Method to update our memory display.  This must run on thw AWT thread.
+	// Method to update our memory display.  This must run on the AWT thread.
 
 	private void showMem()
 	{

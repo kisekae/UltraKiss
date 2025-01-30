@@ -659,7 +659,7 @@ final class TextFrame extends KissFrame
       if (!applemac) newdoc.setMnemonic(KeyEvent.VK_N) ;
 		newdoc.addActionListener(this) ;
       newdoc.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, accelerator));
-		newdoc.setEnabled(!Kisekae.isSecure() && !Kisekae.isExpired()) ;
+		newdoc.setEnabled(!Kisekae.isSecure()) ;
 		fileMenu.add((open = new JMenuItem(Kisekae.getCaptions().getString("MenuFileOpen")))) ;
 		open.addActionListener(this) ;
       if (!applemac) open.setMnemonic(KeyEvent.VK_O) ;
@@ -1213,7 +1213,7 @@ final class TextFrame extends KissFrame
 
 			text.setBorder(new LineNumberBorder(Color.gray)) ;
 			text.setCaretPosition(caret) ;
-         text.setEnabled(!Kisekae.isExpired());
+         text.setEnabled(!Kisekae.isSecure());
          text.setDisabledTextColor(Color.BLACK) ;
          textobject = new TextObject(ze,text,kit) ;
 			FileOpen fd = (ze == null) ? null : ze.getFileOpen() ;
@@ -2320,7 +2320,7 @@ final class TextFrame extends KissFrame
 			// Establish the new text variables.
 
 			text = textobject.getTextComponent() ;
-         text.setEnabled(!Kisekae.isExpired());
+         text.setEnabled(!Kisekae.isSecure());
          text.setDisabledTextColor(Color.BLACK) ;
 			kit = textobject.getEditorKit() ;
 			doc = textobject.getDocument() ;

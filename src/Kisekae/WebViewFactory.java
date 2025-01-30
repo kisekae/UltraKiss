@@ -1,8 +1,8 @@
 package Kisekae ;
 
 // Title:        Kisekae UltraKiss
-// Version:      3.4  (May 11, 2023)
-// Copyright:    Copyright (c) 2002-2023
+// Version:      4.0  (January 27, 2025)
+// Copyright:    Copyright (c) 2002-2025
 // Author:       William Miles
 // Description:  Kisekae Set System
 //
@@ -45,7 +45,7 @@ package Kisekae ;
 
 
 /**
-* WebHTMLEditor class
+* WebViewFactory class
 *
 * Purpose:
 *
@@ -55,50 +55,21 @@ package Kisekae ;
 *
 */
 
-import javax.swing.* ;
 import javax.swing.text.* ;
 import javax.swing.text.html.* ;
 
-
-final class WebHTMLEditor extends HTMLEditorKit
+/**
+ *
+ * @author William
+ */
+public class WebViewFactory extends HTMLEditorKit.HTMLFactory
 {
-
-/*
-   The JEditorPane.setPage() does an asynchronous loading of HTML
-   data. If you try to iterate on the doc before the parsing is
-   completed you only get the tags for the empty doc.
-   You can force a syncrhonous loading by deriving a class from
-   HTMLEditorKit as follow:
-
-   public class SyncHTMLEditor extends HTMLEditorKit {
-   public Document createDefaultDocument() {
-   AbstractDocument doc=(AbstractDocument)
-   super.createDefaultDocument();
-   doc.setAsynchronousLoadPriority(-1);
-   }
-   }
-
-   and use is in JEditorPane:
-
-   //JEditorPane jpane
-   ...
-   jpane.setEditorKit(new SyncHTMLEditor());
-   ...
-   jpane.setPage("http://java.sun.com/");
-   */
-
-   public Document createDefaultDocument()
+   @Override
+   public View create (Element elem)
    {
-      HTMLDocument doc = (HTMLDocument) super.createDefaultDocument() ;
-      int priority = Thread.NORM_PRIORITY ;
-      doc.setAsynchronousLoadPriority(priority) ;
-      doc.setTokenThreshold(1000) ;
-//      doc.setAsynchronousLoadPriority(-1);
-      return doc ;
-   }
-   
-   public ViewFactory getViewFactory ()
-   {
-      return new WebViewFactory ();
+      View view = super.create (elem);
+//      if (view instanceof ImageView)
+//         ((ImageView) view).setLoadsSynchronously (true);
+      return view;
    }
 }

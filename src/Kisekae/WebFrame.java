@@ -95,11 +95,14 @@ final public class WebFrame extends KissFrame
 
 	// HelpSet interface objects.
 
-	private static String helpset = "Help/KissBrowser.hs" ;
-	private static String helpsection = "kissbrowser.index" ;
+   private static String helpset = "Help/Product.hs" ;
+   private static String helpsection = "kisekae.index" ;
 	private static String onlinehelp = "kissbrowser/index.html" ;
+	private static String portalset = "Help/KissBrowser.hs" ;
+	private static String portalsection = "kissbrowser.index" ;
    private AboutBox aboutdialog = null ;
 	private HelpLoader helper = null ;
+	private HelpLoader helper2 = null ;
    private int accelerator = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask() ;
 
 	// User interface objects.
@@ -130,6 +133,7 @@ final public class WebFrame extends KissFrame
 	private JMenu helpMenu ;
 	private JMenuItem exit ;
 	private JMenuItem help ;
+   private JMenuItem portalhelp ;
 	private JMenuItem logfile ;
 	private JMenuItem about ;
    private JMenuItem options ;
@@ -287,7 +291,10 @@ final public class WebFrame extends KissFrame
 		// Find the HelpSet file and create the HelpSet broker.
 
 		if (Kisekae.isHelpInstalled())
+      {
       	helper = new HelpLoader(this,helpset,helpsection) ;
+      	helper2 = new HelpLoader(this,portalset,portalsection) ;
+      }
 
 		// Set up the menu bar.
 
@@ -360,6 +367,10 @@ final public class WebFrame extends KissFrame
       help.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F1,0)) ;
 		help.setEnabled(helper != null && helper.isLoaded()) ;
       if (helper != null) helper.addActionListener(help) ;
+      portalhelp = new JMenuItem(Kisekae.getCaptions().getString("MenuHelpContents")) ;
+//      helpMenu.add(portalhelp) ;
+		portalhelp.setEnabled(helper2 != null && helper2.isLoaded()) ;
+      if (helper2 != null) helper2.addActionListener(portalhelp) ;
       if (!Kisekae.isHelpInstalled()) help.addActionListener(this) ;
       if (!Kisekae.isHelpInstalled()) help.setEnabled(true) ;
       MainFrame mf = Kisekae.getMainFrame() ;
@@ -405,6 +416,7 @@ final public class WebFrame extends KissFrame
 		validate() ;
       setValues() ;
       if (helper != null) helper.setSize(getSize());
+      if (helper2 != null) helper2.setSize(getSize());
 
       // Set listeners.  If we have a current web set the editor hosted site.
 
@@ -565,8 +577,11 @@ final public class WebFrame extends KissFrame
       }
       
       if (runner == null || runner.isAlive()) return ;
+      activebtn.setEnabled(true) ;
+      enterurl.setText(location) ;
       runner = new WebConnect() ;
       runner.start() ;
+//    runner.run() ;
    }
 
 
@@ -708,13 +723,18 @@ final public class WebFrame extends KissFrame
    }
 
    
+   // A reload of the page must clear the document stream description.
+   
    void refresh()
    {
+      statusbar.showStatus("") ;
       Vector v = getHistory() ;
       int i = getHistoryLocation() ;
       if (i < 0 || i >= v.size()) return ;
       location = (String) v.elementAt(i) ;
       setHistoryLocation(i) ;
+      Document doc = editor.getDocument();
+      doc.putProperty(Document.StreamDescriptionProperty, null);
       setPage(location) ;
    }
 
@@ -739,6 +759,7 @@ final public class WebFrame extends KissFrame
    		javax.swing.SwingUtilities.invokeLater(awt) ;
       }
       
+      activebtn.setEnabled(false) ;
       back.setEnabled(getBack() != null) ;
       backbtn.setEnabled(back.isEnabled()) ;
       forward.setEnabled(getForward() != null) ;
@@ -1219,16 +1240,25 @@ final public class WebFrame extends KissFrame
             JOptionPane.ERROR_MESSAGE) ;
 		}
 	}
-   
+
+   // This event is fired by the JEditorPane when the document is loaded.  
    
    public void propertyChange(PropertyChangeEvent e)
 	{
-      pageloadtime = System.currentTimeMillis() - Configuration.getTimestamp() ;
-      long loadtime = pageloadtime - setpagetime ;
-      String s = "Time to load: " + loadtime + " ms" ;
-      statusbar.showStatus(s) ;
-      if (OptionsDialog.getDebugControl())
-         PrintLn.println("WebFrame: Page Loaded, location " + location + ", time to load = " + loadtime + " ms");
+   	Runnable awt = new Runnable()
+		{ 
+         public void run() 
+         { 
+            pageloadtime = System.currentTimeMillis() - Configuration.getTimestamp() ;
+            long loadtime = pageloadtime - setpagetime ;
+            String s = "Time to load: " + loadtime + " ms" ;
+            statusbar.showStatus(s) ;
+            if (OptionsDialog.getDebugControl())
+               PrintLn.println("WebFrame: Page loaded, location " + location + ", time to load = " + loadtime + " ms");
+         } 
+      } ;
+		javax.swing.SwingUtilities.invokeLater(awt) ;
+      update() ;
 	}
 
 
@@ -1617,6 +1647,7 @@ final public class WebFrame extends KissFrame
       editor = null ;
       aboutdialog = null ;
       helper = null ;
+      helper2 = null ;
       parent = null ;
 		me = null ;
 		setVisible(false) ;
@@ -1695,12 +1726,10 @@ final public class WebFrame extends KissFrame
             if (i1 >= 0 && j1 > i1)
                s = s.substring(0,i1) + location + s.substring(j1+1) ;
             if (parent != null) parent.showStatus(s) ;
-            activebtn.setEnabled(true) ;
             if (OptionsDialog.getDebugControl())
                PrintLn.println("WebFrame: setPage " + location) ;
             setpagetime = System.currentTimeMillis() - Configuration.getTimestamp() ;
             editor.setPage(location);
-            enterurl.setText(location) ;
             if (location.equals(OptionsDialog.getKissWeb()))
                currentweb = location ;
             update() ;
@@ -1745,7 +1774,6 @@ final public class WebFrame extends KissFrame
             me.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
          if (parent != null) parent.showStatus(null);
          connecting = false ;
-         activebtn.setEnabled(false) ;
       }
    }
  

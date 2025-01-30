@@ -8,6 +8,43 @@
 	<body>
 		<h1 align="center"><font color="#ff0000" face="Arial, Helvetica, sans-serif">What's new in UltraKiss ?</font></h1>
 		<hr>
+                                        <p>&nbsp;</p>
+                                        <P><b>January 30, 2025: UltraKiss V4.0 is released.</b> UltraKiss 4.0 will provide a standard browser based interface to UltraKiss using the Webswing server product.</P>
+					<OL>
+                      <LI><font face="Arial">The Portal, when started, now shows the last page accessed.  It would previously open to the KiSS Online Library.</font><br>
+                      <LI><font face="Arial">Numerous changes were made to implement webswing specific operation based on invokation on a webswing server.</font><br>
+                      <LI><font face="Arial">UltraKiss 4.0 is now compiled and released with Open Java 17.</font><br>
+                      <LI><font face="Arial">Added the OtakuWorld website to the online Portal for downloading KiSS sets to UltraKiss.  OtakuWorld provides access to over 4500 KiSS sets.</font><br>
+                      <LI><font face="Arial">A new FKiSS 5 viewer("openurl","URL") command is created to load a new archive file.  The URL must be a valid URL with http:// or https:// protocol.</font><br>
+                      <LI><font face="Arial">A new FKiSS 5 viewer("menu","clearcache") command is created to allow for custom menu ability to clear the download cache.</font><br>
+                      <LI><font face="Arial">A new FKiSS 5 viewer("menu","appendcnf") command is created to offer the ability to append configuration files together, rather than replace the file.</font><br>                      
+                      <LI><font face="Arial">Introduced a new TextPane component that is like a TextArea component but allows for styled text.  This enables HTML text display in a component cel.</font><br>                      
+                      <LI><font face="Arial">A new FKiSS action command setPage(component,url) is created to facilitate loading of HTML text into a TextPane component.</font><br>                      
+                      <LI><font face="Arial">A new FKiSS 5 viewer("redirect","url","event","parameter",...) command is created to redirect a Portal hyperlink to an FKiSS event.</font><br>                      
+                      <LI><font face="Arial">A new transparent background attribute is defined for components.  Text components can now be displayed with a transparent background.</font><br>                      
+                      <LI><font face="Arial">Introduced a new viewer("backcolor","rgb") command to specify a background color for the current page.  This is for when no palette file exists.</font><br>                      
+                      <LI><font face="Arial">Introduced a new viewer("view","documents") command to invoke the View-Documents menu command.</font><br>                      
+                      <LI><font face="Arial">Enabled the download of INCLUDE files specified by a URL string.  The URL must specify an http:// or an https:// protocol.</font><br>
+                      <LI><font face="Arial">Implemented a local cache directory to cache downloaded INCLUDE files and KiSS sets downloaded through the Portal.</font><br>
+         	      <LI><font face="Arial">Introduced a new FKiSS 5 viewer("menu","importcnf") command to show a dialog to enable a new configuration CNF file import from disk.</font><br>
+                      </LI>
+                                         </OL>
+                                         <p><B>December 5, 2023: UltraKiss V3.7 is released.</b> This release improves memory utilization and resolves memory leaks.</P>
+					<OL>
+                      <LI><font face="Arial">A new option to reduce the Media Player background sound volume is provided.  See the Options-Media tab.</font><br>
+ 	              <LI><font face="Arial">A problem where animated cel group frames were not being animated through the animate() command is corrected.</font></p>
+ 	              <LI><font face="Arial">A new Media option is created to process long duration background sounds with the MediaPlayer.  Long sounds by default are 10 seconds or more. </font><br>
+ 	              <LI><font face="Arial">UltraKiss now configures a maximum memory pool of 50% available memory with bundled installers.  The log file now shows the maximum memory the JVM will use.</font><br>
+ 	              <LI><font face="Arial">Implemented a new compatibility feature to allow page sets to be treated as loadable scenes for page 0.  Memory use for sets that use many large cels can now be managed by placing these cels in separate scenes.</font><br>
+ 	              <LI><font face="Arial">Strong attachment chains now treat object fix values of 1 as if the object is not fixed.  The attachment is not strong as the object will be unfixed.</font><br>
+ 	              <LI><font face="Arial">Introduced a new general option to enable the display the main menu bar.  The ESC key will restore the main menu if it is not visible.</font><br>
+ 	              <LI><font face="Arial">A new FIND feature was implemented for the Active Objects dialog to facilitate finding objects by name in the object tree.</font><br>
+ 	              <LI><font face="Arial">INCLUDE file specifications in the CNF file failed to properly parse a list of quoted file names delimited by commas.</font><br>
+ 	              <LI><font face="Arial">In PlayFKiss compatibility FKiSS object moves on mouse controlled objects is now prohibited for alarm moves. It is allowed for other events.</font><br>
+ 	              <LI><font face="Arial">Implemented selectable background splash image sets.  Three sets are provided.  See Options-UKiss Options to select a set.</font><br>
+ 	              <LI><font face="Arial">Install4J installation software is now being used to create multiplatform installers for Windows, Linux, and Apple systems.</font><br>
+                      </LI>
+        				</OL>
 		<P><font face="Arial"><b>July 30, 2023: UltraKiss V3.6 is released.</b>&nbsp; &nbsp;This release has focused on improving UltraKiss compatibilty with the Scarecrow sets. <br>
             <br>
 UltraKiss is now fully corrected to enhance development and maintenance of the Scarecrow sets.&nbsp;</font></P>

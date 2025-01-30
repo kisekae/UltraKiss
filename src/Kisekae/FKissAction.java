@@ -1569,7 +1569,6 @@ final class FKissAction extends KissObject
          // Run an operating system command.  shell(command,exitcode)
 
          case 24:		// "shell"
-            if (Kisekae.isWebswing()) break ;
             if (parameters.size() < 1) break ;
             o1 = variable.getValue((String) parameters.elementAt(0),event) ;
             s1 = (o1 != null) ? o1.toString() : "" ;
@@ -1581,7 +1580,7 @@ final class FKissAction extends KissObject
                   BrowserControl browser = new BrowserControl() ;
                   browser.displayURL(s1) ;
                }
-               if (OptionsDialog.getEnableShell())
+               if (OptionsDialog.getEnableShell() && !Kisekae.isWebswing())
                {
                   Process p = Runtime.getRuntime().exec((String) parameters.elementAt(0)) ;
                   if (parameters.size() > 1) 
