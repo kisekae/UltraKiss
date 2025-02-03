@@ -1,4 +1,31 @@
 # UltraKiss
+
+**UltraKiss 4.0.1** is now released to provide internet browser access to KiSS sets using [Webswing](https://www.webswing.org/) technology.   This provides online access to thousands of KiSS sets through your web browser.
+
+Press this button to run UltraKiss.  
+[![UltraKiss](https://github.com/kisekae/UltraKiss/blob/master/src/Images/ultrakissbtn.svg)](http://208.113.200.212:8080/kisekae)
+
+**UltraKiss 4.0.1** is a stability update to release 4.0 that resolves initial Webswing hang issues and corrects Portal delays for display of HTML images.  
+
+
+### How does it work?
+
+UltraKiss is a Java Desktop application.  It is deployed on a cloud based web server that runs a demonstration version of Webswing.  When you press the button above you will access this server.  If the server is running you will receive a login prompt. 
+
+Log in to the server.  The user is "admin" and the password is "pwd".
+
+UltraKiss will launch.  A session is established.  Use the UltraKiss Portal to show links to KiSS sets available on OtakuWorld and other sites on the Internet.  You can also use the File-Open command to open and load KiSS files stored on your computer.
+
+### Limitations
+
+1. Webswing must be running on the remote server for this service to work.  If you are unable to connect to the server try again. If you are still unable to connect submit an [issue report](https://github.com/kisekae/UltraKiss/issues).
+2. Browsers do not natively support MIDI or AU sound files.  Only WAV and MP3 files will play in KiSS sets.
+3. No files can be saved to the server.  
+4. Your session will timeout and close if no activity for 5 minutes.
+
+![](https://github.com/kisekae/UltraKiss/blob/master/src/Images/ultrakiss-webswing.png)
+
+## History
 In 2002 I developed a computer program to implement the Kisekae Set system, KiSS, a Japanese graphics system originally developed to facilitate costume changes on virtual dolls.  KiSS is a presentation method that allows the artist to program certain actions as you interact with images and other items in the application.  The original KiSS specifications were presented as a graduate thesis in Japan in 1992. 
 
 The development of KiSS sets is an artistic process that uses images and other related elements to create new interactive entertainment. The creative process allows the artist to think in terms of visual objects and related actions applied to these objects. Unlike "computer art" which creates or displays traditional art via a computer, KiSS uses the computer as the medium, allowing the art to be not only animated, but also interactive. 
@@ -53,9 +80,11 @@ In 2023, prompted by new KiSS work from [The Owl](http://followtheowl.com/) with
 ### How to get started with UltraKiss
 
 
-1. Download the current UltraKiss release from [GitHub](https://github.com/kisekae/UltraKiss).  For all systems, extract the files from the **UltraKiss_3.6.zip** (or later) download. This extract will create a folder named **ultrakiss**.
+1. Download the current UltraKiss release from [GitHub](https://github.com/kisekae/UltraKiss/release).  For automated installation, see the release downloads.
 
-   For local execution on a Windows system with or without Java installed, run **UltraKiss_3.6.exe** found in the **ultrakiss** folder. This program is a fully self-contained bundled application created with [Launch4j](https://launch4j.sourceforge.net/).
+2. For manual installation, extract the files from the **UltraKiss_4.0.1.zip** (or later) download. This extract will create a folder named **ultrakiss**.
+
+   For local execution on a Windows system with or without Java installed, run **UltraKiss_4.0.1_jre8_201.exe** found in the **ultrakiss** folder. This program is a fully self-contained bundled application created with [Launch4j](https://launch4j.sourceforge.net/).
 
    For local execution on a Linux or Apple system with Java already installed, run the **kisekae.jar** file from the **ultrakiss** folder using the **java -jar kisekae.jar** command.
 
@@ -69,13 +98,13 @@ In 2023, prompted by new KiSS work from [The Owl](http://followtheowl.com/) with
 
    
 
-2. Use **Help-Contents** to access the UltraKiss program documentation. See **Help-Contents-What is UltraKiss** for a brief description of the Kisekae Set system.
+3. Use **Help-Contents** to access the UltraKiss program documentation. See **Help-Contents-What is UltraKiss** for a brief description of the Kisekae Set system.
 
    Use **Help-Demo Sets** to access the KiSS demonstration sets that are packaged with UltraKiss. Click on any of the listed sets to load the set in UltraKiss. To see the FKiSS code behind any KiSS set press F11 or use the **View-Active Configuration** menu command.
    
-3. To learn how to make KiSS sets of your own explore the tutorials provided with UltraKiss. See **Help-Tutorials**.  In particular, look at the FKiSS tutorial to learn how to use the UltraKiss FKiSS Editor debugging tool to breakpoint and step through your code execution.
+4. To learn how to make KiSS sets of your own explore the tutorials provided with UltraKiss. See **Help-Tutorials**.  In particular, look at the FKiSS tutorial to learn how to use the UltraKiss FKiSS Editor debugging tool to breakpoint and step through your code execution.
    
-4. Explore the reference documentation provided with UltraKiss.  Examine the **UltraKiss Introduction** section and the **FKiSS** section.
+5. Explore the reference documentation provided with UltraKiss.  Examine the **UltraKiss Introduction** section and the **FKiSS** section.
 
    The FKiSS event and action statement documentation describes the FKiSS language and provides illustrative examples to help you develop your own interactive KiSS sets.
 
