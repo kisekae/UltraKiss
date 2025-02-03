@@ -84,7 +84,7 @@ public class Kisekae extends Applet
    // Security variables
 
    private static String copyright = 
-      "Kisekae UltraKiss V4.0 (c) 2002-2025 William Miles" ;
+      "Kisekae UltraKiss V4.0.1 (c) 2002-2025 William Miles" ;
    private static Object authorize = null ;        // Seigen module
    private static Calendar warningdate = null ;    // Secure warning
    private static Calendar expiredate = null ;     // Licence expire
@@ -96,6 +96,7 @@ public class Kisekae extends Applet
 
    private static String website = "https://github.com/kisekae/UltraKiss/" ; // Web site
    private static String splashname = "Images/splash.gif" ; // Splash image
+   private static String webswingimg = "Images/KisekaeUltraKiss.png" ; // Webswing 
    private static String webstart = "HTML/KissWeb.html" ; // Portal page
    private static String splashdir = "Splash/" ;   // Splash dir
    private static String cachedir = "Cache/" ;     // Cache dir
@@ -180,7 +181,7 @@ public class Kisekae extends Applet
 
       LogFile.start() ;
       builddate = Calendar.getInstance() ;
-      builddate.set(2025,1-1,30) ;
+      builddate.set(2025,2-1,2) ;
       
       // Restore the properties.
       
@@ -221,6 +222,10 @@ public class Kisekae extends Applet
       ClassLoader cl = getClass().getClassLoader() ;
 //    ClassLoader cl = Thread.currentThread().getContextClassLoader() ; // Trusted Library
       Dimension d = Toolkit.getDefaultToolkit().getScreenSize() ;
+      if (javax.swing.SwingUtilities.isEventDispatchThread()) 
+         PrintLn.println("Initialization is running on the EventDispatchThread") ;
+      else
+         PrintLn.println("Warning, Initialization is not running on the EventDispatchThread") ;
       
       // Check for Apple system.
       
@@ -2206,6 +2211,14 @@ public class Kisekae extends Applet
 
    public static void main(String[] args)
    {
+      if (!SwingUtilities.isEventDispatchThread())
+		{
+			Runnable runner = new Runnable()
+			{ public void run() { main(args) ; } } ;
+			javax.swing.SwingUtilities.invokeLater(runner) ;
+         return ;
+      }
+      
       inapplet = false ;
       if (args.length > 6)
       {
@@ -2334,13 +2347,15 @@ public class Kisekae extends Applet
             StringBuffer style = new StringBuffer("font-family:" + font.getFamily() + ";");
             style.append("font-weight:" + (font.isBold() ? "bold" : "normal") + ";");
             style.append("font-size:" + font.getSize() + "pt;");
-
+                        
             // html content
+            URL uk = getResource(webswingimg) ;
+            String s = (uk != null) ? uk.toString() : webswingimg ;
             JEditorPane ep = new JEditorPane("text/html", "<html><body style=\"" + style + "\">" 
+                + "<p style=\"text-align: center;\"><img src=\""+s+"\"></p>"
                 + "<p>This application provides browser access to KiSS files through a <a href=\"https://www.webswing.org/\">Webswing</a> server.<br><br>"
                 + "Your browser can only play WAV and MP3 files when running through Webswing.<br>"
                 + "MIDI and AU sound is not available. <br><br>"
-                + "Due to network performance mouse dragging of KiSS objects on the browser may be slow.<br><br>"
                 + "You are not permitted to SAVE files to the network server when running through Webswing.<br><br>"
                 + "For full features without these limitations <a href=\"https://github.com/kisekae/UltraKiss/releases\">download and install UltraKiss</a> from GitHub.<br>"
                 + "To report bugs or provide suggestions for improvement <a href=\"https://github.com/kisekae/UltraKiss/issues\">file an issue report</a> on GitHub.<br><br>"
@@ -2388,9 +2403,18 @@ public class Kisekae extends Applet
             ep.setEditable(false);
             ep.setBackground(label.getBackground());
 
-            JOptionPane.showMessageDialog(null,ep,
-                captions.getString("Webswing"),
-                JOptionPane.INFORMATION_MESSAGE) ; 
+            // Run this a little later.
+            
+   			Runnable runner = new Runnable()
+   			{ 
+               public void run() 
+               { 
+                  JOptionPane.showMessageDialog(null,ep,
+                      captions.getString("Webswing"),
+                      JOptionPane.INFORMATION_MESSAGE) ; 
+               } 
+            } ;
+   			javax.swing.SwingUtilities.invokeLater(runner) ;
          }
         
          // Show tips if first time.

@@ -173,8 +173,10 @@ final class CelLocalPanel extends JPanel
    {
       this.setLayout(gridBagLayout1);
       String s = cel.getName() ;
-      String s1 = s.substring(0,30) ;
-      if (s.length() > 30) s1 += " ..." ;
+      if (s == null) s = "unknown" ;
+      int n = s.length() ;
+      String s1 = s.substring(0,(n < 30) ? n : 30) ;
+      if (n > 30) s1 += " ..." ;
       name.setText(s1);
       sizelabel.setText("Size (w,h):");
       widthfield.setText("" + cel.getSize().width);

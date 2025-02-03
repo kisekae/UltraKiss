@@ -67,6 +67,14 @@ public class WebViewFactory extends HTMLEditorKit.HTMLFactory
    @Override
    public View create (Element elem)
    {
+      Object o = elem.getAttributes().getAttribute(StyleConstants.NameAttribute);
+      if (o instanceof HTML.Tag) 
+      {
+         HTML.Tag kind = (HTML.Tag) o;
+         if (kind == HTML.Tag.IMG)
+            return new WebImageView(elem);
+      }
+      
       View view = super.create (elem);
 //      if (view instanceof ImageView)
 //         ((ImageView) view).setLoadsSynchronously (true);

@@ -336,7 +336,7 @@ final public class WebFrame extends KissFrame
       clearhistory.setEnabled(false) ;
 		clearhistory.addActionListener(this) ;
       fileMenu.addSeparator();
-      String mfe = (OptionsDialog.getAppleMac()) ? "MenuFileQuit" : "MenuFileExit" ;
+      String mfe = (OptionsDialog.getAppleMac()) ? "MenuFileQuitPortal" : "MenuFileExitPortal" ;
 		fileMenu.add((exit = new JMenuItem(Kisekae.getCaptions().getString(mfe)))) ;
 		if (!applemac) exit.setMnemonic(KeyEvent.VK_X) ;
 		exit.addActionListener(this) ;
@@ -630,6 +630,8 @@ final public class WebFrame extends KissFrame
          if (n > 0) s = s.substring(0,n) ;
          editor.setHosted(s);
       }
+      Document doc = editor.getDocument();
+      doc.putProperty(Document.StreamDescriptionProperty, null);
       setPage(location) ;
    }
 
@@ -660,6 +662,8 @@ final public class WebFrame extends KissFrame
          if (n > 0) s = s.substring(0,n) ;
          editor.setHosted(s);
       }
+      Document doc = editor.getDocument();
+      doc.putProperty(Document.StreamDescriptionProperty, null);
       setPage(location) ;
    }
 
@@ -1623,6 +1627,8 @@ final public class WebFrame extends KissFrame
       }
       
       if (nd != null) nd.close() ; 
+      if (editorkit instanceof WebHTMLEditor) 
+         ((WebHTMLEditor) editorkit).clearCache() ;
       
       super.close() ;
 		flush() ;
@@ -1645,6 +1651,7 @@ final public class WebFrame extends KissFrame
       statusbar = null ;
       toolbar = null ;
       editor = null ;
+      editorkit = null ;
       aboutdialog = null ;
       helper = null ;
       helper2 = null ;

@@ -21,9 +21,10 @@
 	web. I will also place notices here regarding product updates, scheduled 
 	releases, or problems and work-arounds that may affect you.&nbsp;</p>
                                         <p>&nbsp;</p>
-					<P>UltraKiss V4.0.1 is in development. UltraKiss 4.0.1 will provide stability fixes for the Webswing operation.</P>
+					<p><B>February 2, 2025</B></p>
+					<P>UltraKiss V4.0.1 is released. UltraKiss 4.0.1 has resolved Webswing hangs on start and eliminated portal delays on HTML page image downloads.</P>
                                         <p>&nbsp;</p>
-					<h3><FONT face=Arial>Updates to V4.0&nbsp; </FONT></h3>
+					<h3><FONT face=Arial>Updates to V4.0.1&nbsp; </FONT></h3>
 					<BLOCKQUOTE>
                       <p><font face="Arial">1. Invoking the Portal on webswing startup is synchronized to ensure the portal loads before the webswing notification is displayed. </font></p>
                       <p><font face="Arial">2. Corrected a MissingResourceException for an invalid URL resource key in the UrlLoader. </font></p>
@@ -34,6 +35,7 @@
                       <p><font face="Arial">7. Introduced a new viewer("resetportal") FKiSS5 command to reset the portal to open the default URL when started. </font></p>
                       <p><font face="Arial">8. Ensured that all menu commands and internal functions to save files were disabled for webswing operation. </font></p>
                       <p><font face="Arial">9. The seventh application parameter for a webswing portal launch on start is removed.  Launch on start may hang due to delay.</font></p>
+                      <p><font face="Arial">10. Introduced image caching for HTML image tags when processed in a portal session. This improves portal response.</font></p>
           				</BLOCKQUOTE>
                                         <p>&nbsp;</p>
 					<p><B>January 21, 2025</B></p>
@@ -53,7 +55,7 @@
                       <p><font face="Arial">10. Enabled the use of the @-character ("@map") on all single line FKiSS commands.  Previously this was permitted only in compatiblity mode.</font></p>
                       <p><font face="Arial">11. A set exit() command was not resetting all options to their initial values.  This is corrected.</font></p>
                       <p><font face="Arial">12. Cached INCLUDE files were not being used if a connection to the original download website is refused.  This is corrected.</font></p>
-                      <p><font face="Arial">13. Defined a sixth application parameter "webswing" which if set to "webswing" indicates that UltraKiss is a webswing application.</font></p>
+                      <p><font face="Arial">13. Defined a sixth application parameter which if set to "webswing" indicates that UltraKiss is a webswing application.</font></p>
                       <p><font face="Arial">14. Numerous changes were made to implement webswing specific operation based on invokation on a webswing server.</font></p>
                       <p><font face="Arial">15. New PrintLn.java and AudioWebswing.java classes are defined for webswing specific printing and sound processing functions.</font></p>
                       <p><font face="Arial">16. A seventh application parameter is defined to launch the portal for webswing on start with the specified initial URL.</font></p>

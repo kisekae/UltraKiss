@@ -55,7 +55,7 @@ package Kisekae ;
 *
 */
 
-import javax.swing.* ;
+import java.util.Hashtable;
 import javax.swing.text.* ;
 import javax.swing.text.html.* ;
 
@@ -63,6 +63,8 @@ import javax.swing.text.html.* ;
 final class WebHTMLEditor extends HTMLEditorKit
 {
 
+   private static Hashtable imagecache = new Hashtable() ; // Image cache
+   
 /*
    The JEditorPane.setPage() does an asynchronous loading of HTML
    data. If you try to iterate on the doc before the parsing is
@@ -93,6 +95,7 @@ final class WebHTMLEditor extends HTMLEditorKit
       int priority = Thread.NORM_PRIORITY ;
       doc.setAsynchronousLoadPriority(priority) ;
       doc.setTokenThreshold(1000) ;
+      doc.putProperty("imageCache",imagecache);
 //      doc.setAsynchronousLoadPriority(-1);
       return doc ;
    }
@@ -101,4 +104,10 @@ final class WebHTMLEditor extends HTMLEditorKit
    {
       return new WebViewFactory ();
    }
+   
+   // Specific methods to manage cache
+      
+   public Hashtable getImageCache() { return imagecache ; }
+   
+   public void clearCache() { imagecache.clear() ; }
 }
