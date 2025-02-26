@@ -10,18 +10,19 @@ Press this button to run UltraKiss.
 
 ### How does it work?
 
-UltraKiss is a Java Desktop application.  It is deployed on a cloud based web server that runs a demonstration version of Webswing.  When you press the button above you will access this server.  If the server is running you will receive a login prompt. 
+UltraKiss is a Java Desktop application.  It is deployed on a cloud based web server that runs a demonstration version of Webswing.  When you press the button above you will access this server.   If the server is running you will receive a notice that it is starting the application.
 
-Log in to the server.  The user is "admin" and the password is "pwd".
+UltraKiss will launch. A window is shown that lists browser limitations.
 
-UltraKiss will launch.  A session is established.  Use the UltraKiss Portal to show links to KiSS sets available on OtakuWorld and other sites on the Internet.  You can also use the File-Open command to open and load KiSS files stored on your computer.
+Use the **UltraKiss Portal** to show links to KiSS sets available on OtakuWorld and other sites on the Internet. You can also use the **File-Open** command to open and load KiSS files stored on your computer.
 
 ### Limitations
 
 1. Webswing must be running on the remote server for this service to work.  If you are unable to connect to the server try again. If you are still unable to connect submit an [issue report](https://github.com/kisekae/UltraKiss/issues).
 2. Browsers do not natively support MIDI or AU sound files.  Only WAV and MP3 files will play in KiSS sets.
-3. No files can be saved to the server.  
-4. Your session will timeout and close if no activity for 5 minutes.
+3. No files can be saved to the server.
+4. Server memory is limited. Large KiSS sets may not load. File-Open sets are limited to 5MB.
+5. Your session will timeout and close if no activity for 5 minutes.
 
 ![](https://github.com/kisekae/UltraKiss/blob/master/src/Images/ultrakiss-webswing.png)
 
