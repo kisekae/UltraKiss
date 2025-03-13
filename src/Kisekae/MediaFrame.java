@@ -295,7 +295,7 @@ final class MediaFrame extends KissFrame
 		delete.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE,0));
 		delete.addActionListener(this) ;
 		fileMenu.addSeparator();
-		fileMenu.add((exit = new JMenuItem(Kisekae.getCaptions().getString("MenuFileExit")))) ;
+		fileMenu.add((exit = new JMenuItem(Kisekae.getCaptions().getString("MenuFileExitMediaPlayer")))) ;
 		if (!applemac) exit.setMnemonic(KeyEvent.VK_X) ;
 		exit.addActionListener(this) ;
 		mb.add(fileMenu) ;

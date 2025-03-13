@@ -453,7 +453,7 @@ class TextFindDialog extends KissDialog
       if (doc == null) return -1 ;
       if (monitor == null) return -1 ;
       
-      if (doReplace) monitor.setCaretPosition(startcaret) ;
+//      if (doReplace) monitor.setCaretPosition(startcaret) ;
 		int caret = monitor.getCaretPosition();
       startcaret = caret ;
       boolean directionchange = false ;
@@ -649,7 +649,7 @@ class TextFindDialog extends KissDialog
       JTextComponent monitor = owner.getTextComponent() ;
 		if (doc == null) return -1 ;
       if (monitor == null) return -1 ;
-      monitor.setCaretPosition(startcaret) ;
+//      monitor.setCaretPosition(startcaret) ;
 		int caret = monitor.getCaretPosition();
       startcaret = caret ;
       StringBuffer sb = new StringBuffer() ;

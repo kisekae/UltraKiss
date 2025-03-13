@@ -181,6 +181,7 @@ final public class WebFrame extends KissFrame
       statusbar = new StatusBar(this) ;
       statusbar.setStatusBar(true) ;
       editor.setEditorKit(new WebHTMLEditor());
+      editor.addPropertyChangeListener("page", this);
       runner = new WebConnect() ;
       init() ;
    }
@@ -1262,6 +1263,7 @@ final public class WebFrame extends KissFrame
          } 
       } ;
 		javax.swing.SwingUtilities.invokeLater(awt) ;
+  		editor.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
       update() ;
 	}
 

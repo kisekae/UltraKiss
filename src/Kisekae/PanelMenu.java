@@ -1396,7 +1396,8 @@ final class PanelMenu extends KissMenu
          ext[0] = ".CNF" ;
          fd.open() ;
          String title = Kisekae.getCaptions().getString("ConfigurationListTitle") ;
-         ArchiveEntry ze = fd.showConfig(parent,title,ext,true,null,true,importonly) ;
+         boolean allowimport = false ;
+         ArchiveEntry ze = fd.showConfig(parent,title,ext,true,null,allowimport,importonly) ;
 
          // If we selected an entry, update our menu fileopen object
          // to agree with the new entry that we will initialize.

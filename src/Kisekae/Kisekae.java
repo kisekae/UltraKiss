@@ -181,7 +181,7 @@ public class Kisekae extends Applet
 
       LogFile.start() ;
       builddate = Calendar.getInstance() ;
-      builddate.set(2025,2-1,2) ;
+      builddate.set(2025,3-1,13) ;
       
       // Restore the properties.
       
@@ -2357,6 +2357,7 @@ public class Kisekae extends Applet
                 + "Your browser can only play WAV and MP3 files when running through Webswing.<br>"
                 + "MIDI and AU sound is not available. <br><br>"
                 + "You are not permitted to SAVE files to the network server when running through Webswing.<br><br>"
+                + "Server memory is limited.  Large KiSS sets may not load.  File-Open sets are limited to 5MB.<br><br>"
                 + "For full features without these limitations <a href=\"https://github.com/kisekae/UltraKiss/releases\">download and install UltraKiss</a> from GitHub.<br>"
                 + "To report bugs or provide suggestions for improvement <a href=\"https://github.com/kisekae/UltraKiss/issues\">file an issue report</a> on GitHub.<br><br>"
                 + "To browse online KiSS sets available on OtakuWorld and elsewhere use the <a href=\"file://openportal\">UltraKiss Portal</a>.</p>"
@@ -2409,9 +2410,10 @@ public class Kisekae extends Applet
    			{ 
                public void run() 
                { 
-                  JOptionPane.showMessageDialog(null,ep,
-                      captions.getString("Webswing"),
-                      JOptionPane.INFORMATION_MESSAGE) ; 
+                  Runtime rt = Runtime.getRuntime();
+                  long maxMem = rt.maxMemory();
+                  String s = "Webswing - maximum Java memory " + maxMem /(1024*1024) + " MB" ;
+                  JOptionPane.showMessageDialog(null,ep,s,JOptionPane.INFORMATION_MESSAGE) ; 
                } 
             } ;
    			javax.swing.SwingUtilities.invokeLater(runner) ;

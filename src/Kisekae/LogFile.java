@@ -116,8 +116,9 @@ final public class LogFile extends PrintStream
 			logfile.write(s.getBytes()) ;
 			if (ls != null) logfile.write(ls.getBytes()) ;
 			s = "Run time Java Virtual Machine level " + System.getProperty("java.version") ;
+         s += (is64Bit()) ? " (64-bit)" : " (32-bit)" ;
 			logfile.write(s.getBytes()) ;
-			if (ls != null) logfile.write(ls.getBytes()) ;         
+			if (ls != null) logfile.write(ls.getBytes()) ;       
          Runtime rt = Runtime.getRuntime();
          long maxMem = rt.maxMemory();
          s = "Maximum Java Memory: " + maxMem + " (" + maxMem/(1024*1024) + " MB)" ;
@@ -157,6 +158,29 @@ final public class LogFile extends PrintStream
 			logfile = null ;
 		}
 	}
+   
+   // Determine if JVM is 64 bit
+   
+   public static final boolean is64Bit() 
+   {
+      String model = System.getProperty("sun.arch.data.model",
+                                      System.getProperty("com.ibm.vm.bitmode"));
+      if (model != null) return "64".equals(model);
+      
+      String ARCH = System.getProperty("os.arch") ;
+              
+      if ("x86-64".equals(ARCH)
+        || "ia64".equals(ARCH)
+        || "ppc64".equals(ARCH) || "ppc64le".equals(ARCH)
+        || "sparcv9".equals(ARCH)
+        || "mips64".equals(ARCH) || "mips64el".equals(ARCH)
+        || "amd64".equals(ARCH)
+        || "aarch64".equals(ARCH)) 
+        return true;
+//      return Native.POINTER_SIZE == 8;
+      return false ;
+   }
+
 
 	
 	// Flush the standard output stream so that all data is written to the file.

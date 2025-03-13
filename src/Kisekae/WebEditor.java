@@ -58,9 +58,7 @@ package Kisekae ;
 import java.io.* ;
 import java.net.* ;
 import javax.swing.* ;
-import javax.swing.event.* ;
-import javax.swing.text.* ;
-import javax.swing.text.html.* ;
+import java.awt.Cursor ;
 
 
 final class WebEditor extends JEditorPane
@@ -131,6 +129,7 @@ final class WebEditor extends JEditorPane
             throw new IOException("URL not found, " + urlname) ;
       if (OptionsDialog.getDebugControl())
          PrintLn.println("WebEditor: set page " + page.toString()) ;
+ 		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
       super.setPage(page) ;
    }
    

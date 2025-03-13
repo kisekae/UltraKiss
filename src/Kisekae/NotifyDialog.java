@@ -147,7 +147,12 @@ final class NotifyDialog extends KissDialog
       // Center the frame in the panel space
 
       if (image == null)
-         setSize(new Dimension(300,200)) ;
+      {
+         Dimension d = frame.getSize() ;
+         int h = d.height / 4 ;
+         int w = d.width / 3 ;
+         setSize(new Dimension(w,h)) ;
+      }
       else
          doLayout() ;
  		center(this) ;

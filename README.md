@@ -1,11 +1,13 @@
 # UltraKiss
 
-**UltraKiss 4.0.1** is now released to provide internet browser access to KiSS sets using [Webswing](https://www.webswing.org/) technology.   This provides online access to thousands of KiSS sets through your web browser.
+**UltraKiss 4.0.2** is now released to provide internet browser access to KiSS sets using [Webswing](https://www.webswing.org/) technology.   This provides online access to thousands of KiSS sets through your web browser.
 
 Press this button to run UltraKiss.  
-[![UltraKiss](https://github.com/kisekae/UltraKiss/blob/master/src/Images/ultrakissbtn.svg)](http://www.wmiles.com:8080/kisekae)
+[![UltraKiss](https://github.com/kisekae/UltraKiss/blob/master/src/Images/ultrakissbtn.svg)](https://www.bronzeart.ca/kisekae-ultrakiss/)
 
+**UltraKiss 4.0** is a new release to enable online browser operation of UltraKiss as a webswing server application.  
 **UltraKiss 4.0.1** is a stability update to release 4.0 that resolves initial Webswing hang issues and corrects Portal delays for display of HTML images.  
+**UltraKiss 4.0.2** is an update to release 4.0.1 that corrects a few minor issues related to Webswing operation.  
 
 
 ### How does it work?
@@ -81,7 +83,7 @@ In 2023, prompted by new KiSS work from [The Owl](http://followtheowl.com/) with
 ### How to get started with UltraKiss
 
 
-1. Download the current UltraKiss release from [GitHub](https://github.com/kisekae/UltraKiss/release).  For automated installation, see the release downloads.
+1. Download the current UltraKiss release from [GitHub](https://github.com/kisekae/UltraKiss/releases).  For automated installation, see the release downloads.
 
 2. For manual installation, extract the files from the **UltraKiss_4.0.1.zip** (or later) download. This extract will create a folder named **ultrakiss**.
 

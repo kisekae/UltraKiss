@@ -364,7 +364,7 @@ final public class MainMenu extends KissMenu
       toolsMenu.add((mediaplayer = new JMenuItem(Kisekae.getCaptions().getString("MenuToolsMediaPlayer")))) ;
       mediaplayer.addActionListener(this) ;
       mediaplayer.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_M, accelerator+ActionEvent.SHIFT_MASK));
-      mediaplayer.setEnabled(!Kisekae.isSecure() && !Kisekae.isWebswing()) ;
+      mediaplayer.setEnabled(!Kisekae.isSecure()) ;
       if (!applemac) mediaplayer.setMnemonic(KeyEvent.VK_M) ;
       mediaplayer.setVisible(true) ;
 

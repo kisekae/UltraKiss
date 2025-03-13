@@ -3101,7 +3101,7 @@ final public class OptionsDialog extends KissDialog
 
 
    
-   // A function to dynamically set program options.
+   // A function to dynamically get program options.
 
    static public String getOption(String option)
    {
@@ -3249,6 +3249,7 @@ final public class OptionsDialog extends KissDialog
       else if ("gnomekiss".equalsIgnoreCase(option)) s += getGnomeKissCompatibility() ;
       else if ("kissld".equalsIgnoreCase(option)) s += getKissLDCompatibility() ;
       else if ("multipleevents".equalsIgnoreCase(option)) s += getMultipleEvents() ;
+      else if ("webswing".equalsIgnoreCase(option)) s += Kisekae.isWebswing() ;
       return s ;
    }
 
