@@ -84,7 +84,7 @@ public class Kisekae extends Applet
    // Security variables
 
    private static String copyright = 
-      "Kisekae UltraKiss V4.0.1 (c) 2002-2025 William Miles" ;
+      "Kisekae UltraKiss V4.0.2 (c) 2002-2025 William Miles" ;
    private static Object authorize = null ;        // Seigen module
    private static Calendar warningdate = null ;    // Secure warning
    private static Calendar expiredate = null ;     // Licence expire
@@ -181,7 +181,7 @@ public class Kisekae extends Applet
 
       LogFile.start() ;
       builddate = Calendar.getInstance() ;
-      builddate.set(2025,3-1,13) ;
+      builddate.set(2025,4-1,5) ;
       
       // Restore the properties.
       
@@ -2412,7 +2412,7 @@ public class Kisekae extends Applet
                { 
                   Runtime rt = Runtime.getRuntime();
                   long maxMem = rt.maxMemory();
-                  String s = "Webswing - maximum Java memory " + maxMem /(1024*1024) + " MB" ;
+                  String s = "Webswing (" + maxMem /(1024*1024) + " MB)" ;
                   JOptionPane.showMessageDialog(null,ep,s,JOptionPane.INFORMATION_MESSAGE) ; 
                } 
             } ;

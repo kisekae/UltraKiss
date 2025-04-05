@@ -64,6 +64,7 @@ import java.util.Hashtable ;
 import java.util.Enumeration ;
 import java.util.Scanner ;
 import java.util.prefs.* ;
+import java.util.Date;
 import java.net.URL ;
 import java.io.* ;
 import java.nio.file.Paths;
@@ -84,6 +85,11 @@ final public class MainFrame extends KissFrame
 	private static String ultraImage = "Images/KisekaeUltra.png" ;
    private static int imagenum = -2 ;     // The current splash image
    private static int images = -1 ;       // The number of splash mages
+   private static Date begindate = null ; // The start of this session
+   private static String lastset = "" ;   // The last set loaded this session
+   private static String lastzip = "" ;   // The last archive loaded this session
+   private static URL downloadurl = null ; // The last download this session
+   private static int sets = 0 ;          // The sets loaded in this session
 
 	private MainFrame me = null ;			   // Reference to ourselves
 	private Kisekae kisekae = null ;			// Reference to our main class
@@ -149,6 +155,7 @@ final public class MainFrame extends KissFrame
 		super("UltraKiss") ;
 		kisekae = kiss ;
       me = this ;
+      if (begindate == null) begindate = new Date() ;
       
       // On a restart, retain the same background image.
       
@@ -433,7 +440,12 @@ final public class MainFrame extends KissFrame
    	if (loader == null) return ;
       Configuration c = loader.getNewConfiguration() ;
       newconfigid = (c != null) ? c.getID() : null ;
-      if (expansion) c.setExpandFiles(expandfiles) ;
+      if (expansion && c != null) c.setExpandFiles(expandfiles) ;
+      lastset = (c != null) ? c.getName() : "unknown" ;
+      ArchiveFile zip = (c != null) ? c.getZipFile() : null ;
+      lastzip = (zip != null) ? zip.toString() : "unknown" ;
+      downloadurl = (mainmenu != null) ? mainmenu.getDownloadURL() : null ;
+      sets = sets + 1 ;
    	initframe(c) ;
    }
 
@@ -2468,6 +2480,14 @@ final public class MainFrame extends KissFrame
          {
             savecallback = "close" ;
             if (checksave()) return ;
+         }
+
+         // Maintain a webswing session log.  
+      
+         if (kisekae.isWebswing())
+         {
+            String url = (downloadurl != null) ? downloadurl.toExternalForm() : "" ;
+            WebswingLog.write(begindate, sets, lastset, lastzip, url) ;
          }
 
          // Terminate.

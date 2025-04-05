@@ -1407,6 +1407,7 @@ final public class MainMenu extends KissMenu
       // Clear our URL NoCopy indicator for loads from the menu.
       
       setNoCopy(false) ;
+      downloadurl = null ;
       setOpenPath(fdnew.getPath()) ;      
       OptionsDialog.setSecurityEnable(OptionsDialog.getInitSecurityEnable());
       fd = fdnew ;

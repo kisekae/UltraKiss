@@ -20,7 +20,7 @@ Use the **UltraKiss Portal** to show links to KiSS sets available on OtakuWorld 
 
 ### Limitations
 
-1. Webswing must be running on the remote server for this service to work.  If you are unable to connect to the server try again. If you are still unable to connect submit an [issue report](https://github.com/kisekae/UltraKiss/issues).
+1. Webswing must be running on my remote server for this service to work.  If you are unable to connect to the server try again. If you are still unable to connect submit an [issue report](https://github.com/kisekae/UltraKiss/issues).
 2. Browsers do not natively support MIDI or AU sound files.  Only WAV and MP3 files will play in KiSS sets.
 3. No files can be saved to the server.
 4. Server memory is limited. Large KiSS sets may not load. File-Open sets are limited to 5MB.

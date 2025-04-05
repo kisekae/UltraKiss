@@ -219,17 +219,22 @@ final public class LogFile extends PrintStream
 		if (logfile == null) return ;
 		try
 		{
+			Date today = new Date() ;
+			PrintLn.println("Kisekae UltraKiss log file closed on " + today.toString()) ;
 			System.setOut(oldStdout) ;
 			System.setErr(oldStderr) ;
 			try { logfile.close() ; }
          catch (SecurityException e) { }
-         logfile = null ;
 		}
 		catch (Exception e)
 		{
 			PrintLn.println("LogFile: Exception closing log file " + logfilename) ;
 			e.printStackTrace() ;
 		}
+      finally
+      {
+         logfile = null ;
+      }
 	}
 
 
