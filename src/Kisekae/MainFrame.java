@@ -67,10 +67,11 @@ import java.util.prefs.* ;
 import java.util.Date;
 import java.net.URL ;
 import java.io.* ;
+import java.nio.file.Files;
 import java.nio.file.Paths;
+import static java.nio.file.StandardCopyOption.*;
 import javax.swing.* ;
 import javax.swing.undo.* ;
-
 
 final public class MainFrame extends KissFrame
 	implements ActionListener, WindowListener, KeyListener, ComponentListener
@@ -2482,14 +2483,6 @@ final public class MainFrame extends KissFrame
             if (checksave()) return ;
          }
 
-         // Maintain a webswing session log.  
-      
-         if (kisekae.isWebswing())
-         {
-            String url = (downloadurl != null) ? downloadurl.toExternalForm() : "" ;
-            WebswingLog.write(begindate, sets, lastset, lastzip, url) ;
-         }
-
          // Terminate.
 
          if (options != null) options.resetOptions() ;
@@ -2499,6 +2492,18 @@ final public class MainFrame extends KissFrame
             LogFile.delete() ;
          else
       		LogFile.stop() ;
+
+         // Maintain a webswing session log.  This is a temporary file.
+      
+         if (kisekae.isWebswing())
+         {
+            String logfilename = LogFile.getLogFileName() ;
+            String url = (downloadurl != null) ? downloadurl.toExternalForm() : "" ;
+            WebswingLog.write(begindate, sets, lastset, lastzip, url, logfilename) ;
+            File src = new File(LogFile.getLogFileName()) ;
+            File dst = new File(LogFile.getOrigLogFileName()) ;
+            Files.copy(src.toPath(),dst.toPath(),REPLACE_EXISTING) ;
+         }
       }
       catch (Throwable e) { }
       

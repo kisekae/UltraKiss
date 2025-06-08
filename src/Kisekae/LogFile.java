@@ -52,6 +52,7 @@ import javax.swing.JOptionPane ;
 final public class LogFile extends PrintStream 
 {
 	private static String logfilename = "UltraKiss.log" ;
+	private static String origlogfilename = "UltraKiss.log" ;
    private static boolean tracewrite = false ;
    private static int byteswritten = 0 ;
    private static boolean error = false ;
@@ -90,6 +91,7 @@ final public class LogFile extends PrintStream
          
          try
          {
+            if (Kisekae.isWebswing()) throw new Exception("Webswing Log File") ;
             File f = new File(logfilename) ;
             logfile = new PrintStream(new BufferedOutputStream(new FileOutputStream(logfilename)));
             logfilename = f.getAbsolutePath() ;
@@ -102,7 +104,7 @@ final public class LogFile extends PrintStream
             File f = File.createTempFile(prefix,suffix) ;
             logfilename = f.getAbsolutePath() ;
             logfile = new PrintStream(new BufferedOutputStream(new FileOutputStream(logfilename)));
-            f.deleteOnExit() ;
+//          f.deleteOnExit() ;
          }
 
 			// Time and date stamp this file.
@@ -200,6 +202,7 @@ final public class LogFile extends PrintStream
 	// Return our log file name.
 
 	static String getLogFileName() { return logfilename ; }
+	static String getOrigLogFileName() { return origlogfilename ; }
 
 
 	// Return our log file.

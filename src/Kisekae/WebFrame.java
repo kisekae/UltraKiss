@@ -1257,13 +1257,13 @@ final public class WebFrame extends KissFrame
             pageloadtime = System.currentTimeMillis() - Configuration.getTimestamp() ;
             long loadtime = pageloadtime - setpagetime ;
             String s = "Time to load: " + loadtime + " ms" ;
-            statusbar.showStatus(s) ;
+            if (editor != null) statusbar.showStatus(s) ;
             if (OptionsDialog.getDebugControl())
                PrintLn.println("WebFrame: Page loaded, location " + location + ", time to load = " + loadtime + " ms");
          } 
       } ;
 		javax.swing.SwingUtilities.invokeLater(awt) ;
-  		editor.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
+  		if (editor != null) editor.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
       update() ;
 	}
 

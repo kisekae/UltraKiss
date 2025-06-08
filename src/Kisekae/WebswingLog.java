@@ -53,7 +53,7 @@ import java.util.concurrent.TimeUnit;
 
 final public class WebswingLog extends PrintStream
 {
-	private static String logfilename = "Webswing.log" ;
+	private static String webswinglogname = "Webswing.log" ;
    private static PrintWriter w = null;
 
 	// Constructor
@@ -65,7 +65,7 @@ final public class WebswingLog extends PrintStream
 
    // Create and write session log record.
    
-	public static void write(Date begindate, int sets, String lastset, String lastzip, String url) 
+	public static void write(Date begindate, int sets, String lastset, String lastzip, String url, String logfilename) 
 	{
       try 
       {
@@ -73,7 +73,7 @@ final public class WebswingLog extends PrintStream
          if (begindate == null) return ;
          
          w = new PrintWriter(new BufferedWriter
-            (new FileWriter(logfilename, true)));
+            (new FileWriter(webswinglogname, true)));
 
 			Date enddate = new Date() ;
          long duration = getDateDiff(begindate,enddate,TimeUnit.MINUTES) ;
@@ -86,6 +86,8 @@ final public class WebswingLog extends PrintStream
             s += " last set was " + lastset + ", in archive " + f.getName() ;
          if (url != null && url.length() > 0)
             s += ", downloaded from " + url ;
+         if (logfilename != null && logfilename.length() > 0)
+            s += ", logfile " + logfilename ;
          w.println(s);
       }
 
