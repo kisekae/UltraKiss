@@ -739,6 +739,8 @@ final public class MainMenu extends KissMenu
       {
          if (options == source)
          {
+           if (OptionsDialog.getDebugControl())
+               PrintLn.println("MainMenu options dialog request") ;
             parent.getOptionsDialog().show() ;
             return ;
          }
@@ -748,6 +750,8 @@ final public class MainMenu extends KissMenu
 
          if (memory == source)
          {
+           if (OptionsDialog.getDebugControl())
+               PrintLn.println("MainMenu - memory display request") ;
             long mem = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory() ;
             int n = (int) (mem/1024) ;
             String s1 = Kisekae.getCaptions().getString("MemoryInUseText1") ;
@@ -772,6 +776,8 @@ final public class MainMenu extends KissMenu
 
          if (archive == source)
          {
+           if (OptionsDialog.getDebugControl())
+               PrintLn.println("MainMenu archive manager request") ;
             ZipManager manager = new ZipManager() ;
             manager.setVisible(true) ;
             manager.toFront() ;
@@ -783,6 +789,8 @@ final public class MainMenu extends KissMenu
 
          if (texteditor == source)
          {
+           if (OptionsDialog.getDebugControl())
+               PrintLn.println("MainMenu text editor request") ;
             TextFrame editor = new TextFrame() ;
             editor.setVisible(true) ;
             editor.toFront() ;
@@ -794,6 +802,8 @@ final public class MainMenu extends KissMenu
 
          if (coloreditor == source)
          {
+           if (OptionsDialog.getDebugControl())
+               PrintLn.println("MainMenu color editor request") ;
             ColorFrame editor = new ColorFrame() ;
             editor.setVisible(true) ;
             editor.toFront() ; 
@@ -805,6 +815,8 @@ final public class MainMenu extends KissMenu
 
          if (imageeditor == source)
          {
+           if (OptionsDialog.getDebugControl())
+               PrintLn.println("MainMenu image editor request") ;
             ImageFrame editor = new ImageFrame() ;
             editor.setVisible(true) ;
             editor.toFront() ;
@@ -816,6 +828,8 @@ final public class MainMenu extends KissMenu
 
          if (mediaplayer == source)
          {
+           if (OptionsDialog.getDebugControl())
+               PrintLn.println("MainMenu media player request") ;
             MediaFrame player = new MediaFrame() ;
             player.setMinimized(false) ;
             player.setVisible(true) ;
@@ -827,7 +841,9 @@ final public class MainMenu extends KissMenu
 
          if (about == source)
          {
-            parent.getAboutDialog().show() ;
+            if (OptionsDialog.getDebugControl())
+               PrintLn.println("MainMenu about dialog request") ;
+           parent.getAboutDialog().show() ;
             return ;
          }
 
@@ -835,6 +851,8 @@ final public class MainMenu extends KissMenu
 
          if (register == source)
          {
+           if (OptionsDialog.getDebugControl())
+               PrintLn.println("MainMenu register request") ;
             String s = Kisekae.getCaptions().getString("RegisterTitle") ;
             RegisterDialog rd = new RegisterDialog(parent,s,true) ;
             rd.show() ;
@@ -847,6 +865,8 @@ final public class MainMenu extends KissMenu
 
          if (help == source)
          {
+           if (OptionsDialog.getDebugControl())
+               PrintLn.println("MainMenu help request") ;
             String helpurl = OptionsDialog.getWebSite() + OptionsDialog.getOnlineHelp() ;
             parent.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
             if (Kisekae.isSecure())
@@ -870,7 +890,9 @@ final public class MainMenu extends KissMenu
 
          if (tutorial == source)
          {
-            if (helper2 == null) return ;
+           if (OptionsDialog.getDebugControl())
+               PrintLn.println("MainMenu tutorial request") ;
+            if (helper2 == null) return ;            
             Dimension screensize = Toolkit.getDefaultToolkit().getScreenSize() ;
             screensize.width = (int) (screensize.width*0.5f) ;
             screensize.height = (int) (screensize.height*0.95f) ;
@@ -892,6 +914,8 @@ final public class MainMenu extends KissMenu
 
          if ("HelpWindowClosed".equals(evt.getActionCommand()))
          {
+           if (OptionsDialog.getDebugControl())
+               PrintLn.println("MainMenu help window close request") ;
             tutorial.setEnabled(helper2 != null && helper2.isLoaded()) ;
             if (helper2 == null) return ;
             if (windowsize == null) return ;
@@ -910,6 +934,8 @@ final public class MainMenu extends KissMenu
          {
             String s = evt.getActionCommand() ;
             s = s.substring(s.indexOf(". ")+2) ;
+            if (OptionsDialog.getDebugControl())
+               PrintLn.println("MainMenu window display request for " + s) ;
             Vector windows = KissFrame.getWindowFrames() ;
             for (int i = 0 ; i < windows.size() ; i++)
             {
@@ -932,6 +958,8 @@ final public class MainMenu extends KissMenu
 
          if (showtips == source)
          {
+           if (OptionsDialog.getDebugControl())
+               PrintLn.println("MainMenu show tips request") ;
             TipsBox tips = Kisekae.getTipsBox() ;
             if (tips == null) tips = new TipsBox(parent,Kisekae.getCaptions().getString("TipsBoxTitle"),false) ;
             tips.setModal(false) ;
@@ -943,6 +971,8 @@ final public class MainMenu extends KissMenu
 
          if (rundemo == source)
          {
+           if (OptionsDialog.getDebugControl())
+               PrintLn.println("MainMenu run demo request") ;
             String webstart = Kisekae.getDemoIndex() ;
             if (webstart == null) return ;
             URL demourl = Kisekae.getResource(webstart) ;
@@ -965,6 +995,8 @@ final public class MainMenu extends KissMenu
 
          if (readme == source)
          {
+           if (OptionsDialog.getDebugControl())
+               PrintLn.println("MainMenu readme request") ;
             String readmeindex = Kisekae.getReadMeIndex() ;
             if (readmeindex == null) return ;
             URL readme = Kisekae.getResource(readmeindex) ;
@@ -986,6 +1018,8 @@ final public class MainMenu extends KissMenu
 
          if (exit == source)
          {
+           if (OptionsDialog.getDebugControl())
+               PrintLn.println("MainMenu exit request") ;
             parent.exit() ;
             return ;
          }
@@ -1067,6 +1101,8 @@ final public class MainMenu extends KissMenu
          if (logfile == source || 
             evt.getActionCommand() == Kisekae.getCaptions().getString("MenuViewLogFile"))
          {
+           if (OptionsDialog.getDebugControl())
+               PrintLn.println("MainMenu view logfile request") ;
             InputStream is = null ;
             ArchiveFile dir = null ;
             File fl = new File(LogFile.getLogFileName()) ;
@@ -1098,6 +1134,8 @@ final public class MainMenu extends KissMenu
          if (source instanceof LruMenuItem)
          {
             String s = ((LruMenuItem) source).getLruName() ;
+            if (OptionsDialog.getDebugControl())
+               PrintLn.println("MainMenu open LRU request for " + s) ;
             int n = findLruFile(s) ;
             if (n >= 0)
             {
@@ -1354,10 +1392,28 @@ final public class MainMenu extends KissMenu
    // Toolbar and Menu shared event action methods
    // --------------------------------------------
 
-   void eventNew(int type) { parent.setNew(type) ;  }
+   void eventNew(int type) 
+   { 
+      if (OptionsDialog.getDebugControl())
+         PrintLn.println("MainMenu eventNew, type " + type) ;
+      parent.setNew(type) ;  
+      
+      // Show tutorial if File-New clicked.
+      
+      if (type == NEWFILE && OptionsDialog.getShowTips())
+      {
+         if (tutorial != null)
+         {
+            OptionsDialog.setShowTips(false) ;
+            tutorial.doClick();
+         }
+      }
+   }
 
    void eventOpen()
    {
+      if (OptionsDialog.getDebugControl())
+         PrintLn.println("MainMenu eventOpen ") ;
       FileOpen fdnew = null ;
       ArchiveEntry ze = null ;
 
@@ -1418,6 +1474,8 @@ final public class MainMenu extends KissMenu
 
    void eventExpand()
    {
+      if (OptionsDialog.getDebugControl())
+         PrintLn.println("MainMenu eventExpand ") ;
       if (parent == null) return ;
       Configuration c = parent.getConfig() ;
       if (c == null) return ;
@@ -1461,6 +1519,8 @@ final public class MainMenu extends KissMenu
 
    void eventWeb()
    {
+      if (OptionsDialog.getDebugControl())
+         PrintLn.println("MainMenu eventWeb ") ;
       try
       {
          URL webpage = null ;
@@ -1495,6 +1555,8 @@ final public class MainMenu extends KissMenu
 
    void eventBug()
    {
+      if (OptionsDialog.getDebugControl())
+         PrintLn.println("MainMenu eventBug ") ;
       try
       {
          URL webpage = null ;
@@ -1526,6 +1588,8 @@ final public class MainMenu extends KissMenu
    
    void eventClearCache()
    {
+      if (OptionsDialog.getDebugControl())
+         PrintLn.println("MainMenu eventClearCache ") ;
       if (parent == null) return ;
       OptionsDialog options = parent.getOptionsDialog() ;
       if (options == null) return ;
@@ -1541,6 +1605,8 @@ final public class MainMenu extends KissMenu
 
    void eventUrl()
    {
+      if (OptionsDialog.getDebugControl())
+         PrintLn.println("MainMenu eventUrl ") ;
       URLEntryDialog ud = new URLEntryDialog(parent) ;
       String urlname = ud.getSelected() ;
       if (urlname == null || urlname.length() == 0) return ;
@@ -1557,6 +1623,8 @@ final public class MainMenu extends KissMenu
 
    void eventPortal()
    {
+      if (OptionsDialog.getDebugControl())
+         PrintLn.println("MainMenu eventPortal ") ;
       String website = null ;
       URL currentweb = null ;
       parent.showStatus("Connecting ...");
@@ -1596,6 +1664,8 @@ final public class MainMenu extends KissMenu
 
    void eventSearchWeb()
    {
+      if (OptionsDialog.getDebugControl())
+         PrintLn.println("MainMenu eventSearchWeb ") ;
 /*     String msg = "The Search function scans a file directory or a website\n"
          + "to construct a thumbnail index of all KiSS files found.\n"
          + "Your current UltraKiss session will be closed.\n\n"
@@ -1619,6 +1689,8 @@ final public class MainMenu extends KissMenu
 
    void eventSound(boolean b)
    {
+      if (OptionsDialog.getDebugControl())
+         PrintLn.println("MainMenu eventSound b " + b) ;
       OptionsDialog.setSoundOn(b) ;
       if (!b) Audio.stop() ;
    }
@@ -1627,6 +1699,8 @@ final public class MainMenu extends KissMenu
 
    void eventMovie(boolean b)
    {
+      if (OptionsDialog.getDebugControl())
+         PrintLn.println("MainMenu eventSound b " + b) ;
       OptionsDialog.setMovieOn(b) ;
       if (!b) Video.stop() ;
    }
@@ -1638,6 +1712,8 @@ final public class MainMenu extends KissMenu
 
    void openContext(FileOpen fd, ArchiveEntry ze)
    {
+      if (OptionsDialog.getDebugControl())
+         PrintLn.println("MainMenu openContext ze = " + ze) ;
 		if (!SwingUtilities.isEventDispatchThread())
 		{
 			Runnable awt = new Runnable()

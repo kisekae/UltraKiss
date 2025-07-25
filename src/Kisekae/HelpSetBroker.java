@@ -81,10 +81,30 @@ final class HelpSetBroker extends DefaultHelpBroker
    	super(hs) ;
       try
       {
+         // Determine screen index of parent
+         
+         GraphicsConfiguration config = parent.getGraphicsConfiguration();
+         GraphicsDevice currentDevice = config.getDevice();
+         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+         GraphicsDevice[] screenDevices = ge.getScreenDevices();
+
+         int screen = -1;
+         for (int i = 0; i < screenDevices.length; i++) 
+         {
+            if (screenDevices[i].equals(currentDevice)) 
+            {
+               screen = i;
+               break;
+            }
+         }
+ 
+         // Initialize the window frame 
+         
          initPresentation() ;
          WindowPresentation pres = super.getWindowPresentation();
          Window frame = pres.getHelpWindow();
          if (frame == null) return ;
+         if (screen >= 0) pres.setScreen(screen) ;
          frame.setIconImage(parent.getIconImage());
          frame.addWindowListener(wl); 
       }

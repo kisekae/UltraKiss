@@ -1025,7 +1025,7 @@ final class Configuration extends KissObject
       setRestartable(ref.isRestartable()) ;
       setAppended(ref.isAppended()) ;
       setExpandFiles(ref.getExpandFiles()) ;
-		file = zip.getPath() ;
+		if (zip.getPath() != null) file = zip.getPath() ;
 		bytes = ref.getBytes() ;
       if (isAppended() && getReference() != null) file = ref.getPath() ;
 		PrintLn.println("Open configuration \"" + file + "\" (" + getID() + ")") ;

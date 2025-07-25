@@ -784,6 +784,8 @@ final class PanelMenu extends KissMenu
 
          if (reset == source)
          {
+            if (OptionsDialog.getDebugControl())
+               PrintLn.println("PanelMenu reset request") ;
             parent.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
             parent.reset() ;
             return ;
@@ -793,6 +795,8 @@ final class PanelMenu extends KissMenu
 
          if (restart == source)
          {
+            if (OptionsDialog.getDebugControl())
+               PrintLn.println("PanelMenu restart request") ;
             if (!enableRestart) return ;
             parent.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
             parent.restart() ;
@@ -811,6 +815,8 @@ final class PanelMenu extends KissMenu
 
          if (scale == source)
          {
+            if (OptionsDialog.getDebugControl())
+               PrintLn.println("PanelMenu scale request") ;
             PanelFrame pf = parent.getPanel() ;
             if (pf == null) return ;
             float sf = pf.getScaleFactor() ;
@@ -842,6 +848,8 @@ final class PanelMenu extends KissMenu
 
          if (editimage == source)
          {
+            if (OptionsDialog.getDebugControl())
+               PrintLn.println("PanelMenu edit image request") ;
             Configuration config = parent.getConfig() ;
             if (config == null) return ;
             PanelFrame pf = parent.getPanel() ;
@@ -880,7 +888,13 @@ final class PanelMenu extends KissMenu
 
          // A Close request terminates the currently running configuration.
 
-         if (close == source) { parent.closepanel() ; return ; }
+         if (close == source) 
+         { 
+            if (OptionsDialog.getDebugControl())
+               PrintLn.println("PanelMenu close request") ;
+            parent.closepanel() ; 
+            return ; 
+         }
 
          // A Save request updates the current archive file.
 
@@ -932,6 +946,8 @@ final class PanelMenu extends KissMenu
 
          if (source == edit[0])
          {
+            if (OptionsDialog.getDebugControl())
+               PrintLn.println("PanelMenu view CNF request") ;
             String [] ext = new String[1] ;
             ext[0] = ".CNF" ;
             String title = Kisekae.getCaptions().getString("ConfigurationListTitle") ;
@@ -943,6 +959,8 @@ final class PanelMenu extends KissMenu
 
          if (source == edit[1])
          {
+            if (OptionsDialog.getDebugControl())
+               PrintLn.println("PanelMenu view document request") ;
             String [] ext = ArchiveFile.getDocExt() ;
             String title = Kisekae.getCaptions().getString("DocumentationListTitle") ;
             eventTextEdit(title,ext,false) ;
@@ -953,6 +971,8 @@ final class PanelMenu extends KissMenu
 
          if (source == edit[2])
          {
+            if (OptionsDialog.getDebugControl())
+               PrintLn.println("PanelMenu edit palette request") ;
             String [] ext = ArchiveFile.getPaletteExt() ;
             String title = Kisekae.getCaptions().getString("PaletteListTitle") ;
             eventColorEdit(title,ext) ;
@@ -963,6 +983,8 @@ final class PanelMenu extends KissMenu
 
          if (objects == source)
          {
+            if (OptionsDialog.getDebugControl())
+               PrintLn.println("PanelMenu view object contect request") ;
             Configuration config = parent.getConfig() ;
             ObjectDialog od = new ObjectDialog(parent,config) ;
             od.show() ;
@@ -973,6 +995,8 @@ final class PanelMenu extends KissMenu
 
          if (loadtext == source)
          {
+            if (OptionsDialog.getDebugControl())
+               PrintLn.println("PanelMenu view load messages request") ;
             JTextPane text = parent.getLoadText() ;
             if (text == null) return ;
             JScrollPane scroll = new JScrollPane(text) ;
@@ -987,6 +1011,8 @@ final class PanelMenu extends KissMenu
 
          if (cnffile == source)
          {
+            if (OptionsDialog.getDebugControl())
+               PrintLn.println("PanelMenu view active CNF request") ;
             Configuration config = parent.getConfig() ;
             if (config == null) return ;
             parent.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
@@ -1031,6 +1057,8 @@ final class PanelMenu extends KissMenu
 
          if (archive == source)
          {
+            if (OptionsDialog.getDebugControl())
+               PrintLn.println("PanelMenu view set archive file request") ;
             Configuration config = parent.getConfig() ;
             if (config == null) return ;
             parent.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
@@ -1045,6 +1073,8 @@ final class PanelMenu extends KissMenu
 
          if (debugger == source)
          {
+            if (OptionsDialog.getDebugControl())
+               PrintLn.println("PanelMenu invoke FKiSS editor request") ;
             Configuration config = parent.getConfig() ;
             if (config == null) return ;
             FKissFrame fk = FKissEvent.getBreakFrame() ;
@@ -1149,6 +1179,8 @@ final class PanelMenu extends KissMenu
 
          if (properties == source)
          {
+            if (OptionsDialog.getDebugControl())
+               PrintLn.println("PanelMenu view CNF properties request") ;
             new ConfigDialog(parent,parent.getConfig()).show() ;
             return ;
          }
@@ -1157,6 +1189,8 @@ final class PanelMenu extends KissMenu
 
          if (undoall == source)
          {
+            if (OptionsDialog.getDebugControl())
+               PrintLn.println("PanelMenu undo all request") ;
             if (!undo.canUndo()) return ;
             int n = JOptionPane.showConfirmDialog(parent,
                Kisekae.getCaptions().getString("UndoAllConfirmText"),
@@ -1312,36 +1346,103 @@ final class PanelMenu extends KissMenu
    // Toolbar and Menu shared event action methods
    // --------------------------------------------
 
-   void eventNew(int type) { menu.eventNew(type) ; }
+   void eventNew(int type) 
+   { 
+      if (OptionsDialog.getDebugControl())
+         PrintLn.println("PanelMenu eventNew, type " + type) ;
+      menu.eventNew(type) ; 
+   }
 
-   void eventOpen() { menu.eventOpen() ; }
+   void eventOpen() 
+   { 
+      if (OptionsDialog.getDebugControl())
+         PrintLn.println("PanelMenu eventOpen ") ;
+      menu.eventOpen() ;  
+   }
    
-   void eventClose() { parent.closepanel() ; }
+   void eventClose() 
+   { 
+      if (OptionsDialog.getDebugControl())
+         PrintLn.println("PanelMenu eventClose ");
+      parent.closepanel() ; 
+   }
 
-   void eventPortal() { menu.eventPortal() ; }
+   void eventPortal() 
+   { 
+      if (OptionsDialog.getDebugControl())
+         PrintLn.println("PanelMenu eventPortal ") ;
+      menu.eventPortal() ; 
+   }
 
-   void eventCut() { parent.editCut() ; }
+   void eventCut() 
+   { 
+      if (OptionsDialog.getDebugControl())
+         PrintLn.println("PanelMenu eventCut ") ;
+      parent.editCut() ; 
+   }
 
-   void eventCopy() { parent.editCopy() ; }
+   void eventCopy() 
+   { 
+      if (OptionsDialog.getDebugControl())
+         PrintLn.println("PanelMenu eventCopy ") ;
+      parent.editCopy() ; 
+   }
 
-   void eventPaste() { parent.editPaste() ; }
+   void eventPaste() 
+   { 
+      if (OptionsDialog.getDebugControl())
+         PrintLn.println("PanelMenu eventPaste ") ;
+      parent.editPaste() ; 
+   }
 
-   void eventPasteNew() { parent.editPasteNew() ; }
+   void eventPasteNew() 
+   { 
+      if (OptionsDialog.getDebugControl())
+         PrintLn.println("PanelMenu eventPasteNew ") ;
+      parent.editPasteNew() ; 
+   }
 
-   void eventUngroup() { parent.editUngroup() ; }
+   void eventUngroup() 
+   { 
+      if (OptionsDialog.getDebugControl())
+         PrintLn.println("PanelMenu eventUngroup ") ;
+      parent.editUngroup() ; 
+   }
 
-   void eventRegroup() { parent.editGroup() ; }
+   void eventRegroup() 
+   { 
+      if (OptionsDialog.getDebugControl())
+         PrintLn.println("PanelMenu eventRegroup ") ;
+      parent.editGroup() ; 
+   }
 
-   void eventNewgroup() { parent.editNewgroup() ; }
+   void eventNewgroup() 
+   { 
+      if (OptionsDialog.getDebugControl())
+         PrintLn.println("PanelMenu eventNewgroup ") ;
+      parent.editNewgroup() ; 
+   }
 
-   void eventSelectAll(boolean selectall) { parent.selectAll(selectall) ; }
+   void eventSelectAll(boolean selectall) 
+   { 
+      if (OptionsDialog.getDebugControl())
+         PrintLn.println("PanelMenu eventSelectAll, selectall " + selectall) ;
+      parent.selectAll(selectall) ; 
+   }
 
-   void eventSelectAllVisible(boolean selectall) { parent.selectAllVisible(selectall) ; }
+   void eventSelectAllVisible(boolean selectall) 
+   { 
+      if (OptionsDialog.getDebugControl())
+         PrintLn.println("PanelMenu eventSelectAllVisible, selectall " + selectall) ;
+      parent.selectAllVisible(selectall) ; 
+   }
    
    // Magnify or reduce the screen size.
    
    void eventMagnify(int n)
    {
+      if (OptionsDialog.getDebugControl())
+         PrintLn.println("PanelMenu eventMagnify, n = " + n) ;
       PanelFrame pf = parent.getPanel() ;
       if (pf == null) return ;
       float sf = pf.getScaleFactor() ;
@@ -1357,6 +1458,8 @@ final class PanelMenu extends KissMenu
 
    void eventSelectFind() 
    { 
+      if (OptionsDialog.getDebugControl())
+         PrintLn.println("PanelMenu eventSelectFind ") ;
       Configuration config = parent.getConfig() ;
       if (config == null) return ;
       Vector v = new Vector() ;
@@ -1387,6 +1490,8 @@ final class PanelMenu extends KissMenu
    void eventSelect() { eventSelect(false) ; }
    void eventSelect(boolean importonly)
    {
+      if (OptionsDialog.getDebugControl())
+         PrintLn.println("PanelMenu eventSelect, importonly " + importonly) ;
       Configuration config = parent.getConfig() ;
       if (config == null) return ;
       FileOpen fd = config.getFileOpen() ;
@@ -1442,6 +1547,8 @@ final class PanelMenu extends KissMenu
    
    void eventAppend() 
    { 
+      if (OptionsDialog.getDebugControl())
+         PrintLn.println("PanelMenu eventAppend ");
       Configuration config = parent.getConfig() ;
       if (config == null) return ;
       FileOpen fd = config.getFileOpen() ;
@@ -1517,6 +1624,8 @@ final class PanelMenu extends KissMenu
 
    void eventSave(int type)
    {
+      if (OptionsDialog.getDebugControl())
+         PrintLn.println("PanelMenu eventSave, type = " + type) ;
       Configuration config = parent.getConfig() ;
       if (config == null) return ;
       
@@ -1637,6 +1746,8 @@ final class PanelMenu extends KissMenu
    void eventWrite() { eventWrite(false) ; }
    void eventWrite(boolean saveset)
    {
+      if (OptionsDialog.getDebugControl())
+         PrintLn.println("PanelMenu eventWrite, saveset " + saveset) ;
       Configuration config = parent.getConfig() ;
       if (config == null) return ;
       PanelFrame panel = parent.getPanel() ;
@@ -1679,6 +1790,8 @@ final class PanelMenu extends KissMenu
 
    void eventPrint()
    {
+      if (OptionsDialog.getDebugControl())
+         PrintLn.println("PanelMenu eventPrint ") ;
       if (parent == null) return ;
       PrinterJob pj = PrinterJob.getPrinterJob() ;
       PageFormat pf = parent.getPageFormat() ;
@@ -1704,6 +1817,8 @@ final class PanelMenu extends KissMenu
 
    void eventPrintPreview()
    {
+      if (OptionsDialog.getDebugControl())
+         PrintLn.println("PanelMenu eventPrintPreview ") ;
       if (parent == null) return ;
       PageFormat pf = parent.getPageFormat() ;
       PanelFrame panel = parent.getPanel() ;
@@ -1719,6 +1834,8 @@ final class PanelMenu extends KissMenu
 
    void eventPageSetup()
    {
+      if (OptionsDialog.getDebugControl())
+         PrintLn.println("PanelMenu eventPageSetup ") ;
       PrinterJob pj = PrinterJob.getPrinterJob() ;
       parent.setPageFormat(pj.pageDialog(parent.getPageFormat())) ;
    }
@@ -1727,6 +1844,8 @@ final class PanelMenu extends KissMenu
 
    void eventPage(int p)
    {
+      if (OptionsDialog.getDebugControl())
+         PrintLn.println("PanelMenu eventPage, p = " + p) ;
       if (EventHandler.getModal() != null) return ;
       parent.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
       parent.initpage(p) ;
@@ -1737,6 +1856,8 @@ final class PanelMenu extends KissMenu
 
    void eventColor(int c)
    {
+      if (OptionsDialog.getDebugControl())
+         PrintLn.println("PanelMenu eventColor, c = " + c) ;
       parent.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
       parent.initcolor(new Integer(c)) ;
       parent.showpage() ;
@@ -1746,6 +1867,8 @@ final class PanelMenu extends KissMenu
 
    void eventTextEdit(String title, String [] ext, boolean showline)
    {
+      if (OptionsDialog.getDebugControl())
+         PrintLn.println("PanelMenu eventTextEdit, title = " + title) ;
       FileOpen fileopen = null ;
       Configuration config = parent.getConfig() ;
       if (config == null) return ;
@@ -1796,6 +1919,8 @@ final class PanelMenu extends KissMenu
 
    void eventColorEdit(String title, String [] ext)
    {
+      if (OptionsDialog.getDebugControl())
+         PrintLn.println("PanelMenu eventColorEdit, title = " + title) ;
       Configuration config = parent.getConfig() ;
       if (config == null) return ;
       FileOpen fileopen = config.getFileOpen() ;
@@ -1840,6 +1965,8 @@ final class PanelMenu extends KissMenu
 
    void eventImportImage(boolean newgroup)
    {
+      if (OptionsDialog.getDebugControl())
+         PrintLn.println("PanelMenu eventImportImage, newgroup " + newgroup) ;
       String [] ext = ArchiveFile.getImageExt() ;
       String title = Kisekae.getCaptions().getString("ImageListTitle") ;
       FileOpen fd = new FileOpen(parent,title,ext) ;
@@ -1923,6 +2050,8 @@ final class PanelMenu extends KissMenu
 
    void eventImportPalette()
    {
+      if (OptionsDialog.getDebugControl())
+         PrintLn.println("PanelMenu eventImportPalette ") ;
       String [] ext = ArchiveFile.getPaletteExt() ;
       String title = Kisekae.getCaptions().getString("PaletteListTitle") ;
       FileOpen fd = new FileOpen(parent,title,ext) ;
@@ -1992,6 +2121,8 @@ final class PanelMenu extends KissMenu
 
    void eventImportAudio()
    {
+      if (OptionsDialog.getDebugControl())
+         PrintLn.println("PanelMenu eventImportAudio ") ;
       Configuration config = parent.getConfig() ;
       ArchiveFile zip = (config != null) ? config.getZipFile() : null ;
       if (zip == null) return ;
@@ -2047,6 +2178,8 @@ final class PanelMenu extends KissMenu
 
    void eventImportVideo()
    {
+      if (OptionsDialog.getDebugControl())
+         PrintLn.println("PanelMenu eventImportVideo ") ;
       Configuration config = parent.getConfig() ;
       ArchiveFile zip = (config != null) ? config.getZipFile() : null ;
       if (zip == null) return ;
@@ -2100,6 +2233,8 @@ final class PanelMenu extends KissMenu
 
    void eventImportOther()
    {
+      if (OptionsDialog.getDebugControl())
+         PrintLn.println("PanelMenu eventImportOther ") ;
       Configuration config = parent.getConfig() ;
       ArchiveFile zip = (config != null) ? config.getZipFile() : null ;
       if (zip == null) return ;
@@ -2120,6 +2255,8 @@ final class PanelMenu extends KissMenu
 
    void eventImportPaste()
    {
+      if (OptionsDialog.getDebugControl())
+         PrintLn.println("PanelMenu eventImportPaste ") ;
       if (!Kisekae.isVolatileImage() || Kisekae.isSecure()) return ;
       Configuration config = parent.getConfig() ;
       if (config == null) return ;
@@ -2163,6 +2300,8 @@ final class PanelMenu extends KissMenu
 
    void eventAddComponent(String type)
    {
+      if (OptionsDialog.getDebugControl())
+         PrintLn.println("PanelMenu eventAddComponent, type " + type);
       Configuration config = parent.getConfig() ;
       if (config == null) return ;
       Vector v = config.getComponents() ;
@@ -2188,6 +2327,8 @@ final class PanelMenu extends KissMenu
 
    void eventLayerImage()
    {
+      if (OptionsDialog.getDebugControl())
+         PrintLn.println("PanelMenu eventLayerImage ") ;
       Configuration config = parent.getConfig() ;
       if (config == null) return ;
       LayerDialog ld = new LayerDialog(parent,config) ;
@@ -2198,6 +2339,8 @@ final class PanelMenu extends KissMenu
 
    void eventSound(boolean b)
    {
+      if (OptionsDialog.getDebugControl())
+         PrintLn.println("PanelMenu eventSound, b " + b) ;
       OptionsDialog.setSoundOn(b) ;
       if (!b) Audio.stop() ;
    }
@@ -2206,6 +2349,8 @@ final class PanelMenu extends KissMenu
 
    void eventMovie(boolean b)
    {
+      if (OptionsDialog.getDebugControl())
+         PrintLn.println("PanelMenu eventMovie, b " + b) ;
       OptionsDialog.setMovieOn(b) ;
       if (!b) Video.stop() ;
    }
@@ -2215,6 +2360,8 @@ final class PanelMenu extends KissMenu
 
    void openContext(FileOpen fd, ArchiveEntry ze)
    {
+      if (OptionsDialog.getDebugControl())
+         PrintLn.println("PanelMenu openContext, ze = " + ze) ;
       if (menu == null) return ;
       menu.openContext(fd,ze);
    }
