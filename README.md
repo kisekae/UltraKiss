@@ -1,6 +1,6 @@
 # UltraKiss
 
-**UltraKiss 4.0.2** is now released to provide internet browser access to KiSS sets using [Webswing](https://www.webswing.org/) technology.   This provides online access to thousands of KiSS sets through your web browser.
+**UltraKiss 4.0.3** is now released to provide internet browser access to KiSS sets using [Webswing](https://www.webswing.org/) technology.   This provides online access to thousands of KiSS sets through your web browser.
 
 Press this button to run UltraKiss.  
 [![UltraKiss](https://github.com/kisekae/UltraKiss/blob/master/src/Images/ultrakissbtn.svg)](https://www.bronzeart.ca/kisekae-ultrakiss/)
@@ -8,6 +8,7 @@ Press this button to run UltraKiss.
 **UltraKiss 4.0** is a new release to enable online browser operation of UltraKiss as a webswing server application.  
 **UltraKiss 4.0.1** is a stability update to release 4.0 that resolves initial Webswing hang issues and corrects Portal delays for display of HTML images.  
 **UltraKiss 4.0.2** is an update to release 4.0.1 that corrects a few minor issues related to Webswing operation.  
+**UltraKiss 4.0.3** is an update to release 4.0.2 that improves Webswing logging and enables tutorial help access when creating new KiSS sets.  
 
 
 ### How does it work?
