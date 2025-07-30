@@ -2750,7 +2750,7 @@ final class Configuration extends KissObject
          int valid = 0 ;
          int code = -1 ;
          int mandatory = -1 ;
-         int line = kiss.getLine() ;
+         int line = kiss.getLine() ;         
          String name = kiss.getName() ;
          Object id = kiss.getIdentifier() ;
          String s = (id != null) ? id.toString() : "" ;
@@ -2874,7 +2874,8 @@ final class Configuration extends KissObject
                   if (!(kiss instanceof FKissAction)) 
                      o = kiss ;
                   else if (code == 4 || code == 5 || code == 6 || code == 7 
-                     || code == 8 || code ==9 || code == 26 || code == 106)
+                     || code == 8 || code ==9 || code == 26 || code == 106
+                     || code == 22)
                      o = Alarm.getByKey(Alarm.getKeyTable(),cid,key) ;  
                   else if (code == 31 || code == 32 || code == 33 || code == 34
                      || code == 149) 
@@ -4815,7 +4816,7 @@ final class Configuration extends KissObject
 
 	private Palette parsePalette(String s)
 	{
-		StringTokenizer st = new StringTokenizer(s.substring(1)," \t") ;
+		StringTokenizer st = new StringTokenizer(s.substring(1)," \t;") ;
 
 		// First token is the palette file name.  Format: %file
       // Watch for file names delimited by quotes.
@@ -4943,6 +4944,7 @@ final class Configuration extends KissObject
          String hint = st.nextToken() ;
          String value = st.nextToken() ;
          if (hint != null) hint = hint.toLowerCase() ;
+         if (value != null) value = value.toLowerCase() ;
          
          if ("stack".equals(hint)) 
             OptionsDialog.setOption("",value) ;
@@ -4951,11 +4953,11 @@ final class Configuration extends KissObject
          else if ("bounds".equals(hint))
          {
             String b1 = "", b2 = "", b3 = "" ;
-            if ("all".equalsIgnoreCase(value)) { b1= "true" ; b2 = "true" ; b3 = "false" ; }
-            if ("fkiss".equalsIgnoreCase(value)) { b1= "false" ; b2 = "true" ; b3 = "false" ; }
-            if ("visible".equalsIgnoreCase(value)) { b1= "true" ; b2 = "true" ; b3 = "true" ; }
-            if ("limited".equalsIgnoreCase(value)) { b1= "true" ; b2 = "false" ; b3 = "false" ; }
-            if ("none".equalsIgnoreCase(value)) { b1= "false" ; b2 = "false" ; b3 = "false" ; }
+            if ("all".startsWith(value)) { b1= "true" ; b2 = "true" ; b3 = "false" ; }
+            if ("fkiss".startsWith(value)) { b1= "false" ; b2 = "true" ; b3 = "false" ; }
+            if ("visible".startsWith(value)) { b1= "true" ; b2 = "true" ; b3 = "true" ; }
+            if ("limited".startsWith(value)) { b1= "false" ; b2 = "true" ; b3 = "true" ; }
+            if ("none".startsWith(value)) { b1= "false" ; b2 = "false" ; b3 = "false" ; }
             if (b1.length() > 0) OptionsDialog.setOption("constrainmoves",b1) ;
             if (b2.length() > 0) OptionsDialog.setOption("constrainfkiss",b2) ;
             if (b3.length() > 0) OptionsDialog.setOption("constrainvisible",b3) ;
