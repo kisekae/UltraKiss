@@ -513,18 +513,25 @@ final class Configuration extends KissObject
 		Palette p = getPalette(0) ;
 		if (p == null || rgbborder) 
       {
-         if (!OptionsDialog.getPlayFKissCompatibility())
+         if (rgbborder)
          {
             int r = (border & 0xff0000) >> 16 ;
             int g = (border & 0x00ff00) >> 8 ;
             int b = (border & 0x0000ff) ;
             return new Color(r,g,b) ;
          }
+         
+         // If PlayFKiss these are default colors for (0-255)
+         
          int r = (((border % 1024) / 32) * 36) % 256 ;
          int g = (((border % 32) / 4) * 36) % 256 ;
          int b = (((border % 4)) * 85) % 256 ;
          return new Color(r,g,b) ;
       }
+      
+      // If palette exists, then border color is in the first multipalette 
+      // at the border index.
+      
       if (importborder >= 0) return (p.getColor(0,importborder)) ;
 		return (p.getColor(0,border)) ;
 	}

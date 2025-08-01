@@ -80,6 +80,7 @@ final class Group extends KissObject
 	private Point offset = null ;				// The group location offset
 	private Point initoffset = null ;		// The group initial offset
 	private Point flex = null ;				// The group flex value
+	private Point initialflex = null ;		// The group initial flex value
    private Color selectcolor = null ;		// The cel selection box color
 	private Integer level = null ;			// The lowest cel z-level
 	private Integer currentframe = null ;	// The current frame number
@@ -276,6 +277,7 @@ final class Group extends KissObject
 
 		int f = (c.getFlex() == null) ? 0 : c.getFlex().intValue() ;
 		if (f > flex.y) flex = new Point(f+1,f) ;
+      initialflex = new Point(flex) ;
 
 		// Retain the draw level of the largest numbered cel in the
 		// group.  This identifier represents the minimum overlay
@@ -1022,6 +1024,7 @@ final class Group extends KissObject
          if (c.isInternal()) continue ;
    		int f = (c.getFlex() == null) ? 0 : c.getFlex().intValue() ;
    		if (f > flex.y) flex = new Point(f+1,f) ;
+         initialflex = new Point(flex) ;
       }
    }
    
@@ -1106,6 +1109,10 @@ final class Group extends KissObject
 	// Return the group flex value.
 
 	Point getFlex() { return flex ; }
+
+	// Return the group initial flex value.
+
+	Point getInitialFlex() { return initialflex ; }
 
 	// Return the indicator monitoring if the flex value changed to zero.
 

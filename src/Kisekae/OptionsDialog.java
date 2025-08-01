@@ -5992,10 +5992,10 @@ final public class OptionsDialog extends KissDialog
       setConstrainMoves(true) ;
       setDragMove(true) ;
       setConstrainVisible(true) ;
-//    setImportCel(true) ;
+      setImportCel(true) ;
       setExportCel(false) ;
       setImportComponent(false) ;
-//    setComponentCel(true) ;
+      setComponentCel(true) ;
       setWriteCelOffset(true) ;
       setSoundSingle(true) ;
       setMultipleEvents(false) ;

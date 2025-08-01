@@ -3571,13 +3571,16 @@ final class PanelFrame extends JPanel
       int p = (o instanceof Integer) ? ((Integer) o).intValue() : 0 ;
       page.init() ;
 
-      // Reset any initial movement restrictions.
+      // Reset any initial movement restrictions and object lock value.
 
       for (int i = 0 ; i < groups.size() ; i++)
       {
          Group group = (Group) groups.elementAt(i) ;
          group.setRestrictX(group.getInitialRestrictX()) ;
          group.setRestrictY(group.getInitialRestrictY()) ;
+         Point flex = group.getInitialFlex() ;
+         if (flex != null) flex = new Point(flex) ;
+         group.setFlex(flex) ;
       }
 
       // Re-establish our group set as the reset has changed locations.
@@ -5468,7 +5471,7 @@ final class PanelFrame extends JPanel
       Object o = group.getIdentifier() ;
       if (o != null) trace += ", Object " + o.toString() ;
       if (flexvalue != null && flexvalue.y > 0)
-         trace += ", Flex " + flexvalue.y ;
+         trace += ", Fix " + flexvalue.y ;
       int transparency = 255 - cel.getTransparency() ;
       if (transparency < 0) transparency = 0 ;
       if (transparency > 255) transparency = 255 ;
