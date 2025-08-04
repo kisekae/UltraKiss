@@ -20,16 +20,31 @@
 	web. I will also place notices here regarding product updates, scheduled 
 	releases, or problems and work-arounds that may affect you.&nbsp;</p>
                                         <p>&nbsp;</p>
-					<p><B>July 25, 2025</B></p>
-					<P>UltraKiss V4.0.3 is released. UltraKiss 4.0.3 continues to improve Webswing operation.</P>
+					<p><B>August 3, 2025</B></p>
+					<P>UltraKiss V4.0.3 update 3 is released. UltraKiss 4.0.3 corrects DirectKiss compatibility issues and continues to improve Webswing operation.</P>
                                         <P>UltraKiss is end-of-life.  Issues may be corrected if reported to project <a href="https://github.com/kisekae/UltraKiss">Kisekae UltraKiss</a> on GitHub. </P>
                                         <p>&nbsp;</p>
 					<h3><FONT face=Arial>Updates to V4.0.3&nbsp; </FONT></h3>
 					<BLOCKQUOTE>
                       <p><font face="Arial">1. Restored TheOwl application to run all Scarecrow sets in Webswing.  New hosting has provided increased server capacity.</font></p>
                       <p><font face="Arial">2. Expanded the Options-Debug-Control trace to include menu button traces.  This monitors some interface actions for diagnostic traces.</font></p>
-                      <p><font face="Arial">3. Activated the debug control information for Webswing logging for improved diagnostics.</font></p>
+                      <p><font face="Arial">3. Activated the debug control information by default for Webswing logging for improved diagnostics.</font></p>
                       <p><font face="Arial">4. Invoked the Help-Tutorials screen on the first File-New command to provided improved assistance for new UltraKiss users.</font></p>
+                      <p><font face="Arial">5. Positioned the Help-Tutorials screen on the same monitor as the main UltraKiss screen for multi-monitor systems.</font></p>
+                      <p><font face="Arial">6. UltraKiss was issuing a parameter syntax error for DirectKiss ghost(!celgroup,...) action command.  This is corrected. </font></p>
+                      <p><font face="Arial">7. The interpretation for for DirectKiss ;HINT bounds (All|Limited|FKiSS|Visible|None) is corrected to align with the DirectKiss specification. </font></p>
+                      <p><font face="Arial">8. Implemented the UltraKiss option to show undefined objects and variables when in DirectKiss compatibility mode.</font></p>
+                      <p><font face="Arial">9. Corrected a false undefined alarm name warning that was issued for randomtimer() action statements. </font></p>
+                      <p><font face="Arial">10. Corrected an infinite loop in Lhhuf.java while encoding an element when writing an lha file. </font></p>
+                      <p><font face="Arial">11. Corrected a parsing error if palette file specifiers in the CNF where immediately followed by a semicolon. </font></p>
+          	      <p><font face="Arial">12. Set the initial DirectKiss compatibility options to not constrain mouse and FKiSS movement to the visible area. </font></p>
+          	      <p><font face="Arial">13. New KiSS sets (File-New) could not be saved as archive files.  The menu command to Save As Archive is now enabled.</font></p>
+          	      <p><font face="Arial">14. Packaged the slot machine UltraKiss demonstration set with wav audio files for compatibility with Webswing.</font></p>
+          	      <p><font face="Arial">15. Updated the tutorial documents for creating a new KiSS set. Additional information is provided. </font></p>
+                      <p><font face="Arial">16. Corrected the border color update for sets when PlayFKiss or other compatibility options were set.</font></p>
+                      <p><font face="Arial">17. Reset the object fix values to their initial state on a View-Reset request.  This now resets position and fix values.</font></p>
+                      <p><font face="Arial">18. Object dragging with edit selected objects was not working properly under Webswing.  This is corrected.</font></p>
+                      <p><font face="Arial">19. The download of INCLUDE files specified by a url is significantly faster.  Downloads are now buffered. </font></p>
           				</BLOCKQUOTE>
                                         <p>&nbsp;</p>
 					<p><B>June 8, 2025</B></p>
@@ -60,7 +75,7 @@
                       <p><font face="Arial">3. Converted all URLs on Windows systems to use the forward slash character.  The jar file specifier !\ was invalid. </font></p>
                       <p><font face="Arial">4. Corrected a null pointer fault when repositioning a movie when centering the panel frame. </font></p>
                       <p><font face="Arial">5. Retain the download archive path so a viewer("open") command is relative to the downloaded file path. </font></p>
-                      <p><font face="Arial">6. Fixed a layering issue where all object cels in the object were moved forward or backward rather than just the selected cels. </font></p>
+                      <p><font face="Arial">6. Fixed a layering issuewhere all object cels in the object were moved forward or backward rather than just the selected cels. </font></p>
                       <p><font face="Arial">7. Introduced a new viewer("resetportal") FKiSS5 command to reset the portal to open the default URL when started. </font></p>
                       <p><font face="Arial">8. Ensured that all menu commands and internal functions to save files were disabled for webswing operation. </font></p>
                       <p><font face="Arial">9. The seventh application parameter for a webswing portal launch on start is removed.  Launch on start may hang due to delay.</font></p>

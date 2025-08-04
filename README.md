@@ -8,16 +8,19 @@ Press this button to run UltraKiss.
 **UltraKiss 4.0** is a new release to enable online browser operation of UltraKiss as a webswing server application.  
 **UltraKiss 4.0.1** is a stability update to release 4.0 that resolves initial Webswing hang issues and corrects Portal delays for display of HTML images.  
 **UltraKiss 4.0.2** is an update to release 4.0.1 that corrects a few minor issues related to Webswing operation.  
-**UltraKiss 4.0.3** is an update to release 4.0.2 that improves Webswing logging and enables tutorial help access when creating new KiSS sets.  
+**UltraKiss 4.0.3** is an update to release 4.0.2 that improves Webswing logging and corrects DirectKiss compatibility issues.  
 
 
 ### How does it work?
 
-UltraKiss is a Java Desktop application.  It is deployed on a cloud based web server that runs a demonstration version of Webswing.  When you press the button above you will access this server.   If the server is running you will receive a notice that it is starting the application.
+UltraKiss is a Java Desktop application.  It is deployed on a web server that runs a demonstration version of Webswing.  When you press the button above you will access this server.   If the server is running you will receive a notice that it is starting the application.
 
 UltraKiss will launch. A window is shown that lists browser limitations.
 
 Use the **UltraKiss Portal** to show links to KiSS sets available on OtakuWorld and other sites on the Internet. You can also use the **File-Open** command to open and load KiSS files stored on your computer.
+
+Webswing applications like UltraKiSS that require high-performance, real-time interaction, may be less responsive due to rendering latency.  For improved performance download and install UltraKiss from [Github](https://github.com/kisekae/UltraKiss/releases).
+
 
 ### Limitations
 
@@ -26,6 +29,8 @@ Use the **UltraKiss Portal** to show links to KiSS sets available on OtakuWorld 
 3. No files can be saved to the server.
 4. Server memory is limited. Large KiSS sets may not load. File-Open sets are limited to 5MB.
 5. Your session will timeout and close if no activity for 5 minutes.
+
+For 
 
 ![](https://github.com/kisekae/UltraKiss/blob/master/src/Images/ultrakiss-webswing.png)
 

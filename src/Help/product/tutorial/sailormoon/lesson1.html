@@ -16,7 +16,7 @@
 				<img src="images/directkiss.gif" width="16" height="16" hspace="5" align="absmiddle">
 				<img src="images/gnomekiss.gif" width="16" height="16" hspace="5" align="absmiddle">
 				or use <FONT color="#000099">Tools-Options-Compatibility</FONT> to set a compatibility preset.
-				This lesson	requires editing of the KiSS set so ensure that the Edit Enable toggle button
+				This lesson requires editing of the KiSS set so ensure that the Edit Enable toggle button
 				on the toolbar is set.<img src="images/editenable.gif" width="16" height="16" hspace="5" align="absmiddle">
 				<p>&nbsp;</p>
 			<li>
@@ -26,7 +26,7 @@
 			<li>
 				Use <FONT color="#000099">File-Properties</FONT> to change the new KiSS
 				configuration (CNF) file properties.&nbsp; The attributes section of the
-				Properties dialog will show a playfield size of (448,320).&nbsp; Press the
+				Properties dialog may show a playfield size of (448,320).&nbsp; If it does press the
 				small button beside this attribute and change the screen size to
 				<FONT color="#cc6600">(600,400)</FONT>.&nbsp; Next, press the small button beside the border
 				color attribute and select a white background from the color swatch
@@ -38,9 +38,16 @@
 				Use <FONT color="#000099">Edit-Import Image</FONT> to New Object.&nbsp; Select
 				the <FONT color="#cc6600">sailormoon.gif</FONT> file from the Tutorial/Sailor
 				Moon directory.&nbsp; The image will be loaded and positioned at the upper left
-				corner of the playfield. It	will also be converted to a CEL file with an approriate
-				KCF. It will also have a blue selection marquee box drawn around the image.  This box
-				shows that the image has been selected for editing.
+				corner of the playfield. If any viewer preset compatibility option is set the image 
+                                will be converted to a CEL file with an appropriate KCF. This conversion is performed 
+                                if the <FONT color="#000099">Options-Options-Import setting</FONT> to import images as CEL files is set.  The image 
+                                when imported will also have a blue selection marquee box drawn around the image.  
+                                This box shows that the image has been selected for editing.
+				<p>&nbsp;</p>
+        		<li>
+	                        If the image was converted to a CEL file with a KCF file then the background color of
+                                the set will change.  The background color is taken from the first color in the first 
+                                palette defined in the configuration file.  
 				<p>&nbsp;</p>
 		  <li>
 				Drag the image to the centre of the screen.
@@ -58,14 +65,17 @@
 		  <li>
 				We will now put the two boots into one object.&nbsp; Position the mouse pointer
 				to the left and above the left boot, hold the alt key down and drag the mouse
-				to the right and down, and select both the left and right boots.&nbsp; A red
+				to the right and down, and select both the left and right boots.&nbsp; For linux
+                                systems you may have to hold the shift key down rather than the alt key.&nbsp; A red
 				selection box will show the selection area as you drag.&nbsp; When you release
 				the mouse button both boots should be selected, with blue boundaries.
 				<p>&nbsp;</p>
 		  <li>
 				Use <FONT color="#000099">Edit-New Group</FONT> to place both boots into the
 				same object group.&nbsp; A single blue selection box should now enclose both
-				boots.
+				boots.&nbsp; If you happened to catch the sailormoon image along with the boots 
+                                in the selection box just right click anywhere outside the box to remove the 
+                                selection and try again to select only the boots.
 				<p>&nbsp;</p>
 		  <li>
 				Use <FONT color="#000099">View-Restart</FONT> or press F8 to reload the set in UltraKiss

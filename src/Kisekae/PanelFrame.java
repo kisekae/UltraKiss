@@ -200,6 +200,7 @@ final class PanelFrame extends JPanel
 
    private Cel incel = null ;					// A reference to the mouseover cel
    private Group ingroup = null ;			// A reference to the mouseover group
+   private Cursor mousemoved = null ;     // Cursor set on mouseMoved return
 
    private char keychar = 0 ; 				// The last key event char
    private int keycode = 0 ; 					// The last key event code
@@ -3571,13 +3572,16 @@ final class PanelFrame extends JPanel
       int p = (o instanceof Integer) ? ((Integer) o).intValue() : 0 ;
       page.init() ;
 
-      // Reset any initial movement restrictions.
+      // Reset any initial movement restrictions and object lock value.
 
       for (int i = 0 ; i < groups.size() ; i++)
       {
          Group group = (Group) groups.elementAt(i) ;
          group.setRestrictX(group.getInitialRestrictX()) ;
          group.setRestrictY(group.getInitialRestrictY()) ;
+         Point flex = group.getInitialFlex() ;
+         if (flex != null) flex = new Point(flex) ;
+         group.setFlex(flex) ;
       }
 
       // Re-establish our group set as the reset has changed locations.
@@ -5468,7 +5472,7 @@ final class PanelFrame extends JPanel
       Object o = group.getIdentifier() ;
       if (o != null) trace += ", Object " + o.toString() ;
       if (flexvalue != null && flexvalue.y > 0)
-         trace += ", Flex " + flexvalue.y ;
+         trace += ", Fix " + flexvalue.y ;
       int transparency = 255 - cel.getTransparency() ;
       if (transparency < 0) transparency = 0 ;
       if (transparency > 255) transparency = 255 ;
@@ -5750,12 +5754,14 @@ final class PanelFrame extends JPanel
       enabledrag = true ;
       boolean selected = false ;
       restrictbox = null ;
+      if (Kisekae.isWebswing()) setCursor(mousemoved) ;
 
       try
       {
          e.consume() ;
          requestFocus() ;
          Component source = (Component) e.getSource() ;
+         if (Kisekae.isWebswing()) source.setCursor(mousemoved) ;
          Point p = SwingUtilities.convertPoint(source,e.getX(),e.getY(),this) ;
          int xmouse = p.x + windowOffset.x ;
          int ymouse = p.y + windowOffset.y ;
@@ -6175,6 +6181,7 @@ final class PanelFrame extends JPanel
       mousedown = false ;
       boolean snapback = false ;
       dragobject = null ;
+      mousemoved = null ;
       
       try
       {
@@ -6509,6 +6516,7 @@ final class PanelFrame extends JPanel
       {
          e.consume() ;
          Component source = (Component) e.getSource() ;
+         if (Kisekae.isWebswing()) source.setCursor(mousemoved) ;
          Point p = SwingUtilities.convertPoint(source,e.getX(),e.getY(),this) ;
          int xmouse = p.x + windowOffset.x ;
          int ymouse = p.y + windowOffset.y ;
@@ -6588,6 +6596,7 @@ final class PanelFrame extends JPanel
          // cel characteristics.
 
          Cursor cursor = source.getCursor() ;
+         if (Kisekae.isWebswing()) cursor = mousemoved ;
          if (selected && !cursor.equals(dragcursor))
          {
             if (cel != null && group != null && celbasesize != null)
@@ -7015,14 +7024,21 @@ final class PanelFrame extends JPanel
 
    // On a mouse movement we need to retain the real-time mouse
    // coordinates.  We also process mousein and mouseout events.
+   //
+   // When running under webswing there appears to be an odd problem
+   // where the frame cursor is not set properly.  This results in editing
+   // difficulties where an edit selected group cannot be picked up and
+   // dragged.  For the moment we maintain the cursor in our own variable
+   // and reference this saved value, but only when running under webswing.
 
    public void mouseMoved(MouseEvent e)
    {
+      Component source = (Component) e.getSource() ;
+      Cursor cursor = source.getCursor() ;
+      mousemoved = source.getCursor() ;
       if (config == null) return ;
       if (editmode) return ;
       if (e.getX() == moveX && e.getY() == moveY) return ;
-      Component source = (Component) e.getSource() ;
-      Cursor cursor = source.getCursor() ;
       if (cursor.equals(waitcursor)) return ;
       moveX = e.getX() ;
       moveY = e.getY() ;
@@ -7050,6 +7066,7 @@ final class PanelFrame extends JPanel
          try { cel = (Cel) cels.elementAt(celNum) ; }
          catch (ArrayIndexOutOfBoundsException ex) { cel = null ; }
          source.setCursor(defaultcursor) ;
+         mousemoved = source.getCursor() ;
          if (cel == null) return ;
 
          // Show size change cursors if we are over the boundary of
@@ -7076,6 +7093,7 @@ final class PanelFrame extends JPanel
             if (p1.x <= r.width-1 && p1.x >= r.width-3 && p1.y <= r.height-1 && p1.y >= r.height-3)
                source.setCursor(Cursor.getPredefinedCursor(Cursor.SE_RESIZE_CURSOR)) ;
             Cursor c = source.getCursor() ;
+            mousemoved = source.getCursor() ;
             if (!(c.equals(defaultcursor))) return ;
          }
 
@@ -7144,6 +7162,7 @@ final class PanelFrame extends JPanel
             }
             incel = cel ;
          }
+         mousemoved = source.getCursor() ;
          return ;
       }
 
@@ -7168,6 +7187,7 @@ final class PanelFrame extends JPanel
       incel = null ;
       ingroup = null ;
       source.setCursor(defaultcursor) ;
+      mousemoved = source.getCursor() ;
    }
 
    public void mouseEntered(MouseEvent e) { }

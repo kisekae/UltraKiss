@@ -35,12 +35,13 @@ If you want to ensure that your new KiSS set is created to be compatible with ot
 					;@ map(#10) map(#11) map(#12) map(#13) </font>
 				<p><FONT color="#cc6600">Note:&nbsp; If you copy and paste these lines from the help
 						documentation into your configuration file you must ensure that the semicolon
-						and at-sign combination appears at the beginning of every line.&nbsp; You can
+						and at-sign combination appears <u>at the beginning of every line</u>.&nbsp; You can
 						copy the FKiSS text by selecting the text and pressing Ctrl-C to copy the text
 						to the clipboard, and Ctrl-V to paste the text into the text editor.<br>
 				</FONT><BR>
 				Exit the text editor to apply your changes.<br>
 			  </p>
+				<p>&nbsp;</p>
 		  <li>
 	  Similarly, we should write a set(0) event to ensure that the sailor costume is
 	  visible whenever page 0 is shown.&nbsp; We don't need to worry about the school
@@ -50,10 +51,11 @@ If you want to ensure that your new KiSS set is created to be compatible with ot
 	  <font face="Courier New">;@set(0)<br>
 		  ;@ map(#4) map(#5) map(#6) map(#7) map(#8) </font>
 	  <p><FONT color="#cc6600">Note:&nbsp; If you copy and paste these lines from the help documentation into your
-	  configuration file you must ensure that the semicolon and at-sign combination appears at the beginning of every line.&nbsp;
+	  configuration file you must ensure that the semicolon and at-sign combination appears <u>at the beginning of every line</u>.&nbsp;
 	  You can copy the help text by selecting the text and pressing Ctrl-C to copy the text to the clipboard, and Ctrl-V to paste
 	  the text into the text editor.</FONT><br>
 	  </p>
+				<p>&nbsp;</p>
 		  <li>
 				Exit the FKiSS Editor with <FONT color="#000099">File-Exit</FONT>,
 				or if you want to leave the FKiSS Editor active for future changes you can resume your set execution with <FONT color="#000099">Run-Program Resume</FONT> or pressing the green dot on the toolbar.&nbsp;
@@ -86,11 +88,19 @@ If you want to ensure that your new KiSS set is created to be compatible with ot
 				<p>&nbsp;</p>
 		  <li>
 			  We can have fun with lock values.&nbsp; For example, place the mouse over the
-				school uniform skirt or fuku and right click.&nbsp; Select <FONT color="#000099">Image
-					Context-Properties</FONT> , and change the skirt lock value to
+				school uniform skirt or fuku and right click.&nbsp; Select <FONT color="#000099">
+                                Image Context-Properties</FONT> and change the skirt lock value to
 				5.&nbsp; This will make the skirt 'sticky', or slightly difficult to remove
 				from the doll.&nbsp; After closing the Properties dialog window try to move the
-				skirt and observe the result.
+                                skirt and observe the result.<br>
+                                <br>
+                                You should see the skirt move slightly and then snap back to its initial place.
+                                This is called a sticky object because it cannot be easily moved.  If you keep
+                                trying to move the skirt eventually it will break free.  At this time you are
+                                allowed to move the skirt anywhere.  The skirt broke free on the fifth attempt
+                                because the lock value had been set to 5.<br>
+                                <br>
+                                You can restore the object sticky behaviour if you <FONT color="#000099">View-Reset</FONT> the page.
 				<p>&nbsp;</p>
 		  <li>
 				Use <FONT color="#000099">File-Save</FONT> to save your work.&nbsp; The

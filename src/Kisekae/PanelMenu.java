@@ -656,7 +656,7 @@ final class PanelMenu extends KissMenu
       save.setEnabled(directory != null && !Kisekae.isSecure() && !Kisekae.isExpired() && !menu.getNoCopy()) ;
       saveas.setEnabled(!Kisekae.isSecure() && !Kisekae.isExpired() && !menu.getNoCopy()) ;
       saveasarchive.setVisible(zip != null && zip instanceof DirFile && !Kisekae.isSecure()) ;
-      saveasarchive.setEnabled(!config.isUpdated() && !Kisekae.isExpired() && !menu.getNoCopy()) ;
+      saveasarchive.setEnabled(!Kisekae.isSecure() && !Kisekae.isExpired() && !menu.getNoCopy()) ;
       saveasfiles.setVisible(zip != null && !(zip instanceof DirFile) && !Kisekae.isSecure()) ;
       saveasfiles.setEnabled(!config.isUpdated() && !config.hasIncludeFiles() && !Kisekae.isExpired() && !menu.getNoCopy()) ;
       undoall.setEnabled(b && undo.canUndo()) ;
@@ -1699,6 +1699,9 @@ final class PanelMenu extends KissMenu
          {
             byte [] b = config.write() ;
             config.setMemoryFile(b) ;
+            MemFile mf = new MemFile(config.getName(),b) ;
+            ArchiveEntry ze = config.getZipEntry() ;
+            ze.setMemoryFile(mf) ;
          }
          catch (IOException e)
          {

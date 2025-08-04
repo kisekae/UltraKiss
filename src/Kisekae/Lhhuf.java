@@ -323,6 +323,7 @@ final class Lhhuf
 			{
 				r = q;
 				q = parent[q];
+            if (q == r) break ; // infinite loop? FileWriter write daidar.lzh encoding daish9a.cel from OtakuWorld Jul 28 2025
 			}
 			t = q;
 			while (position[t] < 0) 

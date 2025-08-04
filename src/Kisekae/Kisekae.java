@@ -181,7 +181,7 @@ public class Kisekae extends Applet
 
       LogFile.start() ;
       builddate = Calendar.getInstance() ;
-      builddate.set(2025,7-1,25) ;
+      builddate.set(2025,8-1,3) ;
       
       // Restore the properties.
       
@@ -2226,8 +2226,7 @@ public class Kisekae extends Applet
          String s = Configuration.trim(args[6]) ;
          if (s.length() > 0)
          {
-            s = s.toLowerCase() ;
-            webswing = (s.contains("webswing")) ;
+            webswing = (s.equalsIgnoreCase("webswing")) ;
          }
       }
       
@@ -2355,13 +2354,19 @@ public class Kisekae extends Applet
             JEditorPane ep = new JEditorPane("text/html", "<html><body style=\"" + style + "\">" 
                 + "<p style=\"text-align: center;\"><img src=\""+s+"\"></p>"
                 + "<p>This application provides browser access to KiSS files through a <a href=\"https://www.webswing.org/\">Webswing</a> server.<br><br>"
-                + "Your browser can only play WAV and MP3 files when running through Webswing.<br>"
+                + "UltraKiss requires high-performance, real-time interaction.  If your Internet speed is slow<br>"
+                + "Webswing may respond poorly due to rendering latency.<br><br>"
+                + "Your browser will only play WAV and MP3 files when running through Webswing.<br>"
                 + "MIDI and AU sound is not available. <br><br>"
-                + "You are not permitted to SAVE files to the network server when running through Webswing.<br><br>"
-                + "Server memory is limited.  Large KiSS sets may not load.  File-Open sets are limited to 5MB.<br><br>"
+                + "You are not permitted to SAVE files to the network server when running through Webswing.<br>"
+                + "KiSS sets that are edited or developed with UltraKiss in Webswing cannot be saved.<br><br>"
+                + "Server memory is limited.  Large KiSS sets may not load.  File-Open sets are limited to 5 MB.<br><br>"
                 + "For full features without these limitations <a href=\"https://github.com/kisekae/UltraKiss/releases\">download and install UltraKiss</a> from GitHub.<br>"
+                + "Fully automated installers are provided for 64-bit Windows, Linux, and Apple systems.<br>"
                 + "To report bugs or provide suggestions for improvement <a href=\"https://github.com/kisekae/UltraKiss/issues\">file an issue report</a> on GitHub.<br><br>"
-                + "To browse online KiSS sets available on OtakuWorld and elsewhere use the <a href=\"file://openportal\">UltraKiss Portal</a>.</p>"
+                + "To load and run online KiSS sets on the Internet (OtakuWorld) use <a href=\"file://openportal\">File-Open Portal</a>.<br>"
+                + "To load and run your own KiSS sets packaged in LZH or ZIP files use <a href=\"file://fileopen\">File-Open</a>.<br><br>"
+                + "If you do not know what KiSS is, view the UltraKiss documentation using <a href=\"file://helpcontents\">Help-Contents</a>.</p>"
                 + "</body></html>");
 
             // handle link events
@@ -2388,6 +2393,34 @@ public class Kisekae extends Applet
                                  PrintLn.println("Webswing open portal.") ;
                                  MainMenu mm = mainframe.getMainMenu() ;
                                  mm.openportal.doClick() ;
+                              } 
+                           } ;
+                  			SwingUtilities.invokeLater(awt) ;
+                        }
+                        else if (s.contains("helpcontents"))
+                        {
+                           JOptionPane.getRootFrame().dispose();
+                  			Runnable awt = new Runnable()
+                  			{ 
+                              public void run() 
+                              { 
+                                 PrintLn.println("Webswing open help contents.") ;
+                                 MainMenu mm = mainframe.getMainMenu() ;
+                                 mm.help.doClick() ;
+                              } 
+                           } ;
+                  			SwingUtilities.invokeLater(awt) ;
+                        }
+                        else if (s.contains("fileopen"))
+                        {
+                           JOptionPane.getRootFrame().dispose();
+                  			Runnable awt = new Runnable()
+                  			{ 
+                              public void run() 
+                              { 
+                                 PrintLn.println("Webswing open file.") ;
+                                 MainMenu mm = mainframe.getMainMenu() ;
+                                 mm.open.doClick() ;
                               } 
                            } ;
                   			SwingUtilities.invokeLater(awt) ;

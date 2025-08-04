@@ -5870,6 +5870,7 @@ final public class OptionsDialog extends KissDialog
       setMapCount(true);
       setAllAmbiguous(false);
       setConstrainMoves(false) ;
+      setConstrainFKiss(true) ;
       setDragMove(false) ;
       setConstrainVisible(true) ;
       setImportCel(false) ;
@@ -5991,10 +5992,10 @@ final public class OptionsDialog extends KissDialog
       setConstrainMoves(true) ;
       setDragMove(true) ;
       setConstrainVisible(true) ;
-//    setImportCel(true) ;
+      setImportCel(true) ;
       setExportCel(false) ;
       setImportComponent(false) ;
-//    setComponentCel(true) ;
+      setComponentCel(true) ;
       setWriteCelOffset(true) ;
       setSoundSingle(true) ;
       setMultipleEvents(false) ;
@@ -6023,7 +6024,7 @@ final public class OptionsDialog extends KissDialog
       DetachMove.setSelected((b) ? false : true);
       DetachFix.setSelected((b) ? false : true);
       RetainKey.setSelected((b) ? false : true);
-      StrictSyntax.setSelected((b) ? true : true);
+      StrictSyntax.setSelected((b) ? false : true);
       AutoEndif.setSelected((b) ? true : false);
       InvertGhost.setSelected((b) ? false : false);
       TransparentGroup.setSelected((b) ? false : false);
@@ -6042,6 +6043,7 @@ final public class OptionsDialog extends KissDialog
       MapCount.setSelected((b) ? false : true);
       AllAmbiguous.setSelected((b) ? true : false);
       ConstrainMoves.setSelected((b) ? false : false) ;
+      ConstrainFKiss.setSelected((b) ? false : true) ;
       DragMove.setSelected((b) ? false : false) ;
       ConstrainVisible.setSelected((b) ? false : true) ;
       ImportCel.setSelected((b) ? true : false) ;
@@ -6068,7 +6070,8 @@ final public class OptionsDialog extends KissDialog
       setDetachMove(false);
       setDetachFix(false);
       setRetainKey(false);
-      setStrictSyntax(true);
+      setStrictSyntax(false);
+      setShowUndefs(true);
       setAutoEndif(true);
       setInvertGhost(false);
       setTransparentGroup(false);
@@ -6086,9 +6089,9 @@ final public class OptionsDialog extends KissDialog
       setContextMap(false);
       setMapCount(false);
       setAllAmbiguous(true);
-      setConstrainMoves(true) ;
       setDragMove(false) ;
       setConstrainVisible(true) ;
+      setConstrainFKiss(false) ;
       setImportCel(true) ;
       setExportCel(false) ;
       setImportComponent(false) ;

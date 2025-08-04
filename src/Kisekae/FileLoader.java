@@ -739,11 +739,13 @@ final class FileLoader extends KissFrame
                s1 = s1.substring(0,i1+1) + s + s1.substring(j1) ;
          	showStatus(s1) ;
 
-            while (!stop && (b = is.read()) >= 0)
+            byte [] buffer = new byte[2048] ;
+            while (!stop)
             {
-              	bytes++ ;
-               completed++ ;
-               os.write(b) ;
+               int n1 = is.read(buffer) ;
+               if (n1 < 0) break ;
+               completed += n1 ;
+               os.write(buffer, 0, n1) ;
                if (completed >= 2048)
                {
                   completed -= 2048 ;
