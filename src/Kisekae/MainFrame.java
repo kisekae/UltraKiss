@@ -1272,8 +1272,30 @@ final public class MainFrame extends KissFrame
 			  		if (panel != null && panel.getPage() != null)
 			  			s += "[" + panel.getPage().getIdentifier() + "] ["
 	               	+ panel.getPage().getMultiPalette() + "]" ;
-	            if (config.getZipFile() != null)
-						s += "  (" + config.getZipFile().getFileName() + ")" ;
+               ArchiveFile af = config.getZipFile() ;
+	            if (af != null)
+						s += "  (" + af.getFileName() + ")" ;
+               
+               // With Webswing, we do a Save As Archive when saving a new set.
+               // This creates a new archive file and writes new archive entries
+               // for the CNF and other elements. The new archive file is then
+               // automatically saved with a Save As so that the file can be
+               // uploaded from the server to the user computer. The config 
+               // element has the zip file set to the new file but not the new 
+               // zip entry for the CNF.  This can cause problems.
+               
+               if (Kisekae.isWebswing() && af != null)
+               {
+                  ArchiveEntry ae = config.getZipEntry() ;
+                  if (ae instanceof DirEntry && !(af instanceof DirFile))
+                  {
+                     try { af.open() ; }
+                     catch (IOException e) { }
+                     ArchiveEntry ze = af.getEntry(ae.getPathName(),true) ;
+                     if (ze != null) config.setZipEntry(ze) ;
+                  }
+               }
+               
                if (title != null) s = title ;
 					setTitle(s) ;
 					updateMenu() ;

@@ -106,8 +106,11 @@ final class DirEntry extends ArchiveEntry
 	{
       if (memfile != null) return memfile.getInputStream() ;
    	InputStream is = null ;
-   	if (file == null) return null ;
-      try { is = new FileInputStream(file) ; }
+      File streamsource = file ;
+      if (isImported() && importpath != null) 
+         streamsource = new File(importpath) ;
+   	if (streamsource == null) return null ;
+      try { is = new FileInputStream(streamsource) ; }
       catch ( FileNotFoundException e) { return null ; }
    	return new BufferedInputStream(is,4096) ;
    }

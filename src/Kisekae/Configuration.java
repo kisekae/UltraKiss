@@ -620,6 +620,7 @@ final class Configuration extends KissObject
 	      this.ze = ze ;
 	      this.zip = ze.getZipFile() ;
 			file = ze.getPath() ;
+         ze.setMemoryFile(new MemFile(getName(),b)) ;
       }
    }
    
@@ -1004,11 +1005,13 @@ final class Configuration extends KissObject
 
       ArchiveFile newzip = fileopen.getZipFile() ;
 		ArchiveEntry newze = fileopen.getZipEntry() ;
-      if (newzip == null && newze == null)
-      {
-         newzip = ref.getZipFile() ;
-      	newze = ref.getZipEntry() ;
-      }
+//      if (newzip == null && newze == null)
+//      {
+//         newzip = ref.getZipFile() ;
+//      	newze = ref.getZipEntry() ;
+//      }
+      if (newzip == null) newzip = ref.getZipFile() ;
+      if (newze == null) newze = ref.getZipEntry() ;
       
       // On a restart we created a new zip file.  The old one should be
       // flushed to discard the old content entries.
@@ -1042,6 +1045,7 @@ final class Configuration extends KissObject
 		try
 		{
 			b = ref.getMemoryFile() ;
+         setMemoryFile(b,ze) ;
 			if (b != null)
 			{
 				is = new ByteArrayInputStream(b) ;

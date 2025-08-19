@@ -72,6 +72,7 @@ abstract class ArchiveEntry
 	protected String filename = null ;			// Entry file name (unqualified)
 	protected String dirname = null ;			// Entry directory name
 	protected String pathname = null ;			// Entry path name (qualified)
+	protected String importpath = null ;		// Directory path if imported
 	protected ArchiveFile archive = null ;		// Parent archive file object
 	protected MemFile memfile = null ;        // Memory file for this archive entry
 	protected Object userobject = null ;		// Optional user object
@@ -104,6 +105,10 @@ abstract class ArchiveEntry
    // Returns the full path name of the file.
    
 	public String getPathName() { return pathname ; }
+
+	// Return the path if imported.
+
+	public String getImportPath() { return importpath ; }
 
 	// Return the requested path name.
 
@@ -138,6 +143,14 @@ abstract class ArchiveEntry
       File f = new File(path) ;
       filename = f.getName() ;
       dirname = f.getParent() ;
+   }
+
+
+	// Set the archive element import path.
+
+	void setImportPath(String path)
+   {
+   	importpath = convertSeparator(path) ;
    }
 
 

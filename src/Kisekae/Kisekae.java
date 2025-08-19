@@ -84,7 +84,7 @@ public class Kisekae extends Applet
    // Security variables
 
    private static String copyright = 
-      "Kisekae UltraKiss V4.0.3 (c) 2002-2025 William Miles" ;
+      "Kisekae UltraKiss V4.1 (c) 2002-2025 William Miles" ;
    private static Object authorize = null ;        // Seigen module
    private static Calendar warningdate = null ;    // Secure warning
    private static Calendar expiredate = null ;     // Licence expire
@@ -181,7 +181,7 @@ public class Kisekae extends Applet
 
       LogFile.start() ;
       builddate = Calendar.getInstance() ;
-      builddate.set(2025,8-1,3) ;
+      builddate.set(2025,8-1,18) ;
       
       // Restore the properties.
       
@@ -810,9 +810,9 @@ public class Kisekae extends Applet
 
          Authenticator.setDefault((Authenticator) authorize);
          
-         // If webswing run as if expired
+         // If webswing run as if expired.  No saves are allowed.
          
-         if (Kisekae.isWebswing()) manualexpire = true ;
+//         if (Kisekae.isWebswing()) manualexpire = true ;
       }
 
       catch (Throwable e)
@@ -2355,18 +2355,22 @@ public class Kisekae extends Applet
                 + "<p style=\"text-align: center;\"><img src=\""+s+"\"></p>"
                 + "<p>This application provides browser access to KiSS files through a <a href=\"https://www.webswing.org/\">Webswing</a> server.<br><br>"
                 + "UltraKiss requires high-performance, real-time interaction.  If your Internet speed is slow<br>"
-                + "Webswing may respond poorly due to rendering latency.<br><br>"
+                + "Webswing may respond poorly due to network rendering latency.<br><br>"
+                + "Effective with UltraKiss 4.1, Webswing now enables editing of KiSS sets and download<br>"
+                + "and upload of files to and from the web server.  Files can now be saved to your computer.<br><br>"
+                + "With Webswing, all KiSS sets must be loaded from an LZH or ZIP archive file.  New sets<br>"
+                + "developed with UltraKiss in Webswing must be saved as an LZH or ZIP archive file.<br><br>"
                 + "Your browser will only play WAV and MP3 files when running through Webswing.<br>"
                 + "MIDI and AU sound is not available. <br><br>"
-                + "You are not permitted to SAVE files to the network server when running through Webswing.<br>"
-                + "KiSS sets that are edited or developed with UltraKiss in Webswing cannot be saved.<br><br>"
-                + "Server memory is limited.  Large KiSS sets may not load.  File-Open sets are limited to 5 MB.<br><br>"
+                + "Server resources are limited. Files downloaded through File-Open are limited to 5 MB.<br><br>"
                 + "For full features without these limitations <a href=\"https://github.com/kisekae/UltraKiss/releases\">download and install UltraKiss</a> from GitHub.<br>"
                 + "Fully automated installers are provided for 64-bit Windows, Linux, and Apple systems.<br>"
                 + "To report bugs or provide suggestions for improvement <a href=\"https://github.com/kisekae/UltraKiss/issues\">file an issue report</a> on GitHub.<br><br>"
                 + "To load and run online KiSS sets on the Internet (OtakuWorld) use <a href=\"file://openportal\">File-Open Portal</a>.<br>"
-                + "To load and run your own KiSS sets packaged in LZH or ZIP files use <a href=\"file://fileopen\">File-Open</a>.<br><br>"
-                + "If you do not know what KiSS is, view the UltraKiss documentation using <a href=\"file://helpcontents\">Help-Contents</a>.</p>"
+                + "To load and run your own KiSS sets packaged in LZH or ZIP files use <a href=\"file://fileopen\">File-Open</a>.<br>"
+                + "To upload LZH or ZIP or other files to your computer use File-Save As.<br><br>"
+                + "If you do not know what KiSS is, view the UltraKiss documentation using <a href=\"file://helpcontents\">Help-Contents</a>.<br>"
+                + "To learn how to make KiSS sets using the UltraKiss IDE see <a href=\"file://helptutorial\">Help-Tutorials</a>.</p>"
                 + "</body></html>");
 
             // handle link events
@@ -2411,6 +2415,20 @@ public class Kisekae extends Applet
                            } ;
                   			SwingUtilities.invokeLater(awt) ;
                         }
+                        else if (s.contains("helptutorial"))
+                        {
+                           JOptionPane.getRootFrame().dispose();
+                  			Runnable awt = new Runnable()
+                  			{ 
+                              public void run() 
+                              { 
+                                 PrintLn.println("Webswing open help contents.") ;
+                                 MainMenu mm = mainframe.getMainMenu() ;
+                                 mm.tutorial.doClick() ;
+                              } 
+                           } ;
+                  			SwingUtilities.invokeLater(awt) ;
+                        }
                         else if (s.contains("fileopen"))
                         {
                            JOptionPane.getRootFrame().dispose();
@@ -2446,8 +2464,14 @@ public class Kisekae extends Applet
                { 
                   Runtime rt = Runtime.getRuntime();
                   long maxMem = rt.maxMemory();
-                  String s = "Webswing (" + maxMem /(1024*1024) + " MB)" ;
-                  JOptionPane.showMessageDialog(null,ep,s,JOptionPane.INFORMATION_MESSAGE) ; 
+                  String s = "Webswing memory (" + maxMem /(1024*1024) + " MB)" ;
+//                  JOptionPane.showMessageDialog(null,ep,s,JOptionPane.INFORMATION_MESSAGE) ; 
+                  JOptionPane pane = new JOptionPane(ep,JOptionPane.INFORMATION_MESSAGE) ;
+                  JDialog dialog = pane.createDialog(s) ;
+                  int w = dialog.getWidth() ;
+                  int h = dialog.getHeight() ;
+                  dialog.setSize(new Dimension(w+30,h));
+                  dialog.setVisible(true) ;
                } 
             } ;
    			javax.swing.SwingUtilities.invokeLater(runner) ;

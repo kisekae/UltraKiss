@@ -106,7 +106,8 @@ final class ElementDialog extends KissDialog
       {
         	if (e.getClickCount() == 2)
          {
-           	item = LIST.getSelectedValue().toString() ;
+            Object o = LIST.getSelectedValue() ;
+            item = (o != null) ? o.toString() : null ;
             flush() ;
          	dispose() ;
          }

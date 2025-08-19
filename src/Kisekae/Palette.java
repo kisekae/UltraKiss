@@ -104,6 +104,7 @@ final class Palette extends KissObject
 	// Color model vectors
 
 	private Hashtable cmkey = null ;		// Index into color models
+	private byte [] b = null ;				// Memory file image
 	private byte [] red = null ;			// The red colors
 	private byte [] blue = null ;			// The blue colors
 	private byte [] green = null ;		// The green colors
@@ -434,6 +435,27 @@ final class Palette extends KissObject
      	throw new IOException("unable to encode KiSS palette file as " + type) ;
 	}
 
+	// The write method updates the palette memory copy to show the current state 
+   // of the palette. This is used when palettes are created on cel imports and
+   // the updated configuration is saved as an archive file.  
+   // The new byte array is returned.
+
+	byte [] write() throws IOException
+	{
+   	ByteArrayOutputStream out = new ByteArrayOutputStream() ;
+      try
+      {
+         write(null,out,null) ;
+		   out.close() ;  
+         b = out.toByteArray() ;
+      }
+      catch (IOException e)
+      {
+         PrintLn.println("Palette: write memory file, " + e.getMessage()) ;
+      }
+      return b ;
+   }
+   
 	// Method to export the palette data in text format to the
    // specified output stream.
 
@@ -457,7 +479,7 @@ final class Palette extends KissObject
       // can happen if a cel is saved from a different image format and the
       // palette was rebuilt through dithering.
       
-      if (encodered != null) return ;
+      if (encodered != null && red != null && encodered.length == red.length) return ;
 
       // If we have a transparent color, ensure that it is at index 0.
 

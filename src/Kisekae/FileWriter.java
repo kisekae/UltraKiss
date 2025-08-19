@@ -168,13 +168,33 @@ final class FileWriter extends KissFrame
 	// Constructor to add selected content files to an archive.   The
 	// contents vector must contain all element additions as the archive
 	// file is recreated from scratch.
+   //
+   // The contents can be archive entries or kiss objects.  Kiss objects
+   // are packaged in a ContentEntry so that they are written to the output
+   // archive rather than copied.  When written, if the object has been
+   // updated and exists in a memory file it will be encoded in the proper form.
 
 	public FileWriter(JFrame f, ArchiveFile zip, Vector c, boolean add)
 	{
       parent = f ;
 		mode = (add) ? ADD : DELETE ;
 		sourcezip = zip ;
-		contents = c ;
+		contents = new Vector() ;
+      if (c != null)
+      {
+         for (int i = 0 ; i < c.size() ; i++)
+         {
+            Object o = c.elementAt(i) ;
+            if (o instanceof ArchiveEntry) 
+               contents.addElement(o) ;
+            else if (o instanceof KissObject)
+            {
+               KissObject ko = (KissObject) o ;
+               ArchiveEntry ae = ko.getZipEntry() ;
+               contents.addElement(new ContentEntry(ko,ae,false)) ;
+            }
+         }
+      }
 		init(null,zip.getName(),zip.getName(),true) ;
 	}
 
@@ -487,6 +507,11 @@ final class FileWriter extends KissFrame
 	void interrupt() { interrupted = true ; }
 
 
+	// Method to return the thread error state.
+
+	boolean isError() { return error ; }
+
+
 	// Window Events
 
 	public void windowOpened(WindowEvent evt) { }
@@ -594,6 +619,8 @@ final class FileWriter extends KissFrame
 
 				if (kisszip != null)
 				{
+               if (!kisszip.isOpen())
+                  kisszip.open() ;
 					if (fileopen != null)
 				   {
                   String s = fileopen.getFile() ;
@@ -962,6 +989,9 @@ final class FileWriter extends KissFrame
 					if (ko == null || ce == null) continue ;
 					next = new DirEntry(ko.getDirectory(),ce.getName(),null) ;
                ((DirEntry) next).setFileSize(ce.getSize()) ;
+               ((DirEntry) next).setImported(ce.isImported()) ;
+               ((DirEntry) next).setImportPath(ce.getImportPath()) ;
+               ((DirEntry) next).setMemoryFile(ce.getMemoryFile()) ;
 					if (ko.getName() == null) next.setPath(destination) ;
 					element = next.getPath() ;
 				}
@@ -976,7 +1006,11 @@ final class FileWriter extends KissFrame
 				if (OptionsDialog.getSaveSourceOn())
 					if (ko != null && !(next.isUpdated() || ko.isUpdated() || export)) ko = null ;
 				if (ko == null && zipfile != null)
+            {
 					in = zipfile.getInputStream(next) ;
+               if (Kisekae.isWebswing() && in == null)
+                  in = next.getInputStream() ;               
+            }
 				if (ko == null && zipfile == null)
 					in = next.getInputStream() ;
 
@@ -1546,6 +1580,20 @@ final class FileWriter extends KissFrame
                ze = (ArchiveEntry) ze.clone() ;
                ze.setName(name) ;
             }
+            
+            // If the cel was imported retain the cel archive entry import
+            // path in our archive entry.
+            
+            if (cel.isImported())
+            {
+               ArchiveEntry ae = cel.getZipEntry() ;
+               if (ae != null)
+               {
+                  ze.setImported(ae.isImported()) ;
+                  ze.setImportPath(ae.getImportPath()) ;
+                  ze.setMemoryFile(ae.getMemoryFile()) ;
+               }
+            }
 
             // Establish relative names.
 
@@ -1603,6 +1651,20 @@ final class FileWriter extends KissFrame
 				if (ze == null && palette.getZipEntry() == null)
 	           	ze = new DirEntry(zip.getDirectoryName(),palette.getName(),zip) ;
             if (ze == null) continue ;
+            
+            // If the palette was imported retain the palette archive entry import
+            // path in our archive entry.
+            
+            if (palette.isImported())
+            {
+               ArchiveEntry ae = palette.getZipEntry() ;
+               if (ae != null)
+               {
+                  ze.setImported(ae.isImported()) ;
+                  ze.setImportPath(ae.getImportPath()) ;
+                  ze.setMemoryFile(ae.getMemoryFile()) ;
+               }
+            }
 
             // Relative names.
 
@@ -1648,6 +1710,20 @@ final class FileWriter extends KissFrame
 				if (ze == null && audio.getZipEntry() instanceof DirEntry)
 	           	ze = new DirEntry(zip.getDirectoryName(),audio.getName(),zip) ;
             if (ze == null) continue ;
+            
+            // If the audio was imported retain the audio archive entry import
+            // path in our archive entry.
+            
+            if (audio.isImported())
+            {
+               ArchiveEntry ae = audio.getZipEntry() ;
+               if (ae != null)
+               {
+                  ze.setImported(ae.isImported()) ;
+                  ze.setImportPath(ae.getImportPath()) ;
+                  ze.setMemoryFile(ae.getMemoryFile()) ;
+               }
+            }
 
             // Relative names.
 
@@ -1693,6 +1769,20 @@ final class FileWriter extends KissFrame
 				if (ze == null && video.getZipEntry() instanceof DirEntry)
 	           	ze = new DirEntry(zip.getDirectoryName(),video.getName(),zip) ;
             if (ze == null) continue ;
+            
+            // If the video was imported retain the video archive entry import
+            // path in our archive entry.
+            
+            if (video.isImported())
+            {
+               ArchiveEntry ae = video.getZipEntry() ;
+               if (ae != null)
+               {
+                  ze.setImported(ae.isImported()) ;
+                  ze.setImportPath(ae.getImportPath()) ;
+                  ze.setMemoryFile(ae.getMemoryFile()) ;
+               }
+            }
 
             // Relative names.
 
@@ -1780,6 +1870,7 @@ final class FileWriter extends KissFrame
    {
       int i ;
       ContentEntry ce = null ;
+      ArchiveEntry ze = null ;
    	if (filename == null || contents == null) return -1 ;
 
       // Confirm that the file is referenced in our Kiss object contents.
@@ -1791,13 +1882,15 @@ final class FileWriter extends KissFrame
       {
       	Object o = contents.elementAt(i) ;
       	if (o instanceof ContentEntry) ce = (ContentEntry) o ;
-        	ArchiveEntry ze = (ce == null) ? null : ce.ze ;
+         if (o instanceof ArchiveEntry) ze = (ArchiveEntry) o ;
+        	if (ce != null) ze = ce.ze ;
          String s = (ze == null) ? "" : ze.getPath() ;
          if (filename.equalsIgnoreCase(s)) break ;
          ce = null ;
+         ze = null ;
       }
 
-      if (ce == null) i = -1 ;
+      if (ce == null && ze == null) i = -1 ;
       return i ;
    }
 

@@ -653,12 +653,13 @@ final class PanelMenu extends KissMenu
       boolean b = OptionsDialog.getEditEnable() ;
       ArchiveFile zip = config.getZipFile() ;
       String directory = (zip != null) ? zip.getDirectoryName() : null ;
-      save.setEnabled(directory != null && !Kisekae.isSecure() && !Kisekae.isExpired() && !menu.getNoCopy()) ;
-      saveas.setEnabled(!Kisekae.isSecure() && !Kisekae.isExpired() && !menu.getNoCopy()) ;
+      boolean iswebswingcnf = (zip != null) ? zip instanceof DirFile && Kisekae.isWebswing() : false ;
+      save.setEnabled(directory != null && !Kisekae.isSecure() && !Kisekae.isExpired() && !menu.getNoCopy() && !Kisekae.isWebswing()) ;
+      saveas.setEnabled(!Kisekae.isSecure() && !Kisekae.isExpired() && !menu.getNoCopy() && !iswebswingcnf) ;
       saveasarchive.setVisible(zip != null && zip instanceof DirFile && !Kisekae.isSecure()) ;
       saveasarchive.setEnabled(!Kisekae.isSecure() && !Kisekae.isExpired() && !menu.getNoCopy()) ;
       saveasfiles.setVisible(zip != null && !(zip instanceof DirFile) && !Kisekae.isSecure()) ;
-      saveasfiles.setEnabled(!config.isUpdated() && !config.hasIncludeFiles() && !Kisekae.isExpired() && !menu.getNoCopy()) ;
+      saveasfiles.setEnabled(!config.isUpdated() && !config.hasIncludeFiles() && !Kisekae.isExpired() && !menu.getNoCopy() && !Kisekae.isWebswing()) ;
       undoall.setEnabled(b && undo.canUndo()) ;
       cut.setEnabled(b && panel.isEditOn()) ;
       copy.setEnabled(b && panel.isEditOn()) ;
@@ -1735,6 +1736,63 @@ final class PanelMenu extends KissMenu
          parent.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
          ZipManager zm = new ZipManager(config) ;
          parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
+
+         // For Webswing, Save As Archive becomes a Save As for the new archive file.
+         // This lets Webswing upload the file to the client computer.  Th ZipManager
+         // with Webswing has automatically created a temporary file and initiated 
+         // a FileWriter thread to write all the configuration elements.  We must
+         // wait for the FileWriter thread to finish before we do the Save As.  
+         
+         String s = zm.getFilename() ;
+         if (Kisekae.isWebswing() && s != null)
+         {
+            ArchiveFile zip = zm.getZipFile() ;
+            config.setZipFile(zip) ;
+            Thread t1 = new Thread(new Runnable() 
+            {
+               final int maxtime = 60 ;  // seconds for Save As Archive
+               public void run()
+               {
+                  int n = 0 ;
+                  while (zm.isBusy() && !zm.isError())
+                  {
+                     try { Thread.sleep(1000) ; }
+                     catch (InterruptedException e) { break ; }
+                     if (++n > maxtime) break ;
+                  }
+                  
+                  final int timecounter = n ;                  
+                  if (timecounter > maxtime)
+                     PrintLn.println("PanelMenu: Webswing Save As Archive timeout.") ;
+                  if (zm.isError())
+                     PrintLn.println("PanelMenu: Webswing Save As Archive error.") ;
+                  
+                  Runnable awt = new Runnable()
+                  { 
+                     public void run() 
+                     { 
+                        if (timecounter > maxtime)
+                        {
+                           int n = JOptionPane.showConfirmDialog(parent,
+                              "Creation of archive file timeout.  Continue?", 
+                              "Save As Archive Timeout", 
+                              JOptionPane.YES_NO_OPTION);
+                           if (n == JOptionPane.NO_OPTION) return ;
+                        }
+                        PrintLn.println("PanelMenu Webswing Save As Archive, config=" + config + " zip=" + zip) ;
+                        FileSave fd = new FileSave(parent,config) ;
+                        fd.showall() ;   
+                     } 
+                  } ;
+                  
+                  // Perform the Save As is the archive was written successfully.
+                  
+                  if (!zm.isError())
+                     SwingUtilities.invokeLater(awt) ;
+               }
+            });  
+            t1.start();            
+         }
       }
       if (type == 3)        // Save As Files
       {
@@ -1985,6 +2043,7 @@ final class PanelMenu extends KissMenu
       while (zenew != null)
       {
          zenew.setImported(true) ;
+         zenew.setImportPath(zenew.getPath()) ;
          if (!zenew.isImage())
          {
             String name = zenew.getName() ;
@@ -2070,6 +2129,7 @@ final class PanelMenu extends KissMenu
       while (zenew != null)
       {
          zenew.setImported(true) ;
+         zenew.setImportPath(zenew.getPath()) ;
          if (!zenew.isPalette())
          {
             String name = zenew.getName() ;
@@ -2152,6 +2212,7 @@ final class PanelMenu extends KissMenu
       while (zenew != null)
       {
          zenew.setImported(true) ;
+         zenew.setImportPath(zenew.getPath()) ;
          Audio audio = createAudio(fd,zenew) ;
 
          // Confirm that the audio file loaded properly.
@@ -2209,6 +2270,7 @@ final class PanelMenu extends KissMenu
       while (zenew != null)
       {
          zenew.setImported(true) ;
+         zenew.setImportPath(zenew.getPath()) ;
          Video video = createVideo(fd,zenew) ;
 
          // Confirm that the video file loaded properly.
@@ -2430,6 +2492,22 @@ final class PanelMenu extends KissMenu
             newcel = kisscel ;
             newcel.setUpdated(true) ;
             newcel.setImportedAsCel(true) ; 
+            ze.setName(name) ;
+               
+            // Convert the cel to a memory file.  This allows the
+            // file to be written in the event of a Save As Archive.
+               
+            try
+            {
+               byte [] b = newcel.write() ;
+               MemFile mf = new MemFile(newcel.getName(),b) ;
+               ArchiveEntry ae = newcel.getZipEntry() ;
+               ae.setMemoryFile(mf) ;
+            }
+            catch (IOException e)
+            {
+               PrintLn.println("PanelMenu: createCelPalette, cel " + newcel + " " + e.getMessage()) ;
+            }
             
             // Adjust the palette name so that the palette gets written
             // as a KCF file.
@@ -2442,8 +2520,39 @@ final class PanelMenu extends KissMenu
                n = name.lastIndexOf('.') ;
                if (n >= 0) name = name.substring(0,n) + ".kcf" ;
                newpalette.setName(name) ;
-               newpalette.setZipEntry(new DirEntry(null,name,zip)) ;
+               ArchiveEntry ae = new DirEntry(null,name,zip) ;
+               
+               // If the cel was imported then any associated KCF file
+               // must also show as imported and have its import path
+               // adjusted so as to be written correctly on a Save.
+               
+               ae.setImported(ze.isImported()) ;
+               String importpath = ze.getImportPath() ;
+               if (importpath != null)
+               {
+                  File f = new File(importpath) ;
+                  String parent = f.getParent() ;
+                  f = new File(parent,newpalette.getName()) ;
+                  importpath = f.getPath() ;
+               }
+               ae.setImportPath(importpath) ;
+               newpalette.setZipEntry(ae) ;
                newpalette.setImported(true) ;
+               
+               // Convert the palette to a memory file.  This allows the
+               // file to be written in the event of a Save As Archive.
+               
+               try
+               {
+                  byte [] b = newpalette.write() ;
+                  MemFile mf = new MemFile(newpalette.getName(),b) ;
+                  ae = newpalette.getZipEntry() ;
+                  ae.setMemoryFile(mf) ;
+               }
+               catch (IOException e)
+               {
+                  PrintLn.println("PanelMenu: createCelPalette, palette " + newpalette + " " + e.getMessage()) ;
+               }
             }
  
             // Adjust the archive entry name so this file gets written
@@ -2480,14 +2589,45 @@ final class PanelMenu extends KissMenu
             // the import.  If it does not exist we add it to the configuration.
 
             newpalette = new Palette(pe.getZipFile(),pe.getPath()) ;
+            newpalette.setName(fd.getElement()) ;
             newpalette.setLoader(null) ;
             newpalette.load() ;
+               
+            // Convert the palette to a memory file.  This allows the
+            // file to be written in the event of a Save As Archive.
+               
+            try
+            {
+               byte [] b = newpalette.write() ;
+               MemFile mf = new MemFile(newpalette.getName(),b) ;
+               ArchiveEntry ae = newpalette.getZipEntry() ;
+               ae.setMemoryFile(mf) ;
+            }
+            catch (IOException e)
+            {
+               PrintLn.println("PanelMenu: createCelPalette, palette " + newpalette + " " + e.getMessage()) ;
+            }
 
             // Load the cel object.
 
             newcel = Cel.createCel(ze.getZipFile(),ze.getPath()) ;
             newcel.setPalette(newpalette) ;
             newcel.load() ;
+               
+            // Convert the cel to a memory file.  This allows the
+            // file to be written in the event of a Save As Archive.
+               
+            try
+            {
+               byte [] b = newcel.write() ;
+               MemFile mf = new MemFile(newcel.getName(),b) ;
+               ArchiveEntry ae = newcel.getZipEntry() ;
+               ae.setMemoryFile(mf) ;
+            }
+            catch (IOException e)
+            {
+               PrintLn.println("PanelMenu: createCelPalette, cel " + newcel + " " + e.getMessage()) ;
+            }
          }
       }
 
@@ -2794,6 +2934,7 @@ final class PanelMenu extends KissMenu
             return ;
          }
          zenew.setImported(true) ;
+         zenew.setImportPath(zenew.getPath()) ;
          contents.add(zenew) ;
          zenew = fd.getZipEntry(++n) ;
       }

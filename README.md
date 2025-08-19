@@ -1,21 +1,23 @@
 # UltraKiss
 
-**UltraKiss 4.0.3** is now released to provide internet browser access to KiSS sets using [Webswing](https://www.webswing.org/) technology.   This provides online access to thousands of KiSS sets through your web browser.
+**UltraKiss 4.1** is now released to provide internet browser access to KiSS sets using [Webswing](https://www.webswing.org/) technology.   This provides online access to thousands of KiSS sets through your web browser.
 
 Press this button to run UltraKiss.  
 [![UltraKiss](https://github.com/kisekae/UltraKiss/blob/master/src/Images/ultrakissbtn.svg)](https://www.bronzeart.ca/kisekae-ultrakiss/)
 
 **UltraKiss 4.0** is a new release to enable online browser operation of UltraKiss as a webswing server application.  
-**UltraKiss 4.0.1** is a stability update to release 4.0 that resolves initial Webswing hang issues and corrects Portal delays for display of HTML images.  
-**UltraKiss 4.0.2** is an update to release 4.0.1 that corrects a few minor issues related to Webswing operation.  
-**UltraKiss 4.0.3** is an update to release 4.0.2 that improves Webswing logging and corrects DirectKiss compatibility issues.  
+**UltraKiss 4.1** now provides online visual editing and saving of KiSS sets using the UltraKiss IDE with Webswing.  
 
+With UltraKiss 4.1 you can now visually edit and create KiSS sets from within your browser.  Images in GIF or PNG or BMP or KiSS CEL format with
+KiSS palette KCF files can now be directly imported into KiSS set.  Audio files and text files can also be imported to your KiSS set.
+These images and files are directly downloaded to the Webswing server when opened.  Your KiSS set can now be saved as a ZIP or LZH archive file 
+where they are uploaded to your computer from the Webswing server.   
 
 ### How does it work?
 
 UltraKiss is a Java Desktop application.  It is deployed on a web server that runs a demonstration version of Webswing.  When you press the button above you will access this server.   If the server is running you will receive a notice that it is starting the application.
 
-UltraKiss will launch. A window is shown that lists browser limitations.
+UltraKiss will launch. A window is shown that lists the browser limitations.
 
 Use the **UltraKiss Portal** to show links to KiSS sets available on OtakuWorld and other sites on the Internet. You can also use the **File-Open** command to open and load KiSS files stored on your computer.
 
@@ -24,9 +26,10 @@ Webswing applications like UltraKiSS that require high-performance, real-time in
 
 ### Limitations
 
-1. Webswing must be running on my remote server for this service to work.  If you are unable to connect to the server try again. If you are still unable to connect submit an [issue report](https://github.com/kisekae/UltraKiss/issues).
+1. Webswing must be running on my remote server for this service to work.  If you are unable to connect to the server wait for up to 10 minutes for an automatic server restart and try again. If you are still unable to connect submit an [issue report](https://github.com/kisekae/UltraKiss/issues).
 2. Browsers do not natively support MIDI or AU sound files.  Only WAV and MP3 files will play in KiSS sets.
-3. No files can be saved to the server.
+3. Only KiSS sets in LZH and ZIP file archives can be opened in UltraKiss with a **File-Open** menu command.
+3. Files can only be saved and uploaded to your computer with a **File-Save A** menu command.
 4. Server memory is limited. Large KiSS sets may not load. File-Open sets are limited to 5MB.
 5. Your session will timeout and close if no activity for 5 minutes.
 

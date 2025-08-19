@@ -778,7 +778,8 @@ abstract class ArchiveFile
       if (contents.contains(ze)) return ;
       Object o = key.get(s.toLowerCase()) ;
       if (o != null) return ;
-      if (this instanceof DirFile) ze.setDirectory(getDirectoryName()) ;
+      if (this instanceof DirFile) 
+         ze.setDirectory(getDirectoryName()) ;
       contents.addElement(ze) ;
       key.put(s.toLowerCase(),ze) ;
    }

@@ -298,17 +298,17 @@ public class ZipManager extends KissFrame
             boolean zipopen = configzip.isOpen() ;
             if (!zipopen) configzip.open() ; 
             contents = getContents(kiss,configzip,method) ;
-            if (!zipopen) configzip.close() ;
          }
          catch (IOException e) { }
       }
       
       // Write the files to the archive.
 
+      setBusy() ;
       savecallback = "add" ;
-      FileWriter fw = new FileWriter(this,zip,contents,true) ;
-		fw.callback.addActionListener(this) ;
-		Thread thread = new Thread(fw) ;
+      filewriter = new FileWriter(this,zip,contents,true) ;
+		filewriter.callback.addActionListener(this) ;
+		Thread thread = new Thread(filewriter) ;
       thread.start() ;
   }
 
@@ -762,7 +762,15 @@ public class ZipManager extends KissFrame
          s = Kisekae.getCaptions().getString("CreateArchiveTitle") ;
          statuslabel.setText(s + " " + filename.toUpperCase());
          fileopen = new FileOpen(this,pathname,"rw") ;
-			zip = new DirFile(fileopen,pathname) ;
+         String name = pathname ;
+   		int n = (name != null) ? name.lastIndexOf('.') : -1 ;
+   		String ext = (n < 0) ? "" : name.substring(n).toLowerCase() ;
+   		if (".zip".equals(ext)) 
+            zip = new PkzFile(fileopen,pathname,"rw") ;
+         else if (".lzh".equals(ext)) 
+            zip = new LhaFile(fileopen,pathname,"rw") ;
+         else 
+            zip = new DirFile(fileopen,pathname) ;
       }
       catch (IOException e)
 		{
@@ -954,6 +962,25 @@ public class ZipManager extends KissFrame
 	{
    	FileOpen fd = null ;
       String name = null ;
+      
+      // If we are creating a new archive in Webswing, create a temporary
+      // file.  The Webswing Save As dialog will upload the file to the
+      // client with a userfied name.
+      
+      if (Kisekae.isWebswing() && path == null)
+      {
+         try
+         {
+            File f = File.createTempFile("UltraKiss-Archive", ".zip") ;
+            path = f.getPath() ;
+            f.deleteOnExit() ;
+         }
+         catch (Exception e)
+         {
+            PrintLn.printErr("ZipManager: " + e);
+            return null ;
+         }
+      }
 
       // If we have a path already, use it.
 
@@ -1079,6 +1106,7 @@ public class ZipManager extends KissFrame
 	private void addArchive()
 	{
       if (zip == null) return ;
+		setBusy() ;
       ZipAdd ae = new ZipAdd(this,zip) ;
       savecallback = "add" ;
       ae.setVisible(true);
@@ -1089,6 +1117,7 @@ public class ZipManager extends KissFrame
       if (zip == null) return ;
       openArchive(zip.getName()) ;
       closeArchiveFile() ;
+      clearBusy() ;
    }
 
 
@@ -1125,6 +1154,7 @@ public class ZipManager extends KissFrame
    	if (zip == null) return ;
       openArchive(pathname) ;
       closeArchiveFile() ;
+      clearBusy() ;
    }
 
 
@@ -1166,6 +1196,7 @@ public class ZipManager extends KissFrame
       fsb.delete() ;
       openArchive(pathname) ;
       closeArchiveFile() ;
+      clearBusy() ;
    }
 
 
@@ -1308,6 +1339,7 @@ public class ZipManager extends KissFrame
    	if (zip == null) return ;
       openArchive(pathname) ;
       closeArchiveFile() ;
+      clearBusy() ;
    }
 
 
@@ -1497,7 +1529,7 @@ public class ZipManager extends KissFrame
             // Determine the cel archive entry.
 
 				if (!cel.isWritable()) continue ;
-				ze = (zip == null) ? null : zip.getEntry(cel.getPath()) ;
+				ze = (zip == null) ? null : zip.getEntry(cel.getPath(),true) ;
             if (zip == null)
             {
             	ze = new DirEntry(directory,cel.getName(),null) ;
@@ -1525,7 +1557,14 @@ public class ZipManager extends KissFrame
                ze.setName(relativename) ;
             }
             ze.setMethod(method) ;
-				v.add(ze) ;
+            
+            // Add the kiss object to the content vector if the object
+            // has been updated or a memory file exists. 
+            
+            if (ze.isUpdated() || ze.getMemoryFile() != null)
+               v.add(cel) ;
+            else           
+               v.add(ze) ;
 			}
 
 	      // Add the palette object entries to the contents vector.
@@ -1563,7 +1602,14 @@ public class ZipManager extends KissFrame
                ze.setName(relativename) ;
             }
             ze.setMethod(method) ;
-				v.add(ze) ;
+            
+            // Add the kiss object to the content vector if the object
+            // has been updated or a memory file exists. 
+            
+            if (ze.isUpdated() || ze.getMemoryFile() != null)
+               v.add(palette) ;
+            else           
+               v.add(ze) ;
 			}
 
 			// Add the audio object entries to the contents vector.
@@ -1601,7 +1647,14 @@ public class ZipManager extends KissFrame
                ze.setName(relativename) ;
             }
             ze.setMethod(method) ;
-				v.add(ze) ;
+            
+            // Add the kiss object to the content vector if the object
+            // has been updated or a memory file exists. 
+            
+            if (ze.isUpdated() || ze.getMemoryFile() != null)
+               v.add(audio) ;
+            else           
+               v.add(ze) ;
 			}
 
 			// Add the video object entries to the contents vector.
@@ -1639,7 +1692,14 @@ public class ZipManager extends KissFrame
                ze.setName(relativename) ;
             }
             ze.setMethod(method) ;
-				v.add(ze) ;
+            
+            // Add the kiss object to the content vector if the object
+            // has been updated or a memory file exists. 
+            
+            if (ze.isUpdated() || ze.getMemoryFile() != null)
+               v.add(video) ;
+            else           
+               v.add(ze) ;
 			}
 		}
 
@@ -1959,12 +2019,25 @@ public class ZipManager extends KissFrame
 
 	JTable getTable() { return TABLE ; }
 
+   // Return the archive filename.
+
+	String getFilename() { return filename ; }
+
+   // Return the archive filename.
+
+	ArchiveFile getZipFile() { return zip ; }
+
+   // Return the archive entry.
+
+	ArchiveEntry getZipEntry() { return ze ; }
+
    // Set the Archive Manager state.
 
    void setBusy() { runlabel.setText(Kisekae.getCaptions().getString("ZipStatusBusy")) ; }
    void clearBusy() { runlabel.setText(Kisekae.getCaptions().getString("ZipStatusReady")) ; }
    void setOpen() { runlabel.setText(Kisekae.getCaptions().getString("ZipStatusOpen")) ; }
    boolean isBusy() { return runlabel.getText().equals(Kisekae.getCaptions().getString("ZipStatusBusy")) ; }
+   boolean isError() { return (filewriter != null) ? filewriter.isError() : false ; }
 
    // Disable Rename archive so as to not destroy original file when loaded.
    

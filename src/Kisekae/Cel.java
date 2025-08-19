@@ -1910,6 +1910,30 @@ abstract class Cel extends KissObject
    { return write(fw,out,extension) ; }
 
    abstract int write(FileWriter fw, OutputStream out, String type) throws IOException ;
+   
+   
+	// The write method updates the cel memory copy to show the current state 
+   // of the cel. This is used when cels are created on cel imports and
+   // the updated configuration is saved as an archive file.  
+   // The new byte array is returned.
+
+	byte [] write() throws IOException
+	{
+      byte [] b = null ;
+   	ByteArrayOutputStream out = new ByteArrayOutputStream() ;
+      try
+      {
+         write(null,out) ;
+		   out.close() ;  
+         b = out.toByteArray() ;
+      }
+      catch (IOException e)
+      {
+         PrintLn.println("Cel: write memory file, " + e.getMessage()) ;
+      }
+      return b ;
+   }
+
 
    // Draw the cel at its current position, constrained by the
    // defined bounding box.  We draw the cel only if is is visible

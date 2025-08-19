@@ -6597,7 +6597,7 @@ final class PanelFrame extends JPanel
 
          Cursor cursor = source.getCursor() ;
          if (Kisekae.isWebswing()) cursor = mousemoved ;
-         if (selected && !cursor.equals(dragcursor))
+         if (selected && cursor != null && !cursor.equals(dragcursor))
          {
             if (cel != null && group != null && celbasesize != null)
             {
