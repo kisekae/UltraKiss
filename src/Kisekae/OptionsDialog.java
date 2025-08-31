@@ -5315,7 +5315,7 @@ final public class OptionsDialog extends KissDialog
 
          if (source == CacheAudio || source == CacheVideo ||
              source == CacheAudio1 || source == CacheVideo1 ||
-             source == TimerOption ||
+//             source == TimerOption ||
              source == SizeToFit || source == ScaleToFit ||
              source == ScaleDownOnly ||
              source == JavaSoundDebug || source == AppleMac ||

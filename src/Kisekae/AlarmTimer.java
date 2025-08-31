@@ -123,7 +123,6 @@ final class AlarmTimer extends Thread
 
 	void startTimer(Vector a)
    {
-      if (!OptionsDialog.getTimerOn()) return ;
       alarms = a ;
       start() ;
    }

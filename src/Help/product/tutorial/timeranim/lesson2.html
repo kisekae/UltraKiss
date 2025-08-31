@@ -57,6 +57,11 @@
 				<font face="Courier New">;@begin()<br>
 					;@ timer(1,1000)<br>
 				</font>
+				<BR>
+				<FONT color="#cc6600">Note:&nbsp; If you copy and paste these lines from the help
+					documentation into your configuration file you must ensure that the semicolon
+					and at-sign combination appears at the beginning of every line.</FONT>
+				<BR>
 				<br>
 				The timer action will cause alarm(1) to fire 1000 milliseconds after the data
 				set starts.
@@ -67,12 +72,16 @@
 				smoke.&nbsp; Add the following lines to the end of the configuration file.<br>
 				<br>
 				<font face="Courier New">;@alarm(1)<br>
-					;@ map("smoke1.cel") move(#1,9,0) timer(2,100)<br>
+					;@ map("smoke1.cel") move(#2,9,0) timer(2,100)<br>
 					<br>
 				</font>In 100 milliseconds we fire alarm(2).&nbsp; Alarm(2) turns off the first
 				puff of smoke and turns on the second.&nbsp; Add the following lines to the end
 				of the configuration file.<br>
+                                <br>
+                                Make sure that you specify the correct object number (#2) in the move() command.  
+                                Use the object number for the group containing the eagle.cel and smoke1.cel and smoke2.cel.
 				<br>
+                                <br>
 				<font face="Courier New">;@alarm(2)<br>
 					;@ unmap("smoke1.cel") map("smoke2.cel") timer(3,100)<br>
 					<br>
@@ -86,7 +95,12 @@
 					<br>
 				</font>The sequence of alarm(1), alarm(2) and alarm(3) repeats over and over
 				again.&nbsp; The repetition causes the airplane to move slowly across the
-				screen from left to right.
+                                screen from left to right.<br>
+				<BR>
+				<FONT color="#cc6600">Note:&nbsp; If you copy and paste these lines from the help
+					documentation into your configuration file you must ensure that the semicolon
+					and at-sign combination appears at the beginning of every line.</FONT>
+				<BR>
 				<p>&nbsp;</p>
 			<li>
 				Use the <FONT color="#000099">File-Exit</FONT> command in the text editor to
@@ -97,14 +111,15 @@
 				move across the screen.
 				<p>&nbsp;</p>
 			<li>
-				Use <FONT color="#000099">File-Save As</FONT> to save your work.&nbsp; This
-				time change the name to <FONT color="#cc6600">CNF2.cnf</FONT> .&nbsp; The new
-				configuration file with the event code will be saved in the same directory as
-				the original CNF1.cnf file.
-				<p>&nbsp;</p>
-			<li>
 				Use <FONT color="#000099">View-Restart</FONT> command to commit your changes
 				and reload the data set.
+				<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">File-Save As</FONT> to save your work.&nbsp; If you saving
+                                your work as elements inside a directory change the name to <FONT color="#cc6600">CNF2.cnf</FONT> .&nbsp; 
+                                The new configuration file with the event code will be saved in the same directory as
+				the original CNF1.cnf file.  If your files are maintained within an archive file,
+                                save the archive file to a new name.  
 				<p>&nbsp;</p>
 			<li>
 				To check your work use <FONT color="#000099">File-Open</FONT> to load the
@@ -114,7 +129,7 @@
 				mouse as it moves.&nbsp; This happens because the animation movements are
 				conflicting with your mouse drags.&nbsp; You can prevent this from happening by
 				turning off FKiSS object moves on mouse controlled objects.&nbsp; This option
-				is found in the <FONT color="#000099">Tools-Options-Compatibility</FONT> tab.&nbsp;&nbsp;&nbsp;<br>
+				is found in the <FONT color="#000099">Options-Options-Compatibility</FONT> tab.<br>
 				<br>
 				The <FONT color="#000099">View-Reset</FONT> command will restore the objects to
 				their original positions.
@@ -125,7 +140,7 @@
 		<hr>
 		<p align="left">Next Document:&nbsp; <a href="lesson3.html">Animation Lesson 3<br>
 			</a>Prior Document:&nbsp; <a href="lesson1.html">Animation Lesson 1</a></p>
-		<p align="left">Copyright (c) 2002-2023 William Miles</p>
+		<p align="left">Copyright (c) 2002-2025 William Miles</p>
 
 		<p>&nbsp;</p>
 	</body>

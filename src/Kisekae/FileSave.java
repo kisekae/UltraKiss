@@ -168,6 +168,7 @@ final class FileSave
       // directory in which the KiSS object or archive file resides.
 
 		directory = (zip == null) ? kiss.getDirectory() : zip.getDirectoryName() ;
+      if (Kisekae.isWebswing() && kiss != null) directory = kiss.getDirectory() ;
 		if (directory == null) directory = "" ;
 
       // The source file name is a fully qualified path name to the archive

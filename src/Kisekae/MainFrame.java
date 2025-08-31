@@ -660,6 +660,8 @@ final public class MainFrame extends KissFrame
 
 			// Initialize the panel frame.
 
+         if (restart && config != null && !config.isBorderRgb())
+            config.setImportBorderIndex(-1) ;
          Color bc = config.getBorderColor() ;
 			getContentPane().setBackground(bc) ;
 			panel.setBackground(bc) ;
@@ -2583,6 +2585,11 @@ final public class MainFrame extends KissFrame
 		closeconfig() ;
       closeframe() ;
 		setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
+      
+      // Close the Tutorial Help if it had been opened on a File-New
+      
+      if (mainmenu != null) mainmenu.closeTutorial() ;
+      
       if (OptionsDialog.getRandomSplash()) setNewSplashPane(true) ;      
       if (scrollpane != null) scrollpane.setViewport(null) ;
       scrollpane = null ;

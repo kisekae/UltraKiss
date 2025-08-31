@@ -38,21 +38,21 @@
 				Use <FONT color="#000099">View-Active Configuration</FONT> to open the text
 				editor for the current configuration file.&nbsp; When the set loads we want to
 				move our invisible block to the right side of the screen.&nbsp; The block.gif
-				image should be object group #2.&nbsp; If it is not, use your object group
+				image should be object group #3.&nbsp; If it is not, use your object group
 				number as seen in your configuration file.&nbsp; Remember that our playfield is
 				640 pixels wide.&nbsp; Adjust the begin() event as follows:<br>
 				<br>
 				<font face="Courier New">;@begin()<br>
 					;@ timer(1,1000)<br>
-					;@ moveto(#2,639,0)<br>
+					;@ moveto(#3,639,0)<br>
 					<br>
 				</font><FONT color="#cc6600">Note:&nbsp; If you copy and paste these lines from the
 					help documentation into your configuration file you must ensure that the
 					semicolon and at-sign combination appears at the beginning of every line.</FONT>
 				<BR>
 				<BR>
-				The moveto() action command moves the block object (#2) to the position (639,0)
-				on the playfield.&nbsp; This is the upper right corner of the playfield. T he
+				The moveto() action command moves the block object (#3) to the position (639,0)
+				on the playfield.&nbsp; This is the upper right corner of the playfield. The
 				invisible vertical line will descend all the way down to the lower right
 				corner.
 				<p>&nbsp;</p>
@@ -61,16 +61,21 @@
 				happens we will move the airplane back to the left side of the playfield.&nbsp;
 				We use an <FONT color="#cc6600">in()</FONT> event for this purpose.&nbsp; The
 				in() event fires whenever the bounding area for two objects overlap.&nbsp; The
-				following code assumes that the airplane object is #1 and the block object is
-				#2.&nbsp; Use the correct object group numbers as shown in your configuration
+				following code assumes that the airplane object is #2 and the block object is
+				#3.&nbsp; Use the correct object group numbers as shown in your configuration
 				file for the airplane object and the block object.&nbsp;&nbsp; Add the
 				following to the end of the configuration file.<br>
 				<br>
-				<font face="Courier New">;@in(#1,#2)<br>
-					;@ movebyx(#1,#2,-640)<br>
+				<font face="Courier New">;@in(#2,#3)<br>
+					;@ movebyx(#2,#3,-640)<br>
 					<br>
-				</font>The movebyx() action command moves the airplane object group (#1) to the
-				x-coordinate of the block object (#2), biased to the left by 640 pixels.
+				</font><FONT color="#cc6600">Note:&nbsp; If you copy and paste these lines from the
+					help documentation into your configuration file you must ensure that the
+					semicolon and at-sign combination appears at the beginning of every line.</FONT>
+				<BR>
+                                <BR>        
+				The movebyx() action command moves the airplane object group (#2) to the
+				x-coordinate of the block object (#3), biased to the left by 640 pixels.
 				<p>&nbsp;</p>
 			<li>
 				Use the <FONT color="#000099">File-Exit</FONT> command in the text editor to
@@ -82,19 +87,24 @@
 				the invisible block at the right.
 				<p>&nbsp;</p>
 			<li>
-				Use <FONT color="#000099">File-Save As</FONT> to save your work.&nbsp; This
-				time change the name to <FONT color="#cc6600">CNF3.cnf</FONT> .&nbsp; The new
-				configuration file with the new event code will be saved in the same directory
-				as the original CNF2.cnf file.
-				<p>&nbsp;</p>
-			<li>
 				Use <FONT color="#000099">View-Restart</FONT> to commit your changes and reload
 				the data set.
 				<p>&nbsp;</p>
 			<li>
+				Use <FONT color="#000099">File-Save As</FONT> to save your work.&nbsp; If you saving
+                                your work as elements inside a directory change the name to <FONT color="#cc6600">CNF3.cnf</FONT> .&nbsp; 
+                                The new configuration file with the event code will be saved in the same directory as
+				the original CNF2.cnf file.  If your files are maintained within an archive file,
+                                save the archive file to a new name.  
+				<p>&nbsp;</p>
+			<li>
 				Check your work.&nbsp; If you want you can pick up the airplane and move it
 				around as required.&nbsp; Try the <FONT color="#000099">View-Reset</FONT> command
-				to restore the objects to their original positions.
+                                to restore the objects to their original positions.<br>
+                                <br>
+                                If you have difficulty picking up the airplane ensure that the compatibility option
+                                (Options-Options-Compatibility-Interface) to Enable FKiSS object moves on mouse controlled objects
+                                is off.  
 				<p>&nbsp;</p>
 			<li>
 				The <FONT color="#000099">View-Reset</FONT> shows up an unexpected quirk.&nbsp;
@@ -104,7 +114,7 @@
 				playfield.&nbsp;&nbsp;This is not good.
 				<p>&nbsp;</p>
 			<li>
-				We can fix this as follows.&nbsp; Use <FONT color="#000099">Tools-Options</FONT>
+				We can fix this as follows.&nbsp; Use <FONT color="#000099">Options-Options</FONT>
 				to open the program options dialog.&nbsp; Select the FKiSS tab and clear the <FONT color="#cc6600">
 					Enable Timer</FONT> check box.&nbsp; Now do a <FONT color="#000099">View-Restart</FONT>
 				to reload the data set.&nbsp; The airplane no longer moves as timer actions are
@@ -113,13 +123,12 @@
 				of the screen.&nbsp;&nbsp;<br>
 				<br>
 				Use <FONT color="#000099">Edit-Write Page</FONT> to set the required initial
-				positions for all future resets. Now, use <FONT color="#000099">Tools-Options</FONT>
+				positions for all future resets. Now, use <FONT color="#000099">Options-Options</FONT>
 				and set the <FONT color="#cc6600">Enable Timer</FONT> check box on the FKiSS
 				tab, and do a <FONT color="#000099">View-Restart</FONT> to reload the data set.
 				<p>&nbsp;</p>
 			<li>
-				Now check the airplane behaviour after a <FONT color="#000099">View-Reset</FONT>
-				.
+				Now check the airplane behaviour after a <FONT color="#000099">View-Reset</FONT>.
 				<p>&nbsp;</p>
 			<li>
 				Use <FONT color="#000099">File-Save</FONT> to save your work.
@@ -130,7 +139,7 @@
 		<hr>
 		<p align="left">Next Document:&nbsp; <a href="lesson4.html">Animation Lesson 4<br>
 			</a>Prior Document:&nbsp; <a href="lesson2.html">Animation Lesson 2</a></p>
-		<p align="left">Copyright (c) 2002-2023 William Miles</p>
+		<p align="left">Copyright (c) 2002-2025 William Miles</p>
 
 		<p>&nbsp;</p>
 	</body>

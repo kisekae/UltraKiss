@@ -780,12 +780,15 @@ public class ZipManager extends KissFrame
             JOptionPane.ERROR_MESSAGE) ;
 			return ;
 		}
-      
-      JOptionPane.showMessageDialog(this,
-       	fsb.getName() + "\n" +
-         Kisekae.getCaptions().getString("NewArchiveCreated"),
-         Kisekae.getCaptions().getString("NewArchiveTitle"),
-         JOptionPane.INFORMATION_MESSAGE);
+
+      if (!(Kisekae.isWebswing()))
+      {
+         JOptionPane.showMessageDialog(this,
+          	fsb.getName() + "\n" +
+            Kisekae.getCaptions().getString("NewArchiveCreated"),
+            Kisekae.getCaptions().getString("NewArchiveTitle"),
+            JOptionPane.INFORMATION_MESSAGE);
+      }
 	}
 
 
@@ -965,9 +968,9 @@ public class ZipManager extends KissFrame
       
       // If we are creating a new archive in Webswing, create a temporary
       // file.  The Webswing Save As dialog will upload the file to the
-      // client with a userfied name.
+      // client with a user specified name.
       
-      if (Kisekae.isWebswing() && path == null)
+      if (Kisekae.isWebswing() && path == null && approve != null)
       {
          try
          {

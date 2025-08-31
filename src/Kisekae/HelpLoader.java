@@ -175,6 +175,18 @@ final public class HelpLoader
       if (hb != null) ((HelpSetBroker) hb).setActionListener(a) ;
    }
    
+   // A function to close the help window.
+   
+   void close()
+   {
+      if (!loaded) return ;
+      if (hb == null) return ;
+      ((HelpSetBroker) hb).setDisplayed(false);
+      Window w = ((HelpSetBroker) hb).getWindow() ;
+      if (w != null) w.dispose() ;
+      ((HelpSetBroker) hb).doWindowClosed() ;
+   }
+   
    // Clear our static tables.
    
    public static void clearTables()

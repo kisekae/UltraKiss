@@ -81,11 +81,11 @@
 				<br>
 				<br>
 				<font face="Courier New">;@alarm(4)<br>
-					;@ move(#4,-1,0,"unconstrain") ; move scene to the left<br>
-					;@ letobjectx(X,#4) ; get current location<br>
+					;@ move(#5,-1,0,1) ; move scene to the left (unconstrained)<br>
+					;@ letobjectx(X,#5) ; get current location<br>
 					;@ iflessthan(X,-640) ; finished first section?<br>
-					;@ altmap(#4) ; yes, switch to next image<br>
-					;@ moveto(#4,0,0) ; reset position<br>
+					;@ altmap(#5) ; yes, switch to next image<br>
+					;@ moveto(#5,0,0) ; reset position<br>
 					;@ endif()<br>
 					;@ timer(4,50)<br>
 				</font>
@@ -100,6 +100,9 @@
 				constructed to overlap each other for continuous looping.&nbsp; We swap between
 				the two images half way through their movement using the altmap() action
 				command.&nbsp;<br>
+                                <br>The fourth parameter on the @move(#5,-1,0,1) statement lets the object to move
+                                to the left off the screen even if FKiSS object movement is restricted to the playfield.   
+                                this feature lets the hill scene move even though other FKiSS object movement is restricted.<br>           
 				<br>
 				To start the activity add the following two lines at the end of the begin()
 				event:<br>

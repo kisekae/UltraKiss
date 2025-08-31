@@ -682,7 +682,11 @@ final class FileWriter extends KissFrame
 
 		// Dispose with our window if we had a successful save.
 		// Clear the update state for all content entries.
-
+      //
+      // Webswing should retain the update state as it forces
+      // a Save-As after a Save-As Archive so as to enable file upload
+      // to the client.  The Save-As requires the original update state.
+      
 		if (!error)
 		{
    		for (int i = 0 ; i < originalcontents.size() ; i++)
@@ -695,7 +699,7 @@ final class FileWriter extends KissFrame
                k = ce.kiss ;
                if (k != null) 
                {
-                  k.setUpdated(false) ;
+                  if (!(Kisekae.isWebswing())) k.setUpdated(false) ;
                   ArchiveEntry ze = k.getZipEntry() ;
                   if (ze != null) ze.setWriting(false) ;
                }
@@ -703,7 +707,7 @@ final class FileWriter extends KissFrame
             else if (o instanceof ArchiveEntry)
             {
                ArchiveEntry ze = (ArchiveEntry) o ;
-               ze.setUpdated(false) ;
+               if (!(Kisekae.isWebswing())) ze.setUpdated(false) ;
             }
    		}
 
@@ -719,7 +723,7 @@ final class FileWriter extends KissFrame
          // are not changed, nor are imported cels that have been saved in
          // CEL format.
 
-			if (kiss != null && mode == SAVE)
+			if (kiss != null && (mode == SAVE || mode == COPY))
 			{
             boolean b = (kiss instanceof Cel) && kiss.isImported() ;
             if (!(b && ((Cel) kiss).isImportedAsCel()))
@@ -749,7 +753,7 @@ final class FileWriter extends KissFrame
                   if (zip != null) zip.setName(destination) ;
                   if (fileopen != null) fileopen.setPath(destination) ;
                   if (!ArchiveFile.isArchive(filename))
-                  if (ze != null) ze.setPath(filename) ;
+                     if (ze != null) ze.setPath(filename) ;
                }
             }
 			}
@@ -996,11 +1000,22 @@ final class FileWriter extends KissFrame
 					element = next.getPath() ;
 				}
 
+				// If we have a KiSS object and it has been updated then
+				// we should adjust the archive entry time.
+
+				if (ko != null && ko.isUpdated())
+					next.setTime(ko.lastModified()) ;
+				long time = next.getTime() ;
+            long now = System.currentTimeMillis() ;
+            if (time == 0) next.setTime(now) ; 
+
 				// If the output file element is a writable KiSS object in our
 				// configuration then we will write the KiSS object contents to
 				// the output file.  Otherwise, we establish an input stream to
 				// copy the archive source to the new output file.
 
+            String originalpath = (ko != null) ? ko.getPath() : null ;
+            
 				if (ko != null && !ko.isWritable())
 					if (!(ko instanceof JavaCel) || saveset) ko = null ;
 				if (OptionsDialog.getSaveSourceOn())
@@ -1013,12 +1028,6 @@ final class FileWriter extends KissFrame
             }
 				if (ko == null && zipfile == null)
 					in = next.getInputStream() ;
-
-				// If we have a KiSS object and it has been updated then
-				// we should adjust the archive entry time.
-
-				if (ko != null && ko.isUpdated())
-					next.setTime(ko.lastModified()) ;
 
 				// Verify that we found a valid file.  We have a situation where
             // after loading an expansion set the CNF is updated.  When saving 
@@ -1035,24 +1044,32 @@ final class FileWriter extends KissFrame
                      String name1 = af.getName() ;
                      String name2 = zipfile.getName() ;
                      if (name1 != null && !(name1.equals(name2))) continue ;
-                  }                 
+                  }        
+                  
+                  // Try the original path
+                  
+                  next.setPath(originalpath) ;
+   					in = next.getInputStream() ;                  
                }
                
                // We have a file error on the original zip file.
-               
-               int i = JOptionPane.NO_OPTION ;
-					PrintLn.println("Save: Unable to read file " + element) ;
-               if (!Kisekae.isBatch())
-                  i = JOptionPane.showConfirmDialog(this,
-                     captions.getString("FileReadError") +
-                     "\n" + element + "\n" +
-                     captions.getString("ContinueMessage") + "?",
-                     captions.getString("OptionsDialogWarningTitle"),
-                     JOptionPane.YES_NO_OPTION,
-                     JOptionPane.WARNING_MESSAGE) ;
-  					if (i == JOptionPane.YES_OPTION) continue ;
-					Status.setText("Save aborted.") ;
-					throw new KissException("Save cancelled") ;
+
+               if (in == null)
+               {
+                  int i = JOptionPane.NO_OPTION ;
+                  PrintLn.println("Save: Unable to read file " + element) ;
+                  if (!Kisekae.isBatch())
+                     i = JOptionPane.showConfirmDialog(this,
+                        captions.getString("FileReadError") +
+                        "\n" + element + "\n" +
+                        captions.getString("ContinueMessage") + "?",
+                        captions.getString("OptionsDialogWarningTitle"),
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.WARNING_MESSAGE) ;
+                  if (i == JOptionPane.YES_OPTION) continue ;
+                  Status.setText("Save aborted.") ;
+                  throw new KissException("Save cancelled") ;
+               }
 				}
 
 				// Create the output archive element.  The new element name
@@ -1273,8 +1290,8 @@ final class FileWriter extends KissFrame
             {
 					if (out != null) { out.close() ;  out.flush() ; }
 					fd = closeTemporaryFile(fd) ;
-					long time = next.getTime() ;
-               long now = System.currentTimeMillis() ;
+					time = next.getTime() ;
+               now = System.currentTimeMillis() ;
                if (next.isUpdated()) time = now ;
 					if (fd != null) fd.setLastModified(time) ;
 					if (de != null) de.setTime(time) ;
@@ -1427,6 +1444,21 @@ final class FileWriter extends KissFrame
 			}
 		}
 
+      // Establish relative names.
+
+      String path = ze.getPath() ;
+      String relativename = ze.getName() ;
+      ze = (ArchiveEntry) ze.clone() ;
+      if (directory != null)
+      {
+         if (path.startsWith(directory))
+      	  	relativename = path.substring(directory.length()) ;
+      	if (relativename.startsWith(File.separator))
+      	  	relativename = relativename.substring(File.separator.length()) ;
+         if (ze instanceof DirEntry) ze.setDirectory(directory) ;
+            ze.setName(relativename) ;
+      }
+
       // Add the KiSS object zip entry to our contents vector.
 
       if (ze instanceof DirEntry && kisszip != null && kisszip.isArchive()) ze.setMethod(1) ;
@@ -1451,7 +1483,7 @@ final class FileWriter extends KissFrame
          ArchiveFile opened = null ;
 	      Configuration c = (Configuration) kiss ;
          ArchiveFile czip = (c != null) ? c.getZipFile() : null ;
-         String directory = (czip != null) ? czip.getDirectoryName() : null ;
+//         String directory = (czip != null) ? czip.getDirectoryName() : null ;
 
 	      // Add the cel object entries to the contents vector.  We do not
          // add component or video cels here as they are handled below.
@@ -1471,11 +1503,20 @@ final class FileWriter extends KissFrame
             if (cel instanceof JavaCel) continue ;
             if (cel instanceof Video) continue ;
             if (cel.isFromInclude() && !cel.isUpdated()) continue ;
+            
+            // Do not copy or save files in same directory if unchanged.
+            
             if (!OptionsDialog.getExportCel() && !cel.isUpdated())
             {
+               String s1 = (zip != null) ? zip.getDirectoryName() : "" ;
+               s1 = s1.substring(0, s1.length() - (s1.endsWith("/") ? 1 : 0));
+               s1 = s1.substring(0, s1.length() - (s1.endsWith("\\") ? 1 : 0));
+               String s2 = (directory != null) ? directory : "" ;
+               s2 = s2.substring(0, s2.length() - (s2.endsWith("/") ? 1 : 0));
+               s2 = s2.substring(0, s2.length() - (s2.endsWith("\\") ? 1 : 0));
                if (mode == SAVE) continue ;
                if (mode == COPY && zip != null && zip.isDirectory() && 
-                  directory != null && directory.equals(zip.getDirectoryName())) continue ;
+                  directory != null && s2.equalsIgnoreCase(s1)) continue ;
             }
             if (!cel.isLoaded() && czip != null)
             {
@@ -1597,8 +1638,8 @@ final class FileWriter extends KissFrame
 
             // Establish relative names.
 
-            String path = cel.getPath() ;
-            String relativename = ze.getName() ;
+            path = cel.getPath() ;
+            relativename = ze.getName() ;
             ze = (ArchiveEntry) ze.clone() ;
             if (directory != null)
             {
@@ -1636,9 +1677,15 @@ final class FileWriter extends KissFrame
 	         if (palette.isCopy()) continue ;
             if (!palette.isWritable()) continue ;
             if (palette.isFromInclude() && !palette.isUpdated()) continue ;
+            String s1 = (zip != null) ? zip.getDirectoryName() : "" ;
+            s1 = s1.substring(0, s1.length() - (s1.endsWith("/") ? 1 : 0));
+            s1 = s1.substring(0, s1.length() - (s1.endsWith("\\") ? 1 : 0));
+            String s2 = (directory != null) ? directory : "" ;
+            s2 = s2.substring(0, s2.length() - (s2.endsWith("/") ? 1 : 0));
+            s2 = s2.substring(0, s2.length() - (s2.endsWith("\\") ? 1 : 0));
             if (mode == SAVE && !palette.isUpdated()) continue ;
             if (mode == COPY && zip != null && zip.isDirectory() && directory != null &&
-               directory.equals(zip.getDirectoryName()) && !palette.isUpdated()) continue ;
+               s2.equalsIgnoreCase(s1) && !palette.isUpdated()) continue ;
 				ze = (zip == null) ? null : zip.getEntry(palette.getPath()) ;
             if (zip == null)
             {
@@ -1647,7 +1694,7 @@ final class FileWriter extends KissFrame
             }
 				if (palette.isUpdated()) ze = palette.getZipEntry() ;
 				if (ze == null && palette.getZipEntry() instanceof DirEntry)
-	           	ze = new DirEntry(zip.getDirectoryName(),palette.getName(),zip) ;
+	           	ze = new DirEntry(c.getDirectory(),palette.getName(),zip) ;
 				if (ze == null && palette.getZipEntry() == null)
 	           	ze = new DirEntry(zip.getDirectoryName(),palette.getName(),zip) ;
             if (ze == null) continue ;
@@ -1668,8 +1715,8 @@ final class FileWriter extends KissFrame
 
             // Relative names.
 
-            String path = palette.getPath() ;
-            String relativename = ze.getName() ;
+            path = palette.getPath() ;
+            relativename = ze.getName() ;
             ze = (ArchiveEntry) ze.clone() ;
             if (directory != null)
             {
@@ -1698,8 +1745,14 @@ final class FileWriter extends KissFrame
             if (!audio.isWritable()) continue ;
             if (audio.isFromInclude() && !audio.isUpdated()) continue ;
             if (mode == SAVE && !audio.isUpdated()) continue ;
+            String s1 = (zip != null) ? zip.getDirectoryName() : "" ;
+            s1 = s1.substring(0, s1.length() - (s1.endsWith("/") ? 1 : 0));
+            s1 = s1.substring(0, s1.length() - (s1.endsWith("\\") ? 1 : 0));
+            String s2 = (directory != null) ? directory : "" ;
+            s2 = s2.substring(0, s2.length() - (s2.endsWith("/") ? 1 : 0));
+            s2 = s2.substring(0, s2.length() - (s2.endsWith("\\") ? 1 : 0));
             if (mode == COPY && zip != null && zip.isDirectory() && directory != null &&
-               directory.equals(zip.getDirectoryName()) && !audio.isUpdated()) continue ;
+               s2.equalsIgnoreCase(s1) && !audio.isUpdated()) continue ;
 				ze = (zip == null) ? null : zip.getEntry(audio.getPath()) ;
             if (zip == null)
             {
@@ -1727,8 +1780,8 @@ final class FileWriter extends KissFrame
 
             // Relative names.
 
-            String path = audio.getPath() ;
-            String relativename = ze.getName() ;
+            path = audio.getPath() ;
+            relativename = ze.getName() ;
             ze = (ArchiveEntry) ze.clone() ;
             if (directory != null)
             {
@@ -1756,9 +1809,15 @@ final class FileWriter extends KissFrame
 				if (video.isCopy()) continue ;
 				if (!video.isWritable()) continue ;
             if (video.isFromInclude() && !video.isUpdated()) continue ;
+            String s1 = (zip != null) ? zip.getDirectoryName() : "" ;
+            s1 = s1.substring(0, s1.length() - (s1.endsWith("/") ? 1 : 0));
+            s1 = s1.substring(0, s1.length() - (s1.endsWith("\\") ? 1 : 0));
+            String s2 = (directory != null) ? directory : "" ;
+            s2 = s2.substring(0, s2.length() - (s2.endsWith("/") ? 1 : 0));
+            s2 = s2.substring(0, s2.length() - (s2.endsWith("\\") ? 1 : 0));
             if (mode == SAVE && !video.isUpdated()) continue ;
             if (mode == COPY && zip != null && zip.isDirectory() && directory != null &&
-               directory.equals(zip.getDirectoryName()) && !video.isUpdated()) continue ;
+               s2.equalsIgnoreCase(s1) && !video.isUpdated()) continue ;
 				ze = (zip == null) ? null : zip.getEntry(video.getPath()) ;
             if (zip == null)
             {
@@ -1786,8 +1845,8 @@ final class FileWriter extends KissFrame
 
             // Relative names.
 
-            String path = video.getPath() ;
-            String relativename = ze.getName() ;
+            path = video.getPath() ;
+            relativename = ze.getName() ;
             ze = (ArchiveEntry) ze.clone() ;
             if (directory != null)
             {
@@ -1817,9 +1876,15 @@ final class FileWriter extends KissFrame
             if (cel.isError()) continue ;
 				if (cel.isCopy()) continue ;
 				if (!cel.isWritable()) continue ;
+            String s1 = (zip != null) ? zip.getDirectoryName() : "" ;
+            s1 = s1.substring(0, s1.length() - (s1.endsWith("/") ? 1 : 0));
+            s1 = s1.substring(0, s1.length() - (s1.endsWith("\\") ? 1 : 0));
+            String s2 = (directory != null) ? directory : "" ;
+            s2 = s2.substring(0, s2.length() - (s2.endsWith("/") ? 1 : 0));
+            s2 = s2.substring(0, s2.length() - (s2.endsWith("\\") ? 1 : 0));
             if (mode == SAVE && !OptionsDialog.getComponentCel()) continue ;
             if (mode == COPY && zip != null && zip.isDirectory() && directory != null &&
-               directory.equals(zip.getDirectoryName()) && !OptionsDialog.getComponentCel()) continue ;
+               s2.equalsIgnoreCase(s1) && !OptionsDialog.getComponentCel()) continue ;
             String name = cel.getName() ;
             int n = name.lastIndexOf('.') ;
             if (n >= 0) name = name.substring(0,n) + ".cel" ;

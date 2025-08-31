@@ -1255,7 +1255,11 @@ final class FKissAction extends KissObject
 
                int noconstrain = 0 ;
                if (parameters.size() > 3)
-                  noconstrain = variable.getIntValue((String) parameters.elementAt(3),event) ;
+               {
+                  Object v = variable.getValue((String) parameters.elementAt(3),event) ;
+                  if (v instanceof Integer && ((Integer) v).intValue() > 0) noconstrain = 1 ;
+                  if (v instanceof String && "noconstrain".equals((String) v)) noconstrain = 1 ;
+               }
                if (noconstrain == 0 && kiss.isVisible())
                   m = constrain(x,y,r,d,kiss.getRestrictX(),kiss.getRestrictY()) ;
             }

@@ -77,6 +77,7 @@ final public class MainMenu extends KissMenu
    private boolean nocopy = false ;                // Our URL nocopy indicator
    private String webURL = null ;                  // Initial URL for portal
    private String openpath = null ;                // FileOpen path on open
+   private static boolean filenew = false ;        // True if File-New 
 
    private static final int NEWFILE = 0 ;
    private static final int NEWPAGE = 1 ;
@@ -96,11 +97,13 @@ final public class MainMenu extends KissMenu
 	private static String refsection = "reference2.index" ;
    private static String portal = "HTML/WebAccess.html" ;
    private static String urlbug = "issues" ;
+   private static String urltutorialfiles = "releases" ;
    private static HelpLoader helper = null ;
 	private static HelpLoader helper2 = null ;
 	private static HelpLoader helper3 = null ;
    protected static JMenuItem help = null ;
    protected static JMenuItem tutorial = null ;
+   protected static JMenuItem tutorialfiles = null ;
    protected static JMenuItem refhelp = null ;
    private static Point windowlocation = null ;
    private static Dimension windowsize = null ;
@@ -458,6 +461,9 @@ final public class MainMenu extends KissMenu
       rundemo.addActionListener(this);
       rundemo.setEnabled(Kisekae.getDemoIndex() != null) ;
       helpMenu.add(tutorial) ;
+      helpMenu.add((tutorialfiles = new JMenuItem(Kisekae.getCaptions().getString("MenuHelpTutorialFiles")))) ;
+      tutorialfiles.addActionListener(this);
+      tutorialfiles.setEnabled(tutorial.isEnabled());
       helpMenu.add((logfile = new JMenuItem(Kisekae.getCaptions().getString("MenuViewLogFile")))) ;
       logfile.setEnabled(LogFile.isOpen()) ;
       logfile.addActionListener(this) ;
@@ -543,6 +549,15 @@ final public class MainMenu extends KissMenu
    // Set our last open event FileOpen path.
    
    void setOpenPath(String path) { openpath = path ; }
+   
+   // Close the Tutorial screen invoked through File-New.
+   
+   void closeTutorial() 
+   { 
+      if (!filenew) return ;
+      filenew = false ;
+      if (helper2 != null) helper2.close() ; 
+   }
 
    
    // Implementation of the required menu item update.
@@ -1091,6 +1106,11 @@ final public class MainMenu extends KissMenu
          if (bugreport == source)
          { eventBug() ; return ; }
 
+         // A Tutorial Files request opens a web browser to download the GitHub file.
+
+         if (tutorialfiles == source)
+         { eventTutorialFiles() ; return ; }
+
          // A Clear Cache request clears the download cache.
 
          if (clearcache == source)
@@ -1400,11 +1420,12 @@ final public class MainMenu extends KissMenu
       
       // Show tutorial if File-New clicked.
       
-      if (type == NEWFILE && OptionsDialog.getShowTips())
+      if (type == NEWFILE)
       {
          if (tutorial != null)
          {
-            OptionsDialog.setShowTips(false) ;
+            filenew = true ;
+            if (helper2.isVisible()) return ;
             tutorial.doClick();
          }
       }
@@ -1575,6 +1596,39 @@ final public class MainMenu extends KissMenu
                {
                   parent.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
                   BrowserControl.displayURL(kissweb + urlbug) ;
+                  parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
+               }
+               catch (Exception ex) { }
+            }
+         }
+      }
+      catch (Exception e) { }
+   }
+
+   // Invoke the browser to show the GitHub download page for tutorial files.
+
+   void eventTutorialFiles()
+   {
+      if (OptionsDialog.getDebugControl())
+         PrintLn.println("MainMenu eventTutorialFiles ") ;
+      try
+      {
+         URL webpage = null ;
+         String s = Kisekae.getLoadBase() + urltutorialfiles ;
+         webpage = Kisekae.getResource(urltutorialfiles) ;
+         if (webpage == null) webpage = new URL(s) ;
+         if (webpage != null)
+         {
+            AppletContext browser = Kisekae.getContext() ;
+            if (browser != null)
+               browser.showDocument(webpage,"_blank") ;
+            else
+            {
+               String kissweb = OptionsDialog.getWebSite() ;
+               try
+               {
+                  parent.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
+                  BrowserControl.displayURL(kissweb + urltutorialfiles) ;
                   parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
                }
                catch (Exception ex) { }

@@ -1646,8 +1646,6 @@ final class Configuration extends KissObject
 					// Cel file specifications.
 
 				case '#':
-    if (s.contains("bleg-l.cel"))
-       s = s ;
                file = file ;
 
 					Cel cel = parseCel(s) ;

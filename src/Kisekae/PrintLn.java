@@ -126,6 +126,8 @@ final public class PrintLn
             OutputStream logfile = Kisekae.getLogFile() ;
             if (logfile != null)
             {
+         		String ls = System.getProperty("line.separator") ;
+         		if (ls != null) line += ls ;
          		logfile.write(line.getBytes()) ;
             }
          }

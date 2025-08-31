@@ -115,7 +115,7 @@ final class HelpSetBroker extends DefaultHelpBroker
       }
    }
    
-   private void doWindowClosed()
+   public void doWindowClosed()
    {
       visible = false ;
       if (al == null) return ;
@@ -133,6 +133,12 @@ final class HelpSetBroker extends DefaultHelpBroker
       visible = b ;
       WindowPresentation pres = super.getWindowPresentation();
       Window frame = pres.getHelpWindow();
-      if (frame != null) frame.toFront();
+      if (b && frame != null) frame.toFront();
+   }
+   
+   public Window getWindow()
+   {
+      WindowPresentation pres = super.getWindowPresentation();
+      return (pres != null) ? pres.getHelpWindow(): null ;     
    }
 }

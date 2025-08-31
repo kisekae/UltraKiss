@@ -111,21 +111,22 @@ public class Kisekae extends Applet
    private static Locale locale = null ;           // The current locale
    private static ResourceBundle captions = null ; // The language resources
    private static Locale defaultlocale = null ;    // The default locale
-   private static URL codebase = null ;				// The start directory base
+   private static URL codebase = null ;            // The start directory base
    private static URL loadcodebase = null ;			// The applet code base
    private static URL iconImageURL = null ;			// The product icon URL
-   private static URL iconImage16URL = null ;		// The product small icon URL
-   private static URL splashImageURL = null ;		// The product splash URL
+   private static URL iconImage16URL = null ;      // The product small icon URL
+   private static URL splashImageURL = null ;      // The product splash URL
    private static AppletContext context = null ;	// The applet context
    private static MainFrame mainframe = null ;		// Our main window frame
-   private static Kisekae kisekae = null ;		   // Our own reference 
+   private static Kisekae kisekae = null ;         // Our own reference 
    private static JWindow splashwindow = null ;		// Our load splash window
+   private static JDialog webswingdialog = null ;	// Our webswing window
    private static KissFrame batchframe = null ;	   // Our batch load frame
    private static ImageIcon icon = null ;				// Our product icon
-   private static TipsBox tips = null ;			   // Our Tips system
+   private static TipsBox tips = null ;            // Our Tips system
    private static ImageIcon icon16 = null ;			// Our product small icon
    private static ImageIcon splash = null ;			// Our product splash icon
-   private static Image iconimage = null ;	 		// Our product icon image
+   private static Image iconimage = null ;         // Our product icon image
    private static Image iconimage16 = null ;	 		// Our product small icon 
    private static Image splashimage = null ;	 		// Our product splash image
    private static String cachepath = null ;        // Our cache directory path
@@ -181,7 +182,7 @@ public class Kisekae extends Applet
 
       LogFile.start() ;
       builddate = Calendar.getInstance() ;
-      builddate.set(2025,8-1,18) ;
+      builddate.set(2025,8-1,30) ;
       
       // Restore the properties.
       
@@ -559,7 +560,7 @@ public class Kisekae extends Applet
          tipsinstalled = false ;
          PrintLn.printErr("Tips system is not available.") ;
       }
-
+      
       // Determine if the demo system is available.
 
       try
@@ -2359,9 +2360,9 @@ public class Kisekae extends Applet
                 + "Effective with UltraKiss 4.1, Webswing now enables editing of KiSS sets and download<br>"
                 + "and upload of files to and from the web server.  Files can now be saved to your computer.<br><br>"
                 + "With Webswing, all KiSS sets must be loaded from an LZH or ZIP archive file.  New sets<br>"
-                + "developed with UltraKiss in Webswing must be saved as an LZH or ZIP archive file.<br><br>"
+                + "developed with UltraKiss in Webswing must be saved within an LZH or ZIP archive file.<br><br>"
                 + "Your browser will only play WAV and MP3 files when running through Webswing.<br>"
-                + "MIDI and AU sound is not available. <br><br>"
+                + "This is a Webswing browser sound limitation.  MIDI and AU sound is not available. <br><br>"
                 + "Server resources are limited. Files downloaded through File-Open are limited to 5 MB.<br><br>"
                 + "For full features without these limitations <a href=\"https://github.com/kisekae/UltraKiss/releases\">download and install UltraKiss</a> from GitHub.<br>"
                 + "Fully automated installers are provided for 64-bit Windows, Linux, and Apple systems.<br>"
@@ -2396,6 +2397,7 @@ public class Kisekae extends Applet
                               { 
                                  PrintLn.println("Webswing open portal.") ;
                                  MainMenu mm = mainframe.getMainMenu() ;
+                                 webswingdialog.setVisible(false) ;
                                  mm.openportal.doClick() ;
                               } 
                            } ;
@@ -2410,8 +2412,9 @@ public class Kisekae extends Applet
                               { 
                                  PrintLn.println("Webswing open help contents.") ;
                                  MainMenu mm = mainframe.getMainMenu() ;
+                                 webswingdialog.setVisible(false) ;
                                  mm.help.doClick() ;
-                              } 
+                             } 
                            } ;
                   			SwingUtilities.invokeLater(awt) ;
                         }
@@ -2424,6 +2427,7 @@ public class Kisekae extends Applet
                               { 
                                  PrintLn.println("Webswing open help contents.") ;
                                  MainMenu mm = mainframe.getMainMenu() ;
+                                 webswingdialog.setVisible(false) ;
                                  mm.tutorial.doClick() ;
                               } 
                            } ;
@@ -2438,8 +2442,9 @@ public class Kisekae extends Applet
                               { 
                                  PrintLn.println("Webswing open file.") ;
                                  MainMenu mm = mainframe.getMainMenu() ;
+                                 webswingdialog.setVisible(false) ;
                                  mm.open.doClick() ;
-                              } 
+                             } 
                            } ;
                   			SwingUtilities.invokeLater(awt) ;
                         }
@@ -2467,11 +2472,11 @@ public class Kisekae extends Applet
                   String s = "Webswing memory (" + maxMem /(1024*1024) + " MB)" ;
 //                  JOptionPane.showMessageDialog(null,ep,s,JOptionPane.INFORMATION_MESSAGE) ; 
                   JOptionPane pane = new JOptionPane(ep,JOptionPane.INFORMATION_MESSAGE) ;
-                  JDialog dialog = pane.createDialog(s) ;
-                  int w = dialog.getWidth() ;
-                  int h = dialog.getHeight() ;
-                  dialog.setSize(new Dimension(w+30,h));
-                  dialog.setVisible(true) ;
+                  webswingdialog = pane.createDialog(s) ;
+                  int w = webswingdialog.getWidth() ;
+                  int h = webswingdialog.getHeight() ;
+                  webswingdialog.setSize(new Dimension(w+30,h));
+                  webswingdialog.setVisible(true) ;
                } 
             } ;
    			javax.swing.SwingUtilities.invokeLater(runner) ;

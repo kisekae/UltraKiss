@@ -1454,6 +1454,7 @@ final class PanelFrame extends JPanel
       for (int i = 0 ; i < edit.size() ; i++)
       {
          KissObject kiss = (KissObject) edit.elementAt(i) ;
+         if (!(kiss instanceof Group || kiss instanceof Cel)) continue ;
          if (box == null) box = kiss.getBoundingBox() ;
          else box = box.union(kiss.getBoundingBox()) ;
       }
@@ -1465,6 +1466,7 @@ final class PanelFrame extends JPanel
       for (int i = 0 ; i < edit.size() ; i++)
       {
          KissObject kiss = (KissObject) edit.elementAt(i) ;
+         if (!(kiss instanceof Group || kiss instanceof Cel)) continue ;
          newgroup.addElement(kiss) ;
       }
       
@@ -2385,7 +2387,7 @@ final class PanelFrame extends JPanel
       if (config.getPaletteCount() == 1 && paletteadded)
       {
          Palette p0 = config.getPalette(0) ;
-         if (p0 != null) config.setImportBorderIndex(p0.getBackgroundIndex()) ; 
+//         if (p0 != null) config.setImportBorderIndex(p0.getBackgroundIndex()) ; 
          parent.setBackground(config.getBorderColor()) ;
          setBackground(config.getBorderColor()) ;
          initcolor(new Integer(0)) ;

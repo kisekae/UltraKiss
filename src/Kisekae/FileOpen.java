@@ -693,6 +693,7 @@ final public class FileOpen implements Cloneable
    		elementname = cl.getSelectedItem() ;
          cnfmemfile = cl.getSelectedFile() ;
          selected = cl.getSelectedEntry() ;
+        	ze = (zip != null) ? zip.getEntry(elementname) : null ;
     		cl.dispose() ;
       }
 
@@ -705,7 +706,7 @@ final public class FileOpen implements Cloneable
       // INCLUDE file and expanding our configuration.
 
       if (selected != null) return selected ;
-      
+   
 		if (zip != null && elementname != null)
       {
       	if (zip instanceof DirFile)

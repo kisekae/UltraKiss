@@ -274,8 +274,12 @@ final class Alarm extends KissObject implements Comparable
       // alternate method to scheduling alarms instead of using the polled 
       // AlarmTimer.  When using this method the AlarmTimer must be modified 
       // to not put the alarm on the EventHandler queue.
+      
+      // Note: Timer alarm scheduling disabled 2025/08/25
+      // Need a different option than getTimerOn to switch the timer method.
+      // The getTimerOn is used to control timer scheduling.
 
-      if (!OptionsDialog.getTimerOn())
+      if (!OptionsDialog.getTimerOn() && false)
       {
          if (timer != null) timer.stop() ;
          timer = null ;

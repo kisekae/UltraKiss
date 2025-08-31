@@ -2462,6 +2462,18 @@ final class PanelMenu extends KissMenu
          newcel.setLoader(null) ;
          newcel.load() ;
          newpalette = newcel.getPalette() ;
+         
+         // A duplicate cel (ambiguous) did not paint the background as a
+         // transparent color on a set restart.  Make sure the background
+         // is the same as the transparent color.  Note, the palette is
+         // rewritten when saved to move the transparent and background
+         // color to index 0 as this is the KCF specification.
+         
+         if (newpalette != null)
+         {
+            int n1 = newpalette.getTransparentIndex() ;
+            newcel.setBackgroundIndex(n1) ;
+         }
       }
       
       // If we are not a cel file and we should be importing images as cels,
@@ -2592,6 +2604,8 @@ final class PanelMenu extends KissMenu
             newpalette.setName(fd.getElement()) ;
             newpalette.setLoader(null) ;
             newpalette.load() ;
+            ArchiveEntry ae = newpalette.getZipEntry() ;
+            if (ae != null) ae.setImported(true) ;
                
             // Convert the palette to a memory file.  This allows the
             // file to be written in the event of a Save As Archive.
@@ -2600,8 +2614,7 @@ final class PanelMenu extends KissMenu
             {
                byte [] b = newpalette.write() ;
                MemFile mf = new MemFile(newpalette.getName(),b) ;
-               ArchiveEntry ae = newpalette.getZipEntry() ;
-               ae.setMemoryFile(mf) ;
+               if (ae != null) ae.setMemoryFile(mf) ;
             }
             catch (IOException e)
             {
@@ -2621,8 +2634,8 @@ final class PanelMenu extends KissMenu
             {
                byte [] b = newcel.write() ;
                MemFile mf = new MemFile(newcel.getName(),b) ;
-               ArchiveEntry ae = newcel.getZipEntry() ;
-               ae.setMemoryFile(mf) ;
+               ae = newcel.getZipEntry() ;
+               if (ae != null) ae.setMemoryFile(mf) ;
             }
             catch (IOException e)
             {
