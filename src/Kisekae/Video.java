@@ -1260,7 +1260,12 @@ final class Video extends Cel
 		if (!isInternal() && started)
 			EventHandler.queueEvents(v,Thread.currentThread(),this) ;
    	if (stopcallback == null) return ;
-		stopcallback.doClick() ;
+         
+      // Run the callback on the EDT thread.
+         
+      Runnable runner = new Runnable()
+      { public void run() { stopcallback.doClick() ; } } ;
+      javax.swing.SwingUtilities.invokeLater(runner) ;        
    }
 
 
@@ -1273,7 +1278,12 @@ final class Video extends Cel
 		if (!isInternal() && !started)
 			EventHandler.queueEvents(v,Thread.currentThread(),this) ;
    	if (startcallback == null) return ;
-		startcallback.doClick() ;
+         
+      // Run the callback on the EDT thread.
+         
+      Runnable runner = new Runnable()
+      { public void run() { startcallback.doClick() ; } } ;
+      javax.swing.SwingUtilities.invokeLater(runner) ;        
 	}
 
 
@@ -1284,8 +1294,16 @@ final class Video extends Cel
    {
       if (!realized) return ;
    	if (prefetchcallback == null) return ;
-		prefetchcallback.doClick() ;
-      prefetchcallback.removeActionListener(null) ;
+         
+      // Run the callback on the EDT thread.
+         
+      Runnable runner = new Runnable()
+      { public void run() 
+      { 
+         prefetchcallback.doClick() ; 
+         prefetchcallback.removeActionListener(null) ;
+      } } ;
+      javax.swing.SwingUtilities.invokeLater(runner) ;        
    }
 
 

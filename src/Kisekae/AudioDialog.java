@@ -676,11 +676,12 @@ final class AudioDialog extends KissDialog
 
 	void setValues()
 	{
-      if (!javax.swing.SwingUtilities.isEventDispatchThread())
+      if (!SwingUtilities.isEventDispatchThread())
       {
       	Runnable runner = new Runnable()
 			{ public void run() { setValues() ; } } ;
-   		javax.swing.SwingUtilities.invokeLater(runner) ;
+   		SwingUtilities.invokeLater(runner) ;
+         return ;
       }
 
    	if (audio == null) return ;

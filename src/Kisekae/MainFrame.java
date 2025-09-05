@@ -944,6 +944,7 @@ final public class MainFrame extends KissFrame
 
       title = null ;
       WebFrame.clearRedirect() ;
+      if (mainmenu != null) mainmenu.setWebURL("") ;
 		closeframe() ;
       config = null ;
  		setIconImage(Kisekae.getIconImage()) ;
@@ -2573,6 +2574,7 @@ final public class MainFrame extends KissFrame
          try { javax.swing.SwingUtilities.invokeAndWait(runner) ; }
          catch (InterruptedException e) { }
          catch (Exception e) { e.printStackTrace(); }
+         return ;
       }
       
       if (!callreturn)

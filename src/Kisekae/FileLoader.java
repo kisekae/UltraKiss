@@ -392,6 +392,16 @@ final class FileLoader extends KissFrame
                Vector includefiles = reference.getIncludeFiles() ;
                config.setIncludeFiles(includefiles) ;              
             }
+            
+            // If we have a reference configuration that had other
+            // import files then these files should be retained across
+            // this configuration so they can be written on a file save.  
+            
+            if (reload && reference != null)
+            {
+               Vector otherfiles = reference.getOtherFiles() ;
+               config.addOtherFiles(otherfiles) ;              
+            }
 
             // If we loaded from a URL and our configuration referenced
             // INCLUDE files then we need to download the included files

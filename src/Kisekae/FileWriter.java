@@ -512,6 +512,11 @@ final class FileWriter extends KissFrame
 	boolean isError() { return error ; }
 
 
+	// Method to return the parent frame.
+
+	public JFrame getParent() { return parent ; }
+
+
 	// Window Events
 
 	public void windowOpened(WindowEvent evt) { }
@@ -769,7 +774,12 @@ final class FileWriter extends KissFrame
 			catch (InterruptedException e) { }
 			flush() ;
 			dispose() ;
-			callback.doClick() ;
+         
+         // Run the callback on the EDT thread.
+         
+         Runnable runner = new Runnable()
+         { public void run() { callback.doClick() ; } } ;
+         javax.swing.SwingUtilities.invokeLater(runner) ;
 		}
 	}
 
@@ -873,6 +883,8 @@ final class FileWriter extends KissFrame
 							ContentEntry o = (ContentEntry) contents.elementAt(0) ;
                      String cepathname = o.ze.pathname ;
                      ArchiveEntry zipentry = zipfile.getEntry(cepathname) ;
+                     if (zipentry == null && cepathname != null && cepathname.startsWith(File.separator))
+                        zipentry = zipfile.getEntry(cepathname.substring(1)) ;
 							if (zipentry == null)
                      {
                         if (o != null) v.addElement(o.ze) ;
@@ -992,7 +1004,9 @@ final class FileWriter extends KissFrame
                ArchiveEntry ce = ((ContentEntry) o).ze ;
 					if (ko == null || ce == null) continue ;
 					next = new DirEntry(ko.getDirectory(),ce.getName(),null) ;
-               ((DirEntry) next).setFileSize(ce.getSize()) ;
+               long size = ce.getSize() ;
+               if (ko != null && size < 0) size = ko.getBytes() ;
+               ((DirEntry) next).setFileSize(size) ;
                ((DirEntry) next).setImported(ce.isImported()) ;
                ((DirEntry) next).setImportPath(ce.getImportPath()) ;
                ((DirEntry) next).setMemoryFile(ce.getMemoryFile()) ;
@@ -1076,9 +1090,19 @@ final class FileWriter extends KissFrame
 				// will retain directory path information if our active element
 				// has the save directory flag set or we are explicitly saving
 				// a configuration element and the element was not imported.
+            // With Webswing, if the element was imported and Save As Archive
+            // and the new archive is being saved elsewhere, the relative
+            // element name should be referenced as simply the KiSS object name.
+            // Otherwise the archive will have path information that is incorrect.
 
-  				if (!next.getSaveDir() && !saveconfig) element = next.getName() ;
-  				if (next.isImported()) element = next.getName() ;
+  				if (!next.getSaveDir() && !saveconfig) 
+               element = next.getName() ;
+  				if (next.isImported()) 
+            {
+               element = next.getName() ;
+               if (Kisekae.isWebswing() && ko != null) 
+                  element = ko.getName() ;
+            }
             newname = new String(element) ;
             int j = newname.lastIndexOf('.') ;
             if (j > 0) type = newname.substring(j) ;
@@ -1908,6 +1932,26 @@ final class FileWriter extends KissFrame
             ce = new ContentEntry(cel,ze,(mode == EXPORT)) ;
 				v.add(ce) ;
          }
+
+			// Add the other text object entries to the contents vector.
+         // These are DirEntries as they were selected for import.
+
+	      i = 0 ;
+	      Vector otherfiles = c.getOtherFiles();
+	      while (otherfiles != null && i < otherfiles.size())
+	      {
+				Object o = otherfiles.elementAt(i++) ;
+	         if (!(o instanceof DirEntry)) continue ;
+            ze = (DirEntry) o ;
+
+            // Relative names.
+            
+            relativename = ze.getName() ;
+            ze = (ArchiveEntry) ze.clone() ;
+            if (ze instanceof DirEntry && kisszip != null && kisszip.isArchive()) ze.setMethod(1) ;
+				ce = new ContentEntry(null,ze,(mode == EXPORT)) ;
+				v.add(ce) ;
+			}
 		}
 
       // Return the list of writable zip entry objects.  Make sure that
@@ -2058,15 +2102,73 @@ final class FileWriter extends KissFrame
       // Create a source backup file if the source file exists.  The file
       // may not exist if we are creating a new archive file.
 
+      boolean inuse = false ;
+      boolean open = false ;
+      ArchiveFile czip = null ;
       if (fs.exists())
       {
-	      if (!fs.renameTo(fsb))
+         // Try to recover if source file is in use.
+
+         inuse = fs.renameTo(fsb) ;
+	      if (!inuse)
+	      {
+            if (parent instanceof MainFrame)
+            {
+               MainFrame mf = (MainFrame) parent ;
+               Configuration config = mf.getConfig() ;
+               czip = (config != null) ? config.getZipFile() : null ;               
+               open = (czip != null) ? czip.isOpen() : false ;
+               if (open && czip != null) try { czip.close() ; }
+               catch (IOException e) 
+               { 
+      				PrintLn.println("FileWriter: Unable to close " + fs.getName() + " for backup file " + fsb.getPath()) ;
+               } 
+            }
+            if (parent instanceof TextFrame)
+            {
+               TextFrame tf = (TextFrame) parent ;
+               czip = (tf != null) ? tf.getZipFile() : null ;               
+               open = (czip != null) ? czip.isOpen() : false ;
+               if (open && czip != null) try { czip.close() ; }
+               catch (IOException e) 
+               { 
+      				PrintLn.println("FileWriter: Unable to close " + fs.getName() + " for backup file " + fsb.getPath()) ;
+               } 
+            }
+            if (parent instanceof ImageFrame)
+            {
+               ImageFrame tf = (ImageFrame) parent ;
+               czip = (tf != null) ? tf.getZipFile() : null ;               
+               open = (czip != null) ? czip.isOpen() : false ;
+               if (open && czip != null) try { czip.close() ; }
+               catch (IOException e) 
+               { 
+      				PrintLn.println("FileWriter: Unable to close " + fs.getName() + " for backup file " + fsb.getPath()) ;
+               } 
+            }
+            if (parent instanceof ColorFrame)
+            {
+               ColorFrame tf = (ColorFrame) parent ;
+               czip = (tf != null) ? tf.getZipFile() : null ;               
+               open = (czip != null) ? czip.isOpen() : false ;
+               if (open && czip != null) try { czip.close() ; }
+               catch (IOException e) 
+               { 
+      				PrintLn.println("FileWriter: Unable to close " + fs.getName() + " for backup file " + fsb.getPath()) ;
+               } 
+            }
+         }
+
+         // This is the recovery if we had to close the source file.  
+         
+         if (!inuse) inuse = fs.renameTo(fsb) ;
+	      if (!inuse)
 	      {
 				alternate = true ;
-				String s = "Save: Unable to create backup file " + fsb.getName() ;
+				String s = "FileWriter: Unable to create backup file " + fsb.getName() ;
 	      	ErrorText.setText(s) ;
 				PrintLn.println(s) ;
-				PrintLn.println("Save: File will be saved as " + fsalt.getName()) ;
+				PrintLn.println("FileWriter: File will be saved as " + fsalt.getName()) ;
             String s1 = captions.getString("FileCreateErrorText1") ;
             int i1 = s1.indexOf('[') ;
             int j1 = s1.indexOf(']') ;
@@ -2091,7 +2193,7 @@ final class FileWriter extends KissFrame
 			}
 			if (OptionsDialog.getDebugLoad()  && !alternate)
 			{
-				PrintLn.println("Save: New backup file name is " + fsb.getPath()) ;
+				PrintLn.println("FileWriter: New backup file name is " + fsb.getPath()) ;
          }
       }
 
@@ -2100,7 +2202,7 @@ final class FileWriter extends KissFrame
 		if (!fd.renameTo(fs))
       {
          error = true ;
-			String s = "Save: Unable to rename file "
+			String s = "FileWriter: Unable to rename file "
            	+ fd.getName() + " to " + fs.getName() ;
       	ErrorText.setText(s) ;
   	      PrintLn.println(s) ;
@@ -2122,10 +2224,17 @@ final class FileWriter extends KissFrame
          return null ;
 		}
 
+      // Open the source file if it was closed.
+      
+      if (open & czip != null)
+      {
+         PrintLn.println("FileWriter: backup source file was closed for write, " + czip.getPath()) ;
+      }
+      
 		// Trace the name of the output file.
 
 		if (OptionsDialog.getDebugLoad())
-			PrintLn.println("Save: New output file is " + fs.getPath()) ;
+			PrintLn.println("FileWriter: New output file is " + fs.getPath()) ;
 
       // Delete the source backup file.
 
@@ -2135,7 +2244,7 @@ final class FileWriter extends KissFrame
          {
          	fsb.delete() ;
 		      if (OptionsDialog.getDebugLoad())
-		         PrintLn.println("Save: Delete backup file " + fsb.getPath()) ;
+		         PrintLn.println("FileWriter: Delete backup file " + fsb.getPath()) ;
          }
 		}
 		return fsoriginal ;

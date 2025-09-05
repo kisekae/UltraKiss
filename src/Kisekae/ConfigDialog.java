@@ -1143,20 +1143,7 @@ final class ConfigDialog extends KissDialog
          // indexes are always relative to palette file 0.
 
          Palette palette = config.getPalette(0) ;
-         if (palette != null)
-         {
-   			int cols = 16 ;
-   			int colors = palette.getColorCount() ;
-			   int rows = colors / cols + ((colors % cols == 0) ? 0 : 1) ;
-            if (colors < cols) cols = colors ;
-   			if (rows == 0 && cols == 0) { rows = 1 ; cols = 1 ; }
-
-   			// Set the grid layout.
-
-            cm = new ColorMenu(palette.getName(),rows,cols) ;
-            for (int i = 0 ; i < colors ; i++)
-               cm.setMenuColor(i,palette.getColor(0,i)) ;
-         }
+         cm = buildColorMenu() ;
 
          // Build the dialog.  If we have a color menu then show it
          // and provide an option to use the color chooser.  If we
@@ -1253,8 +1240,6 @@ final class ConfigDialog extends KissDialog
                Color c = chooser.getColor() ;
                if (c == null) { close() ; return ; }
                int rgb = c.getRGB() & 0xFFFFFF ;
-               int index = config.getBorder() ;
-               if (rgb == index) { close() ; return ; }
                panel.setBorderRgb(rgb) ;
             }
             else { close() ; return ; }
@@ -1278,6 +1263,7 @@ final class ConfigDialog extends KissDialog
 
          if (command.equals(Kisekae.getCaptions().getString("ColorChooserMessage")))
    		{
+            if (popup != null) popup.setVisible(false) ;
             ColorChooser.setText(Kisekae.getCaptions().getString("PaletteMessage")) ;
             chooser = new JColorChooser() ;
             chooser.setPreviewPanel(new JPanel()) ;
@@ -1285,6 +1271,7 @@ final class ConfigDialog extends KissDialog
             panel3.add(chooser,BorderLayout.CENTER) ;
             chooser.setColor(config.getBorderColor());
             popup = null ;
+            invalidate() ;
             doLayout() ;
             center() ;
             return ;
@@ -1295,12 +1282,15 @@ final class ConfigDialog extends KissDialog
          if (command.equals(Kisekae.getCaptions().getString("PaletteMessage")))
    		{
             ColorChooser.setText(Kisekae.getCaptions().getString("ColorChooserMessage")) ;
+            cm = buildColorMenu() ;
+            if (cm == null) return ;
             panel3.removeAll() ;
             popup = cm.getPopupMenu() ;
             popup.setVisible(true) ;
             panel3.add(popup,BorderLayout.CENTER) ;
             cm.setSelectedIndex(config.getBorder()) ;
             chooser = null ;
+            invalidate() ;
             doLayout() ;
             center() ;
             return ;
@@ -1312,6 +1302,10 @@ final class ConfigDialog extends KissDialog
       private void close() 
       { 
          if (popup != null) popup.setVisible(false) ;
+         if (cm != null) cm.setVisible(false) ;
+         popup = null ;
+         cm = null ;
+         tf = null ;
          dispose() ; 
       }
 
@@ -1344,16 +1338,42 @@ final class ConfigDialog extends KissDialog
             popup.setSize(w1,h1) ;
          }
       }
+      
+
+      // A utility function to create the color menu object.  A new object
+      // is required when we swap from the ColorChooser and our palette.
+      
+      private ColorMenu buildColorMenu()
+      { 
+         cm = null ;
+         if (config == null) return null ;
+         Palette palette = config.getPalette(0) ;
+         if (palette != null)
+         {
+   			int cols = 16 ;
+   			int colors = palette.getColorCount() ;
+			   int rows = colors / cols + ((colors % cols == 0) ? 0 : 1) ;
+            if (colors < cols) cols = colors ;
+   			if (rows == 0 && cols == 0) { rows = 1 ; cols = 1 ; }
+
+   			// Set the grid layout.
+
+            cm = new ColorMenu(palette.getName(),rows,cols) ;
+            for (int i = 0 ; i < colors ; i++)
+               cm.setMenuColor(i,palette.getColor(0,i)) ;
+         }
+         return cm ;
+      }
 
       
    	// Window Events
 
    	public void windowOpened(WindowEvent evt) { CANCEL.requestFocus() ; }
-   	public void windowClosed(WindowEvent evt) { }
+   	public void windowClosed(WindowEvent evt) { close() ; }
    	public void windowIconified(WindowEvent evt) { }
    	public void windowDeiconified(WindowEvent evt) { }
    	public void windowActivated(WindowEvent evt) { }
    	public void windowDeactivated(WindowEvent evt) { }
-   	public void windowClosing(WindowEvent evt) { close() ; }
+   	public void windowClosing(WindowEvent evt) { }
    }
 }

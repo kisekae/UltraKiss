@@ -1681,6 +1681,16 @@ final class ColorFrame extends KissFrame
 
 	void setPalette(Palette p) { palette = p ; }
 
+   
+
+	// Method to return a reference to our parent zip file object.
+
+	ArchiveFile getZipFile() { return (ze != null) ? ze.getZipFile() : null ; }
+
+	// Method to return a reference to our zip entry object.
+
+	ArchiveEntry getZipEntry() { return ze ; }
+
 
 
 	// A utility method to return a new palette object of the specified size.

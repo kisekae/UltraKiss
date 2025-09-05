@@ -281,8 +281,12 @@ final class JarLoader extends UrlLoader
 		if (fatal && !Kisekae.isBatch()) return ;
 		if (active || Kisekae.isBatch())
 		{
-			callback.doClick() ;
-			close() ;
+         
+         // Run the callback on the EDT thread.
+         
+         Runnable runner = new Runnable()
+         { public void run() { callback.doClick() ; close() ; } } ;
+         javax.swing.SwingUtilities.invokeLater(runner) ;        
 			return ;
 		}
 

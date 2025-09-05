@@ -154,6 +154,7 @@ public class ZipManager extends KissFrame
 	private JTable TABLE = new JTable();
 	private JButton NEW = new JButton();
 	private JButton OPEN = new JButton();
+	private JButton CLOSE = new JButton();
 	private JButton FIND = new JButton();
 	private JButton ADD = new JButton();
 	private JButton EXTRACT = new JButton();
@@ -185,6 +186,7 @@ public class ZipManager extends KissFrame
       	viewaction.setEnabled(true) ;
       	unselectaction.setEnabled(true) ;
       	findaction.setEnabled(true) ;
+      	CLOSE.setEnabled(true) ;
       	EXTRACT.setEnabled(true) ;
       	DELETE.setEnabled(true) ;
       	VIEW.setEnabled(true) ;
@@ -598,6 +600,7 @@ public class ZipManager extends KissFrame
 
 		NEW.addActionListener(this) ;
 		OPEN.addActionListener(this) ;
+		CLOSE.addActionListener(this) ;
 		FIND.addActionListener(this) ;
 		ADD.addActionListener(this) ;
 		EXTRACT.addActionListener(this) ;
@@ -630,6 +633,13 @@ public class ZipManager extends KissFrame
 		OPEN.setText(Kisekae.getCaptions().getString("OpenMessage"));
 		iconfile = Kisekae.getResource("Images/open" + ext) ;
 		if (iconfile != null) OPEN.setIcon(new ImageIcon(iconfile)) ;
+		CLOSE.setEnabled(false);
+		CLOSE.setAlignmentY(0.5f) ;
+		CLOSE.setMaximumSize(new Dimension(110, 27));
+		CLOSE.setToolTipText(Kisekae.getCaptions().getString("ToolTipClose"));
+		CLOSE.setText(Kisekae.getCaptions().getString("CloseMessage"));
+		iconfile = Kisekae.getResource("Images/close" + ext) ;
+		if (iconfile != null) CLOSE.setIcon(new ImageIcon(iconfile)) ;
 		FIND.setEnabled(false);
 		FIND.setAlignmentY(0.5f) ;
 		FIND.setMaximumSize(new Dimension(110, 27));
@@ -680,6 +690,7 @@ public class ZipManager extends KissFrame
 		this.getContentPane().add(jToolBar1, BorderLayout.NORTH);
 		jToolBar1.add(NEW, null);
 		jToolBar1.add(OPEN, null);
+		jToolBar1.add(CLOSE, null);
 		jToolBar1.add(FIND, null);
 		jToolBar1.add(ADD, null);
 		jToolBar1.add(EXTRACT, null);
@@ -748,6 +759,7 @@ public class ZipManager extends KissFrame
      	selectaction.setEnabled(false);
      	unselectaction.setEnabled(false);
      	findaction.setEnabled(false) ;
+      CLOSE.setEnabled(true) ;
       ADD.setEnabled(true);
       EXTRACT.setEnabled(false) ;
       DELETE.setEnabled(false) ;
@@ -871,6 +883,7 @@ public class ZipManager extends KissFrame
      	viewaction.setEnabled(false);
      	selectaction.setEnabled(true);
      	findaction.setEnabled(true) ;
+      CLOSE.setEnabled(true) ;
       ADD.setEnabled(true);
       EXTRACT.setEnabled(true) ;
       DELETE.setEnabled(true) ;
@@ -935,6 +948,7 @@ public class ZipManager extends KissFrame
      	selectaction.setEnabled(false);
      	unselectaction.setEnabled(false);
      	findaction.setEnabled(false) ;
+      CLOSE.setEnabled(false) ;
       ADD.setEnabled(false) ;
       EXTRACT.setEnabled(false) ;
       DELETE.setEnabled(false) ;
@@ -1704,6 +1718,25 @@ public class ZipManager extends KissFrame
             else           
                v.add(ze) ;
 			}
+
+			// Add the other text object entries to the contents vector.
+         // These are DirEntries as they were selected for import.
+
+	      i = 0 ;
+	      Vector otherfiles = c.getOtherFiles();
+	      while (otherfiles != null && i < otherfiles.size())
+	      {
+				Object o = otherfiles.elementAt(i++) ;
+	         if (!(o instanceof DirEntry)) continue ;
+            ze = (DirEntry) o ;
+
+            // Relative names.
+
+            String relativename = ze.getName() ;
+            ze = (ArchiveEntry) ze.clone() ;
+            ze.setMethod(method) ;
+            v.add(ze) ;
+			}
 		}
 
       // Return the list of writable zip entry objects.
@@ -1769,7 +1802,7 @@ public class ZipManager extends KissFrame
 
          // Close Archive request.
 
-         if (source == closefile)
+         if (source == closefile || source == CLOSE)
          { closeArchive() ; return ; }
 
          // Extract element request.

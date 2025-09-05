@@ -3481,7 +3481,7 @@ final class FKissAction extends KissObject
                         // If our openpath was a URL then open with UrlLoader
 
                         openpath = f.getPath() ;
-                        if (openpath != null && openpath.contains(":"))
+                        if (openpath != null && openpath.contains("://"))
                         {
                            openurl = true ;
                            UrlLoader urlloader = new UrlLoader(mf,openpath) ;
@@ -3491,9 +3491,15 @@ final class FKissAction extends KissObject
                            Thread loadthread = new Thread(urlloader) ;
                            loadthread.start() ;                           
                         }
+                        
+                        // If it is not a URL, then it is a file.  Do not
+                        // use the file: protocol if it exists.
+                        
                         else
                         {
-                           fd = new FileOpen(mf,f.getPath(),"r") ;
+                           if (openpath.startsWith("file:"))
+                              openpath = openpath.substring(5) ;
+                           fd = new FileOpen(mf,openpath,"r") ;
                            fd.setSilent(true) ;
                            fd.open(vs2) ;
                         }

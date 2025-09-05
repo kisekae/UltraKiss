@@ -182,7 +182,7 @@ public class Kisekae extends Applet
 
       LogFile.start() ;
       builddate = Calendar.getInstance() ;
-      builddate.set(2025,8-1,30) ;
+      builddate.set(2025,9-1,5) ;
       
       // Restore the properties.
       
@@ -224,7 +224,7 @@ public class Kisekae extends Applet
       ClassLoader cl = getClass().getClassLoader() ;
 //    ClassLoader cl = Thread.currentThread().getContextClassLoader() ; // Trusted Library
       Dimension d = Toolkit.getDefaultToolkit().getScreenSize() ;
-      if (javax.swing.SwingUtilities.isEventDispatchThread()) 
+      if (SwingUtilities.isEventDispatchThread()) 
          PrintLn.println("Initialization is running on the EventDispatchThread") ;
       else
          PrintLn.println("Warning, Initialization is not running on the EventDispatchThread") ;
@@ -1532,8 +1532,16 @@ public class Kisekae extends Applet
 
    static void setLoaded(boolean b)
    {
+      if (!javax.swing.SwingUtilities.isEventDispatchThread())
+      {
+      	Runnable runner = new Runnable()
+			{ public void run() { setLoaded(b) ; } } ;
+   		javax.swing.SwingUtilities.invokeLater(runner) ;
+         return ;
+      }
+      
       loaded = b ;
-      callback.doClick() ;
+      callback.doClick() ; 
    }
 
    // Register a callback action listener.  This is used for batch loads

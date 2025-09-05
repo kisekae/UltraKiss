@@ -59,6 +59,7 @@ import java.awt.* ;
 import java.awt.event.* ;
 import java.util.Vector ;
 import java.util.Hashtable ;
+import java.util.Enumeration ;
 import javax.swing.* ;
 import javax.swing.event.* ;
 import javax.swing.text.* ;
@@ -157,7 +158,7 @@ final public class WebFrame extends KissFrame
       parent = main ;
       if (history.size() == 0)
          history.addElement(currentweb) ;
-      setHistoryLocation(history.size()-1) ;
+      setHistoryLocation(currentlocation) ;
       statusbar = new StatusBar(this) ;
       statusbar.setStatusBar(true) ;
       editor.setEditorKit(new WebHTMLEditor());
@@ -434,7 +435,12 @@ final public class WebFrame extends KissFrame
       editor.addHyperlinkListener(this) ;
       enterurl.addActionListener(this) ;
       Vector v = getHistory() ;
-      setPage((String) v.lastElement()) ;
+//      setPage((String) v.lastElement()) ;
+      int i = getHistoryLocation() ;
+      if (i < 0 || i >= v.size()) i = v.size() - 1 ;
+      s = (currentweb == null) ? OptionsDialog.getKissWeb() : s ;
+      String s1 = (i >= 0) ? (String) v.elementAt(i) : s ;
+      setPage(s1) ;
 		addWindowListener(this) ;
 	}
 
@@ -528,9 +534,41 @@ final public class WebFrame extends KissFrame
    }
    
    // Method to clear the static redirect table.  This is required 
-   // on a new set load.
+   // on a new set load.  All history elements that refer to redirects
+   // are removed.
    
-   public static void clearRedirect() { urlmap.clear(); }
+   public static void clearRedirect() 
+   { 
+      if (urlmap.isEmpty()) return ;
+      Vector newhistory = new Vector() ;
+      for (int i = 0 ; i < history.size() ; i++)
+      {
+         try
+         {
+            String s = (String) history.elementAt(i) ;
+            URL evturl = new URL(s) ;
+            String s1 = evturl.toExternalForm() ;
+            s1 = s1.toLowerCase() ;
+            Enumeration e = urlmap.keys() ;
+            while (e.hasMoreElements())
+            {
+               Object o = e.nextElement() ;
+               String s2 = o.toString() ;
+               if (s2.startsWith(s1))
+               {
+                  s1 = null ;
+                  break ;
+               }
+            }
+             if (s1 != null) newhistory.add(s) ;
+         }
+         catch (MalformedURLException e) { }
+      }
+      history.clear() ;
+      history.addAll(newhistory) ;
+      currentlocation = history.size()-1 ;
+      urlmap.clear(); 
+   }
 
 
    // Set the JEditorPane page to view.   The connection is performed in a
@@ -605,10 +643,7 @@ final public class WebFrame extends KissFrame
       int i = getHistoryLocation() - 1 ;
       if (i < 0 || i >= v.size()) 
       {
-         if (Kisekae.isWebswing())
-            close() ;
-         else
-            me.toBack() ;
+         close() ;
          return ;
       }
       location = (String) v.elementAt(i) ;
@@ -723,6 +758,10 @@ final public class WebFrame extends KissFrame
       
          ActionEvent ae = new ActionEvent(enterurl,ActionEvent.ACTION_PERFORMED,s) ;
          actionPerformed(ae) ;
+         
+         // Reset the history.
+         
+         setCurrentWeb(s) ;
       }
       catch (Exception e) { } ;
    }
@@ -832,8 +871,10 @@ final public class WebFrame extends KissFrame
    void clearLocalHistory(String homepage)
    {
       if (localhistory != null) localhistory = new Vector() ;
-      if (homepage == null) homepage = OptionsDialog.getKissWeb() ;
-      if (localhistory != null) localhistory.addElement(homepage) ;
+      if (homepage == null) 
+         homepage = OptionsDialog.getKissWeb() ;
+      if (localhistory != null) 
+         localhistory.addElement(homepage) ;
       setHistoryLocation(0) ;
    }
    

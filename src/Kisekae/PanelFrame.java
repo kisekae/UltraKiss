@@ -2566,9 +2566,31 @@ final class PanelFrame extends JPanel
 
    void importOther(Vector contents, ArchiveFile zip)
    {
+      if (contents == null) return ;
       if (config == null) return ;
-      if (page == null) return ;
       Object cid = config.getID() ;
+      config.addOtherFiles(contents) ;
+      if (OptionsDialog.getDebugControl())
+      {
+         int i = 0 ; 
+         while (i++ < contents.size())
+         {
+            Object o = contents.elementAt(i) ;
+            if (!(o instanceof ArchiveEntry)) continue ;
+            PrintLn.println("PanelFrame: import " + ((ArchiveEntry) o).getPath() + " to configuration, " + cid) ;
+         }
+      }
+      
+      // With new configurations we do not have a zip file yet.  
+      // Associate the arbitrary file set with the configuration.  
+      // This file set will get written when the new CNF is saved.
+      
+      if (zip != null && zip.getName() == null)
+      {
+         String s = "New file imports are pending a configuration File Save." ;
+         JOptionPane.showMessageDialog(parent, s, "Import Text File", JOptionPane.INFORMATION_MESSAGE) ;
+         return ;
+      }
       
       // Use our FileWriter to copy the files.
 
@@ -9357,7 +9379,7 @@ final class PanelFrame extends JPanel
       }
 
 
-      // Constructor for panel frame background color changes
+      // Constructor for panel frame border color changes
 
       public UndoableColorEdit(boolean oldrgb, int oldbackground,
          boolean newrgb, int newbackground)
@@ -9379,7 +9401,7 @@ final class PanelFrame extends JPanel
          if (type == 1)
             return Kisekae.getCaptions().getString("UndoColorEditName") ;
          if (type == 2)
-            return Kisekae.getCaptions().getString("UndoBackgroundName") ;
+            return Kisekae.getCaptions().getString("UndoBorderName") ;
          return Kisekae.getCaptions().getString("UndoColorEditName") ;
       }
 

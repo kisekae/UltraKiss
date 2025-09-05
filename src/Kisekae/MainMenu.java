@@ -288,7 +288,7 @@ final public class MainMenu extends KissMenu
       expand.addActionListener(this) ;
       fileMenu.add((websearch = new JMenuItem(Kisekae.getCaptions().getString("MenuFileWebSearch")))) ;
       websearch.addActionListener(this) ;
-      websearch.setEnabled(!Kisekae.isSecure() && Kisekae.isSearchInstalled() && !Kisekae.isExpired());
+      websearch.setEnabled(!Kisekae.isSecure() && Kisekae.isSearchInstalled() && !Kisekae.isExpired() && !Kisekae.isWebswing());
       websearch.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, accelerator));
       if (!applemac) websearch.setMnemonic(KeyEvent.VK_S) ;
       fileMenu.addSeparator() ;

@@ -5046,7 +5046,7 @@ final public class OptionsDialog extends KissDialog
                File f = fc.getSelectedFile() ;
                String s = (f != null) ? f.getPath() : null ;
                if (s == null) return ;
-               s = "file:/" + s.replace('\\', '/') ;
+               s = "file://" + s.replace('\\', '/') ;
                setKissWeb(s) ;
                KissWeb.setText(s) ;
                KissWeb.setCaretPosition(0) ;

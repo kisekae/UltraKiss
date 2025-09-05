@@ -168,6 +168,7 @@ final class PanelMenu extends KissMenu
    protected JMenuItem importaudio = null ;
    protected JMenuItem importvideo = null ;
    protected JMenuItem importother = null ;
+   protected JMenuItem importtext = null ;
    protected JMenuItem loadtext = null ;
    protected JMenuItem export = null ;
 
@@ -415,6 +416,9 @@ final class PanelMenu extends KissMenu
       importother.add((importvideo = new JMenuItem(Kisekae.getCaptions().getString("MenuEditImportVideo")))) ;
       importvideo.addActionListener(this) ;
       importvideo.setEnabled(false) ;
+      importother.add((importtext = new JMenuItem(Kisekae.getCaptions().getString("MenuEditImportText")))) ;
+      importtext.addActionListener(this) ;
+      importtext.setEnabled(false) ;
       m[1].addSeparator() ;
       m[1].add((layerimage = new JMenuItem(Kisekae.getCaptions().getString("MenuEditAdjustLayering")))) ;
       layerimage.addActionListener(this) ;
@@ -563,7 +567,7 @@ final class PanelMenu extends KissMenu
          importpalette.setEnabled(pageset != null && !Kisekae.isSecure()) ;
          importaudio.setEnabled(pageset != null && !Kisekae.isSecure()) ;
          importvideo.setEnabled(pageset != null && !Kisekae.isSecure() && Kisekae.isMediaInstalled()) ;
-         importother.setEnabled(pageset != null && !Kisekae.isSecure()) ;
+         importtext.setEnabled(pageset != null && !Kisekae.isSecure()) ;
          addcomponent.setEnabled(pageset != null && !Kisekae.isSecure()) ;
          insertpage.setEnabled(pageset != null) ;
          deletepage.setEnabled(pageset != null) ;
@@ -673,6 +677,7 @@ final class PanelMenu extends KissMenu
       importpalette.setEnabled(b && pageset != null  && !Kisekae.isSecure()) ;
       importaudio.setEnabled(b && pageset != null  && !Kisekae.isSecure()) ;
       importvideo.setEnabled(b && pageset != null  && !Kisekae.isSecure() && Kisekae.isMediaInstalled()) ;
+      importtext.setEnabled(b && pageset != null  && !Kisekae.isSecure()) ;
       importother.setEnabled(b && pageset != null  && !Kisekae.isSecure()) ;
       addcomponent.setEnabled(b && pageset != null  && !Kisekae.isSecure()) ;
       addimage.setEnabled(b && !panel.isEditOn() || panel.isUngrouped()) ;
@@ -1247,7 +1252,7 @@ final class PanelMenu extends KissMenu
 
          if (source == importvideo) { eventImportVideo() ; return ; }
 
-         if (source == importother) { eventImportOther() ; return ; }
+         if (source == importtext) { eventImportOther() ; return ; }
 
          if (source == externalpaste) { eventImportPaste() ; return ; }
 
@@ -2905,7 +2910,7 @@ final class PanelMenu extends KissMenu
    }
    
    
-   // A utility function to confirm the validity of all selected arbitraty 
+   // A utility function to confirm the validity of all selected arbitrary 
    // import files.  We construct a contents vector to copy all the new files 
    // selected in our file open descriptor to our configuration archive.
 

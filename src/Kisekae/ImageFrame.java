@@ -1274,6 +1274,15 @@ final class ImageFrame extends KissFrame
    }
 
 
+	// Method to return a reference to our parent zip file object.
+
+	ArchiveFile getZipFile() { return (ze != null) ? ze.getZipFile() : null ; }
+
+	// Method to return a reference to our zip entry object.
+
+	ArchiveEntry getZipEntry() { return ze ; }
+
+
    // A function to crop an image.
 
    private BufferedImage createCroppedImage(Image img)

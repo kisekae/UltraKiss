@@ -162,7 +162,12 @@ abstract class Audio extends KissObject
 			EventHandler.queueEvents(v,Thread.currentThread(),this) ;
 		if (!hascallback) return ;
 		if (callback == null) return ;
-		callback.doClick() ;
+         
+      // Run the callback on the EDT thread.
+         
+      Runnable runner = new Runnable()
+      { public void run() { callback.doClick() ; } } ;
+      javax.swing.SwingUtilities.invokeLater(runner) ;
 	}
 
 

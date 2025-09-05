@@ -117,6 +117,7 @@ final class Configuration extends KissObject
 	private Vector comps = null ;			   // Set of component cels
 	private Vector frames = null ;  			// Set of animated cels
 	private Vector celgroups = null ;		// Set of cel groups
+	private Vector otherfiles = null ;		// Set of other import files
 	private Variable variable = null ;		// Variable storage
 	private AlarmTimer timer = null ;		// Primary alarm timer
    private GifTimer animator = null ;		// Primary cel animator
@@ -235,6 +236,10 @@ final class Configuration extends KissObject
 	// Method to return the complete list of audio files.
 
 	Vector getSounds() { return sounds ; }
+
+	// Method to return any imported other files.
+
+	Vector getOtherFiles() { return otherfiles ; }
 
 	// Method to return the complete list of video files.
 
@@ -865,6 +870,19 @@ final class Configuration extends KissObject
          }
          movies.addElement(v1) ;
       }
+   }
+   
+   // Method to add other files (text) imported to our configuration.  This  
+   // is used on new configurations (File-New) to stage these files until
+   // such time as the new configuration is written. 
+   
+   void addOtherFiles(Vector v)
+   {
+      if (v == null) return ;
+      if (otherfiles == null) 
+         otherfiles = v ;
+      else
+         otherfiles.addAll(v) ;
    }
 
 	// Method to write our file contents to the specified output stream.
