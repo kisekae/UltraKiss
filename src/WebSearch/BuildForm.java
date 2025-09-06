@@ -166,9 +166,14 @@ class BuildForm implements Runnable, ActionListener
 
       webframe.addTrace("End HTML Form generation.",1) ;
       webframe.buildformactive = false ;
-      webframe.bldcallback.doClick() ;
       if (OptionsDialog.getDebugSearch())
          PrintLn.println(thread.getName() + " ends.") ;
+         
+      // Run the callback on the EDT thread.
+         
+      Runnable runner = new Runnable()
+      { public void run() { webframe.bldcallback.doClick() ; } } ;
+      javax.swing.SwingUtilities.invokeLater(runner) ;        
    }
 
 

@@ -13,7 +13,7 @@
 				screen.&nbsp; Close any existing data set.
 				<p>&nbsp;</p>
 			<li>
-				Use <FONT color="#000099">File-Open</FONT>&nbsp; to load the configuration file <FONT color="#cc6600">
+				Use <FONT color="#000099">File-Open</FONT> to load the configuration file <FONT color="#cc6600">
 					CNF2.cnf</FONT> from the Tutorial/FKiSS directory or the directory you used
 				in the previous lesson.&nbsp; This will load the doll set that you created in
 				lesson 2.
@@ -23,12 +23,38 @@
 				to create page 3.&nbsp; <br>
 			<br>
 			<li> Our set has a black background but we are going to
-				import an image that is meant to be shown on a light background. To fix this
-				problem we will use a palette file for the set.&nbsp; Use <FONT color="#000099">Edit-Import Palette</FONT> and import the palette file <FONT color="#cc6600">'background.kcf'</FONT> from
-				the Tutorial/FKiSS/Bearman directory.&nbsp; &nbsp;The background color should change to a dark green and you will see two  multipalette buttons appear on the toolbar..
-				<p>&nbsp;</p>
+				import an image that is meant to be shown on a different background. To fix this
+				problem we will use a palette file for the set.&nbsp; Use <FONT color="#000099">Edit-Import Other-Import Palette</FONT> and import the palette file <FONT color="#cc6600">'background.kcf'</FONT> from
+                                the Tutorial/FKiSS/Bearman directory.&nbsp; &nbsp;The background color should change to a dark green and you will see two multipalette buttons appear on the toolbar.
+                                You will also see that two color sets are now available through <FONT color="#000099">File-Color Set</FONT>.<br>
+				<br>
+                                If KiSS KCF palettes are used the inside background and transparent color for the page is always taken from the first
+                                color in the page multipalette at index 0.  The color at index 0 for the first multipalette in 
+                                <FONT color="#cc6600">'background.kcf'</FONT> is this dark green color. 
+                                The outside border color for the window frame is specified in the screen
+                                section of the CNF configuration file.  When new sets are first created the initial border color in the configuration file
+                                is <FONT color="#cc6600">[0</FONT>, where 0 is the same index for the inside background color. This is why the
+                                whole screen is a dark green color.<br>
+                                <br>
+                                You can change the outside border color to a different color.  Use <FONT color="#000099">File-Properties</FONT> and
+                                press the little button beside the Border Color attribute.  This will show all the colors in the palette.
+                                Choose one of these colors or if you prefer a custom color use the <FONT color="#cc6600">Color Chooser</FONT>.
+                                If the Color Chooser is used the border color will be set to an RGB color rather than an index into the palette.
+                                <p>&nbsp;</p>
+			<li> 
+                            Experiment with the background color for the current page 3.  Use <FONT color="#000099">View-Color Set</FONT> and select
+                            the alternate color set.  This should have a yellow background.  Switch back to the original background at
+                            color set 0 as we will permanently set the page color set to 1 in the next step.
+                                <p>&nbsp;</p>
 			<li>
-				Next, use <FONT color="#000099">Edit-Import Image to New Object</FONT> and import the file <FONT color="#cc6600">'human.gif'</FONT> from the Tutorial/FKiSS/Bearman directory.&nbsp; &nbsp;This image will be automatically converted to a CEL file with an associated KCF palette. Drag the image to the center of the screen. <BR>
+				Next, use <FONT color="#000099">Edit-Import Image to New Object</FONT> and import the file <FONT color="#cc6600">'human.gif'</FONT> 
+                                from the Tutorial/FKiSS/Bearman directory.<br>
+                                        <br>
+                                        If you have any of the viewer compatibility presets this GIF image will be automatically 
+                                        converted to a palette type KiSS cel.  GIF images all have internal palettes of up to 256 colors. 
+                                        Images are also converted to cels if
+                                        the <FONT color="#000099">Options-Options-Import-Import all images as Cel files</FONT>
+                                option is set.<br>
 				<BR>
 
 				Next, <FONT color="#cc6600">right-click</FONT> on the page set 3 toolbar button
@@ -90,8 +116,8 @@
 				You can repeat Steps&nbsp;5 through 10 to import the remaining pieces of
 				clothing or armour for the human, an attach Snap-To events on these items. Note
 				that the underwear also has front and back similar to the chestplate.&nbsp; We
-				leave this for you to do as an exercise.
-				<p>&nbsp;</p>
+                                leave this for you to do as an exercise.
+                                <p>&nbsp;</p>
 		  <li>
 				Use <FONT color="#000099">File-Save As</FONT> to save your work.&nbsp; Save the
 				new KiSS set to the Tutorial/FKiSS directory or a directory of your

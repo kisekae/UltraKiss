@@ -215,8 +215,13 @@ class GetLinks implements Runnable
          String s = (bytes  / 1024) + "K" ;
          webframe.addTrace("End URL Scan. Pages accessed: " + count + " Bytes downloaded: " + s,1) ;
          webframe.getlinkactive = false ;
-         webframe.urlcallback.doClick() ;
          activecount = 0 ;
+         
+         // Run the callback on the EDT thread.
+         
+         Runnable runner = new Runnable()
+         { public void run() { webframe.urlcallback.doClick() ; } } ;
+         javax.swing.SwingUtilities.invokeLater(runner) ;        
       }
    }
 

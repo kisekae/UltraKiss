@@ -18,6 +18,10 @@
 	<mapID target="tutorials.editimage.lesson2" url="product/tutorial/editimage/lesson2.html" />
 	<mapID target="tutorials.editimage.lesson3" url="product/tutorial/editimage/lesson3.html" />
 	<mapID target="tutorials.editimage.lesson4" url="product/tutorial/editimage/lesson4.html" />
+	<mapID target="tutorials.visualediting.lesson1" url="product/tutorial/visualediting/lesson1.html" />
+	<mapID target="tutorials.visualediting.lesson2" url="product/tutorial/visualediting/lesson2.html" />
+	<mapID target="tutorials.visualediting.lesson3" url="product/tutorial/visualediting/lesson3.html" />
+	<mapID target="tutorials.visualediting.lesson4" url="product/tutorial/visualediting/lesson4.html" />
 	<mapID target="tutorials.fkissevents.lesson1" url="product/tutorial/fkissevents/lesson1.html" />
 	<mapID target="tutorials.fkissevents.lesson2" url="product/tutorial/fkissevents/lesson2.html" />
 	<mapID target="tutorials.fkissevents.lesson3" url="product/tutorial/fkissevents/lesson3.html" />

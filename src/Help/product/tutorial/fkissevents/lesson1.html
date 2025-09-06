@@ -16,26 +16,27 @@
 				<p>&nbsp;</p>
 			<li>
 				Use <FONT color="#000099">File-New</FONT>.&nbsp; This will create a new KiSS
-				set at size (448,320) with a black border and one empty page.
+				set at size (800,600) with a black border and one empty page.
 				<p>&nbsp;</p>
 			<li>
 				Use <FONT color="#000099">File-Properties</FONT> to change the new KiSS
 				configuration (CNF) file properties.&nbsp; The attributes section of the
-				Properties dialog will show a playfield size of (448,320).&nbsp; Press the
+				Properties dialog will show a playfield size of (800,600).&nbsp; If it is
+                                not showing that size, press the
 				small button beside this attribute and change the screen size to <FONT color="#cc6600">
 					(800,600)</FONT>.&nbsp; Exit the configuration Properties dialog by
 				pressing the OK button.
 				<p>&nbsp;</p>
 			<li>
-				The first page of our set will be a menu page.&nbsp; We will add two buttons to
-				this page to switch to other pages in the set.&nbsp; Each button will have a
-				'press' event attached to it.&nbsp; The 'press' event will have the FKiSS code
+				The first page of our set will be a menu page.&nbsp; We will add two cel images
+                                that look like buttons to this page.  We will use these buttons to switch to other pages in the set.&nbsp; 
+                                Each button will have a 'press' event attached to it.&nbsp; The 'press' event will have the FKiSS code
 				that we use to switch to a new page.<BR>
 				<BR>
 				On the main UltraKiss screen use <FONT color="#000099">Edit-Import Image to New
 					Object</FONT>.&nbsp; Select the <FONT color="#cc6600">button1.cel</FONT> file
 				from the Tutorial/FKiSS directory.&nbsp; This is a truecolor or Cherry Kiss cel
-				so you will not see a prompt&nbsp;for anassociated palette file.&nbsp; The
+				so you will not see a prompt&nbsp;for an associated palette file.&nbsp; The
 				image will be loaded and positioned at the upper left corner of the playfield.<BR>
 				<BR>
 				Drag the button to the center of the screen.&nbsp; <FONT color="#cc6600">Repeat
@@ -49,14 +50,17 @@
 				attribute and change the value to 9999 in the popup window. Click OK and
 				observe that the button properties now indicates that the button is fixed.<br>
 				<br>
-				Repeat this step for <FONT color="#cc6600">button2.cel</FONT>.
+                                Repeat this step for <FONT color="#cc6600">button2.cel</FONT>.<br>
+                                <br>
+                                Note, UltraKiss will let you set a fix value for an object with <font color="#000099">Object Context - Properties</font> 
+                                but this value will not be retained across a set restart or saved.  Fix values are always set on the cel.
 				<p>&nbsp;</p>
 		  <li>
 				Use <FONT color="#000099">Edit-Unselect All <FONT color="#000000">to remove the
 						selection boxes or </FONT><FONT color="#cc6600">right-click</FONT></FONT><FONT color="#000000">
 					anywhere on the background</FONT>.&nbsp; Next, <FONT color="#cc6600">right-click</FONT>
 				on the first button again. This time the contexual selection popup window will
-				show. Select <FONT color="#000099">Object Properties</FONT> and then select <FONT color="#000099">
+				show. Select <FONT color="#000099">Object Context</FONT> and then select <FONT color="#000099">
 					Event Wizard</FONT>.
 				<p>&nbsp;</p>
 		  <li>
@@ -88,7 +92,7 @@
 				Next, <FONT color="#cc6600">right-click</FONT> on the second button. We will
 				define an event on the cel this time, rather than on
 				the&nbsp;group.&nbsp;&nbsp;When the contexual selection popup window shows,
-				select <FONT color="#000099">Image Properties</FONT> and then select <FONT color="#000099">
+				select <FONT color="#000099">Image Context</FONT> and then select <FONT color="#000099">
 					Event Wizard</FONT>.
 				<p>&nbsp;</p>
 		  <li>

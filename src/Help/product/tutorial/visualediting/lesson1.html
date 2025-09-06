@@ -1,0 +1,91 @@
+<html>
+	<head>
+		<title>Visual Editing Lesson 1</title></head>
+	<body>
+		<h1 align="center"><font color="#000000">Visual Editing Tutorial</font></h1>
+		<h1 align="center"><font color="#ff0000">Lesson 1. Understanding How To Import Images</font></h1>
+		<p>&nbsp;</p>
+		<ol>
+			<li>
+				This tutorial will show you how to bring new images into your KiSS set.&nbsp; New images are the foundation 
+                                of any Kisekae application.  Kisekae UltraKiss is a visual development system.<br>
+                                <br>
+                                Ensure that UltraKiss is showing the main logo screen.&nbsp; Close any existing set.
+				<p>&nbsp;</p>
+                                This tutorial requires <FONT color="#cc6600">image files</FONT>.  If the necessary files cannot be found 
+                                on your computer download the tutorial files using <FONT color="#000099">Help-Tutorial Files</FONT>.
+				<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">File-New</FONT>.&nbsp; This will create a new KiSS
+				set at size (800,600) with a black border and one empty page.
+				<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">File-Properties</FONT> to change the new KiSS
+				configuration (CNF) file properties.&nbsp; The attributes section of the
+				Properties dialog will show a playfield size of (800,600).&nbsp; If it is
+                                not showing that size, press the
+				small button beside this attribute and change the screen size to <FONT color="#cc6600">
+					(800,600)</FONT>.&nbsp; Exit the configuration Properties dialog by
+				pressing the OK button.
+				<p>&nbsp;</p>
+			<li>
+				The first page of our set will be a menu page.&nbsp; We will add two cel images
+                                that look like buttons to this page.  We will use these buttons to switch to other pages in the set.&nbsp; 
+                                Each button will have a 'press' event attached to it.&nbsp; The 'press' event will have the FKiSS code
+				that we use to switch to a new page.<BR>
+				<BR>
+				On the main UltraKiss screen use <FONT color="#000099">Edit-Import Image to New
+					Object</FONT>.&nbsp; Select the <FONT color="#cc6600">button1.cel</FONT> file
+				from the Tutorial/FKiSS directory.&nbsp; This is a truecolor or Cherry Kiss cel
+				so you will not see a prompt&nbsp;for an associated palette file.&nbsp; The
+				image will be loaded and positioned at the upper left corner of the playfield.<BR>
+				<BR>
+				Drag the button to the center of the screen.&nbsp; <FONT color="#cc6600">Repeat
+					this step to import button2.cel</FONT>.&nbsp; Position the second button
+				below the first button.
+				<p>&nbsp;</p>
+			<li>
+                                Note the difference between <FONT color="#000099">Edit-Import Image to Selection</FONT>
+                                and <FONT color="#000099">Edit-Import Image to New Object</FONT>.  The first command imports
+                                images into the KiSS set that are intended to be grouped together into the same object.
+                                These images all have green marquee boxes.  They are put together into one object with
+                                a new object number using the <FONT color="#000099">Edit-Regroup</FONT> command.<BR>
+                                <BR>
+                                Images like the chest plate and the underwear that have front and back parts are imported 
+                                as selections as these images are intended to be grouped together into one object.<BR>
+				<BR>
+                                The <FONT color="#000099">Edit-Import Image to New Object</FONT> is used when the image
+                                is intended to be placed into its own object.  These images all have blue marquee boxes.
+                                New unique object numbers are assigned to these images when they are imported.<BR>
+                                <BR>
+                                It is not necessarily a problem if you imported images as objects and later decide
+                                you wanted them as image selections.<br>
+                                <br>
+                                To combine two or more objects into one new object, select the objects by right clicking
+                                and choosing <FONT color="#000099">Select</FONT> while holding the <FONT color="#cc6600">CTRL</FONT> 
+                                key down.  The CTRL key is used for multiple selections.  You can also select multiple
+                                objects with the mouse by holding the <FONT color="#cc6600">ALT</FONT> key down and drawing
+                                a selection box.<BR>
+                                <BR>
+                                When objects are selected use <FONT color="#000099">Edit-Ungroup</FONT> to draw green marquee boxes
+                                around all image cels in the objects.  When the images are all individually selected
+                                an <FONT color="#000099">Edit-New Group</FONT> will combine all selected image cels into a new
+                                object.  A new object number is assigned.
+				<p>&nbsp;</p>
+		  <li>
+				Use <FONT color="#000099">File-Save As</FONT> to save your work.&nbsp; Save the
+				new KiSS set to the Tutorial/FKiSS directory or a directory of your
+				choice.&nbsp; The configuration element name should be <FONT color="#cc6600">CNF1.cnf</FONT>
+				if you began this tutorial after first starting UltraKiss.&nbsp; You can
+				overwrite any existing element of the same name.
+				<p>&nbsp;</p>
+		  </li>
+		</ol>
+		<p align="left">&nbsp;</p>
+		<hr>
+		<p align="left">Next Document:&nbsp; <A href="lesson2.html">Visual Editing Tutorial Lesson 2<br>
+			</A>Prior Document:&nbsp; <A href="../../tutorials.html">UltraKiss Tutorials</A></p>
+		<p align="left">Copyright (c) 2002-2025 William Miles</p>
+
+	</body>
+</html>

@@ -184,8 +184,13 @@ class ValidateLinks implements Runnable, ActionListener
          String s = (bytes  / 1024) + "K" ;
          webframe.addTrace("End Archive Validation. Pages: " + count + ". Bytes: " + s,1) ;
          webframe.vallinkactive = false ;
-         webframe.valcallback.doClick() ;
          activecount = 0 ;
+         
+         // Run the callback on the EDT thread.
+         
+         Runnable runner = new Runnable()
+         { public void run() { webframe.valcallback.doClick() ; } } ;
+         javax.swing.SwingUtilities.invokeLater(runner) ;        
       }
       
       kisekae.removeCallback(this) ;

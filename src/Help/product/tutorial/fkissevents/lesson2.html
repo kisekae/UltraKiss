@@ -20,22 +20,37 @@
 			<li>
 				Our buttons will switch the set to new pages.&nbsp; Use <FONT color="#000099">Edit-Add
 					Page</FONT> to create new page 1.&nbsp; UltraKiss will automatically switch
-				to view this empty page.&nbsp; Next, use <FONT color="#000099">Edit-Import Image to
-					New Object</FONT> and select <FONT color="#cc6600">rei.jpg</FONT> from the
-				Tutorial/FKiSS directory.&nbsp; This JPG image will be automatically converted to a cherry KiSS CEL. Position the image in the center of the screen.
+				to view this empty page.&nbsp; 
+                                
 				<p>&nbsp;</p>
 			<li>
-				Repeat step 3 to create new page 2.&nbsp; This time, import <FONT color="#cc6600">ruri.jpg</FONT>
+                                Next, use <FONT color="#000099">Edit-Import Image to
+					New Object</FONT> and select <FONT color="#cc6600">rei.jpg</FONT> from the
+                                        Tutorial/FKiSS directory.<br>
+                                        <br>
+                                        If you have any of the viewer compatibility presets this JPG image will be automatically 
+                                        converted to a cherry KiSS cel.  Images are also converted to cels if
+                                        the <FONT color="#000099">Options-Options-Import-Import all images as Cel files</FONT>
+                                option is set.<br>
+                                <br>
+                                Position the image in the center of the screen.
+				<p>&nbsp;</p>
+			<li>
+				Repeat step 3 and step 4 to create new page 2.&nbsp; This time, import <FONT color="#cc6600">ruri.jpg</FONT>
 				as the image file.&nbsp;
 				<p>&nbsp;</p>
 			<li>
 				Next, use <FONT color="#000099">View-Page Set 0</FONT> or use the toolbar
 				button to display page 0 with the buttons.&nbsp;&nbsp;Right-click on the first
-				button to display the context menu.&nbsp; Choose either <FONT color="#000099">Image
-					Context</FONT> or <FONT color="#000099">Object Context</FONT>, then <FONT color="#000099">
-					Edit Events</FONT>.&nbsp; This will activate the FKiSS Editor tool.&nbsp;
-				You could also have used <FONT color="#000099">Tools-FKiSS Editor</FONT> to do
-				this.
+				button to display the context menu.&nbsp; Choose the <FONT color="#000099">Object Context</FONT>, 
+                                then <FONT color="#000099"> Edit Events</FONT>.&nbsp; This will activate the FKiSS Editor tool.
+                                        Events can be specified for objects or cels.  In the previous tutorial we set the event 
+                                        for the first button on the object.<br>
+                                        <br>
+                                        You could also have used <FONT color="#000099">Tools-FKiSS Editor</FONT> to do this.  In this
+                                        case the FKiSS Editor will show all events for the set, whereas if you invoke the editor
+                                        through the property dialog you will see only the events for the contextually selected
+                                        object or image cel.
 				<p>&nbsp;</p>
 			<li>
 				Click on the <FONT color="#cc6600">'press(#1)'</FONT> event to highlight
@@ -52,6 +67,12 @@
 				<FONT face="Courier New">;@press(#1)<BR>
 					;@ changeset(1)<BR>
 				</FONT>
+				<br>
+				<FONT color="#cc6600">Note:&nbsp; If you copy and paste these lines from the help
+					documentation into your configuration file you must ensure that the semicolon
+					and at-sign combination appears <u>at the beginning of every line</u>.&nbsp; You can
+					copy the help text by selecting the text and pressing Ctrl-C to copy the text
+					to the clipboard. Use Ctrl-V to paste the text into the configuration file.</FONT>				<BR>
 				<p>&nbsp;</p>
 			<li>
 				Exit the Text Editor and apply your changes.&nbsp; If you wish you can exit the
@@ -59,14 +80,24 @@
 				your set should automatically switch to page 1.
 				<p>&nbsp;</p>
 			<li>
-				Repeat steps 5 through 9 to edit the event code for the second button.&nbsp;
+				Repeat steps 6 through 9 to edit the event code for the second button.&nbsp;  In the
+                                previous tutorial we set the event for the second button on the image cel.  
+                                Use <FONT color="#000099">Image Context</FONT> and then <FONT color="#000099"> Edit Events</FONT>.&nbsp; 
+                                This will activate the FKiSS Editor tool and show only the events for the cel.<br>
+                                <br>
 				This time, replace the <FONT face="Courier New">;@notify</FONT> action
 				statement&nbsp;with <FONT face="Courier New">;@ changeset(2)</FONT> statement
 				to cause a switch to page set 2.&nbsp;&nbsp;For button 2, your new event code
 				should look as shown below:<BR>
 				<BR>
 				<FONT face="Courier New">;@catch("button2.cel")<BR>
-					;@ changeset(2)</FONT>&nbsp;
+                                ;@ changeset(2)</FONT><br>
+				<br>
+				<FONT color="#cc6600">Note:&nbsp; If you copy and paste these lines from the help
+					documentation into your configuration file you must ensure that the semicolon
+					and at-sign combination appears <u>at the beginning of every line</u>.&nbsp; You can
+					copy the help text by selecting the text and pressing Ctrl-C to copy the text
+					to the clipboard. Use Ctrl-V to paste the text into the configuration file.</FONT>
 				<p>&nbsp;</p>
 			<li>
 				Exit the Text Editor and apply your changes.&nbsp; If you wish you can exit the
@@ -89,7 +120,7 @@
 		<hr>
 		<p align="left">Next Document:&nbsp; <A href="lesson3.html">Event Tutorial Lesson 3</A><BR>
 			Prior Document:&nbsp;&nbsp;<A href="lesson1.html">Event Tutorial Lesson 1</A></p>
-		<p align="left">Copyright (c) 2002-2023 William Miles</p>
+		<p align="left">Copyright (c) 2002-2025 William Miles</p>
 
 		<p>&nbsp;</p>
 	</body>
