@@ -130,6 +130,7 @@ final class PanelFrame extends JPanel
    private Graphics basegc = null ;			// Graphics context for base image
    private Vector printimage = null ;     // The set of printable page images
    private Rectangle imageArea = null ;   // The area of our image buffers
+   private Thread flickerthread = null ;  // The flicker of selection boxes
 
    private int x, y ;							// Panel centering coordinates
    private int celNum ;							// Our selected cel number
@@ -140,6 +141,7 @@ final class PanelFrame extends JPanel
    private int moveX, moveY ;				   // The mouse moved event coordinates
    private int originalflex ;					// Original flex on mouse down
    private int newflex ;                  // Updated flex on mouse down
+   private int flickercount ;             // The number of times to flicker
    private float sf = 1.0f ;					// Screen image scaling factor
    private float oldsf = 1.0f ;				// Screen image prior scaling factor
    private float newsf = 1.0f ;				// Screen image new scale factor
@@ -622,7 +624,7 @@ final class PanelFrame extends JPanel
          if (pasted && !edit.isPasted(i)) continue ;
          if (OptionsDialog.getDebugEdit())
             PrintLn.println("Edit: cut begin for element " + kiss + " on page " + page) ;
-         newselection.remove(kiss) ;
+         newselection = removeSelection(newselection,kiss) ;
 
          // Cuts of group objects occur for grouped items.
 
@@ -718,6 +720,16 @@ final class PanelFrame extends JPanel
                Video video = (Video) c ;
                video.stop(video) ;
             }
+            
+            // Remove the cel from the group.  Remove the group from
+            // the configuration if it has no cels.
+            
+            if (o instanceof Group)
+            {
+               Group g = (Group) o ;
+               g.removeCel((Cel) kiss) ;                   
+               if (g.getCelCount() == 0) groups.remove(g) ;
+            }            
 
             // Establish the parent group context.  Remove the group from the
             // page if it is not on this page.
@@ -772,7 +784,17 @@ final class PanelFrame extends JPanel
          groupset = new Group() ;
          selection = newselection ;
          for (int i = 0 ; i < selection.size() ; i++)
-            groupset.addElement((KissObject) selection.elementAt(i),false) ;
+         {
+            Object o = selection.elementAt(i) ;
+            if (o instanceof KissObject) 
+               groupset.addElement((KissObject) o,false) ;
+            if (o instanceof Object[])
+            {
+               Object o1 = ((Object[]) o)[0] ;
+               if (o1 instanceof KissObject) 
+                  groupset.addElement((KissObject) o1,false) ;
+            }
+         }
       }
       int pageset = ((Integer) page.getIdentifier()).intValue() ;
       celList = createCelList(pageset) ;
@@ -812,6 +834,16 @@ final class PanelFrame extends JPanel
       page.saveState(config.getID(),"panelframe") ;
       page.restoreState(config.getID(),"panelframe") ;
 
+      // Mark selected objects as copied for a visual flash when painted.
+      // The copied indicator is cleared on paint.
+      
+      for (int i = 0 ; i < edit.size() ; i++)
+      {
+         Object o = edit.elementAt(i) ;
+         if (o instanceof KissObject) 
+            ((KissObject) o).setCopied(true) ;
+      }
+      
       // Capture this edit for undo/redo processing.
 
       if (!undoredo)
@@ -1425,6 +1457,18 @@ final class PanelFrame extends JPanel
       if (!(t instanceof PanelEdit)) return ;
       PanelEdit edit = (PanelEdit) t ;
       suspendEvents() ;
+      
+      // Set page current group positions.  This is required for undo/redo
+      // processing.
+      
+      for (int i = 0 ; i < edit.size() ; i++)
+      {
+         KissObject kiss = (KissObject) edit.elementAt(i) ;
+         if (!(kiss instanceof Group)) continue ;
+         Group g = (Group) kiss ;
+         Integer id = (Integer) g.getIdentifier() ; 
+         page.setGroupPosition(id,g.getLocation()) ;
+      }
 
       // Cut the current selection set from the page.  Retain the
       // current draw order as we need this when cels are regrouped.
@@ -2050,9 +2094,9 @@ final class PanelFrame extends JPanel
    // This method is for cel transparency changes and color changes and
    // dithering of truecolor images to palette images.
 
-   void createImageEdit(Object editobject, int oldtransparent, int loop, Image img, Palette p)
+   void createImageEdit(Object editobject, int oldtransparent, int loop, Point offset, Point location, Image img, Palette p)
    {
-      UndoableImageEdit ce = new UndoableImageEdit(editobject,oldtransparent,loop,img,p) ;
+      UndoableImageEdit ce = new UndoableImageEdit(editobject,oldtransparent,loop,offset,location,img,p) ;
       UndoableEditEvent evt = new UndoableEditEvent(this,ce) ;
       if (undo != null) undo.undoableEditHappened(evt) ;
       parent.updateMenu() ;
@@ -2208,6 +2252,8 @@ final class PanelFrame extends JPanel
             if (selection.getPageUniqueID() == pageuniqueid)
             {
                Object o = selection.firstElement() ;
+               if (o instanceof Object [] && ((Object []) o).length > 0)
+                  o = ((Object []) o)[0] ;
                if (o instanceof Cel)
                {
                   newselection = (PanelEdit) selection.clone() ;
@@ -2232,7 +2278,7 @@ final class PanelFrame extends JPanel
          g.setUpdated(true) ;
          g.setIdentifier(groupnumber) ;
          g.setKey(g.getKeyTable(),cid,groupnumber) ;
-         edit.addElement(g) ;
+         edit.addElement((newgroup) ? (Object) g : (Object) cel) ;
          newselection.add((newgroup) ? (Object) g : (Object) cel) ;
          newgroup = true ;
          showStatus("Object group " + g + " created for image cel " + cel) ;
@@ -2400,6 +2446,9 @@ final class PanelFrame extends JPanel
       parent.updateToolBar() ;
       page.setChanged(true) ;
       config.setUpdated(true) ;
+      KissMenu menu = parent.getMenu() ;
+      if (menu instanceof PanelMenu)
+         ((PanelMenu) menu).setEnableReset(false) ;
       showpage() ;
   }
 
@@ -2897,6 +2946,12 @@ final class PanelFrame extends JPanel
       {
          if (OptionsDialog.getDebugControl())
             PrintLn.println("PanelFrame reactivate page " + pageset) ;
+         
+         // If dragging and FKiSS on the dragged object or cel does a 
+         // changeset() to this current page then release the mouse 
+         // otherwise we conflict with the draw activity.
+         
+         if (mousedown) releaseMouse() ;
 
          // Create our current cel display list.
 
@@ -2913,7 +2968,7 @@ final class PanelFrame extends JPanel
             Group g = (Group) groups.elementAt(i) ;
             g.setContext(pageid) ;
          }
-
+         
          // Establish the current colors.
 
          Integer multipalette = page.getMultiPalette() ;
@@ -3178,12 +3233,6 @@ final class PanelFrame extends JPanel
       // Otherwise, we will change the cel colors to reference the
       // multipalette from the actual cel palette file.
 
-      for (int i = 0 ; i < cels.size() ; i++)
-      {
-         Cel cel = (Cel) cels.elementAt(i) ;
-         cel.changePalette(multipalette) ;
-      }
-
       // Ensure that the required multipalette exists.  We calculate the
       // number of color sets.  This is defined by the maximum number of
       // palette groups across all palette files.
@@ -3210,6 +3259,26 @@ final class PanelFrame extends JPanel
       // where we reference the multipalette in use for the current page.
 
       page.setMultiPalette(multipalette) ;
+      for (int i = 0 ; i < cels.size() ; i++)
+      {
+         Cel cel = (Cel) cels.elementAt(i) ;
+         
+         // If we have a fixed multipalette specification set in the CNF         
+         // then apply this fixed color to the cel.  If not, reset the 
+         // cel color and set the required multipalette.
+         
+         if (cel.getCnfmpid()) 
+         {
+            Object o = cel.getInitPaletteGroupID() ;
+            Integer mpid = (o instanceof Integer) ? (Integer) o : null ;
+            cel.fixPaletteGroup(mpid);
+         }
+         else
+         { 
+            cel.setPaletteGroupID(null) ;
+            cel.changePalette(multipalette) ;
+         }
+      }
 
       // Set the panel frame background color to be the palette file
       // zero multipalette transparent color.  We will establish a
@@ -3587,10 +3656,10 @@ final class PanelFrame extends JPanel
       // events to ensure that objects are placed at their initial
       // positions.  We do not restore visibility because some
       // groups or cels may have been mapped or unmapped as a
-      // result of previous events.
+      // result of previous events. 
 
       page.setState(cid,"panelframe",sv) ;
-      page.restoreState(cid,"panelframe") ;
+      page.restoreState(cid,"panelframe",false,false) ;
       page.saveState(cid,"panelframe") ;
       Object o = page.getIdentifier() ;
       int p = (o instanceof Integer) ? ((Integer) o).intValue() : 0 ;
@@ -4184,7 +4253,7 @@ final class PanelFrame extends JPanel
       // boxes around each object on this page.  If any of our objects were
       // pasted then they will be flagged.  We use this to flicker our boxes
       // by performing a repaint and altering the mark state of the object.
-      // The paste flag is cleared on first draw, therfore flicker is only
+      // The paste flag is cleared on first draw, therefore flicker is only
       // recognized on the initial paint operation.
       
       if (selection != null)
@@ -4208,13 +4277,16 @@ final class PanelFrame extends JPanel
             {
                KissObject kiss = (KissObject) selection.elementAt(i) ;
                if (kiss == null) continue ;
+               if (kiss instanceof Palette) continue ;
                if (kiss instanceof Group && page != null)
                   if (!(page.contains((Group) kiss))) continue ;
                if (kiss instanceof Cel && page != null)
                   if (!(((Cel) kiss).isOnPage((Integer) page.getIdentifier()))) continue ;
-               if (kiss.isPasted()) doflicker = true ;
+               doflicker = kiss.isPasted() || kiss.isCopied() ;
+               if (kiss.isPasted()) flickercount = 5 ;
+               if (kiss.isCopied()) flickercount = 1 ;
                boolean marked = selection.isMarked(kiss) ;
-               boolean flickerstate = flicker ;
+               boolean flickerstate = flicker && doflicker ;
                if (hasmarked && !marked) flickerstate = false ;
                kiss.drawSelected(gc,sf,windowOffset.x,windowOffset.y,marked,flickerstate) ;
             }
@@ -4241,15 +4313,15 @@ final class PanelFrame extends JPanel
       // If we had a pasted selection and need to flicker our selection boxes,
       // start a repaint thread to perform the flicker.
       
-      if (doflicker)
+      if (doflicker && flickerthread == null)
       {
-         Thread thread = new Thread()
+         flickerthread = new Thread()
          {
             public void run()
             {
                try 
                {
-                  for (int i = 0 ; i < 12 ; i++)
+                  for (int i = 0 ; i < flickercount*2 ; i++)
                   {
                      sleep(150) ;
                      flicker = !flicker ;
@@ -4257,9 +4329,18 @@ final class PanelFrame extends JPanel
                   }
                }
                catch (Exception ex) { }
+               for (int i = 0 ; i < selection.size() ; i++)
+               {
+                  KissObject kiss = (KissObject) selection.elementAt(i) ;
+                  if (kiss == null) continue ;
+                  kiss.setPasted(false) ;
+                  kiss.setCopied(false) ;
+               } 
+               flickercount = 0 ;
+               flickerthread = null ;
             }
          } ;
-         thread.start() ;
+         if (flickerthread != null) flickerthread.start() ;
       }
    }
 
@@ -4290,6 +4371,7 @@ final class PanelFrame extends JPanel
          {
             Cel drawcel ;
             int c = celList[i] ;
+            if (c < 0) continue ;
             try { drawcel = (Cel) cels.elementAt(c) ; }
             catch (ArrayIndexOutOfBoundsException e) { continue ; }
             Object o = drawcel.getLevel() ;
@@ -4324,6 +4406,7 @@ final class PanelFrame extends JPanel
       {
          Cel drawcel ;
          int c = celList[i] ;
+         if (c < 0) continue ;
          try { drawcel = (Cel) cels.elementAt(c) ; }
          catch (ArrayIndexOutOfBoundsException e) { continue ; }
          Object o = drawcel.getLevel() ;
@@ -4416,7 +4499,7 @@ final class PanelFrame extends JPanel
       // and we are dragging an object.  The celList and baseList contain
       // integer indexes into the Cel vector, thus we remove the actual
       // index into the cel vector from the list.
-/*
+
       if (mousedown && group != null && baseList != null)
       {
          for (int i = 0; i < group.getCelCount(); i++)
@@ -4427,7 +4510,7 @@ final class PanelFrame extends JPanel
                if (baseList[j] == n) { baseList[j] = -1 ; break ; }
          }
       }
-*/
+
       // Draw within the supplied bounding box.
 
       draw(basegc,box,baseList,null) ;
@@ -5033,10 +5116,17 @@ final class PanelFrame extends JPanel
          int y = (cellocation.y + celoffset.y) - grouplocation.y ;
          c.setOffset(x,y) ;
          c.setUpdated(true) ;
-         c.setAdjustedOffset(new Point(x,y)) ;
-         if (OptionsDialog.getWriteCelOffset() && c.isWriteableOffset())
-            if (!c.hasDuplicateKey(c.getKeyTable(),cid,c.getPath().toUpperCase()))
-               c.setBaseOffset(new Point(x,y)) ;
+         
+         Point p1 = c.getOffset() ;
+         Point p2 = c.getBaseOffset() ;
+         Point p3 = c.getInitialOffset() ;
+         Point p4 = new Point(p2.x+p3.x,p2.y+p3.y) ;        // base + initial
+         Point p5 = new Point(p1.x-p4.x,p1.y-p4.y) ;        // change difference
+         c.setAdjustedOffset(p5) ;
+         
+//         if (OptionsDialog.getWriteCelOffset() && c.isWriteableOffset())
+//            if (!c.hasDuplicateKey(c.getKeyTable(),cid,c.getPath().toUpperCase()))
+//               c.setBaseOffset(new Point(x,y)) ;
       }
    }
 
@@ -7934,10 +8024,33 @@ final class PanelFrame extends JPanel
             name = "Import" + name ;
             c = (Cel) Cel.getByKey(Cel.getKeyTable(),config.getID(),name) ;
          }
-     }
+      }
    }
-
-
+   
+   
+   // This is a utility method to remove a KissObject from a selection set.
+   // The selection set can contain cels or palettes or groups or an array
+   // of an object with marked and pasted flags.
+   
+   PanelEdit removeSelection(PanelEdit set, KissObject kiss)
+   {
+      if (set == null) return null ;
+      PanelEdit v = new PanelEdit() ;
+      v.setPageUniqueID(set.getPageUniqueID()) ;
+      Enumeration e = set.elements() ;
+      while (e.hasMoreElements())
+      {
+         Object o = e.nextElement() ;
+         if (o instanceof KissObject && o.equals(kiss)) continue ;
+         if (o instanceof Object[])
+         {
+            Object o1 = ((Object[]) o)[0] ;
+            if (o1 instanceof KissObject && o1.equals(kiss)) continue ;
+         }
+         v.addElement(o) ;
+      }
+      return v ;
+   }
 
    // Inner Classes
    // -------------
@@ -7965,7 +8078,9 @@ final class PanelFrame extends JPanel
       private JMenuItem celeventwiz = new JMenuItem(Kisekae.getCaptions().getString("EventWizardMessage")) ;
       private JMenuItem groupeventwiz = new JMenuItem(Kisekae.getCaptions().getString("EventWizardMessage")) ;
       private JMenuItem selectobject = new JMenuItem(Kisekae.getCaptions().getString("SelectContextText")) ;
+      private JMenuItem selectcel = new JMenuItem(Kisekae.getCaptions().getString("SelectContextCelText")) ;
       private JMenuItem unselectobject = new JMenuItem(Kisekae.getCaptions().getString("UnselectMessage")) ;
+      private JMenuItem unselectcel = new JMenuItem(Kisekae.getCaptions().getString("UnselectContextCelText")) ;
       private JMenuItem ungroupobject = new JMenuItem(Kisekae.getCaptions().getString("UngroupContextText")) ;
       private JMenuItem regroupobject = new JMenuItem(Kisekae.getCaptions().getString("RegroupContextText")) ;
       private JMenuItem forwardobject = new JMenuItem(Kisekae.getCaptions().getString("ForwardObjectText")) ;
@@ -7976,7 +8091,9 @@ final class PanelFrame extends JPanel
       public PopupMenu()
       {
          add(selectobject) ;
+         add(selectcel) ;
          add(unselectobject) ;
+         add(unselectcel) ;
          add(ungroupobject) ;
          add(regroupobject) ;
          add(forwardobject) ;
@@ -7995,7 +8112,9 @@ final class PanelFrame extends JPanel
          groupmenu.add(groupeventwiz) ;
          
          selectobject.addActionListener(this);
+         selectcel.addActionListener(this);
          unselectobject.addActionListener(this);
+         unselectcel.addActionListener(this);
          ungroupobject.addActionListener(this);
          regroupobject.addActionListener(this);
          forwardobject.addActionListener(this);
@@ -8047,9 +8166,12 @@ final class PanelFrame extends JPanel
          regroupobject.setVisible(b && selection.contains(c)) ;
          forwardobject.setVisible(b) ;
          backwardobject.setVisible(b) ;
-         unselectobject.setVisible(b && !selection.contains(c)) ; 
-         selectobject.setVisible(!(unselectobject.isVisible())) ; 
-         
+         unselectcel.setVisible(b && selection.isMarked(c)) ;
+         unselectobject.setVisible(b && !selection.contains(c) && !unselectcel.isVisible()) ; 
+         selectcel.setVisible(b && selection.contains(c) && !unselectcel.isVisible()) ;
+         unselectcel.setVisible(b && selection.isMarked(c)) ;
+         selectobject.setVisible(!(unselectobject.isVisible() || selectcel.isVisible() || unselectcel.isVisible())) ; 
+    
          // Set attribute menuitem name.  Convert first character to upper case.
          
          if (c instanceof JavaCel)
@@ -8086,7 +8208,7 @@ final class PanelFrame extends JPanel
       {
          Object source = e.getSource() ;
 
-         if (source == selectobject)
+         if (source == selectobject || source == selectcel)
          {
             if (g == null) return ;
             doSelection(e,new Rectangle(),g,c) ;
@@ -8101,6 +8223,13 @@ final class PanelFrame extends JPanel
             if (selection != null && selection.contains(g)) edit.add(g) ;
             if (selection != null && selection.contains(c)) edit.add(c) ;
             unselectSet(edit) ;
+            parent.updateMenu();
+            parent.repaint() ;
+         }
+         
+         if (source == unselectcel)
+         {
+            if (selection != null) selection.setMarked(c,false) ;
             parent.updateMenu();
             parent.repaint() ;
          }
@@ -8261,7 +8390,16 @@ final class PanelFrame extends JPanel
 
          if ("ImageFrame Callback".equals(e.getActionCommand()))
          {
-            reloadAmbiguousCels(c) ;
+            Object o = e.getSource() ;
+            if (o instanceof CallbackButton)
+            {
+               o = ((CallbackButton) o).getDataObject() ;
+               if (o instanceof Cel)
+               {
+                  c = (Cel) o ;
+                  reloadAmbiguousCels(c) ;
+               }
+            }
             if (page == null) return ;
             parent.updateToolBar() ;
             showpage() ;
@@ -8625,7 +8763,7 @@ final class PanelFrame extends JPanel
          multipalette = mp ;
       }
 
-      // Constructor for edit type updates
+      // Constructor for edit type updates (copy, paste, cut, select)
 
       public UndoablePageEdit(int t, PanelEdit e1, PanelEdit e2, PanelEdit e3)
       {
@@ -8815,8 +8953,9 @@ final class PanelFrame extends JPanel
          {
          case COPY:
             if (clipboard == null) break ;
-            PanelEdit clip = (ns == null) ? null : (PanelEdit) ns.clone() ;
-            clipboard.setContents(clip,panel) ;
+            editCopy(e) ;
+//            PanelEdit clip = (ns == null) ? null : (PanelEdit) ns.clone() ;
+//            clipboard.setContents(clip,panel) ;     
             parent.updateMenu() ;
             repaint() ;
             break ;
@@ -8842,7 +8981,22 @@ final class PanelFrame extends JPanel
             if (type == CUT) editCut(e) ;
             if (type == PASTE) editPaste(e) ;
             if (type == PASTENEW) editPasteNew(e) ;
-            ns = selection ;
+
+            // Undo of a paste is a cut.  Mark selected objects as copied for 
+            // a visual flash when undone just like a copy. The indicator is 
+            // cleared on paint.
+            
+            if (!(undoredo && type == CUT)) ns = selection ;
+            if (undoredo && type == CUT && ns != null)
+            {
+               for (int i = 0 ; i < ns.size() ; i++)
+               {
+                  Object o = ns.elementAt(i) ;
+                  if (o instanceof KissObject) 
+                     ((KissObject) o).setCopied(true) ;
+               }      
+            }
+            
             newselection = (ns != null) ? (PanelEdit) ns.clone() : null ;
             fallthrough = true ;
 
@@ -8858,7 +9012,7 @@ final class PanelFrame extends JPanel
             if (p != null && !p.equals(panel.getPage()))
                initpage(((Integer) p.getIdentifier()).intValue()) ;
 
-            // Apply the selection set
+            // Apply the selection set.
 
             selection = ns ;
             if (selection != null)
@@ -8902,6 +9056,7 @@ final class PanelFrame extends JPanel
          case IMPORTCUT:
             Vector cels = config.getCels() ;
             Vector palettes = config.getPalettes() ;
+            Vector groups = config.getGroups() ;
             updatePage(CUT,e,os,ns) ;
             for (int i = 0 ; i < e.size() ; i++)
             {
@@ -8931,11 +9086,16 @@ final class PanelFrame extends JPanel
                   // If we cut a cel the parent group has its bounding box
                   // recomputed, however this is relative to the group offset.
                   // This cut cel must be removed from the group and the
-                  // bounding box recalculated.
+                  // bounding box recalculated. If this is an Undo All and 
+                  // the group is empty delete the group.
 
                   Object o = ((Cel) kiss).getGroup() ;
                   Group g = (o instanceof Group) ? (Group) o : null ;
-                  if (g != null) g.removeCel((Cel) kiss) ;
+                  if (g != null) 
+                  {
+                     g.removeCel((Cel) kiss) ;                   
+                     if (g.getCelCount() == 0) groups.remove(g) ;
+                  }
                }
                if (kiss instanceof Palette)
                {
@@ -8964,6 +9124,7 @@ final class PanelFrame extends JPanel
          case IMPORTPASTE:
             cels = config.getCels() ;
             palettes = config.getPalettes() ;
+            groups = config.getGroups() ;
             for (int i = 0 ; i < e.size() ; i++)
             {
                KissObject kiss = (KissObject) e.elementAt(i) ;
@@ -8994,6 +9155,7 @@ final class PanelFrame extends JPanel
                   {
                      g.addCel((Cel) kiss) ;
                      g.rebuildBoundingBox() ;
+                     if (!groups.contains(g)) groups.add(g) ;
                   }
                }
                if (kiss instanceof Group)
@@ -9561,12 +9723,16 @@ final class PanelFrame extends JPanel
       private int newtransparent = 0 ;
       private int oldloop = 0 ;
       private int newloop = 0 ;
+      private Point oldoffset = new Point() ;
+      private Point newoffset = new Point() ;
+      private Point oldlocation = new Point() ;
+      private Point newlocation = new Point() ;
       private int type = 0 ;
 
 
       // Constructor for image updates
 
-      public UndoableImageEdit(Object editobject, int oldtransparent, int loop, Image img, Palette p)
+      public UndoableImageEdit(Object editobject, int oldtransparent, int loop, Point offset, Point location, Image img, Palette p)
       {
          type = 1 ;
          this.editobject = editobject ;
@@ -9581,6 +9747,10 @@ final class PanelFrame extends JPanel
             this.newpalette = c.getPalette() ;
             this.oldloop = loop ;
             this.newloop = c.getLoopCount() ;
+            this.oldoffset = offset ;
+            this.newoffset = c.getOffset() ;
+            this.oldlocation = location ;
+            this.newlocation = c.getLocation() ;
          }
       }
 
@@ -9602,6 +9772,9 @@ final class PanelFrame extends JPanel
          if (!(editobject instanceof Cel)) return ;
          Cel c = (Cel) editobject ;
          c.setLoopCount(oldloop) ;
+         c.setOffset(oldoffset) ;
+         c.setAdjustedOffset(oldoffset) ;
+         c.setLocation(oldlocation) ;
          c.setImage(oldimage) ;
          c.setPalette(oldpalette) ;
          c.setPaletteID((oldpalette == null) ? null : oldpalette.getIdentifier()) ;
@@ -9655,6 +9828,9 @@ final class PanelFrame extends JPanel
          if (!(editobject instanceof Cel)) return ;
          Cel c = (Cel) editobject ;
          c.setLoopCount(newloop) ;
+         c.setOffset(newoffset) ;
+         c.setAdjustedOffset(newoffset) ;
+         c.setLocation(newlocation) ;
          c.setImage(newimage) ;
          c.setPalette(newpalette) ;
          c.setPaletteID((newpalette == null) ? null : newpalette.getIdentifier()) ;
@@ -9938,11 +10114,11 @@ final class PanelFrame extends JPanel
          if (type == SIZE) setConfigSize(oldsize) ;
          if (type == SIZECEL) 
          { 
-            cel.setSize(oldsize) ; 
             if (ArchiveFile.isImage(cel.getName())) 
             {
                try { cel.scaleImage(oldsize) ; }
                catch (KissException e) { }
+               cel.setSize(oldsize) ; 
             }
             Object o = cel.getGroup() ;
             if (o instanceof Group) ((Group) o).updateBoundingBox() ;
@@ -9967,11 +10143,11 @@ final class PanelFrame extends JPanel
          if (type == SIZE) setConfigSize(newsize) ;
          if (type == SIZECEL) 
          { 
-            cel.setSize(newsize) ; 
             if (ArchiveFile.isImage(cel.getName())) 
             {
                try { cel.scaleImage(newsize) ; }
                catch (KissException e) { }
+               cel.setSize(newsize) ; 
             }
             Object o = cel.getGroup() ;
             if (o instanceof Group) ((Group) o).updateBoundingBox() ;

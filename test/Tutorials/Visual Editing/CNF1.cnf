@@ -1,0 +1,16 @@
+; Kisekae UltraKiss configuration file created on Fri Oct 10 12:51:51 MDT 2025
+; FKiSS code compatibility level is 5
+ 
+;[Screen Section]
+[0                                                          
+(600,600)                                                   
+ 
+;[Cel Section]
+#6   button2.cel         : 0                                ;
+#6   button1.cel         : 0                                ;
+#3   button5.button      : 0                                ;%size[100,50] %offset[0,77] %attributes[text="button2"] 
+#3   button4.button      : 0                                ;%size[100,50] %offset[1,0] %attributes[text="button1"] 
+ 
+;[Page Set Section]
+; Page 0
+$0 * * * 270,176 * * 423,178

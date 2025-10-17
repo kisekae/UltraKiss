@@ -443,7 +443,7 @@ final class FileLoader extends KissFrame
             if (stop) thread.interrupt() ;
 				showStatus(Kisekae.getCaptions().getString("LoadKissStatus")) ;
 				config.load() ;
-
+            
 				// Set up the cel groups and the page sets.
 
             if (stop) thread.interrupt() ;

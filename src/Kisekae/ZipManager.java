@@ -122,7 +122,7 @@ public class ZipManager extends KissFrame
 	private JMenuItem openfile ;
 	private JMenuItem openurl ;
 	private JMenuItem closefile ;
-	private JMenuItem copyfile ;
+	private JMenuItem saveasfile ;
 	private JMenuItem renamefile ;
 	private JMenuItem deletefile ;
 	private JMenuItem addaction ;
@@ -420,11 +420,11 @@ public class ZipManager extends KissFrame
       closefile.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W, accelerator));
       closefile.setEnabled(false) ;
 		fileMenu.addSeparator() ;
-		fileMenu.add((copyfile = new JMenuItem(Kisekae.getCaptions().getString("MenuFileCopy")))) ;
-      if (!applemac) copyfile.setMnemonic(KeyEvent.VK_P) ;
-		copyfile.addActionListener(this) ;
-      copyfile.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, accelerator));
-		copyfile.setEnabled(false) ;
+		fileMenu.add((saveasfile = new JMenuItem(Kisekae.getCaptions().getString("MenuFileSaveAs")))) ;
+      if (!applemac) saveasfile.setMnemonic(KeyEvent.VK_P) ;
+		saveasfile.addActionListener(this) ;
+      saveasfile.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, accelerator));
+		saveasfile.setEnabled(false) ;
 		fileMenu.add((renamefile = new JMenuItem(Kisekae.getCaptions().getString("MenuFileRename")))) ;
       if (!applemac) renamefile.setMnemonic(KeyEvent.VK_R) ;
 		renamefile.addActionListener(this) ;
@@ -751,7 +751,7 @@ public class ZipManager extends KissFrame
       addaction.setEnabled(true);
       closefile.setEnabled(true) ;
       deletefile.setEnabled(true) ;
-      copyfile.setEnabled(true) ;
+      saveasfile.setEnabled(true) ;
       renamefile.setEnabled(true) ;
      	deleteaction.setEnabled(false);
      	extractaction.setEnabled(false);
@@ -876,7 +876,7 @@ public class ZipManager extends KissFrame
       addaction.setEnabled(true);
       closefile.setEnabled(true) ;
       deletefile.setEnabled(true) ;
-      copyfile.setEnabled(true) ;
+      saveasfile.setEnabled(true) ;
       renamefile.setEnabled(true) ;
      	deleteaction.setEnabled(false);
      	extractaction.setEnabled(true);
@@ -940,7 +940,7 @@ public class ZipManager extends KissFrame
       addaction.setEnabled(false);
       closefile.setEnabled(false) ;
       deletefile.setEnabled(false) ;
-      copyfile.setEnabled(false) ;
+      saveasfile.setEnabled(false) ;
       renamefile.setEnabled(false) ;
      	deleteaction.setEnabled(false);
      	extractaction.setEnabled(false);
@@ -1072,7 +1072,7 @@ public class ZipManager extends KissFrame
       String [] msg = new String [] { pathname, 
          Kisekae.getCaptions().getString("ReplaceFileText") } ;
       i = JOptionPane.showConfirmDialog(this, msg,
-         Kisekae.getCaptions().getString("CopyArchiveTitle"),
+         Kisekae.getCaptions().getString("SaveAsArchiveTitle"),
          JOptionPane.YES_NO_OPTION) ;
       if (i == JOptionPane.YES_OPTION) return pathname ;
       return null ;     
@@ -1145,8 +1145,8 @@ public class ZipManager extends KissFrame
    {
    	if (zip == null) return ;
       pathname = selectArchive(null,
-         Kisekae.getCaptions().getString("CopyArchiveTitle"),
-         Kisekae.getCaptions().getString("CopyAsMessage")) ;
+         Kisekae.getCaptions().getString("SaveAsArchiveTitle"),
+         Kisekae.getCaptions().getString("SaveAsMessage")) ;
       if (pathname == null) return ;
       if (pathname.equalsIgnoreCase(zip.getName())) return ;
 
@@ -1833,7 +1833,7 @@ public class ZipManager extends KissFrame
 
          // Copy archive request.
 
-         if (source == copyfile)
+         if (source == saveasfile)
          { copyArchive() ;  return ; }
 
          // Rename archive request.

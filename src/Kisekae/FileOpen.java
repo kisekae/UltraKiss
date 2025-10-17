@@ -102,6 +102,7 @@ final public class FileOpen implements Cloneable
 	private ArchiveEntry selected = null ;		// ZIP file entry selected
    private URL sourceURL = null ;		      // URL of original source
    private int entrycount = 0 ;              // Number of entries
+   private int choice = 0 ;                  // Dialog choice (yes/no)
    private boolean multiple = false ;        // Multiple selection allowed
    private boolean dirs = false ;            // Directories only
    private boolean silent = false ;          // No show exceptions
@@ -194,6 +195,10 @@ final public class FileOpen implements Cloneable
 
 	public String getExtension() { return extension ; }
 
+	// Return the selected file element extension.
+
+	public int getChoice() { return choice ; }
+
 	// Return the full path name for the container file.
 
 	public String getPath() { return pathname ; }
@@ -211,8 +216,16 @@ final public class FileOpen implements Cloneable
 	int getEntryCount() { return entrycount ; }
 
    // Function to set a new pathname for this fileopen object.
+   // Had an issue with LZH archives where an edit of the CNF on 
+   // reload failed to load cels because the LZH archive was closed.
 
-	public void setPath(String path) { pathname = path ; close() ; }
+	public void setPath(String path) 
+   { 
+      pathname = path ; 
+      if (pathname == null) return ;
+      String s = pathname.toLowerCase() ;
+      if (!(pathname.endsWith(".lzh"))) close() ; 
+   }
 
 	// Function to set the URL for the original file source.
 
@@ -598,16 +611,26 @@ final public class FileOpen implements Cloneable
 
 		if (entries.size() == 0)
 		{
-			String s = "File " + filename + " " + type + " element not found." ;
+			String s = "FileOpen: File " + filename + " " + type + " element not found." ;
          PrintLn.println(s) ;
-//       s = captions.getString("FileOpenFileOpenMessage1") ;
-//       int i1 = s.indexOf('[') ;
-//       int j1 = s.indexOf(']') ;
-//       if (i1 >= 0 && j1 > i1)
-//          s = s.substring(0,i1+1) + filename + "] CNF" + s.substring(j1+1) ;
-//			JOptionPane.showMessageDialog(parent, s,
-//         	captions.getString("FileOpenException"),
-//          JOptionPane.ERROR_MESSAGE) ;
+         String s1 = captions.getString("FileOpenFileOpenMessage1") ;
+         int i1 = s1.indexOf('[') ;
+         int j1 = s1.indexOf(']') ;
+         if (i1 >= 0 && j1 > i1)
+         {
+            s = s1.substring(0,i1+1) + filename + "] \n" ;
+            s += "This is not a valid KiSS application file." + "\n" ;
+            s += "KiSS configuration .CNF element not found." + "\n" ;
+            s += "Open this file with the Archive Manager?" ;
+         }
+         
+         if (!silent)
+         {
+     			choice = JOptionPane.showConfirmDialog(parent, s,
+             	captions.getString("FileOpenException"),
+               JOptionPane.YES_NO_OPTION,
+               JOptionPane.ERROR_MESSAGE) ;
+         }
 //       close() ;
          ze = null ;
 			return ze ;

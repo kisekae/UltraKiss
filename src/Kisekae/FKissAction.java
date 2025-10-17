@@ -498,33 +498,39 @@ final class FKissAction extends KissObject
             break ;
 
 
-         // Show a message dialog box.
+         // Show a message dialog box.  Notify messages can display a cel image
+         // with a hyperlink if a cel name is specified.
 
          case 3:		// "debug"
          case 20:		// "notify"
          case 66:		// "showstatus"
             message = "" ;
             Image img = null ;
-            if (parameters.size() > 0)
+            if (code == 20 && parameters.size() > 0)
             {
                kiss = findGroupOrCel((String) parameters.elementAt(0),event) ;
                if (kiss instanceof Cel)
                {
-                  img = ((Cel) kiss).getImage() ;
+                  Cel cel = (Cel) kiss ;
+                  if (!cel.isLoaded()) cel.load() ;
+                  img = cel.getImage() ;
                   // notify(image,hyperlink)
-                  if (parameters.size() > 1)
+                  if (parameters.size() > 1 && img != null)
                   {
                      o = variable.getValue((String) parameters.elementAt(1),event) ;
                      if (o != null) message += o.toString() ;                     
                   }
                }
-               else
+            }
+
+            // The message is text concatenated from strings or variables.
+
+            if (img == null)
+            {
+               for (i = 0 ; i < parameters.size() ; i++)
                {
-                  for (i = 0 ; i < parameters.size() ; i++)
-                  {
-                     o = variable.getValue((String) parameters.elementAt(i),event) ;
-                     if (o != null) message += o.toString() ;
-                  }
+                  o = variable.getValue((String) parameters.elementAt(i),event) ;
+                  if (o != null) message += o.toString() ;
                }
             }
 
@@ -563,22 +569,25 @@ final class FKissAction extends KissObject
 
             // Show the notify box in the AWT event handler thread.
 
-            if (panel == null) break ;
-            final Image image = img ;
-            final String notifymsg = new String(message) ;
-            Runnable notify = new Runnable()
+            if (code == 20)
             {
-               public void run()
+               if (panel == null) break ;
+               final Image image = img ;
+               final String notifymsg = new String(message) ;
+               Runnable notify = new Runnable()
                {
-                  NotifyDialog nd = new NotifyDialog(Kisekae.getMainFrame(),
-                     "Notify",notifymsg,image,false) ;
-                  nd.setVisible(true) ;
-                  if (panel != null) panel.releaseMouse(true) ;
-               }
-            } ;
-            if (!Kisekae.isBatch())
-               javax.swing.SwingUtilities.invokeLater(notify);
-            break ;
+                  public void run()
+                  {
+                     NotifyDialog nd = new NotifyDialog(Kisekae.getMainFrame(),
+                        "Notify",notifymsg,image,false) ;
+                     nd.setVisible(true) ;
+                     if (panel != null) panel.releaseMouse(true) ;
+                  }
+               } ;
+               if (!Kisekae.isBatch())
+                  javax.swing.SwingUtilities.invokeLater(notify);
+               break ;
+            }
 
 
          // Set a timer if a group or cel is fixed or not. A cel is
@@ -1269,7 +1278,7 @@ final class FKissAction extends KissObject
             kiss.setPlacement(m.x,m.y) ;
             kiss.drop() ;
 //          panel.resetDrag(kiss) ;
-         
+            
             // If we have any restricted placements these must be cleared.
 
             if (!OptionsDialog.getDetachRestricted() && primary != null)
@@ -1616,20 +1625,6 @@ final class FKissAction extends KissObject
             if (!(kiss instanceof Alarm)) break ;
             alarm = (Alarm) kiss ;
             delay = variable.getIntValue((String) parameters.elementAt(1),event) ;
-/*            
-            // Kludge for NoGodsLand timing problems
-            s = config.getName() ;
-            if (s.contains("NoGodsLand"))
-            {
-               o = alarm.getIdentifier() ;
-               // problem in Official Meeting Hall with alarm(4057) running before alarm(128)
-               if ("4057".equals(o) && "alarm(4042)".equals(event.getName())) 
-                  delay = delay + 200 ;
-               // problem in Hidden Hermitage with alarm(1001) running before alarm(257)
-               if ("257".equals(o) && "alarm(2887)".equals(event.getName())) 
-                  delay = delay + 200 ;
-            }
-*/            
             alarm.setInterval(delay,activator) ;
             event.setAlarmEnable(kiss) ;
             setAlarmArguments(alarm,parameters,2) ;
@@ -2071,6 +2066,30 @@ final class FKissAction extends KissObject
             variable.setIntValue((String) parameters.elementAt(0),n1,event) ;
             break;
 
+         // Determine the x-offset of an object.  
+
+         case 163:		// "letoffsetx"
+            if (parameters.size() < 2) break ;
+            kiss = findGroupOrCel((String) parameters.elementAt(1),event) ;
+            if (!(kiss instanceof Cel || kiss instanceof Group)) break ;
+            n1 = kiss.getOffset().x ;
+            variable.setIntValue((String) parameters.elementAt(0),n1,event) ;
+            if (panel == null || !(kiss instanceof Group)) break ;
+            variable.setIntValue((String) parameters.elementAt(0),n1,event) ;
+            break;
+
+         // Determine the y-offset of an object.
+
+         case 164:		// "letoffsety"
+            if (parameters.size() < 2) break ;
+            kiss = findGroupOrCel((String) parameters.elementAt(1),event) ;
+            if (!(kiss instanceof Cel || kiss instanceof Group)) break ;
+            n1 = kiss.getOffset().y ;
+            variable.setIntValue((String) parameters.elementAt(0),n1,event) ;
+            if (panel == null || !(kiss instanceof Group)) break ;
+            variable.setIntValue((String) parameters.elementAt(0),n1,event) ;
+            break;
+
          // Determine the flex value of a group or cel.
 
          case 45:		// "letfix"
@@ -2119,21 +2138,20 @@ final class FKissAction extends KissObject
 
          // Determine the current multipalette in use.
          // Syntax: letpal(Variable,[celname])
+         // If there is no celname parameter this returns the page multipalette.
+         // If the page multipalette equals the cel multipalette return 0.
 
          case 48:		// "letpal"
             if (parameters.size() < 1) break ;
             if (panel == null) break ;
+            Integer multipalette = panel.getMultiPalette() ;
+            n1 = (multipalette == null) ? 0 : multipalette.intValue() ;
             if (parameters.size() > 1)
             {
                kiss = findGroupOrCel((String) parameters.elementAt(1),event) ;
                if (!(kiss instanceof Cel)) break ;
-               n1 = ((Cel) kiss).getMultiPalette() ;
-            }
-            else
-            {
-               Integer multipalette = panel.getMultiPalette() ;
-               if (multipalette == null) break ;
-               n1 = multipalette.intValue() ;
+               n2 = ((Cel) kiss).getMultiPalette() ;
+               n1 = (n2 == n1) ? 0 : n2 ;
             }
             variable.setIntValue((String) parameters.elementAt(0),n1,event) ;
             break;
@@ -2740,7 +2758,7 @@ final class FKissAction extends KissObject
             variable.setIntValue((String) parameters.elementAt(0),n1,event) ;
             break;
 
-         // Returns the number of the parent object.
+         // Returns the number of the parent object. 
 
          case 85:		// "letparent"
             if (parameters.size() < 2) break ;
@@ -4996,6 +5014,13 @@ final class FKissAction extends KissObject
       cel.setPlacement(g.getPlacementObject()) ;
       cel.setOffset(x,y) ;
       cel.setLocation(grouplocation) ;
+      
+      Point p1 = cel.getOffset() ;
+      Point p2 = cel.getBaseOffset() ;
+      Point p3 = cel.getInitialOffset() ;
+      Point p4 = new Point(p2.x+p3.x,p2.y+p3.y) ;        // base + initial
+      Point p5 = new Point(p1.x-p4.x,p1.y-p4.y) ;        // change difference
+      cel.setAdjustedOffset(p5) ;
 
       // Update the group bounding box.  This can change the group location.
       // We recompute a new group offset from its original location.
@@ -5019,6 +5044,14 @@ final class FKissAction extends KissObject
          x = (cellocation.x + celoffset.x) - grouplocation.x ;
          y = (cellocation.y + celoffset.y) - grouplocation.y ;
          c.setOffset(x,y) ;
+         
+         p1 = cel.getOffset() ;
+         p2 = cel.getBaseOffset() ;
+         p3 = cel.getInitialOffset() ;
+         p4 = new Point(p2.x+p3.x,p2.y+p3.y) ;        // base + initial
+         p5 = new Point(p1.x-p4.x,p1.y-p4.y) ;        // change difference
+         c.setAdjustedOffset(p5) ;
+
       }
 
       // Rebuild the group bounding box to eliminate any group offset.

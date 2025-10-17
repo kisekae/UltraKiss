@@ -126,6 +126,7 @@ final class ImageFrame extends KissFrame
    private String originalzepath = null ;			// Zip entry name before save
    private String originalcelname = null ;		// Cel name before save
 	private String originalpalettename = null ;	// Palette name before save
+	private Point originallocation = null ;	   // Cel original location
    private Object currentframe = null ;         // Current cel frame on display
    private Image baseimage = null ;             // Our base transform image
    private Image oldimage = null ;              // Our undo original image
@@ -427,6 +428,7 @@ final class ImageFrame extends KissFrame
 			palette = cel.getPalette() ;
          cel.setGroup(group) ;
          cel.setAnimate(0) ;
+      	originallocation = cel.getLocation() ;
          cel.setLocation(new Point(cel.getLocation())) ;
          cel.setOffset(new Point(cel.getOffset())) ;
          cel.setSize(new Dimension(cel.getSize())) ;
@@ -2582,6 +2584,7 @@ final class ImageFrame extends KissFrame
 		boolean restorestate = changed ;
 //      if (colorpanel.isChanged()) colorpanel.apply() ;
 //      if (geompanel.isChanged()) geompanel.apply() ;
+      if (cel != null && cel.isUpdated()) changed = true ;
 
 		// Check for a file save if changes are pending.
 
@@ -2614,6 +2617,8 @@ final class ImageFrame extends KissFrame
 				{
             	int basetransparent = -1 ;
             	int baseloop = 0 ;
+               Point baseoffset = null ;
+               Point baseloc = null ;
 
             	// Transparent cel color changes or max loop count changes
                // may have been applied to a cloned cel.  We need to apply
@@ -2627,6 +2632,8 @@ final class ImageFrame extends KissFrame
                   	Cel c = (Cel) configobject ;
                      basetransparent = c.getTransparentIndex() ;
                      baseloop = c.getLoopLimit() ;
+                     baseoffset = c.getOffset() ;
+                     baseloc = originallocation ;
                      baseimage = c.getImage() ;
                      oldpalette = c.getPalette() ;
                      
@@ -2641,6 +2648,9 @@ final class ImageFrame extends KissFrame
                      c.setColorsUsed(cel.getColorsUsed()) ;
                      c.setBackgroundIndex(cel.getBackgroundIndex()) ;
                      c.setTransparentIndex(cel.getTransparentIndex()) ;
+                     c.setOffset(cel.getOffset()) ;
+                     c.setAdjustedOffset(cel.getAdjustedOffset()) ;
+                     c.setLocation(originallocation) ;
                      c.changeTransparency(0) ;
                      c.setLoopLimit(cel.getLoopLimit()) ;
                      c.setImage(cel.getImage(),cel.getColorModel()) ;
@@ -2659,8 +2669,9 @@ final class ImageFrame extends KissFrame
 
 					// Perform the callback and capture the edit change.
 
-					callback.doClick() ;
-					capturePanelEdit(configobject,basetransparent,baseloop,baseimage,oldpalette) ;
+               callback.setDataObject(configobject) ;
+               callback.doClick() ;
+					capturePanelEdit(configobject,basetransparent,baseloop,baseoffset,baseloc,baseimage,oldpalette) ;
 					updated = true ;
                restorestate = false ;
 				}
@@ -2733,8 +2744,8 @@ final class ImageFrame extends KissFrame
    // ImageFrame editor is an architectural problem as it now associates
    // the image editor to the panel frame.
 
-   private void capturePanelEdit(Object editobject, int transparent, int loop,
-     Image img, Palette palette)
+   private void capturePanelEdit(Object editobject, int transparent, int loop, 
+           Point offset, Point loc, Image img, Palette palette)
    {
       if (!memorysource) return ;
    	MainFrame mainframe = Kisekae.getMainFrame() ;
@@ -2744,7 +2755,7 @@ final class ImageFrame extends KissFrame
 
       // Construct the undoable edit.
 
-	   panelframe.createImageEdit(editobject,transparent,loop,img,palette) ;
+	   panelframe.createImageEdit(editobject,transparent,loop,offset,loc,img,palette) ;
       panelframe.showpage() ;
    }
 

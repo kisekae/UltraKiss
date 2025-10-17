@@ -164,10 +164,11 @@ final class Configuration extends KissObject
    private boolean activated = false ;		// True if configuration is active
 	private boolean copy = false ;			// True if file is a reload copy
 	private boolean changed = false ;		// True if object structure changed
-	private boolean closed = false ;       // True if confuuguration closed
+	private boolean closed = false ;       // True if configuration closed
 	private boolean flushed = false ;      // True if configuration flushed
    private boolean rgbborder = false ;    // True if border is rgb value
    private boolean restartable = true ;   // True if configuration can restart
+   private boolean restart = false ;      // True if restart request
    private boolean appendcnf = false ;    // True if have APPEND directive
    private boolean viewerappend = false ; // True if viewer("menu","appendcnf") exists
    private boolean appended = false ;     // True if APPEND files appended
@@ -490,6 +491,13 @@ final class Configuration extends KissObject
 
 	void setScaleFactor(float f) { sf = f ; }
 
+	// Method to return a specific cel object based on the order read in the CNF.
+
+	Cel getCel(int n)
+	{
+   	return (n < cels.size()) ? (Cel) cels.elementAt(n) : null ;
+   }
+
 	// Method to return a specific page set object.
 
 	PageSet getPage(int p)
@@ -652,6 +660,10 @@ final class Configuration extends KissObject
 
 	void setOptionsChanged(boolean b) { optionchange = b ; }
 
+	// Method to set our restart indicator.  Used for View-Restart.
+
+	void setRestart(boolean b) { restart = b ; }
+
 	// Set the object update state.  This also sets the update state of
 	// the associated archive entry and the possibly outdated entry
    // in the archive file contents.
@@ -731,6 +743,10 @@ final class Configuration extends KissObject
 	// Return our flushed indicator.
 
 	boolean isFlushed() { return flushed ; }
+
+	// Return our restart indicator.
+
+	boolean isRestart() { return restart ; }
 
 	// Return our option change indicator.
 
@@ -995,7 +1011,7 @@ final class Configuration extends KissObject
 		catch (Exception e)
 		{
 			error = true ;
-			showFile("Open Exception, " + file) ;
+			showFile("Configuration: Open Exception, " + file) ;
 			throw e ;
 		}
 	}
@@ -1146,7 +1162,7 @@ final class Configuration extends KissObject
          }
          catch (IOException e)
          {
-     		   PrintLn.println("Exception: Search " + s + " file " + e) ;
+     		   PrintLn.println("Configuration Exception: Search " + s + " file " + e) ;
          }
       }
 
@@ -1174,7 +1190,7 @@ final class Configuration extends KissObject
          }
          catch (IOException e)
          {
-     		   PrintLn.println("Exception: Search " + s + " memory file " + e) ;
+     		   PrintLn.println("Configuration Exception: Search " + s + " memory file " + e) ;
          }
       }
 
@@ -1271,7 +1287,7 @@ final class Configuration extends KissObject
          }
          catch (IOException e)
          {
-     		   PrintLn.println("Exception: Append INCLUDE file " + e) ;
+     		   PrintLn.println("Configuration Exception: Append INCLUDE file " + e) ;
          }
       }
 
@@ -1305,7 +1321,7 @@ final class Configuration extends KissObject
       }
       else      
       {
-         PrintLn.println("No expansion configuration selected.") ; 
+         PrintLn.println("Configuration: No expansion configuration selected.") ; 
       }
       return false ;
    }
@@ -1664,8 +1680,6 @@ final class Configuration extends KissObject
 					// Cel file specifications.
 
 				case '#':
-               file = file ;
-
 					Cel cel = parseCel(s) ;
                if (cel == null) break ;
 					cel.setIdentifier(new Integer(celCount++)) ;
@@ -1870,6 +1884,19 @@ final class Configuration extends KissObject
 	{
 		if (error) return ;
 
+      // Ensure that the configuration archive is open.
+      // On an edit of a web URL configuration load it is not open.
+      
+      boolean b = zip.isOpen() ;
+      if (!b) 
+      {
+         try { zip.open() ; }
+         catch (IOException e)
+         {
+   			PrintLn.println("Configuration: \"" + file + "\" (" + getID() + ")" + " archive " + zip + " open exception " + e.toString()) ;           
+         }
+      }
+      
 		// Load the palette files first.
 
 		if (loader != null)
@@ -2068,7 +2095,12 @@ final class Configuration extends KissObject
       // sequence.
 
       Collections.sort(pages) ;
-
+      
+      // Reset the cels.  Correct offsets if cels were reused on load.
+      
+      for (int i = 0 ; i < cels.size() ; i++)
+         ((Cel) cels.elementAt(i)).reset() ;
+            
 		// Associate the required groups with each page set.  When a set
 		// is activated it will be initialized.  Set 0 is initialized
 		// by default when a new configuration is loaded.
@@ -2967,6 +2999,7 @@ final class Configuration extends KissObject
 		for (int i = 0 ; i < cels.size() ; i++)
       {
          Cel c = (Cel) cels.elementAt(i) ;
+//         c.setAdjustedOffset(new Point(c.getOffset())) ;
 			c.saveState(cid,"initial") ;
          if (c instanceof JavaCel) ((JavaCel) c).setPanel(panel) ;
          if (c instanceof Video) ((Video) c).setPanel(panel) ;
@@ -4712,13 +4745,42 @@ final class Configuration extends KissObject
 			c.setInitPaletteID(pid) ;
          c.setPaletteGroupID(multipalette) ;
          c.setInitPaletteGroupID(multipalette) ;
+         c.setCnfmpid(multipalette != null) ;
 			c.setFlex(flex) ;
 			c.setInitFlex(flex) ;
 			c.setTransparency(transparency) ;
 			c.setInitTransparency(transparency) ;
          c.setTransparentIndex(transparent) ;
-         c.setOffset(celoffsetx,celoffsety) ;
+         
+         // Set the offsets.  The base offset is read from the image file.
+         // The offset is the base offset plus any %offset() value.
+         // The intial offset is the %offset() value.
+         // The restart offset is the first initial offset read on the CNF.
+         //
+         // On a View-Restart we restore the initial offset from the 
+         // reference configuration restart offset.
+         
+         Point p = c.getBaseOffset() ;
+         if (p == null) p = new Point(0,0) ;
+         c.setOffset(p.x+celoffsetx,p.y+celoffsety) ;
          c.setInitialOffset(celoffsetx,celoffsety) ;
+         if (ref != null)                       // reload CNF 
+         {
+            Cel c1 = ref.getCel(celCount) ;
+            p = (c1 != null) ? c1.getRestartOffset() : new Point(0,0) ;
+            c.setRestartOffset(p) ;
+         }
+         else
+            c.setRestartOffset(c.getInitialOffset()) ;
+         if (ref != null && ref.isRestart())   // restart CNF 
+         {
+            Cel c1 = ref.getCel(celCount) ;
+            p = (c1 != null) ? c1.getRestartOffset() : new Point(0,0) ;
+            c.setInitialOffset(p) ;  
+         }
+         
+         // Continue with the cel definition.
+         
 			c.setGhost(ghost) ;
          c.setVisible(visible) ;
          c.setInitVisible(visible) ;
@@ -6242,7 +6304,7 @@ final class Configuration extends KissObject
          else
          {
             if (OptionsDialog.getDebugControl())
-               PrintLn.println("Kisekae: Unable to load properties " + poolname 
+               PrintLn.println("Configuration: Unable to load properties " + poolname 
                + ", configuration path is " + config.getPath()) ;
          }
       }
@@ -6278,13 +6340,13 @@ final class Configuration extends KissObject
             catch (Exception ex)
             {  
                if (OptionsDialog.getDebugControl())
-                  PrintLn.println("Kisekae: Unable to load archive properties " + poolname) ;
+                  PrintLn.println("Configuration: Unable to load archive properties " + poolname) ;
             }
          }
          else
          {
             if (OptionsDialog.getDebugControl())
-               PrintLn.println("Kisekae: Unable to load properties " + poolname) ;
+               PrintLn.println("Configuration: Unable to load properties " + poolname) ;
          }
       }
       

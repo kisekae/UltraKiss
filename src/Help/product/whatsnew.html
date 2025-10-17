@@ -8,7 +8,24 @@
 	<body>
 		<h1 align="center"><font color="#ff0000" face="Arial, Helvetica, sans-serif">What's new in UltraKiss ?</font></h1>
 		<hr>
-                                        <p>&nbsp;</p>
+                <p><B>September 30, 2025: UltraKiss V4.2 is released.</b> UltraKiss 4.2 provides corrections to edit copy, cut, paste, and undo and redo for visual editing of image cels.<br>
+                                        UltraKiss is end-of-life.  Issues may be corrected if reported to project <a href="https://github.com/kisekae/UltraKiss">Kisekae UltraKiss</a> on GitHub. </P>
+					<OL>
+                      <LI><font face="Arial">1. A new Visual Editing tutorial is provided to show how to import images, select objects or cels, and copy or paste material in a KiSS set. </font><br>
+                      <LI><font face="Arial">2. Renamed the archive manager File-Copy command to File-Save As to be consistent with other tools. </font><br>
+                      <LI><font face="Arial">3. Implemented a warning dialog if an attempt was made to load an archive file that did not contain a configuration CNF element. </font><br>
+                      <LI><font face="Arial">4. A View-Reset is disabled after a new cel or component is added to the configuration as object locations are invalid until the set is reloaded. </font><br>
+                      <LI><font face="Arial">5. A redo of an undo of a cel import was recognizing the cel as an object import and not a cel import.  This is corrected. </font><br>
+                      <LI><font face="Arial">6. An undo of an Edit-New Group command was not positioning the restored group objects properly.  This is corrected. </font><br>
+                      <LI><font face="Arial">7. Corrected the marquee box flicker of pasted ambiguous cel images.  Now only the pasted cel flickers. </font><br>
+                      <LI><font face="Arial">8. Corrected undo/redo processing for edit paste selection set maintenance.  Selection sets were not always correct. </font><br>
+                      <LI><font face="Arial">9. Ensured that object group definitions were maintained correctly in the configuration for various undo and redo edits. </font><br>
+                      <LI><font face="Arial">10. Implemented correct contextual select and unselect menu item names for object and cel selection in pop-up menus. </font><br>
+                      <LI><font face="Arial">11. Implemented undo and redo processing for cel location and offset changes in the Image Editor tool. </font><br>
+                      <LI><font face="Arial">12. Cel size edits were not correctly restoring the image size when the image was restored to its unscaled size on an edit undo. </font><br>
+                      <LI><font face="Arial">13. Set restarts were not restoring cel initial offsets.  Moved cels were not reset.  This is corrected. </font></p>
+                      <LI><font face="Arial">14. Corrected a mouse drawing conflict if changing to the same page on an FKiSS changeset() through an event on a dragged object. </font><br>
+                                        </OL>
                                         <p><B>September 5, 2025: UltraKiss V4.1 is released.</b> UltraKiss 4.1 now enables file saves with direct upload to your computer while running with Webswing.<br>
                                         UltraKiss is end-of-life.  Issues may be corrected if reported to project <a href="https://github.com/kisekae/UltraKiss">Kisekae UltraKiss</a> on GitHub. </P>
 					<OL>

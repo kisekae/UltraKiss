@@ -90,6 +90,7 @@ abstract class KissObject
 	private boolean actionEvent = false ;	// True if event runs on user action
 	private boolean internal = false ;		// True if object generated internal
 	private boolean pasted = false ;       // True if object was edit pasted
+	private boolean copied = false ;       // True if object was edit copied
 	private boolean exported = false ;     // True if object was exported
 	private Boolean updated = null ;			// True if object was updated
 
@@ -787,6 +788,7 @@ abstract class KissObject
    // cleared when the selection box is first drawn.
 
 	void setPasted(boolean b) { pasted = b ; }
+	void setCopied(boolean b) { copied = b ; }
 
 	// Set the object imported state. Imported objects are never
    // unloaded as they must remain available until they are
@@ -864,6 +866,10 @@ abstract class KissObject
 	// Return the object recently pasted signal.
 
 	boolean isPasted() {return pasted ; }
+
+	// Return the object recently copied signal.
+
+	boolean isCopied() {return copied ; }
 
 	// Return true if the object is internally generated.
 
@@ -1198,7 +1204,7 @@ abstract class KissObject
 
 	void fixPaletteGroup(Integer n) { }
 
-	// Set the palette identifier value.
+	// Set the multipalette identifier value.
 
 	void changePaletteID(Integer n) { }
 

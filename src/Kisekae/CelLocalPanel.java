@@ -59,7 +59,7 @@ import java.awt.event.* ;
 import javax.swing.* ;
 
 final class CelLocalPanel extends JPanel
-	implements ActionListener
+	implements ActionListener, FocusListener
 {
    private Cel cel = null ;                     // Cel frame
    private ImageFrame parent = null ;           // Parent image frame
@@ -151,7 +151,7 @@ final class CelLocalPanel extends JPanel
       }
    } ;
 
-
+   
 
    // Constructor
 
@@ -189,9 +189,11 @@ final class CelLocalPanel extends JPanel
       xoffsetfield.setText("" + cel.getOffset().x);
       xoffsetfield.setPreferredSize(new Dimension(50,xoffsetfield.getPreferredSize().height));
       xoffsetfield.addActionListener(this);
+      xoffsetfield.addFocusListener(this);
       yoffsetfield.setText("" + cel.getOffset().y);
       yoffsetfield.setPreferredSize(new Dimension(50,yoffsetfield.getPreferredSize().height));
       yoffsetfield.addActionListener(this);
+      yoffsetfield.addFocusListener(this);
       localpalette.setText("Palette:");
       localcheck.setText("(" + cel.getColorsUsed() + ")" );
       editpalette.setText("Edit");
@@ -349,7 +351,10 @@ final class CelLocalPanel extends JPanel
             catch (Exception e) { return ; }
             Point offset = cel.getOffset() ;
             offset.x = n ;
+            Point p = cel.getLocation() ;
             cel.setOffset(offset) ;
+            cel.setLocation(p) ;
+            cel.setAdjustedOffset(new Point(offset)) ;
             if (parent != null) parent.updatePreview() ;
             cel.setUpdated(true) ;
             return ;
@@ -367,7 +372,10 @@ final class CelLocalPanel extends JPanel
             catch (Exception e) { return ; }
             Point offset = cel.getOffset() ;
             offset.y = n ;
+            Point p = cel.getLocation() ;
             cel.setOffset(offset) ;
+            cel.setLocation(p) ;
+            cel.setAdjustedOffset(new Point(offset)) ;
             if (parent != null) parent.updatePreview() ;
             cel.setUpdated(true) ;
             return ;
@@ -385,6 +393,18 @@ final class CelLocalPanel extends JPanel
 				"Internal Fault", JOptionPane.ERROR_MESSAGE) ;
 		}
    }
+
+   
+   // Watch for typing offset values without Enter key being pressed.
+
+    public void focusGained(FocusEvent e) { }
+
+    public void focusLost(FocusEvent e) 
+    {
+		Object source = e.getSource() ;
+      if (source instanceof JTextField)
+         ((JTextField) source).postActionEvent() ;
+    }
 
 
 	// A utility function to update the color selection menu to agree with

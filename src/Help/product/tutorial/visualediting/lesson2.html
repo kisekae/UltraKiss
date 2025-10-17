@@ -8,22 +8,139 @@
 		<ol>
 			<li>
 				This tutorial will show you how to copy and paste image cels and objects within and across
-                                pages in your KiSS set.&nbsp; You will learn about ambiguous cels, that are ambiguous because 
-                                the same cel is used in more than one place on the page.
+                pages in your KiSS set.&nbsp; You will learn about ambiguous cels, images that are ambiguous because 
+                the same cel is used in more than one place on the same page.  If you are continuing from lesson 1
+				you can skip to step 3.  Otherwise, ensure that UltraKiss is showing the main logo screen. 
+				Close any existing set.
 				<p>&nbsp;</p>
-                                Ensure that UltraKiss is showing the main logo screen.&nbsp; Close any existing set.
-				<p>&nbsp;</p>
-                                This tutorial requires <FONT color="#cc6600">image files</FONT>.  If the necessary files cannot be found 
-                                on your computer download the tutorial files using <FONT color="#000099">Help-Tutorial Files</FONT>.
+                This tutorial requires <FONT color="#cc6600">image files</FONT>.  If the necessary files cannot be found 
+                on your computer download the tutorial files using <FONT color="#000099">Help-Tutorial Files</FONT>.
 				<p>&nbsp;</p>
 			<li>
-				Use <FONT color="#000099">File-New</FONT>.&nbsp; This will create a new KiSS
-				set at size (800,600) with a black border and one empty page.
+				Use <FONT color="#000099">File-Open</FONT>&nbsp; to load the configuration file
+				<FONT color="#cc6600">CNF1.cnf</FONT> from the Tutorial/Visual Editing directory or the directory
+				you used in lesson 1.&nbsp; This will load the Visual Editing set that you created in lesson 1.
+				<p>&nbsp;</p>
+				The set will open to page 0.  Four buttons should show.  Two are button components and two are
+				cel images that look like buttons.
+				<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">Edit-Add Page</FONT> to create new page 1. Our buttons will switch the set to new pages.
+				UltraKiss will automatically switch to view this empty page.  It will be black. 
+				<p>&nbsp;</p>
+				Use <FONT color="#000099">View-Page Set</FONT> and choose set 0 from the pop-up menu to return to our menu page.	                                
+				<p>&nbsp;</p>
+			<li>
+				Next, <FONT color="#cc6600">right-click</FONT> on the first component button with the label <FONT color="#cc6600">button1</FONT>. 
+				A contexual selection popup window will show. Select <FONT color="#000099">Image Context</FONT> and then select 
+				<FONT color="#000099"> Event Wizard</FONT>.
 				<p>&nbsp;</p>
 		  <li>
+				The <FONT color="#000099">FKiSS Event Wizard</FONT> dialog will show. The Event Source should be set to 
+				'<FONT color="#cc6600">JavaCel n button4.button</FONT>', the first component button, where 'n' is probably 3 but 
+				could be another number.  Follow the instructions in the Wizard window. Choose the '<FONT color="#cc6600">press</FONT>'
+				event from the Event selection box.
+				<p>&nbsp;</p>
+		  <li>
+				The text area should now display the generated FKiSS code for a <FONT color="#cc6600">press</FONT>
+				event on the selected button cel. The object number '<FONT color="#cc6600">#n</FONT>'
+				from above is used. A default action statement to display a notify dialog is automatically generated for you.
+				<p>&nbsp;</p>
+			<li>
+				Overtype or replace the <FONT face="Courier New">;@notify</FONT> action statement with 
+				<FONT face="Courier New">;@ changeset(1)</FONT> statement. 
+				This statement causes a switch to page set 1.  If your button is button4.button,
+				your new event code should look as shown below:
+				<p>&nbsp;</p>
+				<FONT face="Courier New">;@press("button4.button")<BR>
+					;@ changeset(1)<BR>
+				</FONT>
+				<br>
+				<FONT color="#cc6600">Note:&nbsp; If you copy and paste these lines from the help
+					documentation into your configuration file you must ensure that the semicolon
+					and at-sign combination appears <u>at the beginning of every line</u>.&nbsp; You can
+					copy the help text by selecting the text and pressing Ctrl-C to copy the text
+					to the clipboard. Use Ctrl-V to paste the text into the configuration file.</FONT>				<BR>
+				<p>&nbsp;</p>
+			<li>
+				Click <FONT color="#000099">OK</FONT> to create the new event. If there are no
+				syntax errors in the event code it will become part of the new event code for
+				the set and you can actually try out the event. Go to the next step to continue.
+				<p>&nbsp;</p>
+				If there is a syntax error you will receive an error message and the Text
+				Editor will be automatically invoked so that the error can be corrected.
+				<p>&nbsp;</p>
+				Note, if you happen to paste the <FONT face="Courier New" color="#cc6600">;@ changeset(1)</FONT> statement on the same line
+				as the <FONT face="Courier New" color="#cc6600">;@press()</FONT> statement you will not see an error, but the button
+				press will not work.  The semicolon on the ;@ changeset(1) statement is 
+				being treated as a comment applied to the press() event.  The	changeset(1) statement is being ignored.
+				<p>&nbsp;</p>
+				Also, if you skipped Step 3 and did not create a new page 1, the button will not work.  Ensure that
+				page 1 actually exists.  Use <FONT color="#000099">View-Page Set</FONT> and verify that the pop-up menu shows
+				both page 0 and 1.  
+				<p>&nbsp;</p>
+				If you have problems close this set with <FONT color="#000099">File-Close</FONT> and start again.  There are other
+				ways to correct FKiSS code using the FKiSS Editor tool, but that is the topic of another lesson.  
+				<p>&nbsp;</p>
+			<li>
+				<FONT color="#cc6600">Press the button</FONT>.	Or use <FONT color="#000099">View-Page Set</FONT> and choose 
+				set <FONT color="#cc6600">1</FONT> from the pop-up menu. UltraKiss will switch to page 1 and show a black screen.				
+				<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">Edit-Import Image to Selection</FONT> and choose <FONT color="#cc6600">BALL.CEL</FONT> from the
+				Tutorials/Visual Editing directory.  If prompted to select a palette for this cel choose <FONT color="#cc6600">BALL.KCF</FONT>.
+				<p>&nbsp;</p>
+				The image file will be imported and the page color will change to blue. The page color changed to blue because the background 
+				color for a KiSS set is taken from the first color in the first multipalette in the first palette file in the set.  Another 
+				tutorial will show you how to set and change palette colors.  
+				<p>&nbsp;</p>
+				The ball image will be drawn with a green marquee box as it is a selected image cel.  Do not move this ball.
+				<p>&nbsp;</p
+			<li>
+				Use <FONT color="#000099">Edit-Copy</FONT> to copy this image cel to the clipboard.  Remember, this image cel
+				should have a green marquee box as it is the selection set that is copied.  
+				<p>&nbsp;</p>
+				Use <FONT color="#000099">Edit-Paste</FONT> to paste a copy of this ball into the page.  The selected marquee box will flash as 
+				the second ball is pasted over top of the first ball.
+				<p>&nbsp;</p>
+			<li>
+				Repeat the <FONT color="#000099">Edit-Paste</FONT> seven more times.  You can do this easily using the 
+				<FONT color="#cc6600">Ctrl-V</FONT> shortcut key for the paste operation.  Once again the selected marquee box will 
+				flash for each paste.
+				<p>&nbsp;</p>
+				Check that you have nine copies of the ball in the set.  Use <FONT color="#cc6600">F11</FONT> or <FONT color="#000099">View-Active Configuration</FONT> to
+				open the text editor tool to see the current confiuration CNF file.  Count the number of <FONT color="#cc6600">BALL.CEL</FONT>
+				entries in the object group.  Close the text editor with <FONT color="#000099">File-Exit</FONT>.
+				<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">Edit-Regroup</FONT> to combine all nine selected image cels into one group object.  
+				<FONT color="#cc6600">Right-click</FONT> on the background to remove all selections.  
+				<p>&nbsp;</p>
+				Each time you pasted a copy of the balls into the set you created an ambiguous cel.  Ambiguous cels all have the same name.  
+				The same image cel is used more than once in the KiSS set.  The cels are ambiguous because FKiSS events or other action
+				commands applied to the cel will apply to all copies of the same cel.  
+				<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">View-Page Set</FONT> and choose set 0 from the pop-up menu to return to our menu page.	                                
+				<p>&nbsp;</p>
+				Select the object group with the <FONT color="#cc6600">Press Me</FONT> buttons.  Right-click over one of the buttons and
+				choose <FONT color="#000099">Select</FONT>.  Both buttons should be encased in a blue marquee box.
+				<p>&nbsp;</p>
+				Use <FONT color="#000099">Edit-Copy</FONT> to copy this object to the clipboard.	                                
+				<p>&nbsp;</p>
+			<li>
+				Switch to page 1.  Use <FONT color="#000099">View-Page Set</FONT> and choose set 1 from the pop-up menu.	                                
+				<p>&nbsp;</p>
+				Use <FONT color="#000099">Edit-Paste</FONT> to paste a copy of the buttons into page 1.  You can again use the 
+				<FONT color="#cc6600">Ctrl-V</FONT> shortcut key for the paste operation.  
+				<p>&nbsp;</p>
+				Move the button object to the upper right corner of the page.  Then use <FONT color="#000099">Edit-Write Page</FONT>
+				to set the initial position for these objects on page 1.  These buttons are also ambiguous cels.
+				<p>&nbsp;</p>
+		    <li>
 				Use <FONT color="#000099">File-Save As</FONT> to save your work.&nbsp; Save the
-				new KiSS set to the Tutorial/FKiSS directory or a directory of your
-				choice.&nbsp; The configuration element name should be <FONT color="#cc6600">CNF1.cnf</FONT>
+				new KiSS set to the Tutorial/Visual Editing directory or a directory of your
+				choice.&nbsp; The configuration element name should be <FONT color="#cc6600">CNF2.cnf</FONT>
 				if you began this tutorial after first starting UltraKiss.&nbsp; You can
 				overwrite any existing element of the same name.
 				<p>&nbsp;</p>

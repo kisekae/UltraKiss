@@ -1,41 +1,17 @@
 # UltraKiss
 
-**UltraKiss 4.1** is now released to provide internet browser access to KiSS sets using [Webswing](https://www.webswing.org/) technology.   This provides online access to thousands of KiSS sets through your web browser.
+**UltraKiss 4.2** is now released to provide corrections for visual editing of KiSS sets.   
 
 Press this button to run UltraKiss.  
 [![UltraKiss](https://github.com/kisekae/UltraKiss/blob/master/src/Images/ultrakissbtn.svg)](https://www.bronzeart.ca/kisekae-ultrakiss/)
 
 **UltraKiss 4.0** is a new release to enable online browser operation of UltraKiss as a webswing server application.  
 **UltraKiss 4.1** now provides online visual editing and saving of KiSS sets using the UltraKiss IDE with Webswing.  
+**UltraKiss 4.2** corrects errors with ambiguous cel offsets when visual editing KiSS sets.   
 
-With UltraKiss 4.1 you can now visually edit and create KiSS sets from within your browser.  Images in GIF or PNG or BMP or KiSS CEL format with
-KiSS palette KCF files can now be directly imported into KiSS set.  Audio files and text files can also be imported to your KiSS set.
-These images and files are directly downloaded to the Webswing server when opened.  Your KiSS set can now be saved as a ZIP or LZH archive file 
-where they are uploaded to your computer from the Webswing server.   
-
-### How does it work?
-
-UltraKiss is a Java Desktop application.  It is deployed on a web server that runs a demonstration version of Webswing.  When you press the button above you will access this server.   If the server is running you will receive a notice that it is starting the application.
-
-UltraKiss will launch. A window is shown that lists the browser limitations.
+Webswing service is no longer available due to licensing issues.  A replacement service using the Jetty server is currently under development.
 
 Use the **UltraKiss Portal** to show links to KiSS sets available on OtakuWorld and other sites on the Internet. You can also use the **File-Open** command to open and load KiSS files stored on your computer.
-
-Webswing applications like UltraKiSS that require high-performance, real-time interaction, may be less responsive due to rendering latency.  For improved performance download and install UltraKiss from [Github](https://github.com/kisekae/UltraKiss/releases).
-
-
-### Limitations
-
-1. Webswing must be running on my remote server for this service to work.  If you are unable to connect to the server wait for up to 10 minutes for an automatic server restart and try again. If you are still unable to connect submit an [issue report](https://github.com/kisekae/UltraKiss/issues).
-2. Browsers do not natively support MIDI or AU sound files.  Only WAV and MP3 files will play in KiSS sets.
-3. Only KiSS sets in LZH and ZIP file archives can be opened in UltraKiss with a **File-Open** menu command.
-3. Files can only be saved and uploaded to your computer with a **File-Save A** menu command.
-4. Server memory is limited. Large KiSS sets may not load. File-Open sets are limited to 5MB.
-5. Your session will timeout and close if no activity for 5 minutes.
-
-For 
-
-![](https://github.com/kisekae/UltraKiss/blob/master/src/Images/ultrakiss-webswing.png)
 
 ## History
 In 2002 I developed a computer program to implement the Kisekae Set system, KiSS, a Japanese graphics system originally developed to facilitate costume changes on virtual dolls.  KiSS is a presentation method that allows the artist to program certain actions as you interact with images and other items in the application.  The original KiSS specifications were presented as a graduate thesis in Japan in 1992. 
@@ -94,9 +70,9 @@ In 2023, prompted by new KiSS work from [The Owl](http://followtheowl.com/) with
 
 1. Download the current UltraKiss release from [GitHub](https://github.com/kisekae/UltraKiss/releases).  For automated installation, see the release downloads.
 
-2. For manual installation, extract the files from the **UltraKiss_4.0.1.zip** (or later) download. This extract will create a folder named **ultrakiss**.
+2. For manual installation, extract the files from the **UltraKiss_4.2.zip** (or later) download. This extract will create a folder named **ultrakiss**.
 
-   For local execution on a Windows system with or without Java installed, run **UltraKiss_4.0.1_jre8_201.exe** found in the **ultrakiss** folder. This program is a fully self-contained bundled application created with [Launch4j](https://launch4j.sourceforge.net/).
+   For local execution on a Windows system with or without Java installed, run **UltraKiss_4.2_jre8_201.exe** found in the **ultrakiss** folder. This program is a fully self-contained bundled application created with [Launch4j](https://launch4j.sourceforge.net/).
 
    For local execution on a Linux or Apple system with Java already installed, run the **kisekae.jar** file from the **ultrakiss** folder using the **java -jar kisekae.jar** command.
 

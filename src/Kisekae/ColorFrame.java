@@ -2903,6 +2903,8 @@ final class ColorFrame extends KissFrame
 				{
                int baseloop = (basecel == null) ? 0 : basecel.getLoopCount() ; ;
             	int basetransparent = (basecel == null) ? -1 : basecel.getTransparentIndex() ;
+            	Point baseoffset = (basecel == null) ? null : basecel.getOffset() ;
+            	Point baselocation = (basecel == null) ? null : basecel.getLocation() ;
                Image baseimage = (basecel == null) ? null : basecel.getImage() ;
                ColorModel basecm = (basecel == null) ? null : basecel.getColorModel() ;
                Palette oldpalette = (basecel == null) ? palette : basecel.getPalette() ; 
@@ -2925,7 +2927,7 @@ final class ColorFrame extends KissFrame
 
                callback.setDataObject(cel) ;
 					callback.doClick() ;
-  					capturePanelEdit(configobject,basetransparent,baseloop,baseimage,basecm,oldpalette,cel) ;
+  					capturePanelEdit(configobject,basetransparent,baseloop,baseoffset,baselocation,baseimage,basecm,oldpalette,cel) ;
 					updated = true ;
                restorestate = false ;
 				}
@@ -3008,7 +3010,7 @@ final class ColorFrame extends KissFrame
    // the color editor to the panel frame.
 
    private void capturePanelEdit(Object editobject, int transparent, int loop,
-     Image img, ColorModel cm, Palette oldpalette, Cel oldcel)
+     Point baseoffset, Point baselocation, Image img, ColorModel cm, Palette oldpalette, Cel oldcel)
    {
       Object [] basedata = null ;
       int basecolors = 0 ;
@@ -3061,7 +3063,7 @@ final class ColorFrame extends KissFrame
 
    	else if (editobject instanceof Cel)
       {
-         panelframe.createImageEdit(editobject,transparent,loop,img,oldpalette) ;
+         panelframe.createImageEdit(editobject,transparent,loop,baseoffset,baselocation,img,oldpalette) ;
       }
    }
 

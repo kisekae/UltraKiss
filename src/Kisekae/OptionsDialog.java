@@ -6496,7 +6496,7 @@ final public class OptionsDialog extends KissDialog
 //	   if (alteditdrag != initalteditdrag) writeLine(out,"; alteditdrag = " + alteditdrag) ;
 //	   if (shifteditdrag != initshifteditdrag) writeLine(out,"; shifteditdrag = " + shifteditdrag) ;
 //	   if (importrelative != initimportrelative) writeLine(out,"; importrelative = " + importrelative) ;
-//	   if (writeceloffset != initwriteceloffset) writeLine(out,"; writeceloffset = " + writeceloffset) ;
+	   if (writeceloffset != initwriteceloffset) writeLine(out,"; writeceloffset = " + writeceloffset) ;
 //	   if (showbreakpointend != initshowbreakpointend) writeLine(out,"; showbreakpointend = " + showbreakpointend) ;
 //	   if (showstepintoend != initshowstepintoend) writeLine(out,"; showstepintoend = " + showstepintoend) ;
 //	   if (writecomment != initwritecomment) writeLine(out,"; writecomment = " + writecomment) ;

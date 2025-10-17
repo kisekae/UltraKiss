@@ -88,6 +88,16 @@ final class CelDialog extends KissDialog
    private Object listselection = null ;        // Selected list object
    private Vector alarms = null ;               // The alarms referenced
 
+	// Our update callback button that other components can attach
+	// listeners to.  The callback is fired when the cel object is
+   // updated and the dialog is closed.
+
+	protected CallbackButton callback = new CallbackButton(this,"CelDialog Callback") ;
+   private int basetransparency = -1 ;          // Original transparency
+   private Point baselocation = null ;          // Original location
+   private Point baseoffset = null ;            // Original offset
+   private boolean updated = false ;            // True if cel is updated
+
    // User interface objects.
 
 	private JPanel panel1 = new JPanel();
@@ -497,8 +507,16 @@ final class CelDialog extends KissDialog
       if (preview == null) preview = imagepreview ;
       jPanel7.add(preview,BorderLayout.CENTER) ;
 
-      // Initialize attribute values.
+      // Initialize attribute values.  Retain base values for edit undo.
 
+      if (cel != null)
+      {
+         Point p = cel.getLocation() ;
+   		baselocation = (p != null) ? new Point(p) : null ;
+         p = cel.getOffset() ;
+   		baseoffset = (p != null) ? new Point(p) : null ;
+         basetransparency = cel.getTransparency() ;
+      }
 		setValues() ;
       validate() ;
       Image img = (page == null || pageset == currentpage)
@@ -1038,6 +1056,7 @@ final class CelDialog extends KissDialog
 
    		if (LocationButton == source)
    		{
+            updated = true ;
             JDialog pb = new InputDialog(me,0) ;
             Point p = LocationButton.getLocationOnScreen() ;
             pb.setLocation(p.x,p.y) ;
@@ -1049,6 +1068,7 @@ final class CelDialog extends KissDialog
 
    		if (OffsetButton == source)
    		{
+            updated = true ;
             JDialog pb = new InputDialog(me,1) ;
             Point p = OffsetButton.getLocationOnScreen() ;
             pb.setLocation(p.x,p.y) ;
@@ -1060,6 +1080,7 @@ final class CelDialog extends KissDialog
 
    		if (TransparencyButton == source)
    		{
+            updated = true ;
             JDialog pb = new TransparentDialog(me) ;
             Point p = TransparencyButton.getLocationOnScreen() ;
             pb.show() ;
@@ -1070,6 +1091,7 @@ final class CelDialog extends KissDialog
 
    		if (LockButton == source)
    		{
+            updated = true ;
             JDialog pb = new InputDialog(me,3) ;
             Point p = LockButton.getLocationOnScreen() ;
             pb.setLocation(p.x,p.y) ;
@@ -1399,7 +1421,9 @@ final class CelDialog extends KissDialog
 		if (fpn != null) listmodel.addElement(Kisekae.getCaptions().getString("PaletteFixedGroupText") + " " + fpn) ;
       listmodel.addElement(Kisekae.getCaptions().getString("ColorCountText") + " " + cel.getColorsUsed()) ;
 		listmodel.addElement(Kisekae.getCaptions().getString("ColorBitsText") + " " + cel.getPixelBits()) ;
+  		listmodel.addElement(Kisekae.getCaptions().getString("InitialOffsetText") + " (" + cel.getInitialOffset().x + "," + cel.getInitialOffset().y + ")") ;
   		listmodel.addElement(Kisekae.getCaptions().getString("BaseOffsetText") + " (" + cel.getBaseOffset().x + "," + cel.getBaseOffset().y + ")") ;
+  		listmodel.addElement(Kisekae.getCaptions().getString("AdjustedOffsetText") + " (" + cel.getAdjustedOffset().x + "," + cel.getAdjustedOffset().y + ")") ;
 		listmodel.addElement(Kisekae.getCaptions().getString("EncodingText") + " " + cel.getEncoding()) ;
 		listmodel.addElement(Kisekae.getCaptions().getString("DrawLevelText") + " " + cel.getLevel()) ;
       if (bc != null) listmodel.addElement(bc.toString()) ;
@@ -1652,9 +1676,23 @@ final class CelDialog extends KissDialog
 
    // We overload the KissDialog close method to release our preview image.
    // We also unload any cel images loaded for display purposes.
+	// Perform any callback and if updated capture the edit change.
 
    void close()
    {
+      callback.setDataObject(cel) ;
+      callback.doClick() ;
+      if (cel != null && updated)
+      {
+         cel.setUpdated(true) ; 
+         if (parent instanceof MainFrame)
+         {
+            MainFrame main = (MainFrame) parent ;         
+            PanelFrame panel = main.getPanel() ;
+            if (panel != null)
+               panel.createImageEdit(cel,basetransparency,cel.getLoopCount(),baseoffset,baselocation,cel.getImage(),cel.getPalette()) ;
+         }
+      }
       if (cel != null && loaded) cel.unload() ;
    	stop() ;
       flush() ;

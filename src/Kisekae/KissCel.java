@@ -119,7 +119,7 @@ final class KissCel extends Cel
 
    // Return the writable offset state.
 
-   boolean isWriteableOffset() { return isUpdated() ; }
+   boolean isWriteableOffset() { return true ; }
    static boolean getWriteableOffset() { return true ; }
 
 	// Method to write our file contents to the specified output stream.
@@ -753,12 +753,28 @@ final class KissCel extends Cel
       int n = p.getMultiPaletteCount() - 1 ;
 		if (mp > n) mp = n ;
       if (mp < 0) return ;
+      
+      // If changing to multipalette 0 we are actually changing to the 
+      // multipalette defined for the current page color set.
+
+      int newmp = mp ;
+      if (mp == 0)
+      {
+         MainFrame mf = Kisekae.getMainFrame() ;
+         PanelFrame pf = (mf != null) ? mf.getPanel() : null ;
+         PageSet ps = (pf != null) ? pf.getPage() : null ;
+         if (ps != null) 
+         {
+            mpid = ps.getMultiPalette() ;
+            newmp = (mpid instanceof Integer) ? ((Integer) mpid).intValue() : 0 ;
+         }
+      }
 
 		// Change the palette.  Make the change only if the requested
 		// color model actually exists in the cel palette file.
 
 		multipalette = mp ;
-		ColorModel newcm = p.createColorModel(transparency,multipalette) ;
+		ColorModel newcm = p.createColorModel(transparency,newmp) ;
 		if (newcm != cm)
 		{
 			cm = newcm ;
@@ -768,7 +784,7 @@ final class KissCel extends Cel
 
 			// Construct an image filter.
 
-         transparentcolor = p.getTransparentColor(multipalette) ;
+         transparentcolor = p.getTransparentColor(newmp) ;
 			ImageProducer base = img.getSource() ;
 			ImageProducer ip = new FilteredImageSource(base,
          	new PaletteFilter(cm,basecm,transparency,transparentcolor));

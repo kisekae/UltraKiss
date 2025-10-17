@@ -624,14 +624,18 @@ final public class MainFrame extends KissFrame
          if (loader != null) loadtext = loader.getLoadText() ;
          
          // Restore any retained audio and video files from the previous
-         // configuration if we restarted our set.  
+         // configuration if we restarted our set.  Also reset all cels
+         // to their initial offset and transparency and palette state.
          
          if (restart && config != null)
          {
             config.addSounds(sounds) ; 
             config.addMovies(movies) ; 
+            Vector cels = config.getCels() ;
+            for (int i = 0 ; i < cels.size() ; i++)
+               ((Cel) cels.elementAt(i)).reset() ;
          }
-
+         
 			// Create a scroll pane to manage the situation when the
 			// panel frame size exceeds the window area.  Our panel
 			// must be initialized before its size can be established.
@@ -1303,6 +1307,12 @@ final public class MainFrame extends KissFrame
 					setTitle(s) ;
 					updateMenu() ;
 				}
+
+	         // After a file save resets that were disabled as a result of
+            // cel imports and inconsistent page object positions are possible.
+
+            if (menu instanceof PanelMenu)
+               ((PanelMenu) menu).setEnableReset(true) ;
 
 	         // Process the callback request as per our return indicator.
 
@@ -2227,23 +2237,24 @@ final public class MainFrame extends KissFrame
             }
 			}
 
-         // Retain the updated configuration in memory.  We write cel
-         // offsets to the configuration file so that they can be 
-         // restored on the restart.
+         // Retain the updated configuration in memory.  
 
 			try
          {
-            boolean w = OptionsDialog.getWriteCelOffset() ;
-            OptionsDialog.setWriteCelOffset(false) ;
          	byte [] b = config.write() ;
             config.setMemoryFile(b) ;
-            OptionsDialog.setWriteCelOffset(w) ;
          }
 			catch (IOException e)
 			{
 				PrintLn.println("MainFrame: restart, " + e.getMessage()) ;
 				return ;
 			}
+         
+         // Set restart indicator.  This distinguishes a View-Restart from a 
+         // CNF edit.  This is used to ignore or retain initial cel offsets 
+         // %offset() on a configuration read.
+         
+         config.setRestart(true) ;
 		}
 
       // Close any established trace window.

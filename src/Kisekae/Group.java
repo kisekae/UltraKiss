@@ -1519,7 +1519,6 @@ final class Group extends KissObject
 		final int space = 2 ;      					// size of line segment space
 		final int segment = 4 ;							// size of line segment
 
-      setPasted(false) ;
       Rectangle selectbox = getBoundingBox() ;
 		if (selectbox == null) return ;
 		if (selectbox.width <= 0) return ;

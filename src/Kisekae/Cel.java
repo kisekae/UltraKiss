@@ -90,9 +90,10 @@ abstract class Cel extends KissObject
    protected Dimension size = null ;			// The cel dimensions
    protected Dimension scaledsize = null ;  	// The cel scaled dimensions
    protected Point offset = null ;				// The cel offset
-   protected Point baseoffset = null ;			// The cel image offset
-   protected Point initialoffset = null ;		// The cel offset from cnf
-   protected Point adjustedoffset = null ;	// The cel adjusted offset
+   protected Point baseoffset = null ;			// The image offset from encoder
+   protected Point initialoffset = null ;		// The offset from cnf %offset tag
+   protected Point adjustedoffset = null ;	// The adjusted offset from move
+   protected Point restartoffset = null ;    // The offset on first cnf load
    protected ColorModel cm = null ;				// The cel color model
    protected ColorModel basecm = null ;		// The cel original color model
    protected float sf = 1.0f ;					// The cel scale factor
@@ -157,6 +158,7 @@ abstract class Cel extends KissObject
    protected boolean importascel = false ;	// If true, converted to cel
    protected boolean undoallpages = false ;	// Edit undo for all pages 
    protected boolean unloadedmove = false ;	// True if cel moved when unloaded
+   protected boolean cnfmpid = false ;       // True if cel multipalette set by cnf
 
    // Cel tag update attributes
 
@@ -171,7 +173,7 @@ abstract class Cel extends KissObject
    {
       init() ;
       selectcolor = Color.green ;
-      markcolor = Color.cyan ;
+      markcolor = Color.yellow ;
       flickercolor = Color.red ;
       transparency = 255 ;
    }
@@ -202,7 +204,8 @@ abstract class Cel extends KissObject
 
    // Function to find a Cel object by name.  For duplicate or 
    // ambiguous cels, we return the first cel that we find on the
-   // current page.
+   // current page.  For frames, the syntax is "!name:frame" where
+   // name is either a cel group name or an object #n. 
 
    static Cel findCel(String name, Configuration c, FKissEvent event)
    {
@@ -225,6 +228,30 @@ abstract class Cel extends KissObject
          Object o = c.getVariable().getValue(name,event) ;
          if (!(o instanceof String)) return null ;
          name = o.toString() ;
+      }
+      
+      // Test for a frame identifier.  These are of the form
+      // !name:frame for a cel group name or !#name:frame for 
+      // an object group.  The frame is an integer beginning from 0.
+      // These cel names distinguish unique ambiguous cels used
+      // in cel groups or object groups.
+      
+      if (name.contains(":") && name.startsWith("!"))
+      {
+         int n = 0 ;
+         Object o = null ;
+         String s1 = name.substring(1,name.indexOf(":")) ;
+         String s2 = name.substring(name.indexOf(":")+1) ;
+         if (s1.startsWith("#"))
+            o = Group.findGroup(s1, c, event) ;
+         else
+            o = CelGroup.findCelGroup(s1, c, event) ;
+         if (o == null) return null ;
+         try { n = Integer.parseInt(s2) ; }
+         catch (NumberFormatException e) { return null ; }
+         if (!(o instanceof KissObject)) return null ;
+         Cel cel = ((KissObject) o).getCel(n) ;
+         return cel ;
       }
 
       // Find the cel.  Watch for directory separator differences and 
@@ -364,17 +391,25 @@ abstract class Cel extends KissObject
    void setOffset(int x, int y) { offset.x = x ; offset.y = y ; }
 
    // Set the cel base offset.  This is the initial offset when the cel
-   // is loaded if the cel contains offset values.
+   // is loaded if the image contains offset values.  
 
    void setBaseOffset(Point p) { baseoffset = p ; }
 
    // Set the cel adjusted offset.  This is the offset value if it is changed
-   // through edit commands.
+   // through edit commands when the cel is moved.
 
    void setAdjustedOffset(Point p) { adjustedoffset = p ; }
 
+   // Set the cel restart offset.  This is the initial offset when the CNF is 
+   // first read.  It is used on View-Restart to restore the initial offset.
+
+   void setRestartOffset(Point p) 
+   { 
+      if (restartoffset == null && p != null) restartoffset = new Point(p) ; 
+   }
+
    // Set the cel initial offset.  This is the offset specification from the
-   // cel configuration line.
+   // cel configuration line %offset tag in the CNF.
 
    void setInitialOffset(int x, int y) { initialoffset.x = x ; initialoffset.y = y ; }
    void setInitialOffset(Point p) 
@@ -483,6 +518,10 @@ abstract class Cel extends KissObject
    // Set the cel fixed multipalette identifier value.
 
    void setPaletteGroupID(Object p) { mpid = p ; }
+
+   // Indicate that the multipalette was set in the CNF cel specification.
+
+   void setCnfmpid(boolean b) { cnfmpid = b ; }
 
    // Set the cel pages vector.  This vector contains Integer PageSet
    // identifier values.
@@ -630,7 +669,9 @@ abstract class Cel extends KissObject
    void setTransparentColor(Color c) { transparentcolor = c ; }
 
    // Set the cel size.  This is set to the image size on image load,
-   // but the size can be set manually for video cels.
+   // but the size can be set manually for video cels.  Size can also
+   // be set on an edit undo without actual scaling as the image is
+   // replaced.  
 
    void setSize(Dimension d)
    {
@@ -907,6 +948,10 @@ abstract class Cel extends KissObject
 
    Point getInitialOffset() { return initialoffset ; }
 
+   // Return the cel restart offset used to restore intial offset on View-Restart.
+
+   Point getRestartOffset() { return restartoffset ; }
+
    // Return the cel base offset. This is the offset read from the image.
 
    Point getBaseOffset() { return baseoffset ; }
@@ -920,7 +965,8 @@ abstract class Cel extends KissObject
    Point getAdjustedOffset() 
    { 
       if (adjustedoffset != null) return adjustedoffset ;
-      return new Point(initialoffset.x+baseoffset.x,initialoffset.y+baseoffset.y) ;
+//      return new Point(initialoffset.x+baseoffset.x,initialoffset.y+baseoffset.y) ;
+      return new Point(0,0) ;
    }
 
    // Return a new instance of the cel adjusted offset point.
@@ -1000,6 +1046,10 @@ abstract class Cel extends KissObject
    // Return the cel palette group identifier object.
 
    Object getPaletteGroupID() { return mpid ; }
+
+   // Return the indicator that the mpid was set by a CNF cel specification.
+
+   boolean getCnfmpid() { return cnfmpid ; }
 
    // Return the cel animate flag.
 
@@ -1416,6 +1466,18 @@ abstract class Cel extends KissObject
          transparency = inittransparency ;
          changeTransparency(0) ;
       }
+      
+      // Reset offsets.  Base offset is from image.
+      // Adjusted offset is from edits or cel moves within group object.
+      // Initial offset is is from CNF %offset() tag.
+      // Restart offset is initial offset on first load.
+
+      Point p1 = getBaseOffset() ;
+      Point p2 = getInitialOffset() ;
+      if (p1 == null) p1 = new Point(0,0) ;
+      if (p2 == null) p2 = new Point(0,0) ;
+      setOffset(new Point(p1.x+p2.x,p1.y+p2.y)) ;
+      setAdjustedOffset(null) ;
    }
 
    // Reset the cel to animation state.
@@ -1501,7 +1563,7 @@ abstract class Cel extends KissObject
       boolean b = false ;
       if (type == null) type = extension ;
       type = type.toLowerCase() ;
-      Point celoffset = getBaseOffset() ;
+      Point celoffset = new Point(0,0) ;
       if (".cel".equals(type)) b = KissCel.getWriteableOffset() ;
       else if (".bmp".equals(type)) b = BmpCel.getWriteableOffset() ;
       else if (".gif".equals(type)) b = GifCel.getWriteableOffset() ;
@@ -1510,9 +1572,17 @@ abstract class Cel extends KissObject
       else if (".ppm".equals(type)) b = PpmCel.getWriteableOffset() ;
       else if (".pbm".equals(type)) b = PpmCel.getWriteableOffset() ;
       else if (".pgm".equals(type)) b = PpmCel.getWriteableOffset() ;
+      
+      // Write the offset in the cel file if allowed.  If not write
+      // a zero offset.  The true offset will be written in the CNF
+      // as a %offset() tag.  
+      
       if (OptionsDialog.getWriteCelOffset() && b)
+      {
          if (!hasDuplicateKey(getKeyTable(),cid,getPath().toUpperCase()))
-            celoffset = getAdjustedOffset() ;
+            celoffset = getOffset() ;
+      }
+      
 
       // If the image has changed we must apply current colors and transparency.
       // Cel size changes encode the scaled image.
@@ -1810,8 +1880,9 @@ abstract class Cel extends KissObject
       // %offset[x,y] specification.
 
       i = comment.indexOf("%offset[") ;
-      Point p1 = getAdjustedOffset() ;
+      Point p1 = getOffset() ;
       Point p2 = getBaseOffset() ;
+      Point p3 = getInitialOffset() ;
       b = isWriteableOffset() ;
       
       // Offsets for exported cels are the current adjusted offset. Our export
@@ -1833,17 +1904,24 @@ abstract class Cel extends KissObject
             p2 = new Point(0,0) ;
       }
       
-      // Show the offset if it cannot be written in the file and the cel
+      // Show the offset if it cannot be written in the cel file and the cel
       // is not duplicated. 
-      
-      if (p1.x != p2.x || p1.y != p2.y)
+
+      Point p4 = new Point(p2.x+p3.x,p2.y+p3.y) ;        // base + initial
+      if ((!b || (p1.x != p4.x || p1.y != p4.y)) ||      // offset has changed
+          (b && (p2.x != p3.x || p2.y != p3.y)))         // base != initial
          if (!(OptionsDialog.getWriteCelOffset() && b &&
                !hasDuplicateKey(Cel.getKeyTable(),cid,getPath().toUpperCase()))) 
          {
-            if (OptionsDialog.getXYOffsets()) 
-         	   newcomment.append("%x" + (p1.x-p2.x) + " %y" + (p1.y-p2.y) + " ") ;
-            else
-         	   newcomment.append("%offset[" + (p1.x-p2.x) + "," + (p1.y-p2.y) + "] ") ;
+            Point p5 = new Point(p1.x-p4.x,p1.y-p4.y) ;  // change difference
+            Point p6 = new Point(p5.x+p3.x,p5.y+p3.y) ;  // write offset-base
+            if (!(p6.x == 0 && p6.y == 0))
+            {
+               if (OptionsDialog.getXYOffsets()) 
+            	   newcomment.append("%x" + (p6.x) + " %y" + (p6.y) + " ") ;
+               else
+            	   newcomment.append("%offset[" + (p6.x) + "," + (p6.y) + "] ") ;
+            }
          }
 
       // %attributes[a1,a2,...] specification.
@@ -1975,7 +2053,7 @@ abstract class Cel extends KissObject
    // Method to fix the cel multipalette group.  This is done through 
    // the cel CNF configuration or through a setpal() command.  A cel
    // with a fixed palette group does not participate in color set changes
-   // to a different palette group.
+   // to a different palette group.  
 
    void fixPaletteGroup(Integer n) 
    { 
@@ -2580,7 +2658,6 @@ abstract class Cel extends KissObject
       final int space = 2 ;      					// size of line segment space
       final int segment = 4 ;							// size of line segment
 
-      setPasted(false) ;
       Rectangle selectbox = getBoundingBox() ;
       if (selectbox == null) return ;
       if (selectbox.width <= 0) return ;

@@ -1488,6 +1488,7 @@ final public class MainMenu extends KissMenu
       setOpenPath(fdnew.getPath()) ;      
       OptionsDialog.setSecurityEnable(OptionsDialog.getInitSecurityEnable());
       fd = fdnew ;
+      if (ze == null && fdnew.getChoice() == JOptionPane.NO_OPTION) return ;
       openContext(fd, ze) ;
    }
 

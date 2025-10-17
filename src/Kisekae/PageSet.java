@@ -570,9 +570,9 @@ final class PageSet extends KissObject
    // of object positions.
 	
 	void restoreState(Object cid, Object state)
-   { restoreState(cid,state,false) ; }
+   { restoreState(cid,state,false,true) ; }
 
-	void restoreState(Object cid, Object state, boolean restorevisibility)
+	void restoreState(Object cid, Object state, boolean restorevisibility, boolean restoremp)
 	{
       Integer id = (Integer) this.getIdentifier() ;
 		State sv = (State) State.getByKey(cid,this,state) ;
@@ -583,8 +583,11 @@ final class PageSet extends KissObject
 		{
 			positions = (sv.variable[0] instanceof Vector)
 				? (Vector) sv.variable[0] : new Vector() ;
-			multipalette = (sv.variable[1] instanceof Integer)
-				? (Integer) sv.variable[1] : new Integer(0) ;
+         if (restoremp)
+         {
+   			multipalette = (sv.variable[1] instanceof Integer)
+   				? (Integer) sv.variable[1] : new Integer(0) ;
+         }
 		}
 		
 		// Now restore the groups on this page.  This restores all 

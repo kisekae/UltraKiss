@@ -3,17 +3,23 @@
 		<title>Visual Editing Lesson 1</title></head>
 	<body>
 		<h1 align="center"><font color="#000000">Visual Editing Tutorial</font></h1>
-		<h1 align="center"><font color="#ff0000">Lesson 1. Understanding How To Import Images</font></h1>
+		<h1 align="center"><font color="#ff0000">Lesson 1. Understanding How To Select Images</font></h1>
 		<p>&nbsp;</p>
 		<ol>
 			<li>
-				This tutorial will show you how to bring new images into your KiSS set.&nbsp; New images are the foundation 
-                                of any Kisekae application.  Kisekae UltraKiss is a visual development system.<br>
-                                <br>
-                                Ensure that UltraKiss is showing the main logo screen.&nbsp; Close any existing set.
+				This tutorial will show you how to bring new images into your KiSS set and work with images in an 
+				existing KiSS set.  Images are the foundation of any KiSS application.  Kisekae UltraKiss is a 
+				visual application development system.
 				<p>&nbsp;</p>
-                                This tutorial requires <FONT color="#cc6600">image files</FONT>.  If the necessary files cannot be found 
-                                on your computer download the tutorial files using <FONT color="#000099">Help-Tutorial Files</FONT>.
+                Ensure that UltraKiss is showing the main logo screen.&nbsp; Close any existing set.
+				In this lesson you will learn the difference between an image cel and an object group.  Cels are usually an image 
+				but can be other things like buttons or text boxes or movies.  An object group is a collection of cels that together
+				form a single object that can be manipulated as one unit.
+				<p>&nbsp;</p>
+                Ensure that UltraKiss is showing the main logo screen.&nbsp; Close any existing set.
+				<p>&nbsp;</p>
+                This tutorial requires <FONT color="#cc6600">image files</FONT>.  If the necessary files cannot be found 
+                on your computer download the tutorial files using <FONT color="#000099">Help-Tutorial Files</FONT>.
 				<p>&nbsp;</p>
 			<li>
 				Use <FONT color="#000099">File-New</FONT>.&nbsp; This will create a new KiSS
@@ -22,59 +28,200 @@
 			<li>
 				Use <FONT color="#000099">File-Properties</FONT> to change the new KiSS
 				configuration (CNF) file properties.&nbsp; The attributes section of the
-				Properties dialog will show a playfield size of (800,600).&nbsp; If it is
-                                not showing that size, press the
+				Properties dialog will show a playfield size of (800,600).&nbsp; Press the
 				small button beside this attribute and change the screen size to <FONT color="#cc6600">
-					(800,600)</FONT>.&nbsp; Exit the configuration Properties dialog by
+				(600,600)</FONT>.&nbsp; Exit the configuration Properties dialog by
 				pressing the OK button.
 				<p>&nbsp;</p>
 			<li>
-				The first page of our set will be a menu page.&nbsp; We will add two cel images
-                                that look like buttons to this page.  We will use these buttons to switch to other pages in the set.&nbsp; 
-                                Each button will have a 'press' event attached to it.&nbsp; The 'press' event will have the FKiSS code
-				that we use to switch to a new page.<BR>
-				<BR>
-				On the main UltraKiss screen use <FONT color="#000099">Edit-Import Image to New
-					Object</FONT>.&nbsp; Select the <FONT color="#cc6600">button1.cel</FONT> file
-				from the Tutorial/FKiSS directory.&nbsp; This is a truecolor or Cherry Kiss cel
-				so you will not see a prompt&nbsp;for an associated palette file.&nbsp; The
-				image will be loaded and positioned at the upper left corner of the playfield.<BR>
-				<BR>
-				Drag the button to the center of the screen.&nbsp; <FONT color="#cc6600">Repeat
-					this step to import button2.cel</FONT>.&nbsp; Position the second button
-				below the first button.
+				We are going to build a dynamic KiSS set that includes motion and animation. The first page of our set 
+				will be a menu page.&nbsp;Use <FONT color="#000099">Edit-Add Component</FONT> and choose 
+				a <FONT color="#cc6600">button</FONT> type component from the component selection dialog.  
+				We will add two button components to this page.  We will also add two cel images to this page that 
+				look like buttons to compare and contrast image cel type buttons with component type buttons.
+				<p>&nbsp;</p>
+				The button component will be labelled <FONT color="#cc6600">button1</FONT> and will be  
+				positioned in the upper left corner of the playfield.
+				It will have a green marquee box drawn around the image.  This green marquee box indicates that the
+				button is a cel image selected for editing.
+				<p>&nbsp;</p>
+				Drag the button to the center of the screen.
+				<p>&nbsp;</p>
+            <li>
+				Add another button.  Use <FONT color="#000099">Edit-Add Component</FONT> and choose a <FONT color="#cc6600">button</FONT> type
+				component from the component selection dialog.   This button will be labelled <FONT color="#cc6600">button2</FONT>
+				and will also have a green marquee box.  This button has been imported into the same selection set as the first button.
+				<p>&nbsp;</p>
+				Drag this button to the center of the screen and position it below button 1.
+				<p>&nbsp;</p>				
+				Both buttons should have green marquee boxes. Both buttons are part of the same selection set. If they do not 
+				both have green marquee boxes use <FONT color="#000099">Edit-Undo All</FONT>
+				and begin again from Step 4.  Note, if you start again your buttons will now be named <FONT color="#cc6600">button3</FONT>
+				and <FONT color="#cc6600">button4</FONT> as new component names are created each time a Component is added.
 				<p>&nbsp;</p>
 			<li>
-                                Note the difference between <FONT color="#000099">Edit-Import Image to Selection</FONT>
-                                and <FONT color="#000099">Edit-Import Image to New Object</FONT>.  The first command imports
-                                images into the KiSS set that are intended to be grouped together into the same object.
-                                These images all have green marquee boxes.  They are put together into one object with
-                                a new object number using the <FONT color="#000099">Edit-Regroup</FONT> command.<BR>
-                                <BR>
-                                Images like the chest plate and the underwear that have front and back parts are imported 
-                                as selections as these images are intended to be grouped together into one object.<BR>
-				<BR>
-                                The <FONT color="#000099">Edit-Import Image to New Object</FONT> is used when the image
-                                is intended to be placed into its own object.  These images all have blue marquee boxes.
-                                New unique object numbers are assigned to these images when they are imported.<BR>
-                                <BR>
-                                It is not necessarily a problem if you imported images as objects and later decide
-                                you wanted them as image selections.<br>
-                                <br>
-                                To combine two or more objects into one new object, select the objects by right clicking
-                                and choosing <FONT color="#000099">Select</FONT> while holding the <FONT color="#cc6600">CTRL</FONT> 
-                                key down.  The CTRL key is used for multiple selections.  You can also select multiple
-                                objects with the mouse by holding the <FONT color="#cc6600">ALT</FONT> key down and drawing
-                                a selection box.<BR>
-                                <BR>
-                                When objects are selected use <FONT color="#000099">Edit-Ungroup</FONT> to draw green marquee boxes
-                                around all image cels in the objects.  When the images are all individually selected
-                                an <FONT color="#000099">Edit-New Group</FONT> will combine all selected image cels into a new
-                                object.  A new object number is assigned.
+				Use <FONT color="#000099">Edit-Unselect All</FONT> or right-click any where on the screen not over
+				an object.  The green marquee selection boxes will disappear as we are no longer selecting these
+				cels for editing.  The two button components are now combined as part of the same object number #1.
 				<p>&nbsp;</p>
-		  <li>
+				<FONT color="#000099">Right-click</FONT> on one of the component button images and choose 
+				<FONT color="#cc6600">Select</FONT> from the pop-up menu.
+				The two buttons will now be encased in a blue marquee box.  The blue marquee box shows that this 
+				object contains both buttons and has been selected for editing.
+				<p>&nbsp;</p>
+				When objects or cels are selected for editing they can always be moved on the screen or otherwise 
+				manipulated regardless of any fix state or other restrictions that may apply within the KiSS set.
+				<p>&nbsp;</p>
+			<li>		
+				Add another button.  Use <FONT color="#000099">Edit-Add Component</FONT> 
+				and choose a <FONT color="#cc6600">button</FONT> type component from the component selection dialog.   
+				This button will be labelled <FONT color="#cc6600">button3</FONT> and will also have a green marquee box.
+				The blue marquee box around the first two buttons will disappear.  An object selection cannot be combined
+				with an image selection.  When you created a new button you created a new cel image selection.
+				<p>&nbsp;</p>
+				Drag this button to the center of the screen and position it below the other buttons.
+				<p>&nbsp;</p>				
+				The first two buttons belong to object group #1.  This third button, because it was not imported
+				into an existing selection set, has created a new object in the configuration.  This would be object
+				group #2.
+				<p>&nbsp;</p>
+				<FONT color="#000099">Right-click</FONT> anywhere on the screen not on an object to remove any current edit selection.  
+				Pick up the various button components with the mouse and move them on the screen.  Observe that one object has two button
+				components that move together and the other object has only one.
+				<p>&nbsp;</p>
+			<li>
+				We can play with these object groups. Select the object group that has two button components by right-clicking
+				on one of the buttons and choosing <FONT color="#cc6600">Select</FONT> from the pop-up menu.  Both buttons will
+				now be encased with a blue marquee box.  This means that the object group is selected.
+				<p>&nbsp;</p>
+				Now, select the object group that has only one button components by right-clicking
+				on this button and choosing <FONT color="#cc6600">Select</FONT> from the pop-up menu.  
+				This button will now be encased with a blue marquee box.  The other buttons will no longer be marked.  
+				This selection of the single button object has changed our object selection set.  
+				<p>&nbsp;</p>
+				To make multiple selections of objects use the <FONT color="#cc6600">CTRL</FONT> key.  Hold the CTRL key
+				down and right click while over one of the unselected buttons in object #1.  Choose <FONT color="#cc6600">Select</FONT>
+				from the pop-up menu.
+				This object group will be selected and now all buttons will now show a blue marquee box.  Both object groups
+				are now selected.
+				<p>&nbsp;</p>
+				Even though the objects are both selected each object group will still move independently.  Use your mouse and move 
+				each object.  To move all selected objects concurrently use the <FONT color="#cc6600">SHIFT</FONT> key.  Hold the SHIFT 
+				key down and drag.  Observe the result.
+				<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">Edit-Unselect All</FONT> or right-click somewhere on the screen not over an object
+				to remove all selections.  Now, position your mouse near the upper left of the playfield and use your mouse 
+				to draw a selection box around the buttons.  Hold the <FONT color="#cc6600">ALT</FONT> key key down as you drag 
+				your mouse.	 Select all the buttons. This is another way to perform a multiple selection.
+				<p>&nbsp;</p>
+				Both object groups are now selected but they are both independent objects as discussed in the previous step.  
+				To combine these objects into one object group use <FONT color="#000099">Edit-New Group</FONT>.  This will create 
+				a new group object with a new object number.  The marquee box will flash.  You can now pick up and move the new 
+				object with your mouse.  All three buttons will move concurrently.					
+				<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">View-Active Configuration</FONT> or press <FONT color="#cc6600">F11</FONT>
+				to open the Text Editor tool to view the CNF configuration element that has been created for this
+				new KiSS set.  Editing this text document is another way to edit our configuration and update our KiSS set.  
+				<p>&nbsp;</p>
+				Select the first line in the <FONT color="#cc6600">[Cel Section]</FONT> of the file.
+				This line should refer to object <FONT color="#cc6600">#3</FONT> and <FONT color="#cc6600">button6.button</FONT>.
+				You will observe that various attributes are specified for this button after the last semicolon on the line.
+				Another lesson will show how these attributes can be set.
+				<p>&nbsp;</p>
+				You may observe that the component name for the third button has changed from <FONT color="#cc6600">button3.button</FONT> to 
+				<FONT color="#cc6600">button6.button</FONT>.  This is a side effect of the Edit-New Group command.  Component names are
+				internally generated when new components are created.  For now, select the line containing this component name and 
+				press the <FONT color="#cc6600">Del</FONT> key on your keyboard to delete this line.
+				<p>&nbsp;</p>
+				Use the <FONT color="#000099">File-Exit</FONT> command to exit the text editor and apply the changes to the active set.
+				The set will reload and the third button you created in Step 7 will be gone.
+				<p>&nbsp;</p>
+			<li>
+				We will now add two cel images that look like buttons to this page. 
+				On the main UltraKiss screen use <FONT color="#000099">Edit-Import Image to New
+				Object</FONT>.&nbsp; Select the <FONT color="#cc6600">button1.cel</FONT> file
+				from the Tutorial/Visual Editing directory.&nbsp; This is a truecolor or Cherry Kiss cel
+				so you will not see a prompt for an associated palette file.&nbsp; The
+				image will be loaded as a new object and positioned at the upper left corner of the playfield.
+				It will have a blue marquee box as it was imported as an object.
+				<p>&nbsp;</p>
+				Drag the button to the center of the screen and position it beside the other button components.&nbsp; 
+				<p>&nbsp;</p>
+			<li>	
+				Now, use <FONT color="#000099">Edit-Import Image to Selection</FONT> to import another image as a cel.&nbsp; 
+				You may find that you cannot use the Import to Selection command as it is disabled.  The previous selection 
+				imported an image as an object and it has a blue marquee box.  Object selection sets cannot be combined with
+				image selection sets.
+				<p>&nbsp;</p>				
+				Use <FONT color="#000099">Edit-Unselect All</FONT> or right-click somewhere on the screen not over an object
+				to remove all selections.  Now, repeat the command to <FONT color="#000099">Edit-Import Image to Selection</FONT>.
+				<p>&nbsp;</p>								
+				Select the <FONT color="#cc6600">button2.cel</FONT> file from the Tutorial/Visual Editing directory.&nbsp; This is another 
+				truecolor or Cherry Kiss cel so you will not see a prompt for an associated palette file.  This image cel as
+				it has been imported as a selection will be encased in a green marquee box.
+				<p>&nbsp;</p>											
+				Position the second button below the first button.
+				<p>&nbsp;</p>
+			<li>
+                Note the difference between <FONT color="#000099">Edit-Import Image to Selection</FONT>
+                and <FONT color="#000099">Edit-Import Image to New Object</FONT>.  The first command imports
+                images into the KiSS set that are intended to be grouped together into the same object.
+                These images all have green marquee boxes.  They are put together into one object with
+                a new object number using the <FONT color="#000099">Edit-Regroup</FONT> command.
+				<p>&nbsp;</p>
+                The <FONT color="#000099">Edit-Import Image to New Object</FONT> is used when the image
+                is intended to be placed into its own object.  These images all have blue marquee boxes.
+                New unique object numbers are assigned to these images when they are imported.
+				<p>&nbsp;</p>
+			<li>
+				We will now explore selecting cels. Use <FONT color="#000099">Edit-Unselect All</FONT> or right-click somewhere 
+				on the screen not over an object to remove all selections.  
+				<p>&nbsp;</p>
+				Select only the two image cels recently imported with the <FONT color="#cc6600">Press Me</FONT> text.  Select the objects by right clicking and choosing 
+				<FONT color="#000099">Select</FONT> while holding the <FONT color="#cc6600">CTRL</FONT> key down.  
+				You can also select multiple objects with the mouse by holding the <FONT color="#cc6600">ALT</FONT> key down 
+				and drawing a selection box.  Draw a box only around the two image cels recently imported.
+				The objects when selected will both have blue marquee boxes.
+				<p>&nbsp;</p>
+                When the objects are selected use <FONT color="#000099">Edit-Ungroup</FONT> to draw green marquee boxes
+                around all image cels in all the objects.  When images are all individually selected an <FONT color="#000099">Edit-Regoup</FONT>
+				will restore the selected image cels back into their original object.  
+				<p>&nbsp;</p>
+				Although we have two images selected with green marquee boxes they are not part of the same object.  
+				<p>&nbsp;</p>
+                For example, with the objects both ungrouped and showing green marquee boxes for the cels, use your mouse and drag 
+				one of the cels off to the side.  Perform an <FONT color="#000099">Edit-Regroup</FONT> and observe that the two cels
+				are restored as individual objects in their new position.  Both buttons should now have blue marquee boxes.  Further,
+				if you pick up and drag these two button cels with your mouse both cels move independently.
+				<p>&nbsp;</p>				
+				Ungrouping and regrouping cels in this way lets us manipulate object cels within the object.
+				<p>&nbsp;</p>
+			<li>	
+				When the images are all ungrouped an <FONT color="#000099">Edit-New Group</FONT> will combine all selected image cels into one 
+				new object. A new object number is assigned.  Combining cels in this way is identical to combining group objects as we did previously 
+				with the component buttons.  
+				<p>&nbsp;</p>
+				With both button cels with the <FONT color="#cc6600">Press Me</FONT> descriptions selected as objects with blue marquee boxes, 
+				use <FONT color="#000099">Edit-Ungroup</FONT> once again to draw green marquee boxes around the objects.  This time use 
+				<FONT color="#000099">Edit-New Group</FONT>	to combine the cels into one object.  The blue marquee box will now show the boundary 
+				of the combined cels.
+				<p>&nbsp;</p>
+			<li>	
+				Once again use <FONT color="#000099">Edit-Ungroup</FONT> to convert the object to selected cels or right-click on one
+				of the selected buttons and choose <FONT color="#cc6600"Ungroup</FONT> from the pop-up menu.  This time right click on the  
+				cel image that you dragged to the side in the previous step and choose <FONT color="#cc6600">Select Cel</FONT> from the pop-up menu.  
+				A yellow marquee box will be drawn around this cel image.  A yellow marquee box indicates that this is a selected cel from within 
+				the set of cels selected in the object.  Selected cels like this are used for copy and paste operations that will be explored in 
+				the following lesson.
+				<p>&nbsp;</p>					
+				Use your mouse to drag this selected cel and position it so that one button is better aligned above the other button.  
+				Use <FONT color="#000099">Edit-Regroup</FONT> to restore the object group with the repositioned cel.
+				<p>&nbsp;</p>
+			<li>
 				Use <FONT color="#000099">File-Save As</FONT> to save your work.&nbsp; Save the
-				new KiSS set to the Tutorial/FKiSS directory or a directory of your
+				new KiSS set to the Tutorial/Visual Editing directory or a directory of your
 				choice.&nbsp; The configuration element name should be <FONT color="#cc6600">CNF1.cnf</FONT>
 				if you began this tutorial after first starting UltraKiss.&nbsp; You can
 				overwrite any existing element of the same name.

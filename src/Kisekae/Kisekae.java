@@ -84,7 +84,7 @@ public class Kisekae extends Applet
    // Security variables
 
    private static String copyright = 
-      "Kisekae UltraKiss V4.1 (c) 2002-2025 William Miles" ;
+      "Kisekae UltraKiss V4.2 (c) 2002-2025 William Miles" ;
    private static Object authorize = null ;        // Seigen module
    private static Calendar warningdate = null ;    // Secure warning
    private static Calendar expiredate = null ;     // Licence expire
@@ -182,7 +182,7 @@ public class Kisekae extends Applet
 
       LogFile.start() ;
       builddate = Calendar.getInstance() ;
-      builddate.set(2025,9-1,5) ;
+      builddate.set(2025,10-1,17) ;
       
       // Restore the properties.
       
@@ -2364,22 +2364,22 @@ public class Kisekae extends Applet
                 + "<p style=\"text-align: center;\"><img src=\""+s+"\"></p>"
                 + "<p>This application provides browser access to KiSS files through a <a href=\"https://www.webswing.org/\">Webswing</a> server.<br><br>"
                 + "UltraKiss requires high-performance, real-time interaction.  If your Internet speed is slow<br>"
-                + "Webswing may respond poorly due to network rendering latency.<br><br>"
-                + "Effective with UltraKiss 4.1, Webswing now enables editing of KiSS sets and download<br>"
-                + "and upload of files to and from the web server.  Files can now be saved to your computer.<br><br>"
-                + "With Webswing, all KiSS sets must be loaded from an LZH or ZIP archive file.  New sets<br>"
-                + "developed with UltraKiss in Webswing must be saved within an LZH or ZIP archive file.<br><br>"
+                + "Webswing may respond poorly due to global network rendering latency.<br><br>"
+                + "Effective with UltraKiss 4.1, Webswing now enables download and upload of files<br>"
+                + "to and from the web server.  Files can now be saved to your local computer.<br><br>"
+                + "With Webswing, KiSS sets must be loaded from an LZH or ZIP archive file.  New or edited<br>"
+                + "UltraKiss sets must be saved as an LZH or ZIP archive file for upload to your computer.<br><br>"
                 + "Your browser will only play WAV and MP3 files when running through Webswing.<br>"
                 + "This is a Webswing browser sound limitation.  MIDI and AU sound is not available. <br><br>"
                 + "Server resources are limited. Files downloaded through File-Open are limited to 5 MB.<br><br>"
+                + "To download and run your own KiSS sets packaged in LZH or ZIP files use <a href=\"file://fileopen\">File-Open</a>.<br>"
+                + "To load and run online KiSS sets on the Internet (OtakuWorld) use <a href=\"file://openportal\">File-Open Portal</a>.<br>"
+                + "To upload LZH or ZIP or other files from UltraKiss to your local computer use <a href=\"\">File-Save As</a>.<br><br>"
                 + "For full features without these limitations <a href=\"https://github.com/kisekae/UltraKiss/releases\">download and install UltraKiss</a> from GitHub.<br>"
                 + "Fully automated installers are provided for 64-bit Windows, Linux, and Apple systems.<br>"
                 + "To report bugs or provide suggestions for improvement <a href=\"https://github.com/kisekae/UltraKiss/issues\">file an issue report</a> on GitHub.<br><br>"
-                + "To load and run online KiSS sets on the Internet (OtakuWorld) use <a href=\"file://openportal\">File-Open Portal</a>.<br>"
-                + "To load and run your own KiSS sets packaged in LZH or ZIP files use <a href=\"file://fileopen\">File-Open</a>.<br>"
-                + "To upload LZH or ZIP or other files to your computer use File-Save As.<br><br>"
-                + "If you do not know what KiSS is, view the UltraKiss documentation using <a href=\"file://helpcontents\">Help-Contents</a>.<br>"
-                + "To learn how to make KiSS sets using the UltraKiss IDE see <a href=\"file://helptutorial\">Help-Tutorials</a>.</p>"
+                + "If you do not know what KiSS is, see the UltraKiss documentation using <a href=\"file://helpcontents\">Help-Contents</a>.<br>"
+                + "To learn how to make or visually edit KiSS sets within UltraKiss see <a href=\"file://helptutorial\">Help-Tutorials</a>.</p>"
                 + "</body></html>");
 
             // handle link events

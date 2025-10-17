@@ -89,6 +89,8 @@ final class PanelMenu extends KissMenu
 
    private MainMenu menu = null ;			// Reference to the main menu
    private boolean enableRestart = true ;	
+   private boolean enableReset = true ; 
+   private boolean doundoall = false ;
 
    // MenuBar definitions
 
@@ -454,6 +456,7 @@ final class PanelMenu extends KissMenu
       reset.addActionListener(this) ;
       if (!applemac) reset.setMnemonic(KeyEvent.VK_R) ;
       reset.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F7,0)) ;
+      reset.setEnabled(enableReset) ;
       m[2].add((restart = new JMenuItem(Kisekae.getCaptions().getString("MenuViewRestart")))) ;
       restart.addActionListener(this) ;
       restart.setEnabled(enableRestart) ;
@@ -728,6 +731,10 @@ final class PanelMenu extends KissMenu
 
       parent.validate() ;
    }
+   
+   // Is an Undo All happening?
+   
+   boolean isUndoAll() { return doundoall ; } 
 
    // Implementation of required KissMenu method to return our current
    // FileOpen object.
@@ -774,6 +781,21 @@ final class PanelMenu extends KissMenu
       restart.setEnabled(b) ;
    }
 
+   // Enable or disable set resets.  
+
+   void setEnableReset(boolean b) 
+   { 
+		if (!SwingUtilities.isEventDispatchThread())
+		{
+			Runnable awt = new Runnable()
+			{ public void run() { setEnableReset(b) ; } } ;
+			SwingUtilities.invokeLater(awt) ;
+			return ;
+		}
+      enableReset = b ; 
+      reset.setEnabled(b) ;
+   }
+
 
 
    // The action method is used to process control menu events.
@@ -792,6 +814,7 @@ final class PanelMenu extends KissMenu
          {
             if (OptionsDialog.getDebugControl())
                PrintLn.println("PanelMenu reset request") ;
+            if (!enableReset) return ;
             parent.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
             parent.reset() ;
             return ;
@@ -1032,7 +1055,6 @@ final class PanelMenu extends KissMenu
 					PageSet page = (PageSet) pages.elementAt(j) ;
 					if (!page.isChanged()) continue ;
 	            int n = page.updateInitialPositions(cid);
-	            page.setChanged(false) ;
 					if (n > 0 && OptionsDialog.getDebugControl())
 						PrintLn.println("PanelMenu: Update page initial positions " + page) ;
             }
@@ -1127,6 +1149,7 @@ final class PanelMenu extends KissMenu
             config.setMemoryFile(out.toByteArray(),ze) ;
             config.setUpdated(true) ;
             parent.setRestart(true) ;
+            PrintLn.println("Configuration " + config.getName() + " text is updated. Restart.") ;
             parent.init(config) ;
             return ;
          }
@@ -1206,10 +1229,13 @@ final class PanelMenu extends KissMenu
 
             // Undo everything.  Reset to initial state.
 
+            doundoall = true ;
             parent.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
-            while (undo.canUndo()) undo.undo() ;
+            while (undo.canUndo()) 
+               undo.undo() ;
 //            parent.reset(true) ;
             parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
+            doundoall = false ;
             undo.discardAllEdits() ;
             undoAction.updateUndoState() ;
             redoAction.updateRedoState() ;
@@ -2366,7 +2392,7 @@ final class PanelMenu extends KissMenu
    // Add a GUI component.  This constructs a JavaCel object.
    // Non-input components can be added as cels. This changes
    // the component name and ensures that the image representation
-   // is written as a cal when the set is saved.
+   // is written as a cel when the set is saved.
 
    void eventAddComponent(String type)
    {
