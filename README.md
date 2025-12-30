@@ -3,7 +3,7 @@
 **UltraKiss 4.2** is now released to provide corrections for visual editing of KiSS sets.   
 
 Press this button to run UltraKiss.  
-[![UltraKiss](https://github.com/kisekae/UltraKiss/blob/master/src/Images/ultrakissbtn.svg)](http://www.wmiles.com/ultrakiss/)
+[![UltraKiss](https://github.com/kisekae/UltraKiss/blob/master/src/Images/ultrakissbtn.svg)](http://www.wmiles.com:8080/ultrakiss/)
 
 **UltraKiss 4.0** is a new release to enable online browser operation of UltraKiss as a webswing server application.  
 **UltraKiss 4.1** now provides online visual editing and saving of KiSS sets using the UltraKiss IDE with Webswing.  
