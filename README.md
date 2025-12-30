@@ -1,15 +1,18 @@
 # UltraKiss
 
-**UltraKiss 4.2** is now released to provide corrections for visual editing of KiSS sets.   
+**UltraKiss 5.0** is pre-released to provide browser access to KiSS sets.  You can now use UltraKiss to access all your KiSS sets directly from your browser without the need to install any software on your computer.  
 
 Press this button to run UltraKiss.  
-[![UltraKiss](https://github.com/kisekae/UltraKiss/blob/master/src/Images/ultrakissbtn.svg)](http://www.wmiles.com:8080/ultrakiss/)
+[![UltraKiss](https://github.com/kisekae/UltraKiss/blob/master/src/Images/ultrakissbtn.svg)](https://www.bronzeart.ca/kisekae-ultrakiss/)
+
 
 **UltraKiss 4.0** is a new release to enable online browser operation of UltraKiss as a webswing server application.  
 **UltraKiss 4.1** now provides online visual editing and saving of KiSS sets using the UltraKiss IDE with Webswing.  
 **UltraKiss 4.2** corrects errors with ambiguous cel offsets when visual editing KiSS sets.   
 
 Webswing service is no longer available due to licensing issues.  A replacement service using the Jetty server is currently under development.
+
+Effective December 30, 2025, UltraKiss 5.0 is pre-released to provide browser access using websockets and a Jetty server.  Please provide feedback should you experience issues.
 
 Use the **UltraKiss Portal** to show links to KiSS sets available on OtakuWorld and other sites on the Internet. You can also use the **File-Open** command to open and load KiSS files stored on your computer.
 
