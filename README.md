@@ -2,17 +2,38 @@
 
 **UltraKiss 5.0** is pre-released to provide browser access to KiSS sets.  You can now use UltraKiss to access all your KiSS sets directly from your browser without the need to install any software on your computer.  
 
+```diff
+January 3, 2026. UltraKiss version 5.0 now offers SSL secure connections to the server.
+To run UltraKiss in your browser simply connect to “https://www.wmiles.com/ultrakiss”.
+```
+
 Press this button to run UltraKiss.  
-[![UltraKiss](https://github.com/kisekae/UltraKiss/blob/master/src/Images/ultrakissbtn.svg)](https://www.bronzeart.ca/kisekae-ultrakiss/)
+[![UltraKiss](https://github.com/kisekae/UltraKiss/blob/master/src/Images/ultrakissbtn.svg)](https://www.wmiles.com/ultrakiss)
 
 
 **UltraKiss 4.0** is a new release to enable online browser operation of UltraKiss as a webswing server application.  
 **UltraKiss 4.1** now provides online visual editing and saving of KiSS sets using the UltraKiss IDE with Webswing.  
 **UltraKiss 4.2** corrects errors with ambiguous cel offsets when visual editing KiSS sets.   
 
-Webswing service is no longer available due to licensing issues.  A replacement service using the Jetty server is currently under development.
+Webswing service is no longer available due to licensing issues.  A replacement service using a Jetty server has been developed.
 
-Effective December 30, 2025, UltraKiss 5.0 is pre-released to provide browser access using websockets and a Jetty server.  Please provide feedback should you experience issues.
+#### How does this magic work?
+
+UltraKiss is a traditional Java application program that displays all sorts of things on your terminal and uses the mouse and keyboard to interact with you. Traditionally, these applications were downloaded or provided on a diskette and installed on your computer. The software interacted with the hardware on your personal computer.
+
+Today, many applications are programs that run on a server. A server is a remote computer that sits in a data center somewhere in the world. Your browser interacts with these applications through a web page. The web page transmits screen forms and other things such as your keyboard and mouse movements to the server. These transmissions can occur through a normal web page connection or through a web socket. A web socket is a type of wire that connects your browser to the application running on the remote server computer.
+
+To make a traditional application like UltraKiss work in your browser it needs to be installed on a server. I have my own server at www.wmiles.com and I have loaded UltraKiss on this server. Another program that runs on the server listens for incoming connection requests from your browser. When a connection request comes in (this is a URL to a host on the Internet like http://www.wmiles.com/ultrakiss) the listening program starts up a new instance of UltraKiss on the server. This instance of UltraKiss is unique to you. If someone else tries to connect to my server while you are connected they get their own instance of UltraKiss and cannot interfere with you.
+
+The connection program (this is software known as a Jetty server) responds back to your browser with an HTML web page. This web page contains directives to establish an HTML canvas object in your browser. This canvas object is used as your screen. The browser software in your computer can draw things on this canvas. This web page also loads Javascript code from my server. This Javascript code instructs your web page how to draw on the canvas and how to send information back to the server when you move your mouse or type keys or do other things on your computer.
+
+One of the very first things UltraKiss does when your instance starts running is establish the web socket to your computer. UltraKiss then draws its screen to something called a virtual display on the server. A virtual display is software that emulates a display just like the screen on your computer. Once the web socket is established UltraKiss sends a picture of its virtual display to your computer. The Javascript code on your computer receives this picture and draws it to the canvas on your screen. You can now see what UltraKiss looks like while running on the server!
+
+Now that you see this you can move your mouse or type keys or do other things to interact with your screen. The Javascript on your computer captures these movements and sends them back to the server through the web socket. Ultrakiss then moves the mouse on its virtual display or performs mouse clicks or other things and sends another picture of its virtual display back to your computer so you can see what happened.
+
+Both your computer and the UltraKiss program running on my server cooperate to send information back and forth. This happens very quickly and many times a second. It happens so quickly that it actually looks like UltraKiss is running on your computer.
+
+Of course, things are a bit more complicated than this simple description. There are robots running around doing work on the server and other things happening in the background, but this simple description describes the basic operation.
 
 Use the **UltraKiss Portal** to show links to KiSS sets available on OtakuWorld and other sites on the Internet. You can also use the **File-Open** command to open and load KiSS files stored on your computer.
 
