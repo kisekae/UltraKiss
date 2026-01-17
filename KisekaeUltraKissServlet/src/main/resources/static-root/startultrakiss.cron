@@ -1,0 +1,5 @@
+# m h  dom mon dow   command
+@reboot /usr/bin/vncserver :1 > /home/wmiles/KisekaeUltraKiss/startultrakiss.log 2>&1
+@reboot sleep 10 && /home/wmiles/KisekaeUltraKiss/startultrakiss.sh >> /home/wmiles/KisekaeUltraKiss/startultrakiss.log 2>&1
+#*/10 * * * * /home/wmiles/startwebswing.sh >> /home/wmiles/startwebswing.log
+
