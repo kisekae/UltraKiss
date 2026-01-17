@@ -1,0 +1,165 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="generator" content="Bluefish 2.2.12" >
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>map</title>
+</head>
+
+<body>
+
+<h4><a name="attach" id="attach"></a>attach()&nbsp;</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; attach(child,parent)</p>
+<p>The attach action command creates an attachment relationship between two group objects. The child group object is attached to the parent group object.</p>
+<p>If the child object is attached to a different parent object then this attachment is broken and the child is attached to the new parent object.
+An object can have many children but a child can only have one parent.</p>
+<p>When group objects are attached the objects will move together as one when the parent object is dragged by the mouse or otherwise moved through an FKiSS movement command.  If the child object is dragged by the mouse or otherwise moved then the attachment to the parent object is broken. Once the attachment is broken any further movement of the parent object no longer moves the child object.</p>
+<p>Restrictions on parent object movement do not apply to child objects.  If the parent object is moved its children can move outside the restricted area
+for the parent.  If a child is restricted and the parent object with an attached child moves, and the child reaches a restriched boundary then the attachment
+between the parent and the child is broken.</p>
+<p>It is possible to create an attachment chain.  A child object can be attached to a parent object.  This child object can also be a parent to another object.  When an atachment chain exists movement of the top parent object moves all attached children.  Movement of a child breaks the attachment to its parent but all the children of the child remain attached to the child.</p>
+
+<p>Attached objects which have a positive fix value greater than 1 have strong attachments.
+Attaching an object with a positive fix value to another object is similar to
+tightly gluing the objects together, except that the fix count can change through normal
+mouse actions and allow the object to eventually detach when the fix count
+reaches zero.&nbsp;A fixed attachment solidifies the link. This lets the child
+and its parent move together by dragging the child.
+</p>
+<p>Therefore, picking up a child object with a positive fix count will allow
+combined movement of the object and its parent, if the parent object is
+movable. If the parent object is also fixed then the combined set cannot move.
+However, if the parent is attached to another parent itself, then only if this
+new parent object is mobile can the combined set move. To summarize, if the top
+level parent and all direct children in the chain are fixed, then the chain
+cannot move, but if any parent is mobile then the fixed chain can be broken at
+the unfixed object and the resultant chain dragged by its children.  For the
+purpose of strong attachments an object with a fix value of 1 is not considered
+as fixed when moving a chain through FKiSS commands or with the mouse.
+</p>
+<p>When movement restrictions are in place, object detachment can occur both
+under mouse movement and FKiSS movement.
+For example, if a table and attached objects like cups and saucers is being moved as a unit and one
+of the cups and saucers has a movement restriction in force, then the cup and
+saucer can detach from the parent table object if the table moves beyond the restriction bounds. This detachment
+can only occur if the attached object fix value is
+zero. If the attached object has a positive fix value then the movement
+restriction will stop the parent object from moving beyond the restriction
+bounds.
+</p>
+<p>In the case of a hierarchical attachment chain, where object A is attached to
+object B which is attached to object C and so on, the glue and fix restrictions
+apply separately to each attachment link in the chain. For example, if object A
+has a positive fix value and is attached to object B, and object B is not fixed
+yet is attached to object C, then picking up and dragging object A will break
+the attachment link between object B and C. This will cause a detached() event
+to fire for object B. Similarly, if the attached chain was being moved by
+dragging the parent object C and object A had movement restrictions set, then
+the link between object B and C would be broken when the movement restrictions
+on A were reached and a detached() event will fire for object B.
+</p>
+<p>Detached() events are performed while dragging, after all mouse down events
+have been recognized and before mouse up events are examined. More than one
+detached() event can exist for the same object and these events will be
+scheduled in the same order as the exist in the configuration file. Note that
+there is no defined order for event processing in KiSS. The detached() event is
+asynchronous and single threaded
+viewers that do not support concurrent events can process the detached()
+event at any time. Furthermore, multiple detachments can occur in any sequence.
+No assumptions should be made for the sequence in which mouse events, unfix(), detached(), and
+collision events are processed.
+</p>
+
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>
+<br>
+Related events: <a href="unfix.html"> unfix()</a>, <a href="detached.html">detached()</a><br>
+Related actions: <a href="detach.html">detach()</a>, <a href="attach.html">attach()</a>,
+<a href="glue.html">glue()</a>, <a href="letparent.html">letparent()</a>, <a href="letsibling.html">letsibling()</a>,
+<a href="restrictx.html">restrictx()</a>, <a href="restricty.html">restricty()</a>
+</p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+  <table border="1" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td width="20%">FKiSS5</td>
+      <td width="30%">implements strong attachments</td>
+      <td></td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+  <table border="1" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td width="20%">DetachRestricted</td>
+      <td width="30%">Enable detachment on movement when restricted objects reach
+        restriction limits</td>
+      <td>default value &quot;<font color="#0000FF">true</font>&quot;
+        (Compatibility option)</td>
+    </tr>
+    <tr>
+      <td width="20%">DetachMove</td>
+      <td width="30%">Enable detachment on FKiSS movement if moved object is attached</td>
+      <td>default value &quot;<font color="#0000FF">true</font>&quot;
+        (Compatibility option)</td>
+    </tr>
+    <tr>
+      <td width="20%">DetachFix</td>
+      <td width="30%">Enable strong attachments for fixed objects</td>
+      <td>default value &quot;<font color="#0000FF">true</font>&quot;
+        (Compatibility option)</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>&nbsp;Example:&nbsp;</b></font><br></p>
+<p><font face="Courier New">
+;[Cel Section]  <br>
+#4   button2.button      : 0                                ;%size[179,50] %offset[0,63] %attributes[text="Attach Saucer to Table"] <br>
+#4   button1.button      : 0                                ;%size[179,50] %attributes[text="Attach Teacup to Saucer"] <br>
+#3   teacup1.png         : 0                                ;<br>
+#2   saucer1.png         : 0                                ;<br>
+#1   table1.png          : 0                                ;<br>
+ <br>
+;[Page Set Section]<br>
+; Page 0<br>
+$0 * 183,108 385,202 420,153 0,0<br>
+ <br>
+;[FKiSS Section]<br>
+;@EventHandler<br>
+ <br>
+;@initialize()                                              ; <br>
+;@ let(Teacup,#3)                                           ; Set variable names for objects.  These can be used in action statements but not events.<br>
+;@ let(Saucer,#2)                                           ; <br>
+;@ let(Table,#1)                                            ; <br>
+<br>
+;@press("button1.button")                                   ; <br>
+;@ notify("attach Teacup to Saucer")                        ; <br>
+;@ attach(Teacup,Saucer)                                    ; <br>
+<br>
+;@press("button2.button")                                   ; <br>
+;@ notify("attach Saucer to Table")                         ; <br>
+;@ attach(Saucer,Table)                                     ; <br>
+<br>
+;@detached(#3)                                              ; <br>
+;@ notify("Teacup detached")                                ; <br>
+<br>
+;@detached(#2)                                              ; <br>
+;@ notify("Saucer detached")                                ; <br>
+<br>
+;@detached(#1)                                              ; <br>
+;@ notify("Table detached")                                 ; This cannot happen as Table is not attached to anything <br>
+<br></font>
+
+</body>
+
+</html>

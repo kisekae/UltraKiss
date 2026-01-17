@@ -1,0 +1,247 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>col</title>
+</head>
+
+<body>
+
+<h4><a name="col">col</a>()&nbsp;</h4>
+<p><font color="#FF0000"><b>Syntax:</b></font>&nbsp;&nbsp;&nbsp;&nbsp; col
+(integer)</p>
+<p>This event is triggered when the active palette group changes to the
+specified group. Palette groups are numbered and the first palette group begins
+from zero.
+</p>
+<p>Palette groups are independent color palettes stored in a KiSS color file,
+more commonly known as a palette or KCF file. Each palette group is also known
+as a multipalette. Cel images can refer to a palette file for their coloring.
+Selecting a new palette group will apply a new color map to all cels that have the
+specified palette group in their palette file.
+</p>
+<p>The maximum number of palette groups in a KiSS set is established from the
+largest palette file in the set. This may not always be the first palette file.
+Cels that reference a palette file with fewer than the maximum number of palette
+groups do not change color if a col() event selects a palette group outside
+the range of their palette file.
+</p>
+<p>Most viewers will not support more that 10 palette groups,&nbsp; although
+there is no restriction to the number of palette groups that can be contained in
+a KiSS color file.
+</p>
+<p>The col() event is recognized when the palette group changes through a mouse
+menu selection or through FKiSS changecol() commands. KiSS pages are also
+associated with a default palette group and a page change can also trigger a col()
+event.
+</p>
+<p>A generic col(*) event is defined tol fire on any palette group change. Note that you
+can specify both a generic col(*) event and specific col() events. Specific col()
+events will always supercede a generic col(*) event. If a specific col() event
+exists then the generic event will not fire on a change to the specified palette
+group.&nbsp;
+</p>
+<p>More than one col() event can be specified for a specific palette group and
+each event will fire in the sequence in which it was defined. Col() events are
+immediate and are not queued for later processing. These events fire after page
+set() events.
+</p>
+<p>If the current palette group for a page has been changed then subsequent
+switches to the page should apply the last selected color group. Col() events are
+not fired unless the color palette group actually changes.
+</p>
+<p>
+<br>
+Related events:&nbsp;<a href="set.html"> set()</a><br>
+Related actions:<a href="changecol.html"> changecol()</a>, <a href="letmaxcolor.html">letmaxcolor()</a>,
+<a href="changeset.html">changeset()</a>, <a href="letmaxpage.html">letmaxpage()</a>
+</p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+  <table border="1" cellpadding="5" cellspacing="0" width="100%">
+    <tr>
+      <td width="20%">FKiSS 1 allows integer palette groups.</td>
+      <td width="30%">col (4)</td>
+      <td>Triggered when palette group 4 becomes active</td>
+    </tr>
+    <tr>
+      <td width="20%">FKiSS 4 allows generic col(*) events.&nbsp;&nbsp;</td>
+      <td width="30%">col (*)&nbsp;&nbsp;</td>
+      <td>Triggered when any palette group becomes active</td>
+    </tr>
+    <tr>
+      <td width="20%">FKiSS 5 allows an unlimited number of palette groups&nbsp;</td>
+      <td width="30%">col (99)&nbsp;&nbsp;</td>
+      <td>Triggered when palette group 99 becomes active</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+  <table border="1" cellpadding="5" cellspacing="0" width="100%">
+    <tr>
+      <td width="20%">MaxColorSet</td>
+      <td width="30%">maximum palette groups displayed on the toolbar</td>
+      <td>default value <font color="#0000FF">10</font> (KiSS option)</td>
+    </tr>
+    <tr>
+      <td width="20%">&lt;alt&gt; Page Up</td>
+      <td width="30%">keyboard command to show prior palette group</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td width="20%">&lt;alt&gt; Page Dn</td>
+      <td width="30%">keyboard command to show next palette group</td>
+      <td></td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;
+</p>
+<p><br>
+<font color="#FF0000"><b>FKiSS 2 Example:
+</b></font>
+</p>
+<p><font face="Courier New">;[Palette Section]<br>
+%back.kcf&nbsp;<br>
+%ace.kcf&nbsp;<br>
+%king.kcf&nbsp;<br>
+<br>
+;[Cel Section]<br>
+#10.999 text1.cel&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :
+1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;<br>
+#8.999&nbsp; label4.cel&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :
+0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;<br>
+#8.999&nbsp; label3.cel&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :
+0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;<br>
+#5.999&nbsp; button5.cel&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : 0
+1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;<br>
+#5.999&nbsp; button2.cel&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : 0
+1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;<br>
+#2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; as.cel&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; *1&nbsp;&nbsp;
+: 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;<br>
+#9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; kh.cel&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; *2&nbsp;&nbsp;
+: 1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;</font></p>
+<p><font face="Courier New">;@col(0)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+;@ notify("Color set 0 active")&nbsp;&nbsp;&nbsp;&nbsp; ;&nbsp;<br>
+<br>
+;@col(1)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+;@ unmap(#10)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+<br>
+;@col(2)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+;@ notify("Color set 2 active")&nbsp;&nbsp;&nbsp;&nbsp; ;&nbsp;<br>
+<br>
+;@initialize()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+;@ unmap(&quot;button5.cel&quot;)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+<br>
+;@press("button5.cel")&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+;@ altmap(#5)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+;@ changecol(0)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+;@press("button2.cel")&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+;@ altmap(#5)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+;@ changecol(4)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+</font></p>
+<p><br>
+<font color="#FF0000"><b>FKiSS 4 Example:
+</b></font>
+</p>
+<p><font face="Courier New">;[Palette Section]<br>
+%back.kcf&nbsp;<br>
+%ace.kcf&nbsp;<br>
+%king.kcf&nbsp;<br>
+<br>
+;[Cel Section]<br>
+#12.999&nbsp; label11.cel&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : 0 1&nbsp;&nbsp;&nbsp;&nbsp;
+;!Generic :6&nbsp;<br>
+#12.999&nbsp; label10.cel&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : 0 1&nbsp;&nbsp;&nbsp;&nbsp;
+;!Generic :5<br>
+#12.999&nbsp; label9.cel&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : 0 1&nbsp;&nbsp;&nbsp;&nbsp;
+;!Generic :4<br>
+#12.999&nbsp; label8.cel&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : 0 1&nbsp;&nbsp;&nbsp;&nbsp;
+;!Generic :3<br>
+#12.999&nbsp; label7.cel&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : 0 1&nbsp;&nbsp;&nbsp;&nbsp;
+;!Generic :2<br>
+#12.999&nbsp; label6.cel&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : 0 1&nbsp;&nbsp;&nbsp;&nbsp;
+;!Generic :1<br>
+#12.999&nbsp; label5.cel&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : 0 1&nbsp;&nbsp;&nbsp;&nbsp;
+;!Generic :0<br>
+#10.999&nbsp; text1.cel&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : 1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;<br>
+#5.999&nbsp;&nbsp; button5.cel&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : 0 1&nbsp;&nbsp;&nbsp;&nbsp;
+;<br>
+#5.999&nbsp;&nbsp; button2.cel&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : 0 1&nbsp;&nbsp;&nbsp;&nbsp;
+;<br>
+#2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; as.cel&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; *1&nbsp;&nbsp;
+: 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;<br>
+#9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;        kh.cel&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;          *2&nbsp;&nbsp;   : 1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                          ;<br>
+<br>
+
+;@col(0)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+;@ notify("Color set 0 active")&nbsp;&nbsp;&nbsp;&nbsp; ;&nbsp;<br>
+<br>
+;@col(1)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+;@ unmap(#10)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+<br>
+;@col(2)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+;@ notify("Color set 2 active")&nbsp;&nbsp;&nbsp;&nbsp; ;&nbsp;<br>
+<br>
+;@col(*)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+;@ unmap(#13)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+;@ letpal(C)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+;@ setframe(!Generic,C)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+<br>
+;@initialize()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+;@ unmap("button5.cel")&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+;@ unmap(!Generic)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+<br>
+;@press("button5.cel")&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+;@ altmap(#5)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+;@ changecol(0)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+;@press("button2.cel")&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+;@ altmap(#5)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+;@ changecol(4)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+</font></p>
+
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+</body>
+
+</html>

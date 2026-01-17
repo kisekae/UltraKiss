@@ -1,0 +1,84 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>transparent</title>
+</head>
+
+<body>
+
+<h4><a name="transparent" id="transparent">transparent</a>()</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; transparent (target,adjustment)</p>
+<p>
+The transparent() statement adjusts the transparency of the  target by the adjustment amount. The target can be a cel name, object group number, or cel group name. The adjustment value is a relative transparency integer number ranging from -255 to 255. Positive numbers increase the transparency of the target by the specified amount. Negative numbers decrease the transparency and make the target more opague.</p>
+<p>Transparency is a color attribute like red, green, or blue. Color attributes in the ARGB color model are specified as a 4-tuple where each color value ranges from 0 to 255. The transparency or alpha (A) value of the color has valules where 0 is fully transparent and 255 is fully opague. In a similar way, a white color which is maximum red (R), green(G), and blue (B), has an RGB value of 255,255,255. A fully opague white color is 255,255,255,255.</p>
+<p>KiSS, however,  inverted the alpha interpretation of color transparency. In KiSS, a fully transparent target has a value of 255 and a fully opague target has value 0. </p>
+<p>Cels maintain their own individual transparency value. Object and cel groups maintain one transparency value for the group. Relative transparency changes to a group object adjust the object transparency and the relative adjustment is applied to each cel in the object. Other viewers may not maintain group transparency values as a group attribute. This makes it difficult to obtain current group transparencies through a lettransparent() command. </p>
+<p>Cel transparency adjustments are applied to all ambiguous cels unless this behaviour is restricted through  UltraKiss compatibility options. Otherwise, the first ambiguous cel in the CNF configuration file, possibly restricted to the current page depending on compatibility options, is set. </p>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>FKiSS 5 Syntax:</b></font>&nbsp;&nbsp;&nbsp;&nbsp; transparent (target,adjustment[,bound])</p>
+<p>UltraKiss FKiSS5 introduces the ability to adjust transparency outside the practical limits of 0 to 255. Unbounded transparency adjustments allow images to maintain their relative transparency as other image transparencies are applied. This is important for objects and cel groups where individual images each maintain their own transparency. For example, if a group object contains both a shirt and a skirt and the shirt is 50% transparent, then a relative unbounded adjustment of 255 would make the  object 100% transparent. The shirt would have a transparency of 150% and the skirt would be 100% transparent. This means that an unbounded reversal of the transparency adjustment would restore the object to its original state where the shirt was 50% transparent and the skirt was fully opague. </p>
+<p>The optional 'bound' parameter is an integer number or variable. A value of 0 is used to specify an unbounded transparency adjustment. Bounded adjustments are the default if the parameter is not specified. </p>
+<p>FKiSS5 also allows image cel names, object group numbers, or cel group names to be specified in a variable.</p>
+<p>&nbsp;</p>
+<p>Related actions: <a href="lettransparent.html">lettransparent()</a></p>
+<p>
+<font face="Courier New"></font></p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+    <table border="1" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td width="20%">FKiSS 1 allows cel and object group targets </td>
+        <td width="30%">transparent(#12,100)</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td width="20%">FKiSS 4 allows cel group targets </td>
+        <td width="30%">transparent(!Clothing,200)</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td width="20%">FKiSS 5 allows unbounded transparencies and variable targets </td>
+        <td width="30%">let(Target,&quot;!Clothing&quot;)<br>
+        transparent(Target,200,0)</td>
+        <td>&nbsp;</td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+    <table border="1" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td width="20%">allambiguous</td>
+        <td width="30%">applies transparency adjustments to all ambiguously named cels </td>
+        <td>default value &quot;<font color="#0000FF">true</font>&quot; (Compatibility option)</td>
+      </tr>
+      <tr>
+        <td width="20%">transparentgroup</td>
+        <td width="30%">lets object groups and cel groups maintain their own transparency adjustment. The lettransparent() statement returns this value and does not return -1 if the cels in the group have different transparencies. </td>
+        <td>default value &quot;<font color="#0000FF">true</font>&quot; (Compatibility option)</td>
+      </tr>
+      <tr>
+        <td width="20%">contextmap</td>
+        <td width="30%">uses the current page context to disambiguate cel choices where ambiguous cels exist. </td>
+        <td>default value &quot;<font color="#0000FF">true</font>&quot; (Compatibility option)</td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p><font face="Courier New"><br>
+</font></p>
+<p><font color="#FF0000"><b>Example:&nbsp; </b></font> </p>
+<p><font face="Courier New">;@transparent(&quot;skirt.cel&quot;,100)&nbsp;; The specified cel becomes more transparent <br>
+</font> <font face="Courier New">;@transparent(#12,255) ; The object #12 becomes fully transparent </font><br>
+<font face="Courier New">;@transparent(!Clothing,-255) ; Each cel in the !Clothing group becomes fully opague<br>
+;@transparent(Target,-255,0) ; Each cel in the variable group becomes fully opague</font></p>
+</body>
+
+</html>

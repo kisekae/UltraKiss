@@ -1,0 +1,124 @@
+<html>
+	<head>
+		<title>Sailor Moon Lesson 5</title>
+	</head>
+	<body>
+		<h1 align="center"><font color="#000000">Sailor Moon Tutorial</font></h1>
+		<h1 align="center"><font color="#ff0000">Lesson 5. Correcting the Errors</font></h1>
+		<p>&nbsp;</p>
+		<ol>
+			<li>
+				If you tested the events from exercise 4 you should notice that when switching
+				back and forth from page 0 to page 1, sometimes the sailor costume is not
+				visible.&nbsp; This is because our event logic is not complete.&nbsp; If you
+				are continuing on from lesson 4 you can skip to step 3.&nbsp; Otherwise, ensure
+				that UltraKiss is showing the main logo screen.&nbsp; Close any existing data
+				set.
+If you want to ensure that your new KiSS set is created to be compatible with other viewers, press one of the viewer compatibility preset buttons on the toolbar.
+				<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">File-Open</FONT> command to load the configuration
+				file <FONT color="#cc6600">CNF4.cnf</FONT> from the Tutorial/Sailor Moon
+				directory or the directory you used in lesson 4.&nbsp; This will load the
+				Sailor Moon KiSS set created in exercise 4.
+				<p>&nbsp;</p>
+			<li>
+				For our set(1) event we quite properly made the sailor costume invisible but we
+				forgot to make the school uniform visible.&nbsp; Our set(1) event is not
+				complete.&nbsp; This time we will use the FKiSS Editor to edit our event. Use <FONT color="#000099">Tool-FKiSS Editor </FONT> to
+				open the editor.&nbsp; Select the
+				set(1) event in the tree and use <FONT color="#000099">File-Edit Event</FONT> to open a text editor.&nbsp; Change the complete set(1) event code to be as
+				follows, using the correct object numbers from your data set:<br>
+				<br>
+				<font face="Courier New">;@set(1)<br>
+					;@ unmap(#4) unmap(#5) unmap(#6) unmap(#7) unmap(#8)<br>
+					;@ map(#10) map(#11) map(#12) map(#13) </font>
+				<p><FONT color="#cc6600">Note:&nbsp; If you copy and paste these lines from the help
+						documentation into your configuration file you must ensure that the semicolon
+						and at-sign combination appears <u>at the beginning of every line</u>.&nbsp; You can
+						copy the FKiSS text by selecting the text and pressing Ctrl-C to copy the text
+						to the clipboard, and Ctrl-V to paste the text into the text editor.<br>
+				</FONT><BR>
+				Exit the text editor to apply your changes.<br>
+			  </p>
+				<p>&nbsp;</p>
+		  <li>
+	  Similarly, we should write a set(0) event to ensure that the sailor costume is
+	  visible whenever page 0 is shown.&nbsp; We don't need to worry about the school
+				uniform on page 0 as these objects do not apply to this page.&nbsp; In the FKiSS Editor, use <FONT color="#000099">File-New Event</FONT>. This will open a text editor that is initially empty. Code a
+				set(0) event as shown, using the object numbers from your data set:<br>
+	  <br>
+	  <font face="Courier New">;@set(0)<br>
+		  ;@ map(#4) map(#5) map(#6) map(#7) map(#8) </font>
+	  <p><FONT color="#cc6600">Note:&nbsp; If you copy and paste these lines from the help documentation into your
+	  configuration file you must ensure that the semicolon and at-sign combination appears <u>at the beginning of every line</u>.&nbsp;
+	  You can copy the help text by selecting the text and pressing Ctrl-C to copy the text to the clipboard, and Ctrl-V to paste
+	  the text into the text editor.</FONT><br>
+	  </p>
+				<p>&nbsp;</p>
+		  <li>
+				Exit the FKiSS Editor with <FONT color="#000099">File-Exit</FONT>,
+				or if you want to leave the FKiSS Editor active for future changes you can resume your set execution with <FONT color="#000099">Run-Program Resume</FONT> or pressing the green dot on the toolbar.&nbsp;
+				<p>&nbsp;</p>
+		  <li>
+				Test your changes.&nbsp; Switch back and forth from page 0 to page 1 and
+				observe that the sailor costume shows properly.&nbsp; If there is a problem use <FONT color="#000099">
+					View-Active Configuration</FONT> and verify that all set(0) and set(1)
+				event logic is correct and references the actual object numbers in your
+				configuration.
+				<p>&nbsp;</p>
+		  <li>
+				You may also have noticed that the doll body is not permanently fixed in
+				place.&nbsp; If you try, you can pick up and move the doll from underneath the
+				clothes.&nbsp; This is usually not desired.&nbsp; We fix this as follows.<br>
+				<br>
+				Place the mouse over any part of the doll not covered by clothing, such as the
+				face or arms or legs.&nbsp; Right click with the mouse and a popup menu for the
+				doll object will appear.&nbsp; Select <FONT color="#000099">Image Context -
+					Properties</FONT>.&nbsp; A dialog window for the doll image will be
+				shown.&nbsp; A picture of the doll will be in the preview area of this dialog
+				window.<br>
+				<br>
+				Press the small button beside the <FONT color="#000099">Lock Value</FONT> setting
+				in the attributes section.&nbsp; Enter the value 99999.&nbsp; Press the OK
+				button to close the Properties dialog and then observe that the doll image can
+				no longer be picked up and moved with the mouse.&nbsp; The lock value has fixed
+				the doll in place because the value 99999 exceeds the value set for a maximum
+				fixed object.
+				<p>&nbsp;</p>
+		  <li>
+			  We can have fun with lock values.&nbsp; For example, place the mouse over the
+				school uniform skirt or fuku and right click.&nbsp; Select <FONT color="#000099">
+                                Image Context-Properties</FONT> and change the skirt lock value to
+				5.&nbsp; This will make the skirt 'sticky', or slightly difficult to remove
+				from the doll.&nbsp; After closing the Properties dialog window try to move the
+                                skirt and observe the result.<br>
+                                <br>
+                                You should see the skirt move slightly and then snap back to its initial place.
+                                This is called a sticky object because it cannot be easily moved.  If you keep
+                                trying to move the skirt eventually it will break free.  At this time you are
+                                allowed to move the skirt anywhere.  The skirt broke free on the fifth attempt
+                                because the lock value had been set to 5.<br>
+                                <br>
+                                You can restore the object sticky behaviour if you <FONT color="#000099">View-Reset</FONT> the page.
+				<p>&nbsp;</p>
+		  <li>
+				Use <FONT color="#000099">File-Save</FONT> to save your work.&nbsp; The
+				corrected event code will replace the <FONT color="#cc6600">CNF4.cnf</FONT> file
+				previously loaded and the new object lock values will be saved in the
+				configuration file.<br>
+				<p>&nbsp;</p>
+		  </li>
+		</ol>
+		<hr>
+		<p align="left">Next Document:&nbsp; <a href="lesson6.html">Sailor Moon Lesson 6<br>
+			</a>Prior Document:&nbsp; <a href="lesson4.html">Sailor Moon Lesson 4</a></p>
+		<p align="left">Copyright (c) 2002-2023 William Miles</p>
+
+		<p>
+			<br>
+			<br>
+		</p>
+		<p>&nbsp;</p>
+	</body>
+</html>

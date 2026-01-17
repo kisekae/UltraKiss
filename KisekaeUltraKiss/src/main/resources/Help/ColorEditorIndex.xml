@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='ISO-8859-1'  ?>
+<!DOCTYPE index
+  PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Index Version 1.0//EN"
+         "http://java.sun.com/products/javahelp/index_1_0.dtd">
+<index version="1.0">
+ <indexitem text="Color Editor">
+  <indexitem text="Commands">
+    <indexitem text="File New" target="coloreditor.menu.FileNew"/>
+    <indexitem text="File Open" target="coloreditor.menu.FileOpen"/>
+    <indexitem text="File Close" target="coloreditor.menu.FileClose"/>
+    <indexitem text="File Save" target="coloreditor.menu.FileSave"/>
+    <indexitem text="File Save As" target="coloreditor.menu.FileSaveAs"/>
+    <indexitem text="File Import" target="coloreditor.menu.FileImport"/>
+    <indexitem text="File Export" target="coloreditor.menu.FileExport"/>
+    <indexitem text="File Merge" target="coloreditor.menu.FileMerge"/>
+    <indexitem text="File Page Setup" target="coloreditor.menu.FilePageSetup"/>
+    <indexitem text="File Print Preview" target="coloreditor.menu.FilePrintPreview"/>
+    <indexitem text="File Print" target="coloreditor.menu.FilePrint"/>
+    <indexitem text="File Properties" target="coloreditor.menu.FileProperties"/>
+    <indexitem text="File Exit" target="coloreditor.menu.FileExit"/>
+    <indexitem text="Edit Undo" target="coloreditor.menu.EditUndo"/>
+    <indexitem text="Edit Redo" target="coloreditor.menu.EditRedo"/>
+    <indexitem text="Edit Undo All" target="coloreditor.menu.EditUndoAll"/>
+    <indexitem text="Edit Cut" target="coloreditor.menu.EditCut"/>
+    <indexitem text="Edit Copy" target="coloreditor.menu.EditCopy"/>
+    <indexitem text="Edit Paste" target="coloreditor.menu.EditPaste"/>
+    <indexitem text="Edit Select All" target="coloreditor.menu.EditSelectAll"/>
+    <indexitem text="Edit Select Copy" target="coloreditor.menu.EditSelectCopy"/>
+    <indexitem text="Edit Select HSB" target="coloreditor.menu.EditSimilarHSB"/>
+    <indexitem text="Edit Select RGB" target="coloreditor.menu.EditSimilarRGB"/>
+    <indexitem text="Edit Set Color Count" target="coloreditor.menu.EditSetColorCount"/>
+    <indexitem text="Edit Set Transparent" target="coloreditor.menu.EditSetTransparent"/>
+    <indexitem text="Edit Set Background" target="coloreditor.menu.EditSetBackground"/>
+    <indexitem text="Edit Delete Group" target="coloreditor.menu.EditDeleteGroup"/>
+    <indexitem text="Edit Insert Group" target="coloreditor.menu.EditInsertGroup"/>
+    <indexitem text="Edit Add Group" target="coloreditor.menu.EditAddGroup"/>
+    <indexitem text="Options Palette Panel" target="coloreditor.menu.OptionsPalettePanel"/>
+    <indexitem text="Options Color Chooser" target="coloreditor.menu.OptionsColorChooser"/>
+    <indexitem text="Options Preview Pane" target="coloreditor.menu.OptionsPreviewPane"/>
+    <indexitem text="Options Selection Control" target="coloreditor.menu.OptionsSelectionControl"/>
+    <indexitem text="Options Show Background" target="coloreditor.menu.OptionsShowBackground"/>
+    <indexitem text="Options Relative Changes" target="coloreditor.menu.OptionsRelativeChanges"/>
+    <indexitem text="Options Link HSB" target="coloreditor.menu.OptionsLinkHSB"/>
+    <indexitem text="Options Link RGB" target="coloreditor.menu.OptionsLinkRGB"/>
+    <indexitem text="Help Contents" target="coloreditor.menu.HelpContents"/>
+    <indexitem text="Help About" target="coloreditor.menu.HelpAbout"/>
+  </indexitem>
+ </indexitem>
+</index>
+

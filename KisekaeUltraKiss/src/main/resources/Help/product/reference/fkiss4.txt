@@ -1,0 +1,798 @@
+FKISS Reference
+Introduction
+This FKISS reference assumes that the reader is familiar with the KISS General Specification (KISS/GS), and understands the format of the configuration file (.CNF), and the basic concepts of cels, palettes and objects. 
+
+URL http://www.argonet.co.uk/users/tigger/KISS/fkref4.html
+
+Index
+FKISS Overview 
+Cel ambiguity 
+Cel groups 
+Variables and symbolic names 
+Parameter types 
+Event descriptions 
+Action descriptions 
+
+
+--------------------------------------------------------------------------------
+
+
+FKISS Overview
+FKISS scripting instructions are embedded in the KiSS configuration file. All FKISS lines begin with the characters ";@" (the leading ";" means that non-FKISS programs will at least be able to load the doll and show something, as the FKISS script will be read as comments). 
+
+All FKISS scripts must begin with the line: 
+
+;@EventHandler 
+
+This enables the FKISS engine in the player program, and warns it to expect further script. It is required, and must precede any other FKISS code. Although some players treat this as case-insensitive (i.e. they will accept "@eventhandler"), strictly it is case-sensitive, and if the set is to be portable the line should be exactly as given. Note that unlike all other scripting commands, there are no brackets. However, some players allow the brackets to be present. 
+
+After the EventHandler line, FKISS scripts consist of events (or triggers) followed by a sequence of actions that must be executed when that event occurs. A further FKISS event automatically terminates the handler for the preceding event. For example: 
+
+;@alarm(1)
+;@ unmap(#2)
+;@ unmap(#3)
+;@alarm(2)
+;@ map(#2)
+;@ map(#3)
+
+
+This defines two event handlers. The first is triggered when timer number 1 expires, the second when timer number 2 expires. 
+
+The "@" character must immediately follow the ";", but other than this most whitespace is ignored. It is also legal to have multiple FKISS functions on the same line. Thus, the example above could be written as: 
+
+;@alarm(1) unmap(#2) unmap(#3)
+;@alarm(2) map(#2) map(#3)
+
+
+Ordering of FKISS scripting commands is often misunderstood by FKISS programmers. There are two rules here: 
+
+The order that events occur in the script is (almost) completely irrelevant. The example above could equally well be written as: 
+;@alarm(2) map(#2) map(#3)
+;@alarm(1) unmap(#2) unmap(#3)
+
+
+(ie with the events in reverse order), and the end result would be identical. If what you think you are doing contravenes this rule, then it will not work as you intend. 
+
+Actions in the event handler will be executed in the order they appear in the script; note, however, that FKISS3 introduces actions that can override this rule in limited ways. 
+Rule 1 above include the word "almost"; this is because it is legal to have a script that includes two or more handlers for the same event. For example: 
+
+;@alarm(1) unmap(#2) unmap(#3)
+;@alarm(2) map(#2) map(#3)
+;@alarm(1) unmap(#4) unmap(#5)
+
+
+includes two "alarm(1)" handlers. Different FKISS players can be expected to handle this in different ways. Some players will treat them as two separate events triggered one after the other (with the order in which they are processed being indeterminate); other players will combine the two handlers into one, with the order of the two sets of actions being different from player to player; still others process the first handler and completely ignore the second. !PlayKISS uses the second approach, and processes the actions lexically; internally, therefore, !PlayKISS will convert the example above to: 
+
+;@alarm(1) unmap(#2) unmap(#3) unmap(#4) unmap(#5)
+;@alarm(2) map(#2) map(#3)
+
+
+Because if this indeterminacy, it is strongly recommended that multiple handlers for the same event are avoided. 
+
+
+
+--------------------------------------------------------------------------------
+
+
+Cel ambiguity
+The KISS specification allows an artist to use the same cel in more than one object, as in: 
+
+#1 tharg.cel
+#2 tharg.cel
+
+
+Although legal, this can cause problems in FKISS players if the duplicated cel is used in an FKISS event or action, as in: 
+
+;@press("tharg.cel")
+;@ unmap("tharg.cel")
+
+
+The ambiguity is obvious - which of the two "tharg.cel" is being referenced in the press and unmap? Different players handle this in different ways, and are often internally inconsistant (e.g. unmap("tharg.cel") unmaps all instances of tharg.cel, but press("tharg.cel") is only invoked for the first instance of tharg.cel. 
+
+The use of ambiguous cel names in FKISS functions will therefore behave differently in differect players; it is therefore recommended that such ambiguity is avoided. 
+
+
+
+--------------------------------------------------------------------------------
+
+
+Cel groups
+FKISS4 introduces a new concept to KISS, namely the "cel group". Cel groups are a named assemblage of cels, optionally split into 1 or more frames. The format of a group name is an exclamation mark (!) followed by an alphabetic character, followed by up to 31 additional alphanumeric characters (e.g. !Group, !G173, !Body are all legal group names). Group names are case-insensitive. 
+
+Groups can be used in FKISS function (event or action) anywhere that a single cel name can be used, in which case the FKISS function applies to all the cels in the group. For example @unmap(!Uniform) will unmap all the cels that are part of group !Uniform. Similarly, the event @press(!Body) will be invoked whenever any of the cels that make up !Body are clicked on with the mouse. 
+
+In addition, there are two FKISS actions that specifically relate to groups, @setframe and @letframe. These are described in the actions table below. 
+
+Cel membership of groups is controlled by extensions to the cel definition line described in KISS/GS. The original KISS/GS format is: 
+
+#<mark>[.<Fix>] <cel> [*<palnum>] [:<setnum>...] 
+
+while the extended format is: 
+
+#<mark>[.<Fix>] <cel> [*<palnum>] [:<setnum>...] [; [%t<transp>][%g][<group> [:<frame>...]]] 
+
+Note that the extensions are preceded by a semi-colon (";"), which means that earlier KISS players will treat the text following as a comment. Considering each new entry in turn: 
+
+%t<transp> sets the initial transparency of the cel to >transp< (see @transparent). NB This extension to the cel definition line is not new, but was introduced at about the same time as the @transparent action. 
+%g make the cel a ghost (see @ghost). 
+<group> makes the cel being defined part of the specified group. 
+<frame> makes the cel being defined part of a specific frame number in the group. Frame numbers start at zero, and there is no significant upper limit on the number of frames in a group. 
+It is also possible to add further group membership details by following the cel definition line with additional lines of the form: 
+
+;<group> [:>frame>...] 
+
+A cel that uses all the possible features could look like this: 
+
+#5.10 bubble.cel *2 : 1 2 ;%t128 %g !Bubbles : 1 2 4 
+;!Bubbles 7 9 
+;!Balls 
+
+In addition to the features that are part of KISS/GS, "bubble.cel" starts off with a transparency of 128 and is a ghost. It appears in frames 1, 2, 4, 7 and 9 of group "!Bubbles". It also appears in group "!Balls", but is not a member of any frames in that group. 
+
+
+
+--------------------------------------------------------------------------------
+
+
+Variables and symbolic names
+Variables (FKISS3 and later) consist of a single letter, or a letter followed by a single digit, and are case-insensitive (e.g. n3 and N3 are the same variable). There are therefore 286 possible variable names (a-z, a0-z0,...a9-z9). They are signed 32-bit values. 
+
+In FKISS4, variable names are extended to allow 32 alphanumeric characters (starting with an alhpabetic). 
+
+FKISS4 also allows both alarms and labels to be given symbolic names, with the same format as variables. For example: 
+;@alarm(Blink) 
+:@ <something or other> 
+;@ randomtimer(Blink,5000,1000) 
+
+;@label(CheckCollision) 
+;@ gosub(CheckOverlap) 
+
+Note that although these symbolic names appear to be variables, they so not have a value and should not be used in any of the "let" functions. It is legal to use the same name for an alarm, a timer, and a variable, which leads to the following issues: 
+;@<some event> 
+;@ let(Count,3) 
+;@ timer(Count,1000) 
+;@ gosub(Count) 
+
+;@alarm(3) 
+; <something> 
+
+;@alarm(Count) 
+; <something> 
+
+;@label(3) 
+; <something> 
+
+;@label(Count) 
+; <something> 
+
+Which timer is set? Timer number 3, or the timer called "Count"? And which label is the target of the gosub, label number 3 or the label called "Count"? In such cases FKISS4 follows the rule that symbolic names for timers and alarms always have precedence over the value of variables; hence, timer(Count,1000) will set the timer associated with label(Count), and gosub(Count) will invoke the label(Count) handler. 
+
+Although the rules of FKISS4 mean that there is no confusion caused by overloading variables and labels or timers, doing so results in confusing and difficult-to-follow scripts, so it is disrecommended. 
+
+
+
+--------------------------------------------------------------------------------
+
+
+Parameter types
+Parameters to FKISS events and action fall into a number of basic types, described in the table below. The "Usage" column is the code used in the event and action tables below to reference the parameter type. 
+
+These parameters should be strictly adhered to - if an fkiss function specifies an object reference (o), using an number (n) or a variable (v) will yield undefined results. 
+
+Usage Meaning Description Examples 
+c Cel reference The name of a cel. "eyes.cel" 
+o Object reference The mark of an object. #1 
+ov Object (inc variable) The mark of an object, or a variable containing the object number. #1
+ObjectNumber 
+oc Cel or object reference Either the name of a cel or the mark of an object. #4
+"shirt.cel" 
+ovc Cel or object (inc variable) Either the name of a cel or the mark of an object, or a variable containing the object number #4
+"shirt.cel" 
+g Group The name of a cel group. !Body 
+cg Cel or group The name of a cel, or the name of a group. "eyes.cel"
+!MyGroup 
+ocg Cel, group or object reference The name of a cel or group, or the mark of an object "jacket.cel"
+!Group2
+#19 
+ovgc Cel, object (inc var) or group Any of cel name, group, object number, or variable "fred.cel"
+#1
+!MainGroup
+ObjNum 
+n Number A numeric (integer) value 17 
+s String Any text "Hello there" 
+v Variable Variable name n6 (FKISS3) 
+Count (FKISS4) 
+i Identifier Numeric (integer) value, or a symbolic name for a label or an alarm. GetObj
+23 
+d Number or Variable A literal number or a variable identifier. 75
+k4 
+f Filename String containing a filename. "bang.wav" 
+k Keylist String containing the names or one or more keyboard keys.
+In some cases only a single key name is allowed. "abcd"
+"updownleftright" 
+
+In some case, these parameters may be followed by a number to allow the event or action description to refer to specific parameters [eg timer(d1,d2), movebyx(o1,o2,d)]. 
+
+Legal key names in Keylist parameters (FKISS4 and later) are the alphanumeric keys ("a"-"z" and "0"-"9") plus the special keys "up", "down", "left" and "right" only. Key names are case-insensitive (i.e. "a" & "A" are the same). 
+
+
+
+--------------------------------------------------------------------------------
+
+
+Events
+The table below gives a complete list of all FKISS events currently defined, the version of FKISS in which they appear, and a brief description. In some cases, the format of the event is different for different versions of FKISS - in such cases, there are multiple entries. More detailed information can be obtained by following the links. 
+
+Event Version Example Description Related events Related actions 
+alarm(n) 1 alarm(3) A timer reaches zero. - timer
+randomtimer 
+alarm(i) 4 alarm(Blink) 
+apart(c,c) 2.1 apart("skirt.cel","body.cel") The two cels do not overlap, taking transparent pixels into account.
+Triggers only if the cels did overlap before one of them was moved by the user. collide
+in
+out
+stillin
+stillout
+unfix - 
+apart(cg,cg) 4 apart(!Furniture,"skirt.cel") 
+begin() 1 begin() This event is triggered after the initialize event and before the version event. initialize
+version
+end - 
+catch(oc) 1 catch(#2)
+catch("body.cel") The user clicks on the object or cel.
+Applies to all cels & objects except those with a maximal fix value. press
+fixcatch
+release
+drop
+fixdrop
+unfix - 
+catch(g) 4 catch(!Body) 
+col(n) 1 col(2) The user changes the palette to that specified - changecol
+letpal 
+collide(c,c) 2.1 collide("shirt.cel","body.cel") The two cels touch, taking transparent pixels into account.
+Triggers only if the cels did not overlap before one of them was moved by the user. apart
+in
+out
+stillin
+stillout
+unfix - 
+collide(cg,cg) 4 collide(!Body,!Uniform) 
+detached(o) 4 detached(#21) The object is no longer attached to its parent object. This may be triggered eitherby the FKISS action "detach" or if the object is detached from its parent by a user drag. - attach
+detach
+glue
+letparent
+letchild
+letsibling 
+drop(oc) 1 drop("skirt.cel")
+drop(#2) The user releases the mouse on the object or cel.
+Applies only to all cels & objects except those with a maximal fix value. catch
+press
+fixcatch
+release
+fixdrop
+unfix - 
+drop(g) 4 drop(!Stuff) 
+end() 1 end() The user quits the player or closes the doll initialise
+begin
+version - 
+fixcatch(oc) 1 fixcatch("skirt.cel")
+fixcatch(#1) The user clicks on the object or cel.
+Applies only to fixed cels & objects press
+catch
+release
+drop
+fixdrop
+unfix - 
+fixcatch(g) 4 fixcatch(!Clothes) 
+fixdrop(oc) 1 fixdrop("skirt.cel")
+fixdrop(#2) The user releases the mouse on the object or cel.
+Applies only to fixed cels & objects press
+catch
+release
+drop
+fixcatch
+unfix - 
+fixdrop(g) 4 fixdrop(!Group) 
+in(o,o) 2 in(#1,#2) The two objects overlap, ignoring transparency.
+Triggers only if the objects did not overlap before one of them was moved by the user. apart
+collide
+out
+stillin
+stillout
+unfix - 
+initialize() 1 initialize() Before the doll is displayed after loading begin
+version
+end - 
+keypress(k) 4 keypress("a")
+keypress("up") The user has pressed the specified key. This event is triggered once when the key is pressed - there is no autorepeat.
+Only a single key name is allowed. keyrelease letkey
+letkeymap 
+keyrelease(k) 4 keyrelease("7")
+keyrelease("left") The user has released the specified key (i.e. is no longer pressing it).
+Only a single key name is allowed. keypress letkey
+letkeymap 
+label(n) 3 label(3) Not really an event, but a way of sharing common actions.
+The handler is triggered by a goto or gosub action from another handler - goto
+gosub
+gotorandom
+gosubrandom 
+label(i) 4 label(Count) 
+mousein(ocg) 4 mousein("body.cel")
+mousein(#1)
+mousein(!Body) Triggered when the mouse pointer moves over the cel, object or group.
+The event is only triggered if the cel, object or group is not occluded by either cels (i.e. if a mouse click would invoke a "press" event mouseout letmousex
+letmousey 
+mouseout(ocg) 4 mouseout(!MyGroup)
+mouseout(#21)
+mouseout("cage.cel") Triggered when the mouse pointer moves away from the cel, object or group. mousein letmousex
+letmousey 
+never() 1b never() This event is never triggered.
+Intended for debugging purposes during doll development. - debug 
+out(o,o) 2 out(#2,#3) The two objects do not overlap, ignoring transparency.
+Triggers only if the objects did overlap before one of them was moved by the user. apart
+collide
+in
+stillin
+stillout
+unfix - 
+overflow() 3 overflow() Triggered when an FKISS3 expression evaluation causes an error.
+eg division by zero. - let
+etc 
+press(oc) 1 press("skirt.cel")
+press(#1) The user clicks on the object or cel.
+Applies to all cels & objects. catch
+fixcatch
+release
+drop
+fixdrop
+unfix - 
+press(g) 4 press(!Body) 
+release(oc) 1 release("skirt.cel")
+press(#1) The user releases the object or cel.
+Applies to all cels & objects. catch
+fixcatch
+press
+drop
+fixdrop
+unfix - 
+release(g) 4 release(!Uniform) 
+set(n) 1 set(3) The user changes the set to that specified - changeset
+letset 
+stillin(o,o) 2 stillin(#2,#3) The two objects overlap, ignoring transparency.
+Triggers irrespective of the state of the two objects before movement apart
+collide
+in
+out
+stillout
+unfix - 
+stillout(o,o) 2 stillout(#2,#3) The two objects do not overlap, ignoring transparency.
+Triggers irrespective of the state of the two objects before movement apart
+collide
+in
+out
+stillin
+unfix - 
+unfix(oc) 1 unfix("skirt.cel")
+unfix(#2) A previously-fixed cel or object becomes free to move. apart
+collide
+in
+out
+stillin
+stillout setfix 
+unfix(g) 4 unfix(!StickyStuff) 
+version(n) 2 version(2) After begin, but only if the version code is supported by the current program.
+Version codes are:
+0 : FKISS 1
+1 : FKISS 1b
+2 : FKISS 2
+3 : FKISS 2.1
+4 : FKISS 3
+5 : FKISS 4
+ initialize
+begin
+end - 
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+Actions
+The table below gives a complete list of all FKISS actions currently defined, the version of FKISS in which they appear, and a brief description. In some cases, the format of the action is different for different versions of FKISS - in such cases, there are multiple entries. More detailed information can be obtained by following the links. Action Version Example(s) Description Related events Related actions 
+add(v,d1,d2) 3 add(a1,a2,a3)
+add(b,3,c1) v := d1 + d2 - sub
+div
+mod
+mul
+let
+etc 
+altmap(oc) 1 altmap(#1)
+altmap("eyes1.cel") If the object/cel is mapped (ie part of the image) unmap it; if it is unmapped (ie not map of the image) map it.
+This applies in all sets. - map
+unmap
+ifmapped
+ifnotmapped 
+altmap(ovcg) 4 altmap(!MyGroup)
+altmap(ObjNum) 
+attach(ov1,ov2) 4 attach(#9,#2) Attach object o1 to object o2. If o1 is already attached to another object, detach it first (triggering a "detached" event if appropriate). After this action, object o2 is the "parent" of object o1, andmoving o2 will cause o1 to move so as to retain the same separation. Moving o1 (unless it is fixed)will cause the attachment to br broken. detached detach
+glue
+letparent
+letchild
+letsibling 
+changecol(d) 1 changecol(3)
+changecol(a1) Change the current palette group to that specified. col changeset
+letpal 
+changeset(d) 1 changeset(0)
+changeset(s) Change the current set to that specified. set changecol
+letset 
+debug(s) 1b debug("Hi there") Display the text to the user.
+The exact form of the display (error box, message to terminal) is dependent on the platform. never notify 
+detach(ov) 4 detach(#16)
+detach(Child) Detaches object o from whatever parent it may have had. detached attach
+glue
+letparent
+letchild
+letsibling 
+div(v,d1,d2) 3 div(a1,a2,10)
+div(b,z5,z2) v1 := d1 / d2
+(Integer division) - add
+sub
+mod
+mul
+let
+etc 
+else() 3 else() Part of a structured if/else/endif - various ifs
+endif 
+elseifequal(d1,d2) 4 elseifequal(Count,0) Part of a structured if/elseif/else/endif - various ifs
+else
+endif 
+elseifgreaterthan(d1,d2) 4 elseifgreaterthan(NumObj,0) Part of a structured if/elseif/else/endif - various ifs
+else
+endif 
+elseiflessthan(d1,d2) 4 elseiflessthan(X,6) Part of a structured if/elseif/else/endif - various ifs
+else
+endif 
+elseifnotequal(d1,d2) 4 elseifnotequal(Count,1) Part of a structured if/elseif/else/endif - various ifs
+else
+endif 
+endif() 3 endif() Terminator for structured if/else/endif - various ifs
+else 
+exitevent() 3 exitevent() Aborts the current event handler. - - 
+ghost(oc,d) 3 ghost("eyes.cel",1)
+ghost(#1,a0) If d is not zero, oc becomes a "ghost", otherwise it is unghosted.
+A ghost object or cel cannot be dragged with the mouse - mouse clicks will be passed down to the next cel below. - - 
+ghost(ovcg,d) 4 ghost(!Body,1)
+ghost(ObjNum,1) 
+glue(ov1,ov2) 4 glue(#3,#7)
+glue(Child,Parent) This acts exactly as attach (q.v.), except that moving the child object does not detach it fromits parent. detached attach
+detach
+letparent
+letchild
+letsibling 
+gosub(d) 3 gosub(100)
+gosub(b2) Triggers the event handler for label d.
+When the label event finishes, processing of the current handler will continue. label gosubrandom
+goto
+gotorandom 
+gosub(i) 4 gosub(CountObj) 
+gosubrandom(d1,d2,d3) 3 gosubrandom(50,1,2)
+gosubrandom(b3,b1,5) Performs a gosub to d2 or d3. d1 is the percentage chance that d2 is chosen rather than d3. label goto
+gosub
+gotorandom 
+gosubrandom(d,i1,i2) 4 gosubrandom(P,Map1,Map2) 
+goto(d) 3 goto(5)
+goto(b2) Triggers the event handler for label d.
+When the label event finishes, processing of the current handler will also terminate. label gosub
+gosubrandom
+gotorandom 
+goto(i) 4 goto(CountObj) 
+gotorandom(d1,d2,d3) 3 gotorandom(20,5,10)
+gotorandom(m1,5,c2) As gosubrandom, but performs a random goto rather than a random gosub. label gosub
+gosubrandom
+goto 
+gotorandom(d,i1,i2) 4 gotorandom(25,Map1,Map2) 
+ifequal(d1,d2) 3 ifequal(b,0)
+ifequal(5,c) Begins a structured if. The test is true if d1=d2. - other ifs
+else
+endif 
+iffixed(o,d1,d2) 2.1 iffixed(#1,10,15)
+iffixed(#21,a3,a1) If o is fixed (ie not freely movable), set timer d1 to trigger after time d2 alarm other ifs
+timer 
+iffixed(ov,i,d2) 4 iffixed(ThisObj,Blink,500) 
+ifgreaterthan(d1,d2) 3 ifgreaterthan(a0,5)
+ifgreaterthan(5,t1) Begins a structured if. The test is true if d1 > d2 - other ifs
+else
+endif 
+iflessthan(d1,d2) 3 iflessthan(b1,0)
+iflessthan(0,b1) Begins a structured if. The test is true if d1 < d2 - other ifs
+else
+endif 
+ifmapped(c,d1,d2) 2.1 ifmapped("shoes.cel",10,15)
+ifmapped("skirt.cel",a9,b1) If c is mapped, set timer d1 to trigger after time d2 alarm other ifs
+timer 
+ifmapped(cg,i,d) 4 ifmapped(!Uniform,Wave,500) Timer is only set if all cels in cg are mapped 
+ifmoved(o,d1,d2) 2.1 ifmoved(#1,1,1000)
+ifmoved(#2,a1,a2) If o has moved from its original position (in the current set), set timer d1 to trigger after time d2 alarm other ifs
+timer 
+ifmoved(ov,i,d) 4 ifmoved(Jacket,Show,50) 
+ifnotequal(d1,d2) 3 ifnotequal(5,a)
+ifnotequal(x1,x2) Begins a structured if. The test is true if d1 <> d2. - other ifs
+else
+endif 
+ifnotfixed(o,d1,d2) 2.1 ifnotfixed(#10,a1,1000)
+ifnotfixed(#11,1,a2) If o is not fixed, set timer d1 to trigger after time d2 alarm other ifs
+timer 
+ifnotfixed(ov,i,d) 4 ifnotfixed(This,Count,5000) 
+ifnotmapped(c,d1,d2) 2.1 ifnotmapped("C.cel",10,15)
+ifnotmapped("D.cel",a,a1) If c is not mapped, set timer d1 to trigger after time d2 alarm other ifs
+timer 
+ifnotmapped(cg,i,d) 4 ifnotmapped(!Grp,Count,500) Timer is only set if no cels in cg are mapped 
+ifnotmoved(o,d1,d2) 2.1 ifnotmoved(#6,10,1200)
+ifnotmoved(#5,a1,a2) If o has not moved from its original location, set timer d1 to trigger after time d2 alarm other ifs
+timer 
+ifnotmoved(ov,i,d) 4 ifnotmoved(Cover,1,Delay) 
+let(v,d) 3 let(a,10)
+let(b1,b2) v := d - add
+sub
+div
+mod
+mul
+etc 
+letcatch(v) 3 letcatch(a1) Sets v to the object number currently being dragged.
+If no object is being dragged, v is set to -1. - let
+etc 
+letchild(v,o) 4 letchild(C1,#1) Sets v to the lowest numbered object currently attached to o.
+If no objects are attached,v is set to -1. detached attach
+detach
+glue
+letparent
+letsibling 
+letcollide(v,c1,c2) 3 letcollide(d1,"A.cel","B.cel") If c1 and c2 overlap (taking account of transparency), v is set to 1. Otherwise, v is set to 0. collide
+apart
+in
+out
+stillin
+stillout letinside
+etc 
+letcollide(v,cg1,cg2) 4 letcollide(x,!Unif,"a.cel") v is set to 1 if any cel in cg1 overlaps any cel in cg2 
+letfix(v,o) 3 letfix(a1,#1) Sets v to the current fix value of o - setfix
+let
+etc 
+letfix(v,ov) 4 letfix(fixval,Lever) 
+letframe(v,g) 4 letframe(framno,!Blink) Sets v to the current frame of g.
+If no setframe has been executed for g, v is set to -1. - setframe
+let
+etc 
+letheight(v,ov) 4 letheight(height,thisobj) Sets v to the current height of ov, excluding any unmapped cels - letwidth
+let
+etc 
+letinitx(v,ov) 4 letinitx(StartX,Obj)
+letinitx(X,#1) Sets v to the initial x ordinate of o (in the current set). - letinity
+letobjectx
+letobjecty
+let
+etc 
+letinity(v,ov) 4 letinity(StartY,Tiara)
+letinity(Y,#7) Sets v to the initial y ordinate of o (in the current set). - letinitx
+letobjectx
+letobjecty
+let
+etc 
+letinside(v,o1,o2) 3 letinside(t2,#2,#3) If o1 and o2 overlap (without taking account of transparency), v is set to 1, otherwise 0. collide
+apart
+in
+out
+stillin
+stillout letcollide
+etc 
+letinside(v,ov1,ov2) 4 letinside(I,Body,#2) 
+letkey(v,k) 4 letkey(k0,"updownleftright") Sets v to the index of the first key in k that is pressed. Indexing starts at 1 keypress
+keyrelease letkeymap 
+letkeymap(v,k) 4 letkeymap(k1,"updown") For each key in k that is pressed, the equivalent bit in v is set. keypress
+keyrelease letkey 
+letmapped(v,c) 3 letmapped(m1,"shoes.cel") Sets v to 1 if c is mapped, otherwise 0. - map
+unmap
+altmap
+let
+etc 
+letmapped(v,cg) 4 letmapped(nmap,!Uniform) Sets v to the number of cels in cg that are mapped 
+letmousex(v) 3 letmousex(x1) Sets v to the current mouse x position. If the mouse it outside the bounds of the image, v is set to -1. mousein
+mouseout letmousey
+let
+etc 
+letmousey(v) 3 letmousey(x2) Sets v to the current mouse y position. If the mouse it outside the bounds of the image, v is set to -1. mousein
+mouseout letmousex
+let
+etc 
+letobjectx(v,o) 3 letobjectx(x1,#2) Sets v to the x ordinate of o. - letobjecty
+letinitx
+letinity
+let
+etc 
+letobjectx(v,ov) 4 letobjectx(x1,ObjNum) 
+letobjecty(y,o) 3 letobjecty(x2,#2) Sets v to the y ordinate of o. - letobjectx
+letinitx
+letinity
+let
+etc 
+letobjecty(v,ov) 4 letobjecty(y,ObjNum) 
+letpal(v) 3 letpal(p1) Sets v to the currently selected palette group. col changecol
+let
+etc 
+letparent(v,o) 4 letparent(p,#32) Sets v to the number of the object to which o is currently attached.
+If o is not attached, v is set to -1. detached attach
+detach
+glue
+letchild
+letsibling 
+letparent(v,ov) 4 letparent(parent,child) 
+letset(v) 3 letset(s1) Sets v to the currently selected set. set changepal
+let
+etc 
+letsibling(v,o) 4 letsibling(s,#14) Sets v to the next lowest numbered object currently attached to the parent of o.
+If o is not attached, or o is the highest-numbered object attached to its parent, v is set to -1. detached attach
+detach
+glue
+letchild
+letparent 
+letsibling(v,ov) 4 letsibling(sib,sib) 
+lettransparent(v,c) 3 lettransparent(r1,"dress.cel") Sets v to the transparency value of c - transparent
+let
+etc 
+lettransparent(v,cg) 4 lettransparent(t,!Blinds) If all cels in cg have the same transparency, v is set to this value.
+If cels have different transparencies, v is set to -1. 
+letwidth(v,ov) 4 letwidth(w,thisobj)
+letwidth(width,#2) Sets v to the current width of ov, excluding any unmapped cels - letheight
+let
+etc 
+map(oc) 1 map(#2)
+map("eyes1.cel") Makes oc part of the current image. - unmap
+altmap
+ifmapped
+ifnotmapped 
+map(ovcg) 4 map(!Uniform)
+map(Objno) 
+mod(v,d1,d2) 3 mod(a1,b,c2)
+mod(b2,10,b1) v := d1 modulus d2 (remainder) - add
+sub
+div
+mul
+etc 
+move(o,d1,d2) 1 move(#1,10,202)
+move(#10,a1,a2) Moves o (d1,d2) pixels relative to its current position - movebyx
+movebyy
+moverandx
+moverandy
+moveto
+movetorand 
+move(ov,d1,d2) 4 move(Jacket,dx,dy) 
+movebyx(o1,o2,d) 2 movebyx(#2,#3,10)
+movebyx(#3,#10,a1) Sets the x ordinate of o1 to the x ordinate of o2 plus d - move
+movebyy
+moverandx
+moverandy
+moveto
+movetorand 
+movebyx(ov1,ov2,d) 4 movebyx(Obj,Obj,10) 
+movebyy(o1,o2,d) 2 movebyy(#4,#7,10)
+movebyy(#11,#12,x2) Sets the y ordinate of o1 to the y ordinate of o2 plus d - move
+movebyx
+moverandx
+moverandy
+moveto
+movetorand 
+movebyy(ov1,ov2,d) 4 movebyy(Jacket,#15,0) 
+moverandx(o,d1,d2) 2.1 moverandx(#5,100,200)
+movebyrandx(#10,a1,a2) Sets the x ordinate of o to a random number in the range d1 to d2 - move
+movebyx
+movebyy
+moverandy
+moveto
+movetorand 
+moverandx(ov,d1,d2) 4 moverandx(obj,min,max) 
+moverandy(o,d1,d2) 2.1 moverandy(#6,0,500)
+moverandy(#12,x1,x2) Sets the y ordinate of o to a random number in the range d1 to d2 - move
+movebyx
+movebyy
+moverandx
+moveto
+movetorand 
+moverandy(ov,d1,d2) 4 moverandy(Tiara,300,700) 
+moveto(o,d1,d2) 2 moveto(#10,100,200)
+moveto(#12,x,y) Moves o to (d1,d2) absolute position. - move
+movebyx
+movebyy
+moverandx
+moverandy
+movetorand 
+moveto(ov,d1,d2) 4 moveto(Tharg,x,y) 
+movetorand(o) 2.1 movetorand(#12) Randomises the position of o - move
+movebyx
+movebyy
+moverandx
+moverandy
+moveto 
+movetorand(ov) 4 movetorand(obj) 
+mul(v,d1,d2) 3 mul(a1,a1,a2)
+mul(a2,m2,12) v := d1 * d2 - add
+div
+mod
+sub
+let
+etc 
+music(f) 2 music("song.mid") Plays the midi file f - sound 
+nop() 1 nop() Does nothing. never - 
+notify(s) 2 notify("Goodbye") Display the text to the user.
+The exact form of the display (error box, message to terminal) is dependent on the platform. - debug 
+quit() 1b quit() Exit the player.
+Different players treat this in different ways - some simply close the doll, others quit the player. - - 
+random(v,d1,d2) 3 random(r1,a1,a2)
+random(r,1,1000) v1 is set to a random number in the range d1 to d2 - let
+etc 
+randomtimer(d1,d2,d3) 1 randomtimer(7,20,1200)
+randomtimer(t,r1,r2) Sets timer d1 to expire in a random time in the range d2 to (d2+d3) alarm timer
+iffixed
+ifnotfixed
+ifmapped
+ifnotmapped
+ifmoved
+ifnotmoved 
+randomtimer(i,d1,d2) 4 randomtimer(Blink,1000,100) 
+restrictx(ov,d1,d2) 4 restrictx(#1,x1,x2)
+restrictx(rod,200,400) Restricts all movement (user drags of FKISS "move" functions) such that (the left of) ov remains between d1 and d2.
+If ov is outside the range when this function is executed, it is moved to the nearest point of the range.
+If d1 is greater than d2, this function is ignored. - restricty
+move
+etc 
+restricty(ov,d1,d2) 4 restricty(obj,ymin,ymax)
+restricty(#3,0,50) Restricts all movement (user drags of FKISS "move" functions) such that (the top of) ov remains between d1 and d2.
+If ov is outside the range when this function is executed, it is moved to the nearest point of the range.
+If d1 is greater than d2, this function is ignored. - restrictx
+move
+etc 
+setfix(o,d) 2.1 setfix(#3,100)
+setfix(#10,a1) Set the fix attribute of o to d unfix letfix
+iffixed
+ifnotfixed 
+setfix(ov,d) 4 setfix(Skirt,10) 
+setframe(g,d) 4 setframe(!Clock,10)
+setframe(!Group,fno) All cels that are in frame d of group g are mapped, and all cels that are in group g but not in frame d are unmapped. - letframe
+map
+unmap 
+sound(f) 1 sound("bong.wav") Plays the wav or au file f - music 
+sub(v,d1,d2) 3 sub(x1,100,s2)
+sub(x3,s2,t7) v := d1 - d2 - add
+div
+mod
+mul
+let
+etc 
+timer(d1,d2) 1 timer(10,1100)
+timer(t0,n2) Sets timer d1 to expire (i.e. trigger the associated alarm event) after d2 milliseconds, unless d2 is zero. If d2 is zero, the timer is cancelled without triggering the alarm. alarm randomtimer
+iffixed
+ifnotfixed
+ifmapped
+ifnotmapped
+ifmoved
+ifnotmoved 
+timer(i,d) 4 timer(WaveArm,50) 
+transparent(co,d) 1b transparent("ban.cel",64)
+transparent(#1,-50)
+transparent(#3,b1) Changes the transparency of co by d.
+The transparency of a cel is between 0 (the cel is as rendered exactly as the cel file) and 255 (completely transparent). - lettransparent 
+transparent(ovcg,d) 4 transparent(!Bubbles,128) 
+unmap(oc) 1 unmap(#5)
+unmap("eyes2.cel") Removes oc from the current image - map
+altmap
+ifmapped
+ifnotmapped 
+unmap(ovcg) 4 unmap(!Jacket)
+unmap(ObjNum) 
+viewport(d1,d2) 1b viewport(100,80)
+viewport(x0,y0) Sets the top right of the visible area of the image to (d1,d2)
+This function is not widely supported, and even less widely used. - windowsize 
+windowsize(d1,d2) 1b windowsize(400,200)
+windowsize(x1,y1) Sets the visible size of the image to (d1,d2)
+This function is not widely supported, and even less widely used. - viewport 
+

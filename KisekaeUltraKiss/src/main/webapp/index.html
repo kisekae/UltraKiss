@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit this template
+-->
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Full Screen Canvas</title>
+        <style>
+            body {
+                margin: 0;
+                overflow: hidden; /* Prevent scrollbars */
+            }
+            canvas {
+                display: block; /* Remove extra space below canvas */
+            }
+        </style>
+    </head>
+    <body>
+       <div><div id='custom-alert' style='display: none; padding: 15px; background-color: white; color: black; border: 2px solid red; position: absolute; width: fit-content; left: 0; right: 0; margin-inline: auto; top: 30%; z-index: 1000;'>
+       <span id='alert-message'></span>
+       </div></div>                 
+       <input type="file" id="fileInput" style="display: none;" />
+       <canvas id="myCanvas"></canvas>
+       <script src="client.js" host="127.0.0.1" port="49152"></script>
+       <script src='WebAudioFontPlayer.js'></script>
+       <script src='MIDIFile.js'></script>
+       <script src='MIDIPlayer.js'></script>
+    </body>
+</html>

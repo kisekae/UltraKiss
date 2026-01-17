@@ -1,0 +1,358 @@
+KiSS .cnf layout, FKiSS/FKiSS2 command reference, and various PlayFKiSS notes.
+    written by Chad Randall crandall@msen.com 
+    Last updated, December 31, 1997
+ 
+Terminology
+ 
+Action
+See Command
+Cel
+A graphical image where any pixel using color 0 is transparent. The basic 
+building blocks for a KiSS set. Cels are identified by name. When issuing FKiSS 
+events and commands, there should never be more than one cel per KiSS set with 
+the same name. Such instances are undefined and undesired results may occur.
+Cherry Kiss (ckiss)
+A recent cel format allowing 24 and 32 bit color. This includes an alpha channel 
+for variable transparency. This format requires quite a bit of memory and 
+horsepower. But as computers get faster and cheaper, this may become more 
+widespread. PlayKis s for Acorn, WKiss32, and KissLD are the only viewers 
+capable of ckiss right now. The next release of PlayFKiSS will have ckiss 
+support. Internally, pfks072 can already handle it.
+Command
+A keyword that issues changes or activates something else.
+Fix
+A numerical value ranging from 0 up to 32000, applied to an object. An object 
+may not be moved by the user unless the fix value is equal to zero. Any time the 
+user clicks on the object, it's fix value is reduced by one.
+FKiSS
+An addition to the KiSS format that allows more user interactivity. FKiSS 
+comprises events, commands, and the newer flags. Most FKiSS innovations come 
+from the Japanese side of the Pacific.
+FKiSS2
+Extra commands and features developed by Chad Randall and John Stiles. Included 
+are object collision detection and relative movement.
+FKiSS2.1
+Even more commands, including "if" conditional timers and random movement.
+Flags
+A recent FKiSS addition that allows the set creator to set certain states 
+without requiring a command entry. An example is the ;%t128 portion of a cel 
+definition line.
+Event
+A keyword specifying a group of commands that will be executed when a specific 
+condition occurs.
+Object
+A group of cels. This is a convenient way to issue commands and events to a 
+bunch of cels, such as an item of clothing. Such item can contain one cel for 
+the foreground, one for the inside, one for the sleeve, etc. Objects are usually 
+proceeded by an " #".
+Palette
+A number of colors consisting at the minimum of 16 pens up to 256 pens. There 
+can also be up to 10 palette groups per palette. The maximum number of pens that 
+can be specified is 256*10 or 2560.
+Set
+The group of cels displayed at any one time. There can be up to 10 sets per KiSS 
+set.
+ 
+ 
+Format of the .cnf file
+The sample layout of a .cnf file follows:
+;comments
+%palette1.kcf
+%palette2.kcf
+(640,480) ; Environment size
+[0 ; border color
+;more comments
+#3 fog.cel *1 :0 1 2 3 4 5 6 7 8 9 ;%t128 transparent fog
+#0.10 dress.cel *0 :0 1 2 3 4 5 6 7 8 9 ; lady's dress
+#1.32000 body.cel *0 :0 1 2 3 4 5 6 7 8 9 ; lady
+#0.10 dress_.cel *0 :0 1 2 3 4 5 6 7 8 9 ; back of lady's dress
+;even more comments
+;@EventHandler()
+;@initalize()
+;@ unmap("fog.cel")
+;some more comments
+$0 120,50 220,150 65,65
+$1 120,50 220,150 65,65
+';end of file
+ 
+ 
+Now to break down each line and explain what all those symbols mean.
+ 
+%palette1.kcf
+This indicates a palette file. There may be up to 256 pens per KiSS set. There 
+may be up to 16 palette files if each holds 16 pens. Any pens over 256 are 
+ignored. Also, each palette file can hold up to 10 groups of pens, for a total 
+of 2560 pens. These lines are required! There is no default pen set defined.
+This line maybe omitted in Cherry Kiss files. Since 24/32 bit graphics define 
+their own palettes, there is no requirement for a palette. If you intend to mix 
+ckiss and kiss/gs cels, this line will still be required.
+(640,480)
+This specifies the playfield size. If this line is omitted, it will default to 
+448 x 320.
+[0
+This is the border color, as a pen number. Some programs will ignore this value. 
+Other programs such as DOS based ones will fill the area around the playfield 
+with this color. It will default to 0 if omitted.
+ 
+#0 dress.cel *0 :0 1 2 3 4 5 6 7 8 9 ;%t128 ;comment
+This is broken down farther:
+#0.10
+The object number this individual cel is grouped with. The number following the 
+"." is the fix value of the related object. This value is optional and will 
+default to 0.
+dress.cel
+The name of the cel. While this can be any name you want, there is a certain 
+convention to follow if you plan on distributing the file. Keep filenames 
+compliant to the 8.3 filename MS-DOS naming restriction. Also use lowercase 
+lette rs to conform under case-sensitive systems such as UNIX.
+*0
+This indicates the offset into the palette pen group. This only applies to those 
+cels with 16 colors. 256 color cels will default to offset 0.
+:0 1 2 3 4 5 6 7 8 9
+This section specifies which set groups the cel is visible in. A cel will 
+default to all groups if this section is omitted.
+;%t128
+This indicates the cel's transparent value. Any number from 0 to 255 may be 
+used, with 0 as opaque and 255 completely invisible. This setting is not used by 
+older KiSS viewers, so be aware of Yours truly, target audience. See also t 
+ransparent()
+* I intend to allow other letters here in future releases of PlayFKiSS. Such 
+actions as lighten, darken, additive, subtractive, displacement, XOR, AND, OR, 
+and other graphics mixing operators. This will allow the end user to recreate 
+many PhotoShop l ayering features.
+ 
+Even further down we find:
+;@EventHandler
+;@initalize()
+;@ unmap("fog.cel")
+ 
+This is a section of FKiSS code. The ";@" symbols always indicate FKiSS commands 
+are on that line. EventHandler is a case-sensitive flag that starts the FKiSS 
+section of code. Likewise, all commands and events must be in lowerca se to be 
+properly recognized by most FKiSS parsers. A complete list of FKiSS and FKiSS2 
+commands follow at the end of this document.
+ 
+$0 120,50 220,150 65,65
+$1 120,50 220,150 65,65
+This line basically says that for set 0, use palette group 0. Place object 0 at 
+120 x 50, object 1 at 220 x 150, and object 2 at 65 x 65. Likewise, set 1 is 
+identical except that palette group 1 is used. Don't attempt to edit these 
+values by hand. Most any KiSS viewer program will save these for you. You can 
+cut and paste them from a temporary .cnf file into your master .cnf file if you 
+don't wish to loose other information such as comments.
+ 
+ 
+Standard FKiSS/FKiSS2 Events
+ 
+alarm(number)
+Triggered when a timer reaches zero. Note: Most viewer programs will only accept 
+timer numbers from 0 up to 64. The newer FKiSS2 proposal will allow from 0 up to 
+511.
+apart("celname.cel", "celname2.cel")
+Triggered when cel1 no longer touches cel2, but only if they touching before the 
+move. A touch consists of non-transparent pixels that overlap. Note: This is a 
+proposed FKiSS2.1 event and is not generally supported by other viewers.
+begin()
+Triggered after the first screen is activated. This is a good place to start the 
+animations using timer()
+catch(#object) / catch("celname.cel")
+Triggered when the user "grabs" an object or cel, and the fix value is at zero 
+(movable).
+col(number)
+Similar to set(), but triggered when the palette group is changed. Note: col is 
+probably short for color.
+collide("celname.cel", "celname2.cel")
+Triggered when cel1 touches cel2, but only if they were not touching before the 
+move. A touch consists of non-transparent pixels that overlap. Note: This is a 
+proposed FKiSS2.1 event and is not generally supported by other viewers.
+drop(#object) / catch("celname.cel")
+Triggered when the user "drops" an object or cel, and the fix value is at zero 
+(movable).
+end()
+Triggered when the user closes the KiSS set. This is a good place to play or 
+display any farewell messages.
+fixcatch(#object) / fixcatch("celname.cel")
+Similar to catch(), but only triggered when the object is fixed in place.
+fixdrop(#object) / catch("celname.cel")
+Similar to drop(), but only triggered when the object is fixed in place.
+in(#object1,#object2)
+Triggered when one object's bounding boxes overlap another. The bounding boxes 
+are formed by adding all the visible and mapped cels's rectangles to form a 
+geometric shape. It is not the total rectangle size, but rather a combination of 
+individua l rectangles. This event only occurs when 2 objects are apart and are 
+then moved together. Note: This is a proposed FKiSS2 event and is not generally 
+supported by other viewers.
+initialize()
+Triggered commands before any visual information is displayed. This is a good 
+place to unmap cels.
+never()
+This is never triggered. It is a good place to hide code you don't wish to run. 
+Note: You can precede FKiSS2 code with this event to hide it from older FKiSS 
+viewers.
+out(#object1,#object2)
+Similar to in(), but triggered when 2 objects are moved apart. Note: This is a 
+proposed FKiSS2 event and is not generally supported by other viewers.
+press(#object) / fixcatch("celname.cel")
+Similar to catch(), but triggered regardless of the fix value.
+release(#object) / fixcatch("celname.cel")
+Similar to drop(), but triggered regardless of the fix value.
+set(number)
+Triggered when the user or changeset() command changes the current set.
+stillin(#object1,#object2)
+Triggered when one object's bounding boxes overlap another. The bounding boxes 
+are formed by adding all the visible and mapped cels's rectangles to form a 
+geometric shape. It is not the total rectangle size, but rather a combination of 
+individua l rectangles. Unlike in(), this event occurs whenever the object is 
+moved and "touches" the second object, regardless of the initial states. Note: 
+This is a proposed FKiSS2 event and is not generally supported by other viewers.
+stillout(#object1,#object2)
+Similar to stillin(), but triggered when 2 objects are moved apart. Note: This 
+is a proposed FKiSS2 event and is not generally supported by other viewers.
+unfix(#object)
+Triggered when the fix value reaches zero.
+version(set_version_number)
+Triggered when the current viewer version is equal or greater than the FKiSS 
+command/event version number. This can be used to inform the user that the KiSS 
+set uses commands that are unsupported by the viewer. See the extended notes at 
+the bottom of t his file for an effective example on the usage of this event. 
+Note: This is a proposed FKiSS2 event and is not generally supported by other 
+viewers.
+ 
+Standard FKiSS/FKiSS2 Commands
+altmap(#object) / altmap("celname.cel")
+Turns any mapped cels to unmapped and vice-versa.
+changecol(palette)
+Forces another palette group to become the active one.
+changeset(set)
+Forces another set to become the active one.
+debug("messagestring")
+Displays a message. Each viewer may have a different method to display debug 
+information.
+iffixed(#obj, timer, value)
+Sets timer if the object specified by #obj is fixed (fix value is greater than 
+zero). Note: This is a proposed FKiSS2.1 event and is not generally supported by 
+other viewers.
+ifmapped("cel", timer, value)
+Sets timer if the cel specified by "cel" is mapped. Note: This is a proposed 
+FKiSS2.1 event and is not generally supported by other viewers.
+ifmoved (#obj, timer, value)
+Sets timer if the object specified by #obj has been moved. An object is defined 
+as moved if it's coordinates are not equal to the coordinates specified in the 
+.CNF file. Note: This is a proposed FKiSS2.1 event and is not generally 
+supported by other viewers.
+ifnotfixed(#obj, timer, value)
+Sets timer if the object specified by #obj is not fixed (fix value is equal to 
+zero). Note: This is a proposed FKiSS2.1 event and is not generally supported by 
+other viewers.
+ifnotmapped("cel", timer, value)
+Sets timer if the cel specified by "cel" is not mapped. Note: This is a proposed 
+FKiSS2.1 event and is not generally supported by other viewers.
+ifnotmoved (#obj, timer, value)
+Sets timer if the object specified by #obj has not been moved. An object is 
+defined as moved if it's coordinates are not equal to the coordinates specified 
+in the .CNF file. Note: This is a proposed FKiSS2.1 event and is not generally 
+supported by o ther viewers.
+map(#object) / map("celname.cel")
+Maps all cels.
+move(#object,offsetx,offsety)
+Moves an object using the offsets specified. Note: PlayFKiSS will never move an 
+object off-screen, even when "Enforce Boundaries" is turned off.
+movebyx(#object,#object,offsetx)
+Moves an object using the offset from another object. Note: This is a proposed 
+FKiSS2 command, and is not generally supported by other viewers.
+movebyy(#object,#object,offsetx)
+Moves an object using the offset from another object. Note: This is a proposed 
+FKiSS2 command, and is not generally supported by other viewers.
+moverandx(#object,min,max)
+Moves an object using random values. The new coordinate is relative, based on 
+the min and max values. Ex: If min is -1 and max is 1, the new location may be 
+either 1 pixel less, one pixel more, or the same location. Note: This is a 
+proposed FKiSS2.1 command, and is not generally supported by other viewers.
+moverandy(#object,min,max)
+Moves an object using random values. The new coordinate is relative, based on 
+the min and max values. Ex: If min is -1 and max is 1, the new location may be 
+either 1 pixel less, one pixel more, or the same location. Note: This is a 
+proposed FKiSS2.1 command, and is not generally supported by other viewers.
+moveto(#object,x,y)
+Moves an object to the absolute coordinates specified. Note: PlayFKiSS will 
+never move an object off-screen, even when "Enforce Boundaries" is turned off. 
+Note: This is a proposed FKiSS2 command, and is not generally supported by other 
+viewers.
+< /DIR> 
+movetorand(#object)
+Moves an object to random coordinates. Note: PlayFKiSS will never move an object 
+off-screen, even when "Enforce Boundaries" is turned off. Note: This is a 
+proposed FKiSS2.1 command, and is not generally supported by other viewers.
+ 
+music ("filename.mid")
+Plays a MIDI song. Note: This is a proposed FKiSS2 command, and is not generally 
+supported by other viewers.
+nop()
+Does nothing. NOP is short for "No Operation" in assembly language.
+notify("message string")
+Currently a synonym for debug() Note: This is a proposed FKiSS2 command, and is 
+not generally supported by other viewers.
+quit()
+Forces the viewer to exit. Note: PlayFKiSS retains this command when saving, but 
+will not quit when issued.
+randomtimer(number,minimum,maximum)
+Sets a timer based on a random number.
+setfix(#object,fixval)
+Manually sets the fix val for the object. If the value is 0, any unfix() events 
+linked to this object will be triggered. Note: This is a proposed FKiSS2.1 
+command, and is not generally supported by other viewers.
+ 
+sound("filename.wav") / sound("filename.au")
+Plays a sound. Not all viewers support .au format and vice-versa. If possible, 
+include 2 versions of your .cnf file and convert all sounds to both formats.
+timer(number,duration)
+Starts a timer, using duration microseconds for the countdown. Setting a timer 
+that is already active will reset to the duration value. Setting a timer to 0 
+will effectively turn it off. A microsecond is 1/100 of a second; A timer set to 
+100 microsecon ds will trigger an alarm 1 second later. Note: PlayFKiSS has a 
+scale of 10 microseconds between each alarm event, and will only visually update 
+the screen every 100 microseconds.
+transparent(#object, reloffset) / transparent("celname.cel", reloffset)
+Sets the transparency level of the cels/object. reloffset is the value to add to 
+the current transparency level. The maximum range is from 0 (totally opaque) up 
+to 255 (totally transparent). Note: This command is fairly recent and is not 
+supported by a ll FKiSS viewers. Also, some viewers show cels dithered and 
+other's change to true-color mode (16 million colors).
+unmap(#object) / unmap("celname.cel")
+First case, unmaps all cels belonging to object "#object". Second case unmaps a 
+specific 
+viewport(x,y)
+Changes the viewport offset. Note: PlayFKiSS ignores this command, but will 
+retain it when saving.
+windowsize(x,y)
+Changes the window size. Note: PlayFKiSS ignores this command, but will retain 
+it when saving.
+ 
+Extended FKiSS2 information
+The commands and events marked as FKiSS2 and FKiSS2.1 are, at present, only 
+supported by PlayFKiSS for Win95/NT4 and PlayKiss for Acorn. French KiSS has 
+FKiSS2 support, minus music() and all transparency related stuff. WKiss32g s 
+upports a subset of FKiSS2 including (but not limited to) music(), in(), out(), 
+movebyx(), movebyy(), collide(), apart(), movetorand(), and moveto(). KissLD7x 
+also supports a few FKiSS2 commands. If you would like to see more FKiSS2 
+commands, and/or set s, spread the word. Ask your favorite KiSS programmer to 
+implement the commands. Ask your favorite artist to either insert FKiSS2 
+commands, or create an enhanced .cnf file. Only the support of users will 
+determine the outcome of the entire KiSS project. 
+ 
+To use the version() event, code your EventHandler as follows:
+ 
+;@EventHandler
+;@nothing() ; This tricks older viewers into ignoring the next 2 lines.
+;@version(2) ; If the viewer supports FKiSS2,
+; ; revision 2, run the following commands.
+;@ unmap("warning.cel") 
+; ; warning.cel is a huge poster saying
+; ; "You need a FKiSS2 viewer to play this set."
+;@begin()
+;; If this warning is only a warning (maybe the set will still work without 
+FKiSS2), you could allow the user to dismiss the warning by clicking on it:
+;@release("warning.cel")
+;@ unmap("warning.cel")
+ 
+FKiSS3 specs

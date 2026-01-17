@@ -1,0 +1,3212 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0053)http://bfox.chat.ru/flashformat/SWFfilereference.html -->
+<HTML><HEAD><TITLE>SWF File Reference</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=iso-8859-1">
+<STYLE type=text/css>H1 {
+	FONT-WEIGHT: 900; FONT-SIZE: 24pt; FONT-FAMILY: Arial, Helvetica, sans-serif
+}
+H2 {
+	FONT-WEIGHT: 700; FONT-SIZE: 18pt; FONT-FAMILY: Arial, Helvetica, sans-serif
+}
+H3 {
+	FONT-WEIGHT: 700; FONT-SIZE: 14pt; FONT-FAMILY: Arial, Helvetica, sans-serif
+}
+H4 {
+	FONT-WEIGHT: 700; FONT-SIZE: 12pt; FONT-FAMILY: Arial, Helvetica, sans-serif
+}
+H5 {
+	FONT-WEIGHT: 500; FONT-SIZE: 12pt; FONT-FAMILY: Arial, Helvetica, sans-serif
+}
+.runInHead {
+	FONT-WEIGHT: 700; FONT-SIZE: 11pt; FONT-FAMILY: Arial, Helvetica, sans-serif
+}
+</STYLE>
+
+<META content="MSHTML 5.50.4913.1100" name=GENERATOR></HEAD>
+<BODY text=#000000 vLink=#333399 link=#ff0000 bgColor=#ffffff><A 
+name=h1SWFFileReference></A>
+<H1 align=center>SWF File Reference</H1><A name=h2BasicDataTypes></A>
+<H2>Basic Data Types</H2>
+<P>This section describes the basic data types used to define the more complex 
+data structures that comprise the SWF file format. </P><A name=h3BitValues></A>
+<H3>Bit Values</H3>
+<P>Bit values are a linear sequences of bits that describe signed and unsigned 
+integer and fixed point values. Other types of values that follow one or more 
+bit values are always aligned to the nearest byte boundary with zero bits as 
+padding. </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="50%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="50%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD>SB[n]</TD>
+    <TD>Signed bit value - n is number of significant bits</TD></TR>
+  <TR vAlign=top>
+    <TD>UB[n]</TD>
+    <TD>Unsigned bit value - n is number of significant bits</TD></TR>
+  <TR vAlign=top>
+    <TD>FB[n]</TD>
+    <TD>Signed fixed-point bit value - n is number of significant 
+  bits</TD></TR></TBODY></TABLE><A name=h3IntegerValues></A>
+<H3>Integer Values</H3>
+<P>Integer values are 8-bit, 16-bit, and 32-bit signed and unsigned values. </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="50%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="50%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD>SI8</TD>
+    <TD>Signed 8-bit integer value</TD></TR>
+  <TR vAlign=top>
+    <TD>SI16</TD>
+    <TD>Signed 16-bit integer value</TD></TR>
+  <TR vAlign=top>
+    <TD>SI32</TD>
+    <TD>Signed 32-bit integer value</TD></TR>
+  <TR vAlign=top>
+    <TD>SI8[n]</TD>
+    <TD>Signed 8-bit array - n is number of array elements</TD></TR>
+  <TR vAlign=top>
+    <TD>SI16[n]</TD>
+    <TD>Signed 16-bit array - n is number of array elements</TD></TR>
+  <TR vAlign=top>
+    <TD>UI8</TD>
+    <TD>Unsigned 8-bit integer value</TD></TR>
+  <TR vAlign=top>
+    <TD>UI16</TD>
+    <TD>Unsigned 16-bit integer value</TD></TR>
+  <TR vAlign=top>
+    <TD>UI32</TD>
+    <TD>Unsigned 32-bit integer value</TD></TR>
+  <TR vAlign=top>
+    <TD>UI8[n]</TD>
+    <TD>Unsigned 8-bit array - n is number of array elements</TD></TR>
+  <TR vAlign=top>
+    <TD>UI16[n]</TD>
+    <TD>Unsigned 16-bit array - n is number of array elements</TD></TR>
+  <TR vAlign=top>
+    <TD>UI32[n]</TD>
+    <TD>Unsigned 32-bit array - n is number of array 
+elements</TD></TR></TBODY></TABLE><A name=h3FixedPointValues></A>
+<H3>Fixed-Point Values</H3>
+<P>Fixed values are a 32-bit signed fixed-point number (16.16). </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="50%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="50%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD>FIXED</TD>
+    <TD>Signed 32-bit fixed-point number</TD></TR></TBODY></TABLE><A 
+name=h3ColorValues></A>
+<H3>Color Values</H3>
+<P>A color value represents a 24-bit red, green, and blue value. </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="50%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="50%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD>RGB</TD>
+    <TD>Color value</TD></TR></TBODY></TABLE>
+<P>The format for a color value within the file is described in the following 
+table: </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Red</TD>
+    <TD width="33%">UI8</TD>
+    <TD width="33%">Red color value</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Green</TD>
+    <TD width="33%">UI8</TD>
+    <TD width="33%">Green color value</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Blue</TD>
+    <TD width="33%">UI8</TD>
+    <TD width="33%">Blue color value</TD></TR></TBODY></TABLE><A 
+name=h3ColorWithAlphaValues></A>
+<H3>ColorWithAlpha Values</H3>
+<P>A ColorWithAlpha value represents a 32-bit red, green, and blue value with 
+transparency information. </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="50%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="50%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD>RGBA</TD>
+    <TD>Color value including alpha channel information</TD></TR></TBODY></TABLE>
+<P>The format for a color value within the file is described in the following 
+table: </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Red</TD>
+    <TD width="33%">UI8</TD>
+    <TD width="33%">Red color value</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Green</TD>
+    <TD width="33%">UI8</TD>
+    <TD width="33%">Green color value</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Blue</TD>
+    <TD width="33%">UI8</TD>
+    <TD width="33%">Blue color value</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Alpha</TD>
+    <TD width="33%">UI8</TD>
+    <TD width="33%">Transparency color value</TD></TR></TBODY></TABLE><A 
+name=h3RectangleValues></A>
+<H3>Rectangle Values</H3>
+<P>A rectangle value represents a rectangular region defined by a minimum X- and 
+Y-coordinate position with a maximum X- and Y-coordinate position. </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="50%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="50%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD>RECT</TD>
+    <TD>Rectangular region</TD></TR></TBODY></TABLE>
+<P>The format for a rectangular value within the file is described in the 
+following table: </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Nbits</TD>
+    <TD width="33%"><I>nBits </I>= UB[5]</TD>
+    <TD width="33%">Bits in each rect value field</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Xmin</TD>
+    <TD width="33%">SB[<I>nBits</I>]</TD>
+    <TD width="33%">X minimum position for rect</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Xmax</TD>
+    <TD width="33%">SB[<I>nBits</I>]</TD>
+    <TD width="33%">X maximum position for rect</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Ymin</TD>
+    <TD width="33%">SB[<I>nBits</I>]</TD>
+    <TD width="33%">Y minimum position for rect</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Ymax</TD>
+    <TD width="33%">SB[<I>nBits</I>]</TD>
+    <TD width="33%">Y maximum position for rect</TD></TR></TBODY></TABLE><A 
+name=h3MatrixValues></A>
+<H3>Matrix Values</H3>
+<P>A matrix value is used to describe scale, rotation and translation of a 
+graphic object. </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="50%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="50%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD>MATRIX</TD>
+    <TD>Transform matrix</TD></TR></TBODY></TABLE>
+<P>The format for a matrix value within the file is described in the following 
+table: </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">HasScale</TD>
+    <TD width="33%"><I>hasScale</I> = UB[1]</TD>
+    <TD width="33%">Has scale values if equal to 1</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">NscaleBits</TD>
+    <TD width="33%">If <I>hasScale nScaleBits</I> = UB[5]</TD>
+    <TD width="33%">Bits in each scale value field</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">ScaleX</TD>
+    <TD width="33%">If <I>hasScale</I> FB[<I>nScaleBits</I>]</TD>
+    <TD width="33%">X scale value</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">ScaleY</TD>
+    <TD width="33%">If <I>hasScale</I> FB[<I>nScaleBits</I>]</TD>
+    <TD width="33%">Y scale value</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">HasRotate</TD>
+    <TD width="33%"><I>hasRotate</I> = UB[1]</TD>
+    <TD width="33%">Has rotate and skew values if equal to 1</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">NrotateBits</TD>
+    <TD width="33%">If <I>hasRotate nRotateBits</I> = UB[5]</TD>
+    <TD width="33%">Bits in each rotate value field</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">RotateSkew0</TD>
+    <TD width="33%">If <I>hasRotate</I> FB[<I>nRotateBits</I>]</TD>
+    <TD width="33%">First rotate and skew value</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">RotateSkew1</TD>
+    <TD width="33%">If <I>hasRotate</I> FB[<I>nRotateBits</I>]</TD>
+    <TD width="33%">Second rotate and skew value</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">NtranslateBits</TD>
+    <TD width="33%"><I>nTranslateBits</I> = UB[5]</TD>
+    <TD width="33%">Bits in each translate value field</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">TranslateX</TD>
+    <TD width="33%">SB[<I>nTranslateBits</I>]</TD>
+    <TD width="33%">X translate value</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">TranslateY</TD>
+    <TD width="33%">SB[<I>nTranslateBits</I>]</TD>
+    <TD width="33%">Y translate value</TD></TR></TBODY></TABLE><A 
+name=h3ColorTransformValues></A>
+<H3>Color Transform Values</H3>
+<P>A color transform value is used to describe a color transform applied to a 
+color transform object. </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="50%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="50%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD>CXFORM</TD>
+    <TD>Color transform</TD></TR></TBODY></TABLE>
+<P>The format for a color transform within the file is described in the 
+following table: </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">HasMultTerms</TD>
+    <TD width="33%"><I>hasMult</I> = UB[1]</TD>
+    <TD width="33%">Has color multiply values if equal to 1</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">HasAddTerms</TD>
+    <TD width="33%"><I>hasAdd</I> = UB[1]</TD>
+    <TD width="33%">Has color addition values if equal to 1</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Nbits</TD>
+    <TD width="33%"><I>nBits</I> = UB[4]</TD>
+    <TD width="33%">Bits in each value field</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">RedMultTerm</TD>
+    <TD width="33%">If <I>hasMult</I> SB[<I>nBits</I>]</TD>
+    <TD width="33%">Red multiply value</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">GreenMultTerm</TD>
+    <TD width="33%">If <I>hasMult</I> SB[<I>nBits</I>]</TD>
+    <TD width="33%">Green multiply value</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">BlueMultTerm</TD>
+    <TD width="33%">If <I>hasMult</I> SB[<I>nBits</I>]</TD>
+    <TD width="33%">Blue multiply value</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">RedAddTerm</TD>
+    <TD width="33%">If <I>hasAdd</I> SB[<I>nBits</I>]</TD>
+    <TD width="33%">Red addition value</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">GreenAddTerm</TD>
+    <TD width="33%">If <I>hasAdd</I> SB[<I>nBits</I>]</TD>
+    <TD width="33%">Green addition value</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">BlueAddTerm</TD>
+    <TD width="33%">If <I>hasAdd</I> SB[<I>nBits</I>]</TD>
+    <TD width="33%">Blue addition value</TD></TR></TBODY></TABLE><A 
+name=h3ColorTransformwithAlphaValues></A>
+<H3>Color Transform with Alpha Values</H3>
+<P>A color transform with alpha value is used to describe a color transform with 
+transparency information applied to a color transform object. </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="50%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="50%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD>CXFORMWITHALPHA</TD>
+    <TD>Color transform</TD></TR></TBODY></TABLE>
+<P>The format for a color transform within the file is described in the 
+following table: </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">HasMultTerms</TD>
+    <TD width="33%"><I>hasMult</I> = UB[1]</TD>
+    <TD width="33%">Has color multiply values if equal to 1</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">HasAddTerms</TD>
+    <TD width="33%"><I>hasAdd</I> = UB[1]</TD>
+    <TD width="33%">Has color addition values if equal to 1</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Nbits</TD>
+    <TD width="33%"><I>nBits</I> = UB[4]</TD>
+    <TD width="33%">Bits in each value field</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">RedMultTerm</TD>
+    <TD width="33%">If <I>hasMult</I> SB[<I>nBits</I>]</TD>
+    <TD width="33%">Red multiply value</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">GreenMultTerm</TD>
+    <TD width="33%">If <I>hasMult</I> SB[<I>nBits</I>]</TD>
+    <TD width="33%">Green multiply value</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">BlueMultTerm</TD>
+    <TD width="33%">If <I>hasMult</I> SB[<I>nBits</I>]</TD>
+    <TD width="33%">Blue multiply value</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">AlphaMultTerm</TD>
+    <TD width="33%">If <I>hasMult</I> SB[<I>nBits</I>]</TD>
+    <TD width="33%">Alpha multiply value</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">RedAddTerm</TD>
+    <TD width="33%">If <I>hasAdd</I> SB[<I>nBits</I>]</TD>
+    <TD width="33%">Red addition value</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">GreenAddTerm</TD>
+    <TD width="33%">If <I>hasAdd</I> SB[<I>nBits</I>]</TD>
+    <TD width="33%">Green addition value</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">BlueAddTerm</TD>
+    <TD width="33%">If <I>hasAdd</I> SB[<I>nBits</I>]</TD>
+    <TD width="33%">Blue addition value</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">AlphaAddTerm</TD>
+    <TD width="33%">If <I>hasAdd</I> SB[<I>nBits</I>]</TD>
+    <TD width="33%">Transparency addition value</TD></TR></TBODY></TABLE><A 
+name=h3StringValues></A>
+<H3>String Values</H3>
+<P>A string value represents a null terminated ASCII or multiple byte character 
+string. </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="50%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="50%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD>STRING</TD>
+    <TD>String value</TD></TR></TBODY></TABLE>
+<P>The format for a string value is a sequential list of bytes terminated by the 
+null character byte. </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">String</TD>
+    <TD width="33%">UI8[zero or more]</TD>
+    <TD width="33%">Non-null string character data</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">StringEnd</TD>
+    <TD width="33%">UI8</TD>
+    <TD width="33%">Marks end of string - always zeroa</TD></TR></TBODY></TABLE><A 
+name=h2SWFFileTags></A>
+<H2>SWF File Tags</H2>
+<P>There are two categories of tags: definition and control. Definition tags 
+manage a dictionary of resources such as shapes, text, bitmap, and buttons that 
+can be used at any point in the animation. Control tags control the display list 
+and enable actions such as stopping or starting the animation. </P>
+<P>The following lists show the tags by category. </P><A 
+name=h4Definitiontags></A>
+<H4>Definition tags</H4>
+<TABLE cellSpacing=3 cellPadding=5 width="100%" border=0>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="25%">DefineShape</TD>
+    <TD width="25%">DefineShape2</TD>
+    <TD width="25%">DefineShape3</TD>
+    <TD width="25%">DefineMorphShape</TD></TR>
+  <TR vAlign=top>
+    <TD width="25%">DefineBits</TD>
+    <TD width="25%">DefineBitsJPEG2</TD>
+    <TD width="25%">DefineBitsJPEG3</TD>
+    <TD width="25%">DefineBitsLossless</TD></TR>
+  <TR vAlign=top>
+    <TD width="25%">DefineBitsLossless2</TD>
+    <TD width="25%">JPEGTables</TD>
+    <TD width="25%">DefineButton</TD>
+    <TD width="25%">DefineButton2</TD></TR>
+  <TR vAlign=top>
+    <TD width="25%">DefineButtonCxform</TD>
+    <TD width="25%">DefineButtonSound</TD>
+    <TD width="25%">DefineFont</TD>
+    <TD width="25%">DefineFont2</TD></TR>
+  <TR vAlign=top>
+    <TD width="25%">DefineFontInfo</TD>
+    <TD width="25%">DefineText</TD>
+    <TD width="25%">DefineText2</TD>
+    <TD width="25%">DefineSound</TD></TR>
+  <TR vAlign=top>
+    <TD width="25%">SoundStreamBlock</TD>
+    <TD width="25%">SoundStreamHead</TD>
+    <TD width="25%">SoundStreamHead2</TD>
+    <TD width="25%">DefineSprite</TD></TR></TBODY></TABLE><A 
+name=h4ControltagsSWF></A>
+<H4>Control tags</H4>
+<TABLE cellSpacing=3 cellPadding=5 width="100%" border=0>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="25%">End</TD>
+    <TD width="25%">FrameLabel</TD>
+    <TD width="25%">PlaceObject</TD>
+    <TD width="25%">PlaceObject2</TD></TR>
+  <TR vAlign=top>
+    <TD width="25%">Protect</TD>
+    <TD width="25%">RemoveObject</TD>
+    <TD width="25%">RemoveObject2</TD>
+    <TD width="25%">SetBackgroundColor</TD></TR>
+  <TR vAlign=top>
+    <TD width="25%">ShowFrame</TD>
+    <TD width="25%">StartSound</TD>
+    <TD width="25%">DoAction</TD>
+    <TD vAlign=top width="25%">&nbsp;</TD></TR></TBODY></TABLE><A 
+name=h2DefinitionTags></A>
+<H2>Definition Tags</H2>
+<P>You use definition tags to create animation characters such as shapes, text, 
+bitmap, and buttons. The following sections describe the data types and tags 
+associated with each character type. </P>
+<P>The following lists show the tags associated with each character. </P>
+<H5>Shapes</H5>
+<TABLE cellSpacing=3 cellPadding=5 width="100%" border=0>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="25%">DefineShape</TD>
+    <TD width="25%">DefineShape2</TD>
+    <TD width="25%">DefineShape3</TD>
+    <TD width="25%">DefineMorphShape</TD></TR></TBODY></TABLE>
+<H5>Bitmaps</H5>
+<TABLE cellSpacing=3 cellPadding=5 width="100%" border=0>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="25%">DefineBits</TD>
+    <TD width="25%">DefineBitsJPEG2</TD>
+    <TD width="25%">DefineBitsJPEG3</TD>
+    <TD width="25%">DefineBitsLossless</TD></TR>
+  <TR vAlign=top>
+    <TD width="25%">DefineBitsLossless2</TD>
+    <TD width="25%">JPEGTables</TD>
+    <TD width="25%">&nbsp;</TD>
+    <TD width="25%">&nbsp;</TD></TR></TBODY></TABLE>
+<H5>Buttons</H5>
+<TABLE cellSpacing=3 cellPadding=5 width="100%" border=0>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="25%">DefineButton</TD>
+    <TD width="25%">DefineButton2</TD>
+    <TD width="25%">DefineButtonCxform</TD>
+    <TD width="25%">DefineButtonSound</TD></TR></TBODY></TABLE>
+<H5>Text/Font</H5>
+<TABLE cellSpacing=3 cellPadding=5 width="100%" border=0>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="25%">DefineFont</TD>
+    <TD width="25%">DefineFont2</TD>
+    <TD width="25%">DefineFontInfo</TD>
+    <TD width="25%">DefineText</TD></TR>
+  <TR vAlign=top>
+    <TD width="25%">DefineText2 </TD>
+    <TD width="25%">&nbsp;</TD>
+    <TD width="25%">&nbsp;</TD>
+    <TD width="25%">&nbsp;</TD></TR></TBODY></TABLE>
+<H5>Sound</H5>
+<TABLE cellSpacing=3 cellPadding=5 width="100%" border=0>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="25%">DefineSound</TD>
+    <TD width="25%">SoundStreamBlock</TD>
+    <TD width="25%">SoundStreamHead</TD>
+    <TD width="25%">SoundStreamHead2</TD></TR></TBODY></TABLE>
+<H5>Sprite</H5>
+<P>DefineSprite </P><A name=h3ShapeArchitecture></A>
+<H3>Shape Architecture</H3>
+<P>Shapes in a SWF file have a flexible and powerful data structure that can be 
+very efficiently rendered on the display. A shape is defined by the following 
+elements: </P>
+<UL>
+  <LI><SPAN class=runInHead>Fill styles—</SPAN>A shape begins with a list of all 
+  the fill styles used in a shape. 
+  <LI><SPAN class=runInHead>Line styles—</SPAN>This is followed by a list of all 
+  the line styles used in a shape. 
+  <LI><SPAN class=runInHead>Edges—</SPAN>Finally, there is a list of the Bezier 
+  curve edges that define the shape. </LI></UL>
+<P>In most PC vector graphics formats, shapes are defined by a path data 
+structure that has fill and line styles and a series of curves or lines. SWF 
+extends this format by allowing each curve in a shape to have </P>
+<UL>
+  <LI>Any style from a list line styles 
+  <LI>A boundary between 0, 1, or 2 different filled areas. </LI></UL>
+<P>This flexible data structure is, in part, what enables SWF vectors to be 
+small and rendered quickly. Note that filled shapes in a SWF file always use the 
+even-odd fill rule. </P><A name=h4FillTypes></A>
+<H4>Fill Types</H4>
+<P>SWF supports three basic types of fills for a shape. </P>
+<UL>
+  <LI><SPAN class=runInHead>Solid fill—</SPAN>A simple RGBA color that fills a 
+  portion of a shape. 
+  <LI><SPAN class=runInHead>Gradient Fill —</SPAN>A gradient fill can be either 
+  a linear or a radial gradient. The gradient model has a color ramp that is 
+  mapped on to a square of -16384, -16384, 16384, 16384. For a linear gradient, 
+  the first color is mapped to the left edge and the last color is mapped to the 
+  right edge. For a radial gradient, the first color is mapped to the center 
+  point of the gradient and the last color is mapped to the largest circle that 
+  fits inside the gradient square. These color spaces are mapped on to the 
+  display using a standard transformation matrix. The color ramps consist of up 
+  to eight RGBA colors, where each color has a ratio between 0 and 255 that 
+  determines where in the ramp the color is located. Colors must be sorted with 
+  the smallest ratio first. 
+  <LI><SPAN class=runInHead>Bitmap fill—</SPAN>Bitmap fills refer to a bitmap 
+  character. There are two styles: clipped and tiled. A clipped bitmap fill 
+  repeats the color on the edge of a bitmap if the fill extends beyond the edge 
+  of the bitmap. A tiled fill repeats the bitmap if the fill extends beyond the 
+  edge of the bitmap. </LI></UL>
+<P>A fill style array enumerates a number of fill styles. </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="50%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="50%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD>FILLSTYLEARRAY</TD>
+    <TD>An array of fill styles</TD></TR></TBODY></TABLE>
+<P>The format of a fill style array is described in the following table: </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">FillStyleCount</TD>
+    <TD width="33%"><I>count</I> = UI8</TD>
+    <TD width="33%">Count of fill styles</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">FillStyleCountExtended</TD>
+    <TD width="33%">If <I>count</I> = 0xFF <I>count</I> = UI16</TD>
+    <TD width="33%">Extended count of fill styles. Supported only for Shape2 
+      and Shape3.</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">FillStyles</TD>
+    <TD width="33%">FILLSTYLE[<I>count</I>]</TD>
+    <TD width="33%">Array of fill styles</TD></TR></TBODY></TABLE>
+<P>A fill style represents how a close shape is filled in. </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="50%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="50%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD>FILLSTYLE</TD>
+    <TD>A fill style value</TD></TR></TBODY></TABLE>
+<P>The format of a fill style value within the file is described in the 
+following table: </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">FillStyleType</TD>
+    <TD width="33%"><I>type</I> = UI8<BR>0x00 = solid fill<BR>0x10 = linear 
+      gradient fill<BR>0x12 = radial gradient fill<BR>0x40 = tiled bitmap 
+      fill<BR>0x41 = clipped bitmap fill</TD>
+    <TD width="33%">Type of fill style</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Color</TD>
+    <TD width="33%">If <I>type</I> = 0x00 RGBA (if Shape3); RGB (if Shape1 or 
+      Shape2)</TD>
+    <TD width="33%">Solid fill color with transparency information</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">GradientMatrix</TD>
+    <TD width="33%">If <I>type</I> = 0x10 or 0x12 MATRIX</TD>
+    <TD width="33%">Matrix for gradient fill</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Gradient</TD>
+    <TD width="33%">If <I>type</I> = 0x10 or 0x12 GRADIENT</TD>
+    <TD width="33%">Gradient fill</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">BitmapId</TD>
+    <TD width="33%">If <I>type</I> = 0x40 or 0x41 UI16</TD>
+    <TD width="33%">ID of bitmap character for fill</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">BitmapMatrix</TD>
+    <TD width="33%">If <I>type</I> = 0x40 or 0x41 MATRIX</TD>
+    <TD width="33%">Matrix for bitmap fill</TD></TR></TBODY></TABLE><A 
+name=h4GradientValues></A>
+<H4>Gradient Values</H4>
+<P>Gradient information for a fill style. </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="50%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="50%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD>GRADIENT</TD>
+    <TD>Gradient information</TD></TR></TBODY></TABLE>
+<P>The format of gradient information is described in the following table: </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">NumGradients</TD>
+    <TD width="33%"><I>nGrads</I> = UI8</TD>
+    <TD width="33%">1 to 8</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">GradientRecords</TD>
+    <TD width="33%">GRADRECORD[<I>nGrads</I>]</TD>
+    <TD width="33%">Gradient records - see below</TD></TR></TBODY></TABLE><BR>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="50%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="50%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD>GRADRECORD</TD>
+    <TD>Entry in a gradient record</TD></TR></TBODY></TABLE>
+<P>The gradient record format is: </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Ratio</TD>
+    <TD width="33%">UI8</TD>
+    <TD width="33%">Ratio value</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Color</TD>
+    <TD width="33%">RGB (Shape1 or Shape2)<BR>RGBA (Shape3)</TD>
+    <TD width="33%">Color of gradient</TD></TR></TBODY></TABLE><A 
+name=h4LineStyleValues></A>
+<H4>Line Style Values</H4>
+<P>A line style array enumerates a number of line styles. </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="50%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="50%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD>LINESTYLEARRAY</TD>
+    <TD>An array of line styles</TD></TR></TBODY></TABLE>
+<P>The format of a line style array is described in the following table: </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">LineStyleCount</TD>
+    <TD width="33%"><I>count</I> = UI8</TD>
+    <TD width="33%">Count of line styles</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">LineStyleCountExtended</TD>
+    <TD width="33%">If <I>count</I> = 0xFF <I>count</I> = UI16</TD>
+    <TD width="33%">Extended count of line styles</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">LineStyles</TD>
+    <TD width="33%">LINESTYLE[<I>count</I>]</TD>
+    <TD width="33%">Array of line styles</TD></TR></TBODY></TABLE>
+<P>A line style represents a width and color of a line. </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="50%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="50%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD>LINESTYLE</TD>
+    <TD>A line style value</TD></TR></TBODY></TABLE>
+<P>The format of a line style value within the file is described in the 
+following table: </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Width</TD>
+    <TD width="33%">UI16</TD>
+    <TD width="33%">Width of line in twips</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Color</TD>
+    <TD width="33%">RGB (Shape1 or Shape2)<BR>RGBA (Shape3)</TD>
+    <TD width="33%">Color value including alpha channel information for 
+    Shape3s</TD></TR></TBODY></TABLE><A name=h4ShapeValues></A>
+<H4>Shape Values</H4>
+<P>Shape values define an open or closed shape without a fill style or line 
+style record. </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="50%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="50%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD>SHAPE</TD>
+    <TD>Shape information</TD></TR></TBODY></TABLE>
+<P>The format of shape style information is described in the following table: 
+</P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">NumFillBits</TD>
+    <TD width="33%"><I>NfillBits</I> = UB[4]</TD>
+    <TD width="33%">Number of fill index bits</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">NumLineBits</TD>
+    <TD width="33%"><I>NlineBits</I> = UB[4]</TD>
+    <TD width="33%">Number of line index bits</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">ShapeRecords</TD>
+    <TD width="33%">SHAPEREC[one or more]</TD>
+    <TD width="33%">Shape records - see below </TD></TR></TBODY></TABLE>
+<P>A shape style record is the same as a shape except that a fill style and line 
+style array is appended to the beginning of the data. These records are used in 
+shape characters. </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="50%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="50%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD>SHAPEWITHSTYLE</TD>
+    <TD>Shape with style information</TD></TR></TBODY></TABLE>
+<P>The format of shape style information is described in the following table: 
+</P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">FillStyles</TD>
+    <TD width="33%">FILLSTYLEARRAY</TD>
+    <TD width="33%">Array of fill styles</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">LineStyles</TD>
+    <TD width="33%">LINESTYLEARRAY</TD>
+    <TD width="33%">Array of line styles</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">NumFillBits</TD>
+    <TD width="33%"><I>nFillBits</I> = UB[4]</TD>
+    <TD width="33%">Number of fill index bits</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">NumLineBits</TD>
+    <TD width="33%"><I>nLineBits</I> = UB[4]</TD>
+    <TD width="33%">Number of line index bits</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">ShapeRecords</TD>
+    <TD width="33%">SHAPEREC[one or more]</TD>
+    <TD width="33%">Shape records - see below </TD></TR></TBODY></TABLE>
+<P>There are three types of shape records. </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="50%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="50%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD>SHAPERECORD</TD>
+    <TD>A shape record</TD></TR></TBODY></TABLE>
+<P>Shape Record Type 0 defines the end of shape record. </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">TypeFlag</TD>
+    <TD width="33%">UB[1] = 0</TD>
+    <TD width="33%">Non-edge record flag</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">EndOfShape</TD>
+    <TD width="33%">UB[5] = 0</TD>
+    <TD width="33%">End of shape flag</TD></TR></TBODY></TABLE>
+<P>Shape Record Type 1 defines changes in line style, fill style, position or a 
+new set of styles. </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">TypeFlag</TD>
+    <TD width="33%">UB[1] = 0</TD>
+    <TD width="33%">Non-edge record flag</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">StateNewStyles</TD>
+    <TD width="33%"><I>newStyles</I> = UB[1]</TD>
+    <TD width="33%">New styles flag. Used by DefineShape2 and DefineShape3 
+      only.</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">StateLineStyle</TD>
+    <TD width="33%"><I>lineStyle</I> = UB[1]</TD>
+    <TD width="33%">Line style change flag</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">StateFillStyle0</TD>
+    <TD width="33%"><I>fillStyle0</I> = UB[1]</TD>
+    <TD width="33%">Fill style 0 change flag</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">StateFillStyle1</TD>
+    <TD width="33%"><I>fillStyle1 </I>= UB[1]</TD>
+    <TD width="33%">Fill style 1 change flag</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">StateMoveTo</TD>
+    <TD width="33%"><I>moveTo </I>= UB[1]</TD>
+    <TD width="33%">Move to flag</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">MoveBits</TD>
+    <TD width="33%">If <I>moveTo</I> <I>nMoveBits</I> = UB[5]</TD>
+    <TD width="33%">Move bit count</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">MoveDeltaX</TD>
+    <TD width="33%">If <I>moveTo</I> UB[<I>nMoveBits</I>]</TD>
+    <TD width="33%">Delta X value</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">MoveDeltaY</TD>
+    <TD width="33%">If <I>moveTo</I> UB[<I>nMoveBits</I>]</TD>
+    <TD width="33%">Delta Y value</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Fill0Style</TD>
+    <TD width="33%">If <I>fillStyle0</I> UB[<I>nFillBits</I>]</TD>
+    <TD width="33%">Fill 0 Style</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Fill1Style</TD>
+    <TD width="33%">If <I>fillStyle1</I> UB[<I>nFillBits</I>]</TD>
+    <TD width="33%">Fill 1 Style</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">LineStyle</TD>
+    <TD width="33%">If <I>lineStyle</I> UB[<I>nLineBits</I>]</TD>
+    <TD width="33%">Line Style</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">FillStyles</TD>
+    <TD width="33%">If <I>newStyles</I> FILLSTYLEARRAY</TD>
+    <TD width="33%">Array of fill styles</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">LineStyles</TD>
+    <TD width="33%">If <I>newStyles</I> LINESTYLEARRAY</TD>
+    <TD width="33%">Array of line styles</TD></TR></TBODY></TABLE>
+<P>Shape Record Type 2 defines a straight or curved edge </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">TypeFlag</TD>
+    <TD width="33%">UB[1] = 1</TD>
+    <TD width="33%">This is an edge record</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">EdgeRecord</TD>
+    <TD width="33%">EDGERECORD</TD>
+    <TD width="33%">Line or curve edge record</TD></TR></TBODY></TABLE><A 
+name=h4EdgeRecords></A>
+<H4>Edge Records</H4>
+<P>There are two types of edge records. </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="50%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="50%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD>EDGERECORD</TD>
+    <TD>An edge record</TD></TR></TBODY></TABLE>
+<P>Edge Record Type 0 - defines a curved edge </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">EdgeFlag</TD>
+    <TD width="33%">UB[1] = 0</TD>
+    <TD width="33%">Curved edge - always 0</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">NumBits</TD>
+    <TD width="33%"><I>nBits</I> = UB[4] + 2</TD>
+    <TD width="33%">Number of bits per value</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">ControlDeltaX</TD>
+    <TD width="33%">SB[<I>nBits</I>]</TD>
+    <TD width="33%">X control point change</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">ControlDeltaY</TD>
+    <TD width="33%">SB[<I>nBits</I>]</TD>
+    <TD width="33%">Y control point change</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">AnchorDeltaX</TD>
+    <TD width="33%">SB[<I>nBits</I>]</TD>
+    <TD width="33%">X anchor point change</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">AnchorDeltaY</TD>
+    <TD width="33%">SB[<I>nBits</I>]</TD>
+    <TD width="33%">Y control point change</TD></TR></TBODY></TABLE>
+<P>Edge Record Type 1 - defines a straight edge </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">EdgeFlag</TD>
+    <TD width="33%">UB[1] = 1</TD>
+    <TD width="33%">Straight edge - always 1</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">NumBits</TD>
+    <TD width="33%"><I>nBits</I> = UB[4] + 2</TD>
+    <TD width="33%">Number of bits per value</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">GeneralLineFlag</TD>
+    <TD width="33%"><I>lineFlag</I> = UB[1]</TD>
+    <TD width="33%">General Line equals 1</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">DeltaX</TD>
+    <TD width="33%">If <I>lineFlag</I> = 1 SB[<I>nBits</I>]</TD>
+    <TD width="33%">X delta</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">DeltaY</TD>
+    <TD width="33%">If <I>lineFlag</I> = 1 SB[<I>nBits</I>]</TD>
+    <TD width="33%">Y delta</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">VertLineFlag</TD>
+    <TD width="33%">If <I>lineFlag</I> = 0 <I>vertFlag</I> = SB[1]</TD>
+    <TD width="33%">Vertical Line equals 1</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">DeltaX</TD>
+    <TD width="33%">If <I>vertFlag</I> = 0 SB[<I>nBits</I>]</TD>
+    <TD width="33%">X delta</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">DeltaY</TD>
+    <TD width="33%">If <I>vertFlag</I> = 1 SB[<I>nBits</I>]</TD>
+    <TD width="33%">Y delta</TD></TR></TBODY></TABLE><A name=h4DefineShape></A>
+<H4>DefineShape</H4>
+<P>Defines a vector shape object. The shape definition is a run-length encoded 
+list of bezier curve information, line styles, and fill styles. A shape can 
+contain many different fill colors and line styles. This format compresses very 
+well since each curve segment has its own fill and line attributes. </P>
+<P>A mathematical gradient fill ability and the ability to fill an area with a 
+bitmap enables rich graphics.(SWF 1.0) </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Header</TD>
+    <TD width="33%">RECORDHEADER</TD>
+    <TD width="33%">Tag ID = 2</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">ShapeId</TD>
+    <TD width="33%">UI16</TD>
+    <TD width="33%">ID for this character</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">ShapeBounds</TD>
+    <TD width="33%">RECT</TD>
+    <TD width="33%">Bounds of the shape</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Shapes</TD>
+    <TD width="33%">SHAPEWITHSTYLE</TD>
+    <TD width="33%">Shape information</TD></TR></TBODY></TABLE><A 
+name=h4DefineShape2></A>
+<H4>DefineShape2</H4>
+<P>Extends the capabilities of DefineShape with the ability to support more than 
+255 styles in the style list and multiple style lists in a single shape. (SWF 
+2.0) </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Header</TD>
+    <TD width="33%">RECORDHEADER</TD>
+    <TD width="33%">Tag ID = 22</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">ShapeId</TD>
+    <TD width="33%">UI16</TD>
+    <TD width="33%">ID for this character</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">ShapeBounds</TD>
+    <TD width="33%">RECT</TD>
+    <TD width="33%">Bounds of the shape</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Shapes</TD>
+    <TD width="33%">SHAPEWITHSTYLE</TD>
+    <TD width="33%">Shape information</TD></TR></TBODY></TABLE><A 
+name=h4DefineShape3></A>
+<H4>DefineShape3</H4>
+<P>Extends the capabilities of DefineShape2 by extending all of the RGB color 
+fields to support RGBA with alpha transparency. (SWF 3.0) </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Header</TD>
+    <TD width="33%">RECORDHEADER</TD>
+    <TD width="33%">Tag ID = 32</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">ShapeId</TD>
+    <TD width="33%">UI16</TD>
+    <TD width="33%">ID for this character</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">ShapeBounds</TD>
+    <TD width="33%">RECT</TD>
+    <TD width="33%">Bounds of the shape</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Shapes</TD>
+    <TD width="33%">SHAPEWITHSTYLE</TD>
+    <TD width="33%">Shape information</TD></TR></TBODY></TABLE><A 
+name=h4DefineMorphShape></A>
+<H4>DefineMorphShape</H4>
+<P>Defines the metamorphosis of one shape (Shape1) into another (Shape2). The 
+ShapeBounds1 specifies the boundaries of the original shape, while ShapeBounds2 
+specifies the boundaries of the shape into which Shape1 changes. The data 
+specified in MorphFillStyles and MorphLineStyles are for both shapes. For 
+example, the fill style for Shape1 is specified, then the corresponding fill 
+style for Shape2 is specified. Edges1 specifies the edges for Shape1 as well as 
+the morph style data for both shapes. Edges2 specifies the edges for Shape2, and 
+contains no style data. The number of edges specified in Edges1 must equal the 
+number of edges in Edges2. </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="25%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="25%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="50%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="25%">Header</TD>
+    <TD width="25%">RECORDHEADER</TD>
+    <TD width="50%">Tag ID = 46</TD></TR>
+  <TR vAlign=top>
+    <TD width="25%">Character ID</TD>
+    <TD width="25%">UI16</TD>
+    <TD width="50%">ID for this character</TD></TR>
+  <TR vAlign=top>
+    <TD width="25%">ShapeBounds1</TD>
+    <TD width="25%">RECT</TD>
+    <TD width="50%">Bounds of the original shape</TD></TR>
+  <TR vAlign=top>
+    <TD width="25%">ShapeBounds2</TD>
+    <TD width="25%">RECT</TD>
+    <TD width="50%">Bounds of the shape to which to morph</TD></TR>
+  <TR vAlign=top>
+    <TD width="25%">Offset</TD>
+    <TD width="25%">DWORD</TD>
+    <TD width="50%">Indicates offset to Edges2</TD></TR>
+  <TR vAlign=top>
+    <TD width="25%">MorphFillStyles</TD>
+    <TD width="25%">MORPHFILLSTYLES</TD>
+    <TD width="50%">Fill style information is stored in the same manner as for 
+      a standard shape, however each fill consists of interleaved information 
+      based on a single style type to accommodate morphing.</TD></TR>
+  <TR vAlign=top>
+    <TD width="25%">MorphLineStyles</TD>
+    <TD width="25%">MORPHLINESTYLES</TD>
+    <TD width="50%">Line style information is stored in the same manner as for 
+      a standard shape, however each line consists of interleaved information 
+      based on a single style type to accommodate morphing.</TD></TR>
+  <TR vAlign=top>
+    <TD width="25%">Edges1</TD>
+    <TD width="25%">&nbsp;</TD>
+    <TD width="50%">Contains the set of edges and the style bits that indicate 
+      style changes (for example, MoveTo, FillStyle, and LineStyle.) Number of 
+      edges must equal the number of edges in Edges2.</TD></TR>
+  <TR vAlign=top>
+    <TD width="25%">Edges2</TD>
+    <TD width="25%">&nbsp;</TD>
+    <TD width="50%">Contains only the set of edges, with no style information. 
+      Number of edges must equal the number of edges in 
+Edges1.</TD></TR></TBODY></TABLE>
+<P>A morph fill style array enumerates a number of fill styles. </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="50%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="50%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD>MORPHFILLSTYLES</TD>
+    <TD>An array of fill styles</TD></TR></TBODY></TABLE>
+<P>The format of a fill style array is described in the following table: </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">FillStyleCount</TD>
+    <TD width="33%"><I>count</I> = UI8</TD>
+    <TD width="33%">Count of fill styles</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">FillStyleCountExtended</TD>
+    <TD width="33%">If <I>count</I> = 0xFF <I>count</I> = UI16</TD>
+    <TD width="33%">Extended count of fill styles. </TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">FillStyles</TD>
+    <TD width="33%">FILLSTYLE[<I>count</I>]</TD>
+    <TD width="33%">Array of fill styles</TD></TR></TBODY></TABLE>
+<P>A fill style represents how a close shape is filled in. </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="50%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="50%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD>FILLSTYLE</TD>
+    <TD>A fill style value</TD></TR></TBODY></TABLE>
+<P>The format of a fill style value within the file is described in the 
+following table: </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">FillStyleType</TD>
+    <TD width="33%"><I>type</I> = UI8<BR>0x00 = solid fill<BR>0x10 = linear 
+      gradient fill<BR>0x12 = radial gradient fill<BR>0x41 = clipped bitmap 
+    fill</TD>
+    <TD width="33%">Type of fill style</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Color1</TD>
+    <TD width="33%">If <I>type</I> = 0x00 RGBA </TD>
+    <TD width="33%">Solid fill color with transparency information for first 
+      shape</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Color2</TD>
+    <TD width="33%">If <I>type</I> = 0x00 RGBA </TD>
+    <TD width="33%">Solid fill color with transparency information for second 
+      shape</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">GradientMatrix1</TD>
+    <TD width="33%">If <I>type</I> = 0x10 or 0x12 MATRIX</TD>
+    <TD width="33%">Matrix for gradient fill for first shape</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">GradientMatrix2</TD>
+    <TD width="33%">If <I>type</I> = 0x10 or 0x12 MATRIX</TD>
+    <TD width="33%">Matrix for gradient fill for second shape</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Gradient</TD>
+    <TD width="33%">If <I>type</I> = 0x10 or 0x12 GRADIENT</TD>
+    <TD width="33%">Gradient fill</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">BitmapId</TD>
+    <TD width="33%">If <I>type</I> = 0x40 or 0x41 UI16</TD>
+    <TD width="33%">ID of bitmap character for fill</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">BitmapMatrix1</TD>
+    <TD width="33%">If <I>type</I> = 0x40 or 0x41 MATRIX</TD>
+    <TD width="33%">Matrix for bitmap fill for first shape</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">BitmapMatrix2</TD>
+    <TD width="33%">If <I>type</I> = 0x40 or 0x41 MATRIX</TD>
+    <TD width="33%">Matrix for bitmap fill for second 
+shape</TD></TR></TBODY></TABLE><A name=h4MorphGradientValues></A>
+<H4>Morph Gradient Values</H4>
+<P>Gradient information for a fill style. </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="50%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="50%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD>GRADIENT</TD>
+    <TD>Gradient information</TD></TR></TBODY></TABLE>
+<P>The format of gradient information is described in the following table: </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">NumGradients</TD>
+    <TD width="33%"><I>nGrads</I> = UI8</TD>
+    <TD width="33%">1 to 8</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">GradientRecords</TD>
+    <TD width="33%">GRADRECORD[<I>nGrads</I>]</TD>
+    <TD width="33%">Gradient records - see below</TD></TR></TBODY></TABLE><BR>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="50%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="50%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD>GRADRECORD</TD>
+    <TD>Entry in a gradient record</TD></TR></TBODY></TABLE>
+<P>The gradient record format is: </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Ratio1</TD>
+    <TD width="33%">UI8</TD>
+    <TD width="33%">Ratio value for first shape</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Color1</TD>
+    <TD width="33%">RGBA </TD>
+    <TD width="33%">Color of gradient for first shape</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Ratio2</TD>
+    <TD width="33%">UI8</TD>
+    <TD width="33%">Ratio value for second shape</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Color2</TD>
+    <TD width="33%">RGBA</TD>
+    <TD width="33%">Color of gradient for second shape</TD></TR></TBODY></TABLE><A 
+name=h4MorphLineStyleValues></A>
+<H4>Morph Line Style Values</H4>
+<P>A morph line style array enumerates a number of fill styles. </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="50%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="50%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD>MORPHLINESTYLES</TD>
+    <TD>An array of line styles</TD></TR></TBODY></TABLE>
+<P>The format of a line style array is described in the following table: </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">LineStyleCount</TD>
+    <TD width="33%"><I>count</I> = UI8</TD>
+    <TD width="33%">Count of line styles</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">LineStyleCountExtended</TD>
+    <TD width="33%">If <I>count</I> = 0xFF <I>count</I> = UI16</TD>
+    <TD width="33%">Extended count of line styles</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">LineStyles</TD>
+    <TD width="33%">LINESTYLE[<I>count</I>]</TD>
+    <TD width="33%">Array of line styles</TD></TR></TBODY></TABLE>
+<P>A line style represents a width and color of a line. DefineMorphShape 
+supports only solid line styles. </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="50%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="50%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD>LINESTYLE</TD>
+    <TD>A line style value</TD></TR></TBODY></TABLE>
+<P>The format of a line style value within the file is described in the 
+following table: </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Width1</TD>
+    <TD width="33%">UI16</TD>
+    <TD width="33%">Width of line in first shape in twips</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Width2</TD>
+    <TD width="33%">UI16</TD>
+    <TD width="33%">Width of line in second shape in twips</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Color1</TD>
+    <TD width="33%">RGBA </TD>
+    <TD width="33%">Color value including alpha channel information for first 
+      shape</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Color2</TD>
+    <TD width="33%">RGBA </TD>
+    <TD width="33%">Color value including alpha channel information for second 
+      shape</TD></TR></TBODY></TABLE><A name=h3Bitmaps></A>
+<H3>Bitmaps</H3>
+<P>SWF supports a variety of bitmap formats. One JPEG format has a JPEG header 
+that is shared between multiple JPEG images in a single SWF file to minimize 
+file size. Another JPEG format lets each image have it's own header, allowing 
+each image its own compression settings. The zlib format is similar to an 
+embedded PNG file and is used when you need lossless image compression. This is 
+best for images that would compress well as a GIF file like screen shots or 
+diagrams while JPEG is best for photographs. </P>
+<P>Bitmaps in SWF can also contain alpha channel information. For lossless 
+compression, there can be alpha channel information in a color table of an 8-bit 
+image or there can be full alpha channel information for a 32-bit image. For 
+JPEG images, alpha channels are stored using lossless zlib compression. </P>
+<P>Note that when a bitmap in a SWF file is rendered, the full transform 
+operation is applied to the image including the matrix transformation and the 
+color transform operation. </P><A name=h4DefineBits></A>
+<H4>DefineBits</H4>
+<P>Defines a bitmap character with JPEG compression. This tag contains only the 
+JPEG compressed image data (as defined by the Independent JPEG Group). 
+JPEGTables contains the JPEG encoding data used to encode this image. (SWF 1.0) 
+</P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Header</TD>
+    <TD width="33%">RECORDHEADER</TD>
+    <TD width="33%">Tag ID = 6</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">BitmapId</TD>
+    <TD width="33%">UI16</TD>
+    <TD width="33%">ID for this character</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">BitmapJPEGImage</TD>
+    <TD width="33%">UI8[image data size]</TD>
+    <TD width="33%">JPEG compressed image</TD></TR></TBODY></TABLE><A 
+name=h4DefineBitsJPEG2></A>
+<H4>DefineBitsJPEG2</H4>
+<P>Defines a bitmap character with JPEG compression. This tag differs from 
+DefineBits in that the record contains both the JPEG encoding table and the JPEG 
+image data (as defined by the Independent JPEG Group). This record allows 
+multiple JPEG images with differing compression ratios to be defined within a 
+single SWF file. </P>
+<P>Note: The JPEG encoding data and image data contained within this record are 
+in two separate JPEG streams. Each JPEG stream has a beginning of stream tag 
+(0xFF, 0xD8) and an end of stream tag (0xFF, 0xD9). This differs from a standard 
+JPEG image which combines the encoding data and image data into a single stream. 
+(SWF 2.0) </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Header</TD>
+    <TD width="33%">RECORDHEADER</TD>
+    <TD width="33%">Tag ID = 21</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">BitmapId</TD>
+    <TD width="33%">UI16</TD>
+    <TD width="33%">ID for this character</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">BitmapJPEGEncoding</TD>
+    <TD width="33%">UI8[encoding data size]</TD>
+    <TD width="33%">JPEG encoding table</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">BitmapJPEGImage</TD>
+    <TD width="33%">UI8[image data size]</TD>
+    <TD width="33%">JPEG compressed image</TD></TR></TBODY></TABLE><A 
+name=h4DefineBitsJPEG3></A>
+<H4>DefineBitsJPEG3</H4>
+<P>Defines a bitmap character with JPEG compression. This tag differs from 
+DefineBitsJPEG2 because it contains alpha channel data. This record allows 
+multiple JPEG images with differing compression ratios to be defined within a 
+single SWF file. </P>
+<P>Note: The JPEG encoding data and image data contained within this record are 
+in two separate JPEG streams. Each JPEG stream has a beginning of stream tag 
+(0xFF, 0xD8) and an end of stream tag (0xFF, 0xD9). This differs from a standard 
+JPEG image which combines the encoding data and image data into a single stream. 
+(SWF 3.0) </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Header</TD>
+    <TD width="33%">RECORDHEADER</TD>
+    <TD width="33%">Tag ID = 35</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">BitmapId</TD>
+    <TD width="33%">UI16</TD>
+    <TD width="33%">ID for this character</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">BitmapJPEGEncoding</TD>
+    <TD width="33%">UI8[encoding data size]</TD>
+    <TD width="33%">JPEG encoding table</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">BitmapJPEGImage</TD>
+    <TD width="33%">UI8[image data size]</TD>
+    <TD width="33%">JPEG compressed image</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">BitmapAlphaData</TD>
+    <TD width="33%">UI8[alpha data size]</TD>
+    <TD width="33%">ZLIB compressed array of alpha data</TD></TR></TBODY></TABLE><A 
+name=h4DefineBitsLossless></A>
+<H4>DefineBitsLossless</H4>
+<P>Defines a loss-less bitmap character that contains raw ZLIB compressed image 
+data. The data format used by the ZLIB library is described by Request for 
+Comments (RFCs) documents 1950 to 1952. (SWF 2.0) </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Header</TD>
+    <TD width="33%">RECORDHEADER</TD>
+    <TD width="33%">Tag ID = 20</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">BitmapId</TD>
+    <TD width="33%">UI16</TD>
+    <TD width="33%">Bitmap ID for this character</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">BitmapFormat</TD>
+    <TD width="33%">bmFormat = UI8</TD>
+    <TD width="33%">Format of compressed data<BR>3 = 8 bit image data<BR>4 = 
+      16 bit image data<BR>5 = 32 bit image data</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">BitmapWidth</TD>
+    <TD width="33%">UI16</TD>
+    <TD width="33%">Width of bitmap image</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">BitmapHeight</TD>
+    <TD width="33%">UI16</TD>
+    <TD width="33%">Height of bitmap image</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">BitmapColorTableSize</TD>
+    <TD width="33%">if bmFormat == 3 U8(n-1)</TD>
+    <TD width="33%">Compressed color table size</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">ColorTableRGB</TD>
+    <TD width="33%">RGB[color table size]</TD>
+    <TD width="33%">ZLIB compressed color data</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">BitmapZLIBImage</TD>
+    <TD width="33%">UI8[image data size]</TD>
+    <TD width="33%">ZLIB compressed image data</TD></TR></TBODY></TABLE><A 
+name=h4DefineBitsLossless2></A>
+<H4>DefineBitsLossless2</H4>
+<P>Defines a loss-less bitmap character that contains raw ZLIB compressed image 
+data and alpha channel information. The data format used by the ZLIB library is 
+described by Request for Comments (RFCs) documents 1950 to 1952. (SWF 3.0) </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Header</TD>
+    <TD width="33%">RECORDHEADER</TD>
+    <TD width="33%">Tag ID = 36</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">BitmapId</TD>
+    <TD width="33%">UI16</TD>
+    <TD width="33%">Bitmap ID for this character</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">BitmapFormat</TD>
+    <TD width="33%">bmFormat = UI8</TD>
+    <TD width="33%">Format of compressed data<BR>3 = 8 bit image data<BR>4 = 
+      16 bit image data<BR>5 = 32 bit image data</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">BitmapWidth</TD>
+    <TD width="33%">UI16</TD>
+    <TD width="33%">Width of bitmap image</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">BitmapHeight</TD>
+    <TD width="33%">UI16</TD>
+    <TD width="33%">Height of bitmap image</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">BitmapColorTableSize</TD>
+    <TD width="33%">if bmFormat &lt;= 3 UI8(n-1)</TD>
+    <TD width="33%">Compressed color table size</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">ColorTableRGBA</TD>
+    <TD width="33%">RGBA[color table size]</TD>
+    <TD width="33%">ZLIB compressed color data</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">BitmapZLIBImage</TD>
+    <TD width="33%">UI8[image data size]</TD>
+    <TD width="33%">ZLIB compressed image data</TD></TR></TBODY></TABLE><A 
+name=h4JPEGTables></A>
+<H4>JPEGTables</H4>
+<P>Defines the JPEG encoding table (as defined by the Independent JPEG Group) 
+for the JPEG images defined using the DefineBits records. There should only be 
+one record of this type in a SWF file. (SWF 1.0) </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Header</TD>
+    <TD width="33%">RECORDHEADER</TD>
+    <TD width="33%">Tag ID = 8</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">BitmapJPEGEncoding</TD>
+    <TD width="33%">UI8[encoding data size]</TD>
+    <TD width="33%">JPEG encoding table</TD></TR></TBODY></TABLE><A 
+name=h3Buttons></A>
+<H3>Buttons</H3>
+<P>Button objects provide much of the interactivity in a SWF file. A button 
+object consists of four states. The objects active in the first state are 
+displayed when the button is idle. The objects in the second state are displayed 
+when the mouse is over the button. The objects in the third state are displayed 
+when the button is pressed by the mouse. The objects in the fourth state are 
+used as a hit area to determine when the mouse is over the button. Buttons track 
+the mouse in two ways: by push button and by menu button. Push buttons capture 
+the mouse until the mouse button is released. Menu buttons do no capture the 
+mouse. </P>
+<P>Buttons can perform actions based on certain state transitions. The list of 
+possible button state transitions are: </P>
+<UL>
+  <LI><SPAN class=runInHead>IdleToOverUp—</SPAN>Mouse enter up 
+  <LI><SPAN class=runInHead>OverUpToIdle—</SPAN>Mouse exit up 
+  <LI><SPAN class=runInHead>OverUpToOverDown—</SPAN>Mouse down 
+  <LI><SPAN class=runInHead>OverDownToOverUp—</SPAN> Mouse up in </LI></UL>
+<P><B>Push button transitions</B><BR>These transitions only apply when tracking 
+Push buttons: </P>
+<UL>
+  <LI><SPAN class=runInHead>OverDownToOutDown—</SPAN>Mouse exit down 
+  <LI><SPAN class=runInHead>OutDownToOverDown—</SPAN>Mouse enter down 
+  <LI><SPAN class=runInHead>OutDownToIdle—</SPAN>Mouse up out </LI></UL>
+<P><B>Menu button transitions</B><BR>These transitions only apply when tracking 
+Menu buttons: </P>
+<UL>
+  <LI><SPAN class=runInHead>IdleToOverDown—</SPAN>Mouse enter down 
+  <LI><SPAN class=runInHead>OverDownToIdle—</SPAN>Mouse exit down </LI></UL>
+<P>Typically button actions are performed on a OverDownToOverUp, but they can be 
+performed on any state transition. </P><A name=h4DefineButton></A>
+<H4>DefineButton</H4>
+<P>Defines a button character. A button is defined by an up image, mouse over 
+image, depressed image and a hit region. There is also a list of actions to take 
+when the button is clicked and released. See the DoAction tag. (SWF 1.0) </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Header</TD>
+    <TD width="33%">RECORDHEADER</TD>
+    <TD width="33%">Tag ID = 7</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">ButtonId</TD>
+    <TD width="33%">UI16</TD>
+    <TD width="33%">ID for this character</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Buttons</TD>
+    <TD width="33%">BUTTONRECORD[one or more]</TD>
+    <TD width="33%">Button character records</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">ButtonEndFlag</TD>
+    <TD width="33%">UI8 = 0</TD>
+    <TD width="33%">Always set to 0</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Actions</TD>
+    <TD width="33%">ACTIONRECORD[zero or more]</TD>
+    <TD width="33%">Actions to perform - see below</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">ActionEndFlag</TD>
+    <TD width="33%">UI8 = 0</TD>
+    <TD width="33%">Always set to 0</TD></TR></TBODY></TABLE>
+<H5>Button Records</H5>
+<P>Button records describe the shape and text characters that comprise a button. 
+Each character in a button must be associated with one or more states (up, down, 
+over or hit test). </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="50%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="50%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD>BUTTONRECORD</TD>
+    <TD>Contains data to describe characters in a button</TD></TR></TBODY></TABLE>
+<H5>Button Record—The state flags below indicate where a given character should 
+be used for that state of the button.</H5>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">ButtonReserved</TD>
+    <TD width="33%">UB[4]</TD>
+    <TD width="33%">Reserved bits - always 0</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">ButtonStateHitTest</TD>
+    <TD width="33%">UB[1]</TD>
+    <TD width="33%">Button state hit test flag</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">ButtonStateDown</TD>
+    <TD width="33%">UB[1]</TD>
+    <TD width="33%">Button state down flag</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">ButtonStateOver</TD>
+    <TD width="33%">UB[1]</TD>
+    <TD width="33%">Button state over flag</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">ButtonStateUp</TD>
+    <TD width="33%">UB[1]</TD>
+    <TD width="33%">Button state up flag</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">ButtonCharacter</TD>
+    <TD width="33%">UI16</TD>
+    <TD width="33%">Button character ID</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">ButtonLayer</TD>
+    <TD width="33%">UI16</TD>
+    <TD width="33%">Button character layer</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">ButtonMatrix</TD>
+    <TD width="33%">MATRIX</TD>
+    <TD width="33%">Button character matrix</TD></TR></TBODY></TABLE><A 
+name=h4DefineButton2></A>
+<H4>DefineButton2</H4>
+<P>Defines a button character. A button is defined by an up image, mouse over 
+image, depressed image, and a hit region. You can also specify color 
+transformation and sound data. There is also a list of actions to take when the 
+button is clicked and released. See the DoAction tag. (SWF 3.0) </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="30%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="30%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="40%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="30%">Header</TD>
+    <TD width="30%">RECORDHEADER</TD>
+    <TD width="40%">Tag ID = 34</TD></TR>
+  <TR vAlign=top>
+    <TD width="30%">ButtonId</TD>
+    <TD width="30%">UI16</TD>
+    <TD width="40%">ID for this character</TD></TR>
+  <TR vAlign=top>
+    <TD width="30%">Flags</TD>
+    <TD width="30%">UI8 =0 or 1</TD>
+    <TD width="40%">Track as menu flag</TD></TR>
+  <TR vAlign=top>
+    <TD width="30%">Buttons</TD>
+    <TD width="30%">BUTTONRECORD[one or more]</TD>
+    <TD width="40%">Button character records with color transform with 
+  alpha</TD></TR>
+  <TR vAlign=top>
+    <TD width="30%">ButtonEndFlag</TD>
+    <TD width="30%">UI8 = 0</TD>
+    <TD width="40%">Always set to 0</TD></TR>
+  <TR vAlign=top>
+    <TD width="30%">Button2ActionCondition</TD>
+    <TD vAlign=top width="30%">&nbsp;</TD>
+    <TD width="40%">Specifies a series of actions to perform based on a 
+      condition. Each Button2ActionCondition consists of ActionOffset, 
+      Condition, Actions, and ActionEndFlag</TD></TR>
+  <TR vAlign=top>
+    <TD width="30%">ActionOffset</TD>
+    <TD width="30%">UI16</TD>
+    <TD width="40%">Points to next Button2Action condition</TD></TR>
+  <TR vAlign=top>
+    <TD width="30%">Condition</TD>
+    <TD width="30%">UI16</TD>
+    <TD width="40%">Button state transitions triggering an 
+      action.<BR><BR>UB[7] Reserved<BR>UB[1] OverDownToIdle <BR>UB[1] 
+      IdleToOverDown<BR>UB[1] OutDownToIdle<BR>UB[1] OutDownToOverDown<BR>UB[1] 
+      OverDownToOutDown<BR>UB[1] OverDownToOverUp<BR>UB[1] 
+      OverUpToOverDown<BR>UB[1] OverUpToIdle<BR>UB[1] IdleToOverUp</TD></TR>
+  <TR vAlign=top>
+    <TD width="30%">Actions</TD>
+    <TD width="30%">ACTIONRECORD[zero or more]</TD>
+    <TD width="40%">Actions to perform - see the DoAction tag</TD></TR>
+  <TR vAlign=top>
+    <TD width="30%">ActionEndFlag</TD>
+    <TD width="30%">UI8 = 0</TD>
+    <TD width="40%">Always set to 0</TD></TR></TBODY></TABLE>
+<H5>Button Records</H5>
+<P>Button records describe the shape and text characters that comprise a button. 
+Each character in a button must be associated with one or more states (up, down, 
+over or hit test). </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="50%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="50%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD>BUTTONRECORD</TD>
+    <TD>Contains data to describe characters in a button</TD></TR></TBODY></TABLE>
+<H5>Button Record—The state flags below indicate where a given character should 
+be used for that state of the button.</H5>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">ButtonReserved</TD>
+    <TD width="33%">UB[4]</TD>
+    <TD width="33%">Reserved bits - always 0</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">ButtonStateHitTest</TD>
+    <TD width="33%">UB[1]</TD>
+    <TD width="33%">Button state hit test flag</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">ButtonStateDown</TD>
+    <TD width="33%">UB[1]</TD>
+    <TD width="33%">Button state down flag</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">ButtonStateOver</TD>
+    <TD width="33%">UB[1]</TD>
+    <TD width="33%">Button state over flag</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">ButtonStateUp</TD>
+    <TD width="33%">UB[1]</TD>
+    <TD width="33%">Button state up flag</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">ButtonCharacter</TD>
+    <TD width="33%">UI16</TD>
+    <TD width="33%">Button character ID</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">ButtonLayer</TD>
+    <TD width="33%">UI16</TD>
+    <TD width="33%">Button character layer</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">ButtonMatrix</TD>
+    <TD width="33%">MATRIX</TD>
+    <TD width="33%">Button character matrix</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">ColorTransform</TD>
+    <TD width="33%">CXFORM[nCharacters in button]</TD>
+    <TD width="33%">Character color transform</TD></TR></TBODY></TABLE><A 
+name=h4DefineButtonCxform></A>
+<H4>DefineButtonCxform</H4>
+<P>Defines the color transform for each shape and text character in a button. 
+Not used for DefineButton2. (SWF 2.0) </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Header</TD>
+    <TD width="33%">RECORDHEADER</TD>
+    <TD width="33%">Tag ID = 23</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">ButtonId</TD>
+    <TD width="33%">UI16</TD>
+    <TD width="33%">Button ID for this information </TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">ButtonColorTransforms</TD>
+    <TD width="33%">CXFORM[nCharacters in button]</TD>
+    <TD width="33%">Character color transform</TD></TR></TBODY></TABLE><A 
+name=h4DefineButtonSound></A>
+<H4>DefineButtonSound</H4>
+<P>Defines the sound data for a button. (SWF 2.0) </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Header</TD>
+    <TD width="33%">RECORDHEADER</TD>
+    <TD width="33%">Tag ID = 17</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">ButtonId</TD>
+    <TD width="33%">UI16</TD>
+    <TD width="33%">Button ID this sound is for</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">ButtonSoundChar</TD>
+    <TD width="33%">UI16</TD>
+    <TD width="33%">Sound for state 0</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">ButtonSoundInfo</TD>
+    <TD width="33%">SOUNDINFO</TD>
+    <TD width="33%">Sound information for state 0</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">ButtonSoundChar</TD>
+    <TD width="33%">UI16</TD>
+    <TD width="33%">Sound for state 1</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">ButtonSoundInfo</TD>
+    <TD width="33%">SOUNDINFO</TD>
+    <TD width="33%">Sound information for state 1</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">ButtonSoundChar</TD>
+    <TD width="33%">UI16</TD>
+    <TD width="33%">Sound for state 2</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">ButtonSoundInfo</TD>
+    <TD width="33%">SOUNDINFO</TD>
+    <TD width="33%">Sound information for state 2</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">ButtonSoundChar</TD>
+    <TD width="33%">UI16</TD>
+    <TD width="33%">Sound for state 3</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">ButtonSoundInfo</TD>
+    <TD width="33%">SOUNDINFO</TD>
+    <TD width="33%">Sound information for state 3</TD></TR></TBODY></TABLE><A 
+name=h3FontsandText></A>
+<H3>Fonts and Text</H3>
+<P>SWF defines an efficient font format. The font object defines the outlines of 
+characters in a font. Only the characters that are actually used in the SWF file 
+need to be stored in the font definition. Outlines are stored without any 
+hinting information. (Since SWF graphics are normally anti-aliased, font quality 
+is quite good without any hinting information.) Text objects in a SWF file 
+consist of positioning information for each character to be placed and an index 
+into a font object for the font outline. </P>
+<P>The SWF font scheme has several advantages. The font definitions make it easy 
+to reuse outlines, saving file size. These definitions also make it possible to 
+use the font rendering engine of a platform (if that technique has advantages 
+for a particular platform). Since the layout and positioning information is 
+stored in the text object, it is possible to do very sophisticated text layout 
+effects like kerning and text wrapping without having a complex layout engine 
+built into a SWF file format player. </P><A name=h4DefineFont></A>
+<H4>DefineFont</H4>
+<P>Defines the shape outlines that define each glyph used in a particular font. 
+Only the glyphs that are used in a font are actually defined. This record 
+consists of an offset table followed by a shape table. For each glyph in the 
+shape table. the offset table stores the offset of the glyph in bytes from the 
+start of the offset table. Also, there is a one-to-one ordering match between 
+the order of the glyph offsets in the offset table and the order of the glyph 
+shapes in the shape table. The number of glyphs in the shape table can be 
+inferred by determining the offset of the first glyph shape and dividing the 
+offset by two bytes for each offset entry. (SWF 1.0) </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Header</TD>
+    <TD width="33%">RECORDHEADER</TD>
+    <TD width="33%">Tag ID = 10</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">FontId</TD>
+    <TD width="33%">UI16</TD>
+    <TD width="33%">ID for this character</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">OffsetTable</TD>
+    <TD width="33%">UI16[nGlyphs]</TD>
+    <TD width="33%">Array of shape offsets</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">ShapeTable</TD>
+    <TD width="33%">SHAPE[nGlyphs]</TD>
+    <TD width="33%">Array of shapes</TD></TR></TBODY></TABLE><A 
+name=h4DefineFont2></A>
+<H4>DefineFont2</H4>
+<P>Defines the mapping from a font object to a device font so that the player 
+can optionally use a TrueType or ATM font that may be installed on the computer 
+instead of the stored glyph outlines. Also defines the shape outlines that 
+define each glyph used in a particular font. This record consists of an offset 
+table followed by a shape table; you have the option of extending the offset 
+table to 32 bits. For each glyph in the shape table the offset table stores the 
+offset of the glyph in bytes from the start of the offset table. Also, there is 
+a one to one ordering match between the order of the glyph offsets in the offset 
+table and the order of the glyph shapes in the shape table. (SWF 3.0) </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Header</TD>
+    <TD width="33%">RECORDHEADER</TD>
+    <TD width="33%">Tag ID = 48</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">FontId</TD>
+    <TD width="33%">UI16</TD>
+    <TD width="33%">Font ID for this information</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">FontFlagsReserved</TD>
+    <TD width="33%">UB[8]</TD>
+    <TD width="33%">Reserved Flags</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">FontFlagsHasLayout*</TD>
+    <TD width="33%">UB[1]</TD>
+    <TD width="33%">Has font metrics/layout information</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">FontFlagsShiftJIS</TD>
+    <TD width="33%">UB[1]</TD>
+    <TD width="33%">ShiftJIS encoding</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">FontFlagsUnicode</TD>
+    <TD width="33%">UB[1]</TD>
+    <TD width="33%">Unicode encoding</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">FontFlagsAnsi</TD>
+    <TD width="33%">UB[1]</TD>
+    <TD width="33%">ANSI encoding</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">FontFlagsWideOffsets</TD>
+    <TD width="33%">UB[1]</TD>
+    <TD width="33%">If 1, uses 32 bit offsets</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">FontFlagsWideCodes</TD>
+    <TD width="33%">UB[1]</TD>
+    <TD width="33%">If 1, font uses 16-bit codes, otherwise font uses 8 bit 
+      codes</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">FontFlagsItalic</TD>
+    <TD width="33%">UB[1]</TD>
+    <TD width="33%">Italic Font</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">FontFlagsBold</TD>
+    <TD width="33%">UB[1]</TD>
+    <TD width="33%">Bold Font</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">FontNameLen</TD>
+    <TD width="33%">UI8</TD>
+    <TD width="33%">Length of name</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">FontName</TD>
+    <TD width="33%">UI8[NameLen]</TD>
+    <TD width="33%">Name of Font</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">FontGlyphCount</TD>
+    <TD width="33%">UI16</TD>
+    <TD width="33%">Count of Glyphs in font – nGlyphs</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">FontOffsetTable</TD>
+    <TD width="33%">If FontFlagsWideOffsets is 1, UI32[nGlyphs] else 
+      UI16[nGlyphs]</TD>
+    <TD vAlign=top width="33%">&nbsp;</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">FontShapeTable</TD>
+    <TD width="33%">SHAPE[nGlyphs]</TD>
+    <TD vAlign=top width="33%">&nbsp;</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">FontCodeTable</TD>
+    <TD width="33%">If FontFlagsWideCodes is 1, UI16[nGlyphs] else 
+    UI8[nGlyphs]</TD>
+    <TD vAlign=top width="33%">&nbsp;</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">FontAscent</TD>
+    <TD width="33%">If FontFlagsHasLayout is 1,<BR>SI16 - Font ascender 
+    height</TD>
+    <TD vAlign=top width="33%">&nbsp;</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">FontDescent</TD>
+    <TD width="33%">If FontFlagsHasLayout is 1,<BR>SI16 - Font decender 
+    height</TD>
+    <TD vAlign=top width="33%">&nbsp;</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">FontLeading</TD>
+    <TD width="33%">If FontFlagsHasLayout is 1,<BR>SI16 - Font leading 
+    height</TD>
+    <TD vAlign=top width="33%">&nbsp;</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">FontAdvanceTable</TD>
+    <TD width="33%">If FontFlagsHasLayout is 1,<BR>SI16[nGlyphs]</TD>
+    <TD vAlign=top width="33%">&nbsp;</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">FontBoundsTable</TD>
+    <TD width="33%">If FontFlagsHasLayout = 1,<BR>RECT[nGlyphs]</TD>
+    <TD vAlign=top width="33%">&nbsp;</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">FontKerningCount</TD>
+    <TD width="33%">If FontFlagsHasLayout is 1,<BR>UI16 - Font kerning table 
+      count</TD>
+    <TD vAlign=top width="33%">&nbsp;</TD></TR></TBODY></TABLE>
+<P>*If FontFlagsHasLayout has been set, each kerning structure has the following 
+data: </P>
+<UL>
+  <LI>FontKerningCode1. If FontFlagsWideCodes is 1, UI16 else UI8. 
+  <LI>FontKerningCode2. If FontFlagsWideCodes is 1, UI16 else UI8. 
+  <LI>FontKerningAdjustment. SI16</LI></UL><A name=h4DefineFontInfo></A>
+<H4>DefineFontInfo</H4>
+<P>Defines the mapping from a font object to a device font so that the player 
+can optionally use a TrueType or ATM font that may be installed on the computer 
+instead of the stored glyph outlines. This record also contains information that 
+can be used to map glyph indices in a text record to character codes to 
+reconstruct the original string data. (SWF 1.0) </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Header</TD>
+    <TD width="33%">RECORDHEADER</TD>
+    <TD width="33%">Tag ID = 13</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">FontId</TD>
+    <TD width="33%">UI16</TD>
+    <TD width="33%">Font ID this information is for</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">FontNameLen</TD>
+    <TD width="33%">nameLen = UI8</TD>
+    <TD width="33%">Length of font name</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">FontName</TD>
+    <TD width="33%">UI8[nameLen]</TD>
+    <TD width="33%">Name of the font</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">FontFlagsReserved</TD>
+    <TD width="33%">UB[2]</TD>
+    <TD width="33%">Reserved bit fields</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">FontFlagsUnicode</TD>
+    <TD width="33%">UB[1]</TD>
+    <TD width="33%">Unicode character codes</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">FontFlagsShiftJIS</TD>
+    <TD width="33%">UB[1]</TD>
+    <TD width="33%">ShiftJIS character codes</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">FontFlagsANSI</TD>
+    <TD width="33%">UB[1]</TD>
+    <TD width="33%">ANSI character codes</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">FontFlagsItalic</TD>
+    <TD width="33%">UB[1]</TD>
+    <TD width="33%">Font is italic</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">FontFlagsBold</TD>
+    <TD width="33%">UB[1]</TD>
+    <TD width="33%">Font is bold</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">FontFlagsWideCodes</TD>
+    <TD width="33%">wideChars = UB[1]</TD>
+    <TD width="33%">if 1 codeTable is UI16s else UI8s</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">CodeTable</TD>
+    <TD width="33%">if wideChars = 1 U16[nGlyphs]<BR>if wideChars = 0 
+      UI8[nGlyphs]</TD>
+    <TD width="33%">Glyph to code table</TD></TR></TBODY></TABLE><A 
+name=h4DefineText></A>
+<H4>DefineText</H4>
+<P>Defines a text object. This is a complex record that describes the font, 
+height, color, and position of every text character in the record. (SWF 1.0) 
+</P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Header</TD>
+    <TD width="33%">RECORDHEADER</TD>
+    <TD width="33%">Tag ID = 11</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">TextId</TD>
+    <TD width="33%">UI16</TD>
+    <TD width="33%">ID for this character</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">TextBounds</TD>
+    <TD width="33%">RECT</TD>
+    <TD width="33%">Bounds of the text</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">TextMatrix</TD>
+    <TD width="33%">MATRIX</TD>
+    <TD width="33%">Matrix for the text</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">TextGlyphBits</TD>
+    <TD width="33%">NGlyphBits = UI8</TD>
+    <TD width="33%">Bits in each glyph index</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">TextAdvanceBits</TD>
+    <TD width="33%">NAdvanceBits = UI8</TD>
+    <TD width="33%">Bits in each advance value</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">TextRecords</TD>
+    <TD width="33%">TEXTRECORD[zero or more]</TD>
+    <TD width="33%">Text records</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">TextEndOfRecordsFlag</TD>
+    <TD width="33%">UI8 = 0</TD>
+    <TD width="33%">Always set to zero</TD></TR></TBODY></TABLE>
+<P>Text records specify either changes to the state of text or actual glyph 
+indices for text. </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="50%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="50%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD>TEXTRECORD</TD>
+    <TD>A text record type 0 or type 1 as specified below</TD></TR></TBODY></TABLE>
+<H5>Text Record Type 0</H5>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">TextRecordType</TD>
+    <TD width="33%">UB[1] = 0</TD>
+    <TD width="33%">0 if text glyph record</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">TextGlyphCount</TD>
+    <TD width="33%">NGlyphs = UB[7]</TD>
+    <TD width="33%">Number of glyphs in record</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">TextGlyphEntries</TD>
+    <TD width="33%">GLYPHENTRY[nGlyphs]</TD>
+    <TD width="33%">Glyph entry - see below</TD></TR></TBODY></TABLE>
+<H5>Text Record Type 1</H5>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">TextRecordType</TD>
+    <TD width="33%">UB[1] = 0</TD>
+    <TD width="33%">1 if text state change record</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">TextReserved</TD>
+    <TD width="33%">UB[3]</TD>
+    <TD width="33%">Reserved - always 0</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">TextHasFont</TD>
+    <TD width="33%">HasFont = UB[1]</TD>
+    <TD width="33%">1 if text font specified</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">TextHasColor</TD>
+    <TD width="33%">HasColor = UB[1]</TD>
+    <TD width="33%">1 if text color specified</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">TextHasYOffset</TD>
+    <TD width="33%">HasYOffset = UB[1]</TD>
+    <TD width="33%">1 if Y offset specified</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">TextHasXOffset</TD>
+    <TD width="33%">HasXOffset = UB[1]</TD>
+    <TD width="33%">1 if X offset specified</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">TextFont</TD>
+    <TD width="33%">If hasFont UI16</TD>
+    <TD width="33%">Font ID for following text</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">TextColor</TD>
+    <TD width="33%">If hasColor RGB</TD>
+    <TD width="33%">Font color for following text</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">TextXOffset</TD>
+    <TD width="33%">If hasXOffset UI16</TD>
+    <TD width="33%">Font X offset for following text</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">TextYOffset</TD>
+    <TD width="33%">If hasYOffset UI16</TD>
+    <TD width="33%">Font Y offset for following text</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">TextHeight</TD>
+    <TD width="33%">If hasFont UI16</TD>
+    <TD width="33%">Font height for following text</TD></TR></TBODY></TABLE>
+<P>Glyph entries describe the glyph index and X advance value to use for a 
+particular character in the currently selected font for the text record. </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="50%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="50%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD>GLYPHENTRY</TD>
+    <TD>A glyph entry that describes a text glyph</TD></TR></TBODY></TABLE><BR>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">TextGlyphIndex</TD>
+    <TD width="33%">UB[nGlyphBits]</TD>
+    <TD width="33%">Glyph index into current font</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">TextGlyphAdvance</TD>
+    <TD width="33%">SB[nAdvanceBits]</TD>
+    <TD width="33%">X advance value for glyph</TD></TR></TBODY></TABLE><A 
+name=h4DefineText2></A>
+<H4>DefineText2</H4>
+<P>Defines a text object with color transparency data. This is a complex record 
+that describes the font, height, color, and position of every text character in 
+the record. (SWF 3.0) </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Header</TD>
+    <TD width="33%">RECORDHEADER</TD>
+    <TD width="33%">Tag ID = 11</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">TextId</TD>
+    <TD width="33%">UI16</TD>
+    <TD width="33%">ID for this character</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">TextBounds</TD>
+    <TD width="33%">RECT</TD>
+    <TD width="33%">Bounds of the text</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">TextMatrix</TD>
+    <TD width="33%">MATRIX</TD>
+    <TD width="33%">Matrix for the text</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">TextGlyphBits</TD>
+    <TD width="33%">NGlyphBits = UI8</TD>
+    <TD width="33%">Bits in each glyph index</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">TextAdvanceBits</TD>
+    <TD width="33%">NadvanceBits = UI8</TD>
+    <TD width="33%">Bits in each advance value</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">TextRecords</TD>
+    <TD width="33%">TEXTRECORD[zero or more]</TD>
+    <TD width="33%">Text records</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">TextEndOfRecordsFlag</TD>
+    <TD width="33%">UI8 = 0</TD>
+    <TD width="33%">Always set to zero</TD></TR></TBODY></TABLE>
+<P>Text records specify either changes to the state of text or actual glyph 
+indices for text. </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="50%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="50%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD>TEXTRECORD</TD>
+    <TD>A text record type 0 or type 1 as specified below</TD></TR></TBODY></TABLE>
+<H5>Text Record Type 0</H5>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">TextRecordType</TD>
+    <TD width="33%">UB[1] = 0</TD>
+    <TD width="33%">0 if text glyph record</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">TextGlyphCount</TD>
+    <TD width="33%">NGlyphs = UB[7]</TD>
+    <TD width="33%">Number of glyphs in record</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">TextGlyphEntries</TD>
+    <TD width="33%">GLYPHENTRY[nGlyphs]</TD>
+    <TD width="33%">Glyph entry - see below</TD></TR></TBODY></TABLE>
+<H5>Text Record Type 1</H5>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">TextRecordType</TD>
+    <TD width="33%">UB[1] = 0</TD>
+    <TD width="33%">1 if text state change record</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">TextReserved</TD>
+    <TD width="33%">UB[3]</TD>
+    <TD width="33%">Reserved - always 0</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">TextHasFont</TD>
+    <TD width="33%">HasFont = UB[1]</TD>
+    <TD width="33%">1 if text font specified</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">TextHasColor</TD>
+    <TD width="33%">HasColor = UB[1]</TD>
+    <TD width="33%">1 if text color specified</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">TextHasYOffset</TD>
+    <TD width="33%">HasYOffset = UB[1]</TD>
+    <TD width="33%">1 if Y offset specified</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">TextHasXOffset</TD>
+    <TD width="33%">HasXOffset = UB[1]</TD>
+    <TD width="33%">1 if X offset specified</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">TextFont</TD>
+    <TD width="33%">If hasFont UI16</TD>
+    <TD width="33%">Font ID for following text</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">TextColor</TD>
+    <TD width="33%">If hasColor RGBA</TD>
+    <TD width="33%">Font color for following text</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">TextXOffset</TD>
+    <TD width="33%">If hasXOffset UI16</TD>
+    <TD width="33%">Font X offset for following text</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">TextYOffset</TD>
+    <TD width="33%">If hasYOffset UI16</TD>
+    <TD width="33%">Font Y offset for following text</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">TextHeight</TD>
+    <TD width="33%">If hasFont UI16</TD>
+    <TD width="33%">Font height for following text</TD></TR></TBODY></TABLE>
+<P>Glyph entries describe the glyph index and X advance value to use for a 
+particular character in the currently selected font for the text record. </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="50%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="50%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD>GLYPHENTRY</TD>
+    <TD>A glyph entry that describes a text glyph</TD></TR></TBODY></TABLE><BR>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">TextGlyphIndex</TD>
+    <TD width="33%">UB[nGlyphBits]</TD>
+    <TD width="33%">Glyph index into current font</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">TextGlyphAdvance</TD>
+    <TD width="33%">SB[nAdvanceBits]</TD>
+    <TD width="33%">X advance value for glyph</TD></TR></TBODY></TABLE><A 
+name=h3Sounds></A>
+<H3>Sounds</H3>
+<P>The SWF file format defines a small and efficient sound model. Sounds are 
+stored as 2-, 3-, 4- or 5-bit ADPCM. This simple but efficient compression 
+scheme avoids any licensing or patent issues that arise with more sophisticated 
+sound compression schemes and helps to keep player implementations very small. 
+SWF supports sample rates of 5.5, 11, 22 and 44 khz in both stereo and mono. It 
+is assumed that the playback platform can support rate conversion and 
+multi-channel mixing of these sounds. </P>
+<P>The number of simultaneous channels supported depends on the CPU of specific 
+platforms, but is typically three to eight channels. There is also the concept 
+of a sound envelope where a simple transform can be applied to a sound object to 
+generate various types of fades and level control (fade-in, fade-out, 
+cross-fade). </P>
+<P>Sounds in SWF are stored as individual sound objects that can be reused and 
+mixed at runtime. The SWF file format also supports a streaming sound mode where 
+sound data is played and downloaded in tight synchronization with the timeline. 
+In this mode, sound packets are stored with each frame. If a CPU cannot render 
+the frames of a movie as quickly as specified by the frame rate of the movie, 
+the player slows down the animation rate instead of skipping frames. When 
+streaming sound is present, the player skips frames in order to maintain tight 
+synchronization with the sound track. </P>
+<P>Note that a timeline can only have a single streaming sound playing at a 
+time, but each movie clip can have it's own streaming sound. </P>
+<P>See Also: StartSound </P><A name=h4SoundInformationValues></A>
+<H4>Sound Information Values</H4>
+<P>Sound information modifies how a sound character is played. </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="50%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="50%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD>SOUNDINFO</TD>
+    <TD>Sound information</TD></TR></TBODY></TABLE>
+<P>The format of sound information is described in the following table: </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">HasEnvelope</TD>
+    <TD width="33%"><I>hasEnvelope</I> = UB[1]</TD>
+    <TD width="33%">Has envelope information if equal to 1</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">HasLoops</TD>
+    <TD width="33%"><I>hasLoops</I> = UB[1]</TD>
+    <TD width="33%">Has loop information if equal to 1</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">HasOutPoint</TD>
+    <TD width="33%"><I>hasOutPoint</I> = UB[1]</TD>
+    <TD width="33%">Has out point information if equal to 1</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">HasInPoint</TD>
+    <TD width="33%"><I>hasInPoint</I> = UB[1]</TD>
+    <TD width="33%">Has in point information if equal to 1</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">SyncFlags</TD>
+    <TD width="33%">UB[4]<BR></TD>
+    <TD width="33%">Sync flags<BR>0x1 = syncNoMultiple Don't start the sound 
+      if already playing.<BR><BR>0x2 = SyncStop Stop the sound.</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">InPoint</TD>
+    <TD width="33%">if <I>hasInPoint</I> UI32</TD>
+    <TD width="33%">Sound in point value</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">OutPoint</TD>
+    <TD width="33%">if <I>hasOutPoint</I> UI32</TD>
+    <TD width="33%">Sound out point value</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">LoopCount</TD>
+    <TD width="33%">if <I>hasLoops</I> UI16</TD>
+    <TD width="33%">Sound loop count</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">EnvelopeNumPoint</TD>
+    <TD width="33%">if <I>hasEnvelope</I> <I>nPoints</I> = UI8 </TD>
+    <TD width="33%">Sound Envelope point count</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">EnvelopeRecords</TD>
+    <TD width="33%">if <I>hasEnvelope</I> SNDENV[<I>nPoints</I>]</TD>
+    <TD width="33%">Sound Envelope records</TD></TR></TBODY></TABLE><BR>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="50%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="50%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD>SNDENV</TD>
+    <TD>Sound envelope information record</TD></TR></TBODY></TABLE>
+<P>The sound envelope record format is </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Mark44</TD>
+    <TD width="33%">UI32</TD>
+    <TD width="33%">Mark44 information</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Level0</TD>
+    <TD width="33%">UI16</TD>
+    <TD width="33%">Level 0 information</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Level1</TD>
+    <TD width="33%">UI16</TD>
+    <TD width="33%">Level 1 information</TD></TR></TBODY></TABLE><A 
+name=h4DefineSound></A>
+<H4>DefineSound</H4>
+<P>Defines the data for a sound. (SWF 2.0) </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Header</TD>
+    <TD width="33%">RECORDHEADER</TD>
+    <TD width="33%">Tag ID = 14</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">SoundId</TD>
+    <TD width="33%">UI16</TD>
+    <TD width="33%">ID for this character</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">SoundFormat</TD>
+    <TD width="33%">UB[4]<BR>0 = sndCompressNone<BR>1 = sndCompressADPCM</TD>
+    <TD width="33%">Format of sound. Level of compression is stored in the 
+      ADPCM data.</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">SoundRate</TD>
+    <TD width="33%">UB[2]<BR>0 = snd5K<BR>1 = snd11K<BR>2 = snd22K<BR>3 = 
+      snd44K</TD>
+    <TD width="33%">Sound rate</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">SoundSize</TD>
+    <TD width="33%">UB[1]<BR>0 = snd8Bit<BR>1 = snd16Bit</TD>
+    <TD width="33%">Size of sound data</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">SoundType</TD>
+    <TD width="33%">UB[1]<BR>0 = sndMono<BR>1 = sndStereo</TD>
+    <TD width="33%">Mono or stereo sound</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">SoundSampleCount</TD>
+    <TD width="33%">UI32</TD>
+    <TD width="33%">Number of samples</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">SoundData</TD>
+    <TD width="33%">UI8[size of compressed data]</TD>
+    <TD width="33%">Compressed sound data</TD></TR></TBODY></TABLE><A 
+name=h4SoundStreamBlock></A>
+<H4>SoundStreamBlock</H4>
+<P>Defines sound data that is interleaved with frame data so that sounds can be 
+played as the movie is streamed over a network connection. (SWF 2.0) </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Header</TD>
+    <TD width="33%">RECORDHEADER</TD>
+    <TD width="33%">Tag ID = 19</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">StreamSoundData</TD>
+    <TD width="33%">UI8[size of compressed data]</TD>
+    <TD width="33%">Compressed sound data</TD></TR></TBODY></TABLE><A 
+name=h4SoundStreamHead></A>
+<H4>SoundStreamHead</H4>
+<P>Defines the start of sound data that is interleaved with frame data so that 
+sounds can be played as the movie is streamed over a network connection. Does 
+not support uncompressed sound. (SWF 2.0) </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Header</TD>
+    <TD width="33%">RECORDHEADER</TD>
+    <TD width="33%">Tag ID = 18</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">StreamSoundMixFormat</TD>
+    <TD width="33%">U8</TD>
+    <TD width="33%">Recommended mixer format</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">StreamSoundFormat</TD>
+    <TD width="33%">UB[4] = 1</TD>
+    <TD width="33%">Always ADPCM</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">StreamSoundReserved</TD>
+    <TD width="33%">UB[2]</TD>
+    <TD width="33%">Always zero</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">StreamSoundSize</TD>
+    <TD width="33%">UB[1] = 1</TD>
+    <TD width="33%">Always 16 bit</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">StreamSoundType</TD>
+    <TD width="33%">UB[1]<BR>0 = sndMono<BR>1 = sndStereo</TD>
+    <TD width="33%">Mono or stereo sound</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">StreamSoundSampleCount</TD>
+    <TD width="33%">UI16</TD>
+    <TD width="33%">Number of samples</TD></TR></TBODY></TABLE><A 
+name=h4SoundStreamHead2></A>
+<H4>SoundStreamHead2</H4>
+<P>Defines the start of sound data that is interleaved with frame data so that 
+sounds can be played as the movie is streamed over a network connection. 
+Supports uncompressed sound. (SWF 3.0) </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Header</TD>
+    <TD width="33%">RECORDHEADER</TD>
+    <TD width="33%">Tag ID = 45</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">StreamSoundMixFormat</TD>
+    <TD width="33%">U8</TD>
+    <TD width="33%">Recommended mixer format</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">StreamSoundCompression</TD>
+    <TD width="33%">UB[4] </TD>
+    <TD width="33%">1 = Compressed ADPCM</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">StreamSoundReserved</TD>
+    <TD width="33%">UB[2]</TD>
+    <TD width="33%">Always zero</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">StreamSoundSize</TD>
+    <TD width="33%">UB[1] </TD>
+    <TD width="33%">If <I>StreamSoundCompression</I> = 1, always 16-bit.<BR>If 
+      <I>StreamSoundCompression</I> = 0, 8- or 16-bit.</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">StreamSoundType</TD>
+    <TD width="33%">UB[1]<BR>0 = sndMono<BR>1 = sndStereo</TD>
+    <TD width="33%">Mono or stereo sound</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">StreamSoundSampleCount</TD>
+    <TD width="33%">UI16</TD>
+    <TD width="33%">Number of samples</TD></TR></TBODY></TABLE><A 
+name=h3Sprites></A>
+<H3>Sprites</H3>
+<P>SWF sprites (movie clips) are a SWF movie contained within a SWF movie. A 
+sprite tag consists of a series of control tags. All the definition tags should 
+be defined in the main body of the file before the sprite is defined. When a 
+sprite is placed on the display list, it starts a new thread of control where 
+the frames of the sprite are processed independently of the current main 
+timeline frame. A sprite is stopped when it is removed from the display list. 
+The objects placed by a sprite are added to the display list as children of the 
+sprite object. The sprite transform is concatenated to the object transforms. 
+</P><A name=h4DefineSprite></A>
+<H4>DefineSprite</H4>
+<P>Defines a sprite. (SWF 3.0). Sprites are a grouped series of tags. They allow 
+you to nest tags. Each sprite has an independent timeline. </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Header</TD>
+    <TD width="33%">RECORDHEADER</TD>
+    <TD width="33%">Tag ID = 39</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Sprite ID</TD>
+    <TD width="33%">UI16</TD>
+    <TD width="33%">ID of sprite</TD></TR>
+  <TR>
+    <TD width="33%"><I>...&lt;mini file structure&gt;...</I></TD>
+    <TD vAlign=top width="33%">&nbsp;</TD>
+    <TD width="33%">A series of tags</TD></TR></TBODY></TABLE>
+<P>The valid tags within a sprite are as follows: </P>
+<UL>
+  <LI>ShowFrame 
+  <LI>PlaceObject 
+  <LI>PlaceObject2 
+  <LI>RemoveObject 
+  <LI>RemoveObject2 
+  <LI>DoAction 
+  <LI>StartSound 
+  <LI>FrameLabel 
+  <LI>SoundStreamHead 
+  <LI>SoundStreamBlock 
+  <LI>End</LI></UL><A name=h2ControlTags></A>
+<H2>Control Tags</H2>
+<P>Control tags can be divided into three categories: display list, control, and 
+action. The following sections describe each category and its tags. </P><A 
+name=h4DisplayListtags></A>
+<H4>Display List tags</H4>
+<TABLE cellSpacing=3 cellPadding=5 width="100%" border=0>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="25%">PlaceObject</TD>
+    <TD width="25%">PlaceObject2</TD>
+    <TD width="25%">RemoveObject</TD>
+    <TD width="25%">RemoveObject2</TD></TR>
+  <TR vAlign=top>
+    <TD width="25%">ShowFrame</TD>
+    <TD width="25%">&nbsp;</TD>
+    <TD width="25%">&nbsp;</TD>
+    <TD width="25%">&nbsp;</TD></TR></TBODY></TABLE><A 
+name=h4ControltagsControl></A>
+<H4>Control tags</H4>
+<TABLE cellSpacing=3 cellPadding=5 width="100%" border=0>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="25%">End</TD>
+    <TD width="25%">Protect</TD>
+    <TD width="25%">FrameLabel</TD>
+    <TD width="25%">SetBackgroundColor</TD></TR>
+  <TR vAlign=top>
+    <TD width="25%">StartSound</TD>
+    <TD width="25%">&nbsp;</TD>
+    <TD width="25%">&nbsp;</TD>
+    <TD width="25%">&nbsp;</TD></TR></TBODY></TABLE><A name=h4Actiontags></A>
+<H4>Action tags</H4>
+<P>DoAction </P><A name=h3DisplayList></A>
+<H3>Display List</H3>
+<P>Display list tags control the contents of the display list. (See the Display 
+List section for more information on the display list.) The following tags are 
+display list: </P>
+<P><SPAN class=runInHead>PlaceObject and PlaceObject2—</SPAN>Place the specified 
+object on the display list. </P>
+<P><SPAN class=runInHead>RemoveObject and RemoveObject2—</SPAN>Remove the 
+specified object from the display list. </P>
+<P><SPAN class=runInHead>ShowFrame—</SPAN>Displays the display list contents on 
+screen. </P><A name=h4PlaceObject></A>
+<H4>PlaceObject</H4>
+<P>Places the indicated character on the display surface with an arbitrary 
+PostScript style transformation matrix. Also includes a depth parameter to 
+indicate a stacking order. Each character can be placed many times on the 
+screen. If the length of the record indicates a size that exceeds the end of the 
+transformation matrix, it is assumed that color transformation data is appended 
+to the record. (SWF 1.0) </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Header</TD>
+    <TD width="33%">RECORDHEADER</TD>
+    <TD width="33%">Tag ID = 4</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">CharacterId</TD>
+    <TD width="33%">UI16</TD>
+    <TD width="33%">ID of character to place</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Depth</TD>
+    <TD width="33%">UI16</TD>
+    <TD width="33%">Depth of character</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Matrix</TD>
+    <TD width="33%">MATRIX</TD>
+    <TD width="33%">Transform matrix data</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">ColorTransform (optional)</TD>
+    <TD width="33%">CXFORM</TD>
+    <TD width="33%">Color transform data</TD></TR></TBODY></TABLE><A 
+name=h4PlaceObject2></A>
+<H4>PlaceObject2</H4>
+<P>Places the indicated character on the display surface with an arbitrary 
+PostScript style transformation matrix. Also includes a depth parameter to 
+indicate a stacking order. Each character can be placed many times on the 
+screen. (SWF 3.0) </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Header</TD>
+    <TD width="33%">RECORDHEADER</TD>
+    <TD width="33%">Tag ID = 26</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">PlaceFlagsReserved</TD>
+    <TD width="33%">UB[2]</TD>
+    <TD width="33%">Reserved Flags</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">PlaceFlagHasName</TD>
+    <TD width="33%">UB[1]</TD>
+    <TD width="33%">Has name</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">PlaceFlagHasRatio</TD>
+    <TD width="33%">UB[1]</TD>
+    <TD width="33%">Has ratio</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">PlaceFlagHasColorTransform </TD>
+    <TD width="33%">UB[1]</TD>
+    <TD width="33%">Has color transform</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">PlaceFlagHasMatrix</TD>
+    <TD width="33%">UB[1]</TD>
+    <TD width="33%">Has matrix</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">PlaceFlagHasCharacter</TD>
+    <TD width="33%">UB[1]</TD>
+    <TD width="33%">Places a character</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">PlaceFlagMove</TD>
+    <TD width="33%">UB[1]</TD>
+    <TD vAlign=top width="33%">&nbsp;</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Depth</TD>
+    <TD width="33%">UI16</TD>
+    <TD width="33%">Depth of character</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">CharacterId</TD>
+    <TD width="33%">If PlaceFlagHasCharacter = 1 UI16</TD>
+    <TD width="33%">ID of character to place</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Matrix</TD>
+    <TD width="33%">If PlaceFlagHasMatrix = 1 MATRIX</TD>
+    <TD width="33%">Transform matrix data</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">ColorTransform</TD>
+    <TD width="33%">If PlaceFlagHasColorTransform = 1 CXFORM</TD>
+    <TD width="33%">Color transform data</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Ratio</TD>
+    <TD width="33%">If PlaceFlagHasRatio = 1 UI16</TD>
+    <TD vAlign=top width="33%">&nbsp;</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Name</TD>
+    <TD width="33%">If PlaceFlagHasName = 1 STRING</TD>
+    <TD width="33%">Name of character</TD></TR></TBODY></TABLE><A 
+name=h4RemoveObject></A>
+<H4>RemoveObject</H4>
+<P>Removes the indicated character from the display surface. (SWF 1.0) </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Header</TD>
+    <TD width="33%">RECORDHEADER</TD>
+    <TD width="33%">Tag ID = 5</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">CharacterId</TD>
+    <TD width="33%">UI16</TD>
+    <TD width="33%">ID of character to remove</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Depth</TD>
+    <TD width="33%">UI16</TD>
+    <TD width="33%">Depth of character</TD></TR></TBODY></TABLE><A 
+name=h4RemoveObject2></A>
+<H4>RemoveObject2</H4>
+<P>Removes the character from the display surface. (SWF 3.0) </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Header</TD>
+    <TD width="33%">RECORDHEADER</TD>
+    <TD width="33%">Tag ID = 28</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Depth</TD>
+    <TD width="33%">UI16</TD>
+    <TD width="33%">Depth of character</TD></TR></TBODY></TABLE><A 
+name=h4ShowFrame></A>
+<H4>ShowFrame</H4>
+<P>Flags the end of the current frame. During playback, the characters present 
+in the display list (see PlaceObject/RemoveObject) should be rendered and movie 
+paused for the duration of a single frame. (SWF 1.0) </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Header</TD>
+    <TD width="33%">RECORDHEADER</TD>
+    <TD width="33%">Tag ID = 1</TD></TR></TBODY></TABLE><A name=h3Control></A>
+<H3>Control</H3>
+<P>Control tags manage some overall aspects of files and frames. The following 
+tags are control tags: </P>
+<P><SPAN class=runInHead>SetBackgroundColor—</SPAN>Sets the background color 
+displayed in the frame. </P>
+<P><SPAN class=runInHead>FrameLabel—</SPAN>Labels a frame for your easy 
+reference. </P>
+<P><SPAN class=runInHead>Protect—</SPAN>Marks the file so that it cannot be 
+opened in the authoring system. </P>
+<P><SPAN class=runInHead>StartSound—</SPAN>Starts and stops a sound. </P>
+<P><SPAN class=runInHead>End—</SPAN>Marks the end of the SWF file. </P><A 
+name=h4SetBackgroundColor></A>
+<H4>SetBackgroundColor</H4>
+<P>Set the background color of the display. (SWF 1.0) </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Header</TD>
+    <TD width="33%">RECORDHEADER</TD>
+    <TD width="33%">Tag ID = 9</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">BackgroundColor</TD>
+    <TD width="33%">COLOR</TD>
+    <TD width="33%">Color of the movie background</TD></TR></TBODY></TABLE><A 
+name=h4FrameLabel></A>
+<H4>FrameLabel</H4>
+<P>Names a frame. (SWF 3.0) </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Header</TD>
+    <TD width="33%">RECORDHEADER</TD>
+    <TD width="33%">Tag ID = 43</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">String</TD>
+    <TD width="33%">Null-terminated STRING. (0 is NULL)</TD>
+    <TD width="33%">Label for frame..</TD></TR></TBODY></TABLE><A 
+name=h4Protect></A>
+<H4>Protect</H4>
+<P>Marks a file as not importable for editing in the authoring tool. If this tag 
+is present in the file, the authoring tool should prevent loading of the file 
+for editing. (SWF 2.0) </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Header</TD>
+    <TD width="33%">RECORDHEADER</TD>
+    <TD width="33%">Tag ID = 24</TD></TR></TBODY></TABLE><A name=h4StartSound></A>
+<H4>StartSound</H4>
+<P>Starts playing a sound character. You can stop a sound by setting the 
+synchStop flag in the SoundInfo structure used by DefineSound. (SWF 2.0) </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Header</TD>
+    <TD width="33%">RECORDHEADER</TD>
+    <TD width="33%">Tag ID = 15</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">SoundId</TD>
+    <TD width="33%">UI16</TD>
+    <TD width="33%">ID of sound character to play</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">SoundInfo</TD>
+    <TD width="33%">SOUNDINFO</TD>
+    <TD width="33%">Sound information</TD></TR></TBODY></TABLE><A name=h4End></A>
+<H4>End</H4>
+<P>Marks the end of a file. This should always be the last tag in a file. (SWF 
+1.0) </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Header</TD>
+    <TD width="33%">RECORDHEADER</TD>
+    <TD width="33%">Tag ID = 0</TD></TR></TBODY></TABLE><A name=h3Actions></A>
+<H3>Actions</H3>
+<P>The SWF File format defines a simple action model. An action list can be 
+attached to a button state transition or placed in the tags that will be 
+processed for a given frame. There are 127 possible actions of which 13 are 
+currently defined. An action list consists of an 1-byte action code. If the high 
+bit of the action code is set, then there is a 16 bit length that describes the 
+amount of data used by the action. If the high bit is clear, the action has no 
+data. </P>
+<P>When an action is encountered, it is added to a list to be processed. The 
+list is processed on a ShowFrame tag or after a button state has changed. An 
+action can cause other actions to be triggered, in which case, the action is 
+added to the list of actions to be processed. Actions are processed until the 
+action list is empty. </P>
+<P>Actions such as stop, play and go to frame apply to a particular timeline. By 
+default, they apply to the timeline which contains them. However, the SetTarget 
+action (tell target) can be used to send an action to another timeline. </P><A 
+name=h4ActionValues></A>
+<H4>Action Values</H4>
+<P>Action values specify an action the player should perform when the frame is 
+complete, when a button is pressed, or when a do action tag is encountered. </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="50%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="50%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD>ACTIONRECORD</TD>
+    <TD>An action value as specified below</TD></TR></TBODY></TABLE>
+<H5>Action Goto Frame—Go to the specified frame.</H5>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">ActionGotoFrame</TD>
+    <TD width="33%">UI8</TD>
+    <TD width="33%">Action = 0x81</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Length</TD>
+    <TD width="33%">UI16</TD>
+    <TD width="33%">Always 2</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Frame</TD>
+    <TD width="33%">UI16</TD>
+    <TD width="33%">Frame index</TD></TR></TBODY></TABLE>
+<H5>Action Get URL—Direct the player to get the specified URL.</H5>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">ActionGetURL</TD>
+    <TD width="33%">UI8</TD>
+    <TD width="33%">Action = 0x83</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Length</TD>
+    <TD width="33%">UI16</TD>
+    <TD width="33%">Combined length of strings</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">UrlString</TD>
+    <TD width="33%">STRING</TD>
+    <TD width="33%">Target URL string</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">WinString</TD>
+    <TD width="33%">STRING</TD>
+    <TD width="33%">Target window string</TD></TR></TBODY></TABLE>
+<H5>Action Next Frame—Go to the next frame.</H5>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">ActionNextFrame</TD>
+    <TD width="33%">UI8</TD>
+    <TD width="33%">Action = 0x04</TD></TR></TBODY></TABLE>
+<H5>Action Previous Frame—Go to the previous frame.</H5>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">ActionPrevFrame</TD>
+    <TD width="33%">UI8</TD>
+    <TD width="33%">Action = 0x05</TD></TR></TBODY></TABLE>
+<H5>Action Play—Start playing at the current frame.</H5>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">ActionPlay</TD>
+    <TD width="33%">UI8</TD>
+    <TD width="33%">Action = 0x06</TD></TR></TBODY></TABLE>
+<H5>Action Stop—Stop playing the movie at the current frame.</H5>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">ActionStop</TD>
+    <TD width="33%">UI8</TD>
+    <TD width="33%">Action = 0x07</TD></TR></TBODY></TABLE>
+<H5>Action Toggle Quality—Toggle the display between high and low quality.</H5>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">ActionToggleQualty</TD>
+    <TD width="33%">UI8</TD>
+    <TD width="33%">Action = 0x08</TD></TR></TBODY></TABLE>
+<H5>Action Stop Sounds—Stop playing all sounds.</H5>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">ActionStopSounds</TD>
+    <TD width="33%">UI8</TD>
+    <TD width="33%">Action = 0x09</TD></TR></TBODY></TABLE>
+<H5>Action Wait For Frame—Wait until the specified frame otherwise skip the 
+specified number of actions.</H5>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">ActionWaitForFrame</TD>
+    <TD width="33%">UI8</TD>
+    <TD width="33%">Action = 0x8A</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Length</TD>
+    <TD width="33%">UI16</TD>
+    <TD width="33%">Always 3</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Frame</TD>
+    <TD width="33%">UI16</TD>
+    <TD width="33%">Frame to wait for</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">SkipCount</TD>
+    <TD width="33%">UI8</TD>
+    <TD width="33%">Number of actions to skip if frame is not 
+  loaded</TD></TR></TBODY></TABLE>
+<H5>Action Set Target—Sets context of action.</H5>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">ActionSetTarget</TD>
+    <TD width="33%">UI8</TD>
+    <TD width="33%">Action = 0x8B</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">TargetName</TD>
+    <TD width="33%">STRING</TD>
+    <TD width="33%">Target of action target </TD></TR></TBODY></TABLE>
+<H5>Action Go to Label—Go to frame associated with the specified label.</H5>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">ActionGoToLabel</TD>
+    <TD width="33%">UI8</TD>
+    <TD width="33%">Action = 0x8C</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Label</TD>
+    <TD width="33%">STRING</TD>
+    <TD width="33%">Frame label </TD></TR></TBODY></TABLE><A name=h4DoAction></A>
+<H4>DoAction</H4>
+<P>Flags that the specified actions should be performed when the frame is 
+complete. (SWF 1.0) </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Header</TD>
+    <TD width="33%">RECORDHEADER</TD>
+    <TD width="33%">Tag ID = 12</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Actions</TD>
+    <TD width="33%">ACTIONRECORD[zero or more]</TD>
+    <TD width="33%">Actions to perform - see below</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">ActionEndFlag</TD>
+    <TD width="33%">UI8 = 0</TD>
+    <TD width="33%">Always set to 0</TD></TR></TBODY></TABLE><BR><BR>
+<HR>
+<A href="http://bfox.chat.ru/flashformat/SWFfileformat.html">SWF File Format 
+Specification</A><BR>SWF File Reference<BR><A 
+href="http://bfox.chat.ru/flashformat/terminology.html">Terminology</A><BR>
+<HR>
+<BR><BR></BODY></HTML>

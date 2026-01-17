@@ -1,0 +1,80 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>transparent</title>
+</head>
+
+<body>
+
+<h4><font face="Courier New"></font><a name="lettransparent" id="lettransparent">lettransparent</a>()</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; lettransparent (variable,target)</p>
+<p> The lettransparent() statement returns in the specified variable  the current transparency value of the target cel, object group, or cel group. The transparency is an integer number from 0 to 255 where 0 represents a fully opague target and 255 represents a fully transparent target.</p>
+<p>Cels maintain their own individual transparency value. The lettransparent() statement when the target is a cel returns the individual cel transparency. </p>
+<p>Object groups and cel groups maintain one transparency value for the object. Relative transparency changes to an object adjust the object transparency and the relative adjustment is applied to each cel in the object. The lettransparent() statement when the target is an object group returns the object  transparency which can be different from an individual cel transparency. </p>
+<p>If the UltraKiss option to maintain group transparency values is not set, the lettransparent() statement when the target is an object group or a cel group returns the actual group cel transparency value  if all cels in the group have the same transparency, otherwise the returned value is -1. </p>
+<p>If the target cannot be identified the variable is not initialized or changed. </p>
+<p>&nbsp;</p>
+<p>Related actions: <a href="transparent.html">transparent()</a></p>
+<p> <font face="Courier New"> </font></p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+    <table border="1" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td width="20%">FKiSS 1 allows cel and object group targets </td>
+        <td width="30%">lettransparent(N,#12)</td>
+        <td>The value for N is either -1 or bounded from 0 to 255 </td>
+      </tr>
+      <tr>
+        <td width="20%">FKiSS 4 allows cel group targets </td>
+        <td width="30%">lettransparent(N,!Clothing)</td>
+        <td>The value for N is either -1 or bounded from 0 to 255 </td>
+      </tr>
+      <tr>
+        <td width="20%">FKiSS 5 allows unbounded transparencies and variable targets </td>
+        <td width="30%">let(Target,&quot;!Clothing&quot;)<br>
+          lettransparent(N,Target)</td>
+        <td>The value for N is unbounded </td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+    <table border="1" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td width="20%">allambiguous</td>
+        <td width="30%">applies transparency adjustments to all ambiguously named cels </td>
+        <td>default value &quot;<font color="#0000FF">true</font>&quot; (Compatibility option)</td>
+      </tr>
+      <tr>
+        <td width="20%">transparentgroup</td>
+        <td width="30%">lets object groups and cel groups maintain their own transparency adjustment. The lettransparent() statement returns this value and does not return -1 if the cels in the group have different transparencies. </td>
+        <td>default value &quot;<font color="#0000FF">true</font>&quot; (Compatibility option)</td>
+      </tr>
+      <tr>
+        <td width="20%">contextmap</td>
+        <td width="30%">uses the current page context to disambiguate cel choices where ambiguous cels exist. </td>
+        <td>default value &quot;<font color="#0000FF">true</font>&quot; (Compatibility option)</td>
+      </tr>
+    </table>
+  </center>
+</div>
+<div align="center"></div>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>Example:&nbsp; </b></font> </p>
+<p><font face="Courier New">;@lettransparent(N,&quot;shirt.cel&quot;) ; Variable N is set to the individual cel transparency <br>
+</font> <font face="Courier New">;@lettransparent(N,#12)&nbsp;; Variable N is set to the object group transparency </font><br>
+<font face="Courier New">;@lettransparent(N,!Clothing) ;<br>
+;@lettransparent(N,Target) ; The variable 'Target' must identify a cel, object, or cel group </font><font face="Courier New">
+</font></p>
+<p>&nbsp;</p>
+<p><font face="Courier New"></font></p>
+</body>
+
+</html>

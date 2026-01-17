@@ -1,0 +1,85 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>getText</title>
+</head>
+
+<body>
+<h4><a name="getValueAt">getValueAt</a>()&nbsp;</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; getValueAt(variable,component,index)</p>
+<p>This is a component command to retrieve the string value of a list component at the specified index. </p>
+<p>The <em>component</em> may be a literal name of a list or a variable that contains the name of a list component. </p>
+<p>The <em>index</em> is an integer value or a variable that contains an integer. </p>
+<p>Note that the action command name 'getValueAt'
+    is case sensitive and must be specified as shown.</p>
+<p>This command returns the string valueof the item in the list at the specified index, and an empty string if the specified component is not a list or the index is out of range. Index values begin at 0.</p>
+<p>Components are declared as cels within a KiSS configuration as shown in
+the example below.&nbsp; Component cel identifiers use specific extensions such
+as .button, .list, or .textarea to identify the component type.&nbsp;&nbsp;</p>
+<font SIZE="2">
+<p><font face="Courier New">#1.9999 List-1.List&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+: 0&nbsp;&nbsp;&nbsp;&nbsp; ;%size[146,207] %offset[12,121] %attributes[wrap,vsb]<br>
+#1.9999 TextArea-1.TextArea&nbsp;&nbsp; : 0&nbsp;&nbsp;&nbsp;&nbsp; ;%size[269,49]
+%offset[227,176] %attributes[wrap]<br>
+#1.9999 Button1.Button&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : 0&nbsp;&nbsp;&nbsp;&nbsp; ;%size[135,25]
+%offset[325,267] %attributes[text=&quot;Press Me&quot;]</font></p>
+</font>
+<p>The example above defines a List component with vertical scroll bars, a
+TextArea component that performs word-wrap, and a Button.&nbsp; The size and
+location of these components within the object are specified with the %size[]
+and %offset[] tags.&nbsp; Component attributes are specified with the
+%attributes[] tag.</p>
+<p>&nbsp;&nbsp;</p>
+<div align="left">
+  <p>Related actions: <a href="setvalueat.html">setValueAt(), </a> <a href="getitemcount.html">getItemCount()</a>, <a href="getindexof.html">getIndexOf()</a></p>
+</div>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+  <table border="1" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td width="20%">UltraKiss Extension</td>
+      <td width="30%">getValueAt (On,&quot;button1.togglebutton&quot;)</td>
+      <td>Sets the 'On' variable to 1 if the toggle button has been selected </td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<table width="80%"  border="1" align="center" cellpadding="5" cellspacing="5" bordercolor="#000000" bgcolor="#FFFF99">
+  <tr>
+    <td><div align="center">Note: The UltraKiss getValueAt() command is viewer specific and not compatible with other viewers. </div></td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>Example:&nbsp;<br>
+</b></font>
+</p>
+<p><font face="Courier New">#8.999   button1.button&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: 0                      ;%size[318,26]&nbsp;&nbsp;&nbsp;&nbsp;
+%attributes[text=&quot;Press Me!"]&nbsp;<br>
+#3.999   list1.list&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+: 0                      ;%size[175,177]&nbsp;&nbsp;&nbsp; %attributes[vsb]&nbsp;<br>
+</font></p>
+<p><font face="Courier New, Courier, mono">;@initialize() ; <br>
+  ;@ addItem(&quot;list1.list&quot;,&quot;carrots&quot;) ; index 0 <br>
+  ;@ addItem(&quot;list1.list&quot;,&quot;potatoes&quot;) ; index 1 <br>
+  ;@ addItem(&quot;list1.list&quot;,&quot;corn&quot;) ; index 2 <br>
+  ;@ addItem(&quot;list1.list&quot;,&quot;peas&quot;) ; index 3 <br>
+  ;@ addItem(&quot;list1.list&quot;,&quot;apple, orange, grape, cherry, plum, pear, peach&quot;) ; </font><br> 
+</p>
+<p>
+<font face="Courier New">;@press(#8) ; <br>
+;@ getValueAt(S,&quot;list1.list&quot;,1) ; Gets 'potatoes' <br>
+;@ concat(S,&quot;List selected &quot;,S) ; <br>
+;@ notify(S) ; <br>
+<br>
+</font>
+<font face="Courier New"></font></p>
+<p><font face="Courier New"></font></p>
+</body>
+
+</html>

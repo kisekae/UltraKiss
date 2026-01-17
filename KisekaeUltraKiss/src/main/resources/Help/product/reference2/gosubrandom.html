@@ -1,0 +1,82 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>map</title>
+</head>
+
+<body>
+
+<h4><a name="gosubrandom" id="gosubrandom">gosubrandom</a>()&nbsp;</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; gosubrandom (percent,labelname1,labelname2)</p>
+<p>The gosubrandom  statement will transfer control to either the <em>labelname1</em> module or the <em>labelname2</em> module randomly, such that the specified average percent of random choices will be to labelname1. </p>
+<p>The <em>percent</em> parameter should be an integer literal value or a variable with an integer value between 0 and 100. If the percent value is less than or equal to 0 then all random choices will invoke labelname2. If the percent value is greater than or equal to 100 then all random choices will be to labelname1.</p>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>FKiSS 5 Syntax:</b></font>&nbsp;&nbsp;&nbsp;&nbsp; gosubrandom (percent,labelname1,labelname2[, argument1, argument2, ...])</p>
+<p>For the gosubrandom() command it is recommended that the labelname1 and labelname2 modules use a consistent and equivalent parameter set. The set of arguments can be applied to either the labelname1 module or the labelname2 module depending on which is randomly chosen. If the parameter set is not consistent then incorrect or missing parameter values will be established for one or the other label modules.</p>
+<p>The optional argument list specifies a set of variable names that must be referenced as local variables within the label module.</p>
+<p>Local variable names are prefixed with an '<font face="Courier New, Courier, mono">@</font>' sign. Thus, the variable '<font face="Courier New, Courier, mono">@N</font>' is a local variable declared and referenced within the module and is distinct from any global variable '<font face="Courier New, Courier, mono">N</font>'. Calling the label module recursively creates new instances of all local variables distinct from any other local variable of the same name.</p>
+<p>Return values can be specified for label modules by assigning a value to a local variable of the same name as the label module. </p>
+<p>&nbsp;</p>
+<p>Related actions: <a href="gosub.html">gosub()</a>, <a href="goto.html">goto()</a>, <a href="gotorandom.html">gotorandom()</a>, <a href="label.html">label</a></p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td>VariableCase</td>
+        <td>variable names are case sensitive</td>
+        <td>default value &quot;<font color="#0000FF">false</font>&quot; (Compatibility option)</td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>&nbsp;Example:</b></font></p>
+<p> <font face="Courier New">;@press(#1)<br>
+  ;@ let(N,0)<br>
+;@ goto(DoIt)</font></p>
+<p><font face="Courier New"> ;@label(DoIt)<br>
+  </font><font face="Courier New">;@ gosubrandom(80,label1,label2)<br>
+  ;@ add(N,N,1)<br>
+  ;@ iflessthan(N,100) goto(DoIt) endif() </font></p>
+<p><font face="Courier New">  ;@label(label1)<br>
+  ;@
+  &nbsp;debug(&quot;in label1&quot;)&nbsp;</font></p>
+<p><font face="Courier New">;@label(label2)<br>
+;@ &nbsp;debug(&quot;in label2&quot;)&nbsp;<br>
+  </font></p>
+<p><font color="#FF0000"><b>&nbsp;FKiSS 5 Example:</b></font></p>
+<p> <font face="Courier New">;@press(#1)<br>
+  ;@ let(N,0)<br>
+  ;@ goto(DoIt)</font></p>
+<p><font face="Courier New"> ;@label(DoIt)<br>
+  ;@ for(I,1,100)
+  <br>
+  </font><font face="Courier New">;@ &nbsp;gosubrandom(80,label1,label2,I)<br>
+  ;@ next(I) <br>
+  ;@ notify(&quot;Final value is: &quot;,N) </font></p>
+<p><font face="Courier New"> ;@label(label1,@X)<br>
+  ;@ &nbsp;add(N,N,@X)</font></p>
+<p><font face="Courier New">;@label(label2,@Y)<br>
+  ;@ &nbsp;sub(N,N,@Y)&nbsp;</font></p>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>&nbsp;FKiSS 5 Example:</b></font></p>
+<p><font face="Courier New">  </font><font face="Courier New">;@press(#1)&nbsp;<br>
+  ;@ let(A,6)<br>
+  ;@ gosubrandom(50,Mul,Div,A,2) ; Randomly decide to multiply or divide <br>
+  ;@ notify(&quot;Mul is &quot;,@Mul,'\n',&quot;Div is &quot;,@Div)&nbsp;; <br>
+  <br>
+  ;@label(Mul,@X,@Y)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;; local variable @X and @Y are parameter<br>
+  ;@ mul(@Mul,@X,@Y) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; perform multiplication, return @Mul <br>
+  <br>
+  ;@label(Div,@X,@Y)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;; local variable @X and @Y are parameter<br>
+  ;@ div(@Div,@X,@Y) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; perform division, return @Div<br>
+  </font><br>
+  <font face="Courier New"></font></p>
+</body>
+
+</html>

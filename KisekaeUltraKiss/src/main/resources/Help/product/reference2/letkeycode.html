@@ -1,0 +1,320 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>ifstatements</title>
+</head>
+
+<body>
+
+<h4><a name="letkeycode" id="letkeycode">letkeycode</a>()</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; letkeycode (variable)</p>
+<p> The letkeycode() statement sets the variable to the virtual character code of the last key pressed. </p>
+<p>The letkeycode() startement always returns a numeric value for any key pressed. The letkeycode() statement does not distinguish between upper and lower case characters unless the UltraKiss keyboard case option is set. The letkeycode() statement will respond to all keys on the keyboard. </p>
+<p>Some viewers may only recognize keyboard entry while a key is actually being pressed. This can lead to viewer compatibility problems as the letkeycode() statement may only function within keypress() events. </p>
+<p>&nbsp;</p>
+<H3><FONT color=#FF0000><A name=VirtualKeyCodes>Virtual Key Codes (FKiSS 5)</A></FONT></H3>
+<P>VK_ENTER = '\n';<BR>
+  VK_BACK_SPACE = '\b';<BR>
+  VK_TAB = '\t';<BR>
+  VK_CANCEL = 3&nbsp;&nbsp;<BR>
+  VK_CLEAR = 12&nbsp;&nbsp;<BR>
+  VK_SHIFT = 16&nbsp;&nbsp;<BR>
+  VK_CONTROL = 17&nbsp;&nbsp;<BR>
+  VK_ALT = 18&nbsp;&nbsp;<BR>
+  VK_PAUSE = 19&nbsp;<BR>
+  VK_CAPS_LOCK = 20&nbsp;&nbsp;<BR>
+  VK_ESCAPE = 27&nbsp;&nbsp;<BR>
+  VK_SPACE = 32&nbsp;&nbsp;<BR>
+  VK_PAGE_UP = 33&nbsp;<BR>
+  VK_PAGE_DOWN = 34&nbsp;<BR>
+  VK_END = 35&nbsp;<BR>
+  VK_HOME = 36&nbsp;<BR>
+  VK_LEFT = 37&nbsp;&nbsp;<BR>
+  VK_UP = 38&nbsp;&nbsp;<BR>
+  VK_RIGHT = 39&nbsp;&nbsp;<BR>
+  VK_DOWN = 40&nbsp;&nbsp;<BR>
+  VK_COMMA = 44&nbsp;&nbsp;<BR>
+  VK_MINUS = 45&nbsp;&nbsp;<BR>
+  VK_PERIOD = 46&nbsp;&nbsp;<BR>
+  VK_SLASH = 47&nbsp;&nbsp;<BR>
+  <BR>
+  /** VK_0 thru VK_9 are the same as ASCII '0' thru '9' (0x30 - 0x39) */<BR>
+  VK_0 = 48&nbsp;&nbsp;<BR>
+  VK_1 = 49&nbsp;&nbsp;<BR>
+  VK_2 = 50&nbsp;&nbsp;<BR>
+  VK_3 = 51&nbsp;<BR>
+  VK_4 = 52&nbsp;&nbsp;<BR>
+  VK_5 = 53&nbsp;&nbsp;<BR>
+  VK_6 = 54&nbsp;&nbsp;<BR>
+  VK_7 = 55&nbsp;&nbsp;<BR>
+  VK_8 = 56&nbsp;&nbsp;<BR>
+  VK_9 = 57&nbsp;&nbsp;<BR>
+  <BR>
+  VK_SEMICOLON = 59&nbsp;&nbsp;<BR>
+  K_EQUALS = 61&nbsp;&nbsp;<BR>
+  <BR>
+  /** VK_A thru VK_Z are the same as ASCII 'A' thru 'Z' (0x41 - 0x5A) */<BR>
+  VK_A = 65&nbsp;&nbsp;<BR>
+  VK_B = 66&nbsp;&nbsp;<BR>
+  VK_C = 67&nbsp;&nbsp;<BR>
+  VK_D = 68&nbsp;&nbsp;<BR>
+  VK_E = 69&nbsp;&nbsp;<BR>
+  VK_F = 70&nbsp;&nbsp;<BR>
+&nbsp;VK_G = 71&nbsp;&nbsp;<BR>
+&nbsp;VK_H = 72&nbsp;&nbsp;<BR>
+&nbsp;VK_I = 73&nbsp;&nbsp;<BR>
+&nbsp;VK_J = 74&nbsp;&nbsp;<BR>
+&nbsp;VK_K = 75&nbsp;&nbsp;<BR>
+&nbsp;VK_L = 76&nbsp;&nbsp;<BR>
+&nbsp;VK_M = 77&nbsp;&nbsp;<BR>
+&nbsp;VK_N = 78&nbsp;&nbsp;<BR>
+&nbsp;VK_O = 79&nbsp;&nbsp;<BR>
+&nbsp;VK_P = 80&nbsp;&nbsp;<BR>
+&nbsp;VK_Q = 81&nbsp;&nbsp;<BR>
+&nbsp;VK_R = 82&nbsp;&nbsp;<BR>
+&nbsp;VK_S = 83&nbsp;&nbsp;<BR>
+&nbsp;VK_T = 84&nbsp;&nbsp;<BR>
+&nbsp;VK_U = 85&nbsp;&nbsp;<BR>
+&nbsp;VK_V = 86&nbsp;&nbsp;<BR>
+&nbsp;VK_W = 87&nbsp;&nbsp;<BR>
+&nbsp;VK_X = 88&nbsp;&nbsp;<BR>
+&nbsp;VK_Y = 89&nbsp;&nbsp;<BR>
+&nbsp;VK_Z = 90&nbsp;&nbsp;<BR>
+  <BR>
+&nbsp;VK_OPEN_BRACKET = 91&nbsp;&nbsp;<BR>
+&nbsp;VK_BACK_SLASH = 92&nbsp;&nbsp;<BR>
+&nbsp;VK_CLOSE_BRACKET = 93&nbsp;&nbsp;<BR>
+  <BR>
+&nbsp;VK_NUMPAD0 = 96&nbsp;&nbsp;<BR>
+&nbsp;VK_NUMPAD1 = 97&nbsp;&nbsp;<BR>
+&nbsp;VK_NUMPAD2 = 98&nbsp;&nbsp;<BR>
+&nbsp;VK_NUMPAD3 = 99&nbsp;&nbsp;<BR>
+&nbsp;VK_NUMPAD4 = 100&nbsp;<BR>
+&nbsp;VK_NUMPAD5 = 101&nbsp;&nbsp;<BR>
+&nbsp;VK_NUMPAD6 = 102&nbsp;&nbsp;<BR>
+&nbsp;VK_NUMPAD7 = 103&nbsp;&nbsp;<BR>
+&nbsp;VK_NUMPAD8 = 104&nbsp;&nbsp;<BR>
+&nbsp;VK_NUMPAD9 = 105&nbsp;&nbsp;<BR>
+&nbsp;VK_MULTIPLY = 106&nbsp;<BR>
+&nbsp;VK_ADD = 107&nbsp;&nbsp;<BR>
+&nbsp;VK_SEPARATER = 108&nbsp;&nbsp;<BR>
+&nbsp;VK_SUBTRACT = 109&nbsp;&nbsp;<BR>
+&nbsp;VK_DECIMAL = 110&nbsp;&nbsp;<BR>
+&nbsp;VK_DIVIDE = 111&nbsp;&nbsp;<BR>
+&nbsp;VK_DELETE = 127&nbsp;&nbsp;<BR>
+&nbsp;VK_NUM_LOCK = 144&nbsp;&nbsp;<BR>
+&nbsp;VK_SCROLL_LOCK = 145&nbsp;&nbsp;<BR>
+  <BR>
+&nbsp;VK_F1 = 112<BR>
+&nbsp;VK_F2 = 113<BR>
+&nbsp;VK_F3 = 114&nbsp;<BR>
+&nbsp;VK_F4 = 115&nbsp;<BR>
+&nbsp;VK_F5 = 116&nbsp;<BR>
+&nbsp;VK_F6 = 117&nbsp;<BR>
+&nbsp;VK_F7 = 118&nbsp;<BR>
+&nbsp;VK_F8 = 119&nbsp;<BR>
+&nbsp;VK_F9 = 120&nbsp;<BR>
+&nbsp;VK_F10 = 121&nbsp;<BR>
+&nbsp;VK_F11 = 122&nbsp;<BR>
+&nbsp;VK_F12 = 123&nbsp;<BR>
+  <BR>
+  /* F13 - F24 are used on IBM 3270 keyboard; use random range for constants. */<BR>
+&nbsp;VK_F13 = 61440&nbsp;<BR>
+&nbsp;VK_F14 = 61441&nbsp;<BR>
+&nbsp;VK_F15 = 61442&nbsp;<BR>
+&nbsp;VK_F16 = 61443&nbsp;<BR>
+&nbsp;VK_F17 = 61444&nbsp;<BR>
+&nbsp;VK_F18 = 61445&nbsp;<BR>
+&nbsp;VK_F19 = 61446&nbsp;<BR>
+&nbsp;VK_F20 = 61447&nbsp;<BR>
+&nbsp;VK_F21 = 61448&nbsp;<BR>
+&nbsp;VK_F22 = 61449&nbsp;<BR>
+&nbsp;VK_F23 = 61450&nbsp;<BR>
+&nbsp;VK_F24 = 61451&nbsp;<BR>
+  <BR>
+&nbsp;VK_PRINTSCREEN = 154&nbsp;<BR>
+&nbsp;VK_INSERT = 155&nbsp;<BR>
+&nbsp;VK_HELP = 156&nbsp;<BR>
+&nbsp;VK_META = 157&nbsp;<BR>
+  <BR>
+&nbsp;VK_BACK_QUOTE = 192<BR>
+&nbsp;VK_QUOTE = 222<BR>
+  <BR>
+  /** for KeyPad cursor arrow keys */<BR>
+&nbsp;VK_KP_UP = 224<BR>
+&nbsp;VK_KP_DOWN = 225&nbsp;<BR>
+&nbsp;VK_KP_LEFT = 226&nbsp;<BR>
+&nbsp;VK_KP_RIGHT = 227&nbsp;<BR>
+  <BR>
+  /* For European keyboards */<BR>
+&nbsp;VK_DEAD_GRAVE = 128&nbsp;<BR>
+&nbsp;VK_DEAD_ACUTE = 129&nbsp;<BR>
+&nbsp;VK_DEAD_CIRCUMFLEX = 130&nbsp;<BR>
+&nbsp;VK_DEAD_TILDE = 131&nbsp;<BR>
+&nbsp;VK_DEAD_MACRON = 132&nbsp;<BR>
+&nbsp;VK_DEAD_BREVE = 133&nbsp;<BR>
+&nbsp;VK_DEAD_ABOVEDOT = 134&nbsp;<BR>
+&nbsp;VK_DEAD_DIAERESIS = 135&nbsp;<BR>
+&nbsp;VK_DEAD_ABOVERING = 136&nbsp;<BR>
+&nbsp;VK_DEAD_DOUBLEACUTE = 137&nbsp;<BR>
+&nbsp;VK_DEAD_CARON = 138&nbsp;<BR>
+&nbsp;VK_DEAD_CEDILLA = 139&nbsp;<BR>
+&nbsp;VK_DEAD_OGONEK = 140&nbsp;<BR>
+&nbsp;VK_DEAD_IOTA = 141&nbsp;<BR>
+&nbsp;VK_DEAD_VOICED_SOUND = 142&nbsp;<BR>
+&nbsp;VK_DEAD_SEMIVOICED_SOUND = 143&nbsp;<BR>
+  <BR>
+&nbsp;VK_AMPERSAND = 150&nbsp;<BR>
+&nbsp;VK_ASTERISK = 151&nbsp;<BR>
+&nbsp;VK_QUOTEDBL = 152&nbsp;<BR>
+&nbsp;VK_LESS = 153&nbsp;<BR>
+  <BR>
+&nbsp;VK_GREATER = 160&nbsp;<BR>
+&nbsp;VK_BRACELEFT = 161&nbsp;<BR>
+&nbsp;VK_BRACERIGHT = 162&nbsp;<BR>
+  <BR>
+  /** Constant for the "@" key. */<BR>
+&nbsp;VK_AT = 512&nbsp;<BR>
+  <BR>
+  /** Constant for the ":" key. */<BR>
+&nbsp;VK_COLON = 513&nbsp;<BR>
+  <BR>
+  /** Constant for the "^" key. */<BR>
+&nbsp;VK_CIRCUMFLEX = 514<BR>
+  <BR>
+  /** Constant for the "$" key. */<BR>
+&nbsp;VK_DOLLAR = 515&nbsp;<BR>
+  <BR>
+  /** Constant for the Euro currency sign key. */<BR>
+&nbsp;VK_EURO_SIGN = 516&nbsp;<BR>
+  <BR>
+  /** Constant for the "!" key. */<BR>
+&nbsp;VK_EXCLAMATION_MARK = 517<BR>
+  <BR>
+  /** Constant for the inverted exclamation mark key. */<BR>
+&nbsp;VK_INVERTED_EXCLAMATION_MARK = 518&nbsp;<BR>
+  <BR>
+  /** Constant for the "(" key. */<BR>
+&nbsp;VK_LEFT_PARENTHESIS = 519&nbsp;<BR>
+  <BR>
+  /** Constant for the "#" key. */<BR>
+&nbsp;VK_NUMBER_SIGN = 520<BR>
+  <BR>
+  /** Constant for the "+" key. */<BR>
+&nbsp;VK_PLUS = 521<BR>
+  <BR>
+  /** Constant for the ")" key. */<BR>
+&nbsp;VK_RIGHT_PARENTHESIS = 522&nbsp;<BR>
+  <BR>
+  /** Constant for the "_" key. */<BR>
+&nbsp;VK_UNDERSCORE = 523<BR>
+  <BR>
+  /* for input method support on Asian Keyboards */<BR>
+&nbsp;VK_FINAL = 24<BR>
+&nbsp;VK_CONVERT = 28<BR>
+&nbsp;VK_NONCONVERT = 29<BR>
+&nbsp;VK_ACCEPT = 30<BR>
+&nbsp;VK_MODECHANGE = 31<BR>
+&nbsp;VK_KANA = 21<BR>
+&nbsp;VK_KANJI = 25<BR>
+  <BR>
+  /** Constant for the Alphanumeric function key. */<BR>
+  /* Japanese PC 106 keyboard */<BR>
+&nbsp;VK_ALPHANUMERIC = 240<BR>
+  <BR>
+  /** Constant for the Katakana function key. */<BR>
+  /* Japanese PC 106 keyboard */<BR>
+&nbsp;VK_KATAKANA = 241<BR>
+  <BR>
+  /** Constant for the Hiragana function key. */<BR>
+  /* Japanese PC 106 keyboard */<BR>
+&nbsp;VK_HIRAGANA = 242<BR>
+  <BR>
+  /** Constant for the Full-Width Characters function key. */<BR>
+  /* Japanese PC 106 keyboard */<BR>
+&nbsp;VK_FULL_WIDTH = 243<BR>
+  <BR>
+  /** Constant for the Half-Width Characters function key. */<BR>
+  /* Japanese PC 106 keyboard */<BR>
+&nbsp;VK_HALF_WIDTH = 244<BR>
+  <BR>
+  /** Constant for the Roman Characters function key. */<BR>
+  /* Japanese PC 106 keyboard */<BR>
+&nbsp;VK_ROMAN_CHARACTERS = 245<BR>
+  <BR>
+  /** Constant for the All Candidates function key. */<BR>
+  /* Japanese PC 106 keyboard - VK_CONVERT + ALT */<BR>
+&nbsp;VK_ALL_CANDIDATES = 256<BR>
+  <BR>
+  /** Constant for the Previous Candidate function key. */<BR>
+  /* Japanese PC 106 keyboard - VK_CONVERT + SHIFT */<BR>
+&nbsp;VK_PREVIOUS_CANDIDATE = 257<BR>
+  <BR>
+  /** Constant for the Code Input function key. */<BR>
+  /* Japanese PC 106 keyboard - VK_ALPHANUMERIC + ALT */<BR>
+&nbsp;VK_CODE_INPUT = 258<BR>
+  <BR>
+  /** Constant for the Japanese-Katakana function key.<BR>
+  * This key switches to a Japanese input method and selects its Katakana input mode. */<BR>
+  /* Japanese Macintosh keyboard - VK_JAPANESE_HIRAGANA + SHIFT */<BR>
+&nbsp;VK_JAPANESE_KATAKANA = 259<BR>
+  <BR>
+  /** Constant for the Japanese-Hiragana function key.<BR>
+  * This key switches to a Japanese input method and selects its Hiragana input mode. */<BR>
+  /* Japanese Macintosh keyboard */<BR>
+&nbsp;VK_JAPANESE_HIRAGANA = 260<BR>
+  <BR>
+  /** Constant for the Japanese-Roman function key.<BR>
+  * This key switches to a Japanese input method and selects its Roman-Direct input mode. */<BR>
+  /* Japanese Macintosh keyboard */<BR>
+&nbsp;VK_JAPANESE_ROMAN = 261<BR>
+  <BR>
+  /* for Sun keyboards */<BR>
+&nbsp;VK_CUT = 65489&nbsp;<BR>
+&nbsp;VK_COPY = 65485&nbsp;<BR>
+&nbsp;VK_PASTE = 65487&nbsp;<BR>
+&nbsp;VK_UNDO = 65483&nbsp;<BR>
+&nbsp;VK_AGAIN = 65481&nbsp;<BR>
+&nbsp;VK_FIND = 65488&nbsp;<BR>
+&nbsp;VK_PROPS = 65482&nbsp;<BR>
+&nbsp;VK_STOP = 65480&nbsp;<BR>
+  <BR>
+  /** Constant for the Compose function key. */<BR>
+&nbsp;VK_COMPOSE = 65312&nbsp;<BR>
+  <BR>
+  /** Constant for the AltGraph modifier key. */<BR>
+&nbsp;VK_ALT_GRAPH = 65406&nbsp;<BR>
+</P>
+<p>&nbsp;</p>
+<p>Related events: <a href="keypress.html">keypress()</a>, <a href="keyrelease.html">keyrelease()</a>, <a href="keytype.html">keytype()</a><br>
+</a>Related actions: <a href="letkeymap.html">letkeymap()</a>, <a href="letkeychar.html">letkeychar()</a>, <a href="letkeychar.html">letkeychar()</a>, <a href="letkeystring.html">letkeystring()</a>, <a href="letkeymodifier.html">letkeymodifier()</a></p>
+<p>&nbsp;</p>
+<div align="center"></div>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+    <table border="1" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td width="20%">KeyCase</td>
+        <td width="30%">Enable keyboard upper/lower case key entry </td>
+        <td>default value &quot;<font color="#0000FF">false</font>&quot; (FKiSS option)</td>
+      </tr>
+      <tr>
+        <td>RetainKey</td>
+        <td>Remember last key pressed </td>
+        <td>default value &quot;<font color="#0000FF">true</font>&quot; (Compatibility option)</td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>&nbsp;Example:&nbsp;</b></font></p>
+<p><font face="Courier New">;@letkeycode(N)&nbsp;; Sets variable N to the virtual character code of the character typed<br>
+</font><font face="Courier New"><br>
+</font></p>
+</body>
+
+</html>

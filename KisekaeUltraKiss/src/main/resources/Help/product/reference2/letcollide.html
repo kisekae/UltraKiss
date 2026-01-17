@@ -1,0 +1,71 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>string</title>
+</head>
+
+<body>
+
+<h4><a name="letcollide" id="letcollide">letcollide</a>()</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp;
+letcollide (variable,target1,target2)</p>
+<p>
+The letcollide() statement returns the value of 1 in the specified variable if the two target entities overlap at any pixel. If the entities do not overlap a zero value is returned. </p>
+<p>The <em>target</em> entities can be a cel name, an object group specifier, or a cel group specifier. For object groups or cel groups the entities overlap if any pixel from any visible cel in the groups overlap. Target parameters can be specified as literal values or as variables. </p>
+<p>Pixels that match the cel transparent color do not overlap. Pixels that are not the cel transparent color yet are fully transparent do overlap. Thus, a cel made fully transparent with a transparent() command can overlap with another cel. Cels that are ghosted can also overlap with other entities.</p>
+<p>Pixel collision determination is computationally intensive. Where pixel accuracy is not required use the letinside() statement to identify overlaps between bounding boxes. </p>
+<p><br>
+  Related events: <a href="collide.html">collide()</a>, <a href="apart.html">apart()</a> </p>
+<p>  Related actions: <a href="letinside.html">letinside()</a></p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+    <table border="1" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td width="20%">FKiSS 4 &nbsp;</td>
+        <td width="30%">letcollide (N,&quot;shirt.cel&quot;,#1)&nbsp; </td>
+        <td>N becomes 1 if &quot;shirt.cel&quot; overlaps any visible cel in object #1 </td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+    <table border="1" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td>AllAmbiguous</td>
+        <td>apply test to all ambiguous cels </td>
+        <td>default value &quot;<font color="#0000FF">false</font>&quot; (Compatibility option)</td>
+      </tr>
+      <tr>
+        <td>ContextMap</td>
+        <td>use page context to disambiguate cels </td>
+        <td>default value &quot;<font color="#0000FF">true</font>&quot; (Compatibility option)</td>
+      </tr>
+      <tr>
+        <td width="20%">VariableCase</td>
+        <td width="30%">variable names are case sensitive</td>
+        <td>default value &quot;<font color="#0000FF">false</font>&quot; (Compatibility option)</td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<div align="center"></div>
+<p><font color="#FF0000"><b>&nbsp;Example:&nbsp;</b></font></p>
+<p>
+<font face="Courier New">;@letcollide (N,&quot;shirt.cel&quot;,#1)&nbsp;;&nbsp;N is 1 if overlaps any visible cel in object #1 <br> 
+;@letcollide (N,!Clothes,!Doll)&nbsp;;&nbsp;N is 1 if any clothing cel overlaps any doll cel <br>
+<br>
+<br>
+</font></p>
+<p>&nbsp; </p>
+</body>
+
+</html>

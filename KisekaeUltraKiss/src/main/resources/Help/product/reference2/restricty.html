@@ -1,0 +1,129 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="generator" content="Bluefish 2.2.12" >
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>map</title>
+</head>
+
+<body>
+
+<h4><a name="restricty" id="restricty">restricty()</a>&nbsp;</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; restricty(group,minY,maxY)</p>
+<p>This action restricts the group object vertical movement to the boundaries specified. The restriction boundaries 
+apply to the location of the group object which is defined as the upper left corner of the visible group bounding box.
+If the group object is not within the restricted area then it will be moved to satisfy the restriction.
+If the group object is attached to another object then it is the parent object that is moved sufficiently 
+to satisfy the restriction.  If the restriction cannot be satisfied because of an attached child restriction 
+then all restricted children are detached.  The vertical restriction is removed from the group object if the maximum
+boundary value is less than the minimum boundary value.</p>
+<p>The <em>group</em> must be a variable containing a group number or a literal name of group object.
+ The <em>minY</em> and <em>maxY</em> arguments must be integer values or variables that evaluate to integer values.</p>
+<p>Fixed and maximum fixed objects can always be moved with a restricty() command. Movement of an object with FKiSS does
+ not affect the object fix count. </p>
+<p>FKiSS object movement can affect objects under mouse control if the restriction command is applied through alarms 
+or other events that concurrently fire. The specification as to whether the mouse has control or the FKiSS command has 
+control is not consistent between different viewers. UltraKiss provides two compatiblity options to manage this behaviour.</p>
+<p>Collision events are recognized and processed after the object has been moved. The KiSS specifications are poor and 
+there is no clarity as to whether  collisions are supposed to be recognized after the each FKiSS action statement or 
+after each FKiSS event has completed. For example, if an event was to move object A to point P and then move the 
+object back to its starting position, should collision events be recognized at point P? UltraKiss provides a 
+compatibility option to enable collision event recognition after each interim move() statement, or at the completion 
+of the event at the final positions. </p>
+<p>The restricty() command is often paired with a restrictx() command to establish a restricted movement box. 
+One difficulty with the KiSS specification is that no single command was specified to perform a relative object 
+movement in two dimensions as a single operation. The expected result would be that a collision event would fire 
+for either the restrictx() action or the restricty() actions if the object intersected with another object during 
+its two step path to its final destination. UltraKiss has introduced a compatibility option to prevent multiple 
+collision events from firing in this situation.</p>
+<p>If object movement is restricted through restrictx() or restricty() commands then the random movement is constrained 
+by the restricted bounds. The object will move as close as possible to the required point. </p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>Releated events: <a href="collide.html">collide()</a>, <a href="apart.html">apart()</a> </p>
+<p>Related actions: <a href="move.html">move(</a>), <a href="moveto.html">moveto()</a>, <a href="movebyy.html">movebyy()</a>, <a href="movetorand.html">movetorand()</a>, <a href="moverandx.html">moverandx()</a>, <a href="moverandy.html">moverandy()</a>, <a href="restrictx.html">restrictx()</a>, <a href="letobjectx.html">letobjectx()</a>, <a href="letobjecty.html">letobjecty()</a>, <a href="letinitx.html">letinitx()</a>, <a href="letinity.html">letinity()</a>, <a href="letinside.html">letinside()</a>, <a href="letcollide.html">letcollide()</a> </p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td>FKiSS 1 allows  literal names for objects.</td>
+      <td> restricty(#1,0,100)</td>
+      <td>Restricts object #1 to the upper left corner of the playfield </td>
+    </tr>
+    <tr>
+      <td>FKiSS 3 allows variables for objects.&nbsp;&nbsp;</td>
+      <td>let(X,10) restricty (X,50,500)&nbsp;</td>
+      <td>Restricts object #10 to vertical movement in the area (50,500) in the playfield </td>
+    </tr>
+    <tr>
+      <td>FKiSS 5 allows variables for all names</td>
+      <td>restricty (&quot;#10&quot;,X,Y)&nbsp;</td>
+      <td>Restricts group &quot;#10&quot; to vertical movement (X,Y) in the playfield. </td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td>ConstrainFKiSS</td>
+      <td>restrict FKiSS movement to playfield boundaries </td>
+      <td>default value &quot;<font color="#0000FF">true</font>&quot;
+        (General option)</td>
+    </tr>
+    <tr>
+      <td>ReleaseMove</td>
+      <td>enable FKiSS movement on mouse controlled objects </td>
+      <td>default value &quot;<font color="#0000FF">true</font>&quot;
+        (Compatibility option)</td>
+    </tr>
+    <tr>
+      <td>DragMove</td>
+      <td>retain mouse control after FKiSS object movement </td>
+      <td>default value &quot;<font color="#0000FF">false</font>&quot; (Compatibility option)</td>
+    </tr>
+    <tr>
+      <td>ImmediateCollide</td>
+      <td>apply collision events immediately after move() statement </td>
+      <td>default value &quot;<font color="#0000FF">true</font>&quot; (Compatibility option)</td>
+    </tr>
+    <tr>
+      <td>MoveXYcollide</td>
+      <td>apply collision events on each restricty() and restricty() statement </td>
+      <td>default value &quot;<font color="#0000FF">true</font>&quot; (Compatibility option)</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>&nbsp;Example:&nbsp;</b></font><br></p>
+<p><font face="Courier New">;[Cel Section]<br>
+#4   rightboot.cel       : 0                                ;<br>
+#3   button2.button      : 0                                ;%size[139,50] %attributes[text="Clear Restriction"] <br>
+#2   button1.button      : 0                                ;%size[100,50] %attributes[text="Restrict Y"] <br>
+#1   sailormoon.cel      : 0                                ;<br>
+ <br>
+;[FKiSS Section]<br>
+;@EventHandler<br>
+<br> 
+;@press(#2)                                                 ;<br>
+;@ restricty(#1,100,300)                                    ;<br>
+;@ notify("press Group 1 vertical movement restricted to (100,300)") ;<br>
+<br>
+;@press(#3)                                                ; <br>
+;@ restricty(#1,1,-1)                                      ; <br>
+;@ notify("press Group 3 button2.button to clear the vertical restriction on group #1") ; <br>
+<br>
+;@collide("rightboot.cel",#1)                               ;<br>
+;@ notify("collide KissCel 3 rightboot.cel and Group 1 sailormoon.cel") ;<br>
+<br></font>
+
+</body>
+
+</html>

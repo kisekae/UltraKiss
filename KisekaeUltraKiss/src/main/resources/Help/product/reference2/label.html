@@ -1,0 +1,163 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>label</title>
+</head>
+
+<body>
+
+<h4><a name="label">label</a>()</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; label (identifier)<br>
+<br>
+A label is an FKiSS code module that specifies actions to be performed on a
+gosub() or goto() action command.&nbsp;The label identifier can be an integer or a name.
+Label identifiers must be unique within the set of all label modules.</p>
+<p>The label() specifier is not truly an event. It is a mechanism by which
+structured code modules can be developed. Label() code is normally invoked
+through other events.</p>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>FKiSS 5 Syntax:</b></font>&nbsp;&nbsp;&nbsp;&nbsp;
+label (identifier[, parameter1, parameter2, ...])</p>
+<p>FKiSS  extended the notion of label modules to allow for subroutine parameter specifications and function return values. Previous FKiSS versions were incapable of parameterizing label calls. FKiSS 5 implements local label variables and this provides the ability to support recursion and functions. Local variables are label specific and eliminate the requirement for the programmer to manage global variables.</p>
+<p>The optional parameter list specifies a set of literal constants
+or variables that can be referenced as parameters within the label  module. The arguments are passed to the label module by value and referenced as  variables within the label module. Either local or global variable names may be specified within the parameter list. </p>
+<p>Local variable names are prefixed with an '<font face="Courier New, Courier, mono">@</font>' sign. Thus, the variable '<font face="Courier New, Courier, mono">@N</font>'
+is a local variable declared and referenced within the module and is distinct
+from any global variable '<font face="Courier New, Courier, mono">N</font>'. Calling the label module recursively creates new
+instances of all local variables distinct from any other local variable of the
+same name.</p>
+<p>Return values can be specified for label modules by assigning a value to a
+local variable of the same name as the label module. The following example shows
+how to specify label parameters and return values.</p>
+<p><font face="Courier New">;@EventHandler<br>
+;@begin()&nbsp;<br>
+;@ gosub(Factorial,5)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; 5
+is an argument to the factorial label routine<br>
+;@ notify(&quot;5! is &quot;,@Factorial)&nbsp;; the return value is in local
+variable @Factorial<br>
+<br>
+;@label(Factorial,@N)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;
+local variable @N is the function parameter<br>
+;@ iflessthan(@N,2)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; factorial of 2 is 2, 1 is 1, 0 is 0<br>
+;@&nbsp; let(@Factorial,@N)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;
+set the function return value<br>
+;@&nbsp; exitevent()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; exit<br>
+;@&nbsp; endif()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;<br>
+;@ sub(@N1,@N,1)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; N1 is N - 1&nbsp;<br>
+;@ gosub(Factorial,@N1)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; this is a
+recursive call to Factorial(N-1)<br>
+;@ mul(@X,@N,@Factorial)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; factorial of N is
+N*Factorial(N-1)<br>
+;@ let(@Factorial,@X)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;
+local variable @Factorial is the return value</font></p>
+<p>&nbsp;
+
+</p>
+<p>
+Related actions: <a href="goto.html">goto()</a>, <a href="gosub.html">gosub()</a>,
+<a href="gotorandom.html">gotorandom()</a>, <a href="gosubrandom.html">gosubrandom()</a><br>
+</p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+  <table border="1" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td width="20%">FKiSS 1 allows numeric label identifiers.</td>
+      <td width="30%">label(12)</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td width="20%">FKiSS 2 allows named identifiers.&nbsp;&nbsp;</td>
+      <td width="30%">label(Ring)</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td width="20%">FKiSS 5 allows label parameters</td>
+      <td width="30%">label(Ring,X,Y)</td>
+      <td>Return value is specified in @Ring</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+  <table border="1" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td width="20%">VariableCase</td>
+      <td width="30%">variable names are case sensitive</td>
+      <td>default value &quot;<font color="#0000FF">false</font>&quot; (FKiSS
+        option)</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;
+
+</p>
+<p><font color="#FF0000"><b>FKiSS 2 Example:</b></font></p>
+<p><font face="Courier New">
+#2.999&nbsp; button.cel     *0   :0&nbsp; ; Begin button&nbsp;</font></p>
+<p><font face="Courier New">;@press(#2)&nbsp;<br>
+;@ goto(11)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+;@ notify(&quot;Should not see this&quot;)&nbsp; ;&nbsp;<br>
+</font></p>
+<p><font face="Courier New">;@label(11)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;<br>
+;@ notify(&quot;In label 11&quot;)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+;@ gosub(ABC)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;<br>
+;@ notify(&quot;In label 11 again&quot;)&nbsp;&nbsp;&nbsp; ;&nbsp;<br>
+;@ gosub(14)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;<br>
+;@ notify(&quot;Exiting label 11&quot;)&nbsp;&nbsp;&nbsp;&nbsp; ;&nbsp;<br>
+</font></p>
+<p><font face="Courier New">;@label(ABC)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+;@ notify(&quot;In label ABC&quot;)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+;@alarm(14)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;<br>
+;@ notify(&quot;In label 14&quot;)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+</font></p>
+
+<p>&nbsp;</p>
+
+<p><font color="#FF0000"><b>FKiSS 5 Example:</b></font></p>
+<p><font face="Courier New">;@begin()&nbsp;<br>
+  ;@ gosub(Factorial,5)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; 5
+is an argument to the factorial label routine<br>
+;@ notify(&quot;5! is &quot;,@Factorial)&nbsp;; the return value is in local
+variable @Factorial<br>
+<br>
+;@label(Factorial,@N)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;
+local variable @N is the function parameter<br>
+;@ iflessthan(@N,2)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; factorial of 2 is 2, 1 is 1, 0 is 0<br>
+;@&nbsp; let(@Factorial,@N)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;
+set the function return value<br>
+;@&nbsp; exitevent()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; exit<br>
+;@&nbsp; endif()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;<br>
+;@ sub(@N1,@N,1)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; N1 is N - 1&nbsp;<br>
+;@ gosub(Factorial,@N1)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; this is a
+recursive call to Factorial(N-1)<br>
+;@ mul(@X,@N,@Factorial)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; factorial of N is
+N*Factorial(N-1)<br>
+;@ let(@Factorial,@X)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;
+local variable @Factorial is the return value</font></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+</body>
+
+</html>

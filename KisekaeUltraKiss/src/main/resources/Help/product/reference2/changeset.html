@@ -1,0 +1,60 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>map</title>
+</head>
+
+<body>
+
+<h4><a name="changeset" id="changeset">changeset</a>()&nbsp;</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; changeset
+(integer)</p>
+<p>This action programattically changes the current page of the KiSS set. Pages are numbered beginning from 0. Note that this command will cause all defined set() events to fire for the specified page, and page set changes can cause color set changes for associated col() events. </p>
+<p>The changeset() command should not be used in initialize() events, but can be used in begin() events. </p>
+<p>Any attempt to change to a page that exceeds the maximum number of pages available in the KiSS set will fail silently. </p>
+<p>&nbsp;</p>
+<p>Related actions: <a href="set.html">set()</a>, <a href="changecol.html">changecol()</a>, <a href="letmaxpage.html#letmaxpage">letmaxpage()</a> </p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+  <table border="1" cellpadding="5" cellspacing="0" width="100%">
+    <tr>
+      <td width="20%">FKiSS 1 allows cel literal names or objects.</td>
+      <td width="30%">changeset (3)</td>
+      <td>Sets the active page to the fourth page in the set.</td>
+    </tr>
+    <tr>
+      <td width="20%">FKiSS 3 allows variables for objects.&nbsp;&nbsp;</td>
+      <td width="30%">let(X,10) changeset (X)&nbsp;</td>
+      <td>Sets the active page to the value in variable X.</td>
+    </tr>
+    <tr>
+      <td width="20%">FKiSS 5 allows  an unlimited number</td>
+      <td width="30%">changeset(25)</td>
+      <td>Previous FKiSS versions were limited to a maximum 10 pages. </td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>&nbsp;Example:&nbsp;<br>
+</b></font></p>
+<p><font face="Courier New, Courier, mono">%palette0.kcf</font></p>
+<p><font face="Courier New">#1.999 button.cel       : 0                              ;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+#3.999    fk4b3a.cel       : 0                              ;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font></p>
+
+<p>
+<font face="Courier New">;@changeset(3)&nbsp;&nbsp;&nbsp; ;&nbsp;<br>
+
+<br>
+</font><br>
+<a href="examples/apart/apart.lzh">Run this example</a>. <font face="Courier New"><br>
+</font></p>
+
+</body>
+
+</html>

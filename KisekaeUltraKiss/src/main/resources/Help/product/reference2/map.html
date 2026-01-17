@@ -1,0 +1,92 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>map</title>
+</head>
+
+<body>
+
+<h4><a name="map">map</a>()&nbsp;</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; map
+(target)</p>
+<p>This action sets the mapping or visibility of the target. The target may be a literal name of an image
+file or a cel group name or an object group identifier.</p>
+<p>For object groups or cel groups, each image cel in the group is mapped.</p>
+<p>FKiSS adjustment of cel visibility through map()
+commands can trigger collision events if the viewer supports visibility
+collisions.&nbsp;For example, an image collide() event could fire when the cel
+becomes visible, or an apart() event could fire when the cel was hidden.</p>
+<p><br>
+Related actions: <a href="altmap.html">altmap()</a>, <a href="unmap.html">unmap()</a>,
+<a href="setframe.html">setframe()</a>, <a href="letframe.html">letframe(),</a> <a href="ghost.html">ghost()</a></p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td>FKiSS 1 allows cel literal names or objects.</td>
+      <td>map (&quot;cel1.cel&quot;) or map(#1)</td>
+      <td>Sets the mapping of the specified cel, or all cels in the object
+        group.</td>
+    </tr>
+    <tr>
+      <td>FKiSS 3 allows variables for objects.&nbsp;&nbsp;</td>
+      <td>let(X,10) map (X)&nbsp;</td>
+      <td>Sets the mapping of the all cels in the object group specified by
+        variable X.</td>
+    </tr>
+    <tr>
+      <td>FKiSS 4 allows cel group names.&nbsp;&nbsp;</td>
+      <td>map (!Table)&nbsp;</td>
+      <td>Sets the mapping of all cels in the cel group.</td>
+    </tr>
+    <tr>
+      <td>FKiSS 5 allows variables for all names</td>
+      <td>let(Cel,&quot;a.cel&quot;) map (Cel)&nbsp;</td>
+      <td>Sets the mapping of the specified cel, or all cels in the object
+        group or cel group.</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td>AllAmbiguous</td>
+      <td>apply map to all ambiguous cels</td>
+      <td>default value &quot;<font color="#0000FF">false</font>&quot;
+        (Compatibility option)</td>
+    </tr>
+    <tr>
+      <td>MapCollide</td>
+      <td>apply collision events on visibility changes</td>
+      <td>default value &quot;<font color="#0000FF">false</font>&quot;
+        (Compatibility option)</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>&nbsp;Example:&nbsp;<br>
+</b></font>
+</p>
+<p><font face="Courier New">#1.999 button.cel       : 0                              ;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+#3.999    fk4b3a.cel       : 0                              ;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font></p>
+
+<p>
+<font face="Courier New">;@press(#1)&nbsp;&nbsp; map(#3)&nbsp; ;&nbsp;<br>
+;@release(#1) unmap(#3)                                               ;&nbsp;<br>
+<br>
+</font><font face="Courier New"><br>
+</font></p>
+
+</body>
+
+</html>

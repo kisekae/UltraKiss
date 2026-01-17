@@ -1,0 +1,56 @@
+<?xml version='1.0' encoding='ISO-8859-1'  ?>
+<!DOCTYPE index
+  PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Index Version 1.0//EN"
+         "http://java.sun.com/products/javahelp/index_1_0.dtd">
+<index version="1.0">
+ <indexitem text="Archive Manager">
+  <indexitem text="Commands">
+    <indexitem text="File New" target="archivemanager.menu.FileNew"/>
+    <indexitem text="File Open" target="archivemanager.menu.FileOpen"/>
+    <indexitem text="File Close" target="archivemanager.menu.FileClose"/>
+    <indexitem text="File Copy" target="archivemanager.menu.FileCopy"/>
+    <indexitem text="File Rename" target="archivemanager.menu.FileRename"/>
+    <indexitem text="File Delete" target="archivemanager.menu.FileDelete"/>
+    <indexitem text="File Exit" target="archivemanager.menu.FileExit"/>
+    <indexitem text="Edit Add" target="archivemanager.menu.EditAdd"/>
+    <indexitem text="Edit Extract" target="archivemanager.menu.EditExtract"/>
+    <indexitem text="Edit Delete" target="archivemanager.menu.EditDelete"/>
+    <indexitem text="Edit View" target="archivemanager.menu.EditView"/>
+    <indexitem text="Edit Find" target="archivemanager.menu.EditFind"/>
+    <indexitem text="Edit Select All" target="archivemanager.menu.EditSelectAll"/>
+    <indexitem text="Edit Unselect All" target="archivemanager.menu.EditUnselectAll"/>
+    <indexitem text="Options Sort" target="archivemanager.menu.OptionsSort"/>
+    <indexitem text="Options View As Text Playback" target="archivemanager.menu.OptionsViewAsText"/>
+    <indexitem text="Help Contents" target="archivemanager.menu.HelpContents"/>
+    <indexitem text="Help About" target="archivemanager.menu.HelpAbout"/>
+  </indexitem>
+  <indexitem text="Add Options">
+    <indexitem text="File Selection" target="archivemanager.add.FileSelection"/>
+    <indexitem text="File Name" target="archivemanager.add.FileName"/>
+    <indexitem text="Files of Type" target="archivemanager.add.FilesOfType"/>
+    <indexitem text="Add and Replace" target="archivemanager.add.AddReplace"/>
+    <indexitem text="Add and Refresh" target="archivemanager.add.AddRefresh"/>
+    <indexitem text="Normal Compression" target="archivemanager.add.NormalCompression"/>
+    <indexitem text="No Compresson" target="archivemanager.add.NoCompression"/>
+    <indexitem text="Recurse Folders" target="archivemanager.add.RecurseFolders"/>
+    <indexitem text="Save Absolute Path" target="archivemanager.add.SaveAbsolutePath"/>
+    <indexitem text="Save Relative Path" target="archivemanager.add.SaveRelativePath"/>
+    <indexitem text="Add Button" target="archivemanager.add.AddButton"/>
+    <indexitem text="Cancel Button" target="archivemanager.add.CancelButton"/>
+    <indexitem text="Help Button" target="archivemanager.add.HelpButton"/>
+  </indexitem>
+  <indexitem text="Extract Options">
+    <indexitem text="Directory Selection" target="archivemanager.extract.DirectorySelection"/>
+    <indexitem text="Selected Files" target="archivemanager.extract.SelectedFiles"/>
+    <indexitem text="All Files" target="archivemanager.extract.AllFiles"/>
+    <indexitem text="Overwrite Existing Files" target="archivemanager.extract.OverwiteExistingFiles"/>
+    <indexitem text="Skip Older Files" target="archivemanager.extract.SkipOlderFiles"/>
+    <indexitem text="Use Path Names" target="archivemanager.extract.UsePathNames"/>
+    <indexitem text="Extract Button" target="archivemanager.extract.ExtractButton"/>
+    <indexitem text="Cancel Button" target="archivemanager.extract.CancelButton"/>
+    <indexitem text="Help Button" target="archivemanager.extract.HelpButton"/>
+    <indexitem text="New Folder" target="archivemanager.extract.NewFolder"/>
+  </indexitem>
+</indexitem>
+</index>
+

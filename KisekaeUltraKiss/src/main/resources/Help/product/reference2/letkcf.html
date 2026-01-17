@@ -1,0 +1,43 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="generator" content="Bluefish 2.2.12" >
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>map</title>
+</head>
+
+<body>
+
+<h4><a name="letkcf" id="letkcf">letkcf</a>()&nbsp;</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; letkcf (variable,target)</p>
+<p>This action returns the ordinal palette number (kcf file number) that is being used for a cel, group, or celgroup. Note that palette file numbers begin from 0. </p>
+<p>If the cel does not reference a palette file the value returned is -1.</p>
+<p>If the group object or cel group member image cels do not all reference the same palette file the value returned is -1.</p>
+<p>The <em>target</em>  can be a cel name or an object group specifier or a cel group specifier. </p>
+<p>Related actions: <a href="letpal.html">letpal()</a>, <a href="setkcf.html">setkcf()</a>, <a href="setpal.html">setpal()</a> </p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td width="20%">VariableCase</td>
+        <td width="30%">variable names are case sensitive</td>
+        <td>default value &quot;<font color="#0000FF">false</font>&quot; (Compatibility option)</td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>&nbsp;Example:&nbsp;<br>
+</b></font></p>
+<p><font face="Courier New">;@ letkcf(N,"256-col1.cel") &nbsp;&nbsp;&nbsp; ;<br>
+;@ notify(&quot;This cel references palette file &quot;,N)&nbsp;&nbsp;&nbsp; ;&nbsp;&nbsp;<br>
+
+<br>
+</font><br>
+</p>
+</body>
+
+</html>

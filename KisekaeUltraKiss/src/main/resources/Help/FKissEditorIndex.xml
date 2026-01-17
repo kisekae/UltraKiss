@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='ISO-8859-1'  ?>
+<!DOCTYPE index
+  PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Index Version 1.0//EN"
+         "http://java.sun.com/products/javahelp/index_1_0.dtd">
+<index version="1.0">
+ <indexitem text="FKiSS Editor">
+  <indexitem text="Commands">
+    <indexitem text="File New Event" target="fkisseditor.menu.FileNewEvent"/>
+    <indexitem text="File Edit Event" target="fkisseditor.menu.FileEditEvent"/>
+    <indexitem text="File Delete Event" target="fkisseditor.menu.FileDeleteEvent"/>
+    <indexitem text="File Configuration" target="fkisseditor.menu.FileConfiguration"/>
+    <indexitem text="File Page Setup" target="fkisseditor.menu.FilePageSetup"/>
+    <indexitem text="File Print Preview" target="fkisseditor.menu.FilePrintPreview"/>
+    <indexitem text="File Print" target="fkisseditor.menu.FilePrint"/>
+    <indexitem text="File Properties" target="fkisseditor.menu.FileProperties"/>
+    <indexitem text="File Exit" target="fkisseditor.menu.FileExit"/>
+    <indexitem text="Edit Undo" target="fkisseditor.menu.EditUndo"/>
+    <indexitem text="Edit Redo" target="fkisseditor.menu.EditRedo"/>
+    <indexitem text="Edit Undo All" target="fkisseditor.menu.EditUndoAll"/>
+    <indexitem text="Run Execute Statement" target="fkisseditor.menu.RunExecute"/>
+    <indexitem text="Run Trace into Call" target="fkisseditor.menu.RunStepInto"/>
+    <indexitem text="Run Run to Selection" target="fkisseditor.menu.RunToSelection"/>
+    <indexitem text="Run Run to Call Return" target="fkisseditor.menu.RunToReturn"/>
+    <indexitem text="Run Set Breakpoint" target="fkisseditor.menu.RunSetBreakpoint"/>
+    <indexitem text="Run Clear Breakpoint" target="fkisseditor.menu.RunClearBreakpoint"/>
+    <indexitem text="Run Disable Breakpoint" target="fkisseditor.menu.RunDisableBreakpoint"/>
+    <indexitem text="Run EnableBreakpoint" target="fkisseditor.menu.RunEnableBreakpoint"/>
+    <indexitem text="Run Clear All Breakpoints" target="fkisseditor.menu.RunClearAllBreakpoints"/>
+    <indexitem text="Run Program Pause" target="fkisseditor.menu.RunProgramPause"/>
+    <indexitem text="Run Program Resume" target="fkisseditor.menu.RunProgramResume"/>
+    <indexitem text="Run Program Restart" target="fkisseditor.menu.RunProgramRestart"/>
+    <indexitem text="Options Pause on Event" target="fkisseditor.menu.OptionsPauseEvent"/>
+    <indexitem text="Options Pause on Action" target="fkisseditor.menu.OptionsPauseAction"/>
+    <indexitem text="Help Contents" target="fkisseditor.menu.HelpContents"/>
+    <indexitem text="Help About" target="fkisseditor.menu.HelpAbout"/>
+  </indexitem>
+ </indexitem>
+</index>
+

@@ -1,0 +1,190 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>catch</title>
+</head>
+
+<body>
+
+<h4><a name="catch">catch</a>()</h4>
+<p><font color="#FF0000"><b>Syntax:</b></font>&nbsp;&nbsp;&nbsp;&nbsp; catch
+(target)</p>
+<p>
+Triggered when the user clicks on a cel or an object, except if the item clicked on
+exceeds the maximal fix value. The target may be a literal name of an image
+file or a cel group name or an object group identifier.
+</p>
+<p>Some viewers treat catch() as being associated with mouse drag movement and
+do not correctly
+enforce the maximum fix value limitation. However, fix values are the essential
+difference between catch() events and press() events. Press() events fire regardless
+of fix value. Catch() events fire only if the fix value is less than the maximal
+fix value. This leads to inconsistent catch() interpretation across viewers.
+</p>
+<p>More than one catch() event can be specified for a specific cel or object
+group. If sequential event processing is enforced each event will usually fire in the
+sequence in which it was defined, otherwise they can be processed concurrently.&nbsp;
+</p>
+<p>Catch() events are recognized when the mouse is pressed. Single threaded
+viewers that do not support concurrent events will typically process the catch()
+event after the press() event and before fixcatch() events. Some
+viewers process object group events before cel or cel group events. No
+assumptions should be made for the sequence in which events are processed.
+</p>
+<p>With FKiSS4, other problems occurs. For image cels that participate in
+more than one cel group there is no standard defined for the order in which cel
+group events are expected to fire. For example, if 'redball.cel' participates in the !BALL and
+!RED cel groups, and catch() events are defined for the both the cel groups, no
+assumptions can be made for the sequence in which the events are processed. KiSS events are expected to be independent
+and instantaneous. However, for single threaded viewers one could assume that each event fires in
+some
+sequence and viewer dependent event code can be written that assumes this
+sequence.
+</p>
+<p>We also have the situation where multiple events can apply to the same target
+by creating events with&nbsp; a cel name or object identifier or cel group
+identifier.&nbsp; Most
+viewers will process object group events before cel or cel group events, but
+once again this is implementation dependent and leads to inconsistent KiSS
+interpretations.&nbsp;
+</p>
+<p>Note that it is valid to assume that mouse pressed events will be recognized before
+mouse release events. However, in a multi-threaded implementation it is possible
+to have concurrent events simultaneously running. Therefore, no assumption can
+be made that a catch() event will terminate processing before a mouse release event
+begins.
+</p>
+<p>
+<br>
+Related events: <a href="fixcatch.html">fixcatch()</a>, <a href="press.html">press()</a>,
+<a href="drop.html">drop()</a>, <a href="fixdrop.html">fixdrop(),</a> <a href="release.html">release()<br>
+</a>Related actions: <a href="letcatch.html">letcatch()</a>, <a href="letcel.html">letcel(),</a>
+<a href="setfix.html">setfix()</a>
+</p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+  <table border="1" cellpadding="5" cellspacing="0" width="100%">
+    <tr>
+      <td width="20%">FKiSS 1 allows cel literal names or object groups.</td>
+      <td width="30%">catch (&quot;cel1.cel&quot;) or catch (#3)</td>
+      <td>Triggered when the cel or group is pressed.</td>
+    </tr>
+    <tr>
+      <td width="20%">FKiSS 4 allows cel group names.&nbsp;&nbsp;</td>
+      <td width="30%">catch (!Table)&nbsp;&nbsp;</td>
+      <td>Triggered when any cel in cel group !Table is pressed.</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+  <table border="1" cellpadding="5" cellspacing="0" width="100%">
+    <tr>
+      <td width="20%">MaxLock</td>
+      <td width="30%">maximum fix value</td>
+      <td>default value <font color="#0000FF">32767</font> (KiSS option)</td>
+    </tr>
+    <tr>
+      <td width="20%">ImmediateEvent&nbsp;</td>
+      <td width="30%">enforces sequential event processing&nbsp;&nbsp;</td>
+      <td>default value &quot;<font color="#0000FF">false</font>&quot;
+        (Compatibility option)</td>
+    </tr>
+    <tr>
+      <td width="20%">CatchFixDrop</td>
+      <td width="30%">enable catch events on fixed or sticky cels or objects</td>
+      <td>default value &quot;<font color="#0000FF">true</font>&quot;
+        (Compatibility option)</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><br>
+<font color="#FF0000"><b>FKiSS 2 Example:
+</b></font>
+</p>
+<p><font face="Courier New">#3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SSMILE-4.cel&nbsp;
+:0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;<br>
+#3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SMILEY-5.cel&nbsp; :0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;<br>
+#2.999&nbsp;&nbsp; SSMILE.cel&nbsp;&nbsp;&nbsp; :0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;<br>
+#2.999&nbsp;&nbsp; SMILEY.cel&nbsp;&nbsp;&nbsp; :0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; ambiguous cel<br>
+#1.32768         SSMILE.cel&nbsp;&nbsp;&nbsp; :0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;<br>
+#1.32768   SMILEY.cel&nbsp;&nbsp;&nbsp; :0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;</font></p>
+<p><font face="Courier New">;@catch("SMILEY-5.cel")&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;<br>
+;@ notify("catch SMILEY-5.cel")&nbsp;&nbsp; ;<br>
+<br>
+;@catch("SMILEY.cel")&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; ambiguous catch<br>
+;@ notify("catch SMILEY.cel&quot;)&nbsp;&nbsp;&nbsp;&nbsp; ;<br>
+<br>
+;@catch(#3)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;<br>
+;@ notify("catch Group 3&quot;)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;<br>
+</font></p>
+
+<p><br>
+<font color="#FF0000"><b>FKiSS 4 Example:
+</b></font>
+</p>
+<p><font face="Courier New">#4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SSMILE-6.cel&nbsp;
+: 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;<br>
+#4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SMILEY-7.cel&nbsp; : 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;<br>
+#3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SSMILE-4.cel&nbsp; : 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;!SmileySmile<br>
+#3.9&nbsp;&nbsp;&nbsp;&nbsp; SMILEY-5.cel&nbsp; : 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;!Smiley<br>
+#2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SSMILE.cel&nbsp;&nbsp;&nbsp; : 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;!GreenSmile !SmileySmile<br>
+#2.999&nbsp;&nbsp; SMILEY.cel&nbsp;&nbsp;&nbsp; : 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;!Green !Smiley<br>
+#1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SSMILE.cel&nbsp;&nbsp;&nbsp; : 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;!GreenSmile<br>
+#1.32768   SMILEY.cel&nbsp;&nbsp;&nbsp; : 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;!Green</font>
+</p>
+<p><font face="Courier New">;@catch(&quot;SMILEY.cel&quot;)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+;@ unmap(&quot;SSMILE.cel&quot;)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+;@ notify("catch KissCel 5 SMILEY.cel")                     ;&nbsp;<br>
+<br>
+;@catch(#3)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+;@ unmap("SSMILE-4.cel")&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;&nbsp;<br>
+;@ notify("catch Group 3 SSMILE-4.cel")                     ;&nbsp;<br>
+<br>
+;@catch(!GREEN)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+;@ unmap(!GREENSMILE)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+;@ notify("catch !GREEN")&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;&nbsp;<br>
+<br>
+;@catch(!SMILEY)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+;@ unmap(!SMILEYSMILE)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+;@ notify("catch !SMILEY")&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;&nbsp;<br>
+</font>
+</p>
+<p><font face="Courier New"><br>
+</font></p>
+
+</body>
+
+</html>

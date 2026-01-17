@@ -1,0 +1,111 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>label</title>
+</head>
+
+<body>
+
+<h4><a name="sound" id="sound">sound</a>()</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; sound (filename)<br>
+<br>
+The sound() command will initiate the playback of an audio stream file. The filename must be a literal specification of a valid path to a sound file or a variable that contains a string path name. </p>
+<p>A relative  filename is assumed to be relative to the location of the set configuration file. An absolute filename can be specified if desired. The path specifiers for a filename can be '/' or '\'.</p>
+<p>KiSS viewers should accept WAV and AU file encodings. Other encodings are viewer dependent. UltraKiss will accept RMF, AIFF, and MIDI encodings for the sound() command, as well as MP3 sound files if appropriately configured.</p>
+<p>Multiple sound() commands can be concurrently active. A sound(&quot;&quot;) command with an empty filename will terminate all currently playing sound files.</p>
+<p>If the filename does not exist then the sound() command fails silently. </p>
+<p>A sound() command is independent from a music() command.  </p>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>FKiSS 5 Syntax:</b></font>&nbsp;&nbsp;&nbsp;&nbsp;
+sound (filename[,repeat])</p>
+<p>FKiSS 5 introduced an optional <em>repeat</em> parameter for audio playback. This parameter specifies the number of times that the sound is to be played. Note that the repeat value specifies the number of sound repetitions, thus a value of 1 plays the sound once.  A value of 0 requests that the sound be stopped. A negative repeat value will result in the sound being repeated indefinitely.</p>
+<p>FKiSS  provided no easy way to control or manage sound playback. There was no  way to determine when a sound file terminated such that it could be repeated. </p>
+<p>The FKiSS5 mediastart() and mediastop() events can  be used to recognize sound playback events. These events fire on sound initiation and sound termination for the specified sound file. These events fire on completion of the command and not on completion of the sound. Thus, if repetition was specified, one  mediastart event fires at the beginning of the command and one mediastop event fires when all repetitions are complete. </p>
+<p>&nbsp;</p>
+<p>Related events: <a href="mediastart.html">mediastart(),</a> <a href="mediastop.html">mediastop()</a> <br>
+  Related actions: <a href="music.html">music(),</a> <a href="mediaplayer.html">mediaplayer()</a> <br>
+</p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+  <table border="1" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td width="26%">FKiSS 1 requires literal filenames.</td>
+      <td width="24%">sound(&quot;happysound.wav&quot;)</td>
+      <td width="50%"></td>
+    </tr>
+    <tr>
+      <td width="26%">FKiSS 5 allows string variables </td>
+      <td width="24%">let(S,&quot;happysound.wav&quot;)<br>
+        sound(S)</td>
+      <td>&nbsp;</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+  <table border="1" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td>CacheAudio</td>
+      <td>cache audio files in memory </td>
+      <td>default value &quot;<font color="#0000FF">true</font>&quot; (General option)</td>
+    </tr>
+    <tr>
+      <td>DebugAudio</td>
+      <td>write audio debug traces to log file </td>
+      <td>default value &quot;<font color="#0000FF">false</font>&quot; (Debug option)</td>
+    </tr>
+    <tr>
+      <td>StopMusic</td>
+      <td>stops active sound on page change </td>
+      <td>default value &quot;<font color="#0000FF">false</font>&quot; (Media option)</td>
+    </tr>
+    <tr>
+      <td width="20%">VariableCase</td>
+      <td width="30%">variable names are case sensitive</td>
+      <td>default value &quot;<font color="#0000FF">false</font>&quot; (FKiSS
+        option)</td>
+    </tr>
+    <tr>
+      <td width="20%">SoundSingle</td>
+      <td width="30%">only one sound can play at a time</td>
+      <td>default value &quot;<font color="#0000FF">false</font>&quot; (Compatibility
+        option)</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;
+
+</p>
+<p><font color="#FF0000"><b>FKiSS 1 Example:</b></font></p>
+<p><font face="Courier New">
+</font><font face="Courier New">;@press(#2)&nbsp;<br>
+;@ sound(&quot;mysound.wav&quot;)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+</font><font face="Courier New"></font></p>
+<p>&nbsp;</p>
+
+<p><font color="#FF0000"><b>FKiSS 5 Example:</b></font></p>
+<p><font face="Courier New">;@begin()&nbsp;<br>
+;@ sound(&quot;audio/happysound.wav&quot;,-1)&nbsp;&nbsp; &nbsp;&nbsp;; play a sound forever<br>
+<br>
+;@mediastart(&quot;audio/happysound.wav&quot;)&nbsp;&nbsp;&nbsp; ; event triggered when sound starts <br>
+;@ notify(&quot;happysound started&quot;) &nbsp;<br>
+<br>
+;@mediastop(&quot;audio/happysound.wav&quot;)&nbsp;&nbsp;&nbsp; &nbsp;; event triggered when sound stops <br>
+;@ notify(&quot;happysound stopped&quot;) &nbsp; <br>
+</font></p>
+<p>&nbsp; </p>
+<p>&nbsp;</p>
+
+</body>
+
+</html>

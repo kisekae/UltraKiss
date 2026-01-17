@@ -1,0 +1,145 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>iffixed</title>
+</head>
+
+<body>
+
+<h4><a name="iffixed">iffixed</a>()</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; iffixed (target,alarmname,duration)</p>
+<p>The iffixed() statement tests a target object fix state. </p>
+<p>The <em>target</em> can be a literal object number with or without the preceeding '#', a cel name, or a variable that maintains an object  number or a cel name. The iffixed() command does not apply to cel groups. </p>
+<p>The <em>alarmname</em> is an identifier for an alarm or a string variable that contains the name of an alarm. If the object has a
+    non-zero fix value a timer is set for the specified alarm, to fire after the
+    specified time duration. </p>
+<p>The <em>duration</em> is an integer number or a variable with an integer value that specifies the duration time in milliseconds. </p>
+<p>Object fix count locks objects on the screen so they are unmovable. Fix count
+is initially established by lock values specified for image cels in the KiSS
+configuration file, however fix count can change when the user interacts with an object.&nbsp;
+The count is reduced by one for each mouse interaction on the object. Note that fix count
+can only
+be reduced by user mouse action if the object fix value is less than the fixed
+lock value. This is typically a viewer parameter with a default value of
+100.&nbsp;
+</p>
+<p>The KiSS specifications do not define precisely what a mouse interaction is. Some viewers
+will reduce the fix value for an object when the object is
+clicked on or pressed. This interpretation suggests that fix count is dependent
+on object touches. Other viewers will reduce the fix count only
+when the object is dragged or the mouse is released. This interpretation suggests that object fix count
+is dependent on object moves of possibly zero displacement.&nbsp;
+</p>
+<p>A fixed object, when dragged, can usually be moved slightly but it will snap
+back to its original location if it is dragged too far. This snapback gives a
+visual signal to the user that the object is 'sticky', or fixed in place. If we
+consider the case where an object has a fix count of 1 and it is dragged, it is
+reasonable to expect that the object snaps back to its original location and its
+fix count be reduced to zero and the object becomes mobile on the next drag.
+However, in practice this does not occur. The fix count is reduced immediately and the object becomes mobile
+on this drag even
+though it was first touched with a fix count of 1. The KiSS specification does not define when fix
+count should be decremented, thus it is unclear whether the unfix() event should
+fire on the snap back, or when the object is next touched or moved.&nbsp;</p>
+<p>Lock values or fix counts can be defined for each cel image in the KiSS
+configuration file. However, it is the object that is fixed and the fix count for an
+object group is usually defined as the maximum value of all lock values for all
+cels in the object, although some viewers may define this differently. The lock value of the object that determines if any cel in the object is
+mobile.&nbsp;
+</p>
+<p>With FKiSS 5 the semantics are extended to allow iffixed() testing on image
+cels. This maintains consistency with the ifmapped() and ifmoved() commands
+where the target can be an object or a cel name or possibly an FKiSS 4 cel group
+name.&nbsp; A cel is fixed if and only
+if its parent object is fixed.</p>
+<p>This command fails silently if the target or alarm does not exist.</p>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>FKiSS 5 Syntax:</b></font>&nbsp;&nbsp;&nbsp;&nbsp; iffixed(target,alarmname,duration[, argument1, argument2, ...])</p>
+<p>UltraKiss FKiSS5 introduces the ability to pass parameters to the alarm code module, similar to parameters on label modules. The optional parameter list specifies a set of variables or literal constants that can be referenced as local variables within the alarm code module. With FKiSS 5 the alarm name can also be specified through a variable that has a string value, providing that the variable name is not the same as an existing alarm name. </p>
+<p>The optional argument list specifies a set of variable names that must be referenced as local variables within the alarm module. </p>
+<p>Local variable names are prefixed with an '<font face="Courier New, Courier, mono">@</font>' sign. Thus, the variable '<font face="Courier New, Courier, mono">@N</font>' is a local variable declared and referenced within the module and is distinct from any global variable '<font face="Courier New, Courier, mono">N</font>'. Calling any module recursively creates new instances of all local variables distinct from any other local variable of the same name.</p>
+<p>&nbsp;</p>
+<p>
+Related actions: <a href="ifnotfixed.html">ifnotfixed()</a>, <a href="ifmoved.html">ifmoved(),</a>
+<a href="ifmapped.html">ifmapped()</a>, <a href="letfix.html">letfix(),</a> <a href="setfix.html">setfix()</a>
+</p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+  <table border="1" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td width="20%">FKiSS 2</td>
+      <td width="30%">iffixed(#5,12,1000)</td>
+      <td>object comparisons, integer alarm identifiers</td>
+    </tr>
+    <tr>
+      <td width="20%">FKiSS 3&nbsp;</td>
+      <td width="30%">iffixed(A,12,T)</td>
+      <td>variables for objects, alarms, and durations</td>
+    </tr>
+    <tr>
+      <td>FKiSS 5</td>
+      <td>iffixed(Target,NextAlarm,Time) or iffixed(&quot;face.cel&quot;,12,T,Param1,Param2)</td>
+      <td>variables for objects and cels, with alarm parameters </td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+  <table border="1" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td width="20%">VariableCase</td>
+      <td width="30%">variable names are case sensitive</td>
+      <td>default value &quot;<font color="#0000FF">false</font>&quot;
+        (Compatibility option)</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>Example Code (FKiSS3):&nbsp;</b></font></p>
+<p><font face="Courier New, Courier, mono">#8 angelmar.cel *1 : 0 ;<br>
+  #7 angelven.cel *0 : 0 ;</font></p>
+<p> <font face="Courier New, Courier, mono">;@press(#10) ; Press event to verify the 'iffixed' state <br>
+  ;@ iffixed(&quot;angelven.cel&quot;,5,20) ; DirectKiss does not accept this syntax, PlayFKiss does<br>
+  ;@ ifnotfixed(&quot;angelven.cel&quot;,6,20) ; DirectKiss does not accept this syntax, PlayFKiss does<br>
+  ;@ iffixed(#8,7,1) ; If the time value above is less than 20, PlayFKiss will not fire this?<br>
+  ;@ ifnotfixed(#8,8,1) ; If the time value above is less than 20, PlayFKiss will not fire this?<br>
+  <br>
+  ;@press(#9) ; Press event to alter the fix of &quot;angelven.cel&quot; <br>
+  ;@ letmapped(N,&quot;button4a.cel&quot;) ; <br>
+  ;@ ifequal(N,0) ; <br>
+  ;@ setfix(&quot;angelven.cel&quot;,0) ; PlayFKiss and DirectKiss do not accept this syntax<br>
+  ;@ else() ; <br>
+  ;@ setfix(&quot;angelven.cel&quot;,2) ; PlayFKiss and DirectKiss do not accept this syntax<br>
+  ;@ endif() ; <br>
+  ;@ altmap(#9) ; <br>
+  <br>
+  ;@press(#11) ; Press event to alter the fix of object group #8 <br>
+  ;@ letmapped(N,&quot;button6a.cel&quot;) ; <br>
+  ;@ ifequal(N,0) ; <br>
+  ;@ setfix(#8,0) ; <br>
+  ;@ else() ; <br>
+  ;@ setfix(#8,2) ; <br>
+  ;@ endif() ; <br>
+  ;@ altmap(#11) ; </font></p>
+<p><font face="Courier New, Courier, mono">;@alarm(5) ; Alarm fired if &quot;angelven.cel&quot; is fixed <br>
+  ;@ notify(&quot;Cel angelven on page 0 is fixed&quot;) ; </font></p>
+<p><font face="Courier New, Courier, mono">;@alarm(6) ; Alarm fired if &quot;angelven.cel&quot; is unfixed <br>
+  ;@ notify(&quot;Cel angelven on page 0 is unfixed&quot;) ; </font></p>
+<p><font face="Courier New, Courier, mono">;@alarm(7) ; Alarm fired if group #8 is fixed <br>
+  ;@ notify(&quot;Object #8 angelmercury is fixed&quot;) ; </font></p>
+<p><font face="Courier New, Courier, mono">;@alarm(8) ; Alarm fired if group #8 is unfixed </font><br>
+    <font face="Courier New, Courier, mono">;@ notify(&quot;Object #8 angelmercury is unfixed&quot;) ; </font></p>
+<p><font face="Courier New">
+</font></p>
+</body>
+
+</html>

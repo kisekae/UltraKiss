@@ -1,0 +1,36 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>never</title>
+</head>
+
+<body>
+
+<h4><a name="never">never</a>()&nbsp;</h4>
+<p><font color="#FF0000"><b>Syntax:</b></font>&nbsp;&nbsp;&nbsp;&nbsp; never ()</p>
+<p>This event is never triggered. It can be used as a placeholder to hide events
+or event code that may not be recognized by other viewers.</p>
+<p>Other names for the never() event are
+unknown() and nothing().&nbsp; </p>
+<p>The intention of never() was to wrap unknown <u>event</u> statements that
+might not be understood by earlier viewers, such as version(), so that the
+earlier viewers would not complain when parsing the FKiSS code. </p>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b> Example:</b></font></p>
+<p><font face="Courier New">;@never()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; hides the following event from viewers that do not understand version()<br>
+;@version(3)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;
+fired if the viewer supports FKiSS3<br>
+;@ unmap(&quot;fk3warn.cel&quot;) ; a warning that FK3 is needed</font> </p>
+<p>&nbsp;</p>
+<p>One difficulty with never() is that it does not work for unknown FKiSS <u>action</u>
+statements. KiSS viewers are supposed to ignore actions that they do not
+understand, but many viewers will issue warning messages when unknown actions
+are parsed.</p>
+
+</body>
+
+</html>

@@ -1,0 +1,464 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>FKiSS Data Types</title>
+</head>
+
+<body>
+
+<h2 align="center"><font face="Arial" color="#FF0000">FKiSS Data Types</font></h2>
+<p>The KiSS language defined entities&nbsp;such as objects, cels, labels,
+alarms, and so on that can be used as
+parameters in an FKiSS command. The original design of FKiSS did not consider
+representation of data, but with the inclusion of FKiSS 3 the notion of a simple integer data
+type was required. A rudimentary concept of strings was also introduced for cel
+name and notification messages. UltraKiss FKiSS 5 formalized this capability by
+defining string types, character processing, long integers, and floating point
+numbers.&nbsp;</p>
+<p> FKiSS 5 type conversion between different data types is automatic and
+transparent to the programmer. KiSS should be fail safe and fault
+tolerant, therefore in the case where type conversion fails a zero or
+undefined value should be assigned. If an
+FKiSS command reference an unknown entity, the
+command should fail silently.</p>
+<p>&nbsp;</p>
+<h2><font color="#FF0000"><a name="Numbers">Numbers</a></font></h2>
+<p><b><font face="Arial">Integer Type</font></b>&nbsp;</p>
+<p>FKiSS 1 through FKiSS 4 only support Integer number types. There is no notion
+of the size of an Integer, however for 32 bit machines integers range
+from -2147483648 to 2147483647, inclusive. Integer values are typically used to
+specify coordinate locations, alarm or label names, or for simple arithmetic.
+Negative numbers are preceded with a minus sign. Integer numbers can also be used
+to identify KiSS objects, although by convention object numbers are usually preceded
+by a '#' character.</p>
+<p>Example:</p>
+<p><font face="Courier New">;@alarm(1)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; define named alarm 1<br>
+;@
+let(A,10)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; assign an integer to variable A<br>
+;@ move(#3,5,-10)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; move
+object 3 five pixels right and ten pixels up<br>
+;@ moveto(A,-5,10)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; move object
+10 to screen location (-5,10)<br>
+;@
+timer(1,100)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;
+invoke alarm 1 in 100 milliseconds</font></p>
+<p>The following syntax is also valid although many viewers may not implement
+this construct for consistent object identification.</p>
+<p><font face="Courier New">;@ let(A,#10)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; assign an object reference to variable A<br>
+;@ moveto(#A,-5,10)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; move object A
+(A=10) to screen location (-5,10)<br>
+</font>&nbsp;</p>
+<p>Because there is no KiSS definition for an Integer, implementations could
+provide more accurate calculations by using increased precision
+arithmetic.&nbsp; For 64 bit numbers values could range from
+-9223372036854775808 to 9223372036854775807, inclusive. These data types are
+Long integers and long values can be used
+for more accurate calculations. Integers are automatically converted to Long
+values when necessary. Long values are automatically truncated to Integer values
+when necessary.&nbsp;</p>
+<p>Example:</p>
+<p><font face="Courier New">;@ let(A,999999999999)&nbsp;&nbsp;&nbsp;&nbsp; ;
+assign a big number to variable A<br>
+;@ div(B,A,9999999999)&nbsp;&nbsp;&nbsp;&nbsp; ; do long division<br>
+;@ debug(B)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; show the integer result<br>
+</font></p>
+<p>&nbsp;</p>
+<p><b><font face="Arial">Floating Point </font></b><font face="Arial"><b>Type</b></font>&nbsp;</p>
+<p>FKiSS 5 introduces Floating Point or decimal number types.&nbsp; Floating
+point numbers are automatically converted to Long or Integer values when
+necessary. An overflow() event can be fired if the conversion loses precision.
+Although there is no notion of the size of a floating point number, most floating point numbers are represented as 64 bit entities.</p>
+<p>Example:</p>
+<p><font face="Courier New">;@
+let(A,3.14)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; assign a fractional number to variable A<br>
+;@ div(B,A,-0.15)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; do
+floating point division<br>
+;@ debug(B)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; show the result<br>
+</font></p>
+<p>&nbsp;</p>
+<h2><font color="#FF0000"><a name="Strings">Strings</a></font></h2>
+<p>A string is text delimited by double quotation marks. String text is used to
+display messages or identify named cels.</p>
+<p>UltraKiss FKiSS 5 introduces string processing action commands to facilitate the
+definition and construction of strings. New FKiSS commands concat(), substr(),
+indexof(), replacestr(), and strlen() exist to manipulate and process string
+values.
+Extensions to the notify() and debug() commands are provided to enable string
+display. Keyboard events and component input can be used to obtain string text
+from the user.</p>
+<p> With FKiSS 5 quotation marks and
+control characters for specifying new lines can be included in string text if the
+character is preceded with a backslash '\' escape character.</p>
+<p>String characters are indexed from zero. Substrings can be isolated from
+strings by specifying the start index and end index of the substring. Strings
+are automatically converted to numbers for calculations if the string is a valid
+number. Numbers are automatically converted to strings when necessary.</p>
+<p>Example:</p>
+<p><font face="Courier New">;@ let(A,&quot;1.
+Hello&quot;)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; assign a string to variable A<br>
+;@ concat(B,A,&quot; World&quot;)&nbsp;&nbsp;&nbsp; ; create &quot;1. Hello
+World&quot; in B<br>
+;@ replacestr(C,B,0,1,&quot;2&quot;) ; create &quot;2. Hello World&quot; in C<br>
+;@ notify(B,&quot;\n&quot;,C)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; show
+the strings on two lines<br>
+;@ substr(D,C,0,1)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; isolate the
+substring &quot;2&quot; in D<br>
+;@
+add(E,D,5)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; add 2 + 5 giving E<br>
+;@ debug(&quot;Sum is &quot;,E)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; show the sum<br>
+</font></p>
+<p>For more information on the use of string variables, see <a href="concat.html">concat()</a>, <a href="substr.html">substr()</a>,
+<a href="indexof.html">indexof()</a>, <a href="replacestr.html">replacestr()</a>, and <a href="strlen.html">strlen()</a>.</p>
+<p>&nbsp;</p>
+<h2><font color="#FF0000"><a name="Characters">Characters</a></font></h2>
+<p>A character is a single letter delimited by single quotation marks.
+Characters are typically used to specify special line spacing, tabs, or other control characters in
+strings. Quotation marks and control characters such as the new line character can be included
+in string text if the character is preceded with a backslash escape character.</p>
+<p>Example:</p>
+<p><font face="Courier New">;@ let(A,'\n')&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; assign a newline character to variable A<br>
+;@ ifequal(A,'\n')&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; compare A
+to a newline<br>
+;@ keypress('\\')&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;
+keypress() event for a backslash character<br>
+;@ notify(&quot;A\nB\nC&quot;)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; newlines in
+a string ABC<br>
+</font></p>
+<p>&nbsp;</p>
+<h2><font color="#FF0000"><a name="Identifiers">Identifiers</a></font></h2>
+<p>An identifier is a name. Names must begin with an alphabetic character and
+cannot contain spaces. Names are usually case insensitive, however this is viewer dependent and
+can be specified by viewer options. Names are typically used to identify Alarms,
+Label modules, Cel Groups, and Variables. Names must be unique within type. In
+other words, alarm names should be unique, label module names should be unique,
+and variable names should be unique.&nbsp;</p>
+<p>Names need not be unique across types. An alarm can have the same name as a
+label module. However, in the case of variables, if a variable name duplicates
+an alarm or label module name, the alarm or label name will take precedence over
+the variable value.</p>
+<p>Some viewers limit the maximum number of letters in a name. With FKiSS 5 there is no restriction on the length of a
+name.&nbsp;</p>
+<p>Example:</p>
+<p><font face="Courier New">;@ alarm(AnAlarm)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; an alarm specification<br>
+;@ timer(A_Long_Name,10)&nbsp; ; schedule the named alarm<br>
+;@ let(A,&quot;AnAlarm&quot;)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; assign a
+string variable<br>
+;@ timer(A,10)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; schedule AnAlarm<br>
+;@ let(AnAlarm,&quot;Blink&quot;)&nbsp;&nbsp; ; assign a string variable<br>
+;@ timer(AnAlarm,10)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; schedule AnAlarm as the
+variable name is superceded<br>
+</font></p>
+<p>&nbsp;</p>
+<h2><font color="#FF0000"><a name="Targets">Targets</a></font></h2>
+<p>A target is generalized term that is used to specify the object of an action
+command. The term <i>target</i> is used for commands that apply to object groups, cel groups,
+or cels. Therefore, a target can be a cel name specifier in quotation marks, an
+object specifier preceded by a '#' character, or a cel group identifier preceded
+by a '!' character.&nbsp;</p>
+<p>Example:</p>
+<p><font face="Courier New">;@
+press(#12)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; the press event applies to a target<br>
+;@ press(!Card)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;
+this includes various identifier types<br>
+;@ press(&quot;face.cel&quot;)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;&nbsp;<br>
+</font></p>
+<p>&nbsp;</p>
+<h2><font color="#FF0000"><a name="Cels">Cels</a></font></h2>
+<p>A cel is an image file that is identified by its filename, including the
+image type extension.
+KiSS created its own image format known as CEL images. These images use an
+independent palette file for coloring. CEL files can also be truecolor images
+which do not use a palette.&nbsp;Filenames are strings enclosed in double quotation marks.&nbsp;</p>
+<p>FKiSS 1 through FKiSS 4 will only permit cel image types, which implies that
+the only valid image type extension is CEL. However, UltraKiss FKiSS 5 allows other image
+types such as GIF, JPG, PNG, BMP, PPM, PGM, and PBM.&nbsp; An UltraKiss specific
+extension also introduces GUI components such as labels, buttons, textareas, lists,
+and so on. These components are recognized through their file extension.</p>
+<p>With FKiSS 5, variables can be used in place of cel names. When variables are
+used the variable must contain a string value.</p>
+<p>Example:</p>
+<p><font face="Courier New">;@ press(&quot;skirt.cel&quot;)&nbsp;&nbsp;&nbsp;&nbsp;
+; a press event on a cel<br>
+;@ unmap(&quot;shirt.cel&quot;)&nbsp;&nbsp;&nbsp;&nbsp; ; unmap an image<br>
+;@ let(A,&quot;back.jpg&quot;)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; assign a string
+variable<br>
+;@ map(A)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; map the image<br>
+;@ press(&quot;go.button&quot;)&nbsp;&nbsp;&nbsp;&nbsp; ; a component button<br>
+</font></p>
+<p>Note that the same image file may be specified for use in different objects.
+This may be done to apply different color palettes to the same image, or simply
+to share the image among different objects. Shared images are also known as
+ambiguous images. With ambiguous images it is impossible to uniquely identify a
+specific image by name only. To improve cel identification in the presence of
+ambiguity, FKiSS 4 introduced cel groups.</p>
+<p>Some viewers simply apply FKiSS actions such as unmap(&quot;shirt.cel&quot;)
+to the first instance of an ambiguous image, which leads to inconsistent
+results. Other viewers apply the action command to all ambiguous images within
+the KiSS set which can lead to over specification.&nbsp; UltraKiss will use
+context sensitive determination to identify the correct instance where possible.</p>
+<p>For more information on the use of objects and cels, see <a href="kiss_image_types.html">KiSS images</a>.</p>
+<p>&nbsp;</p>
+<h2><font color="#FF0000"><a name="Objects">Objects</a></font></h2>
+<p>An object is a collection of image files grouped together as a named unit. Objects
+are identified by number preceded with a '#'
+character. The '#' prefix differentiates an object identifier from an integer. Most viewers
+are restrictive in not allowing literal object identifiers without the preceding
+'#' character, although this is not required as the semantic interpretation can
+be determined by the command.</p>
+<p>Example:</p>
+<p><font face="Courier New">;@
+press(#12)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; a press event on an object<br>
+;@ unmap(#12)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; unmap the object<br>
+;@ movebyX(#12,#1,5)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; move object #12 relative to
+#1<br>
+;@
+let(A,12)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; assign an integer to a variable&nbsp;<br>
+;@ let(A,#12)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;; assign an
+object to a variable&nbsp;<br>
+;@ map(A)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; map the object 12<br>
+;@
+map(#A)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; map the object 12<br>
+</font></p>
+<p>For more information on the use of objects and cels, see <a href="kiss_object_groups.html">KiSS groups</a>.</p>
+<p>&nbsp;</p>
+<h2><font color="#FF0000"><a name="Cel Groups">Cel Groups</a></font></h2>
+<p>Cel groups were introduced with FKiSS 4 to enable the specification of a set
+of related image cels that are unrelated to objects. This feature provided new
+grouping capabilities that could be used to uniquely identify certain frames or
+images within the set, and also assist with resolving the problems associated with
+ambiguous cels. Cel group frames also facilitated animation control beyond the
+capabilities provided with groups.</p>
+<p>Cel groups have named identifiers. Cel group names are preceded with a '!'
+character. An identifier must start with a letter and cannot contain spaces.
+Image cels can participate in one or more different cel groups.</p>
+<p>Example:</p>
+<p><font face="Courier New">;@ press(!Card)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; a press event on any cel in a cel group<br>
+;@ unmap(!Card)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;
+unmap all images in a cel group<br>
+;@ setframe(!Card,5)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; map frame 5 in the cel
+group<br>
+;@ let(A,&quot;!Face&quot;)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;
+assign a string to a variable&nbsp;<br>
+;@ map(A)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; map the cel group !Face<br>
+;@ let(A,&quot;Face&quot;)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; assign a string to a variable&nbsp;<br>
+;@ map(!A)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; map the cel group !Face<br>
+</font></p>
+<p>For more information on the use of object groups and cel groups, see <a href="kiss_object_groups.html">KiSS
+groups</a>.</p>
+<p>&nbsp;</p>
+<h2><font color="#FF0000"><a name="Object Groups">Object Groups</a></font></h2>
+<p>Objects are also collections of cels and can be considered as a group. The
+original FKiSS 4 specification of cel groups did not consider this relation,
+however all cel group commands can equally apply to objects. Frames or images
+within objects can also be selected to assist with resolving the difficulties
+associated with ambiguous cels. Object group frames also facilitated animation
+control beyond the capabilities provided with simple object commands.</p>
+<p>Example:</p>
+<p><font face="Courier New">;@
+press(#10)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; a press event on object #10<br>
+;@ setframe(#10,5)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; map cel image 5
+in object #10<br>
+;@ let(A,&quot;#10&quot;)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; assign a string to a variable&nbsp;<br>
+;@ map(A)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; map the object #10<br>
+;@ let(A,#10)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; assign an object reference to A&nbsp;<br>
+;@ map(A)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; map the object #10<br>
+;@
+let(A,10)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; assign an integer to a variable&nbsp;<br>
+;@ unmap(A)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; unmap the object #10<br>
+</font></p>
+<p>For more information on the use of object groups and cel groups, see <a href="kiss_object_groups.html">KiSS
+groups</a>.</p>
+<p>&nbsp;</p>
+<h2><font color="#FF0000"><a name="Alarms">Alarms</a></font></h2>
+<p>Alarms are stuctured modules of FKiSS code that are intended to be executed on a timed basis initiated through a timer action. Alarms are identified by either a number or a name. Named alarms&nbsp; must
+begin with an alphabetic character and cannot contain spaces. Identifiers are
+not strings and alarm names must not be enclosed in quotation marks, however
+names can be assigned to variables and used in alarm action commands wherever an
+identifier is required. Names are usually case insensitive, however this is
+viewer dependent and can be specified by viewer options.&nbsp;</p>
+<p>Example:</p>
+<p><font face="Courier New">;@
+alarm(5)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; an FKiSS 1 specification of a numbered alarm<br>
+;@ alarm(Ring)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; an FKiSS 4 specification of a named alarm<br>
+;@ timer(5,100)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; an
+action that references alarm 5&nbsp;<br>
+;@ timer(Ring,0)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; an
+action that references alarm 'Ring'<br>
+;@ let(A,&quot;Ring&quot;)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; assign a string to variable A&nbsp;<br>
+;@
+timer(A,5)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; set a timer on alarm 'Ring'<br>
+;@
+let(A,5)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; assign an integer to a variable&nbsp;<br>
+;@ timer(A,10)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; set a timer on alarm 5<br>
+</font></p>
+<p>UltraKiss FKiSS 5 introduces alarm parameters. Alarm parameters are variables that can
+be local or global to the alarm execution. Parameters are specified on the
+alarm() statement and arguments are supplied on related timer() statements.
+Alarms are unique by name, therefore only the last timer() command arguments are
+referenced when the alarm fires.</p>
+<p>Example:</p>
+<p><font face="Courier New">;@
+alarm(5,N)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; an FKiSS 5 specification of an alarm<br>
+;@&nbsp; notify(&quot;Alarm N=&quot;,N)&nbsp; ; display the alarm global
+parameter<br>
+;@&nbsp;
+add(M,N,1)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;
+add 1 to the alarm parameter<br>
+;@&nbsp; timer(5,1000,M)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; fire alarm 5 in
+1000 ms with a new argument&nbsp;<br>
+;@
+timer(5,1)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; begin the alarm firing sequence<br>
+;<br>
+;@ alarm(6,@M)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; an FKiSS 5 specification of an alarm<br>
+;@&nbsp; notify(&quot;Alarm M=&quot;,@M) ; display the alarm local parameter<br>
+;@&nbsp; add(@M,@M,1)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;
+add 1 to the alarm parameter<br>
+;@&nbsp; timer(6,1000,@M)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; fire alarm 6 in 1000
+ms with a new argument&nbsp;<br>
+;@
+timer(6,1)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; begin the alarm firing sequence<br>
+</font></p>
+<p>For more information on the use of alarms, see <a href="alarm.html">alarm()</a> and <a href="timer.html">timer()</a>.</p>
+<p>&nbsp;</p>
+<h2><font color="#FF0000"><a name="Labels">Labels</a></font></h2>
+<p>A label module is an FKiSS code module that can be executed as a subroutine
+or function. Label modules are identified by either a number or a name. Named
+labels must begin with an alphabetic character and cannot contain spaces.
+Identifiers are not strings and label names must not be enclosed in quotation
+marks, however names can be assigned to variables and used in label action
+commands wherever an identifier is required. Names are usually case insensitive,
+however this is viewer dependent and can be specified by viewer options.&nbsp;</p>
+<p>Example:</p>
+<p><font face="Courier New">;@
+label(12)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; an FKiSS 1 specification of a numbered label<br>
+;@ label(ShowIt)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; an
+FKiSS 4 specification of a named label<br>
+;@
+goto(12)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; an action that references label 12&nbsp;<br>
+;@ gosub(ShowIt)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; an
+action that references label 'ShowIt'<br>
+</font></p>
+<p>UltraKiss FKiSS 5 introduces label parameters. Label parameters are variables that can
+be local or global to the label execution. Parameters are specified on the
+label() statement and arguments are supplied on related goto() or gosub()
+statements. Labels are unique by name, however with concurrent event handling
+multiple instances of label code could be simultaneously executing. Therefore,
+label code should be designed to be reentrant. UltraKiss is the only known
+viewer that will support reentrant code.</p>
+<p>With FKiSS 5 label modules can return results. This allows label modules to
+act as functions. Function return values are assigned to a local variable of the
+same name as the label module. This local variable can be subsequently
+referenced by the calling routine.</p>
+<p>Example:</p>
+<p><font face="Courier New">;@label(Factorial,@N)&nbsp;&nbsp;&nbsp; ;&nbsp;<br>
+;@ iflessthan(@N,2)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; 1! is 1, 0! is 0<br>
+;@  let(@Factorial,@N)&nbsp;&nbsp;&nbsp; ; set the function return value<br>
+;@  exitevent()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; exit as we know the answer<br>
+;@ endif()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+;@ sub(@N1,@N,1)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; N! = N * (N-1)!&nbsp;<br>
+;@ gosub(Factorial,@N1)&nbsp; ; compute (N-1)!&nbsp;<br>
+;@ mul(@X,@N,@Factorial)                                    ; compute N! = N * (N-1)!&nbsp;<br>
+;@ let(@Factorial,@X)&nbsp;&nbsp;&nbsp; ; return the answer&nbsp;<br>
+</font></p>
+<p>For more information on the use of labels, see <a href="kiss_subroutines.html">KiSS subroutines,</a> or <a href="label.html">label()</a>, <a href="gosub.html">gosub()</a>, and <a href="goto.html">goto()</a>.</p>
+<p>&nbsp;</p>
+<h2><font color="#FF0000"><a name="Variables">Variables</a></font></h2>
+<p>Variables were introduced with FKiSS 3. Variables can be used in FKiSS action
+statements whenever a parameter value is required. The value of the variable is
+used for the parameter value when the action statement is processed. Variables
+must begin with an alphabetic character and must not contain spaces. FKiSS 3
+only allowed variables whose names were a single letter followed by a single
+digit. FKiSS 4 allowed variable names up to 32 characters long. FKiSS 5 allows
+unlimited length variable names.</p>
+<p>FKiSS 1 through FKiSS 4 is severely limited in that variables can only
+contain simple integer values. FKiSS 5 removes this restriction by introducing
+string variables and floating point numbers. String variables can be used to
+specify alarm and label names and enable display of text output to the user.
+Floating point variables facilitate mathematical calculations.</p>
+<p>Variable values are set with a let() action statement. The let() statement is
+equivalent to an assignment statement in other programming languages. </p>
+<p>Example:</p>
+<p><font face="Courier New">;@
+let(A,12)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; an FKiSS3 specification of a numbered variable<br>
+;@ let(ABC,&quot;Hello&quot;)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; an FKiSS5
+specification of a string variable<br>
+;@ add(Sum,A,B)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; an
+arithmetic statement using variables <br>
+;@ debug(&quot;Sum=&quot;,Sum)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;; an FKiSS 5 output statement to display a variable<br>
+</font></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2><b><font color="#FF0000"><a name="FKiSS 5 Extensions">FKiSS 5 Extensions</a></font></b></h2>
+<p>KiSS, and FKiSS as a programming language, was originally conceived as a
+graduate thesis. As such it was incomplete and not consistent with respect to a
+well defined syntax and semantics. FKiSS 3 provided a foundation for automated
+programming of FKiSS events and actions by introducing variables and logic
+statements. FKiSS 4 introduced new concepts for object manipulation with cel
+groups and improved naming conventions. UltraKiss FKiSS 5 continues this process by
+improving the data representation and extending program capabilities through
+function control and enhanced conditional logic statements.</p>
+<p>FKiSS 5 allows for extended precision numbers.</p>
+<p>FKiSS 5 allows for floating point or decimal numbers.</p>
+<p>FKiSS 5 implements standard Mathematical functions.</p>
+<p>FKiSS 5 implements String variables and Character processing
+capabilities.</p>
+<p>FKiSS 5 should not restrict identifiers or variable names to a limited number
+of characters.</p>
+<p>FKiSS 5 allows for alarm and label parameters and return values.</p>
+<p>FKiSS 5 allows for nested IF statements for conditional logic.</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+</body>
+
+</html>

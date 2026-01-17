@@ -1,0 +1,1677 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-ca">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>UltraKiss Menu</title>
+</head>
+
+<body>
+
+<h1><font color="#FF0000"> UltraKiss Menu Commands</font></h1>
+<hr>
+
+<p><font face="Arial">Welcome to the Kisekae UltraKiss program documentation. The UltraKiss Menu provides a
+standard drop down list of commands for all program functions.&nbsp;</font></p>
+
+
+
+<p>&nbsp;</p>
+
+
+
+<h2 align="left"> <font color="#000080" face="Arial"> File Menu</font></h2>
+<font face="Arial">
+The File menu has commands to load, save, and print KiSS data sets.  The File menu also contains commands to display current data set properties and terminate the program execution.</font><p><font face="Arial">UltraKiss
+can load complete data sets or expansion sets that contain additional
+objects necessary to extend or enhance an existing KiSS data set.&nbsp;
+Expansion sets must be added into the UltraKiss program after the original data
+set has been loaded.&nbsp; UltraKiss can reuse objects from the currently loaded
+data set if the expansion set objects are not contained
+within the expansion archive file.</font></p>
+
+<p>&nbsp;</p>
+<h3><a name="FileNew"><font color="#800000" face="Arial">New</font></a></h3>
+<font face="Arial">
+The New command is used to create new KiSS data sets. New data
+sets create a default configuration element with one new empty page set in the
+configuration.&nbsp; Graphic elements such as images can be imported into this
+page with the <a href="#EditImportCel">Edit-Import Image</a> edit command.&nbsp; The
+set configuration
+properties can be accessed and edited through the <a href="#FileProperties">File-Properties</a>
+command or the <a href="#ViewDataObjects">View-Data Objects </a>command.&nbsp;&nbsp;&nbsp;</font>
+
+<p>  <font face="Arial">KiSS sets are defined&nbsp; by a KiSS
+configuration file, or CNF file. A KiSS configuration file is a text file that identifies image cels, color palettes, and
+programmed events associated with a KiSS data set. KiSS configuration files may be opened from a file directory or a compressed archive file.  When a configuration is opened and initialized all objects defined by the configuration are
+read into the
+UltraKiss program from the parent file directory or archive file.</font></p>
+
+<p><font face="Arial">The new data set configuration file can be saved to a named file directory
+through the <a href="#FileSaveAs">File-Save As</a> command.&nbsp; If a configuration
+is saved all imported palette elements, cel elements, and other
+elements are written to the named file directory.</font></p>
+<p>&nbsp;</p>
+
+<h3><a name="FileOpen"><font color="#800000" face="Arial">Open...</font></a></h3>
+<p><font face="Arial">The Open command is used to open a new KiSS data set configuration file or any other file recognized by the Kisekae
+UltraKiss program.&nbsp;
+The UltraKiss program can open KiSS archive files, KiSS configuration elements, KiSS palette elements, KiSS cels, standard text files, rich text files, image files, sound files, and movie files.&nbsp;&nbsp;</font></p>
+
+<p>
+<font face="Arial">
+KiSS configuration elements are processed with the UltraKiss program.&nbsp; KiSS palette elements are automatically opened with the <a href="../coloreditor/index.html"> Color Editor</a> tool.  Text elements are opened with the <a href="../texteditor/index.html"> Text Editor</a> tool.&nbsp;
+KiSS cels and image files are loaded into the <a href="../imageeditor/index.html"> Image Editor</a> tool.&nbsp;
+Sound and movie files are played by the <a href="../mediaplayer/index.html"> Media Player</a>.</font></p>
+
+<p>  <font face="Arial">  A KiSS configuration file is a text file that identifies image cels, color palettes, and
+programmed events associated with a KiSS data set. KiSS configuration files may be opened from a file directory or a compressed archive file.  When a configuration is opened and initialized all objects defined by the configuration are
+read into the
+UltraKiss program from the parent file directory or archive file.</font></p>
+
+<p><font face="Arial">Figure 1 shows a file Open dialog.&nbsp; Your dialog
+may appear slightly different depending on your system software platform. To
+load a KiSS set you must select either an archive files of type LZH or ZIP, or a
+KiSS configuration file with a CNF extension. If the selected file
+is a compressed archive file then it will be opened and the archive will be searched for KiSS configuration elements.&nbsp;If the file is of any
+other type then the appropriate editing tool for the file type will be invoked.&nbsp;
+If the file is not recognized then the user is prompted to open the file as a text file.&nbsp;&nbsp;</font></p>
+
+<p>&nbsp;</p>
+<p align="center">
+<font face="Arial">
+<img border="0" src="images/menu_01.gif" width="425" height="263"></font></p>
+<p align="center"> <font face="Arial"> Figure 1. Open Dialog</font></p>
+
+<p>&nbsp;</p>
+<p><font face="Arial">The example in Figure 1 selected the archive file TESTSET.LZH.&nbsp; When
+opening archive files, if only one configuration element exists within the archive file then this element will be
+automatically loaded.&nbsp;
+If many configuration elements exist in an archive file then the
+UltraKiss program will display a selection dialog listing as shown in Figure 2.&nbsp;&nbsp;</font>
+</p>
+
+<p>&nbsp;</p>
+<p align="center">
+<font face="Arial">
+<img border="0" src="images/menu_02.gif" width="209" height="276"></font></p>
+<p align="center"> <font face="Arial"> Figure 2. Configuration Selection</font></p>
+
+<p>&nbsp;</p>
+<p><font face="Arial">When a configuration element is selected it will be opened and processed.&nbsp; Figure 3 shows an
+UltraKiss configuration file load progress window.&nbsp; Data set files are loaded
+as a background activity.&nbsp; The file load progress window tracks the load of the configuration objects and displays any appropriate error message.&nbsp;
+This window may be minimized if desired.&nbsp;&nbsp;</font></p>
+
+<p>&nbsp;</p>
+<p align="center">
+<font face="Arial">
+<img border="0" src="images/menu_03.gif" width="501" height="350"></font></p>
+<p align="center"> <font face="Arial"> Figure 3. File Load Window</font></p>
+
+<p>&nbsp;</p>
+
+<p><font face="Arial">A loaded configuration is automatically initialized on load completion if no load errors
+occurred.&nbsp; If the window was minimized then it must be restored and the Play
+or OK button pressed to activate the new configuration.</font></p>
+
+<p> <font face="Arial"> The example load shown in Figure 3
+had two syntax errors.&nbsp; Errors can be fatal or non-fatal.&nbsp; Non-fatal errors can be corrected by pressing the Edit button to
+edit the KiSS configuration file.&nbsp; These types of errors can also be ignored if the Play button is
+pressed to initialize the new configuration.&nbsp;  Fatal errors are not recoverable and the configuration load must be cancelled.
+&nbsp;For related information see the <a href="../texteditor/menu.html">Text
+Editor</a> documentation.&nbsp;</font></p>
+
+<p> <font face="Arial"> When a configuration is initialized any currently active configuration is closed.&nbsp;
+Note that configuration file loading can be cancelled at any time by pressing the Cancel button.</font></p>
+
+<p>&nbsp;</p>
+<h3><a name="FileAdd"><font color="#800000" face="Arial">Add..</font></a></h3>
+
+<p><font face="Arial">The Add command is used to add expansion data sets to an open KiSS data set configuration file.&nbsp;
+A Configuration Selection dialog as shown in Figure
+2 is displayed.&nbsp; All configuration files found in the current data set
+archive are listed in the selection dialog.&nbsp; After selecting a configuration the File Load activity
+shown in Figure 3 begins.&nbsp; For
+further information see the <a href="#FileOpen">File Open</a> command.</font></p>
+
+<p><font face="Arial">Expansion sets are loaded on top of the currently loaded 'base' set. Any
+image cel or palette or audio object referenced in the expansion set but not
+found within the expansion set archive is referenced from the 'base' set. Once
+the expansion set is loaded the 'base' set is dropped. The new expansion set and
+the objects referenced in the expansion configuration file now become the new
+'base' set. If multiple expansion sets are loaded in sequence each builds upon
+the last.</font></p>
+
+<p>&nbsp;</p>
+
+<h3><a name="FileSelect"><font color="#800000" face="Arial">Select...</font></a></h3>
+
+<p><font face="Arial">The Select command is used to select and open a new KiSS data set configuration file
+contained within the current file directory or compressed archive file.&nbsp;
+A Configuration Selection dialog as shown in Figure
+2 is displayed.&nbsp; All configuration files found in the current data set
+archive are listed in the selection dialog.&nbsp; After selecting a configuration the File Load activity
+shown in Figure 3 begins.&nbsp; For
+further information see the <a href="#FileOpen">File Open</a> command.</font></p>
+
+<p>&nbsp;</p>
+
+<p align="center"><font face="Arial"><img border="0" src="images/menu_04.gif" width="209" height="276"></font></p>
+
+<p align="center"> <font face="Arial"> Figure 4. Configuration Selection Dialog</font></p>
+
+<p align="left">&nbsp;</p>
+<h3><a name="FileClose"><font color="#800000" face="Arial">Close</font></a></h3>
+
+<p><font face="Arial">The Close command is used to close the currently active KiSS configuration file.&nbsp;
+This will release all system resources associated with this data set.&nbsp; When the
+configuration is closed UltraKiss will display the initial program logo screen
+as shown in Figure 1 of the
+UltraKiss Introduction.</font></p>
+
+<p><font face="Arial">If any file in the currently active configuration has been updated or
+modified the user will be prompted to save the current data set.&nbsp; Figure 5 is a close prompt that is shown on any attempt to close or exit the
+program after a configuration set has been modified.&nbsp; If the program is not
+being terminated, cancelling the save will cancel the
+close request.&nbsp; If the current data set is saved&nbsp; the <a href="#FileSaveAs">Save As</a> command
+is invoked.&nbsp; If not, the close operation will continue and all changes are
+lost.&nbsp;</font></p>
+
+<p>&nbsp;</p>
+<p align="center">
+<font face="Arial">
+<img border="0" src="images/menu_05.gif" width="426" height="117"></font></p>
+<p align="center"> <font face="Arial"> Figure 5. Close Prompt Dialog</font></p>
+
+<p>&nbsp;</p>
+
+<p><font face="Arial">The View Changes button can be used to identify the file elements that have
+been changed.&nbsp;&nbsp;</font></p>
+
+<p>&nbsp;</p>
+<h3><a name="FileSave"><font color="#800000" face="Arial">Save...</font></a></h3>
+
+<p><font face="Arial">KiSS data sets are, by default, saved to the file directory or compressed archive file
+from which they were loaded.&nbsp; For example, if the data set was loaded from
+an archive file then all updated elements are written to this archive
+file.&nbsp; If the files were loaded from a file
+directory then the Save operation writes all updated elements into this
+directory.&nbsp; Note that data sets loaded from
+a compressed archive file may rewrite the complete archive file replacing all updated elements with their new contents.&nbsp;
+For data sets
+loaded from a directory only the updated element files are written.&nbsp;&nbsp;</font></p>
+
+<p><font face="Arial">Updated files are always written by referencing their contents as
+found in memory.&nbsp; When saving to an archive, unchanged files can be written from their internal
+memory copies or from their original source data.&nbsp; This behaviour depends on the setting of the
+program <a href="options.html#SaveFromSource">Save from Source</a> option.&nbsp;
+If this option is set unchanged or unloaded files are copies of&nbsp; their
+source files. If this option is not set files written from their memory copies
+reflect their current state and their final state is not
+guaranteed to be identical to their source file.</font></p>
+
+<p><font face="Arial">The currently loaded KiSS configuration file, if
+updated, must be written from its
+current state as retained in memory.&nbsp;&nbsp;&nbsp; Under normal conditions
+the new file will
+reflect all changes made to the current configuration but will not change any initial
+page set object position.&nbsp; To write new page set initial object position,
+see the <a href="#FileWriteAs">Write As</a> command and the <a href="#EditWritePage">Write
+Page</a> command.</font></p>
+
+<p><font face="Arial">The Save operation is performed as a background activity.&nbsp; Figure
+6 shows the file save window that
+tracks the progress of the file output.&nbsp; The save operation may be
+cancelled at any time.&nbsp; If an error occurs an appropriate
+message will be displayed and the save operation will be terminated.&nbsp; If the
+save is successful the file save window will be automatically closed.</font></p>
+
+<p>&nbsp;</p>
+<p align="center">
+<font face="Arial">
+<img border="0" src="images/menu_06.gif" width="400" height="200"></font></p>
+<p align="center"> <font face="Arial"> Figure 6. File Save Window</font></p>
+
+<p>&nbsp;</p>
+
+<p><font face="Arial">Note that files are written to temporary files on disk and then renamed to the permanent
+file name if the save operation is successful.&nbsp; This ensures that a backup
+file copy will exist in the event of a program error.&nbsp; The backup file is
+normally deleted. Backups can be retained if the <a href="options.html#KeepFileBackup"> Keep File Backup</a> program option has been set.</font></p>
+
+<p>&nbsp;</p>
+<h3><a name="FileSaveAs"><font color="#800000" face="Arial">Save As...</font></a></h3>
+
+<p><font face="Arial">The Save As operation provides a means to save
+the currently loaded KiSS data set to a new file.&nbsp; If the configuration was
+loaded from a compressed archive file then the Save As function will save the
+complete data set&nbsp; to a new compressed archive file name.&nbsp; If the configuration was loaded from a file
+directory then the Save As function will save the new configuration element to a
+new element name in a new directory.&nbsp;</font></p>
+
+<p><font face="Arial">Figure 7 shows a standard file Save
+As dialog.  The file Save As dialog will only accept file names consistent with the context of the currently loaded configuration.&nbsp; If the configuration was loaded from a compressed archive file then only archive file extensions can be specified.&nbsp; If the configuration was loaded from a file directory then
+new configuration element names must be specified.</font></p>
+
+<p><font face="Arial">The Save operation proceeds as described in the <a href="#FileSave">Save</a>
+command.</font></p>
+
+<p>&nbsp;</p>
+<p align="center">
+<font face="Arial">
+<img border="0" src="images/menu_07.gif" width="425" height="263"></font></p>
+<p align="center"> <font face="Arial"> Figure 7. Save As Dialog</font></p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+<h3><a name="FileSaveAsFiles"><font color="#800000" face="Arial">Save
+As Files...</font></a></h3>
+
+<p><font face="Arial">The Save As Files operation provides a means to
+extract all KiSS configuration elements from a currently loaded archive file
+and save the elements in the specified file directory. This operation is only
+available if the KiSS set was loaded from an archive. An Archive Manager extract
+dialog as shown in Figure 8 below can be used to navigate to and create the
+destination file directory.</font></p>
+
+<p><font face="Arial">Note that only files from the currently active
+configuration are saved. Images and audio files not referenced in the current
+configuration are not extracted from the archive.</font></p>
+
+<p>&nbsp;</p>
+
+<p align="center"><font face="Arial"><img border="0" src="../archivemanager/images/intro_04.jpg" width="553" height="314"></font></p>
+
+<p align="center"> <font face="Arial"> Figure 8. Save As Dialog</font></p>
+
+<p align="left">&nbsp;</p>
+
+<p>&nbsp;</p>
+<h3><a name="FileSaveAsArchive"><font color="#800000" face="Arial">Save
+As Archive...</font></a></h3>
+
+<p><font face="Arial">The Save As Archive operation provides a means to
+add all KiSS configuration elements from the currently loaded directory into a
+new archive file. This operation is only available if the KiSS set was loaded
+from a directory. A file save dialog similar to that shown in Figure 1 can be
+used to navigate to and specify the name of the new destination archive file.</font></p>
+
+<p><font face="Arial">Note that only files from the currently active
+configuration are saved. Other images and audio files in the directory will not
+be added to the archive..</font></p>
+
+<p align="center"><img border="0" src="images/menu_30.gif" width="506" height="359"></p>
+
+<p align="center"> <font face="Arial"> Figure 9. Save As Archive Dialog</font></p>
+
+<p align="left">&nbsp;</p>
+<h3><font face="Arial"><a name="FileURL"><font color="#800000">Open URL... </font> </a> </font></h3>
+
+<p><font face="Arial">The Open URL command lets UltraKiss load a data file referenced through a
+Universal Resource Locator on the World Wide Web.&nbsp;&nbsp;&nbsp;Supported
+protocols are http and file.&nbsp; Figure 10 shows the URL name entry
+screen.&nbsp; The pop-down list retains all recently entered URL names and these
+can be selected for editing if required.</font></p>
+
+<p>&nbsp;</p>
+
+<p align="center"><font face="Arial"><img border="0" src="images/menu_28.gif" width="499" height="149"></font></p>
+
+<p align="center"><font face="Arial">Figure 10. URL Name Entry</font></p>
+
+<p align="left">&nbsp;</p>
+
+<p align="left"><font face="Arial">The URL file is downloaded into a temporary file through a
+background activity.&nbsp; A progress dialog as shown in Figure 11 is
+displayed.&nbsp; This screen tracks the download progress and will display
+messages for any errors that may occur.&nbsp; When the download completes the
+file will be automatically loaded into UltraKiss.&nbsp; The download can be
+cancelled at any time.&nbsp; If the load window has been minimized the automatic
+load does not occur.&nbsp; The window must be restored and the Load button
+pressed to load the file into UltraKiss.</font></p>
+
+<p align="left">&nbsp;</p>
+
+<p align="center"><font face="Arial"><img border="0" src="images/menu_27.gif" width="549" height="169"></font></p>
+
+<p align="center"><font face="Arial">Figure 11. URL File Download&nbsp;</font></p>
+
+<p align="left">&nbsp;</p>
+
+<h3><font face="Arial"><font color="#800000">Open <a name="FileWeb">Browser</a></font><a name="FileWeb"><font color="#800000">...</font></a></font></h3>
+
+<p><font face="Arial">The Open Browser command can be used to open a web browser for access to the world wide web.&nbsp;
+This command will open your default web browser and display the Kisekae
+WebAccess.html page found in the HTML release file directory.&nbsp; This page
+can be customized if required.&nbsp; Figure 12 shows the Microsoft Internet
+Explorer web browser after the standard page has been loaded.</font></p>
+
+<p>&nbsp;</p>
+
+<p align="center"><img border="0" src="images/menu_29.gif" width="602" height="637"></p>
+
+<p align="center"><font face="Arial">Figure 12. Default Web Browser Page</font></p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+<h3><a name="FilePageSetup"><font color="#800000" face="Arial">Page Setup...</font></a></h3>
+
+<p><font face="Arial">The Page Setup dialog is an operating system dependent interface into the
+print control subsystem to size and orient the print page in preparation for
+printing.&nbsp; Figure 13 shows the
+Page Setup dialog for a Microsoft Windows operating environment.&nbsp; Not all
+systems will support all features for page control.</font></p>
+
+<p>&nbsp;</p>
+
+<p align="center"><font face="Arial"><img border="0" src="../images/pagesetup.gif" width="365" height="414"></font></p>
+<p align="center"> <font face="Arial"> Figure 13. Page Setup Dialog</font></p>
+
+<p align="left">&nbsp;</p>
+<h3><a name="FilePrintPreview"><font color="#800000" face="Arial">Print Preview...</font></a></h3>
+
+<p><font face="Arial">The Print Preview command is used to preview all print pages before
+printing.&nbsp; Figure 14 shows an
+example of the UltraKiss Print Preview dialog screen.&nbsp; UltraKiss will center
+and scale the current page image on the print page.&nbsp; The preview image
+of the print page can be scaled to any size required by changing the percentage
+value in the preview control field.&nbsp; Preset values of 10%, 25%, 50% and
+100% are provided for convenience.</font></p>
+
+<p><font face="Arial">The <a href="#FilePageSetup">Page Setup</a> can be changed from this dialog
+and <a href="#FilePrint">Printing</a> can be initiated directly.&nbsp;&nbsp;</font></p>
+
+<p>&nbsp;</p>
+
+<p align="center"><font face="Arial"><img border="0" src="../images/printpreview.gif" width="402" height="274"></font></p>
+<p align="center"> <font face="Arial"> Figure 14. Print
+Preview Dialog</font></p>
+
+<p align="left">&nbsp;</p>
+
+<p align="left">&nbsp;</p>
+<h3><a name="FilePrint"><font color="#800000" face="Arial">Print...</font></a></h3>
+
+<p><font face="Arial">The Print dialog is an operating system dependent interface into the print
+control subsystem to initiate printing of a print page.&nbsp; Figure 15 shows the Print dialog for a Microsoft Windows operating
+environment.&nbsp; Not all systems will support all features for print control.</font></p>
+
+<p>&nbsp;</p>
+
+<p align="center"><font face="Arial"><img border="0" src="../images/print.gif" width="438" height="325"></font></p>
+<p align="center"> <font face="Arial"> Figure 15. Print Dialog</font></p>
+
+<p align="center">&nbsp;</p>
+
+<p align="center">&nbsp;</p>
+<h3><a name="FileProperties"><font color="#800000" face="Arial">Properties...</font></a></h3>
+
+<p><font face="Arial">The Properties command shows a standard dialog window to display attributes
+of the currently loaded KiSS configuration file.&nbsp; Figure 16 is an example of a KiSS configuration properties dialog.&nbsp; This
+dialog provides detailed information on the technical aspects of the active KiSS
+configuration and provides control buttons to view additional information about
+associated data objects.</font></p>
+
+<p>&nbsp;</p>
+
+<p align="center"><font face="Arial"><img border="0" src="images/menu_11.gif" width="521" height="408"></font></p>
+
+<p align="center"> <font face="Arial"> Figure 16. Configuration Properties Dialog</font></p>
+
+<p>&nbsp;</p>
+<p><font face="Arial">This dialog window is a entry into the complete Kisekae UltraKiss subsystem to display
+the attributes and properties of all objects associated with an active KiSS data
+set.&nbsp; Refer to the <a href="objects.html">Object Properties</a>
+subsystem for a comprehensive description of all subsystem features, dialogs,
+and operation control.&nbsp;</font></p>
+
+<p>&nbsp;</p>
+<h3><a name="FileExit"><font color="#800000" face="Arial">Exit</font></a></h3>
+
+
+
+<p><font face="Arial">The Exit command closes any currently active data set and terminates the
+UltraKiss program execution.</font></p>
+
+
+
+<p><font face="Arial">If any file in the currently active configuration has been updated or
+modified the user will be prompted to save the current data set.&nbsp; Figure 5 is an example of a close prompt dialog.&nbsp; Cancelling the save will cancel the
+exit request.&nbsp; If the current data set is saved&nbsp; then the <a href="#FileSaveAs">Save As</a> command
+is invoked and the program terminates upon completion of the save.&nbsp; If
+changes are not saved they will be
+lost.&nbsp;</font></p>
+
+
+
+<p><font face="Arial">If the UltraKiss program is terminated by closing the main program window the
+Exit command will be automatically invoked.&nbsp; The option
+to cancel the Exit request will not be available.</font></p>
+
+<p>&nbsp;</p>
+
+
+
+<p>&nbsp;</p>
+
+
+
+<p>&nbsp;</p>
+<h2 align="left"> <font color="#000080" face="Arial"> Edit Menu</font></h2>
+<font face="Arial">
+UltraKiss Edit features provide for full undo and redo recovery of all editing operations applied to the current KiSS data set.  Standard Edit functions to Cut, Copy, and Paste selected objects within and between page sets
+are available.  Data set pages can be created or deleted and the current state of any page can be captured for output.  New images can be imported into the current page and edited if required.&nbsp;
+For a full description of the features and capabilities of the Edit subsystem,
+refer to the <a href="editing.html">Edit Functions</a> document.</font>
+<p><font face="Arial">Many edit commands operate with a selected set of objects.&nbsp; Objects are
+selected through the <a href="#EditSelectAll">Select All</a> command or
+graphically with a mouse selection operation.&nbsp; A mouse selection operation
+is performed by positioning the mouse over an object and pressing the left mouse
+button with the Alt key down, or by drawing a rectangular selection area with
+the mouse while holding the Alt key down.&nbsp; All group objects visible within the selection box are selected even if they are
+overlaid by another object.</font></p>
+<p><font face="Arial">Selected objects are visually identifiable.&nbsp; Each selected group shows a
+rectangular marquee bounding box.&nbsp; UltraKiss is in edit mode if any object
+has been selected.&nbsp;&nbsp;</font></p>
+<p><font face="Arial">While in edit mode selected objects can be moved by positioning the mouse
+pointer over the object and pressing the left mouse button and dragging the
+object.&nbsp; This object moves regardless of its fix value as defined in
+the data set configuration.&nbsp; The complete selection set can be moved as a
+unit by holding the Shift key down and dragging any selected object in the group
+or by double clicking the left
+mouse button before dragging.</font></p>
+<p><font face="Arial">If a selection set exists new objects can be added to the selection set by
+positioning the mouse over a new object and pressing the left mouse button while
+holding the Ctrl key down.&nbsp; Alternatively, a new selection area can be
+drawn while holding the Ctrl key down and all selected objects in this area will be added to the selection set
+if&nbsp; when the mouse button is released.</font></p>
+<p><font face="Arial">Objects can be removed from an existing selection set by placing the mouse
+over the requested object and pressing the right mouse button.&nbsp;
+Alternatively,&nbsp; a new deletion selection area can be drawn by holding the
+right mouse button down.&nbsp;&nbsp; All selected objects in the identified area
+will be removed from the selection set when the mouse button is released.</font></p>
+
+<p><font face="Arial">Figure 17 shows an example of
+selected objects.</font></p>
+
+<p>&nbsp;</p>
+
+<p align="center"><font face="Arial"><img border="0" src="images/menu_12.jpg" width="497" height="428"></font></p>
+
+<p align="center"> <font face="Arial"> Figure 17. Selected
+Objects</font></p>
+
+<p>&nbsp;</p>
+<h3><a name="EditUndo"><font color="#800000" face="Arial">Undo</font></a></h3>
+
+<p><font face="Arial"> UltraKiss supports full undo and redo edit recovery.&nbsp; Most editing changes
+made to a KiSS data set are reversible.&nbsp; Undo support is available for Edit
+Cut, Copy, and Paste operations.&nbsp; Object selections and grouping can be
+undone, as can selected object movements.&nbsp; Palette color changes applied
+through the Color Editor can be undone.&nbsp; Page set additions and deletions
+can be undone.&nbsp; For a full description of the features and capabilities of the Edit subsystem,
+refer to the <a href="editing.html">Edit Functions</a> document.</font></p>
+
+<p>&nbsp;</p>
+<h3><a name="EditRedo"><font color="#800000" face="Arial">Redo</font></a></h3>
+
+<p><font face="Arial"> UltraKiss supports full undo and redo edit recovery.&nbsp; Most editing changes
+made to a KiSS data set are reversible.&nbsp; Redo support is available for Edit
+Cut, Copy, and Paste operations.&nbsp; Object selections and grouping can be redone, as can selected object movements.&nbsp; Palette color changes applied
+through the Color Editor can be redone.&nbsp; Page set additions and deletions
+can be redone.&nbsp; For a full description of the features and capabilities of the Edit subsystem,
+refer to the Kisekae <a href="editing.html">Edit Functions</a> document.</font></p>
+
+<p>&nbsp;</p>
+<h3><a name="EditCut"><font color="#800000" face="Arial">Cut</font></a></h3>
+
+<p><font face="Arial">The Cut operation will remove selected objects from the current page.&nbsp;
+Objects, when cut, are placed in the clipboard and can be referenced through a
+subsequent <a href="#EditPaste">Paste</a> command.&nbsp; Cut group objects or
+cels are no longer associated with the current page.&nbsp;&nbsp;For a full description of the features and capabilities of the Edit subsystem,
+refer to the <a href="editing.html">Edit Functions</a> document.</font></p>
+
+<p>&nbsp;</p>
+<h3><a name="EditCopy"><font color="#800000" face="Arial">Copy</font></a></h3>
+
+<p><font face="Arial">The Copy operation transfers selected objects to the clipboard.&nbsp; Objects
+in the clipboard and can be referenced through a subsequent <a href="#EditPaste">Paste</a>
+command.&nbsp; For a full description of the features and capabilities of the Edit subsystem,
+refer to the <a href="editing.html">Edit Functions</a> document.</font></p>
+
+<p>&nbsp;</p>
+<h3><a name="EditPaste"><font color="#800000" face="Arial">Paste</font></a></h3>
+
+<p><font face="Arial">The Paste operation inserts objects from the clipboard into the current
+page.&nbsp; Objects, when pasted, are located in the new page at their initial
+object locations.&nbsp; Cels pasted into a new page become associated with the
+page.&nbsp; If the paste operation duplicates existing group objects or cels on the
+page then&nbsp; new cel identifiers and new object groups are created.&nbsp;</font></p>
+
+<p><font face="Arial">For example, if a complete KiSS doll object is selected, then the selection
+will contain all cels associated with the doll object group.&nbsp; If the
+selection is copied and then pasted into the same page this will duplicate the
+existing doll object on the page.&nbsp; A new doll object group will be
+created.&nbsp; New cels for this new doll object are also created.&nbsp; The new object
+group and the new cel objects all have new unique identifiers.</font></p>
+
+<p><font face="Arial">Conversely, if a complete KiSS doll object is selected and pasted into a new
+page that does not contain the doll then a new object group is not
+created.&nbsp; The existing cel objects in the configuration are adjusted to become associated with the
+new page.</font></p>
+
+<p> <font face="Arial"> For a full description of the features and capabilities of the Edit subsystem,
+refer to the <a href="editing.html">Edit Functions</a> document.</font></p>
+
+<p>&nbsp;</p>
+<h3><font face="Arial"><a name="EditUngroup"><font color="#800000">Ungroup</font></a></font></h3>
+
+<p><font face="Arial">The Ungroup command splits selected object groups into into their component
+image cels.&nbsp;
+Ungrouped cels retain their association with their original group object.&nbsp;
+Cels cut from this group object are now removed from the group and cels imported
+or pasted into the group object are added to the group.</font></p>
+
+<p>&nbsp;</p>
+<h3><a name="EditRegroup"><font color="#800000" face="Arial">Regroup</font></a></h3>
+
+<p> <font face="Arial"> The Regroup command regroups selected cels into a selected group object.&nbsp;
+If
+the selection set contains ungrouped image cels then all entities in the
+selection set are identified with
+their own selection boxes.&nbsp;&nbsp; The regroup operation associates the
+ungrouped image cels with their original object groups.</font></p>
+
+<p>&nbsp;</p>
+
+<h3><a name="EditNewGroup"><font color="#800000" face="Arial">New Group</font></a></h3>
+
+<p> <font face="Arial"> If
+the selection set contains ungrouped image cels then all entities in the
+selection set are identified with
+their own selection boxes.&nbsp;&nbsp; The new group command takes all these
+selected image cels and adds them to a new object group.&nbsp; All cels added
+are removed from their previous object group associations.&nbsp;</font></p>
+
+<p>&nbsp;</p>
+<h3><a name="EditSelectAll"><font color="#800000" face="Arial">Select All</font></a></h3>
+
+<p><font face="Arial">The Select All command selects all visible objects in the current page
+set.&nbsp; A visible object is an object that has a visible cel.&nbsp; Note that
+visible cels may be transparent and thus not actually visible and that visible
+objects may be hidden by other objects on top of the object.&nbsp; For a full description of the features and capabilities of the Edit subsystem,
+refer to the <a href="editing.html">Edit Functions</a> document.</font></p>
+
+<p>&nbsp;</p>
+<h3><a name="EditUnselectAll"><font color="#800000" face="Arial">Unselect All</font></a></h3>
+
+<p><font face="Arial">The Unselect All command terminates the current selection set.&nbsp; The
+UltraKiss program will no longer be in edit mode and reverts to a normal mode
+operation.&nbsp; For a full description of the features and capabilities of the Edit subsystem,
+refer to the <a href="editing.html">Edit Functions</a> document.</font></p>
+
+<p>&nbsp;</p>
+<h3><a name="EditAddComponent"><font color="#800000" face="Arial">Add
+Component...</font></a></h3>
+
+<p><font face="Arial">The Add Component command can be used to insert a new
+GUI component object into the current page in the data set configuration.&nbsp;
+A pop down submenu will let you choose from a wide variety of GUI components
+such as buttons, labels, text boxes, lists and so on. These components help ease
+the construction of KiSS sets that require user input. Components that do not
+allow input can be easily saved as cel format images for compatibility with
+older viewers.</font></p>
+
+<p><font face="Arial">UltraKiss provides a number of extensions to
+support Labels, Buttons, Checkboxes, Text areas, Text ields, Lists, Combo boxes,
+Menu items, and Password fields.</font></p>
+
+<p>&nbsp;</p>
+<h3><a name="EditImportCel"><font color="#800000" face="Arial">Import Image...</font></a></h3>
+
+<p><font face="Arial">The Import Image command can be used to insert a new image from an external
+file into the current page in the data set configuration.&nbsp; A standard file
+open dialog as shown in Figure 18 is used to
+select the new image file.</font></p>
+
+<p>&nbsp;</p>
+
+<p align="center"><font face="Arial"><img border="0" src="images/menu_13.gif" width="425" height="263"></font></p>
+
+<p align="center"> <font face="Arial"> Figure 18. Import Image Selection Dialog</font></p>
+
+<p align="left">&nbsp;</p>
+
+<p align="left"><font face="Arial">New images can be loaded from compressed archive files or
+standard file directories.&nbsp; If an archive file is opened a selection dialog
+will be displayed for all image files contained within the archive.&nbsp; Images
+that are of KiSS Cel type require an associated palette file.&nbsp;&nbsp; If
+a cel image is selected a palette selection dialog will be displayed.&nbsp; This
+dialog will show all KiSS palette files found within the current archive file
+or file directory.</font></p>
+
+<p align="left"><font face="Arial">Images can be imported to a new
+object or to into the set of currently selected images. Importing images into a
+new object always creates a new object number in the configuration. Importing
+images into the current selection adds the image to the currently selected
+object.&nbsp;</font></p>
+<p align="left"><font face="Arial">The image is loaded into the
+upper left corner of the current page&nbsp; A new group object is
+automatically created for this cel if the image was imported to a new object, and the new cel is inserted at the beginning
+of the configuration cel list.&nbsp;&nbsp; Thus, the new cel object will be
+displayed on top of all other cels in the data set.&nbsp; The current
+configuration file may have to be edited to adjust the position of this cel to
+obtain the desired overlay order.</font></p>
+<p align="left"><font face="Arial">The Import Image operation can be undone.&nbsp; The Undo/Redo
+operation is simulated through the use of the Cut/Paste facility.&nbsp; The Undo
+command will remove the imported image from the current page through use of the
+Cut operation.&nbsp; The Redo command will insert the deleted image into the
+page through the Paste operation.</font></p>
+<p align="left">&nbsp;</p>
+<h3><a name="EditImportOther"><font color="#800000" face="Arial">Import
+Other...</font></a></h3>
+
+<p><font face="Arial">The Import Other command can be used to insert new
+palette files, audio files, or video files into the current page in the data set configuration.&nbsp; A standard file
+open dialog as shown in Figure 1 is used to
+select the new file.</font></p>
+
+<p><font face="Arial">Palette files are added to the [Palette] section
+of the configuration file if and only if they do not previously exist in the
+configuration. Audio files, after being added to the configuration, can be
+referenced and saved with the configuration if the file is referenced in an
+FKiSS sound() or music() or mediaplayer() action command. Video files, when
+added to the configuration, are imported as new cel images in the configuration,
+similar to the import image command.&nbsp;</font></p>
+
+<p align="left">&nbsp;</p>
+<h3><a name="EditAdjustLayer"><font color="#800000" face="Arial">Adjust Layering
+...</font></a></h3>
+
+<p><font face="Arial">The Adjust Layering command can be used to alter the
+overlay order of the image cels. Cels are layered in sequence, such that the
+earlier cels listed in the cel list are drawn on top of lower level cels.&nbsp;
+New images imported into the set are placed first in the list.</font></p>
+
+<p><font face="Arial">A layering dialog window as shown in figure 19 below can
+be used to visually drag images to different levels in the set. The preview
+window shows the new layering order as adjustments are made. A cel can be
+selected in the list and then dragged to another location and dropped. The list
+will scroll if the mouse is dragged to any of the four corners of the list.</font></p>
+
+<p><font face="Arial">Layer adjustments are undoable operations, both within the
+layer adjustment dialog and the main UltraKiss window after layer changes are
+accepted.</font></p>
+
+<p>&nbsp;</p>
+
+<p align="center"><img border="0" src="images/menu_31.gif" width="485" height="341"></p>
+
+<p align="center"> <font face="Arial"> Figure 19. Layer Adjust&nbsp; Dialog</font></p>
+
+<p>&nbsp;</p>
+
+<p align="left">&nbsp;</p>
+<h3><a name="EditEditObject"><font color="#800000" face="Arial">Edit Object...</font></a></h3>
+
+<p><font face="Arial">This command will invoke the Image Editor for the currently selected image.
+The Image Editor is currently in development, but it can be used to apply some
+simple transformations to the image cel.</font></p>
+
+<p>&nbsp;</p>
+
+<p align="center"><img border="0" src="images/menu_32.gif" width="630" height="586"></p>
+
+<p align="center"> <font face="Arial"> Figure 20. Image Editor</font></p>
+
+<p>&nbsp;</p>
+<h3><a name="EditDeletePage"><font color="#800000" face="Arial">Delete Page</font></a></h3>
+
+<p><font face="Arial">The Delete Page command removes all objects from the current page and removes
+the page from the configuration.&nbsp; Objects are removed as if selected and
+cut from the page.&nbsp; Removed objects are not retained in the clipboard,
+however the Delete Page operation can be undone.&nbsp; All page sets beyond the
+current page will have their page numbers modified.&nbsp;&nbsp; Note that
+UltraKiss program events coded within the event model are not automatically corrected to
+reflect the new page numbers.&nbsp;&nbsp;</font></p>
+
+<h4>&nbsp;</h4>
+
+<h3><a name="EditInsertPage"><font color="#800000" face="Arial">Insert Page</font></a></h3>
+
+<p><font face="Arial">The Insert Page command creates a new, empty page set for the current
+page.&nbsp; All page sets from the current page to the last have their page
+number modified.&nbsp;&nbsp; UltraKiss program events are not adjusted for the new
+page numbers.&nbsp;&nbsp; The Insert Page operation can be undone.</font></p>
+
+<p>&nbsp;</p>
+<h3><a name="EditAddPage"><font color="#800000" face="Arial">Add Page</font></a></h3>
+
+<p><font face="Arial">The Add Page command inserts a new, empty page set into the configuration at
+the end of the existing set of pages.&nbsp; The Add Page operation can be
+undone.&nbsp;&nbsp;</font></p>
+
+<p>&nbsp;</p>
+<h3><a name="EditWritePage"><font color="#800000" face="Arial">Write Page</font></a></h3>
+
+
+
+<p><font face="Arial">The Write Page command sets the object initial position state to the current
+positions, for all visible objects on the page.&nbsp; Only the current page is
+adjusted.&nbsp; This command&nbsp;
+can be undone.&nbsp; Objects are always set to their initial positions when the page
+set is first displayed or if the <a href="#ViewReset">Reset</a> command is
+used.&nbsp;&nbsp; See the <a href="#FileWriteAs">Write As</a>
+command.</font></p>
+
+
+
+<p>&nbsp;</p>
+
+
+
+<p>&nbsp;</p>
+<h2 align="left"> <font color="#000080" face="Arial"> View Menu</font></h2>
+<font face="Arial">
+The UltraKiss View functions can be used to customize the program viewing area to personal preference.&nbsp;
+Data set images can be restored to their initial positions and state.  Images on the screen can be magnified or reduced as required.&nbsp;
+The View menu also contains specific commands to show various objects and files associated with the currently loaded KiSS configuration.</font>
+
+<p>&nbsp;</p>
+<h3><a name="ViewToolbar"><font color="#800000" face="Arial">Toolbar</font></a></h3>
+
+<p><font face="Arial">The Toolbar checkbox is a switch that can be used to turn the toolbar display
+on and off.&nbsp; The toolbar is a set of graphic buttons that activate common
+menu commands, such as <a href="#FileNew">File New</a>, <a href="#FileOpen">File
+Open</a>, <a href="#FileSelect">File Select</a>, <a href="#FileSave">File Save</a>,
+<a href="#EditCut">Edit Cut</a>, <a href="#EditCopy">Edit Copy</a>, <a href="#EditPaste">Edit
+Paste</a>, <a href="#EditUndo">Edit Undo</a>, <a href="#EditRedo">Edit Redo</a>,
+Sound On, Movie On, page set selection and color set selection.&nbsp; For
+further information on the toolbar functions, see the <a href="toolbar.html">Toolbar
+Commands</a> documentation.&nbsp; The toolbar initial state is determined by the
+program options <a href="options.html#ShowToolbar">Toolbar</a> setting.</font></p>
+
+<p>&nbsp;</p>
+<h3><a name="ViewStatusbar"><font color="#800000" face="Arial">Status Bar</font></a></h3>
+
+<p><font face="Arial">The Status Bar checkbox is a switch that can be used to turn the status bar
+display on and off.&nbsp; The status bar is a text field that displays program
+copyright information and various status messages during program
+execution.&nbsp; The status bar initial state is determined by the program
+options <a href="options.html#ShowStatusbar">Status Bar</a> setting.</font></p>
+
+<p>&nbsp;</p>
+<h3><a name="ViewReset"><font color="#800000" face="Arial">Reset</font></a></h3>
+
+<p><font face="Arial">The Reset command is used to position all objects on the current page to
+their initial locations.&nbsp; The reset operation also restores all object flex
+values to their initial state.&nbsp; The reset command does not restore the
+visibility of any objects on the page.&nbsp; Object mapping from prior FKiSS
+events is not changed.&nbsp; To restore the page to its initial event state, see
+the <a href="#ViewRestart">Restart</a> command.&nbsp;</font></p>
+
+<p>&nbsp;</p>
+<h3><a name="ViewRestart"><font color="#800000" face="Arial">Restart</font></a></h3>
+
+<p><font face="Arial">The Restart command reloads the data set configuration from its current
+source file.&nbsp; All objects on all pages are restored to their initial
+state.&nbsp; All FKiSS initialization events are processed.&nbsp; The restart
+command initiates a new&nbsp; file load sequence as discussed in the <a href="#FileOpen">File
+Open</a> command.&nbsp; To reset the positions of objects on the current page
+without restarting the events, see the <a href="#ViewReset">Reset</a> command.</font></p>
+
+<p>&nbsp;</p>
+<h3><a name="ViewPageset"><font color="#800000" face="Arial">Page Set</font></a></h3>
+
+<p><font face="Arial">The Page Set command provides a popup menu to select a specific page set
+within the configuration.&nbsp; The UltraKiss program will display the requested
+page.&nbsp; The main program window title and the toolbar are updated to
+indicate the current page set on display.&nbsp;&nbsp;</font></p>
+
+<p>&nbsp;</p>
+<h3><a name="ViewColorset"><font color="#800000" face="Arial">Color Set</font></a></h3>
+
+<p><font face="Arial">The Color Set command provides a popup menu to select a specific palette
+group within the configuration.&nbsp; The UltraKiss program will adjust apply
+the selected palette group colors to the objects on the current page.&nbsp; The main
+program window title and the toolbar are updated to indicate the current palette
+group on display.&nbsp;&nbsp;</font></p>
+
+<p>&nbsp;</p>
+<h3><a name="ViewMagnify"><font color="#800000" face="Arial">Magnify</font></a></h3>
+
+<p><font face="Arial">The Magnify command scales all objects in the current data set to 1.5 times
+their current size.&nbsp; Scaled objects can increase memory utilization
+excessively.&nbsp; The Magnify command is the inverse of the <a href="#ViewReduce">Reduce</a>
+command. To scale objects to a specific size, see the <a href="#ViewScale">Scale</a>
+command.&nbsp;&nbsp;</font></p>
+
+<p>&nbsp;</p>
+<h3><a name="ViewReduce"><font color="#800000" face="Arial">Reduce</font></a></h3>
+
+<p><font face="Arial">The Reduce command scales all objects in the current data set to 2/3 of their
+current size.&nbsp; Reduced objects may have poor image quality as the image
+pixels are approximated and color can be compromised.&nbsp; The Reduce command is the inverse of the <a href="#ViewMagnify">Magnify</a>
+command. To scale objects to a specific size, see the <a href="#ViewScale">Scale</a>
+command.&nbsp;&nbsp;</font></p>
+
+<p>&nbsp;</p>
+<h3><a name="ViewScale"><font color="#800000" face="Arial">Scale...</font></a></h3>
+
+<p><font face="Arial">The Scale command enables image scaling to an arbitrary size subject to
+available memory limitations.&nbsp; The dialog shown in Figure 21 shows the current scale factor and accepts entry of a new real number
+scale factor.&nbsp; Scale factors are absolute and relate to the
+original image size.&nbsp; A scale factor of 1 scales the images to their
+original size.&nbsp; A factor of 2 doubles the original image size.&nbsp; A
+scale factor of 0.66 shows the images at two thirds of their original size.</font></p>
+
+<p>&nbsp;</p>
+
+<p align="center"><font face="Arial"><img border="0" src="images/menu_14.gif" width="294" height="145"></font></p>
+
+<p align="center"> <font face="Arial"> Figure 21. Scale
+Factor Dialog</font></p>
+
+<p align="left"> &nbsp;</p>
+
+<p>&nbsp;</p>
+<h3><a name="ViewConfigurationFiles"><font color="#800000" face="Arial">Configuration Files...</font></a></h3>
+
+<p><font face="Arial">The Configuration Files command displays a selection dialog listing all
+configuration elements stored in the current data set.&nbsp; Figure 22 shows an example of a configuration selection dialog.&nbsp; If a
+configuration element is selected it is opened in the <a href="../texteditor/index.html"> Text Editor</a>
+tool.&nbsp;&nbsp;</font></p>
+
+<p align="center"><font face="Arial"><img border="0" src="images/menu_16.gif" width="209" height="276"></font></p>
+
+<p align="center"> <font face="Arial"> Figure 22.
+Configuration List</font></p>
+
+<p align="left">&nbsp;</p>
+
+<p align="left"><font face="Arial">If the selected configuration is the active configuration
+currently in use, editing changes to this configuration can be applied to the
+current memory resident configuration file.&nbsp; See the <a href="../texteditor/menu.html#FileUpdate">Text
+Editor Update</a>  command for further information.&nbsp; The edit changes are
+not permanently stored until such time as the configuration element is saved in
+the text editor or the data set is saved</font></p>
+
+<p>&nbsp;</p>
+<h3><a name="ViewDocumentationFiles"><font color="#800000" face="Arial">Documentation Files...</font></a></h3>
+
+<p><font face="Arial">The Documentation Files command displays a selection dialog listing all text,
+rich text, or document elements stored in the current data set.&nbsp; Figure 23 shows an example of a documentation selection dialog.&nbsp; If a
+documentation element is selected it is opened in the <a href="../texteditor/index.html"> Text Editor</a>
+tool.&nbsp;&nbsp;</font></p>
+
+<p>&nbsp;</p>
+
+<p align="center"><font face="Arial"><img border="0" src="images/menu_17.gif" width="210" height="277"></font></p>
+
+<p align="center"> <font face="Arial"> Figure 23.
+Documentation List</font></p>
+
+<p>&nbsp;</p>
+<h3><a name="ViewPaletteFiles"><font color="#800000" face="Arial">Palette Files...</font></a></h3>
+
+<p><font face="Arial">The Palette Files command displays a selection dialog listing all KiSS
+palette elements stored in the current data set.&nbsp; Figure 24 shows an example of a palette selection dialog.&nbsp; If a palette
+element is selected it is opened in the <a href="../coloreditor/index.html"> Color Editor</a>
+tool.&nbsp;&nbsp;</font></p>
+
+<p>&nbsp;</p>
+
+<p align="center"><font face="Arial"><img border="0" src="images/menu_18.gif" width="210" height="277"></font></p>
+
+<p align="center"> <font face="Arial"> Figure 24. Palette List</font></p>
+
+<p align="left"><font face="Arial">If the selected palette is active in the current configuration, editing changes to this palette can be applied to the current memory
+resident palette file.&nbsp; See the <a href="../coloreditor/menu.html#FileUpdate">Color
+Editor Update</a> command for further information.&nbsp; Note that edit changes
+for an active palette are
+not permanently stored until such time as the palette element is saved in the
+color editor or the data set is saved.</font></p>
+
+<p align="left">&nbsp;</p>
+
+<h3><a name="ViewArchiveFile"><font color="#800000" face="Arial">Archive File...</font></a></h3>
+
+<p><font face="Arial">The Archive File command is used to open the Archive Manager tool to view or
+modify the contents of the current data set archive file.&nbsp;&nbsp; Data sets
+that were loaded from a file directory will not be able to use this command.&nbsp;
+Figure 25 shows the Archive Manager tool
+after an archive file has been opened.&nbsp; For further information see the <a href="../archivemanager/index.html">Archive
+Manager</a> documentation.&nbsp;&nbsp;&nbsp;</font></p>
+
+<p>&nbsp;</p>
+
+<p align="center"><font face="Arial"><img border="0" src="images/menu_20.gif" width="488" height="292"></font></p>
+
+<p align="center"> <font face="Arial"> Figure 25. Archive
+Manager</font></p>
+
+<p align="left">&nbsp;</p>
+
+<p align="left"><font face="Arial">Active configuration objects are directly loaded into memory and not impacted by changes to the archive file.&nbsp; However, if the archive
+file is deleted or elements are deleted from the current archive while an active
+configuration is loaded any attempt to
+save or reload a deleted element can result in an I/O error or element
+not found error.</font></p>
+
+<p>&nbsp;</p>
+<h3><a name="ViewActiveObjects"><font color="#800000" face="Arial">Active
+Configuration...</font></a></h3>
+
+<p><font face="Arial">The Active Configuration command invokes the Text Editor
+tool to display the current KiSS configuration.&nbsp; This CNF fille is a
+dynamic representation of the current state of the KiSS set. It can be edited as
+required and upon exit the new configuration is parsed and loaded.</font></p>
+
+<p><font face="Arial">The ability to view and modify the current configuration
+is a powerful feature of UltraKiss.</font></p>
+
+<p>&nbsp;</p>
+<h3><a name="ViewActiveObjects"><font color="#800000" face="Arial">Active Objects...</font></a></h3>
+
+<p><font face="Arial">The Active Objects command shows a standard dialog window to display object attributes
+of the currently loaded KiSS configuration file.&nbsp; Figure 26 is an example of a KiSS
+active objects dialog.&nbsp; This
+dialog identifies the active KiSS
+configuration and provides control buttons to view additional information about
+associated data objects.</font></p>
+
+<p>&nbsp;</p>
+
+<p align="center"><font face="Arial"><img border="0" src="images/menu_19.gif" width="446" height="324"></font></p>
+
+<p align="center"> <font face="Arial"> Figure 26. Data
+Objects Dialog</font></p>
+
+<p align="left">&nbsp;</p>
+
+<p><font face="Arial">This dialog window is a entry into the complete Kisekae UltraKiss subsystem to display
+the attributes and properties of all objects associated with an active KiSS data
+set.&nbsp; Refer to the <a href="objects.html">Object Properties</a>
+subsystem for a comprehensive description of all subsystem features, dialogs,
+and operation control.&nbsp;</font></p>
+
+<p>&nbsp;</p>
+
+<h3><a name="ViewActiveObjects"><font color="#800000" face="Arial">Load
+Messages...</font></a></h3>
+
+<p><font face="Arial">The Load Messages command shows a dialog window that displays
+the load messages and warning messages recognized when the set was first loaded.
+It can be useful to refer to this dialog if your set had errors and warnings.</font></p>
+
+<p>&nbsp;</p>
+
+<p align="center"><img border="0" src="images/menu_34.gif" width="575" height="488"></p>
+
+<p align="center"> <font face="Arial"> Figure 27. Load Messages Dialog</font></p>
+
+<p align="left">&nbsp;</p>
+
+
+
+<p align="left">&nbsp;</p>
+
+
+
+<p align="left">&nbsp;</p>
+
+
+
+<p>&nbsp;</p>
+<h2 align="left"> <font color="#000080" face="Arial"> Tools Menu</font></h2>
+<font face="Arial">
+The Kisekae UltraKiss Tools menu is used to select new program options or related tools.&nbsp;
+UltraKiss provides integrated tools to configure the program operation and development
+features for KiSS
+data sets.</font>
+
+<p>&nbsp;</p>
+<h3><a name="ToolsOptions"><font color="#800000" face="Arial">Options...</font></a></h3>
+
+<p><font face="Arial">The Options command enables setting and adjustment of the UltraKiss program
+options.&nbsp; Figure 28 shows the standard program option dialog.&nbsp; This
+dialog organizes the configurable parameter settings into different sections for
+general program options, KiSS options, FKiSS options, compatibility with other
+viewers, media control options, editing options and
+debug options.&nbsp; For a
+detailed description of each option see the <a href="options.html">Program
+Options</a>
+documentation.&nbsp;&nbsp;</font></p>
+
+<p>&nbsp;</p>
+
+<p align="center"><font face="Arial"><img border="0" src="../images/optionsmain.gif" width="637" height="464"></font></p>
+
+<p align="center"> <font face="Arial"> Figure 28. Options Dialog</font></p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+<h3><a name="ToolsMemory"><font color="#800000" face="Arial">Memory...</font></a></h3>
+
+<p><font face="Arial">The Memory command provides a means to explicitly show the internal memory in
+use and optionally request that available program memory be reclaimed.&nbsp; The
+run time system will reclaim memory when necessary and manual memory reclamation
+should not be necessary.&nbsp; Figure 29
+shows the memory management dialog.&nbsp;</font></p>
+
+<p>&nbsp;</p>
+
+<p align="center"><font face="Arial"><img border="0" src="images/menu_23.gif" width="279" height="121"></font></p>
+
+<p align="center"> <font face="Arial"> Figure 29. Memory Dialog</font></p>
+
+<p>&nbsp;</p>
+<h3><a name="ToolsTextEditor"><font color="#800000" face="Arial">Text Editor...</font></a></h3>
+
+<p><font face="Arial">The Text Editor command invokes the text editor tool.&nbsp; The Text Editor is a full featured editor program designed to manipulate text files associated with KiSS data
+sets.  The Text Editor supports standard and rich text files.&nbsp; For
+information on the operation and use of the text editor, see the <a href="../texteditor/index.html">Text
+Editor</a> program documentation.</font></p>
+
+<p>&nbsp;</p>
+<h3><a name="ToolsColorEditor"><font color="#800000" face="Arial">Color Editor...</font></a></h3>
+
+<p><font face="Arial">The Color Editor command invokes the color editor tool.&nbsp; The Color Editor is a full featured palette editing program designed to manipulate KiSS data palettes
+or graphical image file palettes for images used in KiSS data sets.&nbsp; For
+information on the operation and use of the color editor, see the <a href="../coloreditor/index.html">Color
+Editor</a> program documentation.</font></p>
+
+<p>&nbsp;</p>
+<h3><a name="ToolsImageEditor"><font color="#800000" face="Arial">Image Editor...</font></a></h3>
+
+<p><font face="Arial">The Image Editor command invokes the image editor tool.&nbsp; The Image Editor is a full featured graphical image editing program designed to manipulate graphical images
+used within KiSS data sets.  The Image Editor provides many features for image manipulation, including scaling,
+rotation, clipping, various affine transformations, and so on. For information
+on the operation and use of the image editor, see the <a href="../imageeditor/index.html">Image
+Editor</a> program documentation.</font></p>
+
+<p>&nbsp;</p>
+<h3><a name="ToolsArchiveManager"><font color="#800000" face="Arial">Archive Manager...</font></a></h3>
+
+<p><font face="Arial">The Archive Manager command invokes the archive manager tool.&nbsp; The Archive Manager is a full featured data compression and extraction program designed to manipulate KiSS data
+sets stored in LHA, ZIP, or JAR format archive files.&nbsp; For information on
+the operation and use of the archive manager, see the <a href="../archivemanager/index.html">Archive
+Manager</a> program documentation.</font></p>
+
+<p>&nbsp;</p>
+<h3><a name="ToolsMediaPlayer"><font color="#800000" face="Arial">Media Player...</font></a></h3>
+
+<p><font face="Arial">The Media Player command invokes the Kisekae UltraKiss media player.&nbsp; The Media Player is a full featured audio and visual playback program
+developed to play media
+files contained within KiSS data sets.&nbsp;&nbsp; For information on the
+operation and use of the media player, see the <a href="../mediaplayer/index.html">Media
+Player</a> program documentation.</font></p>
+
+<p>&nbsp;</p>
+<h3><a name="ToolsThreadManager"><font color="#800000" face="Arial">Thread Manager...</font></a></h3>
+
+
+
+
+
+
+
+<p><font face="Arial">The Thread Manager is an internal tool to display and manage the
+UltraKiss event processing threads.&nbsp; These threads control all execution of
+FKiSS
+events.&nbsp; For normal operation all threads must be active.&nbsp; Threads can
+be suspended if necessary.&nbsp; Suspending the alarm timer thread will disable
+all FKiSS alarms and timer events.&nbsp; Suspending any event handler thread
+will disable all FKiSS event processing.&nbsp; Figure 30 shows the Thread Manager dialog.</font></p>
+
+
+
+
+
+
+
+<p>&nbsp;</p>
+
+
+
+
+
+
+
+<p align="center"><font face="Arial"><img border="0" src="images/menu_24.gif" width="407" height="326"></font></p>
+
+
+
+
+
+
+
+<p align="center"> <font face="Arial"> Figure 30. Thread
+Management</font></p>
+
+
+
+
+
+
+
+<p>&nbsp;</p>
+
+
+
+
+
+
+
+<p><font face="Arial">If a thread is suspended objects queued on this thread for execution can be
+examined.&nbsp; The View Queue button will show all objects on the queue.&nbsp;
+Figure 31 shows an example of 5 queued objects on the AlarmTimer thread
+currently waiting to be processed.</font></p>
+
+
+
+
+
+
+
+<p>&nbsp;</p>
+
+
+
+
+
+
+
+<p align="center"><font face="Arial"><img border="0" src="images/menu_25.gif" width="407" height="326"></font></p>
+
+
+
+
+
+
+
+<p align="center"> <font face="Arial"> Figure 31. Thread
+Queued Objects</font></p>
+
+
+
+
+
+
+
+<p>&nbsp;</p>
+
+
+
+
+
+
+
+<p><font face="Arial">The View button, if pressed, will show the object properties for the selected
+object.&nbsp; This dialog window is a entry into the complete UltraKiss subsystem to display
+the attributes and properties of all objects associated with an active KiSS data
+set.&nbsp; Refer to the <a href="objects.html">Object Properties</a>
+subsystem for a comprehensive description of all subsystem features, dialogs,
+and operation control.&nbsp;</font></p>
+
+
+
+
+
+
+
+<p>&nbsp;</p>
+
+
+
+<p>&nbsp;</p>
+<h2 align="left"> <font color="#000080" face="Arial">Window Menu</font></h2>
+<font face="Arial">
+The UltraKiss Window functions can be used to adjust the program window area to personal preference.&nbsp;
+Sets can be magnified on load to fit your display area or the UltraKiss window
+can be sized to fit the set.&nbsp;
+The Window menu also contains specific commands to show window borders and
+special debug trace accessories.</font>
+<h3><a name="WindowSizeToFit"><font color="#800000" face="Arial">Size to Fit</font></a></h3>
+
+<p><font face="Arial">The Size to Fit checkbox option, if turned on, automatically
+resizes the UltraKiss window to the size of the loaded set.</font></p>
+
+<p><font face="Arial">If the Size to Fit option is turned off the UltraKiss
+window is restored to its original size.&nbsp; If the Size to Fit option is on all new data set images are automatically
+scaled to the appropriate screen size when loaded.&nbsp;&nbsp;</font></p>
+
+<p><font face="Arial">When the UltraKiss program is started the Scale to Fit checkbox is set to
+match the <a href="options.html#ScaleToFit">Size To Fit</a> option in the
+Options setting dialog.</font></p>
+
+<p>&nbsp;</p>
+
+<h3><a name="WindowScaleToFit"><font color="#800000" face="Arial">Scale to Fit</font></a></h3>
+
+<p><font face="Arial">The Scale to Fit checkbox option, if turned on, automatically calculates the
+correct scale factor to fit images in the data set to the actual screen
+size.&nbsp; Scroll bars are not required to view the complete page.&nbsp; All
+data set images are scaled to the optimum size.&nbsp; See the <a href="#ViewScale">Scale</a>
+command for additional information.</font></p>
+
+<p><font face="Arial">If the Scale to Fit option is turned off all images are returned to their
+original size.&nbsp; If the Scale to Fit option is on all new data set images are automatically
+scaled to the appropriate screen size when loaded.&nbsp;&nbsp;</font></p>
+
+<p><font face="Arial">When the UltraKiss program is started the Scale to Fit checkbox is set to
+match the <a href="options.html#ScaleToFit">Scale To Fit</a> option in the
+Options setting dialog.</font></p>
+
+<p>&nbsp;</p>
+
+<h3><a name="WindowShowBorder"><font color="#800000" face="Arial">Show Border</font></a></h3>
+
+<p><font face="Arial">The Show Border checkbox option, if turned on, will draw a
+border line around the boundary of the KiSS set. The border distinguishes the
+set area from the window background.</font></p>
+
+<p>&nbsp;</p>
+
+<h3><a name="WindowShowBorder"><font color="#800000" face="Arial">Trace FKiSS</font></a></h3>
+
+<p><font face="Arial">The Trace FKiSS checkbox option, if turned on, will
+automatically open a dialog window at the bottom of the screen when a KiSS set
+is loaded. All FKiSS statements are listed as executed, including debug
+statement output.</font></p>
+
+<p>&nbsp;</p>
+
+<p align="center"><img border="0" src="images/menu_33.gif" width="601" height="690"></p>
+
+
+
+
+
+
+
+<p align="center"> <font face="Arial"> Figure 32. FKiSS Trace Window</font></p>
+
+
+
+
+
+
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+
+
+
+
+
+
+<p>&nbsp;</p>
+
+
+
+
+
+
+
+<p>&nbsp;</p>
+<h2 align="left"><font color="#000080" face="Arial">Help Menu</font></h2>
+<font face="Arial">
+The Kisekae UltraKiss Help menu is used to display the online program documentation and
+product license information.</font>
+<h3><a name="HelpContents"><font color="#800000" face="Arial">Contents ...</font></a></h3>
+
+
+
+
+
+
+
+<p><font face="Arial">The Contents command invokes the UltraKiss online help system.&nbsp; Access to
+all product documentation is available.&nbsp; The online help system provides a
+complete index and navigation system to various topics of interest.</font></p>
+
+
+
+
+
+
+
+<p><font face="Arial">The help system is organized into various topic areas for each program
+tool.&nbsp;&nbsp;</font></p>
+
+
+
+
+
+
+
+<p>&nbsp;</p>
+
+
+
+
+
+
+
+<h3><a name="HelpReadMe"><font color="#800000" face="Arial">Read Me ...</font></a></h3>
+
+
+
+
+
+
+
+<p><font face="Arial">The Read Me command invokes your web browser to display
+important information on the configuration and operation of UltraKiss. You are
+encouraged to view this for any specific release information.</font></p>
+
+
+
+
+
+
+
+<p>&nbsp;</p>
+
+
+
+
+
+
+
+<h3><a name="HelpReadMe"><font color="#800000" face="Arial">Show Tips ...</font></a></h3>
+
+
+
+
+
+
+
+<p><font face="Arial">The Show Tips command activates the UltraKiss helpful tips
+subsystem.&nbsp;</font></p>
+
+
+
+
+
+
+
+<p align="center"><img border="0" src="images/menu_35.gif" width="619" height="447"></p>
+
+
+
+
+
+
+
+<p align="center"> <font face="Arial"> Figure 33. FKiSS Trace Window</font></p>
+
+
+
+
+
+
+
+<p>&nbsp;</p>
+
+
+
+
+
+
+
+<h3><a name="HelpDemoSets"><font color="#800000" face="Arial">Demo Sets ...</font></a></h3>
+
+
+
+
+
+
+
+<p><font face="Arial">The Demo Sets command activates the UltraKiss Portal to
+facilitate the load and execution of numerous demonstration sets provided for
+UltraKiss.</font></p>
+
+
+
+
+
+
+
+<p align="center"><font face="Arial"><img border="0" src="images/menu_36.gif" width="604" height="710">.&nbsp;</font></p>
+
+
+
+
+
+
+
+<p align="center"> <font face="Arial"> Figure 34. FKiSS Trace Window</font></p>
+
+
+
+
+
+
+
+<h3><a name="HelpTutorial"><font color="#800000" face="Arial">Tutorial</font></a></h3>
+
+
+
+
+
+
+
+<p><font face="Arial">The Tutorial command activates the UltraKiss Help
+subsystem to show the tutorial exercises provided to help you learn about
+UltraKiss. The Tutorial system is automatically sized to fit half of your
+display area alongside the UltraKiss window. This lets you navigate through the
+tutorials while concurrently executing the commands in UltraKiss.&nbsp;</font></p>
+
+
+
+
+
+
+
+<p align="center"><img border="0" src="images/menu_37.gif" width="639" height="613"></p>
+
+
+
+
+
+
+
+<p align="center"> <font face="Arial"> Figure 35. Tutorial Window</font></p>
+
+
+
+
+
+
+
+<p align="center">&nbsp;</p>
+
+
+
+
+
+
+
+<p>&nbsp;</p>
+
+
+
+
+
+
+
+<h3><a name="ViewLogFile"><font color="#800000" face="Arial">Log File...</font></a></h3>
+
+
+
+<p><font face="Arial">The Log File command opens the <a href="../imageeditor/index.html"> Text Editor</a>
+tool to view the current UltraKiss log file.&nbsp; The log file tracks program
+status messages and control information necessary for problem fault
+diagnosis.&nbsp;&nbsp;</font></p>
+
+
+
+<p><font face="Arial">Diagnostic messages are written to the log file according to the program
+debug options settings.&nbsp; See the <a href="#ToolsOptions">Program Options</a>
+command for further information on setting program options.</font></p>
+
+
+
+<p><font face="Arial">The log file cannot be directly updated.&nbsp; It can be saved to a new file
+and this new file can be edited if required.</font></p>
+
+
+
+<p><font face="Arial">The log file is only available if the UltraKiss program has write privileges on
+the local computer.&nbsp; This may not be the case if the UltraKiss program is
+running from a web browser and does not have the appropriate privilege to access
+the local file system.</font></p>
+
+
+
+<p><font face="Arial">Figure 36 is an example of an UltraKiss log file.</font></p>
+
+
+
+<p>&nbsp;</p>
+
+
+
+<p align="center"><font face="Arial"><img border="0" src="images/menu_21.gif" width="494" height="211"></font></p>
+
+
+
+<p align="center"> <font face="Arial"> Figure 36. Log File
+Example</font></p>
+
+
+
+
+
+
+
+<p>&nbsp;</p>
+
+
+
+
+
+
+
+<h3><a name="HelpRegistration"><font color="#800000" face="Arial">Registration</font></a></h3>
+
+
+
+
+
+
+
+<p><font face="Arial">The Registration command is developed to enable automatic
+authentication to secure websites through the UltraKiss
+Portal.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font></p>
+
+
+
+
+
+
+
+<p>&nbsp;</p>
+
+
+
+
+
+
+
+<h3><a name="HelpAbout"><font color="#800000" face="Arial">About</font></a></h3>
+
+
+
+
+
+
+
+<p><font face="Arial">The About command shows a standard program information dialog that provides
+copyright and program version information.&nbsp; Figure 37 show an example of the UltraKiss program About dialog.&nbsp;
+The program icon is the Kanji character for clothing and the
+Japanese characters show the Kanji word for paper dolls.</font></p>
+
+
+
+
+
+
+
+<p>&nbsp;</p>
+
+
+
+
+
+
+
+<p align="center"><font face="Arial"><img border="0" src="../images/about.jpg" width="596" height="459"></font></p>
+
+
+
+
+
+
+
+<p align="center"> <font face="Arial"> Figure 37. About Dialog</font></p>
+
+
+
+
+
+
+
+<p>&nbsp;</p>
+
+
+
+
+
+
+
+<hr>
+
+
+
+
+
+
+
+<p align="left">Next Document:&nbsp; <a href="toolbar.html">Toolbar
+Commands<br>
+</a>Prior Document:&nbsp; <a href="index.html">UltraKiss Introduction</a></p>
+<p align="left">Copyright (c) 2002-2023 William Miles</p>
+
+
+
+
+
+
+
+
+</body>
+
+</html>

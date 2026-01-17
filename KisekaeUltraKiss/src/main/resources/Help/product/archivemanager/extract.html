@@ -1,0 +1,302 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-ca">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>Archive Manager Extract Function</title>
+</head>
+
+<body>
+
+<h1><font color="#FF0000">Archive Manager Extract Function</font></h1>
+<hr>
+
+<p><font face="Arial">Welcome to the Kisekae Archive Manager program documentation. The Archive
+Manager Extract Function is used to extract elements from an archive file.&nbsp; This
+document describes the Extract options and features.&nbsp;</font></p>
+
+
+
+<p>&nbsp;</p>
+
+
+
+<p> <font face="Arial"> The Extract function is used to extract file elements from an archive file.&nbsp; The standard
+Extract screen is shown in Figure 1.&nbsp;&nbsp;</font></p>
+
+<p> &nbsp;</p>
+
+<p align="center"> <font face="Arial"> <img border="0" src="images/intro_04.jpg" width="553" height="314"></font></p>
+
+<p align="center"> <font face="Arial"> Figure 1.&nbsp; Extract Screen</font></p>
+
+<p align="left"> &nbsp;</p>
+
+<p align="left"><font face="Arial">The files to be extracted must have been previously selected
+within the Archive Manager element list.&nbsp; File selection is as described in
+the Menu commands for the <a href="menu.html#EditExtract">Edit-Extract</a>
+command or <a href="menu.html#EditSelectAll">Edit-Select All</a> command.</font></p>
+
+<p>&nbsp;</p>
+
+<h3><a name="DirectorySelection"><font color="#800000" face="Arial">Directory Selection</font></a></h3>
+
+<p><font face="Arial">Files must be extracted into an existing directory on your system.&nbsp; The directory
+tree list as seen in Figure 1 can be used to specify the destination directory
+for the extract operation.&nbsp; The directory tree list shows only file
+directories.&nbsp; By scrolling the list and clicking on an entry you can select
+a directory or parent directory for the extraction.</font></p>
+
+<p><font face="Arial">The Extract To field is not editable.&nbsp; This field shows the fully
+qualified path name of the current directory selected in the directory tree
+list.</font></p>
+
+<p><font face="Arial">If you wish to extract the archive files into a new directory, the New Folder
+button can be used to create a new directory relative to the current directory
+shown in the Extract To field.</font></p>
+
+<p align="center">&nbsp;</p>
+
+<h3><font face="Arial"><font color="#800000"><a name="SelectedFiles">Selected </a></font><a name="SelectedFiles"><font color="#800000">Files</font></a></font></h3>
+
+<p><font face="Arial">The Selected Files radio button is automatically set if the Extract function
+has been invoked from the Archive Manager and files were selected from the
+archive element list.&nbsp; This button is disabled if no files were
+selected.&nbsp; This option is superceded if the <a href="#AllFiles">All Files</a>
+option is set.</font></p>
+
+<p align="center"> &nbsp;</p>
+
+<h3><a name="AllFiles"><font color="#800000" face="Arial">All Files</font></a></h3>
+
+<p><font face="Arial">The All Files radio button is automatically set if the Extract function has
+been invoked from the Archive Manager and no files were selected from the
+archive element list.&nbsp; If files were selected this option can be used to
+request that all files from the archive be extracted to the specified directory.</font></p>
+
+<p>&nbsp;</p>
+
+<h3><a name="OverwriteExistingFiles"><font color="#800000" face="Arial">Overwrite Existing
+Files</font></a></h3>
+
+<p> <font face="Arial"> When element files are extracted these files can
+either overwrite any existing element in the extract directory with the same name,
+or not replace the element if it already exists.&nbsp; The Overwrite Existing
+Files option lets the archive extract replace existing directory elements.&nbsp; Every element
+in the directory with a similarly named element to an extracted archive element
+can be replaced, subject to the <a href="#SkipOlderFiles">Skip Older Files</a>
+option.&nbsp;</font></p>
+
+<p> <font face="Arial"> If this option is not set then similarly named elements in the file
+directory will not be replaced.</font></p>
+
+<p align="center"> &nbsp;</p>
+
+<h3><a name="SkipOlderFiles"><font color="#800000" face="Arial">Skip Older Files</font></a></h3>
+
+
+
+
+
+
+
+<p> <font face="Arial"> When element files are extracted from an existing archive file the elements can
+either unconditionally replace any existing element in the extract directory with the same name,
+or conditionally replace the element if the extracted element is newer than the
+directory element.&nbsp; The Skip Older Files option conditionally
+replaces directory elements.&nbsp; No element in the directory will be replaced
+if it has an update or creation date
+later than the date of the extracted element in the archive.&nbsp; The Skip
+Older Files option prevents a later modified element from being replaced with an earlier
+version of the element.&nbsp;</font></p>
+
+<p align="left"> &nbsp;</p>
+
+<h3><a name="UsePathNames"><font color="#800000" face="Arial">Use Path Names</font></a></h3>
+
+
+
+
+
+
+
+<p align="left"> <font face="Arial"> Archive elements can be saved in the archive with path
+names.&nbsp; If selected elements have path names then this option must be set
+to restore the directory paths when the elements are extracted.&nbsp; The
+extract operation will create new file directories as required.&nbsp;&nbsp;</font></p>
+
+
+
+
+
+
+
+<p align="left"> <font face="Arial"> If this option is not set all path information associated with
+the archive element is ignored.&nbsp; All selected archive elements will be
+written to the same extract directory set through the <a href="#DirectorySelection">Directory
+Selection</a>.</font></p>
+
+<p align="left"> &nbsp;</p>
+
+<h3><a name="ExtractButton"><font color="#800000" face="Arial">Extract Button</font></a></h3>
+
+
+
+
+
+
+
+<p align="left"> <font face="Arial"> The Extract button initiate the archive file extraction.&nbsp; When
+files are extracted from an archive the files are written to a file directory.&nbsp;
+Elements in the directory are replaced
+with the new files depending on the <a href="#OverwriteExistingFiles">Overwrite
+Existing Files</a> option or the <a href="#AddRefresh">Skip Older Files</a>
+option.&nbsp;
+All other elements in the directory are retained.</font></p>
+
+
+
+
+
+
+
+<p align="left"> <font face="Arial"> The directory file update occurs as a background write
+activity.&nbsp; Figure 2 shows a write operation in progress.&nbsp; This
+operation can be cancelled if necessary.&nbsp;&nbsp;</font></p>
+
+
+
+
+
+
+
+<p align="left"> &nbsp;</p>
+
+
+
+
+
+
+
+<p align="center"> <font face="Arial"> <img border="0" src="images/extract_02.gif" width="400" height="200"></font></p>
+
+
+
+
+
+
+
+<p align="center"> <font face="Arial"> Figure 2.&nbsp; Extract File Write</font></p>
+
+
+
+
+
+
+
+<p align="left"> &nbsp;</p>
+
+<h3><a name="CancelButton"><font color="#800000" face="Arial">Cancel Button</font></a></h3>
+
+
+
+
+
+
+
+<p align="left"> <font face="Arial"> The Cancel button closes the Extract screen dialog without updating
+the directory file.</font></p>
+
+<p align="left"> &nbsp;</p>
+
+<h3><a name="HelpButton"><font color="#800000" face="Arial">Help Button</font></a></h3>
+
+
+
+
+
+
+
+<p align="left"> <font face="Arial"> The Help button shows this online help document.</font></p>
+
+<p align="left"> &nbsp;</p>
+
+<h3><a name="NewFolder"><font color="#800000" face="Arial">New Folder</font></a></h3>
+
+
+
+
+
+
+
+<p align="left"> <font face="Arial"> The New Folder button will create a new file directory of the
+specified name relative to the current file directory in the Extract To
+field.&nbsp; Figure 3 shows a prompt for a new directory name.</font></p>
+
+
+
+
+
+
+
+<p align="left"> <font face="Arial"> When the new directory is created the directory tree list will
+be refreshed and the Extract To field will show the path name to the new
+directory.</font></p>
+
+
+
+
+
+
+
+<p align="left"> &nbsp;</p>
+
+
+
+
+
+
+
+<p align="center"> <font face="Arial"> <img border="0" src="images/extract_03.gif" width="376" height="144"></font></p>
+
+
+
+
+
+
+
+<p align="center"> <font face="Arial"> Figure 3.&nbsp; Create New Folder</font></p>
+
+
+
+
+
+
+
+<p align="left"> &nbsp;</p>
+
+
+
+
+
+
+
+<p align="left"> &nbsp;</p>
+
+<hr>
+
+<p align="left">Prior Document:&nbsp; <a href="add.html">Add Function</a></p>
+
+<p align="left">Copyright (c) 2002-2023 William Miles</p>
+
+
+
+
+
+
+
+</body>
+
+</html>

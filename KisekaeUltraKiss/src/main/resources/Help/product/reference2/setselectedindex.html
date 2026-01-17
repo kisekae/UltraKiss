@@ -1,0 +1,276 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>getText</title>
+</head>
+
+<body>
+<h4><a name="setSelectedIndex" id="setSelectedIndex">setSelectedIndex</a>()&nbsp;</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; setSelectedIndex(component,index)</p>
+<p>This action sets the selected item in the list component or combobox component to the specified index value. The <em>component</em> may be a literal name of a list or or a variable that contains the name of a list component or combobox component. The <em>index</em> may be an literal integer specification or a variable that is an integer. </p>
+<p>For list or combobox components that have the 'multiple' attribute set to allow multiple selections, the setSelectedIndex() command will allow for multiple selections if applied to different indicies in the component. </p>
+<p>If the specified index is out of range for the component then all currently selected items are cleared. </p>
+<p>This command fails silently if the specified componentis not a list or combobox. Index values begin at 0. </p>
+<p>Components are declared as cels within a KiSS configuration as shown in the example below.&nbsp; Component cel identifiers use specific extensions such as .button, .list, or .textarea to identify the component type.&nbsp;&nbsp;</p>
+<p><font size="2" face="Courier New">#1.9999 List-1.List&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : 0&nbsp;&nbsp;&nbsp;&nbsp; ;%size[146,207] %offset[12,121] %attributes[wrap,vsb]<br>
+  #1.9999 TextArea-1.TextArea&nbsp;&nbsp; : 0&nbsp;&nbsp;&nbsp;&nbsp; ;%size[269,49] %offset[227,176] %attributes[wrap]<br>
+  #1.9999 Button1.Button&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : 0&nbsp;&nbsp;&nbsp;&nbsp; ;%size[135,25] %offset[325,267] %attributes[text=&quot;Press Me&quot;]</font></p>
+<p>The example above defines a List component with vertical scroll bars, a TextArea component that performs word-wrap, and a Button.&nbsp; The size and location of these components within the object are specified with the %size[] and %offset[] tags.&nbsp; Component attributes are specified with the %attributes[] tag.&nbsp;&nbsp;</p>
+<p>&nbsp;</p>
+<div align="left">Related actions: <a href="#getSelectedIndex"></a><a href="getselectedindex.html">getSelectedIndex()</a>, <a href="getnextselectedindex.html">getNextSelectedIndex()</a>, <a href="getselected.html">getSelected()</a>, <a href="setselected.html">setSelected()</a>, <a href="getselectedvalue.html">getSelectedValue()</a>, <a href="setselectedvalue.html">setSelectedValue()</a>, <a href="getselecteditem.html">getSelectedItem()</a>, <a href="#getSelectedValue"></a><a href="setselecteditem.html">setSelectedItem()</a></div>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+    <table border="1" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td width="20%">UltraKiss Extension</td>
+        <td width="30%">setSelectedIndex (&quot;list1.list&quot;,-1)</td>
+        <td>unselects all selections in list1.list </td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<table width="80%"  border="1" align="center" cellpadding="5" cellspacing="5" bordercolor="#000000" bgcolor="#FFFF99">
+  <tr>
+    <td><div align="center">Note: The UltraKiss setSelectedIndex() command is viewer specific and not compatible with other viewers. </div></td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>Example:&nbsp;<br>
+</b></font> </p>
+<p><font face="Courier New">#8.999 button1.button&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: 0 ;%size[318,26]&nbsp;&nbsp;&nbsp;&nbsp; %attributes[text=&quot;Press Me!"]&nbsp;<br>
+  #3.999 list1.list&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : 0 ;%size[175,177]&nbsp;&nbsp;&nbsp; %attributes[vsb]&nbsp;<br>
+</font></p>
+<p><font face="Courier New, Courier, mono">;@initialize() ; <br>
+  ;@ addItem(&quot;list1.list&quot;,&quot;carrots&quot;) ; index 0 <br>
+  ;@ addItem(&quot;list1.list&quot;,&quot;potatoes&quot;) ; index 1 <br>
+  ;@ addItem(&quot;list1.list&quot;,&quot;corn&quot;) ; index 2 <br>
+  ;@ addItem(&quot;list1.list&quot;,&quot;peas&quot;) ; index 3 <br>
+  ;@ addItem(&quot;list1.list&quot;,&quot;apple, orange, grape, cherry, plum, pear, peach&quot;) ; </font><br>
+</p>
+<p> <font face="Courier New">;@press(#8) ; <br>
+  ;@ setSelectedIndex(&quot;list1.list&quot;,Index) ; unselects everything if Index &gt; 4 or Index &lt; 0 <br>
+  ;@ add(Index,Index,1) ;<br>
+  ;@ getSelectedIndex(S,&quot;list1.list&quot;) ; <br>
+  ;@ concat(S,&quot;List selected &quot;,S) ; <br>
+  ;@ notify(S) ; <br>
+</font></p>
+<hr>
+<p>&nbsp;</p>
+<h4><a name="getSelectedValue" id="getSelectedValue">getSelectedValue</a>()&nbsp;</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; getSelectedValue(variable,component)</p>
+<p>This is a component command to retrieve the value of a list component or combobox component that has a selected item. The <em>component</em> may be a literal name of a list or combobox, or a variable that contains the name of a list component or combobox component. The value of a selected item is the string representation of the item in the list. Note that the action command name 'getSelectedValue' is case sensitive and must be specified as shown.</p>
+<p>This command sets the specified variable to the string value of the first selected item index in the list or combobox. If there is no currently selected item in the list or if the component is not a list or combobox the variable is set to an empty string. Note that indexing of list items begins at 0. </p>
+<p>Components are declared as cels within a KiSS configuration as shown in the example below.&nbsp; Component cel identifiers use specific extensions such as .button, .list, or .textarea to identify the component type.&nbsp;&nbsp;</p>
+<p><font size="2" face="Courier New">#1.9999 List-1.List&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : 0&nbsp;&nbsp;&nbsp;&nbsp; ;%size[146,207] %offset[12,121] %attributes[wrap,vsb]<br>
+  #1.9999 TextArea-1.TextArea&nbsp;&nbsp; : 0&nbsp;&nbsp;&nbsp;&nbsp; ;%size[269,49] %offset[227,176] %attributes[wrap]<br>
+  #1.9999 Button1.Button&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : 0&nbsp;&nbsp;&nbsp;&nbsp; ;%size[135,25] %offset[325,267] %attributes[text=&quot;Press Me&quot;]</font></p>
+<p>The example above defines a List component with vertical scroll bars, a TextArea component that performs word-wrap, and a Button.&nbsp; The size and location of these components within the object are specified with the %size[] and %offset[] tags.&nbsp; Component attributes are specified with the %attributes[] tag.&nbsp;&nbsp;</p>
+<p>&nbsp;</p>
+<div align="left">Related actions: <a href="#setSelectedValue">setSelectedValue()</a>, <a href="#setSelectedIndex"> setSelectedIndex()</a>, <a href="#getSelectedIndex">getSelectedIndex()</a>, <a href="#getNextSelectedIndex">getNextSelectedIndex()</a>, <a href="#setSelectedIndex"></a><a href="#setSelected">setSelected()</a>, <a href="#getSelected">getSelected()</a>, <a href="#getSelectedItem">getSelectedItem()</a>, <a href="#getSelectedValue"></a><a href="#setSelectedItem">setSelectedItem()</a></div>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+    <table border="1" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td width="20%">UltraKiss Extension</td>
+        <td width="30%">getSelectedValue(S,&quot;list1.list&quot;)</td>
+        <td>Sets the variable S to the string value of the first selected item in the list </td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<table width="80%"  border="1" align="center" cellpadding="5" cellspacing="5" bordercolor="#000000" bgcolor="#FFFF99">
+  <tr>
+    <td><div align="center">Note: The UltraKiss getSelectedValue() command is viewer specific and not compatible with other viewers. </div></td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>Example:&nbsp;<br>
+</b></font> </p>
+<p><font face="Courier New">#8.999 button1.button&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: 0 ;%size[318,26]&nbsp;&nbsp;&nbsp;&nbsp; %attributes[text=&quot;Press Me!"]&nbsp;<br>
+  #3.999 list1.list&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : 0 ;%size[175,177]&nbsp;&nbsp;&nbsp; %attributes[vsb]&nbsp;<br>
+</font></p>
+<p><font face="Courier New, Courier, mono">;@initialize() ; <br>
+  ;@ addItem(&quot;list1.list&quot;,&quot;carrots&quot;) ; index 0 <br>
+  ;@ addItem(&quot;list1.list&quot;,&quot;potatoes&quot;) ; index 1 <br>
+  ;@ addItem(&quot;list1.list&quot;,&quot;corn&quot;) ; index 2 <br>
+  ;@ addItem(&quot;list1.list&quot;,&quot;peas&quot;) ; index 3 <br>
+  ;@ addItem(&quot;list1.list&quot;,&quot;apple, orange, grape, cherry, plum, pear, peach&quot;) ; </font><br>
+</p>
+<p> <font face="Courier New">;@press(#8) ; <br>
+  ;@ getSelectedIndex(S,&quot;list1.list&quot;) ; <br>
+  ;@ concat(S,&quot;List selected &quot;,S) ; <br>
+  ;@ notify(S) ; <br>
+  <br>
+</font> <font face="Courier New"> </font></p>
+<hr>
+<p><font face="Courier New"></font></p>
+<h4><a name="setSelectedValue" id="setSelectedValue">setSelectedValue</a>()&nbsp;</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; setSelectedValue(component,value)</p>
+<p>This action selects the item in the list component or combobox component providing that the string value is a member of the list. The <em>component</em> may be a literal name of a list or or a variable that contains the name of a list component. The <em>value</em> may be a string literal  specification or a variable that has a string value. </p>
+<p>The comparision for selection is case sensitve. The item must be in the list exactly as specified for it to be selected. For list components that have the 'multiple' attribute set to allow multiple selections, the setSelectedValue() command will allow for multiple selections if applied to different items in the component. </p>
+<p>This command fails silently if the specified component is not a list component or a combobox component. </p>
+<p>Components are declared as cels within a KiSS configuration as shown in the example below.&nbsp; Component cel identifiers use specific extensions such as .button, .list, or .textarea to identify the component type.&nbsp;&nbsp;</p>
+<p><font size="2" face="Courier New">#1.9999 List-1.List&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : 0&nbsp;&nbsp;&nbsp;&nbsp; ;%size[146,207] %offset[12,121] %attributes[wrap,vsb]<br>
+  #1.9999 TextArea-1.TextArea&nbsp;&nbsp; : 0&nbsp;&nbsp;&nbsp;&nbsp; ;%size[269,49] %offset[227,176] %attributes[wrap]<br>
+  #1.9999 Button1.Button&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : 0&nbsp;&nbsp;&nbsp;&nbsp; ;%size[135,25] %offset[325,267] %attributes[text=&quot;Press Me&quot;]</font></p>
+<p>The example above defines a List component with vertical scroll bars, a TextArea component that performs word-wrap, and a Button.&nbsp; The size and location of these components within the object are specified with the %size[] and %offset[] tags.&nbsp; Component attributes are specified with the %attributes[] tag.&nbsp;&nbsp;</p>
+<p>&nbsp;</p>
+<div align="left">Related actions: <a href="#getSelectedValue">getSelectedValue(), getSelectedIndex()</a>, <a href="#getNextSelectedIndex">getNextSelectedIndex()</a>, <a href="#setSelectedIndex">setSelectedIndex()</a>, <a href="#getSelectedIndex"></a><a href="#getSelected">getSelected()</a>, <a href="#setSelected">setSelected()</a>, <a href="#getSelectedItem">getSelectedItem()</a>, <a href="#getSelectedValue"></a><a href="#setSelectedItem">setSelectedItem()</a></div>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+    <table border="1" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td width="20%">UltraKiss Extension</td>
+        <td width="30%">setSelectedValue (&quot;list1.list&quot;,&quot;new value&quot;)</td>
+        <td>sets the first selected item in the list to the &quot;new value&quot;</td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<table width="80%"  border="1" align="center" cellpadding="5" cellspacing="5" bordercolor="#000000" bgcolor="#FFFF99">
+  <tr>
+    <td><div align="center">Note: The UltraKiss setSelectedValue() command is viewer specific and not compatible with other viewers. </div></td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>Example:&nbsp;<br>
+</b></font> </p>
+<p><font face="Courier New">#8.999 button1.button&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: 0 ;%size[318,26]&nbsp;&nbsp;&nbsp;&nbsp; %attributes[text=&quot;Press Me!"]&nbsp;<br>
+  #3.999 list1.list&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : 0 ;%size[175,177]&nbsp;&nbsp;&nbsp; %attributes[vsb]&nbsp;<br>
+</font></p>
+<p><font face="Courier New, Courier, mono">;@initialize() ; <br>
+  ;@ addItem(&quot;list1.list&quot;,&quot;carrots&quot;) ; index 0 <br>
+  ;@ addItem(&quot;list1.list&quot;,&quot;potatoes&quot;) ; index 1 <br>
+  ;@ addItem(&quot;list1.list&quot;,&quot;corn&quot;) ; index 2 <br>
+  ;@ addItem(&quot;list1.list&quot;,&quot;peas&quot;) ; index 3 <br>
+  ;@ addItem(&quot;list1.list&quot;,&quot;apple, orange, grape, cherry, plum, pear, peach&quot;) ; </font><br>
+</p>
+<p> <font face="Courier New">;@press(#8) ; <br>
+  ;@ setSelectedValue(&quot;list1.list&quot;,&quot;corn&quot;) ; selects the 'corn' item <br>
+  ;@ setSelectedValue(&quot;list1.list&quot;,&quot;Peas&quot;) ; fails to select any item <br>
+  ;@ getSelectedValue(S,&quot;list1.list&quot;) ; <br>
+  ;@ concat(S,&quot;List selected &quot;,S) ; <br>
+  ;@ notify(S) ; <br>
+</font></p>
+<hr>
+<p><font face="Courier New"></font></p>
+<h4><a name="getSelectedItem" id="getSelectedItem">getSelectedItem</a>()&nbsp;</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; getSelectedItem(variable,component)</p>
+<p>This is a component command to retrieve the value of a combobox component that has a selected item. The <em>component</em> may be a literal name of a combobox, or a variable that contains the name of a combobox component. The value of a selected item is the string representation of the item in the list. Note that the action command name 'getSelectedItem' is case sensitive and must be specified as shown.</p>
+<p>This command sets the specified variable to the string value of the first selected item index in the combobox. If there is no currently selected item in the combobox or if the component is not a combobox the variable is set to an empty string. Note that indexing of list items begins at 0. </p>
+<p>Components are declared as cels within a KiSS configuration as shown in the example below.&nbsp; Component cel identifiers use specific extensions such as .button, .list, or .textarea to identify the component type.&nbsp;&nbsp;</p>
+<p><font size="2" face="Courier New">#1.9999 List-1.List&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : 0&nbsp;&nbsp;&nbsp;&nbsp; ;%size[146,207] %offset[12,121] %attributes[wrap,vsb]<br>
+  #1.9999 TextArea-1.TextArea&nbsp;&nbsp; : 0&nbsp;&nbsp;&nbsp;&nbsp; ;%size[269,49] %offset[227,176] %attributes[wrap]<br>
+  #1.9999 Button1.Button&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : 0&nbsp;&nbsp;&nbsp;&nbsp; ;%size[135,25] %offset[325,267] %attributes[text=&quot;Press Me&quot;]</font></p>
+<p>The example above defines a List component with vertical scroll bars, a TextArea component that performs word-wrap, and a Button.&nbsp; The size and location of these components within the object are specified with the %size[] and %offset[] tags.&nbsp; Component attributes are specified with the %attributes[] tag.&nbsp;&nbsp;</p>
+<p>&nbsp;</p>
+<div align="left">Related actions: <a href="#setSelectedItem">setSelectedItem()</a>, <a href="#setSelectedValue">setSelectedValue()</a>, <a href="#setSelectedIndex"> </a><a href="#getSelectedValue">getSelectedValue()</a>, <a href="#setSelectedValue"></a><a href="#setSelectedIndex">setSelectedIndex()</a>, <a href="#getSelectedIndex">getSelectedIndex()</a>, <a href="#getNextSelectedIndex">getNextSelectedIndex()</a>, <a href="#setSelectedIndex"></a><a href="#setSelected">setSelected()</a>, <a href="#getSelected">getSelected()</a></div>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+    <table border="1" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td width="20%">UltraKiss Extension</td>
+        <td width="30%">getSelectedItem(S,&quot;combo1.combobox&quot;)</td>
+        <td>Sets the variable S to the string value of the first selected item in the list </td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<table width="80%"  border="1" align="center" cellpadding="5" cellspacing="5" bordercolor="#000000" bgcolor="#FFFF99">
+  <tr>
+    <td><div align="center">Note: The UltraKiss getSelectedItem() command is viewer specific and not compatible with other viewers. </div></td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>Example:&nbsp;<br>
+</b></font> </p>
+<p><font face="Courier New">#8.999 button1.button&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: 0 ;%size[318,26]&nbsp;&nbsp;&nbsp;&nbsp; %attributes[text=&quot;Press Me!"]&nbsp;<br>
+  #3.999 list1.list&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : 0 ;%size[175,177]&nbsp;&nbsp;&nbsp; %attributes[vsb]&nbsp;<br>
+</font></p>
+<p><font face="Courier New, Courier, mono">;@initialize() ; <br>
+  ;@ addItem(&quot;list1.list&quot;,&quot;carrots&quot;) ; index 0 <br>
+  ;@ addItem(&quot;list1.list&quot;,&quot;potatoes&quot;) ; index 1 <br>
+  ;@ addItem(&quot;list1.list&quot;,&quot;corn&quot;) ; index 2 <br>
+  ;@ addItem(&quot;list1.list&quot;,&quot;peas&quot;) ; index 3 <br>
+  ;@ addItem(&quot;list1.list&quot;,&quot;apple, orange, grape, cherry, plum, pear, peach&quot;) ; </font><br>
+</p>
+<p> <font face="Courier New">;@press(#8) ; <br>
+  ;@ getSelectedIndex(S,&quot;list1.list&quot;) ; <br>
+  ;@ concat(S,&quot;List selected &quot;,S) ; <br>
+  ;@ notify(S) ; <br>
+  <br>
+</font> <font face="Courier New"> </font></p>
+<hr>
+<p><font face="Courier New"></font></p>
+<h4><a name="setSelectedItem" id="setSelectedItem">setSelectedItem</a>()&nbsp;</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; setSelectedItem(component,value)</p>
+<p>This action   selects the item in the combobox component that has the  specified string value. The <em>component</em> may be a literal name of a combobox or or a variable that contains the name of a  combobox component. The <em>value</em> may be a string literal specification or a variable that has a string value. For selection of items by value in a combobox use setSelectedItem(). </p>
+<p>The comparision for selection is case sensitve. The item must be in the combobox exactly as specified for it to be selected. For combobox components that have the 'multiple' attribute set to allow multiple selections, the setSelectedItem() command will allow for multiple selections if applied to different items in the component. </p>
+<p>This command fails silently if the specified component is not a combobox. </p>
+<p>Components are declared as cels within a KiSS configuration as shown in the example below.&nbsp; Component cel identifiers use specific extensions such as .button, .list, or .textarea to identify the component type.&nbsp;&nbsp;</p>
+<p><font size="2" face="Courier New">#1.9999 List-1.List&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : 0&nbsp;&nbsp;&nbsp;&nbsp; ;%size[146,207] %offset[12,121] %attributes[wrap,vsb]<br>
+  #1.9999 TextArea-1.TextArea&nbsp;&nbsp; : 0&nbsp;&nbsp;&nbsp;&nbsp; ;%size[269,49] %offset[227,176] %attributes[wrap]<br>
+  #1.9999 Button1.Button&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : 0&nbsp;&nbsp;&nbsp;&nbsp; ;%size[135,25] %offset[325,267] %attributes[text=&quot;Press Me&quot;]</font></p>
+<p>The example above defines a List component with vertical scroll bars, a TextArea component that performs word-wrap, and a Button.&nbsp; The size and location of these components within the object are specified with the %size[] and %offset[] tags.&nbsp; Component attributes are specified with the %attributes[] tag.&nbsp;&nbsp;</p>
+<p>&nbsp;</p>
+<div align="left">Related actions: <a href="#getSelectedItem">getSelectedItem()</a>, <a href="#getSelectedValue">getSelectedValue(), </a><a href="#setSelectedValue">setSelectedValue()</a>, <a href="#setSelectedIndex"> </a><a href="#getSelectedValue"></a><a href="#getSelectedValue">getSelectedIndex()</a>, <a href="#getNextSelectedIndex">getNextSelectedIndex()</a>, <a href="#setSelectedIndex">setSelectedIndex()</a>, <a href="#getSelectedIndex"></a><a href="#getSelected">getSelected()</a>, <a href="#setSelected">setSelected()</a></div>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+    <table border="1" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td width="20%">UltraKiss Extension</td>
+        <td width="36%">setSelectedItem (&quot;combo1.combobox&quot;,&quot;new value&quot;)</td>
+        <td width="44%">sets a  selected item in the list to the &quot;new value&quot;</td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<table width="80%"  border="1" align="center" cellpadding="5" cellspacing="5" bordercolor="#000000" bgcolor="#FFFF99">
+  <tr>
+    <td><div align="center">Note: The UltraKiss setSelectedItem() command is viewer specific and not compatible with other viewers. </div></td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>Example:&nbsp;<br>
+</b></font> </p>
+<p><font face="Courier New">#8.999 button1.button&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: 0 ;%size[318,26]&nbsp;&nbsp;&nbsp;&nbsp; %attributes[text=&quot;Press Me!"]&nbsp;<br>
+  #3.999 combo1.combobox&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : 0 ;%size[175,177]&nbsp;&nbsp;&nbsp; %attributes[multiple]&nbsp;<br>
+</font></p>
+<p><font face="Courier New, Courier, mono">;@initialize() ; <br>
+  ;@ addItem(&quot;</font><font face="Courier New">combo1.combobox</font><font face="Courier New, Courier, mono">&quot;,&quot;carrots&quot;) &nbsp;; index 0 <br>
+  ;@ addItem(&quot;</font><font face="Courier New">combo1.combobox</font><font face="Courier New, Courier, mono">&quot;,&quot;potatoes&quot;) ; index 1 <br>
+  ;@ addItem(&quot;</font><font face="Courier New">combo1.combobox</font><font face="Courier New, Courier, mono">&quot;,&quot;corn&quot;) &nbsp;&nbsp;&nbsp;&nbsp;; index 2 <br>
+  ;@ addItem(&quot;</font><font face="Courier New">combo1.combobox</font><font face="Courier New, Courier, mono">&quot;,&quot;peas&quot;) &nbsp;&nbsp;&nbsp;&nbsp;; index 3 <br>
+  </font><br>
+</p>
+<p> <font face="Courier New">;@press(#8) ; <br>
+  ;@ setSelectedItem(&quot;combo1.combobox&quot;,&quot;corn&quot;) ; <br>
+  ;@ getSelectedValue(S,&quot;combo1.combobox&quot;) ; <br>
+  ;@ concat(S,&quot;List selected &quot;,S) ; <br>
+  ;@ notify(S) ; <br>
+</font></p>
+<p><font face="Courier New"><br>
+  </font><font face="Courier New"><br>
+  </font><font face="Courier New"><br>
+  </font></p>
+</body>
+
+</html>

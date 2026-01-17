@@ -1,0 +1,96 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>add</title>
+</head>
+
+<body>
+
+<h4><a name="ifequal">add</a>()</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; add
+(result,operand1,operand2)</p>
+<p>This command performs an arithmetic addition. The <em>result</em>  is is
+assigned the sum of <em>operand1</em> plus <em>operand2</em>.&nbsp; The result argument must be a variable. Operand1 and operand2 can be numeric literal
+values or variables that represent numeric values.</p>
+<p>result = operand1 + operand2.&nbsp;</p>
+<p>FKiSS 3 and FKiSS 4 only support Integer values that range
+from -2147483648 to 2147483647, inclusive.&nbsp; UltraKiss FKiSS 5 provides support for
+floating point numbers and long integers that can range from
+-9223372036854775808 to 9223372036854775807, inclusive. With FKiSS5 implicit
+conversion between variables is automatically performed and all calculations
+maintain the appropriate precision.&nbsp;</p>
+<p>Numeric overflow may occur if the resulting sum cannot be accurately
+represented by the computer.&nbsp;</p>
+<p>
+Related actions: <a href="sub.html">sub()</a>, <a href="mul.html">mul()</a>, <a href="div.html">div()</a>,
+<a href="mod.html">mod()</a>, <a href="math.html">math()</a>, <a href="sqrt.html">sqrt(),</a>
+<a href="random.html">random()</a><br>
+</p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+  <table border="1" cellpadding="5" cellspacing="0" width="100%">
+    <tr>
+      <td width="20%">FKiSS 3</td>
+      <td width="30%">add(X,A,B)&nbsp; or&nbsp; add(X,A,3)</td>
+      <td>integer addition, single letter variable names</td>
+    </tr>
+    <tr>
+      <td width="20%">FKiSS 5</td>
+      <td width="30%">add(MyVariable,A,3.145) or add(X,A,999999999999)</td>
+      <td>integer, string, floating point addition, long variable names</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+  <table border="1" cellpadding="5" cellspacing="0" width="100%">
+    <tr>
+      <td width="20%">VariableCase</td>
+      <td width="30%">variable names are case sensitive</td>
+      <td>default value &quot;<font color="#0000FF">false</font>&quot;
+        (Compatibility option)</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>Example Code (FKiSS3):&nbsp;
+</b></font>
+</p>
+<p><font face="Courier New">;@let(A,1) let(B,2) let(C,3)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+;@add(X,A,B)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;simple addition<br>
+;@add(X,C,-1)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; literal constants<br>
+</font>
+</p>
+<p><font color="#FF0000"><b>Example Code (FKiSS5):&nbsp;
+</b></font>
+</p>
+<p><font face="Courier New">;@let(Apple,1) let(Pear,2) let(PI,3.1415927)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;<br>
+;@add(TwoPie,PI,PI)&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;floating point addition<br>
+;@add(OnePie,TwoPie,-3.1415927)&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;floating
+point constant<br>
+;@add(BigPie,OnePie,-1234567890123456)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; long constant<br>
+;@add(X,4,2)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; integer arithmetic<br>
+</font>
+</p>
+<p><font face="Courier New"><br>
+</font></p>
+
+</body>
+
+</html>

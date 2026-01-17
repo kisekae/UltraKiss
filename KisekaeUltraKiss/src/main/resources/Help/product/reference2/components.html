@@ -1,0 +1,250 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>UltraKiss Components</title>
+</head>
+
+<body>
+
+<h1><font color="#FF0000">UltraKiss Components</font></h1>
+<hr>
+<p>UltraKiss V1.0 (beta 5) introduced new capability to include basic Graphical
+User Interface (GUI) components within a KiSS set.&nbsp; Components can be
+used for interactive user input and display of information and provide an easy
+way to create standard objects on the screen.</p>
+<p>Components are either active input components or passive components.&nbsp;
+Active input components, such as a multi-line Text Area or a single line Text Field are
+capable of accepting user input or selection.&nbsp; Passive components, such
+as a standard Button or a Text Area that has the read attribute assigned do not
+accept input and are incapable of responding to user events.&nbsp; Passive components behave in a similar way
+to a KiSS image cel.&nbsp; These components can be drawn, layered, and
+positioned on the screen along with other KiSS images.&nbsp; Conversely, active
+input components intercept mouse events and cannot be directly manipulated with
+mouse movements.&nbsp; Input components are drawn on top of all other images in
+the KiSS set and can extend beyond the playfield boundaries.</p>
+<p>UltraKiss currently provides support for the following components:</p>
+<p>&nbsp;</p>
+<div align="center">
+  <center>
+  <table border="1" cellpadding="5" width="100%">
+    <tr>
+      <td><b>Component</b></td>
+      <td><b>Type</b></td>
+      <td><b>Attributes</b></td>
+    </tr>
+    <tr>
+      <td>button</td>
+      <td>Passive</td>
+      <td>text, fc, bc, nomargin, fontname, fontsize, fontstyle, disabled</td>
+    </tr>
+    <tr>
+      <td>radiobutton</td>
+      <td>Input</td>
+      <td>text, fc, bc, nomargin, fontname, fontsize, fontstyle, disabled,
+        selected, read</td>
+    </tr>
+    <tr>
+      <td>togglebutton</td>
+      <td>Input</td>
+      <td>text, fc, bc, nomargin, fontname, fontsize, fontstyle, disabled,
+        selected, read</td>
+    </tr>
+    <tr>
+      <td>label</td>
+      <td>Passive</td>
+      <td>text, fc, bc, nomargin, fontname, fontsize, fontstyle, disabled, align</td>
+    </tr>
+    <tr>
+      <td>textbox</td>
+      <td>Passive</td>
+      <td>text, fc, bc, nomargin, fontname, fontsize, fontstyle, disabled, wrap</td>
+    </tr>
+    <tr>
+      <td>textarea</td>
+      <td>Input</td>
+      <td>text, fc, bc, nomargin, fontname, fontsize, fontstyle, disabled, wrap,
+        vsb, hsb, read, noscroll</td>
+    </tr>
+    <tr>
+      <td>textfield</td>
+      <td>Input</td>
+      <td>text, fc, bc, nomargin, fontname, fontsize, fontstyle, disabled, read</td>
+    </tr>
+    <tr>
+      <td>passwordfield</td>
+      <td>Input</td>
+      <td>text, fc, bc, nomargin, fontname, fontsize, fontstyle, disabled, read</td>
+    </tr>
+    <tr>
+      <td>checkbox</td>
+      <td>Input</td>
+      <td>text, fc, bc, nomargin, fontname, fontsize, fontstyle, disabled,
+        selected</td>
+    </tr>
+    <tr>
+      <td>list</td>
+      <td>Input</td>
+      <td>text, fc, bc, nomargin, fontname, fontsize, fontstyle, disabled, wrap,
+        vsb, hsb, read, noscroll, multiple</td>
+    </tr>
+    <tr>
+      <td>combobox</td>
+      <td>Input</td>
+      <td>fc, bc, nomargin, fontname, fontsize, fontstyle, disabled, vsb, hsb,
+        read, multiple</td>
+    </tr>
+    <tr>
+      <td>menuitem</td>
+      <td>N/A</td>
+      <td>fc, bc, nomargin, fontname, fontsize, fontstyle, disabled&nbsp;</td>
+    </tr>
+    <tr>
+      <td>checkboxmenuitem</td>
+      <td>N/A</td>
+      <td>fc, bc, nomargin, fontname, fontsize, fontstyle, disabled</td>
+    </tr>
+    <tr>
+      <td>menuseparator</td>
+      <td>N/A</td>
+      <td>N/A</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p><font face="Courier New"><br>
+</font></p>
+<p>Components are declared as cels within a KiSS configuration as shown in
+the example below.&nbsp; Component cel identifiers use specific extensions such
+as .button, .list, or .textarea to identify the component type.&nbsp;&nbsp;</p>
+<p><font face="Courier New">#3.9999 Add.gif&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+: 18&nbsp;&nbsp;&nbsp;&nbsp; ;%offset[167,176]<br>
+#3.9999 Next.gif&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :
+18&nbsp;&nbsp;&nbsp;&nbsp; ;%offset[399,377]<br>
+#3.9999 Back.gif&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :
+18&nbsp;&nbsp;&nbsp;&nbsp; ;%offset[339,377]<br>
+#3.9999 Cancel.gif&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :
+18&nbsp;&nbsp;&nbsp;&nbsp; ;%offset[273,378]<br>
+#3.9999 LI0S8-1.List&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :
+18&nbsp;&nbsp;&nbsp;&nbsp; ;%size[146,207] %offset[12,121] %attributes[wrap,vsb]<br>
+#3.9999 TA0S9-1.TextArea&nbsp;&nbsp; : 18&nbsp;&nbsp;&nbsp;&nbsp; ;%size[269,49]
+%offset[227,176] %attributes[wrap]<br>
+#3.9999 TA0Obj.TextArea&nbsp;&nbsp;&nbsp; : 18&nbsp;&nbsp;&nbsp;&nbsp;
+;%size[321,65] %offset[217,11] %attributes[read,wrap]<br>
+#3.9999 Action2Date.Button : 18&nbsp;&nbsp;&nbsp;&nbsp; ;%size[135,25]
+%offset[325,267]<br>
+#3.9999 Objective10.gif&nbsp;&nbsp;&nbsp; : 18&nbsp;&nbsp;&nbsp;&nbsp; ;</font></p>
+<p>In this example object #3 contains a List, two TextAreas, and a Button.&nbsp; The size and
+location of these component within the object are specified with the %size[]
+and %offset[] tags.&nbsp; Component attributes are specified with the
+%attributes[] tag.&nbsp;&nbsp;</p>
+<h4>&nbsp;</h4>
+<h4>Component Attributes</h4>
+<p>Every component has a set of attributes that specify the presentation
+characteristics for the object. Component attributes are specified with a
+%attributes[...] tag. To facilitate the specification of component attributes a
+dialog as shown in Figure 1 below can be used.&nbsp; This dialog can be accessed
+through the object context menu, selected by right-clicking while over a
+componentobject
+when UltraKiss is in Edit mode.</p>
+<p>&nbsp;</p>
+<p align="center"><img border="0" src="images/atributes.gif" width="644" height="552"></p>
+<p align="center">Figure 1</p>
+<p>&nbsp;</p>
+<p><font color="#800000">Text</font>:&nbsp; The text attribute specifies the initial text that is displayed
+by components that support text.</p>
+<p><font color="#800000">Read</font>: This attribute specifies, for input components, whether the component
+is read-only. Valid options are True and False. Read-only components cannot
+respond to user input. Text boxes or textareas in read-only mode cannot accept
+user input.</p>
+<p><font color="#800000">Wrap</font>: This attribute applies to text components. Valid options are True and
+False. If a text component wraps, words will be wrapped onto the following lines
+if the text exceeds the width of the component.</p>
+<p><font color="#800000">Align</font>: This attribute specifies the initial text alignment. Valid options are
+Right, Left, and Center. This attribute applies to text boxes or textareas or
+textfields. Button text is always centered.</p>
+<p><font color="#800000">No scroll</font>:&nbsp; This attribute can be used to disable scrolling for
+scrollable components. Valid options are True and False. Text boxes, textareas,
+and lists by default are scrollable. A scrollable component is an input
+component, whether or not it is read-only. A scrollable component will support
+both vertical and horizontal scroll bars.</p>
+<p><font color="#800000">Vertical scroll</font>: This attribute can be used to force the display of a
+vertical scroll bar for a scrollable component. Valid options are True and
+False.&nbsp;</p>
+<p><font color="#800000">Horizontal scroll</font>: This attribute can be used to force the display of a
+horizontal scroll bar for a scrollable component. Valid options are True and
+False.&nbsp;</p>
+<p><font color="#800000">Multiple</font>:&nbsp; This attribute enables multiple selections for list
+components. Valid options are True and False.&nbsp;</p>
+<p><font color="#800000">Disabled</font>:&nbsp; This attribute sets the initial enable state for a component.
+If a component is disabled it cannot accept user input action. Valid options are
+True and False.&nbsp;</p>
+<p><font color="#800000">Selected</font>:&nbsp; This attribute sets the initial selection state for a
+component, such as a checkbox or radio button. Valid options are True and False.&nbsp;</p>
+<p><font color="#800000">No margin</font>:&nbsp; This attribute applies to button component types. Valid
+options are True and False. If a no margin attribute is set text can extend to
+the boundaries of the button.</p>
+<p><font color="#800000">Font name</font>:&nbsp; This attribute lets you select
+the text font from the fonts available on your system.&nbsp;</p>
+<p><font color="#800000">Font size</font>:&nbsp; This area lets you specify a
+non-standard font size, in points.&nbsp; Typical values are 8, 10, 11, 12, 14,
+16, 18, and so on.</p>
+<p><font color="#800000">Font style</font>:&nbsp; This attribute specifies the
+style of type, either bold or italic or plain.</p>
+<p><font color="#800000">Border</font>: This attribute specifies the style of
+border to be drawn around the component. This is either line, bevel, etched,
+matte, or titled. Borders without type default to line borders. Depending on the
+border type, the border attributes may differ. Line borders have a thickness
+attribute. Titled borders have a title string. Beveled borders have a bevel
+type.</p>
+<p><font color="#800000">Thickness</font>: This attribute applies to line type
+borders. It specifies the thickness of the line in pixels.</p>
+<p><font color="#800000">Bevel type</font>: This attribute applies to bevel type
+borders. Beveled borders may be raised or lowered.</p>
+<p><font color="#800000">Title</font>: This attribute applies to titled borders.
+This is the title text for the border.</p>
+<p><font color="#800000">Insets</font>:&nbsp; This attribute specifies the
+border spacing around the top, left, bottom, and right sides of the component.
+The spacing is in pixels.</p>
+<p><font color="#800000">Border color</font>:&nbsp; This attribute specifies the
+primary color for the border. The Reset button may be used to remove any
+previously specified border color.</p>
+<p><font color="#800000">Back color</font>:&nbsp; This attribute specifies the
+background color for the component. The Reset button may be used to remove any
+previously specified background color.</p>
+<p><font color="#800000">Fore color</font>:&nbsp; This attribute specifies the
+foreground color for the component. The Reset button may be used to remove any
+previously specified foreground color.</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h4>Component Events</h4>
+<p>FKiSS press() and release() events can be attached to all component
+objects.&nbsp; These events fire when the user interacts with a component
+to either press a button, change the state of a checkbox, or select an item from
+a list or combo box.&nbsp; For example, the following events are fired if the
+user presses the button component show above or selects an item from the list
+component.</p>
+<p><font face="Courier New">;@press(&quot;Action2Date.Button&quot;)&nbsp;<br>
+;@ notify(&quot;Button pressed&quot;)&nbsp;&nbsp;</font></p>
+<p><font face="Courier New">;@release(&quot;LI0S8-1.List&quot;)&nbsp;<br>
+;@ getSelectedValue(S,&quot;LI0S8-1.List&quot;)<br>
+;@ notify(&quot;User selected &quot;,S)&nbsp;</font></p>
+<p>&nbsp;</p>
+
+<h4>Component Conversion to Cel Images </h4>
+<p>For compatibility, any read-only component such as a button, label, or textbox can be converted
+to a cel image. Input components such as lists and user input text areas cannot
+be represented as cels as these components require active user input.&nbsp; To
+convert label components and buttons to cel images, set the
+Options-Export-Export GUI Components as Cel Files option.</p>
+<p>&nbsp;</p>
+
+<hr>
+
+<p align="left">Copyright (c) 2002-2008 WSM Information System Inc.</p>
+
+</body>
+
+</html>

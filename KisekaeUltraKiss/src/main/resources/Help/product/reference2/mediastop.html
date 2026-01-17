@@ -1,0 +1,85 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>mediastop</title>
+</head>
+
+<body>
+
+<h4><a name="mediastop">mediastop</a>()&nbsp;</h4>
+<p><font color="#FF0000"><b>Syntax:</b></font>&nbsp;&nbsp;&nbsp;&nbsp; mediastop
+(filename)</p>
+<p>This event is triggered when a sound file or other media file stops playing.
+The filename is the name of a media file and must have an extension that is for a recognized file
+type. The filename should be a literal name enclosed within
+double quotation marks or a variable that has a string value.</p>
+<p>UltraKiss FKiSS 5 introduced the mediastart() and mediastop() events to facilitate
+control of media playback. Basic FKiSS was deficient in that sound playback
+could be initiated through the sound() or music() action command, but no process
+existed to recognize when such files stopped or started.</p>
+<p>Note that only one mediastart() and mediastop() event is initiated for media
+files that repeat.&nbsp;&nbsp;</p>
+<p>More than one mediastop() event can be specified for a specific file. If sequential event processing is enforced each event will fire in
+the sequence in which it was defined, otherwise they are queued for concurrent
+processing.&nbsp;
+</p>
+<p>Related events: <a href="mediastart.html">mediastart()</a><br>
+Related actions: <a href="sound.html">sound()</a>, <a href="music.html">music(),</a> <a href="mediaplayer.html">mediaplayer()</a>, <a href="movie.html">movie()</a> </p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+  <table border="1" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td width="20%">FKiSS 5 &nbsp;</td>
+      <td width="30%">mediastart (&quot;sound.wav&quot;)&nbsp; or&nbsp; mediastart (&quot;music.midi&quot;)</td>
+      <td>Triggered when the sound begins to play.</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+  <table border="1" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td width="20%">CacheAudio</td>
+      <td width="30%">retain audio files in memory</td>
+      <td>default value &quot;<font color="#0000FF">true</font>&quot; (General option)</td>
+    </tr>
+    <tr>
+      <td width="20%">CacheVideo</td>
+      <td width="30%">retain video files in memory</td>
+      <td>default value &quot;<font color="#0000FF">false</font>&quot; (General option)</td>
+    </tr>
+    <tr>
+      <td width="20%">StopMusic&nbsp;</td>
+      <td width="30%">stops music files on a page change&nbsp;</td>
+      <td>default value &quot;<font color="#0000FF">false</font>&quot; (Media option)</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p>
+<br>
+<font color="#FF0000"><b>FKiSS 5 Example:&nbsp;</b></font></p>
+<p><font face="Courier New">;@EventHandler<br>
+<br>
+;@mediastart(&quot;click.wav&quot;)                                ;&nbsp;<br>
+;@ notify(&quot;Sound is playing&quot;)                    ;&nbsp;<br>
+<br>
+;@mediastop(&quot;click.wav&quot;)                                ;&nbsp;<br>
+;@ notify(&quot;Sound has stopped&quot;)                    ;&nbsp;<br>
+<br>
+</font></p>
+<p><font face="Courier New"><br>
+</font></p>
+
+</body>
+
+</html>

@@ -1,0 +1,1189 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>FKiSS Data Types</title>
+</head>
+
+<body>
+
+<h2 align="center"><font face="Arial" color="#FF0000"> KiSS Configuration (CNF) File</font></h2>
+<p>&nbsp;</p>
+<p>A KISS set is composed of the following files:</p>
+<p>  * Image file (CEL)</p>
+<ul>
+  <li> This is the image data to be moved. Image files can be of different types such as Cel, GIF, JPG, PNG, BMP, and PPM </li>
+  <li> A cel file is an array of pixels. Each pixel identifies the color of a particular point on the screen. </li>
+  <li> Depending on the image file format pixel colors can be specified in the file or through indexes into a palette file.</li>
+  <li> With cel files using external palettes, pixel code 0 is always a transparent pixel.</li>
+</ul>
+<p>  * Palette file (KCF) </p>
+<ul>
+  <li>  This is a table where each image pixel is an index into the table that defines the actual color of pixels.</li>
+  <li>Palette files can contain many different tables or palette groups, also known as multipalettes. </li>
+  <li>Palette color  index 0 is always assumed to be a transparent color. </li>
+</ul>
+<p>  * Configuration file (CNF) </p>
+<ul>
+  <li> This file describes the overlapping order and positions of cels.</li>
+  <li> The KISS viewer reads this first and uses this file  to identify and read other files.</li>
+  <li> This file is a text file created with a text editor.</li>
+  <li> This file may be changed by KISS program's save function. </li>
+</ul>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2><font color="#FF0000"><a name="titlesection" id="titlesection">Titles and Comments </a></font></h2>
+<p>If the first character in a KiSS Configuration file is a semicolon '<font face="Courier New, Courier, mono">;</font>' then the complete text line is considered to be a comment. The line is not, in general, interpreted by the KiSS viewer. Exceptions to this rule exist for FKiSS statements that begin with '<font face="Courier New, Courier, mono">;@</font>' and other directive statements such as <font face="Courier New, Courier, mono">;INCLUDE</font> and other viewer specific extension commands.</p>
+<p>It is a common practice for the first line in a KiSS CNF file to identify the program that created the file. </p>
+<p>Example:</p>
+<p><font face="Courier New">; Kisekae UltraKiss configuration file created on Sun Jan 06 10:22:53 MST 2008<br>
+  ; FKiSS code compatibility level is 5<br>
+</font></p>
+<p>&nbsp;</p>
+<h2><font color="#FF0000"><a name="includesection" id="includesection">Include Files </a></font></h2>
+<p>The <font face="Courier New, Courier, mono">;INCLUDE</font> directive was introduced to KiSS with the FKiSS 4 enhancements. This directive is intended to facilitate automatic inclusion of required files to the KiSS configuration. </p>
+<p>For example, expansion sets add new images or files to the KiSS configurations where new images and configurations  can replace existing entities of the same name. Expansion files  also contain new CNF files with FKiSS code that reference the new images. With early viewers the base file had to be loaded into the viewer and expansion files had to be entered into the configuration through a viewer specific command. If the ;INCLUDE directive is specified in the expansion file then the required base files can be automatically loaded concurrently with the expansion file. </p>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; <font face="Courier New, Courier, mono">;INCLUDE filename1, filename2, ... </font></p>
+<p>Each filename must specify a relative or absolute path to a KiSS archive file. File names must be delimited by quotes (&quot;) if the file name contains spaces. Relative paths are relative to the current CNF location. The <font face="Courier New, Courier, mono">;INCLUDE</font> directive is case sensitive and must be specified exactly as shown with capital letters and no space after the semicolon. One or more <font face="Courier New, Courier, mono">;INCLUDE</font> directives can be specified in a CNF file. </p>
+<p>If multiple <font face="Courier New, Courier, mono">;INCLUDE</font> directives are used  they should be ordered in the sequence in which the files should be loaded. If multiple filenames are specified on one <font face="Courier New, Courier, mono">;INCLUDE</font> directive then the filenames should also be ordered in the sequence in which the files should be loaded.</p>
+<p>&nbsp;</p>
+<p>Example:</p>
+<p><font face="Courier New, Courier, mono">;INCLUDE &nbsp;&nbsp;&nbsp;bd13ks.lzh</font></p>
+<p>&nbsp;</p>
+<h2><font color="#FF0000"><a name="optionsection" id="optionsection">Option Section </a></font></h2>
+<p>The <font face="Courier New, Courier, mono">;[Option Section]</font> directive was introduced by UltraKiss to allow for the specification of viewer specific options that are required for correct set operation. The <font face="Courier New, Courier, mono">;[Option Section]</font>directive is optional. If used, it is case sensitive and must be specified exactly as shown and with no space after the semicolon. </p>
+<p>Option settings are either true or false, or the actual option value. Each option setting must appear on its own line following the <font face="Courier New, Courier, mono">[Option Section]</font> heading and the line must begin with a semicolon. </p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; <font face="Courier New, Courier, mono">;[Option Section]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;; option = true | false | value </font></p>
+<p>UltraKiss options that may be set are listed in the table below.</p>
+<table border="1">
+  <tr>
+    <td><strong>Option</strong></td>
+    <td><strong>Type</strong></td>
+    <td><strong>Purpose</strong></td>
+    <td><strong>Class</strong></td>
+    <td><strong>Default Value</strong></td>
+  </tr>
+  <tr>
+    <td>sound</td>
+    <td>true/false</td>
+    <td>enables sound </td>
+    <td>viewer</td>
+    <td>TRUE</td>
+  </tr>
+  <tr>
+    <td>movie</td>
+    <td>true/false</td>
+    <td>enables movies</td>
+    <td>viewer</td>
+    <td>TRUE</td>
+  </tr>
+  <tr>
+    <td>event</td>
+    <td>true/false</td>
+    <td>enables event processing</td>
+    <td>viewer</td>
+    <td>TRUE</td>
+  </tr>
+  <tr>
+    <td>animate</td>
+    <td>true/false</td>
+    <td>enables GIF animation</td>
+    <td>viewer</td>
+    <td>TRUE</td>
+  </tr>
+  <tr>
+    <td>timer</td>
+    <td>true/false</td>
+    <td>enables alarm timers</td>
+    <td>viewer</td>
+    <td>TRUE</td>
+  </tr>
+  <tr>
+    <td>editenable</td>
+    <td>true/false</td>
+    <td>enables set editing</td>
+    <td>viewer</td>
+    <td>TRUE</td>
+  </tr>
+  <tr>
+    <td>securityenable</td>
+    <td>true/false</td>
+    <td>turns set security options on</td>
+    <td>viewer</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>initedit</td>
+    <td>true/false</td>
+    <td>enables set editing on startup</td>
+    <td>viewer</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>debugmouse</td>
+    <td>true/false</td>
+    <td>writes debug traces of mouse events to log</td>
+    <td>debug</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>debugcontrol</td>
+    <td>true/false</td>
+    <td>writes debug traces of control events to log</td>
+    <td>debug</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>debugload</td>
+    <td>true/false</td>
+    <td>writes debug traces of file load events to log</td>
+    <td>debug</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>debugedit</td>
+    <td>true/false</td>
+    <td>writes debug traces of edit cut/paste events to log</td>
+    <td>debug</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>debugimage</td>
+    <td>true/false</td>
+    <td>writes debug traces of image edit events to log</td>
+    <td>debug</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>debugevent</td>
+    <td>true/false</td>
+    <td>writes debug traces of FKiSS events to log</td>
+    <td>debug</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>debugaction</td>
+    <td>true/false</td>
+    <td>writes debug traces of FkiSS action ststements to log</td>
+    <td>debug</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>debugvariable</td>
+    <td>true/false</td>
+    <td>writes debug traces of FKiSS variable assignments to log</td>
+    <td>debug</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>debugfkiss</td>
+    <td>true/false</td>
+    <td>writes debug traces of FKiSS editor events to log</td>
+    <td>debug</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>debugsound</td>
+    <td>true/false</td>
+    <td>writes debug traces of sound events to log</td>
+    <td>debug</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>debugmovie</td>
+    <td>true/false</td>
+    <td>writes debug traces of movie events to log</td>
+    <td>debug</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>debugmedia</td>
+    <td>true/false</td>
+    <td>writes debug traces of media player events to log</td>
+    <td>debug</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>debugsearch</td>
+    <td>true/false</td>
+    <td>writes debug traces of search module events to log</td>
+    <td>debug</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>javasound</td>
+    <td>true/false</td>
+    <td>enables Java sound versus media player sound</td>
+    <td>viewer</td>
+    <td>TRUE</td>
+  </tr>
+  <tr>
+    <td>systemlf</td>
+    <td>true/false</td>
+    <td>enables host platform system look and feel</td>
+    <td>viewer</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>javalf</td>
+    <td>true/false</td>
+    <td>enables Java common system look and feel</td>
+    <td>viewer</td>
+    <td>TRUE</td>
+  </tr>
+  <tr>
+    <td>applemac</td>
+    <td>true/false</td>
+    <td>enables Apple system specific operation</td>
+    <td>viewer</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>backup</td>
+    <td>true/false</td>
+    <td>retains backup file on file save</td>
+    <td>viewer</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>savesource</td>
+    <td>true/false</td>
+    <td>writes images files from source data or memory</td>
+    <td>viewer</td>
+    <td>TRUE</td>
+  </tr>
+  <tr>
+    <td>showdlprompt</td>
+    <td>true/false</td>
+    <td>shows a download prompt in browser</td>
+    <td>viewer</td>
+    <td>TRUE</td>
+  </tr>
+  <tr>
+    <td>showtips</td>
+    <td>true/false</td>
+    <td>shows tips on startup</td>
+    <td>viewer</td>
+    <td>TRUE</td>
+  </tr>
+  <tr>
+    <td>loadclose</td>
+    <td>true/false</td>
+    <td>closes set before load of new set</td>
+    <td>viewer</td>
+    <td>TRUE</td>
+  </tr>
+  <tr>
+    <td>cacheaudio</td>
+    <td>true/false</td>
+    <td>enables sound file caching in memory</td>
+    <td>viewer</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>cachevideo</td>
+    <td>true/false</td>
+    <td>enables video file caching in memory</td>
+    <td>viewer</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>cacheimage</td>
+    <td>true/false</td>
+    <td>enables image file caching in memory</td>
+    <td>viewer</td>
+    <td>TRUE</td>
+  </tr>
+  <tr>
+    <td>suspendmedia</td>
+    <td>true/false</td>
+    <td>suspends media player when sound is active</td>
+    <td>viewer</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>stopmusic</td>
+    <td>true/false</td>
+    <td>stops music playback on page change</td>
+    <td>viewer</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>scaletofit</td>
+    <td>true/false</td>
+    <td>scales set to fit the viewer window size</td>
+    <td>viewer</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>sizetofit</td>
+    <td>true/false</td>
+    <td>sizes the viewer window to fit the set playfield</td>
+    <td>viewer</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>retainwindowsize</td>
+    <td>true/false</td>
+    <td>retains last system window size on close</td>
+    <td>viewer</td>
+    <td>TRUE</td>
+  </tr>
+  <tr>
+    <td>maximizewindow</td>
+    <td>true/false</td>
+    <td>opens system windows at maximum size</td>
+    <td>viewer</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>randomsplash</td>
+    <td>true/false</td>
+    <td>shows a random background image on set close</td>
+    <td>viewer</td>
+    <td>TRUE</td>
+  </tr>
+  <tr>
+    <td>showborder</td>
+    <td>true/false</td>
+    <td>shows a border around the set playfield</td>
+    <td>viewer</td>
+    <td>TRUE</td>
+  </tr>
+  <tr>
+    <td>inittoolbar</td>
+    <td>true/false</td>
+    <td>shows the viewer toolbar</td>
+    <td>viewer</td>
+    <td>TRUE</td>
+  </tr>
+  <tr>
+    <td>initstatusbar</td>
+    <td>true/false</td>
+    <td>shows the viewer status bar</td>
+    <td>viewer</td>
+    <td>TRUE</td>
+  </tr>
+  <tr>
+    <td>tbcolors</td>
+    <td>true/false</td>
+    <td>shows the color set icons in the toolbar</td>
+    <td>viewer</td>
+    <td>TRUE</td>
+  </tr>
+  <tr>
+    <td>tbpages</td>
+    <td>true/false</td>
+    <td>shows the page set icons in the toolbar</td>
+    <td>viewer</td>
+    <td>TRUE</td>
+  </tr>
+  <tr>
+    <td>tbedits</td>
+    <td>true/false</td>
+    <td>shows the edit cut/copy/paste icons in the toolbar</td>
+    <td>viewer</td>
+    <td>TRUE</td>
+  </tr>
+  <tr>
+    <td>tbcompat</td>
+    <td>true/false</td>
+    <td>shows the viewer compatibility icons in the toolbar</td>
+    <td>conversion</td>
+    <td>TRUE</td>
+  </tr>
+  <tr>
+    <td>importcel</td>
+    <td>true/false</td>
+    <td>enables conversion of all image files to cel form on import</td>
+    <td>conversion</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>exportcel</td>
+    <td>true/false</td>
+    <td>enables conversion of all image files to cel form on save</td>
+    <td>conversion</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>componentcel</td>
+    <td>true/false</td>
+    <td>enables conversion of non-input components to cel form on save</td>
+    <td>conversion</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>importcomponent</td>
+    <td>true/false</td>
+    <td>enables conversion of non-input components to cel form on import</td>
+    <td>conversion</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>constrainmoves</td>
+    <td>true/false</td>
+    <td>constrains object movement to playfield size</td>
+    <td>viewer</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>constrainvisible</td>
+    <td>true/false</td>
+    <td>constrains object dragging to playfield size</td>
+    <td>viewer</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>constrainfkiss</td>
+    <td>true/false</td>
+    <td>constrains FKiSS object movement to playfield size</td>
+    <td>viewer</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>autoscroll</td>
+    <td>true/false</td>
+    <td>enables automatic window scrolling on dragging</td>
+    <td>viewer</td>
+    <td>TRUE</td>
+  </tr>
+  <tr>
+    <td>dragmove</td>
+    <td>true/false</td>
+    <td>enables continued dragging of FKiSS moved objects</td>
+    <td>compatibility</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>releasemove</td>
+    <td>true/false</td>
+    <td>forces a mouse release on FKiSS moved objects</td>
+    <td>compatibility</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>dropfixdrop</td>
+    <td>true/false</td>
+    <td>allows drop and fixdrop events on mouse release</td>
+    <td>compatibility</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>catchfixdrop</td>
+    <td>true/false</td>
+    <td>allows catch and fixcatch events on mouse press</td>
+    <td>compatibility</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>visibleunfix</td>
+    <td>true/false</td>
+    <td>allows unfix event on visible objects only</td>
+    <td>compatibility</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>earlyfix</td>
+    <td>true/false</td>
+    <td>allows unfix event to fire before mouse down events</td>
+    <td>compatibility</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>detachrestricted</td>
+    <td>true/false</td>
+    <td>allows object detachments when restrictions reached</td>
+    <td>compatibility</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>detachmove</td>
+    <td>true/false</td>
+    <td>allows object detachments on FKiSS movements</td>
+    <td>compatibility</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>detachfix</td>
+    <td>true/false</td>
+    <td>allows object detachments when cels are fixed</td>
+    <td>compatibility</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>invertghost</td>
+    <td>true/false</td>
+    <td>corrects PlayFKiSS ghost logic fault</td>
+    <td>compatibility</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>transparentgroup</td>
+    <td>true/false</td>
+    <td>enables unique transparency for objects and cel groups</td>
+    <td>compatibility</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>mapcollide</td>
+    <td>true/false</td>
+    <td>enables collision events on obect visibility changes</td>
+    <td>compatibility</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>movexycollide</td>
+    <td>true/false</td>
+    <td>enables collision events on movebyx and movebyy actions</td>
+    <td>compatibility</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>autoloop</td>
+    <td>true/false</td>
+    <td>enables continuous looping of media files</td>
+    <td>mediaplayer</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>autofullscreen</td>
+    <td>true/false</td>
+    <td>enables full screen viewing of media files</td>
+    <td>mediaplayer</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>mediaminimize</td>
+    <td>true/false</td>
+    <td>enables minimization of mediaplayer on playlist activation</td>
+    <td>mediaplayer</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>mediacenter</td>
+    <td>true/false</td>
+    <td>enables centering of media player in sceen</td>
+    <td>mediaplayer</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>mediamusicresume</td>
+    <td>true/false</td>
+    <td>enables automatic resumption of media playback after sound</td>
+    <td>mediaplayer</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>keepaspect</td>
+    <td>true/false</td>
+    <td>enables aspect ratio retention for media movies</td>
+    <td>mediaplayer</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>keycase</td>
+    <td>true/false</td>
+    <td>enables upper and lower case keyboard input</td>
+    <td>viewer</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>variablecase</td>
+    <td>true/false</td>
+    <td>enables upper and lower case distinct FKiSS variable names</td>
+    <td>viewer</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>expandevents</td>
+    <td>true/false</td>
+    <td>retains existing FKiSS event definitions on an expansion set load</td>
+    <td>viewer</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>enableshell</td>
+    <td>true/false</td>
+    <td>enables shell() FKiSS action command</td>
+    <td>viewer</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>xyoffsets</td>
+    <td>true/false</td>
+    <td>converts %offset tags to %x and %y offset tags</td>
+    <td>compatibility</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>absolutewindow</td>
+    <td>true/false</td>
+    <td>interprets windowsize() parameters as absolute values </td>
+    <td>compatibility</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>panelvisible</td>
+    <td>true/false</td>
+    <td>&nbsp;</td>
+    <td>compatibility</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>mouseinoutbox</td>
+    <td>true/false</td>
+    <td>&nbsp;</td>
+    <td>compatibility</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>contextmap</td>
+    <td>true/false</td>
+    <td>uses page context for ambiguous cel disambiguation</td>
+    <td>compatibility</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>mapcount</td>
+    <td>true/false</td>
+    <td>&nbsp;</td>
+    <td>compatibility</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>allambiguous</td>
+    <td>true/false</td>
+    <td>applies action commands to all ambiguously named image files</td>
+    <td>compatibility</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>alteditdrag</td>
+    <td>true/false</td>
+    <td>uses alt ket as edit selector for selection boundaries</td>
+    <td>viewer</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>shifteditdrag</td>
+    <td>true/false</td>
+    <td>uses shift ket as edit selector for selection boundaries</td>
+    <td>viewer</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>importrelative</td>
+    <td>true/false</td>
+    <td>uses relative paths for file names on import</td>
+    <td>viewer</td>
+    <td>TRUE</td>
+  </tr>
+  <tr>
+    <td>writeceloffset</td>
+    <td>true/false</td>
+    <td>writes image offsets to Cel files on save</td>
+    <td>viewer</td>
+    <td>TRUE</td>
+  </tr>
+  <tr>
+    <td>showbreakpointend</td>
+    <td>true/false</td>
+    <td>&nbsp;</td>
+    <td>viewer</td>
+    <td>TRUE</td>
+  </tr>
+  <tr>
+    <td>writecomment</td>
+    <td>true/false</td>
+    <td>&nbsp;</td>
+    <td>viewer</td>
+    <td>TRUE</td>
+  </tr>
+  <tr>
+    <td>eventpause</td>
+    <td>true/false</td>
+    <td>enables breakpoints on FKiSS events</td>
+    <td>viewer</td>
+    <td>TRUE</td>
+  </tr>
+  <tr>
+    <td>actionpause</td>
+    <td>true/false</td>
+    <td>enables breakpoint on FKiSS action statements</td>
+    <td>viewer</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>retainkey</td>
+    <td>true/false</td>
+    <td>&nbsp;</td>
+    <td>viewer</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>strictsyntax</td>
+    <td>true/false</td>
+    <td>enables strict syntax xhecking on FKiSS statements</td>
+    <td>viewer</td>
+    <td>TRUE</td>
+  </tr>
+  <tr>
+    <td>showundefs</td>
+    <td>true/false</td>
+    <td>enables FKiSS syntax errors for undefined entities</td>
+    <td>viewer</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>autoendif</td>
+    <td>true/false</td>
+    <td>enables automatic generation of endif() statements when required</td>
+    <td>viewer</td>
+    <td>TRUE</td>
+  </tr>
+  <tr>
+    <td>immediatecollide</td>
+    <td>true/false</td>
+    <td>&nbsp;</td>
+    <td>compatibility</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>immediateunfix</td>
+    <td>true/false</td>
+    <td>&nbsp;</td>
+    <td>compatibility</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>immediateevent</td>
+    <td>true/false</td>
+    <td>&nbsp;</td>
+    <td>compatibility</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>eventqueues</td>
+    <td>integer</td>
+    <td>&nbsp;</td>
+    <td>viewer</td>
+    <td>"1"</td>
+  </tr>
+  <tr>
+    <td>timerperiod</td>
+    <td>integer</td>
+    <td>&nbsp;</td>
+    <td>viewer</td>
+    <td>"10"</td>
+  </tr>
+  <tr>
+    <td>gifperiod</td>
+    <td>integer</td>
+    <td>&nbsp;</td>
+    <td>viewer</td>
+    <td>"100"</td>
+  </tr>
+  <tr>
+    <td>stickyflex</td>
+    <td>integer</td>
+    <td>the pixel range for sticky movement drags</td>
+    <td>viewer</td>
+    <td>"10"</td>
+  </tr>
+  <tr>
+    <td>maxflex</td>
+    <td>integer</td>
+    <td>the KiSS fixed lock value </td>
+    <td>viewer</td>
+    <td>"100"</td>
+  </tr>
+  <tr>
+    <td>maxlock</td>
+    <td>integer</td>
+    <td>the KiSS maxuimum lock value</td>
+    <td>viewer</td>
+    <td>"32768"</td>
+  </tr>
+  <tr>
+    <td>maxpageset</td>
+    <td>integer</td>
+    <td>the number of page sets displayed on the toolbar</td>
+    <td>viewer</td>
+    <td>"10"</td>
+  </tr>
+  <tr>
+    <td>maxcolorset</td>
+    <td>integer</td>
+    <td>the number of color sets displayed on the toolbar</td>
+    <td>viewer</td>
+    <td>"10"</td>
+  </tr>
+  <tr>
+    <td>jpegquality</td>
+    <td>integer</td>
+    <td>&nbsp;</td>
+    <td>viewer</td>
+    <td>"80"</td>
+  </tr>
+  <tr>
+    <td>undolimit</td>
+    <td>integer</td>
+    <td>&nbsp;</td>
+    <td>viewer</td>
+    <td>"100"</td>
+  </tr>
+  <tr>
+    <td>commentcol</td>
+    <td>integer</td>
+    <td>the start column in the CNF for comment text</td>
+    <td>viewer</td>
+    <td>"60"</td>
+  </tr>
+  <tr>
+    <td>indentspace</td>
+    <td>integer</td>
+    <td>the spaces to indent block when writing FKISS code</td>
+    <td>viewer</td>
+    <td>"1"</td>
+  </tr>
+  <tr>
+    <td>maxlrufiles</td>
+    <td>integer</td>
+    <td>the number of files in the last referenced file menu list</td>
+    <td>viewer</td>
+    <td>"4"</td>
+  </tr>
+  <tr>
+    <td>kissweb</td>
+    <td>string</td>
+    <td>&nbsp;</td>
+    <td>viewer</td>
+    <td>literal</td>
+  </tr>
+  <tr>
+    <td>userdir</td>
+    <td>string</td>
+    <td>&nbsp;</td>
+    <td>viewer</td>
+    <td>literal</td>
+  </tr>
+  <tr>
+    <td>onlinehelp</td>
+    <td>string</td>
+    <td>&nbsp;</td>
+    <td>viewer</td>
+    <td>literal</td>
+  </tr>
+  <tr>
+    <td>website</td>
+    <td>string</td>
+    <td>&nbsp;</td>
+    <td>viewer</td>
+    <td>literal</td>
+  </tr>
+  <tr>
+    <td>splashdir</td>
+    <td>string</td>
+    <td>&nbsp;</td>
+    <td>viewer</td>
+    <td>literal</td>
+  </tr>
+  <tr>
+    <td>icondir</td>
+    <td>string</td>
+    <td>&nbsp;</td>
+    <td>viewer</td>
+    <td>literal</td>
+  </tr>
+  <tr>
+    <td>language</td>
+    <td>string</td>
+    <td>the viewer language</td>
+    <td>viewer</td>
+    <td>literal</td>
+  </tr>
+  <tr>
+    <td>encoding</td>
+    <td>string</td>
+    <td>the output file encoding (SJIS)</td>
+    <td>viewer</td>
+    <td>literal</td>
+  </tr>
+  <tr>
+    <td>exporttype</td>
+    <td>string</td>
+    <td>the image type for writing files during a Save As</td>
+    <td>viewer</td>
+    <td>literal</td>
+  </tr>
+  <tr>
+    <td>browser</td>
+    <td>string</td>
+    <td>&nbsp;</td>
+    <td>viewer</td>
+    <td>literal</td>
+  </tr>
+  <tr>
+    <td>playfkiss</td>
+    <td>true/false</td>
+    <td>sets PlayFKiSS viewer compatibility options</td>
+    <td>compatibility</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>directkiss</td>
+    <td>true/false</td>
+    <td>sets DirectKiSS viewer compatibility options</td>
+    <td>compatibility</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>gnomekiss</td>
+    <td>true/false</td>
+    <td>sets GnomeKiSS viewer compatibility options</td>
+    <td>compatibility</td>
+    <td>FALSE</td>
+  </tr>
+  <tr>
+    <td>kissld</td>
+    <td>true/false</td>
+    <td>sets KiSSLD viewer compatibility options</td>
+    <td>compatibility</td>
+    <td>FALSE</td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<p>Example:</p>
+<p><font face="Courier New, Courier, mono">;[Option Section]<br>
+; contexmap = false<br>
+; systemlf = true <br> 
+</font></p>
+<p></p>
+<h2><font color="#FF0000"><a name="screensection" id="screensection">Screen Section </a></font></h2>
+<p>The <font face="Courier New, Courier, mono">;[Screen Section]</font> directive was introduced by UltraKiss to centralize the specification of set specific options for playfield size and border colors. This directive is not required and it exists simply for structural organization. In general, KiSS screen specifications can appear anywhere within a CNF file. The set options are specified through specific control directives as described below. </p>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; <font face="Courier New, Courier, mono">=memoryK<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(width,height)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[integer</font></p>
+<table width="80%"  border="1" cellspacing="1" cellpadding="1">
+  <tr>
+    <td><div align="center"><strong>Column 1 char</strong></div></td>
+    <td><div align="center"><strong>Purpose</strong></div></td>
+    <td><div align="center"><strong>Example</strong></div></td>
+  </tr>
+  <tr>
+    <td width="5%"><div align="center">=</div></td>
+    <td width="66%">memory in kilobytes </td>
+    <td width="29%">=800K</td>
+  </tr>
+  <tr>
+    <td><div align="center">(</div></td>
+    <td>playfield size in pixel width and height </td>
+    <td>(&lt;horizontal size&gt;,&lt;vertical size&gt;)</td>
+  </tr>
+  <tr>
+    <td><div align="center">[</div></td>
+    <td>border color palette index into palette file 0, or an integer RGB value </td>
+    <td>[12</td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<p>Example:</p>
+<p><font face="Courier New, Courier, mono">;[Screen Section]<br>
+  [2 <br>
+  (600,380) </font><br>
+</p>
+<p>&nbsp; </p>
+<h2><font color="#FF0000"><a name="palettesection" id="palettesection">Palette Section </a></font></h2>
+<p>The <font face="Courier New, Courier, mono">;[Palette Section]</font> directive was introduced by UltraKiss to centralize the specification of set specific palette file specifications. This directive is not required and it exists simply for structural organization. In general, KiSS palette file specifications can appear anywhere within a CNF file. </p>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; <font face="Courier New, Courier, mono">%filename </font></p>
+<p>The first palette file in the CNF is used by the border color specification found in the Screen Section. Palette files are numbered in the sequence in which they appear in the CNF beginning from number 0.</p>
+<p>A KiSS KCF palette file can contain an unlimited number of palette groups. Each palette group is an independent table of colors that can be used by any palette type image cel. </p>
+<p>Palette file specifications must begin with a '%' character in column 1. The filename specification may be proceeded by one or more spaces and can be a fully qualified or relative path name to a file on the system. Filenames that contain spaces should be delimited by quotes (&quot;).</p>
+<p>&nbsp;</p>
+<p>Example:</p>
+<p><font face="Courier New, Courier, mono">;[Palette Section]<br>
+  %doll.kcf &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;; palette file 0 <br>
+  %clothes.kcf  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;; palette file 1 <br>
+  %clothesg.kcf  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;; palette file 2 <br>
+  %doll_g.kcf  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;; palette file 3 <br>
+%ikg.kcf  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;; palette file 4 </font></p>
+<p>&nbsp;</p>
+<h2><font color="#FF0000"><a name="celsection" id="celsection">Cel Section </a></font></h2>
+<p>The <font face="Courier New, Courier, mono">;[Cel Section]</font> directive was introduced by UltraKiss to centralize the specification of set specific cel file specifications. This directive is not required and it exists simply for structural organization. In general, KiSS cel file specifications can appear anywhere within a CNF file. Images overlay one another according to the order in which they appear in the CNF. Images that appear first in the file are drawn on top of images that appear later in the file. Cel files are internally numbered in the sequence in which they appear in the CNF beginning from number 0. Therefore, lower numbered cel files are drawn on top of higher numbered files. </p>
+<p>Cel  specifications must begin with a '#' character in column 1. The specification serves to identify the objects in the KiSS set and the images within each object. The specification also identifies the palette file associated with the image and the viewer pages on wich the image can be seen. </p>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; #&lt;Object&gt;[.&lt;Fix&gt;] &lt;Cel filename&gt; 
+  [*&lt;Palette number&gt;[.&lt;Palette group &gt;]] [:&lt;Page Set number&gt;...] <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  [; [&lt;%Tag&gt;...] [&lt;!Cel group [: &lt;frame ...&gt;] ...] comment] <BR>
+</p>
+<p>The object number is defined through the cel specification. More than one image cel specification line can have the same object number. This is how more than one image is associated to a unique object.</p>
+<p>The optional fix specification is an integer number that defines the lock count for the image cel. A deficiency with KiSS is that lock restrictions actually apply to objects and not images. Therefore, the object lock count is established to be the maximum lock count of all image cels associated to the same object number.</p>
+<p>The cel filename specification must be proceeded by one or more spaces and can be a fully qualified or relative path name to a file on the system. Filenames that contain spaces should be delimited by quotes (&quot;).</p>
+<p>The palette number should relate to one of the palette files specified in the Palette Section. Image cels that do not use a palette do not need to specify a palette number and any such specification will be ignored. Image cels that are associated to an unknown palette number may not be drawn properly. </p>
+<p>The optional palette group specification is an UltraKiss extension to identify the fixed palette group of colors that will be applied to the image. This fixed palette group will not change as  color sets change and is related to the setpal() and letpal() FKiSS action commands.</p>
+<p>The optional page set numbers should be delimited by spaces. If no page sets are defined then the image cel is visible on all page sets. If the page set colon {:) prefix is specified without any following page numbers then the image cel is not visible on any page. If a single multidigit sequence of undelimited numbers is used then this single number is considered to be a set of page specifiers where each digit specifies a page from 0 to 9. This simplification is provided for compatibility with early KiSS sets where viewers did not support more than 10 pages or color sets. </p>
+<p>The optional tag specifier is an early extension introduced to configure transparency and other specifiers for the image cel. All tag specifiers must be delimited by one or more spaces and must proceed any cel group specifications and comment text. </p>
+<p>The optional cel group specifier is an FKiSS 4 extension implemented to allow for additional groupings of image cels beyond movable objects. Every image cel can be a member of an unlimited number of groups where each group has a unique name. The image cel can also be assigned a unique frame number which assists with identifying a subset of images within the group. </p>
+<p>&nbsp;</p>
+<p>Example:</p>
+<p><font face="Courier New, Courier, mono">;[Cel Section]<br>
+  #21.100 ikg.cel &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*4 &nbsp;: 0 7 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;<br>
+  #20 &nbsp;&nbsp;&nbsp;&nbsp;warning.cel &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;<br>
+  #6 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;coat_1.cel &nbsp;&nbsp;&nbsp;*1 &nbsp;: 2 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;<br>
+  #10 &nbsp;&nbsp;&nbsp;&nbsp;blazer1g.cel &nbsp;*2 &nbsp;: 1 3 4 6 7 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;<br>
+  #5 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;blazer_1.cel &nbsp;*1 &nbsp;: 1 2 3 5 7 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;<br>
+  #13 &nbsp;&nbsp;&nbsp;&nbsp;blazer1p.cel &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;<br>
+#12 &nbsp;&nbsp;&nbsp;&nbsp;blouse1g.cel &nbsp;*2 &nbsp;: 0 1 3 4 5 6 7 &nbsp;&nbsp;&nbsp;&nbsp;;</font></p>
+<p>&nbsp;</p>
+<h2><font color="#FF0000"><a name="tags" id="tags">Tags</a></font></h2>
+<p>Tags are optional specifications that appear at the end of a cel specification line as comment specifiers. The semicolon that begins the comment is required. Some viewers will require that there be no spaces between the semicolon and the first tag specifier, although this is not strictly necessary. One or more spaces are required between each different tag to delimit the tag tokens.</p>
+<p>&nbsp;</p>
+<h4><a name="unmaptag" id="unmaptag">%u (unmap tag) </a></h4>
+<p>Tag Syntax:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font face="Courier New">; %u </font><br>
+    <br>
+The unmap tag sets the initial visibility state of the image to unmapped. </p>
+<p>Example:</p>
+<p><font face="Courier New, Courier, mono">#20 &nbsp;&nbsp;&nbsp;&nbsp;warning.cel &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;; %u %t64 %g </font></p>
+<p>&nbsp;</p>
+<h4><a name="transparenttag" id="transparenttag">%t (transparency tag) </a></h4>
+<p>Tag Syntax:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font face="Courier New">; %tN</font><br>
+    <br>
+The transparency tag sets the initial transparency of the image. A transparency N value of 0 is fully opague and 255 is fully transparent. There can be no spaces between the transparency flag <font face="Courier New, Courier, mono">%t</font> and the first digit of the number N. </p>
+<p>Example:</p>
+<p><font face="Courier New, Courier, mono">#20 &nbsp;&nbsp;&nbsp;&nbsp;warning.cel &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;; %u %t64 %g </font></p>
+<p>&nbsp;</p>
+<h4><a name="ghosttag" id="ghosttag">%g (ghost tag) </a></h4>
+<p>Tag Syntax:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font face="Courier New">; %g</font><br>
+    <br>
+The ghost tag sets an initial ghost state for the image. A ghosted image is unresponsive to mouse clicks. </p>
+<p>Example:</p>
+<p><font face="Courier New, Courier, mono">#20 &nbsp;&nbsp;&nbsp;&nbsp;warning.cel &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;; %u %t64 %g </font></p>
+<p>&nbsp;</p>
+<h4><a name="colortag" id="colortag">%c (transparent color tag) </a></h4>
+<p>Tag Syntax:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font face="Courier New">; %cN</font><br>
+    <br>
+The color tag is used to set an initial transparent color for image cels that do not maintain transparency. The color value N is an integer representation of the RGB color components, where the red, green, and blue color values range from 0 to 255 inclusive. There can be no spaces between the color flag <font face="Courier New, Courier, mono">%c</font> and the first digit of the number N. </p>
+<p>Example:</p>
+<p><font face="Courier New, Courier, mono">#7.32767 one.gif : 1 ;%c16777116 </font></p>
+<p><br>
+</p>
+<h4><a name="sizetag" id="sizetag">%size </a></h4>
+<p>Tag Syntax:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font face="Courier New">; %size[width,height]</font><br>
+    <br>
+The size tag sets an initial size for the image, for those images or other components that may not maintain sizing information. The <font face="Courier New, Courier, mono">%size</font> tag requires  integer width and height specifiers contained within a list as shown. Each integer is a measure in pixel size for the image. The square brackets must be specified. There can be no spaces between the size flag <font face="Courier New, Courier, mono">%size</font> and the square bracket '[' that begins the width and height list. </p>
+<p>Example:</p>
+<p><font face="Courier New, Courier, mono">#1.9999 label1.label ;%size[470,50] %attributes[text=&quot;FKiSS5&quot;,fc=16711680] </font></p>
+<p><font face="Courier New, Courier, mono"><br>
+</font></p>
+<h4><a name="offsettag" id="offsettag">%offset </a></h4>
+<p>Tag Syntax:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font face="Courier New">; %offset[x,y]</font><br>
+    <br>
+The offset tag sets an initial offset for the image, for those images or other components that may not maintain offset information. The <font face="Courier New, Courier, mono">%offset</font> tag requires integer X and Y specifiers contained within a list as shown. Each integer is a measure in pixel size for the image. The square brackets must be specified. There can be no spaces between the size flag <font face="Courier New, Courier, mono">%offset</font> and the square bracket '[' that begins the offset list. Both positive and negative numbers can be specified for the X and Y offset values.</p>
+<p>Example:</p>
+<p><font face="Courier New, Courier, mono">#2.9999 string.textfield  ;%size[327,26] %offset[108,0] %attributes[text=&quot;&quot;] </font><br>
+</p>
+<p>&nbsp;</p>
+<h4><a name="attributetag" id="attributetag">%attributes </a></h4>
+<p>Tag Syntax:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font face="Courier New">; %attributes[attribute1,attribute2,...]</font><br>
+    <br>
+The attribute tag is used to specify optional attributes for component type image cels, such as background colors, initial text fonts, and so on. Each attribute is generally unique for the component. The square brackets must be specified. There can be no spaces between the attribute flag <font face="Courier New, Courier, mono">%attributes</font> and the square bracket '[' that begins the attribute list. The attribute values are specific to the attribute and can be of text or numeric types. Text attributes must be delimited by quotation marks. Attribute terms must be specified in a comma separated list. </p>
+<p>Example:</p>
+<p><font face="Courier New, Courier, mono">#7.9999 label7.label  ;%size[400,26] %attributes[text=&quot;&quot;,border=1,borderstyle=line] </font><br>
+</p>
+<p>&nbsp;</p>
+<h4><a name="celgrouptag" id="celgrouptag">! (cel group tag)</a></h4>
+<p>Tag Syntax:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font face="Courier New">; !&lt;name&gt; [: n1 n2 n3]</font><br>
+<br>
+The celgroup tag is the cel group name starting with an exclamation mark, and
+optionally a frame definition which is a colon followed by frame numbers. As the
+example below shows, one cel instance can be assigned to many different cel groups. Cel
+group definitions can also be placed on  a new line as long as the line definitions are preceded by a semicolon.&nbsp;The
+examples show two equivalent representations for the specification of cels
+'three.cel' and 'four.cel' . An image cel can have multiple frames and many different image cels in the same group can have the same frame number. </p>
+<p>Example:</p>
+<p><font face="Courier New">#10.100 three.cel : 0 ; !Number :3&nbsp;<br>
+;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+!Card :1&nbsp;<br>
+;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+!Queen<br>
+#10.100 four.cel&nbsp; : 0 ; !Number :4&nbsp;<br>
+;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+!Card :1&nbsp;<br>
+;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+!Jack<br>
+</font></p>
+<p>Example:</p>
+<p><font face="Courier New">#10.100   zero.cel&nbsp; : 0 ; !Number :0 !Card :0<br>
+#10.100 one.cel&nbsp;&nbsp; : 0 ; !Number :1 !Card :1 !Ace<br>
+#10.100 two.cel&nbsp;&nbsp; : 0 ; !Number :2 !Card :1 !King&nbsp;<br>
+#10.100 three.cel          : 0 ; !Number :3 !Card :1 !Queen<br>
+#10.100 four.cel&nbsp; : 0 ; !Number :4 !Card :1 !Jack<br>
+#10.100 five.cel&nbsp; : 0 ; !Number :5 !Card :2 !Ten<br>
+#10.100 six.cel&nbsp;&nbsp; : 0 ; !Number :6 !Card :3 !Nine<br>
+#10.100 seven.cel          : 0 ; !Number :7 !Card :4 !Eight<br>
+</font></p>
+<p><font face="Courier New">;@ press(!Card)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; a press event on any cel in a cel group<br>
+;@ unmap(!Card)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;
+unmap all images in a cel group<br>
+;@ setframe(!Card,5)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; map frame 5 in the cel
+group<br>
+;@ let(A,&quot;!Ace&quot;)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; assign a string to a variable&nbsp;<br>
+;@ map(A)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; map the cel group !Ace<br>
+;@ let(A,&quot;Number&quot;)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; assign
+a string to a variable&nbsp;<br>
+;@ map(!A)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; map the cel group !Number<br>
+</font></p>
+<p>&nbsp;</p>
+<h2><font color="#FF0000"><a name="pagesetsection" id="pagesetsection">Page Set Section </a></font></h2>
+<p>The <font face="Courier New, Courier, mono">;[Page Set Section]</font> directive was introduced by UltraKiss to centralize the specification of object page positioning specifications. This directive is not required and it exists simply for structural organization. In general, KiSS page set specifications can appear anywhere within a CNF file. </p>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; <font face="Courier New, Courier, mono">$&lt;Palette group&gt; [&lt;x,y&gt; &lt;x,y&gt; ...] </font></p>
+<p>The palette group specifier is an integer number from 0 to N, where N is the maximum number of palette groups or color sets taken over all palette files. This is the initial color setting that is applied to all palette cels when the page is first opened. For cels that reference a palette file that does not contain the required palette group the image cel color is not changed.</p>
+<p>The optional list of <font face="Courier New, Courier, mono">x,y</font> pairs represent coordinate positions for each object in the set, beginning from object number 0. If a coordinate pair does not exist for a given object number then the object is positioned at location (0,0). </p>
+<p>Each $ page set specification applies to one page in the order in which the $ lines appear in the CNF file. The first $ line applies to page 0, the next to page 1, and so on. There is no limit as to the number of pages that can be defined in this way. Page set specifications can be continued on the following line or lines providing that each successive line in the specification begins with a blank, or space character in column 1. </p>
+<p>Object coordinates pairs are specified with a '*', for object numbers that do not exist in the configuration or are not visible on the page.</p>
+<p>&nbsp;</p>
+<p>Example:</p>
+<p><font face="Courier New, Courier, mono">;[Page Set Section]<br>
+  ; Page 0<br>
+  $0 * 0,0 * * * * * * * * * * * * 130,25 * * * * * * *<br>
+  ; Page 1<br>
+  $0 * 0,0 130,60 560,300 577,96 619,331 605,331 591,331 113,115 0,0 <br>
+ &nbsp;&nbsp; 0,0 590,188 590,155 590,122 * * * * * * * *</font></p>
+<p>&nbsp;</p>
+<h2><font color="#FF0000"><a name="fkisssection" id="fkisssection">FKiSS Section </a></font></h2>
+<p>The <font face="Courier New, Courier, mono">;[FKiSS Section]</font> directive was introduced by UltraKiss to centralize the specification of FKiSS code. This directive is not required and it exists simply for structural organization. In general, FKiSS code must appear together and at the end of  a CNF file. The <font face="Courier New, Courier, mono">;[FKiSS Section]</font>directive is almost always followed by the <font face="Courier New, Courier, mono">;@EventHandler</font> line that begins FKiSS code. <font face="Courier New, Courier, mono"><br>
+</font></p>
+<p>Example:</p>
+<p><font face="Courier New, Courier, mono">;[FKiSS Section]<br>
+  ;@EventHandler<br>
+  <br>
+  ;@initialize() ; <br>
+  ;@ let(MaxFrames,7) ; the number of images in a block<br>
+  ;@ let(Magic,6) ; the magic frame image in a block<br>
+  ;@ random(MusicFile,0,13) ; choose a random music file<br>
+;@ random(BackFile,0,4) ; choose a random background file</font></p>
+<p><font face="Courier New, Courier, mono">; Unmap all main menu hint text strings.</font></p>
+<p><font face="Courier New, Courier, mono">;@ unmap(&quot;slidertxt.gif&quot;) ; unmap slider game text</font></p>
+<p>&nbsp;</p>
+<p><font face="Courier New, Courier, mono">; **********************************************************************<br>
+  ; Main Menu Event Section. <br>
+  ; ======================================================================</font></p>
+<p><font face="Courier New, Courier, mono">; The set(0) event initializes for the main menu screen.</font></p>
+<p><font face="Courier New, Courier, mono">;@set(0) ; <br>
+  ;@ music(&quot;&quot;) ; stop music<br>
+  ;@ letset(Set) ; retain our current page<br>
+  ;@ gosub(NewBackground) ; choose a new background<br>
+  ;@ gosub(DestroyObjects) ; destroy all prior objects<br>
+</font></p>
+</body>
+
+</html>

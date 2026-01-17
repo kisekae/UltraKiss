@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='ISO-8859-1'  ?>
+<!DOCTYPE toc
+  PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp TOC Version 1.0//EN"
+         "http://java.sun.com/products/javahelp/toc_1_0.dtd">
+<toc version="1.0">
+  <tocitem text="">
+   <tocitem text="Archive Manager">
+    <tocitem text="Introduction" target="archivemanager.index"/>
+    <tocitem text="Menu Commands" target="archivemanager.menu"/>
+    <tocitem text="Toolbar Commands" target="archivemanager.toolbar"/>
+    <tocitem text="Add Function" target="archivemanager.add"/>
+    <tocitem text="Extract Function" target="archivemanager.extract"/>
+   </tocitem>
+  </tocitem>
+</toc>
+
+

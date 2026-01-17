@@ -1,0 +1,295 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-ca">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>UltraKiss Edit Subsystem</title>
+</head>
+
+<body>
+
+<h1><font color="#FF0000"> UltraKiss Edit Subsystem</font></h1>
+<hr>
+
+<p><font face="Arial">Kisekae UltraKiss is a full featured development environment for creating, editing and displaying
+KiSS data sets.  This document provides reference material for the various
+editing commands and functions available within the
+UltraKiss program.&nbsp;</font></p>
+
+<p><font face="Arial">Editing of a KiSS data set requires the ability to select various objects,
+move them to new locations, cut, copy, and paste objects as required, and undo
+changes that are not correct.&nbsp; UltraKiss is designed to facilitate easy
+visual editing of a KiSS data set.&nbsp;&nbsp;</font></p>
+
+
+
+<p>&nbsp;</p>
+
+
+
+<h3><a name="Edit Mode"><font face="Arial">Edit Mode</font></a></h3>
+
+<p><font face="Arial">UltraKiss is in edit mode if any object on the current page is
+selected.&nbsp; Selected objects are visually identified with a marquee
+box around the object.&nbsp; This box describes the bounding box area of the screen
+that is redrawn whenever the object needs to be repainted.&nbsp;</font></p>
+
+<p align="center"><img border="0" src="images/menu_12.jpg" width="497" height="428"></p>
+
+<p>&nbsp;</p>
+
+<h3><a name="Object Selection"><font face="Arial">Object Selection</font></a></h3>
+
+<p><font face="Arial">Objects are selected by Alt-left clicking with the mouse while over an
+object, or by holding the Alt key and left mouse button down and dragging the
+mouse to draw a selection box.&nbsp; Any object whose bounding box area is fully
+contained within the selection box will be selected.&nbsp; Note that the
+selection box will only be drawn for drag movement gestures that are to the left
+and down.&nbsp;&nbsp;</font></p>
+
+<p><font face="Arial">All visible, but possibly hidden objects within the dragged selection box
+will be added to the selection set.&nbsp; If objects are selected in this way
+you will pick up not only the top, visible object, but also all hidden objects
+that may be underneath the visible object.&nbsp;</font></p>
+
+<p><font face="Arial">Objects are unselected by Alt-right clicking with the mouse while over a
+selected object, or by holding the Alt key and right mouse button down and
+drawing a new selection box that encapsulates a set of currently selected
+objects.&nbsp;&nbsp; Any object whose bounding box area is fully contained
+within the selection box will be removed from the selection set.&nbsp;</font></p>
+
+<p><font face="Arial">Alt-right clicking will only remove top level visible
+objects.&nbsp; If you need to remove hidden objects from the selection set, use Alt-right drag to encapsulate the underlying object in a removal selection box.</font></p>
+
+<p><font face="Arial">When no objects remain in the selection set UltraKiss is no longer in edit
+mode.</font></p>
+
+<p><font face="Arial">A new selection set can be created by Alt-left clicking with the mouse while
+over a new object, or by holding the Alt key and left mouse button down and
+dragging the mouse to draw a new selection box.&nbsp; If a new selection set is
+created all objects from the old selection set are discarded.&nbsp; It is possible
+to select no objects, in which case UltraKiss will no longer be in edit mode.</font></p>
+
+<p><font face="Arial">Objects can be added to the current selection set by Ctrl-left clicking with
+the mouse while over an object, or by holding the Ctrl key and left mouse button
+down and dragging the mouse to draw a selection box.&nbsp; Any object whose
+bounding box area is fully contained within the selection box will be added to the current selection set.&nbsp; Note that the selection box will
+only be drawn for drag movement gestures that are to the left and
+down.&nbsp;&nbsp;</font></p>
+
+<p><font face="Arial">Selection operations are undoable.&nbsp; If you select the wrong objects or
+wish to cancel the selection, the Edit-Undo operation will restore the selection
+set to its prior state.</font></p>
+
+<p>&nbsp;</p>
+
+<h3><a name="Object Movement"><font face="Arial">Object Movement</font></a></h3>
+
+<p><font face="Arial">When in edit mode selected objects can be moved.&nbsp; These
+objects are not restricted by their existing movement lock values.&nbsp;
+Selected objects, when moved, do not fire FKiSS programmed events.&nbsp; These
+objects do not participate within the normal play mode of UltraKiss.</font></p>
+
+<p><font face="Arial">To reposition a selected object on the screen, place the mouse pointer over
+the object and left click and drag.&nbsp;&nbsp; To reposition all selected
+objects in the selection set, hold the Shift key down, place the mouse pointer
+over any object in the selection set and left click and drag.&nbsp; Shift-drags
+will move the complete selection set.&nbsp; Alternatively, rather than use the
+Shift key, you can double-click and drag.&nbsp; Once again, the complete
+selection set will move.&nbsp; Double clicking is not as accurate as
+shift-drags.&nbsp; The object beneath the mouse pointer can move slightly on the
+first click before the complete selection set begins to move.</font></p>
+
+<p><font face="Arial">Move operations are undoable.&nbsp; If you move the objects to the wrong
+place or
+wish to cancel the movement, the Edit-Undo operation will restore the objects to
+their prior positions.</font></p>
+
+<p>&nbsp;</p>
+
+<h3><a name="Object Removal"><font face="Arial">Object Removal</font></a></h3>
+
+<p><font face="Arial">Selected objects can be cut from the data set and removed from the active
+page on display.&nbsp; To remove objects use the Edit-Cut command.&nbsp; This
+will copy the selected objects to the internal clipboard and then remove
+them.&nbsp; The cut objects, because they are retained in the clipboard, can be
+immediately pasted or re-inserted into a different page set if required.</font></p>
+
+<p><font face="Arial">If an object group is cut its reference is removed only from the active page
+set on display.&nbsp; The object group can still reside on different page
+sets.&nbsp; To remove the object from all pages you must explicitly cut the
+object from each page.&nbsp; If an object no longer exists on any page it will
+be removed from the list of object groups associated with the configuration and
+eliminated from the data set when the configuration file is saved.&nbsp;&nbsp;</font></p>
+
+<p><font face="Arial">Image cels within a cut object group retain their original page set
+association throughout the UltraKiss session.&nbsp; This association can be
+re-established in the event the cut operation is undone and the group object is
+restored.&nbsp; The image cel page set association will be permanently updated
+only when the configuration file is saved.</font></p>
+
+<p><font face="Arial">Cut operations are undoable.&nbsp; If you cut objects and wish to restore
+their presence, the Edit-Undo operation will paste the cut objects into their prior
+positions.</font></p>
+
+<p>&nbsp;</p>
+
+<h3><a name="Object Insertion"><font face="Arial">Object Insertion</font></a></h3>
+
+<p><font face="Arial">Objects within the internal clipboard can be pasted into the data set and
+added to the active page on display.&nbsp; To paste objects use the Edit-Paste
+command.&nbsp; This will take the selected objects from the internal clipboard
+and add them to the current page.&nbsp; The pasted objects, because they are
+retained in the clipboard, can be immediately pasted or re-inserted into the
+same page or a different page set if required.</font></p>
+
+<p><font face="Arial">If an object group is pasted its reference is added to the active page set on
+display.&nbsp; If the object did not previously exist on the page all image cels
+contained within the object group simply have their page set associations
+updated to include the new page number.&nbsp; If the object previously existed
+on the page then a new object number will be created.&nbsp; This new object will
+appear in the configuration object list and will contain new image cel entities
+that are copies of the existing image cels.&nbsp; The new image cel entities
+will also appear in the configuration image list and will be written to the
+configuration file when the file is saved.</font></p>
+
+<p><font face="Arial">Group objects pasted into a page retain their object position as exists on
+their source page.&nbsp; If an object is selected and copied to the clipboard
+and pasted, then the duplicate object will overlay its original position.&nbsp;
+If this object is moved the original object will be seen.&nbsp; Pasted image
+cels have the same depth layer as their original copies.&nbsp;&nbsp;&nbsp;&nbsp;</font></p>
+
+<p><font face="Arial">New objects can also be inserted into the data set with the Edit-Image Import
+command.&nbsp; This creates a new object for the imported image cel as described
+above.&nbsp; Imported images are positioned at the upper left corner of the
+image screen and must be moved to their desired position.</font></p>
+
+<p><font face="Arial">Paste operations are undoable.&nbsp; If you paste objects and
+wish to undo their presence, the Edit-Undo operation will cut the pasted objects
+from their new positions.</font></p>
+
+<p>&nbsp;</p>
+
+<h3><a name="Object Duplication"><font face="Arial">Object Duplication</font></a></h3>
+
+<p><font face="Arial">Objects can be duplicated by first selecting the required objects, using the
+Edit-Copy command to copy the selection set to the internal clipboard, and then
+using the Edit-Paste command to insert the objects to the current page
+set.&nbsp; Duplicated objects are created as described with <a href="#Object Insertion"> Object
+Insertion</a>.&nbsp; If an object is duplicated on the current page then new object
+groups are created, otherwise the image cels are simply updated to reference the
+new page set.</font></p>
+
+<p><font face="Arial">If an object already exists on one page set and you wish to replicate this
+object on other page sets, simply copy the object to the clipboard, switch to
+the destination page set, and paste the object into the page.</font></p>
+
+<p>&nbsp;</p>
+
+<h3><a name="Object Layering"><font face="Arial">Object Layering</font></a></h3>
+
+<p><font face="Arial">When inserting new objects or adjusting your page sets, you may find that the
+drawing overlay order for your image cels is unsatisfactory.&nbsp; The
+Edit-Adjust Layering command can be used to alter the drawing priority for
+all image cels in the data set.</font></p>
+
+<p><font face="Arial">Image cels are layered according to their position within the configuration
+file.&nbsp; An image cel will be drawn on top of all image cels that
+follow.&nbsp; The Edit-Adjust Layering command lets you reposition image cels
+within the complete cel list to alter the drawing order.&nbsp; Select an image
+cel from the list and drag it to a new position.&nbsp; When all changes are
+applied the images on the screen are redrawn.&nbsp;</font></p>
+
+<p><font face="Arial">The Object Layering operation is undoable.&nbsp; If you adjust the image
+layers and
+wish to undo the changes, the Edit-Undo operation will restore the previous
+layering order to the data set.</font></p>
+
+<p>&nbsp;</p>
+
+<h3><a name="New Page Sets"><font face="Arial">New Page Set</font></a></h3>
+
+<p><font face="Arial">You can create new, empty page sets with either the Edit-Insert Page command
+or the Edit-Add Page command.&nbsp; The Edit-Insert Page command creates a new
+page set with the same number as the current page on display.&nbsp; The current
+page and all subsequent pages have their page number incremented.&nbsp; The
+Edit-Add Page command appends a new page set at the end of the
+configuration.&nbsp;&nbsp;</font></p>
+
+<p><font face="Arial">New page sets are initially empty.&nbsp; You must populate the page with
+objects of your choice.&nbsp; If you wish to duplicate all objects from an
+existing page, copy the objects from the source page and paste them into the new
+page.</font></p>
+
+<p><font face="Arial">New page operations are undoable.&nbsp; If you create new page sets and wish
+to undo the creation, the Edit-Undo operation will delete the new empty page set
+from the configuration.&nbsp; All page numbers will be readjusted as required.</font></p>
+
+<p>&nbsp;</p>
+
+<h3><a name="Delete Page Sets"><font face="Arial">Delete Page Set</font></a></h3>
+
+<p><font face="Arial">Page sets, and all objects contained on the page, can be deleted from the
+configuration.&nbsp; Use the Edit-Delete Page command.&nbsp; This will remove
+the current page and all objects on the page.</font></p>
+
+<p><font face="Arial">Page number are readjusted as required.&nbsp; All pages after the deleted
+page have their page numbers reduced.&nbsp; It is possible to delete all pages
+from the data set.</font></p>
+
+<p><font face="Arial">The Delete page operation is undoable.&nbsp; If you delete a page set and
+wish to undo the deletion, the Edit-Undo operation will add the deleted page set
+back into the configuration.&nbsp; All page numbers will be readjusted as
+required.&nbsp; All objects that existed on the deleted page will be restored.</font></p>
+
+<p>&nbsp;</p>
+
+<h3><a name="Write Page Set"><font face="Arial">Write Page Set</font></a></h3>
+
+<p><font face="Arial">During normal editing operations you will move and position objects as
+required.&nbsp; An Edit-Write Page command is used to set the initial object
+positions so that the objects will be positioned at their current locations
+whenever the page set is opened or the Edit-Reset command is used.</font></p>
+
+<p><font face="Arial">The Edit-Write Page command sets the default palette group for the page set
+to the current palette group being used.</font></p>
+
+<p><font face="Arial">A common error is to forget to set the initial page positions after a page
+has been edited.&nbsp; UltraKiss maintains current page positions during your
+session so that pages are restored correctly while playing with your data
+set.&nbsp; However, if you edit your data set and save it without updating the
+initial positions, a reload of the data set may give undesirable results.</font></p>
+
+<p><font face="Arial">Either the Edit-Write Page command or the File-Write As command should be
+used to capture the initial state of pages in the data set after an editing
+session.&nbsp;&nbsp;</font></p>
+
+<p><font face="Arial">The Write Page operation is undoable.&nbsp; If you update the object initial
+positions and wish to undo the update, the Edit-Undo operation will restore the
+original initial object positions prior to the change.&nbsp;&nbsp;</font></p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<h2>&nbsp;</h2>
+
+<hr>
+<p align="left">Next Document:&nbsp; <a href="../reference2/index.html">UltraKiss Events<br>
+</a>Prior Document:&nbsp; <a href="objects.html">Object Properties</a></p>
+<p align="left">Copyright (c) 2002-2023 William Miles</p>
+
+
+
+
+
+
+
+
+
+
+</body>
+
+</html>

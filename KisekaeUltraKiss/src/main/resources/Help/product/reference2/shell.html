@@ -1,0 +1,83 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>shell</title>
+</head>
+
+<body>
+
+<h4><a name="shell">shell</a>()&nbsp;</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; shell
+(string)</p>
+<p>The shell() action will initiate the execution of an external program on the
+host system. There is no indication if the shell command is successful.</p>
+<p>If the string is a valid URL with protocols &quot;http:&quot; or
+&quot;file:&quot; or &quot;mailto:&quot; the default system browser is launched
+for the specified URL. Note that browser commands are not constrained by the
+EnableShell option that permits or restricts external shell program execution.</p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">FKiSS 5 Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp;
+shell (string[, exitcode])</p>
+<p>FKiSS 5 syntax provides for an optional integer exitcode variable. If the
+process is not launched the value returned is -1, otherwise the FKiSS event
+waits until the external process terminates.&nbsp;&nbsp;</p>
+<p><br>
+</p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td>FKiSS 1 to 4 only allows literal strings.</td>
+      <td>shell (&quot;notepad c:/myfile.txt&quot;)</td>
+      <td>Invoke an external program</td>
+    </tr>
+    <tr>
+      <td>FKiSS 5 allows variables and an optional return state</td>
+      <td>let(A,&quot;ls -l &quot;) shell(A,ExitCode)</td>
+      <td>Invoke an external program and wait</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+  <table border="1" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td width="20%">EnableShell</td>
+      <td width="30%">allow shell command to execute</td>
+      <td>default value &quot;<font color="#0000FF">false</font>&quot;
+        (Compatibility option)</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>&nbsp;FKiSS 1 Example:
+</b></font>
+</p>
+<p><font face="Courier New">;@press(#1)&nbsp;&nbsp; shell(&quot;mailto:somebody@mydomain.com&quot;)&nbsp; ;&nbsp;<br>
+</font></p>
+
+<p><font color="#FF0000"><b>&nbsp;FKiSS 5 Example:
+</b></font>
+</p>
+<p><font face="Courier New">;@press(#1)&nbsp;&nbsp; let(S,&quot;echo Hello
+World!&quot;)&nbsp;shell(S) ;&nbsp;<br>
+;@release(#1) shell(&quot;http://www.kisekaeworld.com&quot;)&nbsp; ;&nbsp;
+<br>
+</font></p>
+
+<p><br>
+<font face="Courier New"><br>
+</font></p>
+
+</body>
+
+</html>

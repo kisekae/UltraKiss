@@ -1,0 +1,207 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-ca">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>Media Player Index</title>
+</head>
+
+<body>
+
+<h1><font color="#FF0000"> Media Player Help Topics</font></h1>
+<hr>
+
+<p><font face="Arial">Welcome to the UltraKiss Media Player documentation.&nbsp; To open an online book, choose a book from the Contents page in the upper
+left of the Help Viewer. Click the book icon to expand the book topics. Then, click a topic to
+view it.</font></p>
+
+<h2>&nbsp;</h2>
+
+<h2><b><a name="Introduction"><font face="Arial">Introduction</font></a></b></h2>
+
+<p><font face="Arial">The Media Player is a full featured audio and visual playback program designed to reproduce media
+files contained within KiSS data sets.  This online Help document provides reference material for the various
+commands and options available within the Media Player program.</font></p>
+
+<p><font face="Arial">The Media Player is an independent application that is designed for playback
+of background music during your UltraKiss session.&nbsp; You start the
+Media Player with the UltraKiss <a href="../kisekae/menu.html#ToolsMediaPlayer">Tools-Media
+Player</a> command.&nbsp; This will open the main Media Player screen.&nbsp; You
+use menu commands to load audio files or movie files or playlist files as
+required.&nbsp;&nbsp;</font></p>
+
+<p><font face="Arial">A playlist is a text document that lists media file names that are to be
+played in sequence.&nbsp; The Media Player will load a playlist file with a LST
+file extension and play each file.&nbsp; The Media Player provides menu commands
+to queue or delete entries from the playlist and to save playlists as
+required.&nbsp;&nbsp;&nbsp;</font></p>
+
+<p><font face="Arial">The Media Player can be integrated within your KiSS data set.&nbsp; The <a href="../reference/fkiss5.html#mediaplayer">mediaplayer()</a>
+FKiSS action command will start the Media Player application and initiate
+playback of the specified media file or playlist.&nbsp;&nbsp; Media Players
+started in this way are associated with the active KiSS data set and will be
+terminated when the data set is closed.&nbsp;</font></p>
+
+<p><font face="Arial">The Media Player uses Java Media Framework (JMF) to play media files.&nbsp;
+Kisekae UltraKiss can be used with any version of JMF.&nbsp; Note
+that cross-platform version of JMF only supports the following audio sample
+rates: 8, 11.025, 11.127, 16, 22.05, 22.254, 32, 44.1, and 48 KHz.</font></p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<h2><a name="Media Player Main Screen"><font face="Arial">Media Player Main Screen</font></a></h2>
+
+<p><font face="Arial">Figure 1 shows the main Media Player screen displayed when the Media Player
+is first launched.&nbsp; The menu bar at the top of the screen provides commands
+to adjust the Media Player options and to control the Media Player.&nbsp; For
+further information on playback options see the Media Player <a href="menu.html">menu</a> commands
+document.</font></p>
+
+<p>&nbsp;</p>
+
+<p align="center"><font face="Arial"><img border="0" src="images/mediaplayer1.jpg" width="413" height="159"></font></p>
+
+<p align="center"><font face="Arial">Figure 1.</font></p>
+
+<p align="left"><font face="Arial">A status message is displayed at the bottom of the Media Player
+window.&nbsp; A player is initializing when the media file is being
+loaded.&nbsp; The player is realizing when the media data is being read into
+internal memory.&nbsp; The player is prefetched if it has been read into memory
+but is not active.&nbsp; The player is started when it is actively playing
+content.</font></p>
+
+<p align="left">&nbsp;</p>
+
+<h2>
+<a name="Media Player Audio Screen"><font face="Arial">Media Player Audio Screen</font></a>
+</h2>
+
+<p>
+<font face="Arial">
+If an audio file is loaded the Media Player will display an active audio control
+screen as shown in Figure 2a or Figure 2b.&nbsp; The window title will show the
+name of the active audio file.&nbsp; A control slider will be shown for audio
+files being processed with Java Media Framework.&nbsp; This control can be used
+to position the audio file as required.&nbsp;&nbsp;</font>
+</p>
+
+<p>
+&nbsp;
+</p>
+
+<p align="center">
+<font face="Arial">
+<img border="0" src="images/mediaplayer2a.gif" width="400" height="92">
+</font>
+</p>
+
+<p align="center">
+<font face="Arial">
+Figure 2a.</font>
+</p>
+
+<p align="left"><font face="Arial">Figure 2b shows the Media Player screen for a file being
+processed with Java Sound.&nbsp; Playback position cannot be controlled, however
+the playback can be started or stopped as required.</font>
+</p>
+
+<p align="left">&nbsp;
+</p>
+
+<p align="center"><font face="Arial"><img border="0" src="images/mediaplayer2b.gif" width="400" height="108">
+</font>
+</p>
+
+<p align="center"><font face="Arial">Figure 2b.</font>
+</p>
+
+<p align="left">&nbsp;
+</p>
+
+<h2>
+<a name="Media Player Video Screen"><font face="Arial">Media Player Video Screen</font></a>
+</h2>
+
+<p align="left">
+<font face="Arial">
+Figure 3 shows the Media Player as it plays a movie file.&nbsp; The Media Player
+is sized to fit the movie.&nbsp; A control slider can be used to position the
+movie as required.</font>
+</p>
+
+<p align="left">
+&nbsp;
+</p>
+
+<p align="center">
+<font face="Arial">
+<img border="0" src="images/mediaplayer3.gif" width="328" height="332">
+</font>
+</p>
+
+<p align="center">
+<font face="Arial">
+Figure 3.</font>
+</p>
+
+<p align="left">
+&nbsp;
+</p>
+
+<h2>
+<a name="Media Player Playlist Screen"><font face="Arial">Media Player Playlist Screen</font></a>
+</h2>
+
+<p><font face="Arial">If a playlist is loaded the Media Player will show, in a scrollable list, all
+media files queued for playback.&nbsp; Figure 4 is an example of a playlist.&nbsp; The highlighted list entry shows the currently active media
+file.&nbsp;&nbsp; Any entry in the playlist can be selected for playback by
+clicking on the line item.&nbsp; The playlist can be edited by inserting new
+entries with the Insert key or the <a href="menu.html#FileQueue"> File-Queue</a> command, or deleted using the
+Delete key or the <a href="menu.html#FileDelete"> File-Delete</a> command.&nbsp;</font>
+</p>
+
+<p><font face="Arial">Playlists are useful for playback of a collection of audio files.&nbsp; A
+movie file or mixed file collection is possible, too.&nbsp; If movie files are
+active the Media Player will show the movie and the playlist will not be seen
+until the movie ends.</font>
+</p>
+
+<p>
+&nbsp;
+</p>
+
+<p align="center">
+<font face="Arial">
+<img border="0" src="images/mediaplayer4.gif" width="400" height="248">
+</font>
+</p>
+
+<p align="center">
+<font face="Arial">
+Figure 4.</font>
+</p>
+
+<p align="left">
+&nbsp;
+</p>
+
+<p align="left">&nbsp;</p>
+<hr>
+<p align="left">Next Document:&nbsp; <a href="menu.html">Menu Commands</a></p>
+
+<p align="left">
+<p align="left">Copyright (c) 2002-2023 William Miles</p>
+
+</p>
+
+<p align="left">
+&nbsp;
+</p>
+
+</body>
+
+</html>

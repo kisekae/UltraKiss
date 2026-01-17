@@ -1,0 +1,145 @@
+<html>
+	<head>
+		<title>Image Edit Lesson 2</title></head>
+	<body>
+		<h1 align="center"><font color="#000000">Image Tutorial</font></h1>
+		<h1 align="center"><font color="#ff0000">Lesson 2. Creating Color Variations</font></h1>
+		<p>&nbsp;</p>
+		<ol>
+			<li>
+				We are now going to create a different color variation to the doll set created
+				in lesson 1.&nbsp; If you are continuing from lesson 1 you can skip to step
+				3.&nbsp; Otherwise, ensure that UltraKiss is showing the main logo
+				screen.&nbsp; Close any existing data set.
+
+This	lesson	requires	editing	of the KiSS set so ensure that the Edit Enable toggle button on the toolbar is set.<img src="images/editenable.gif" width="16" height="16" hspace="5" align="absmiddle">
+<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">File-Open</FONT>&nbsp; to load the configuration file <FONT color="#cc6600">
+					CNF1.cnf</FONT> from the Tutorial/Edit Image directory or the directory you
+				used in lesson 1.&nbsp; This will load the doll set that you created in lesson
+				1.
+				<p>&nbsp;</p>
+			<li>
+				Select the doll and all its clothes.&nbsp; Position your mouse above and to the
+				left of the doll, hold down the <FONT color="#cc6600">alt key</FONT>, and drag
+				to create a selection box that fully contains the doll.&nbsp; Release the mouse
+				button and all items will be selected and shown with blue marquee boxes.&nbsp;
+				Note that this procedure has purposefully not selected the background picture.
+				<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">Edit-Copy</FONT> or <FONT color="#000099">Ctrl-c</FONT>
+				to copy the selected objects to the clipboard.
+				<p>&nbsp;</p>
+			<li>
+				Next, use <FONT color="#000099">Edit-Add Page</FONT> to add a new page to your
+				set.&nbsp;&nbsp;UltraKiss will automatically switch to view this empty page.
+				<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">Edit-Paste</FONT> or <FONT color="#000099">Ctrl-v</FONT>
+				to paste the selected objects into this page. You should see the doll
+				appear with all its clothes. The background color of the page should be
+				the background color of the first palette file referenced in the
+				CNF. You should use <FONT color="#000099">Edit-Unselect All</FONT> or
+				<FONT color="#cc6600">right-click</FONT> with your mouse
+				anywhere on the background to remove the selection boxes.
+				<p>&nbsp;</p>
+		  <li>
+				Next, use <FONT color="#000099">Edit-Past</FONT> or press <FONT color="#000099">
+				Ctrl-v</FONT> again to paste another copy of the selected objects into this
+				page.&nbsp; You should see blue selection marquee boxes appear once more as the
+				second copy is pasted over top of the first copy.<br>
+				<BR>
+				Hold the <FONT color="#cc6600">shift</FONT> key down and drag the second copy
+				to some other location on the page.&nbsp; With the shift key down all selected
+				items are moved simultaneously.&nbsp; If you make a mistake and forget to hold
+				the shift key down, use <FONT color="#000099">Edit-Undo</FONT> or press <FONT color="#000099">
+				Ctrl-z</FONT> to undo your last change and try again.&nbsp;You can <FONT color="#cc6600">
+				right-click </FONT>with your mouse anywhere on the background to remove the
+				selection boxes after the doll is moved.<br>
+				<br>
+				This paste operation has created new object numbers with duplicate ambiguous cel images for all selected cels.
+				You can see the duplicate references in the KiSS configuration file if you use
+				<FONT color="#000099">View-Active Configuration</FONT> or press F11.<br>
+				<br>
+				When you are satisfied with the positioning you should commit these changes by doing an <FONT color="#000099">Edit-Write Page</FONT>.
+				This will establish the initial positions for all new objects so that a
+				<FONT color="#000099">View-Reset</FONT> will restore the objects to their current positions.
+			    <p>&nbsp;</p>
+		  <li>
+				You should now have two copies of the doll. We want to change one of the shirt
+				colors.&nbsp; On one of the dolls right-click on the shirt and select <FONT color="#000099">
+					Image&nbsp;Context-Edit&nbsp;Palette</FONT>. This will invoke the Color
+				Editor tool to change palette colors.&nbsp; You will see two copies of the
+				shirt in the preview panel because each image cel is currently associated with
+				the same palette file. We are going to change the color of the shirts and
+				create a new palette file for one of the images.<br>
+				<br>
+				If the images in the preview panel are too small to work with, use the magnifying glass tool
+				in the <FONT color="#000099">Color Editor</FONT> image preview panel to
+				increase the image size.
+				<p>&nbsp;</p>
+		  <li>
+				Select the eyedropper tool in the <FONT color="#000099">Color Editor</FONT> image
+				preview panel. Position the eyedropper over a light blue color in one of
+				the shirts and click.&nbsp; This highlights the color in the palette panel and
+				also sets the active color in the toolbar.
+				<p>&nbsp;</p>
+		  <li>
+				Drag the <FONT color="#000099">HSB slider</FONT> to near the 60% value. All
+				similar hue colors to the active color in the palette will be selected.&nbsp;
+				This should be the complete set of blue boxes in the middle of the palette and
+				perhaps a few outlying colors.&nbsp; You can remove the outlying colors
+				from the palette selection by pressing <FONT color="#cc6600">Ctrl-right click</FONT>
+				on each outlying box.
+				<p>&nbsp;</p>
+		  <li>
+				Choose a nice green color from the Color Chooser panel.&nbsp; All the selected
+				colors in the palette will change to match the tint of this color.&nbsp; The
+				preview image will also change to show the shirt in the new color. If the image
+				does not look good, you can <FONT color="#000099">Edit-Undo</FONT> the color
+				change and try again, repeating from step 9.
+				<p>&nbsp;</p>
+		  <li>
+				When you are satisfied with your changes use the Color Editor&nbsp;<FONT color="#000099">File-Save
+					As</FONT> command to save the new palette.&nbsp;Enter the name <FONT color="#cc6600">
+					'greenshirt.kcf'</FONT>. and save the palette&nbsp;in the same
+				directory&nbsp;that contains the&nbsp;image cel files.&nbsp;When the palette
+				file is saved you can close the Color Editor with <FONT color="#000099">File-Exit</FONT>.&nbsp;
+				When prompted to apply the changes to the current set, answer <FONT color="#cc6600">
+					No</FONT>.
+				<p>&nbsp;</p>
+		  <li>
+				On page 1 of the set select one of the shirts with an <FONT color="#cc6600">alt-click</FONT>.&nbsp;
+				Use <FONT color="#000099">Edit-Cut</FONT> or <FONT color="#000099">Ctrl-x</FONT>
+				to remove the selected object from the page.
+				<p>&nbsp;</p>
+		  <li>
+				Use <FONT color="#000099">Edit-Import Image to New Object</FONT> and select the <FONT color="#cc6600">
+					shirt.cel</FONT>.&nbsp; When prompted for the palette, choose <FONT color="#cc6600">
+					greenshirt.kcf</FONT>.&nbsp; Position the new imported shirt properly on
+				the doll.
+				<p>&nbsp;</p>
+		  <li>
+				Use <FONT color="#000099">Edit-Adjust Layering</FONT> to properly layer the
+				green shirt. Drag the top line for <FONT color="#cc6600">shirt.cel</FONT> down
+				to the other instance of shirt.cel in the list.&nbsp; When this is done the bow
+				should show in front of the new green shirt.
+				<p>&nbsp;</p>
+		  <li>
+				Use <FONT color="#000099">File-Save As</FONT> to save your work.&nbsp; Save the
+				new KiSS set to the Tutorial/Edit Image directory or a directory of your
+				choice.&nbsp; Change the name to <FONT color="#cc6600">CNF2.cnf</FONT>.&nbsp;
+				You can overwrite any existing element of the same name.
+				<p>&nbsp;</p>
+		  </li>
+		</ol>
+		<p align="left">&nbsp;</p>
+		<hr>
+		<p align="left">Next Document:&nbsp; <a href="lesson3.html">Image Tutorial Lesson 3<br>
+			</a>Prior Document:&nbsp; <a href="lesson1.html">Image&nbsp;Tutorial Lesson 1</a></p>
+		<p align="left">Copyright (c) 2002-2023 William Miles</p>
+
+		<p>&nbsp;</p>
+	</body>
+</html>

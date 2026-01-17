@@ -1,0 +1,235 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>UltraKiss Components</title>
+</head>
+
+<body>
+
+<h4><a name="getAttributes" id="getAttributes">getAttributes</a>()&nbsp;</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; getAttributes (variable,component[,attribute])</p>
+<p>This is a component command to retrieve the list of all attribute settings for a component, or the value of a specific attribute setting for a component. </p>
+<p>The <em>component</em> may be a literal name of any component or video cel. </p>
+<p>The <em>attribute</em> is a literal string or variable specifying the name of a specific attribute. Note that the action command name 'getAttributes' is case sensitive and must be specified as shown.</p>
+<p>This command returns a string value in the specified variable. When the optional attribute argument is not supplied the returned string is a comma delimited list of all attribute settings in a 'name=value' format. </p>
+<p>&nbsp;</p>
+<table width="80%"  border="0" cellspacing="1" cellpadding="1">
+  <tr>
+    <td width="10%"><font color="#800000">text</font></td>
+    <td width="90%">The text attribute specifies the initial text that is displayed by components that support text.</td>
+  </tr>
+  <tr>
+    <td><font color="#800000">read</font></td>
+    <td>This attribute specifies, for input components, whether the component is read-only. Valid options are True and False. Read-only components cannot respond to user input. Text boxes or textareas in read-only mode cannot accept user input.</td>
+  </tr>
+  <tr>
+    <td><font color="#800000">wrap</font></td>
+    <td>This attribute applies to text components. Valid options are True and False. If a text component wraps, words will be wrapped onto the following lines if the text exceeds the width of the component.</td>
+  </tr>
+  <tr>
+    <td><font color="#800000">align</font></td>
+    <td>This attribute specifies the initial text alignment. Valid options are Right, Left, and Center. This attribute applies to text boxes or textareas or textfields. Button text is always centered.</td>
+  </tr>
+  <tr>
+    <td><font color="#800000">noscroll</font></td>
+    <td>This attribute can be used to disable scrolling for scrollable components. Valid options are True and False. Text boxes, textareas, and lists by default are scrollable. A scrollable component is an input component, whether or not it is read-only. A scrollable component will support both vertical and horizontal scroll bars.</td>
+  </tr>
+  <tr>
+    <td><font color="#800000">vsb</font></td>
+    <td>This attribute can be used to force the display of a vertical scroll bar for a scrollable component. Valid options are True and False.&nbsp;</td>
+  </tr>
+  <tr>
+    <td><font color="#800000">hsb</font></td>
+    <td>This attribute can be used to force the display of a horizontal scroll bar for a scrollable component. Valid options are True and False.&nbsp;</td>
+  </tr>
+  <tr>
+    <td><font color="#800000">multiple</font></td>
+    <td>This attribute enables multiple selections for list components. Valid options are True and False.&nbsp;</td>
+  </tr>
+  <tr>
+    <td><font color="#800000">disabled</font></td>
+    <td>This attribute sets the initial enable state for a component. If a component is disabled it cannot accept user input action. Valid options are True and False.</td>
+  </tr>
+  <tr>
+    <td><font color="#800000">selected</font></td>
+    <td>This attribute sets the initial selection state for a component, such as a checkbox or radio button. Valid options are True and False.&nbsp;</td>
+  </tr>
+  <tr>
+    <td><font color="#800000"> nomargin</font></td>
+    <td>This attribute applies to button component types. Valid options are True and False. If a no margin attribute is set text can extend to the boundaries of the button.</td>
+  </tr>
+  <tr>
+    <td><font color="#800000">fontname</font></td>
+    <td>This attribute lets you select the text font from the fonts available on your system.&nbsp;</td>
+  </tr>
+  <tr>
+    <td><font color="#800000">fontsize</font></td>
+    <td>This area lets you specify a non-standard font size, in points.&nbsp; Typical values are 8, 10, 11, 12, 14, 16, 18, and so on.</td>
+  </tr>
+  <tr>
+    <td><font color="#800000">fontstyle</font></td>
+    <td>This attribute specifies the style of type, either bold or italic or plain.</td>
+  </tr>
+  <tr>
+    <td><font color="#800000">border</font></td>
+    <td>This attribute specifies the style of border to be drawn around the component. This is either line, bevel, etched, matte, or titled. Borders without type default to line borders. Depending on the border type, the border attributes may differ. Line borders have a thickness attribute. Titled borders have a title string. Beveled borders have a bevel type.</td>
+  </tr>
+  <tr>
+    <td><font color="#800000">thickness</font></td>
+    <td>This attribute applies to line type borders. It specifies the thickness of the line in pixels.</td>
+  </tr>
+  <tr>
+    <td><font color="#800000">bevelstyle</font></td>
+    <td>This attribute applies to bevel type borders. Beveled borders may be raised or lowered.</td>
+  </tr>
+  <tr>
+    <td><font color="#800000">bordertitle</font></td>
+    <td>This attribute applies to titled borders. This is the title text for the border.</td>
+  </tr>
+  <tr>
+    <td><font color="#800000">insets</font></td>
+    <td>This attribute specifies the border spacing around the top, left, bottom, and right sides of the component. The spacing is in pixels.</td>
+  </tr>
+  <tr>
+    <td><font color="#800000">bdc</font></td>
+    <td>This attribute specifies the primary color for the border. The value is an integer that specifies RGB colors. </td>
+  </tr>
+  <tr>
+    <td><font color="#800000">bc</font></td>
+    <td>This attribute specifies the background color for the component. The value is an integer that specifies RGB colors.</td>
+  </tr>
+  <tr>
+    <td><font color="#800000">fc</font></td>
+    <td>This attribute specifies the foreground color for the component. The value is an integer that specifies RGB colors. </td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<p>Components are declared as cels within a KiSS configuration as shown in the example below.&nbsp; Component cel identifiers use specific extensions such as .button, .list, or .textarea to identify the component type.&nbsp;&nbsp;</p>
+<p><font size="2" face="Courier New">#1.9999 List-1.List&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : 0&nbsp;&nbsp;&nbsp;&nbsp; ;%size[146,207] %offset[12,121] %attributes[wrap,vsb]<br>
+  #1.9999 TextArea-1.TextArea&nbsp;&nbsp; : 0&nbsp;&nbsp;&nbsp;&nbsp; ;%size[269,49] %offset[227,176] %attributes[wrap]<br>
+  #1.9999 Button1.Button&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : 0&nbsp;&nbsp;&nbsp;&nbsp; ;%size[135,25] %offset[325,267] %attributes[text=&quot;Press Me&quot;]</font></p>
+<p>The example above defines a List component with vertical scroll bars, a TextArea component that performs word-wrap, and a Button.&nbsp; The size and location of these components within the object are specified with the %size[] and %offset[] tags.&nbsp; Component attributes are specified with the %attributes[] tag.&nbsp;&nbsp;</p>
+<p>&nbsp;</p>
+<div align="center">
+  <p align="left">UltraKiss currently provides support for the following components:</p>
+  <div align="center">
+    <center>
+      <table border="1" cellpadding="5" width="100%">
+        <tr>
+          <td><b>Component</b></td>
+          <td><b>Type</b></td>
+          <td><b>Attributes</b></td>
+        </tr>
+        <tr>
+          <td>button</td>
+          <td>Passive</td>
+          <td>text, fc, bc, nomargin, fontname, fontsize, fontstyle, disabled</td>
+        </tr>
+        <tr>
+          <td>radiobutton</td>
+          <td>Input</td>
+          <td>text, fc, bc, nomargin, fontname, fontsize, fontstyle, disabled, selected, read</td>
+        </tr>
+        <tr>
+          <td>togglebutton</td>
+          <td>Input</td>
+          <td>text, fc, bc, nomargin, fontname, fontsize, fontstyle, disabled, selected, read</td>
+        </tr>
+        <tr>
+          <td>label</td>
+          <td>Passive</td>
+          <td>text, fc, bc, nomargin, fontname, fontsize, fontstyle, disabled, align</td>
+        </tr>
+        <tr>
+          <td>textbox</td>
+          <td>Passive</td>
+          <td>text, fc, bc, nomargin, fontname, fontsize, fontstyle, disabled, wrap</td>
+        </tr>
+        <tr>
+          <td>textarea</td>
+          <td>Input</td>
+          <td>text, fc, bc, nomargin, fontname, fontsize, fontstyle, disabled, wrap, vsb, hsb, read, noscroll</td>
+        </tr>
+        <tr>
+          <td>textfield</td>
+          <td>Input</td>
+          <td>text, fc, bc, nomargin, fontname, fontsize, fontstyle, disabled, read</td>
+        </tr>
+        <tr>
+          <td>passwordfield</td>
+          <td>Input</td>
+          <td>text, fc, bc, nomargin, fontname, fontsize, fontstyle, disabled, read</td>
+        </tr>
+        <tr>
+          <td>checkbox</td>
+          <td>Input</td>
+          <td>text, fc, bc, nomargin, fontname, fontsize, fontstyle, disabled, selected</td>
+        </tr>
+        <tr>
+          <td>list</td>
+          <td>Input</td>
+          <td>text, fc, bc, nomargin, fontname, fontsize, fontstyle, disabled, wrap, vsb, hsb, read, noscroll, multiple</td>
+        </tr>
+        <tr>
+          <td>combobox</td>
+          <td>Input</td>
+          <td>fc, bc, nomargin, fontname, fontsize, fontstyle, disabled, vsb, hsb, read, multiple</td>
+        </tr>
+        <tr>
+          <td>menuitem</td>
+          <td>N/A</td>
+          <td>fc, bc, nomargin, fontname, fontsize, fontstyle, disabled&nbsp;</td>
+        </tr>
+        <tr>
+          <td>checkboxmenuitem</td>
+          <td>N/A</td>
+          <td>fc, bc, nomargin, fontname, fontsize, fontstyle, disabled</td>
+        </tr>
+        <tr>
+          <td>menuseparator</td>
+          <td>N/A</td>
+          <td>N/A</td>
+        </tr>
+      </table>
+    </center>
+  </div>
+<font face="Courier New"></font></div>
+<p>&nbsp;</p>
+<p>  Related actions: <a href="setattributes.html">setAttributes()</a>, <a href="getenabled.html">getEnabled()</a>, <a href="setenabled.html">setEnabled()</a></p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+    <table border="1" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td width="20%">UltraKiss Extension</td>
+        <td width="30%">getAttributes (S,&quot;button1.togglebutton&quot;)</td>
+        <td>Sets the S variable to the toggle button attribute list </td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<table width="80%"  border="1" align="center" cellpadding="5" cellspacing="5" bordercolor="#000000" bgcolor="#FFFF99">
+  <tr>
+    <td><div align="center">Note: The UltraKiss getAttributes() command is viewer specific and not compatible with other viewers. </div></td>
+  </tr>
+</table>
+<p>&nbsp;</p><p><font color="#FF0000"><b>Example:&nbsp;<br>
+</b></font> </p>
+<p><font face="Courier New">#3.999 button1.button&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: 0 ;%size[318,26]&nbsp;&nbsp;&nbsp;&nbsp; %attributes[text=&quot;Press Me!"]&nbsp;<br>
+  #3.999 list1.list&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : 0 ;%size[175,177]&nbsp;&nbsp;&nbsp; %attributes[vsb]&nbsp;<br>
+</font> </p>
+<p> <font face="Courier New">;@press("button1.button") ;&nbsp;<br>
+  ;@ getAttributes(S,"list1.list") ;&nbsp;<br>
+  ;@ notify(&quot;list attributes are &quot;,S) ;&nbsp;<br>
+  ;@ getAttributes(T,"list1.list",&quot;text&quot;) ;&nbsp;<br>
+;@ notify(&quot;list text attribute is &quot;,T) ;&nbsp;</font></p>
+<p>&nbsp;</p>
+<h4>&nbsp;</h4>
+</body>
+
+</html>

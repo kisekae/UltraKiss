@@ -1,0 +1,398 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-ca">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>Media Player Menu</title>
+</head>
+
+<body>
+
+<h1><font color="#FF0000">Media Player Menu Commands</font></h1>
+<hr>
+
+<p><font face="Arial">Welcome to the Kisekae Media Player program documentation. The Media Player menu provides a
+standard drop down list of commands for all media player functions.&nbsp;</font></p>
+
+
+
+<p>&nbsp;</p>
+
+
+
+<h2 align="left"> <font color="#000080" face="Arial"> File Menu</font></h2>
+<font face="Arial">
+The File menu has commands to load and save media files and playlist files.&nbsp; The Kisekae
+Media Player can load any supported media file format as discussed in the Media
+Player <a href="index.html#Introduction">Introduction</a>.</font>
+
+<p>&nbsp;</p>
+<h3><a name="FileOpen"><font color="#800000" face="Arial">Open...</font></a></h3>
+<p><font face="Arial">The Open command is used to open an existing KiSS media file or any other
+type of media file recognized by the Kisekae
+UltraKiss program.&nbsp;</font></p>
+
+<p><font face="Arial">Figure 1 shows a standard Microsoft Windows file Open dialog.&nbsp;
+The file Open dialog can be used to select any file.&nbsp; If the selected file is of
+an audio or video type recognized by the Kisekae program then the media file will be
+opened.&nbsp;
+If the file is a text playlist file with an LST extension it will also be
+opened.&nbsp;
+If the file is not of a type recognized by the program then an error message
+will be displayed.</font></p>
+
+<p>&nbsp;</p>
+<p align="center">
+<font face="Arial">
+<img border="0" src="images/menu_01.gif" width="425" height="263"></font></p>
+<p align="center"> <font face="Arial"> Figure 1. Open Dialog</font></p>
+
+<p>&nbsp;</p>
+<p><font face="Arial">The example in Figure 1 selected the archive file TESTSETC.LZH.&nbsp; When
+opening archive files, the Media Player will display a selection list of
+suitable media elements found within the archive.&nbsp;These elements can be
+audio or video files or playlist files.&nbsp; Figure 2 shows a media selection dialog for the
+TESTSETC.LZH file.&nbsp;&nbsp;</font>
+</p>
+
+<p>&nbsp;</p>
+<p align="center">
+<font face="Arial">
+<img border="0" src="images/menu_02.gif" width="210" height="277"></font></p>
+<p align="center"> <font face="Arial"> Figure 2. Media File Selection</font></p>
+
+<p>&nbsp;</p>
+<p><font face="Arial">Once the media file is selected the file is opened and processed.&nbsp; Figure 3a shows a
+the Media Player with an audio file loaded.&nbsp; Figure 3b shows the Media
+Player with a playlist file loaded.</font></p>
+
+<p>&nbsp;</p>
+<p align="center">
+<font face="Arial">
+<img border="0" src="images/menu_03a.gif" width="399" height="91"></font></p>
+<p align="center"> <font face="Arial"> Figure 3a. Media Player Window</font></p>
+
+<p align="center"> &nbsp;</p>
+
+<p align="center"> <font face="Arial"> <img border="0" src="images/menu_03b.gif" width="400" height="248"></font></p>
+
+<p align="center"> <font face="Arial"> Figure 3b. Media Player Playlist</font></p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+<h3><a name="FileClose"><font color="#800000" face="Arial">Close</font></a></h3>
+
+<p><font face="Arial">The Close command is used to close the currently active media file or
+playlist file.&nbsp;If a
+playlist has been updated or
+modified the user will be prompted to save the current file.&nbsp; Figure 4
+is an example of a close prompt dialog.&nbsp; Canceling the file save will cancel the
+close request.&nbsp; If a playlist file is to be saved&nbsp; the <a href="#FileSaveAs">File-Save As</a> command
+is invoked.&nbsp; If not, the close operation will continue and all changes are
+lost.&nbsp;</font></p>
+
+<p>&nbsp;</p>
+<p align="center">
+<font face="Arial">
+<img border="0" src="images/menu_04.gif" width="270" height="117"></font></p>
+<p align="center"> <font face="Arial"> Figure 4. Close Prompt Dialog</font></p>
+
+<p>&nbsp;</p>
+
+<p><font face="Arial">Files loaded from a compressed archive are written to the original archive
+file from which they were loaded.</font></p>
+
+<p>&nbsp;</p>
+<h3><a name="FileSave"><font color="#800000" face="Arial">Save...</font></a></h3>
+
+<p><font face="Arial">The Save command saves playlist elements.&nbsp; KiSS playlist files are, by default, saved to the file directory or compressed archive file
+from which they were loaded.&nbsp; For example, if a media file was loaded from
+an archive file then any updated playlist will be written back to this archive
+file.&nbsp; If the files were loaded from a file
+directory then the Save operation writes any updated playlist into this
+directory.&nbsp; When files are saved to a compressed archive then the complete archive file
+is rewritten, replacing all updated elements in the archive.&nbsp; For files loaded from a directory only the
+playlist file is written.&nbsp;&nbsp;</font></p>
+
+<p><font face="Arial">The Save operation is performed in the background.&nbsp; Figure 5 shows the file save window that
+tracks the progress of the file output.&nbsp; The save operation may be
+cancelled at any time.&nbsp; If an error occurs an appropriate
+message will be displayed and the save operation will be cancelled.&nbsp; If the
+save operation is successful the dialog window will be automatically closed.</font></p>
+
+<p>&nbsp;</p>
+<p align="center">
+<font face="Arial">
+<img border="0" src="images/menu_05.gif" width="400" height="200"></font></p>
+<p align="center"> <font face="Arial"> Figure 5. File Save Window</font></p>
+
+<p>&nbsp;</p>
+
+<p><font face="Arial">Note that files are written to temporary files on disk and then renamed to the permanent
+file name if the save operation is successful.&nbsp; This ensures that backup
+file copies exist in the event of a program error.&nbsp; The backup file is
+normally deleted upon completion of a successful save. Backups can be retained
+permanently if the UltraKiss <a href="../kisekae/options.html#KeepFileBackup">Keep File Backup</a> program option has been set.</font></p>
+
+<p>&nbsp;</p>
+<h3><a name="FileSaveAs"><font color="#800000" face="Arial">Save As...</font></a></h3>
+
+<p><font face="Arial">The Save As operation provides a means to save the currently loaded playlist to a new file.&nbsp; If the
+playlist or media file was loaded from a compressed
+archive file then the Save As function will write the playlist&nbsp; to a new
+element in the compressed archive
+file.&nbsp; If the file was loaded from a file
+directory then the Save As function will write the element with a new name.&nbsp;&nbsp;</font></p>
+
+<p><font face="Arial">Figure 6 shows a standard Microsoft Windows file Save
+As dialog.  The Media Player Save As dialog will only accept element file names.&nbsp;
+You cannot change the name of the archive file from which the playlist element
+was loaded.&nbsp; To change archive file names, use the <a href="../archivemanager/index.html"> Archive Manager</a> tool.</font></p>
+
+<p><font face="Arial">The Save operation proceeds as described in the <a href="#FileSave">File-Save</a>
+command.</font></p>
+
+<p>&nbsp;</p>
+<p align="center">
+<font face="Arial">
+<img border="0" src="images/menu_06.gif" width="425" height="263"></font></p>
+<p align="center"> <font face="Arial"> Figure 6. Save As Dialog</font></p>
+
+<p>&nbsp;</p>
+
+<h3><a name="FileQueue"><font color="#800000" face="Arial">Queue...</font></a></h3>
+
+<p><font face="Arial">The Queue command initiates a <a href="#FileOpen">File-Open</a>
+command.&nbsp; The selected file is added to any active playlist currently in
+use.&nbsp; If the Media Player is inactive, queuing a file creates a new
+playlist as shown in Figure 3b and the queued media file begins to play.&nbsp;
+If the Media Player is active, queuing a new file will create a new playlist if
+required and add the file to the end of the list.</font></p>
+
+<p><font face="Arial">Media files are played in sequence.&nbsp; When a media file reaches the end
+of media the next file will start.&nbsp; When the last playlist media file
+completes the Media Player will enter an inactive state.&nbsp; The playlist will
+repeat from the first file if the player <a href="#OptionsLoopPlayback">Loop
+Playback</a> option is set.</font></p>
+<p><font face="Arial">The UltraKiss Media Player requires that all media files in a playlist be
+loaded from the same file directory or compressed archive file.&nbsp;&nbsp;</font></p>
+
+<p>&nbsp;</p>
+
+<h3><a name="FileDelete"><font color="#800000" face="Arial">Delete...</font></a></h3>
+
+<p><font face="Arial">The Delete command is used to remove queued entries from an active playlist
+file.&nbsp; When a playlist as seen in Figure 3b is loaded, the highlighted or
+selected file can be deleted from the list.</font></p>
+
+<p><font face="Arial">If the selected file is currently playing it will be closed, the playlist
+entry will be deleted, and the next playlist entry will start.</font></p>
+
+<p align="center">&nbsp;</p>
+
+
+
+<h3><a name="FileExit"><font color="#800000" face="Arial">Exit</font></a></h3>
+
+
+
+<p><font face="Arial">The Exit command closes any currently media file and terminates the Media
+Player program execution.</font></p>
+
+
+
+<p><font face="Arial">If a playlist file in the Media Player has been updated or
+modified the user will be prompted to save the current playlist.&nbsp; Figure 4
+is an example of a close prompt dialog.&nbsp; Cancelling the save will cancel the
+exit request.&nbsp; If the current file is saved&nbsp; then the <a href="#FileSaveAs">File-Save As</a> command
+is invoked and the Media Player program terminates upon completion of the save.&nbsp; If
+changes are not saved they will be
+lost.&nbsp;</font></p>
+
+
+
+<p><font face="Arial">If the Media Player program is terminated by closing the window the
+Exit command will be automatically invoked.&nbsp; The option
+to cancel the Exit request will not be available.</font></p>
+
+
+
+<p>&nbsp;</p>
+
+
+
+
+
+
+
+<p>&nbsp;</p>
+<h2 align="left"><font color="#000080" face="Arial">Options Menu</font></h2>
+<font face="Arial">
+The Media Player Options menu is used to set various control options and
+settings for custom control of the media playback.&nbsp; These options are
+related to the corresponding UltraKiss menu options.&nbsp; The UltraKiss Options
+settings are applied to any
+active Media Player.&nbsp;</font>
+
+<p>&nbsp;</p>
+<h3><a name="OptionsCenterFrame"><font color="#800000" face="Arial">Center Frame</font></a></h3>
+
+<p> <font face="Arial"> This option instructs the Media Player to
+center the frame in the screen when the media file begins.&nbsp; See the related
+UltraKiss <a href="../kisekae/options.html#CenterFrame">Center Frame</a> option.</font></p>
+
+<p>&nbsp;</p>
+
+<h3><a name="OptionsLoopPlayback"><font color="#800000" face="Arial">Loop Playback</font></a></h3>
+
+<p> <font face="Arial"> This option instructs the Media Player to
+repeat the playback of the active media file or play list upon completion of the file.&nbsp;
+See the related UltraKiss <a href="../kisekae/options.html#LoopPlayback">Loop
+Playback</a> option.</font></p>
+
+<p>&nbsp;</p>
+
+<h3><a name="OptionsMinimizeAudio"><font color="#800000" face="Arial">Minimize Audio</font></a></h3>
+
+<p> <font face="Arial"> This option instructs the Media Player to
+minimize itself when an audio media file begins.&nbsp; See the related UltraKiss
+<a href="../kisekae/options.html#MinimizeAudio">Minimize Audio</a> option.</font></p>
+
+<p>&nbsp;</p>
+
+<h3><a name="OptionsFullScreenVideo"><font color="#800000" face="Arial">Full Screen Video</font></a></h3>
+
+<p> <font face="Arial"> This option instructs the Media Player to
+show video files in a maximized window when the media file begins.&nbsp; See the
+related UltraKiss <a href="../kisekae/options.html#FullScreenVideo">Full Screen
+Video</a> option.</font></p>
+
+<p>&nbsp;</p>
+
+<h3><a name="OptionsRetainAspectRatio"><font color="#800000" face="Arial">Retain Aspect Ratio</font></a></h3>
+
+<p> <font face="Arial"> This option instructs the Media Player to
+maintain the original video aspect ratio if the window is resized.&nbsp; If this
+option is not set the movie will be scaled to fit within the actual window size.&nbsp;
+See the related UltraKiss <a href="../kisekae/options.html#RetainAspectRatio">Retain
+Aspect Ratio</a> option.</font></p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<h2 align="left"><font color="#000080" face="Arial">Help Menu</font></h2>
+<font face="Arial">
+The Media Player Help menu is used to display the online program documentation and
+product license information.</font>
+<p>&nbsp;</p>
+<h3><a name="HelpContents"><font color="#800000" face="Arial">Contents</font></a></h3>
+
+
+
+
+
+
+
+<p><font face="Arial">The Contents command invokes the Media Player online help system.&nbsp; Access to
+all product documentation is available.&nbsp; The online help system provides a
+complete index and navigation system to various topics of interest.</font></p>
+
+
+
+
+
+
+
+<h3>&nbsp;</h3>
+
+
+
+
+
+
+
+<h3><a name="HelpAbout"><font color="#800000" face="Arial">About</font></a></h3>
+
+
+
+
+
+
+
+<p><font face="Arial">The About command shows a standard program information dialog that provides
+copyright and program version information.&nbsp; Figure 7 show an example of the Kisekae UltraKiss program About dialog.&nbsp;
+The program icon image is the Kanji character that represents clothing and the
+Japanese characters show the Kanji word for paper dolls.</font></p>
+
+
+
+
+
+
+
+<p>&nbsp;</p>
+
+
+
+
+
+
+
+<p align="center"><img border="0" src="../images/about.jpg" width="596" height="459"></p>
+
+
+
+
+
+
+
+<p align="center"> <font face="Arial"> Figure 7. About Dialog</font></p>
+
+
+
+
+
+
+
+<p>&nbsp;</p>
+
+
+
+
+
+
+
+<p>&nbsp;</p>
+
+
+
+
+
+
+
+<hr>
+<p align="left">Prior Document:&nbsp; <a href="index.html">Media Player
+Introduction</a></p>
+
+
+
+
+
+
+
+<p align="left">Copyright (c) 2002-2023 William Miles</p>
+
+
+
+
+
+
+
+
+</body>
+
+</html>

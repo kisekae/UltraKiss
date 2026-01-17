@@ -1,0 +1,231 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>FKiSS Variables</title>
+</head>
+
+<body>
+
+<h2 align="center"><font face="Arial" color="#FF0000">FKiSS Variables</font></h2>
+<p>FKiSS 3 introduced variables, logic statements, and label
+blocks into the purely event driven and previously non-procedural KiSS
+program language. This extension transformed the FKiSS language
+from a non-procedural language specification into a procedural specification. With FKiSS
+3 the language now had the ability to maintain state information and
+consider sequences of operations over time.</p>
+<p>This procedural implementation introduced viewer compatibility problems, primarily because the leading
+FKiSS 3 program was limited in capability. These limitations&nbsp;required that variable names could only be of single
+character or a character followed by a single digit in length, label names could
+only be numbers, variable values could only be of integer type, type case was
+ignored for variable names, and events would be processed in a defined
+sequential order. Furthermore, all variables were given global scope across all FKiSS
+events. These implementation restrictions soon became implicit specifications
+for the FKiSS language.</p>
+<p>FKiSS 4 was a limited attempt to relax these restrictions. Variable names were
+expanded to 32 alphanumeric characters. Label blocks could now have mnemonic names.
+However, variable names continued to be case insensitive, variables were still only
+for integer data types, and variables continued to be global in scope.</p>
+<p> UltraKiss FKiSS 5 removes variable restrictions and limitations by introducing
+string variables and floating point numbers. String variables can be used to
+specify alarm and label names and enable display of text output to the user.
+Floating point variables facilitate mathematical calculations. New syntax
+declares event local variables to reduce scope and visibility. Label routines
+can now accept parameters and return results. FKiSS 5 variable
+names can be case sensitive. FKiSS 5 type conversion between different data types is automatic and
+transparent. FKiSS is intended to be fail safe and fault
+tolerant, therefore in the case where type conversion fails a zero or
+undefined value should be assigned. If an
+FKiSS command references an unknown entity, the
+command should fail silently.</p>
+<p>&nbsp;</p>
+<h2><font color="#FF0000"><a name="Variables">Variables</a></font></h2>
+<p>Variable values are set with a let() action statement. The let() statement is
+equivalent to an assignment statement in other programming languages. </p>
+<p>Example:</p>
+<p><font face="Courier New">;@
+let(A,12)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; an FKiSS 3 specification of a simple variable<br>
+;@ let(A1,10)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;; an
+FKiSS 3 specification of a simple numbered variable<br>
+;@ let(ABC,10)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;; an
+FKiSS 4 specification of a long name variable<br>
+;@ add(Sum,A,B)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; an
+FKiSS 4 arithmetic statement using variables <br>
+;@ let(ABC,&quot;face.cel&quot;)&nbsp;&nbsp;&nbsp;&nbsp;; an FKiSS 5
+specification of a string variable<br>
+;@ map(ABC)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; an FKiSS 5 map request for a cel<br>
+</font></p>
+<p>&nbsp;</p>
+<p><b><font face="Arial">Global Variables</font></b></p>
+<p>Global variables are the traditional variables as defined in previous FKiSS
+versions. &nbsp;Variable names must begin with a letter and can contain any
+alphanumeric character, including an underscore. Variable names cannot contain a
+space. All global variables are declared in a let() statement. Global variables
+are persistent and can be accessed by any label module or event routine. If a
+variable is referenced in a statement before it has been declared, a zero value
+will be assumed for the undeclared variable.</p>
+<p>Example:</p>
+<p><font face="Courier New">
+;@ let(ABC,&quot;Hello&quot;)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; an FKiSS 5
+specification of a string variable<br>
+;@ let(ABC,3.14159)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; an FKiSS 5
+specification of a floating point variable<br>
+;@ let(ABC,1234567)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; an FKiSS 5
+specification of an integer variable<br>
+;@ let(ABC,9999999999999)&nbsp;; an FKiSS 5
+specification of a long integer variable<br>
+;@ let(ABC,XYZ)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; if
+XYZ is undeclared, ABC will be assigned the value 0<br>
+</font></p>
+<p><b><font face="Arial">Local Variables</font></b></p>
+<p>Local variables were introduced withUltraKiss FKiSS 5  to facilitate the use of
+iterative or recursive label events. Local variables are only valid within the current event or label module in
+which they are declared. &nbsp;Local variable names must begin with an '@' sign
+followed by a letter and can contain any alphanumeric character, including an
+underscore. Local variable names cannot contain a space.</p>
+<p>New event local variables override other variables of the same name that are
+in scope. In other words, if label module One declares local variable <font face="Courier New, Courier, mono">@A</font> and
+calls label module Two, and label module Two also declares a local variable <font face="Courier New, Courier, mono">@A</font>,
+then within module Two the local variable of the same name in label module One can no longer be
+referenced. This ensures that recursive events are possible with no conflict
+between variables.</p>
+<p>Label modules can accept parameters and can use a local variable name to
+return a function result.</p>
+<p>Example:</p>
+<p><font face="Courier New">
+;@ let(@ABC,&quot;Hello&quot;)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; a specification of a
+local string variable<br>
+;@ let(@ABC,3.14159)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; a specification of a
+local floating point variable<br>
+;@ label(DoIt,@Param1)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;; a specification of a label
+module with one local parameter<br>
+;@ let(@DoIt,999999)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; a specification of a
+return value for the DoIt routine.<br>
+</font></p>
+<p><b><font face="Arial">Indirect Variables</font></b></p>
+<p>Indirect variable names begin with a '$' sign followed by a letter and can contain
+any alphanumeric character, including an underscore. Indirect variables are used
+to reference the value of another variable, whose name is contained in the
+indirect variable. For example, if variable <font face="Courier New, Courier, mono">$A</font> contains the value &quot;B&quot;,
+then a reference to <font face="Courier New, Courier, mono">$A</font> actually returns the value in variable B.</p>
+<p>Multiple levels of indirection are possible. If variable <font face="Courier New, Courier, mono">$A</font> contains the
+value &quot;$B&quot;, and variable <font face="Courier New, Courier, mono">$B</font> contains the value C, t hen a reference to
+<font face="Courier New, Courier, mono">$A</font> actually returns the value in variable C.</p>
+<p>Note that variable <font face="Courier New, Courier, mono">$A</font> is not the same as variable A.&nbsp;</p>
+<p>Example:</p>
+<p><font face="Courier New">
+;@ let($A,B)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; a
+specification of an indirect variable<br>
+;@ let(B,12)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; a
+specification of a global variable<br>
+;@ debug(&quot;$A=&quot;,$A)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; should display
+$A=12<br>
+</font></p>
+<p>&nbsp;</p>
+<h2><font color="#FF0000"><a name="Variable Types">Variable Types</a></font></h2>
+<p><b><font face="Arial">Integer Type</font></b>&nbsp;</p>
+<p>FKiSS 1 through FKiSS 4 only support Integer number types. There is no notion
+of the size of an Integer, however for 32 bit machines integers range
+from -2147483648 to 2147483647, inclusive. Integer values are typically used to
+specify coordinate locations, alarm or label names, or for simple arithmetic.
+Negative numbers are preceded with a minus sign. Integer numbers can also be used
+to identify KiSS objects, although by convention object numbers are usually preceded
+by a '#' character.</p>
+<p>Example:</p>
+<p><font face="Courier New">;@alarm(1)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; define named alarm 1<br>
+;@
+let(A,10)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; assign an integer to variable A<br>
+;@ move(#3,5,-10)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; move
+object 3 five pixels right and ten pixels up<br>
+;@ moveto(A,-5,10)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; move object
+10 to screen location (-5,10)<br>
+;@
+timer(1,100)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;
+invoke alarm 1 in 100 milliseconds</font></p>
+<p>The following syntax is also valid, although many viewers may not implement
+this construct that implements consistent object identification.</p>
+<p><font face="Courier New">;@ let(A,#10)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; assign an object reference to variable A<br>
+;@ moveto(#A,-5,10)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; move object A
+(A=10) to screen location (-5,10)<br>
+</font>&nbsp;</p>
+<p>Because there is no KiSS definition for an Integer, implementations could
+provide more accurate calculations by using increased precision
+arithmetic.&nbsp; For 64 bit numbers values could range from
+-9223372036854775808 to 9223372036854775807, inclusive. These data types are
+Long integers and long values can be used
+for more accurate calculations. Integers are automatically converted to Long
+values when necessary. Long values are automatically truncated to Integer values
+when necessary.&nbsp;</p>
+<p>Example:</p>
+<p><font face="Courier New">;@ let(A,999999999999)&nbsp;&nbsp;&nbsp;&nbsp; ;
+assign a big number to variable A<br>
+;@ div(B,A,9999999999)&nbsp;&nbsp;&nbsp;&nbsp; ; do long division<br>
+;@ debug(B)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; show the integer result<br>
+</font></p>
+<p>&nbsp;</p>
+<p><b><font face="Arial">Floating Point </font></b><font face="Arial"><b>Type</b></font>&nbsp;</p>
+<p>UltraKiss FKiSS 5 introduces Floating Point or decimal number types.&nbsp; Floating
+point numbers are automatically converted to Long or Integer values when
+necessary. An overflow() event can be fired if the conversion loses precision.
+Floating point numbers are 64 bit entities.</p>
+<p>Example:</p>
+<p><font face="Courier New">;@
+let(A,3.14)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; assign a fractional number to variable A<br>
+;@ div(B,A,-0.15)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; do
+floating point division<br>
+;@ debug(B)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; show the result<br>
+</font></p>
+<p>&nbsp;</p>
+<p><b><font face="Arial">String </font></b><font face="Arial"><b>Type</b></font>&nbsp;</p>
+<p>A string is text delimited by double quotation marks. String text is used to
+display messages or identify named cels.</p>
+<p>UltraKiss FKiSS 5 introduces string processing action commands to facilitate the
+definition and construction of strings. New FKiSS commands concat(), substr(),
+indexof(), replacestr(), and strlen() exist to manipulate and process string
+values.
+Extensions to the notify() and debug() commands are provided to enable string
+display. Keyboard events and component input can be used to obtain string text
+from the user.</p>
+<p> With FKiSS 5 quotation marks and
+control characters such as new line characters can be included in string text if the
+character is preceded with a backslash '\' escape character.</p>
+<p>String characters are indexed from zero. Substrings can be isolated from
+strings by specifying the start index and end index of the substring. Strings
+are automatically converted to numbers for calculations if the string is a valid
+number. Numbers are automatically converted to strings when necessary.</p>
+<p>Example:</p>
+<p><font face="Courier New">;@ let(A,&quot;1.
+Hello&quot;)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; assign a string to variable A<br>
+;@ concat(B,A,&quot; World&quot;)&nbsp;&nbsp;&nbsp; ; create &quot;1. Hello
+World&quot; in B<br>
+;@ replacestr(C,B,0,1,&quot;2&quot;) ; create &quot;2. Hello World&quot; in C<br>
+;@ notify(B,&quot;\n&quot;,C)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; show
+the strings on two lines<br>
+;@ substr(D,C,0,1)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; isolate the
+substring &quot;2&quot; in D<br>
+;@
+add(E,D,5)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; add 2 + 5 giving E<br>
+;@ debug(&quot;Sum is &quot;,E)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; show the sum<br>
+</font></p>
+<p>&nbsp;</p>
+<h2>&nbsp;</h2>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+</body>
+
+</html>

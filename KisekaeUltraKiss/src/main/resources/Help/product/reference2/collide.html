@@ -1,0 +1,182 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>collide</title>
+</head>
+
+<body>
+
+<h4><a name="collide">collide</a>()&nbsp;</h4>
+<p><font color="#FF0000"><b>Syntax:</b></font>&nbsp;&nbsp;&nbsp;&nbsp; collide (target,target)</p>
+<p>This event is triggered when either the cel or a cel in the cel group is
+moved so that its visible pixels overlap with those of the other cel
+or member of the other cel group. The target may be a literal name of an image
+file or a cel group name or a group object identifier.</p>
+<p>A cel must be mapped for a collision event to occur. Note that a mapped and completely transparent image pixel that is not the cel
+transparent color will trigger a collide() event. This applies to truecolor image
+cels that maintain alpha transparency.</p>
+<p>FKiSS movement of visible non-touching cels that are subsequently unmapped
+and moved can trigger a collide() event when the cel is mapped if the viewer
+supports visibility collisions.&nbsp;</p>
+<p>Collide() events are symmetric. collide (&quot;cel1.cel&quot;,
+&quot;cel2.cel&quot;) is equivalent to collide (&quot;cel2.cel&quot;,
+&quot;cel1.cel&quot;). Only one case need be specified and the event will trigger when cel1 touches cel2
+or cel2 touches cel1.</p>
+<p>More than one collide() event can be specified for a specific cel or object
+group pair. If sequential event processing is enforced each event will fire in
+the sequence in which it was defined, otherwise they are processed concurrently.&nbsp;
+</p>
+<p>Collide() events are triggered for movement with the mouse or movement by FKiSS
+action commands. On mouse movement, collision events are identified by comparing
+the collision state at the time the mouse button was pressed to the collision
+state when the mouse button is released. An object passing through or over
+another object as part of a mouse drag does not participate in a collision.</p>
+<p>On FKiSS movement, object collisions can be recognized on an individual
+action command basis or on an event granularity basis. For action commands,
+collisions are recognized by comparing the object collision state at the start
+of the command to the state after the command is processed. For event
+granularity, collisions are recognized by comparing the object collision state
+at the beginning of the event to the state when the event terminates. Event
+granularity will not recognize interim collisions when an object is moved,
+collides with another object, and then is restored to its original location
+within the same event. Action command granularity may fire duplicate collisions
+if an object is moved multiple times within an event, as could happen with
+movebyx() and movebyy() action commands.</p>
+<p>Viewers implement collision processing in different ways.&nbsp; Some viewers
+will recognize collisions on a command basis and others on an event basis. Some
+viewers will also execute collision event code immediately, interrupting the
+primary event, rather than interpreting the collision as a separately specified
+event. These differences all lead to viewer incompatibilities.&nbsp;</p>
+<p>Note that there is no defined order for event processing in KiSS. Single threaded viewers that do not support concurrent events will typically
+process the collide() event after the apart() event and before any in(), out(),
+or other collision event. No assumptions should be made for the sequence in
+which events are processed.</p>
+<p>&nbsp;</p>
+<p>Related events: <a href="apart.html">apart()</a>, <a href="out.html">out()</a>,
+<a href="in.html">in()<br>
+</a>Related actions: <a href="letcollide.html">letcollide()</a>, <a href="letinside.html">letinside(),</a>
+<a href="letcatch.html">letcatch()</a></p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+  <table border="1" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td width="20%">FKiSS 2 allows cel literal names.</td>
+      <td width="30%">collide (&quot;cel1.cel&quot;, &quot;cel2.cel&quot;)</td>
+      <td>Triggered when the first cel collides with the second cel.</td>
+    </tr>
+    <tr>
+      <td width="20%">FKiSS 4 allows cel group names.&nbsp;&nbsp;</td>
+      <td width="30%">collide (!Table, !Chair)&nbsp; or&nbsp; collide (!Table,
+        &quot;cel1.cel&quot;)</td>
+      <td>Triggered when any cel in cel group 1 collides with any cel in cel
+        group 2.</td>
+    </tr>
+    <tr>
+      <td width="20%">FKiSS 5 allows group objects.</td>
+      <td width="30%">collide (!Table, #4)&nbsp; or&nbsp; collide (#4, &quot;cel1.cel&quot;) or
+        collide(#3,#4)</td>
+      <td>Triggered when any cel in the first collection collides with any cel
+        in the second collection.</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+  <table border="1" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td width="20%">ImmediateCollide</td>
+      <td width="30%">apply collision events on every action statement</td>
+      <td>default value &quot;<font color="#0000FF">true</font>&quot;
+        (Compatibility option)</td>
+    </tr>
+    <tr>
+      <td width="20%">MoveXYCollide&nbsp;</td>
+      <td width="30%">apply collision events on each moveby[x/y] command&nbsp;&nbsp;</td>
+      <td>default value &quot;<font color="#0000FF">false</font>&quot;
+        (Compatibility option)</td>
+    </tr>
+    <tr>
+      <td width="20%">MapCollide</td>
+      <td width="30%">apply collision events on visibility changes</td>
+      <td>default value &quot;<font color="#0000FF">false</font>&quot;
+        (Compatibility option)</td>
+    </tr>
+    <tr>
+      <td width="20%">ImmediateEvent&nbsp;</td>
+      <td width="30%">enforces sequential event processing&nbsp;&nbsp;</td>
+      <td>default value &quot;<font color="#0000FF">false</font>&quot;
+        (Compatibility option)</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p>
+<font color="#FF0000"><b>FKiSS 2 Example:&nbsp;<br>
+</b></font>
+<br>
+<font face="Courier New">#3   R.CEL         *0   : 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;<br>
+#2   G.CEL         *0   : 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;<br>
+#1   B.CEL         *0   : 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;<br>
+<br>
+
+;@collide(&quot;G.CEL&quot;,&quot;B.CEL&quot;) ;&nbsp;<br>
+;@ notify("collide G.CEL and B.CEL")                        ;&nbsp;<br>
+<br>
+;@collide("G.CEL","R.CEL")                                  ;&nbsp;<br>
+;@ notify("collide G.CEL and R.CEL")                        ;&nbsp;<br>
+<br>
+;@collide("R.CEL","B.CEL")                                  ;&nbsp;<br>
+;@ notify("collide R.CEL and B.CEL")                        ;&nbsp;<br>
+</font></p>
+<p><br>
+<font color="#FF0000"><b>FKiSS 4 Example:&nbsp;</b></font></p>
+<p><font face="Courier New">#3   R.CEL         *0   : 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;!RedGreen !Red<br>
+#2   G.CEL         *0   : 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;!RedGreen<br>
+#1   B.CEL         *0   : 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;!Blue</font></p>
+<p><font face="Courier New">;@collide(&quot;B.CEL&quot;,!RedGreen)                                ;&nbsp;<br>
+;@ notify("collide B.CEL and !RedGreen")                    ;&nbsp;<br>
+<br>
+;@collide(!Red,!Blue)&nbsp;&nbsp;&nbsp;&nbsp; ;&nbsp;<br>
+;@ notify("collide !Red and !Blue")                         ;&nbsp;<br>
+<br>
+;@collide(!RedGreen,!Blue)                                  ;&nbsp;<br>
+;@ notify("collide !RedGreen and !Blue")                    ;</font></p>
+<p><font face="Courier New"><br>
+</font><br>
+<font color="#FF0000"><b>FKiSS 5 Example:</b></font></p>
+<p><font face="Courier New">#2   R.CEL         *0   : 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;<br>
+#2   G.CEL         *0   : 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;<br>
+#1   B.CEL         *0   : 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;!Blue</font></p>
+<p><font face="Courier New">;@collide(#1,#2)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;&nbsp;<br>
+;@ notify("collide #1 and #2")                              ;&nbsp;<br>
+<br>
+;@collide(&quot;R.CEL&quot;,#1)&nbsp;&nbsp;&nbsp;&nbsp; ;&nbsp;<br>
+;@ notify("collide R.CEL and #1")                           ;&nbsp;<br>
+<br>
+;@collide(#2,!Blue)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;&nbsp;<br>
+;@ notify("collide #2 and !Blue")                           ;&nbsp;<br>
+</font></p>
+<p><font face="Courier New"><br>
+</font></p>
+
+</body>
+
+</html>

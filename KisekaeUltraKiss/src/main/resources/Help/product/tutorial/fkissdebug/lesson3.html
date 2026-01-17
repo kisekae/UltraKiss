@@ -1,0 +1,221 @@
+<html>
+	<head>
+		<title>Image Tutorial Lesson 1</title></head>
+	<body>
+		<h1 align="center"><font color="#000000">Debugging FKiSS Tutorial</font></h1>
+		<h1 align="center"><font color="#ff0000"> Lesson 3.&nbsp;The FKiSS Editor</font></h1>
+		<p>&nbsp;</p>
+		<ol>
+			<li>
+                Now that we have our calculator number buttons correctly
+                functioning, we can create operation buttons for the arithmetic
+                functions.&nbsp; If you are continuing from lesson 2 you can skip to step
+				3.&nbsp; Otherwise, ensure that UltraKiss is showing the main logo
+				screen.&nbsp; Close any existing data set.
+				<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">File-Open</FONT>&nbsp; to load the configuration file <FONT color="#cc6600">
+                    CNF2.cnf</FONT> from the Tutorial/FKiSS directory or the directory you used
+				in lesson 2.&nbsp; This will load the set that you created in lesson
+                2.
+				<p>&nbsp;</p>
+			<li>
+                Use <FONT color="#000099">Edit-Add Component-Button</FONT> to
+				create&nbsp;our first&nbsp;arithmetic button for our calculator. Position the button below
+				the calculator number buttons..&nbsp;	<BR>
+				<BR>
+				<FONT color="#cc6600">Right-click</FONT> on the button, select the Button
+				Attributes, and enter a plus sign in the Text area.&nbsp; Select an Arial font
+				and a Font Size of 20.&nbsp; Click OK, and then use your mouse to size the
+				button appropriately.<BR>
+				<BR>
+				Use <FONT color="#000099">Edit-Unselect All<FONT color="#000000"> to remove the
+						selection box or </FONT><FONT color="#cc6600">right-click</FONT></FONT><FONT color="#000000">
+					anywhere on the background</FONT>.<br>
+                <br>
+                Repeat this step and create buttons for the subtraction,
+                multiplication, and division operations, with the appropriate
+                symbols. Also create a button
+                for the equals operation that will show the arithmetic result.
+				<p>&nbsp;</p>
+			<li>
+                Right-click on one of the arithmetic buttons. Select <font color="#000099">Image
+                Context</font> from the pop-up menu and select the <font color="#000099">Event
+                Wizard</font>. When the wizard dialog shows, choose a <font color="#CC6600"> press</font>
+                event from the Event Type drop down combo box. You will see
+                simple skeleton event code for a press event on the button cel
+                automatically generated for you.<br>
+                <br>When arithmetic buttons are pressed we need to perform a
+                numeric calculation and update the display. We need to know which
+                operation was pressed,
+                but every button will behave in the same way.&nbsp; We will use
+                a label module to centralize our arithmetic logic.<br>
+                <br>Replace the <font face="Courier New">;@notify(...)</font>
+                statement in the generated skeleton code with the following line,
+                using the correct numeral for the button that you are working
+                with:<br>
+                <br><font face="Courier New">;@ let(Operation,1)
+                goto(OperatorPressed)</font><br>
+                <br>Repeat this step for all other arithmetic buttons. Use the
+                operation value 1 for addition, 2 for subtraction, 3 for
+                multiplication, 4 for division, and 5 for equals.
+				<p>&nbsp;</p>
+			<li>
+                We will now code the OperatorPressed label module. Use <font color="#000099">Tools-FKiSS
+                Editor</font> to launch the FKiSS Editor tool. Choose <font color="#000099">File-New
+                Event</font> to open a text editor window for the new event
+                code. In the text editor, add the following code:<br>
+                <br><font face="Courier New">;@label(OperatorPressed)<br>
+                ;@ ifequal(LastOp,0) let(A,N) endif()<br>
+                ;@ ifequal(LastOp,1) add(A,A,N) endif()<br>
+                ;@ ifequal(LastOp,2) sub(A,A,N) endif()<br>
+                ;@ ifequal(LastOp,3) mul(A,A,N) endif()<br>
+                ;@ ifequal(LastOp,4) div(A,A,N) endif()<br>
+                ;@ ifequal(LastOp,5) setText(&quot;textbox1.textbox&quot;,A)
+                endif()<br>
+                ;@ let(LastOp,Operation)<br>
+                ;@ let(NewNumber,0)<br>
+                </font><br>
+                <FONT color="#cc6600">Note:&nbsp; If you copy and paste these lines from the help
+					documentation into the text editor you must ensure that the semicolon
+					and at-sign combination appears at the beginning of every line.&nbsp; You can
+					copy the help text by selecting the text and pressing Ctrl-C to copy the text
+					to the clipboard. Use Ctrl-V to paste the text into the text
+                file.</FONT><BR>
+                <br>The variable <font face="Courier New">LastOp</font> represents our
+                last calculator operation. The textbox is our display
+                window. Each time we press an operator button apply the last
+                observed operation using our current number N and update our
+                accumulator A. The variable <font face="Courier New">NewNumber</font>
+                lets us enter a new number into our calculator.<br>
+                <br>
+                Exit the text editor and apply the changes to create the
+                OperatorPressed label event.
+				<p>&nbsp;</p>
+			<li>
+                We now need to correct our DigitPressed label module to
+                recognize when a new number is being entered. Use <font color="#000099">Tools-FKiSS
+                Editor</font> to launch the FKiSS Editor tool. Select the
+                DigitPressed event from the event list in the right pane. Choose <font color="#000099">File-Edit
+                Event</font> to open a text editor window for the event
+                code. In the text editor, replace the code with the following:<br>
+                <br><font face="Courier New">;@label(DigitPressed)&nbsp;&nbsp;<br>
+                ;@ ifequal(NewNumber,0) let(N,0) endif()&nbsp;<br>
+                ;@ mul(N,N,10) add(N,N,Digit) setText(&quot;textbox1.textbox&quot;,N)&nbsp;&nbsp;<br>
+                ;@ let(NewNumber,1)&nbsp;<br>
+                </font><font face="Courier New"><br>
+                </font>
+                <br>
+                Exit the text editor and apply the changes to update the
+                DigitPressed label event.
+				<p>&nbsp;</p>
+			<li>
+                When the updates have been made, press the FKiSS Editor <img border="0" src="../../fkisseditor/images/toolbar_04.gif" align="center" width="25" height="25">&nbsp;
+                toolbar button or use <font color="#000099">Run-Program Resume</font>
+                to return to normal processing. This will hide the FKiSS Editor
+                tool.
+                You can now play with your set and see how it behaves.<br>
+                <br>
+                There is a purposeful bug in our code which you will discover. We will use
+                the FKiSS Editor to track down and correct this problem.<br>
+                <br>
+                Enter 999. Then press the + button. Then enter 1. If you have
+                coded the OperatorPressed and DigitPressed label events as
+                shown, your calculator display should show the number 1. Now
+                press the Equals button. We expect the result 1000 to be shown
+                in the calculator display, but nothing appears to happen. If you
+                press the Equal button again, the result 1000 magically shows.
+                The Equals button does not always display the accumulator
+                result. It takes two presses on the button before the result is
+                shown.<br>
+                <br>
+                Let's figure out what is happening. Use <font color="#000099">View-Restart</font> to reset our
+                calculator. We are now going to debug our code to try to find
+                the error. Repeat the test. Enter 999. Then press the + button.
+                Then enter 1.&nbsp;<br>
+                <br>
+                Now, press the <img border="0" src="../../fkisseditor/images/toolbar_03.gif" align="center" width="25" height="25">&nbsp;
+                pause breakpoint button on the UltraKiss toolbar to activate the FKiSS Editor
+                on the next event. Then, press the Equal button and trace your code to
+                see if you can discover why the Equals button is not behaving
+                correctly.<br>
+                <br>
+                As you trace the code you should see that the LastOp variable is
+                1 for the addition operation and the sum 999+1 is correctly
+                computed, with the result 1000 in variable A. However, as we
+                continue to execute the code step by step we will eventually encounter the
+                statement that is supposed to update the display:&nbsp;<font face="Courier New"><br>
+                <br>
+                ;@ ifequal(LastOp,5) setText(&quot;textbox1.textbox&quot;,A)
+                endif()</font><br>
+                <br>
+                By looking at the variable values we can see the problem. This statement incorrectly references the LastOp variable which
+                is our + operator and has a value of 1. This explains why the
+                display is not updated. This test for the Equals operation should
+                use our
+                current Operation variable, and not LastOp.
+				<p>&nbsp;</p>
+			<li>
+                In the FKiSS Editor use <font color="#000099">File-Edit Event</font>
+                to correct the OperatorPressed label code. A text editor window
+                will open. Edit the incorrect statement and replace the faulty
+                statement with:<br>
+                &nbsp;<br>
+                <font face="Courier New">
+                ;@ ifequal(Operation,5) setText(&quot;textbox1.textbox&quot;,A)
+                endif()</font><br>
+                <br>
+                Exit the text editor and apply the change.
+                When the updates have been made, press the FKiSS Editor <img border="0" src="../../fkisseditor/images/toolbar_04.gif" align="center" width="25" height="25">&nbsp;
+                toolbar button or use <font color="#000099">Run-Program Resume</font>
+                to return to normal processing.<br>
+                <br>
+                Use <font color="#000099">View-Restart</font> to reset our
+                calculator. Repeat the test and observe that the error is
+                corrected.
+				<p>&nbsp;</p>
+			<li>
+                The last thing to do is add a Clear button to our calculator.
+                Use <FONT color="#000099">Edit-Add Component-Button</FONT> to
+				create&nbsp;this button. Position the button appropriately on
+                the calculator.&nbsp;	<BR>
+				<BR>
+				<FONT color="#cc6600">Right-click</FONT> on the button, select the Button
+				Attributes, and enter 'Clear' in the Text area.&nbsp; Select an Arial font
+				and a Font Size of 20.&nbsp; Click OK, and then use your mouse to size the
+				button appropriately.
+				<p>&nbsp;</p>
+			<li>
+                Right-click on the Clear button. Select <font color="#000099">Image
+                Context</font> from the pop-up menu and select the <font color="#000099">Event
+                Wizard</font>. When the wizard dialog shows, choose a <font color="#CC6600"> press</font>
+                event from the Event Type drop down combo box.&nbsp;<br>
+                <br>Replace the <font face="Courier New">;@notify(...)</font>
+                statement in the generated skeleton code with the following
+                code:<br>
+                <br><font face="Courier New">;@ let(NewNumber,0) let(LastOp,0)
+                let(A,0)<br>
+                ;@ </font><font face="Courier New">setText(&quot;textbox1.textbox&quot;,0)</font><br>
+                <br>Apply the change and test your calculator. You may find that
+                there are other features that you wish to develop or other
+                improvements necessary. This is left as an exercise.
+				<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">File-Save As</FONT> to save your work.&nbsp; Save the
+				new KiSS set to the Tutorial/FKiSS directory or a directory of your
+				choice.&nbsp; The configuration element name should be changed
+                to <FONT color="#cc6600">CNF3.cnf</FONT>
+				if you began this tutorial after first starting UltraKiss.&nbsp; You can
+				overwrite any existing element of the same name.
+				<p>&nbsp;</p>
+			</li>
+		</ol>
+		<p align="left">&nbsp;</p>
+		<hr>
+        <p align="left">Next Document:&nbsp; <A href="../../tutorials.html">UltraKiss Tutorials</A><A href="lesson2.html"><br>
+			</A>Prior Document:&nbsp; <a href="lesson2.html">Event Tutorial
+        Lesson 2</a></p>
+		<p align="left">Copyright (c) 2002-2023 William Miles</p>
+
+	</body>
+</html>

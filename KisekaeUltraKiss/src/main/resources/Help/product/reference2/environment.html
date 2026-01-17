@@ -1,0 +1,174 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>map</title>
+</head>
+
+<body>
+
+<h4><a name="environment" id="environment">environment</a>()&nbsp;</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; environment(variable, command, argument1, argument2, ...)</p>
+<p>The environment() command enables access to state information and other objects external to the viewer run-time environment. This command can be used to obtain the current user name, the system date and time, and access to a Calendar object to facilitate date manipulation.</p>
+<p>The result of the environment command is always returned in the first parameter variable. The  information returned in this variable can be of any type - integer, string, or even a reference to an external object instance. The second parameter is always an environment command, specified as a string literal or a variable that contains a string value. The remaining arguments are all literal values or variables that are specific to the identified environment command.</p>
+<p>Environment commands, specified as the command string, are shown below.&nbsp; Environment commands are not case sensitive. </p>
+<p>&nbsp;</p>
+<div align="center"><center>
+  <table border="1" cellpadding="5">
+      <tr>
+        <td width="118">&quot;getdate&quot;</td>
+        <td width="800">Returns the current date.&nbsp; The date is a string of the form MMM DD YYYY.</td>
+      </tr>
+      <tr>
+        <td>&quot;gettime&quot;</td>
+        <td>Returns the current time.&nbsp; The time is a string of the form HH:MM:SS.</td>
+      </tr>
+      <tr>
+        <td>&quot;getuser&quot;</td>
+        <td>Returns the UltraKiss registered user name.</td>
+      </tr>
+      <tr>
+        <td>&quot;gettotalmemory&quot;</td>
+        <td>Returns the total memory, in bytes, available to the Java virtual machine.</td>
+      </tr>
+      <tr>
+        <td>&quot;getfreememory&quot;</td>
+        <td>Returns the free memory, in bytes, currently available.&nbsp; This may not be accurate as Java memory management may not have reclaimed all available memory.</td>
+      </tr>
+      <tr>
+        <td valign="top">&quot;calendar&quot;</td>
+        <td><p>This invokes commands on the Calendar subsystem.&nbsp; Calendar commands are specified in the first argument variable as follows: </p>
+          <p>&nbsp;</p>
+          <table border="0" cellpadding="5">
+              <tr>
+                <td>&quot;getInstance&quot;</td>
+                <td>Returns a Calendar object.&nbsp; This object is initialized to the integer year, month, and day values passed as the next three argument values.&nbsp; If year, month, and day values are not provided the Calendar object is initialized to the current date.&nbsp; The returned Calendar object can be used on subsequent Calendar commands. Examples follow
+                              <p>environment(MyCalendar,&quot;calendar&quot;,&quot;getInstance&quot;,Y,M,D)<br>
+                environment(Cal,&quot;calendar&quot;,&quot;getInstance&quot;)</td>
+              </tr>
+              <tr>
+                <td>&quot;getyear&quot;</td>
+                <td>Returns the numeric year from the specified calendar object provided in  argument 2.&nbsp; If no calendar object obtained through a previous &quot;getInstance&quot; call is provided then the current year is returned.&nbsp; Examples follow:
+                              <p>environment(Year,&quot;calendar&quot;,&quot;getYear&quot;,Calendar)<br>
+                environment(Year,&quot;calendar&quot;,&quot;getYear&quot;)</td>
+              </tr>
+              <tr>
+                <td>&quot;getmonth&quot;</td>
+                <td>Returns the numeric month from the specified calendar object provided in argument 2.&nbsp; If no calendar object obtained through a previous &quot;getInstance&quot; call is provided then the current month is returned.</td>
+              </tr>
+              <tr>
+                <td>&quot;getdate&quot;</td>
+                <td>Returns the numeric date from the specified calendar object provided in argument 2.&nbsp; If no calendar object obtained through a previous &quot;getInstance&quot; call is provided then the current date is returned.</td>
+              </tr>
+              <tr>
+                <td>&quot;getdayofweek&quot;</td>
+                <td>Returns the current day of the week of the date in the specified calendar object provided in argument 2.&nbsp; If no calendar object obtained through a previous &quot;getInstance&quot; call is provided then the current day of week is returned.&nbsp; The day of week is a number from 0 to 6 in the Gregorian calendar, beginning from Sunday.</td>
+              </tr>
+              <tr>
+                <td>&quot;getdaysinmonth&quot;</td>
+                <td>Returns the number of days in the month for the date in the specified calendar object provided in argument 2.&nbsp; If no calendar object obtained through a previous &quot;getInstance&quot; call is provided then the current month is used.&nbsp;&nbsp;</td>
+              </tr>
+              <tr>
+                <td>&quot;year&quot;</td>
+                <td>Returns the string representation of the year from the specified calendar object provided in argument 2.&nbsp; If no calendar object obtained through a previous &quot;getInstance&quot; call is provided then the current year is returned.&nbsp;</td>
+              </tr>
+              <tr>
+                <td>&quot;month&quot;</td>
+                <td>Returns the string representation of the month from the specified calendar object provided in argument 2.&nbsp; If no calendar object obtained through a previous &quot;getInstance&quot; call is provided then the current month is returned. Values are January, February, March, ...</td>
+              </tr>
+              <tr>
+                <td>&quot;date&quot;</td>
+                <td>Returns the string representation of the date from the specified calendar object provided in argument 2.&nbsp; If no calendar object obtained through a previous &quot;getInstance&quot; call is provided then the current date is returned.</td>
+              </tr>
+              <tr>
+                <td>&quot;dayofweek&quot;</td>
+                <td>Returns the string representation of the day of week from the specified calendar object provided in argument 2.&nbsp; If no calendar object obtained through a previous &quot;getInstance&quot; call is provided then the current date is used.&nbsp; Values are Sunday, Monday, Tuesday, ...</td>
+              </tr>
+              <tr>
+                <td>&quot;setyear&quot;</td>
+                <td>Sets the year in the Calendar object passed as environment argument 2 to the integer value specified in environment argument 3.&nbsp; A new Calendar object is returned as the result of the environment command.&nbsp; If a calendar object is not passed in argument 1 then a new Calendar instance is returned.</td>
+              </tr>
+              <tr>
+                <td>&quot;setmonth&quot;</td>
+                <td>Sets the month in the Calendar object passed as environment argument 2 to the integer value specified in environment argument 3.&nbsp; A new Calendar object is returned as the result of the environment command.&nbsp; If a calendar object is not passed in argument 1 then a new Calendar instance is returned.</td>
+              </tr>
+              <tr>
+                <td>&quot;setdate&quot;</td>
+                <td>Sets the date in the Calendar object passed as environment argument 2 to the integer value specified in environment argument 3.&nbsp; A new Calendar object is returned as the result of the environment command.&nbsp; If a calendar object is not passed in argument 1 then a new Calendar instance is returned.</td>
+              </tr>
+        </table></td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp; </p>
+<p>Related actions: <a href="viewer.html">viewer()</a></p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+    <table border="1" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td width="20%">UltraKiss Extension</td>
+        <td width="30%">environment(N,&quot;gettotalmemory&quot;) </td>
+        <td>invoke environment specific functions</td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<table width="80%"  border="1" align="center" cellpadding="5" cellspacing="5" bordercolor="#000000" bgcolor="#FFFF99">
+  <tr>
+    <td><div align="center">Note: The UltraKiss environment() command is viewer specific and not compatible with other viewers. </div></td>
+  </tr>
+</table>
+<p><font color="#FF0000"><b>&nbsp;Example:&nbsp;<br>
+</b></font></p>
+<p><font face="Courier New, Courier, mono">;@label(BuildCalendar)                                      ; <br>
+  ;@ for(I,1,31) concat(S,&quot;20B&quot;,I,&quot;.Button&quot;) setAttributes(S,&quot;fc=0&quot;) next(I) ; <br>
+;@ ifequal(Calendar,0) ; <br>
+;@ &nbsp;environment(Calendar,&quot;Calendar&quot;,&quot;getInstance&quot;) ; get today's calendar<br>
+;@ &nbsp;environment(Y,&quot;Calendar&quot;,&quot;getYear&quot;,Calendar) ; <br>
+;@ &nbsp;environment(M,&quot;Calendar&quot;,&quot;getMonth&quot;,Calendar) ; <br>
+;@ &nbsp;environment(D,&quot;Calendar&quot;,&quot;getDate&quot;,Calendar) ; <br>
+;@ endif() ; <br>
+;@ environment(Calendar,&quot;Calendar&quot;,&quot;getInstance&quot;,Y,M,D) ; get required calendar<br>
+;@ environment(Calendar,&quot;Calendar&quot;,&quot;setDate&quot;,Calendar,1) ; set to first of month <br>
+;@ environment(Day,&quot;Calendar&quot;,&quot;getDayOfWeek&quot;,Calendar) ; <br>
+;@ environment(Days,&quot;Calendar&quot;,&quot;getDaysInMonth&quot;,Calendar) ; <br>
+;@ gosub(ChangeDate) ; restore date <br>
+;@ concat(S,&quot;20B&quot;,D,&quot;.Button&quot;) ; <br>
+;@ ifnotequal(Y,Year) setAttributes(S,&quot;fc=0&quot;) endif() ; <br>
+;@ ifnotequal(M,Month) setAttributes(S,&quot;fc=0&quot;) endif() ; <br>
+;@ ifnotequal(D,Date) setAttributes(S,&quot;fc=0&quot;) endif() ; <br>
+;@ environment(S1,&quot;Calendar&quot;,&quot;Year&quot;,Calendar) ; get symbolic year and month<br>
+;@ environment(S2,&quot;Calendar&quot;,&quot;Month&quot;,Calendar) ; <br>
+;@ concat(S,S2,&quot; &quot;,S1) setText(&quot;20Title.Label&quot;,S) ; set calendar title<br>
+;@ letinitx(X,#421) add(X,X,20) let(X1,X) ; calendar location<br>
+;@ letinity(Y,#421) add(Y,Y,60) let(Y1,Y) ; <br>
+;@ let(DX,23) let(DY,20) ; delta offsets<br>
+;@ sub(Day,Day,1) mul(N1,Day,DX) add(X,X,N1) ; X location of first day<br>
+;@ for(I,1,Days) ; <br>
+;@ &nbsp;concat(S,&quot;20B&quot;,I,&quot;.Button&quot;) moveto(S,X,Y) map(S) ; position date button<br>
+;@ &nbsp;add(X,X,DX) add(Day,Day,1) ; <br>
+;@ &nbsp;ifgreaterthan(Day,6) let(Day,0) add(Y,Y,DY) let(X,X1) endif() ; <br>
+;@ next(I) ; <br>
+;@ for(J,I,31) ; <br>
+;@ &nbsp;concat(S,&quot;20B&quot;,J,&quot;.Button&quot;) unmap(S) ; hide unused dates<br>
+;@ next(J) ; </font></p>
+<p><font face="Courier New, Courier, mono">;@label(ChangeDate) ; <br>
+  ;@ environment(N,&quot;Calendar&quot;,&quot;getDate&quot;,Calendar) <br>
+  ;@ 
+  concat(S,&quot;20B&quot;,N,&quot;.Button&quot;) setAttributes(S,&quot;fc=0&quot;) ; <br>
+;@ concat(S,&quot;20B&quot;,D,&quot;.Button&quot;) setAttributes(S,&quot;fc=16711680&quot;)<br>
+;@
+</font><font face="Courier New, Courier, mono">environment(Calendar,&quot;Calendar&quot;,&quot;setDate&quot;,Calendar,D) ; <br>
+</font><br>
+</p>
+<p><font face="Courier New"></font></p>
+</body>
+
+</html>

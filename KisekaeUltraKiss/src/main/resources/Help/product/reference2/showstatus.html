@@ -1,0 +1,76 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>showstatus</title>
+</head>
+
+<body>
+
+<h4><a name="showstatus">showstatus</a>()&nbsp;</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp;
+showstatus (string[,string,string,...])</p>
+<p>The showstatus() action displays a message on the viewer status bar. The
+arguments specify the text to be displayed in the status line and can be
+variable or literal strings. Each argument is converted to its string
+representation and concatenated with all other arguments in the order
+specified.&nbsp;</p>
+<p>To set the status line to its default state, use showstatus() without any
+arguments.</p>
+<p>
+Related actions: <a href="debug.html">debug()</a>, <a href="notify.html">notify()</a>,
+<a href="confirm.html">confirm()</a></p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td>UltaKiss extension</td>
+      <td>showstatus(&quot;Variable X is: &quot;,X)</td>
+      <td>Displays a composite message in the system status bar.</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<table width="80%"  border="1" align="center" cellpadding="5" cellspacing="5" bordercolor="#000000" bgcolor="#FFFF99">
+  <tr>
+    <td><div align="center">Note: The UltraKiss showstatus() command is viewer specific and not compatible with other viewers. </div></td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+    <table border="1" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td width="20%">VariableCase</td>
+        <td width="30%">variable names are case sensitive</td>
+        <td>default value &quot;<font color="#0000FF">false</font>&quot; (Compatibility option)</td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>&nbsp;FKiSS 5 Example:
+</b></font>
+</p>
+<p><font face="Courier New">#1.999 button.cel       : 0                              ;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+</font>
+<br>
+<font face="Courier New">;@press(#1)&nbsp;&nbsp; let(S,&quot;Object #1
+pressed&quot;)&nbsp;showstatus(S) ;&nbsp;<br>
+;@release(#1) showstatus(S,&quot; and then released&quot;)&nbsp; ;&nbsp;
+<br>
+</font></p>
+
+<p><br>
+<font face="Courier New"><br>
+</font></p>
+
+</body>
+
+</html>

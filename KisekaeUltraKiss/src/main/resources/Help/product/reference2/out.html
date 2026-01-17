@@ -1,0 +1,166 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>out</title>
+</head>
+
+<body>
+
+<h4><a name="out">out</a>()&nbsp;</h4>
+<p><font color="#FF0000"><b>Syntax:</b></font>&nbsp;&nbsp;&nbsp;&nbsp; out (target,target)</p>
+<p>This event is triggered when the bounding boxes of the two objects no longer
+overlap after a move, if they overlapped before. The target may be a literal name of an image
+file or a cel group name or an object group identifier.</p>
+<p>A cel must be mapped for a collision event to occur. Note that a mapped and completely transparent image
+can trigger an
+out() event.&nbsp;</p>
+<p>For cel group out() events, the event is triggered if no cel bounding box
+overlaps when any cel bounding box overlapped before. In other words, bounding
+boxes for all cels in the target groups are examined for overlap inclusion.</p>
+<p>Collision events are triggered for movement with the mouse or movement by FKiSS
+action commands. FKiSS movement of visible non-touching cels that are subsequently unmapped
+and moved can trigger a collision event when the cel is mapped if the viewer
+supports visibility collisions.&nbsp;</p>
+<p>Out() events are symmetric, out (#1, #2) is equivalent to out (#2, #1). Only one case need be specified and the event will trigger when
+object group #1 no longer overlaps object group #2
+or vice versa.</p>
+<p>More than one out() event can be specified for a specific cel or object
+group pair. If sequential event processing is enforced each event will fire in
+the sequence in which it was defined, otherwise they are processed concurrently.&nbsp;
+</p>
+<p>Out() events are triggered for movement with the mouse or movement by FKiSS
+action commands. On mouse movement, collision events are identified by comparing
+the collision state at the time the mouse button was pressed to the collision
+state when the mouse button is released. An object passing through or over
+another object as part of a mouse drag does not participate in a collision.</p>
+<p>On FKiSS movement, object collisions can be recognized on an individual
+action command basis or on an event granularity basis. For action commands,
+collisions are recognized by comparing the object collision state at the start
+of the command to the state after the command is processed. For event
+granularity, collisions are recognized by comparing the object collision state
+at the beginning of the event to the state when the event terminates. Event
+granularity will not recognize interim collisions when an object is moved,
+collides with another object, and then is restored to its original location
+within the same event. Action command granularity may fire duplicate collisions
+if an object is moved multiple times within an event, as could happen with
+movebyx() and movebyy() action commands.</p>
+<p>Viewers implement collision processing in different ways.&nbsp; Some viewers
+will recognize collisions on a command basis and others on an event basis. Some
+viewers will also execute collision event code immediately, interrupting the
+primary event, rather than interpreting the collision as a separately specified
+event. These differences all lead to viewer incompatibilities.&nbsp;</p>
+<p>Note that there is no defined order for event processing in KiSS. Single threaded viewers that do not support concurrent events will typically
+process the out() event after collide() and apart() events and after any in()
+event, and before stillin() and stillout() variants. No assumptions should be made for the sequence in
+which events are processed.</p>
+<p>&nbsp;</p>
+<p>Related events: <a href="apart.html">apart()</a>, <a href="collide.html">collide(),</a>
+<a href="stillout.html">stillout(),</a> <a href="in.html">in(),</a> <a href="stillin.html">stillin()</a><br>
+Related actions: <a href="letcollide.html">letcollide()</a>, <a href="letinside.html">letinside(),</a>
+<a href="letcatch.html">letcatch()</a></p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+  <table border="1" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td width="20%">FKiSS 2 allows object group names.</td>
+      <td width="30%">out (#1, #2)</td>
+      <td>Triggered when the first object group no longer overlaps with the second
+        object group.</td>
+    </tr>
+    <tr>
+      <td width="20%">FKiSS 4 allows cel group names and cel names.&nbsp;&nbsp;</td>
+      <td width="30%">out (!Table, !Chair)&nbsp; or&nbsp; out n (!Table,
+        &quot;cel1.cel&quot;)</td>
+      <td>Triggered when all cels in cel group 1 no longer overlap with any cel in cel
+        group 2.</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+  <table border="1" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td width="20%">ImmediateCollide</td>
+      <td width="30%">apply collision events on every action statement</td>
+      <td>default value &quot;<font color="#0000FF">true</font>&quot;
+        (Compatibility option)</td>
+    </tr>
+    <tr>
+      <td width="20%">MoveXYCollide&nbsp;</td>
+      <td width="30%">apply collision events on each moveby[x/y] command&nbsp;&nbsp;</td>
+      <td>default value &quot;<font color="#0000FF">false</font>&quot;
+        (Compatibility option)</td>
+    </tr>
+    <tr>
+      <td width="20%">MapCollide</td>
+      <td width="30%">apply collision events on visibility changes</td>
+      <td>default value &quot;<font color="#0000FF">false</font>&quot;
+        (Compatibility option)</td>
+    </tr>
+    <tr>
+      <td width="20%">ImmediateEvent&nbsp;</td>
+      <td width="30%">enforces sequential event processing&nbsp;&nbsp;</td>
+      <td>default value &quot;<font color="#0000FF">false</font>&quot;
+        (Compatibility option)</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p>
+<font color="#FF0000"><b>FKiSS 2 Example:&nbsp;<br>
+</b></font>
+<br>
+<font face="Courier New">#3   R.CEL         *0   : 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;<br>
+#2   G.CEL         *0   : 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;<br>
+#1   B.CEL         *0   : 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;<br>
+<br>
+
+;@out(&quot;G.CEL&quot;,&quot;B.CEL&quot;) ;&nbsp;<br>
+;@ notify(&quot;out G.CEL and B.CEL")                        ;&nbsp;<br>
+<br>
+;@out(&quot;G.CEL&quot;,&quot;R.CEL&quot;)                                  ;&nbsp;<br>
+;@ notify(&quot;out G.CEL and R.CEL")                        ;&nbsp;<br>
+<br>
+;@out(&quot;R.CEL&quot;,&quot;B.CEL&quot;)                                  ;&nbsp;<br>
+;@ notify(&quot;out R.CEL and B.CEL")                        ;&nbsp;<br>
+</font></p>
+<p><br>
+<font color="#FF0000"><b>FKiSS 4 Example:&nbsp;</b></font></p>
+<p><font face="Courier New">#3   R.CEL         *0   : 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;!RedGreen !Red<br>
+#2   G.CEL         *0   : 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;!RedGreen<br>
+#1   B.CEL         *0   : 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;!Blue</font></p>
+<p><font face="Courier New">;@out(&quot;B.CEL&quot;,!RedGreen)                                ;&nbsp;<br>
+;@ notify(&quot;out B.CEL and !RedGreen")                    ;&nbsp;<br>
+<br>
+;@out(!Red,!Blue)&nbsp;&nbsp;&nbsp;&nbsp; ;&nbsp;<br>
+;@ notify(&quot;out !Red and !Blue")                         ;&nbsp;<br>
+<br>
+;@out(!RedGreen,!Blue)                                  ;&nbsp;<br>
+;@ notify(&quot;out !RedGreen and !Blue")                    ;</font></p>
+<p><font face="Courier New">;@out(&quot;R.CEL&quot;,#1)&nbsp;&nbsp;&nbsp;&nbsp; ;&nbsp;<br>
+;@ notify(&quot;out R.CEL and #1")                           ;&nbsp;<br>
+<br>
+;@out(#2,!Blue)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;&nbsp;<br>
+;@ notify(&quot;out #2 and !Blue")                           ;&nbsp;<br>
+</font></p>
+<p><font face="Courier New"><br>
+</font></p>
+
+</body>
+
+</html>

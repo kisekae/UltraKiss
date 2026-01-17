@@ -1,0 +1,703 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-ca">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>Text Editor Menu</title>
+</head>
+
+<body>
+
+<h1><font color="#FF0000">FKiSS Editor Menu Commands</font></h1>
+<hr>
+
+<p><font face="Arial">Welcome to the Kisekae UltraKiss program documentation. The FKiSS Editor Menu provides a
+standard drop down list of commands for all program functions.&nbsp;</font></p>
+
+
+
+<p>&nbsp;</p>
+
+
+
+<h2 align="left"> <font color="#000080" face="Arial"> File Menu</font></h2>
+<font face="Arial">
+The File menu has commands to create, edit or delete event definitions, edit the
+text of the current configuration file, and show the properties of any selected
+event or action object.  The File menu also contains commands to print the current
+event definitions and terminate the FKiSS Editor execution.</font><p><font face="Arial">The FKiSS Editor can
+edit the text of any event and apply the changes to the current data set
+configuration.&nbsp; The changes take effect immediately and do not require a
+restart of the configuration.&nbsp; All changes to event definitions are
+re-parsed to identify syntax errors before any event definition is changed.</font></p>
+
+<p>&nbsp;</p>
+<h3><font face="Arial"><a name="FileNewEvent"><font color="#800000">New Event</font></a><font color="#800000">...</font></font></h3>
+<font face="Arial">
+The New Event command creates one or more new event definitions within the
+current KiSS configuration.&nbsp; The New Event command opens an empty <a href="../texteditor/index.html">Text
+Editor</a> screen in which the new event code can be typed, as shown in Figure
+1.&nbsp;&nbsp;</font>
+<p>&nbsp;</p>
+<p align="center"><font face="Arial"><img border="0" src="images/edit_01.jpg" width="532" height="262"></font></p>
+<p align="center"><a name="Figure 1. New Event"><font face="Arial">Figure 1. New Event</font></a></p>
+<p align="left">&nbsp;</p>
+<p align="left"><font face="Arial">More than one new event declarations can be defined.&nbsp; All
+events within the text file will be created when the text editor is
+closed.&nbsp; Each event is a new event and is added to the current
+configuration.&nbsp; It is valid to create multiple events such as press events
+for the same KiSS object.&nbsp; Each event declaration is unique and
+individually processed when the external event signal occurs.&nbsp; New event definitions
+are undoable commands.</font></p>
+<p align="left"><font face="Arial">When events are added to the configuration the command syntax is
+checked for errors.&nbsp; If a syntax error exists a warning message as shown in
+Figure 2 will be displayed.&nbsp; When the error is acknowledged a new text
+editor session will be created to enable error correction.</font></p>
+<p align="left">&nbsp;</p>
+<p align="center"><font face="Arial"><img border="0" src="images/edit_02.jpg" width="375" height="116"></font></p>
+<p align="center"><a name="Figure 2. Syntax Error"><font face="Arial">Figure 2. Syntax Error</font></a></p>
+<p align="left">&nbsp;</p>
+
+<h3><font face="Arial"><a name="FileEditEvent"><font color="#800000">Edit Event</font></a><font color="#800000">...</font></font></h3>
+<p><font face="Arial">The Edit Event command is used to open a new <a href="../texteditor/index.html">Text
+Editor</a> window that contains the full event text for the selected
+event.&nbsp; To select an event highlight an event name or an event action
+command in the FKiSS Editor event list display.&nbsp; If an action command is
+selected the editor is invoked for the parent event of the action command.&nbsp;</font></p>
+
+<p><font face="Arial">The event name can be changed, the event parameters can be changed, and
+action commands can be added or removed from the event definition.&nbsp; When the text editor is closed
+any updated event definitions are parsed for syntax errors.&nbsp; If no errors exist the original event is removed
+from the configuration and replaced with the new event definition.&nbsp; Event
+editing is an undoable command.</font></p>
+
+
+
+
+
+
+
+<p><font face="Arial">If syntax errors exist then a message as shown in Figure 2 will be displayed
+and the text editor will be re-invoked to correct the error.</font></p>
+
+
+
+
+
+
+
+<p><font face="Arial">New event definitions can be added through the Edit
+Event command.&nbsp; The selected event will be replaced with the first event
+definition and all other events in the edited file will be added to the
+configuration as new, unique events.&nbsp;&nbsp;</font></p>
+
+
+
+
+
+
+
+<p>&nbsp;</p>
+
+
+
+
+
+
+
+<h3><a name="FileDeleteEvent"><font color="#800000" face="Arial">Delete Event</font></a></h3>
+
+
+
+
+
+
+
+<p><font face="Arial">The Delete Event command will remove the selected event definition from the
+current configuration.&nbsp; To select an event highlight an event name or an
+event action command in the FKiSS Editor event list display.&nbsp; If an action
+command is selected the editor is invoked for the parent event of the action
+command.&nbsp;</font></p>
+
+
+
+
+
+
+
+<p><font face="Arial">A confirmation prompt dialog as shown in Figure 3 is displayed to confirm
+event deletion.&nbsp; Event deletion is an undoable command.</font></p>
+
+
+
+
+
+
+
+<p>&nbsp;</p>
+
+
+
+
+
+
+
+<p align="center"><font face="Arial"><img border="0" src="images/edit_03.jpg" width="372" height="117"></font></p>
+
+
+
+
+
+
+
+<p align="center"><a name="Figure 3. Event Deletion Confirmation"><font face="Arial">Figure 3.
+Event Deletion Confirmation</font></a></p>
+
+
+
+
+
+
+
+<p>&nbsp;</p>
+
+
+
+
+
+
+
+<h3><font color="#800000" face="Arial"><a name="FileConfiguration">Configuration</a>...</font></h3>
+
+
+
+
+
+
+
+<p><font face="Arial">The Configuration command is used to open a <a href="../texteditor/index.html">Text
+Editor</a> window to view the full configuration text.&nbsp; Editing changes to
+the event declarations can also be made within the configuration file.&nbsp; If changes
+are made the complete KiSS configuration will be reloaded into UltraKiss.&nbsp; The
+configuration reload will terminate the current FKiSS Editor session and restart
+the KiSS set.&nbsp;</font></p>
+
+
+
+
+
+
+
+<p><font face="Arial">All FKiSS breakpoints will be removed if the configuration is reloaded.&nbsp;&nbsp;</font></p>
+
+
+
+
+
+
+
+<p>&nbsp;</p>
+<h3><a name="FilePageSetup"><font color="#800000" face="Arial">Page Setup...</font></a></h3>
+
+<p><font face="Arial">The Page Setup dialog is an operating system dependent interface into the
+print control subsystem to size and orient the print page in preparation for
+printing.&nbsp; Figure 4 shows the
+Page Setup dialog for a Microsoft Windows operating environment.&nbsp; Not all
+systems will support all features for page control.</font></p>
+
+<p>&nbsp;</p>
+
+<p align="center"><font face="Arial"><img border="0" src="../images/pagesetup.gif" width="365" height="414"></font></p>
+<p align="center"> <font face="Arial"> Figure 4. Page Setup Dialog</font></p>
+
+<p align="left">&nbsp;</p>
+<h3><a name="FilePrintPreview"><font color="#800000" face="Arial">Print Preview...</font></a></h3>
+
+<p><font face="Arial">The Print Preview command is used to preview all print pages before
+printing.&nbsp; Figure 5 shows an
+example of the UltraKiss Print Preview dialog screen.&nbsp; UltraKiss will center
+and scale the current page image on the print page.&nbsp; The preview image
+of the print page can be scaled to any size required by changing the percentage
+value in the preview control field.&nbsp; Preset values of 10%, 25%, 50% and
+100% are provided for convenience.</font></p>
+
+<p><font face="Arial">The <a href="#FilePageSetup">Page Setup</a> can be changed from this dialog
+and <a href="#FilePrint">Printing</a> can be initiated directly.&nbsp;&nbsp;</font></p>
+
+<p>&nbsp;</p>
+
+<p align="center"><font face="Arial"><img border="0" src="../images/printpreview.gif" width="402" height="274"></font></p>
+<p align="center"> <font face="Arial"> Figure 5. Print
+Preview Dialog</font></p>
+
+<p align="left">&nbsp;</p>
+
+<p align="left">&nbsp;</p>
+<h3><a name="FilePrint"><font color="#800000" face="Arial">Print...</font></a></h3>
+
+<p><font face="Arial">The Print dialog is an operating system dependent interface into the print
+control subsystem to initiate printing of a print page.&nbsp; Figure 6 shows the Print dialog for a Microsoft Windows operating
+environment.&nbsp; Not all systems will support all features for print control.</font></p>
+
+<p>&nbsp;</p>
+
+<p align="center"><font face="Arial"><img border="0" src="../images/print.gif" width="438" height="325"></font></p>
+<p align="center"> <font face="Arial"> Figure 6. Print Dialog</font></p>
+
+<p align="center">&nbsp;</p>
+
+<p align="center">&nbsp;</p>
+<h3><a name="FileProperties"><font color="#800000" face="Arial">Properties...</font></a></h3>
+
+<p><font face="Arial">The Properties command shows a standard dialog window to display attributes
+of the currently loaded KiSS configuration file or the currently selected event
+or action item.&nbsp; Figure 7 is an example of a KiSS configuration properties dialog.&nbsp; This
+dialog provides detailed information on the technical aspects of the active KiSS
+configuration and provides control buttons to view additional information about
+associated data objects.</font></p>
+
+<p>&nbsp;</p>
+
+<p align="center"><font face="Arial"><img border="0" src="images/menu_11.gif" width="521" height="408"></font></p>
+
+<p align="center"> <font face="Arial"> Figure 7. Configuration Properties Dialog</font></p>
+
+<p>&nbsp;</p>
+<p><font face="Arial">This dialog window is a entry into the complete Kisekae UltraKiss subsystem to display
+the attributes and properties of all objects associated with an active KiSS data
+set.&nbsp; Refer to the <a href="../kisekae/objects.html">Object Properties</a>
+subsystem for a comprehensive description of all subsystem features, dialogs,
+and operation control.&nbsp;</font></p>
+
+<p>&nbsp;</p>
+<h3><a name="FileExit"><font color="#800000" face="Arial">Exit</font></a></h3>
+
+
+
+<p><font face="Arial">The Exit command closes the FKiSS Editor window.&nbsp; When the FKiSS Editor
+closes the edit history within the FKiSS editing session is not retained for
+future editing sessions.</font></p>
+
+
+
+
+
+
+
+<p>&nbsp;</p>
+
+
+
+
+
+
+
+<p>&nbsp;</p>
+<h2 align="left"> <font color="#000080" face="Arial"> Edit Menu</font></h2>
+<font face="Arial">
+The FKiSS Editor provides full undo and redo recovery of all FKiSS editing operations applied to the current KiSS data set.&nbsp;
+It is possible to undo or redo event definition creation, replacement, or
+deletion.&nbsp; In addition, debugging edit changes to variable values can also
+be undone or redone.&nbsp;</font><p><font face="Arial">FKiSS Editor edit functions can only be undone within
+the current editing session.&nbsp; Once the FKiSS Editor is closed the edit
+history is not retained.&nbsp; The FKiSS Editor is designed to be re-entrant for
+continuous breakpoint processing and code correction.&nbsp; Thus, the editor
+should only be terminated when all edit history can be discarded.&nbsp;</font></p>
+<p>&nbsp;</p>
+<h3><a name="EditUndo"><font color="#800000" face="Arial">Undo</font></a></h3>
+
+<p><font face="Arial">The FKiSS Editor supports full undo and redo edit recovery for event editing
+operations and variable value changes.&nbsp; These types of editing changes are reversible.&nbsp;
+The Undo command will reverse the last edit change that was made to the current
+KiSS configuration file.</font></p>
+
+<p>&nbsp;</p>
+<h3><a name="EditRedo"><font color="#800000" face="Arial">Redo</font></a></h3>
+
+<p><font face="Arial">The FKiSS Editor supports full undo and redo edit recovery for event editing
+operations and variable value changes.&nbsp; These types of editing changes are reversible.&nbsp;
+The Redo command will re-apply the last edit change that was made to the current
+KiSS configuration file.</font></p>
+
+<p>&nbsp;</p>
+
+<h3><font color="#800000" face="Arial"><a name="EditUndoAll">Undo All</a></font></h3>
+
+<p><font face="Arial">The Undo All command will roll back all edit changes that have been made
+since the FKiSS Editor session was started.&nbsp; This command cannot be
+undone.&nbsp; A confirmation dialog as shown in Figure 8 will inquire if this
+operation should proceed.</font></p>
+
+<p>&nbsp;</p>
+
+<p align="center"><font face="Arial"><img border="0" src="images/edit_08.jpg" width="269" height="116"></font></p>
+
+<p align="center"><a name="Figure 8. Undo All Confirmation"><font face="Arial">Figure 8. Undo All
+Confirmation</font></a></p>
+
+<p align="left">&nbsp;</p>
+
+<p align="left">&nbsp;</p>
+
+<h2><font color="#000080" face="Arial">Run Menu</font></h2>
+
+<p><font face="Arial">The Run Menu provides a set of commands to control breakpoint processing and
+debugging of FKiSS events.&nbsp;&nbsp;You can set dynamic breakpoints on any
+FKiSS event or action statement, the code will automatically interrupt, and you
+can visually step though your code and watch it run.&nbsp; The event handling
+interrupts whenever it tries to process a command that is flagged to breakpoint.
+When breakpointed the window title will start with &quot;Breakpoint&quot; and
+the event display will open to the interrupted statement.&nbsp; If you are in
+breakpoint mode and tracing an event, you can single step through the code (F3),
+step into the code (F4), run to a selected statement (F5), or run to the end of
+the current event (F6).&nbsp; The active breakpoint line is shown in blue.&nbsp;
+Execution is interrupted 'before' any breakpoint statement is executed so
+variable values show the before state. If you single step through the code the
+statement is executed in its entirety and the current line will move to the next
+line. If you want to look at the 'after' values for the variables once the
+statement is executed, examine the FKiSS Editor variable list or hold your
+cursor over the just executed line to see a tool tip pop-up.</font></p>
+
+<p>&nbsp;</p>
+
+<h3><font color="#800000" face="Arial"><a name="RunExecute">Execute Statement</a></font></h3>
+
+<p><font face="Arial">The Execute Statement command single steps through the FKiSS code and
+executes each action statement in sequence.&nbsp; This command fully executes
+any contained subroutine or gosub() action call before stopping at the next
+statement.&nbsp; If the current statement is a goto() action, the Execute
+Statement command will stop at the first statement of the new label event.&nbsp;</font></p>
+
+<p><font face="Arial">When the top level traced event is complete the FKiSS Editor will display the
+message as seen in Figure 9.</font></p>
+
+<p>&nbsp;</p>
+
+<p align="center"><font face="Arial"><img border="0" src="images/edit_09.jpg" width="269" height="116">&nbsp;</font></p>
+
+<p align="center"><font face="Arial">Figure 9.</font></p>
+
+<p>&nbsp;</p>
+
+<h3><font color="#800000" face="Arial"><a name="RunStepInto">Trace Into Call</a></font></h3>
+
+<p><font face="Arial">The Trace Into Call will drill down into subroutine or gosub() action
+commands and breakpoint at the first action statement of the contained
+routine.&nbsp; This command is equivalent to an Execute Statement if the current
+action statement is not a subroutine call.&nbsp; If you trace into any action
+call that invokes an alarm event, an interim breakpoint is set on the alarm, the
+current traced event runs to completion, and the FKiSS Editor will open as soon
+as the specified breakpointed alarm is fired.</font></p>
+
+<p>&nbsp;</p>
+
+<h3><font color="#800000" face="Arial"><a name="RunToSelection">Run To Selection</a></font></h3>
+
+<p><font face="Arial">The Run To Selection command will resume action command processing.&nbsp; The
+process will stop when the currently selected line in the FKiSS Editor event
+list is reached or if the event terminates.&nbsp; Statements can be selected in
+the FKiSS Editor event list by clicking on a line or using the cursor control
+keys to position the selection to an alternate location.&nbsp; This command is
+frequently used to resume breakpointed tracing at a specific location without
+stepping though intervening action statements.</font></p>
+
+<p>&nbsp;</p>
+
+<h3><font color="#800000" face="Arial"><a name="RunToReturn">Run to Call Return</a></font></h3>
+
+<p><font face="Arial">The Run to Call Return command will resume action command processing.&nbsp;
+The process will stop when the current traced event completes.&nbsp; If this
+event was called from another event, continued tracing through an Execute
+Statement command will return to the next executable statement in the calling
+event.&nbsp; This command is typically used to stop tracing the current event,
+yet continue to trace execution within the parent event.</font></p>
+
+<p>&nbsp;</p>
+
+<h3><font color="#800000" face="Arial"><a name="RunSetBreakpoint">Set Breakpoint</a></font></h3>
+
+<p><font face="Arial">The Set Breakpoint command will place an execution breakpoint on the
+currently selected event declaration or action command statement.&nbsp;
+Statements can be selected in the FKiSS Editor event list by clicking on a line
+or using the cursor control keys to position the selection to an alternate
+location.&nbsp; Event breakpoints interrupt normal processing whenever the event
+is executed.&nbsp; Action statement breakpoints interrupt normal processing
+whenever the action statement is executed.&nbsp; Breakpoints can be set through
+this command or by right clicking while the mouse is positioned over an event or
+action statement.&nbsp; Breakpointed lines are shown in red.</font></p>
+
+<p>&nbsp;</p>
+
+<h3><font color="#800000" face="Arial"><a name="RunClearBreakpoint">Clear Breakpoint</a></font></h3>
+
+<p><font face="Arial">The Clear Breakpoint command clears a breakpoint from the currently selected
+event declaration or action command statement.&nbsp; Statements can be selected
+in the FKiSS Editor event list by clicking on a line or using the cursor control
+keys to position the selection to an alternate location.&nbsp; Breakpoints can
+be cleared through this command or by right clicking while the mouse is
+positioned over an event or action statement that has a breakpoint
+defined.&nbsp; Breakpointed lines are shown in red.</font></p>
+
+<p>&nbsp;</p>
+
+<h3><font color="#800000" face="Arial"><a name="RunDisableBreakpoint">Disable Breakpoint</a></font></h3>
+
+<p><font face="Arial">The FKiSS Editor can pause execution at the next statement or event processed
+if requested.&nbsp; The Disable Breakpoint command is used to exclude the
+currently selected event from automatic pause breakpoint processing.&nbsp; In
+certain cases you may not wish to pause execution on a specified event.&nbsp;
+The Disable Breakpoint command is used to eliminate these selected events from
+pause breakpoints.</font></p>
+
+<p><font face="Arial">Text for disabled events is shown in a light grey color.&nbsp; If the
+currently selected statement is an action statement the Disable Breakpoint
+command will disable pause breakpoints for the action parent event.&nbsp; If an
+event is disabled all breakpoints for the event and event actions are
+removed.&nbsp; Individual breakpoints can be restored on disabled action
+statements through the Set Breakpoint command.&nbsp;</font></p>
+
+<p>&nbsp;</p>
+
+<h3><font color="#800000" face="Arial"><a name="RunEnableBreakpoint">Enable Breakpoint</a></font></h3>
+
+<p><font face="Arial">The Enable Breakpoint command restores a disabled event to normal
+state.&nbsp; Disabled events are excluded from automatic pause breakpoint
+processing.&nbsp;&nbsp;</font></p>
+
+<p><font face="Arial">Text for disabled events is shown in a light grey color.&nbsp; If the
+currently selected statement is an action statement the Enable Breakpoint
+command will enable pause breakpoints on the action parent event.&nbsp; If an
+event is enabled all current breakpoints for the event and event actions are
+retained.&nbsp;&nbsp;</font></p>
+
+<p>&nbsp;</p>
+
+<h3><font color="#800000" face="Arial"><a name="RunClearAllBreakpoints">Clear All Breakpoints</a></font></h3>
+
+<p><font face="Arial">The Clear All Breakpoints command will remove all breakpoint settings from
+all event and action statements.&nbsp; This command is enabled if at least one
+breakpoint is set in the configuration.</font></p>
+
+<p>&nbsp;</p>
+
+<h3><font color="#800000" face="Arial"><a name="RunProgramPause">Program Pause</a></font></h3>
+
+<p><font face="Arial">You may wish to pause execution at the next event processed without knowing
+the event that is being invoked.&nbsp; Or, you may wish to debug the executed event code
+based upon on a user action such as a mouse press.&nbsp; The Program Pause
+command can be used to stop FKiSS execution at the next event or
+action statement processed.&nbsp; When the pause breakpoint is recognized the
+FKiSS Editor will be automatically invoked to trace the event code.</font></p>
+
+<p><font face="Arial">The FKiSS event handler state is monitored by the indicator light at the
+right end of the editor toolbar.&nbsp; A green light means the configuration is
+running and events are being processed. Red means the event handler is
+suspended. Yellow means that the configuration is running but will interrupt or
+break at the first action command it has to process.&nbsp; If the indicator is
+green a Program Pause command will turn the indicator yellow.&nbsp; If the
+indicator is red a Program Pause command will activate program execution and the
+indicator will turn yellow.&nbsp; Note that if you set a pause breakpoint and
+there is an event that is being repetitively processed in a timer
+loop, the interrupt can happen almost immediately, the indicator will turn red,
+and you will directly transition to breakpoint mode.</font></p>
+
+<p><font face="Arial">Pause breakpoints are one time occurrences.&nbsp;&nbsp; When the FKiSS Editor
+is invoked on a pause breakpoint the pause state is cleared.&nbsp; The pause
+breakpoint can also be cleared manually by pressing the yellow indicator
+light.&nbsp; This will remove the pause request and the indicator will turn
+green.</font></p>
+
+<p><font face="Arial">Execution is always resumed on a Program Pause and the
+UltraKiss main screen will be brought to the foreground.&nbsp; The FKiSS Editor
+screen may continue to show&nbsp; in the background, however it will not be the
+active window.&nbsp;&nbsp;</font></p>
+
+<p>&nbsp;</p>
+
+<h3><font color="#800000" face="Arial"><a name="RunProgramResume">Program Resume</a></font></h3>
+
+<p><font face="Arial">The Program Resume command continues program execution from a breakpoint
+state.&nbsp; When execution is resumed the event handler is activated and the
+UltraKiss main screen will be brought to the foreground.&nbsp; The FKiSS Editor
+screen may continue to show&nbsp; in the background, however it will not be the
+active window.&nbsp;&nbsp;</font></p>
+
+<p><font face="Arial">The Program Resume command is the preferred way to return to your current
+UltraKiss session without permanently closing the FKiSS Editor.&nbsp; New
+breakpoints will be processed by the current FKiSS Editor.&nbsp; Thus, the undoable
+edit change history will remain valid for your editing session.</font></p>
+
+<p><font face="Arial">When the program is resumed it may immediately breakpoint again on a new
+FKiSS action command or event.&nbsp; This could occur if a breakpoint was set on
+another action statement or event declaration or if a pause breakpoint had been
+set.</font></p>
+
+<p>&nbsp;</p>
+
+<h3><font color="#800000" face="Arial"><a name="RunProgramRestart">Program Restart</a></font></h3>
+
+<p><font face="Arial">The Program Restart command is used to reload the KiSS configuration and
+restart program execution.&nbsp; Program restarts are required to breakpoint on
+initialize() of begin() events that execute during program start-up.&nbsp;&nbsp;If a breakpoint has been
+set on an initialize() or begin() event a new FKiSS Editor session will be
+automatically launched on the configuration activation to trace the event.</font></p>
+
+<p><font face="Arial">A program restart will always terminate the FKiSS Editor.&nbsp; All undoable edit
+change history is lost on program restarts.&nbsp;&nbsp;</font></p>
+
+
+
+
+
+
+
+<p>&nbsp;</p>
+<h2 align="left"> <font color="#000080" face="Arial">Options Menu</font></h2>
+<font face="Arial">
+The FKiSS Editor provides options to customize the editor behaviour during
+editing sessions.&nbsp;</font><p>&nbsp;</p>
+
+<h3><font color="#800000" face="Arial"><a name="OptionsPauseEvent">Pause on Event</a></font></h3>
+
+<p><font face="Arial">The Pause on Event option, if set, instructs the UltraKiss event handler to
+recognize pause breakpoints only on new event executions.&nbsp; Breakpoints are
+not recognized for action commands within an event.&nbsp; This option is the
+default behaviour for pause breakpoints.</font></p>
+
+<p>&nbsp;</p>
+
+<h3><font color="#800000" face="Arial"><a name="OptionsPauseAction">Pause on Action</a></font></h3>
+
+<p><font face="Arial">The Pause on Action option, if set, instructs the UltraKiss event handler to
+recognize a pause breakpoint on any enabled FKiSS action command.&nbsp;&nbsp; If
+Pause on Action is set, Program Pause requests within a breakpointed event will
+cause new breakpoints to occur on each consecutive action statement.</font></p>
+
+
+
+
+
+
+
+<p>&nbsp;</p>
+
+
+
+
+
+
+
+<p>&nbsp;</p>
+<h2 align="left"><font color="#000080" face="Arial">Help Menu</font></h2>
+<font face="Arial">
+The FKiSS Editor Help menu is used to display the online program documentation and
+product license information.</font>
+<p>&nbsp;</p>
+<h3><a name="HelpContents"><font color="#800000" face="Arial">Contents</font></a></h3>
+
+
+
+
+
+
+
+<p><font face="Arial">The Contents command invokes the UltraKiss online help system.&nbsp; Access to
+all product documentation is available.&nbsp; The online help system provides a
+complete index and navigation system to various topics of interest.</font></p>
+
+
+
+
+
+
+
+<p>&nbsp;</p>
+
+
+
+
+
+
+
+<h3><a name="HelpAbout"><font color="#800000" face="Arial">About</font></a></h3>
+
+
+
+
+
+
+
+<p><font face="Arial">The About command shows a standard program information dialog that provides
+copyright and program version information.&nbsp; Figure 10 show an example of the UltraKiss program About dialog.&nbsp;
+The program icon is the Kanji character for clothing and the
+Japanese characters show the Kanji word for paper dolls.</font></p>
+
+
+
+
+
+
+
+<p>&nbsp;</p>
+
+
+
+
+
+
+
+<p align="center"><font face="Arial"><img border="0" src="../images/about.jpg" width="546" height="413"></font></p>
+
+
+
+
+
+
+
+<p align="center"> <font face="Arial"> Figure 10. About Dialog</font></p>
+
+
+
+
+
+
+
+<p>&nbsp;</p>
+
+
+
+
+
+
+
+<p>&nbsp;</p>
+
+
+
+
+
+
+
+<hr>
+
+
+
+
+
+
+
+<p align="left">Next Document:&nbsp; <a href="toolbar.html">Toolbar
+Commands<br>
+</a>Prior Document:&nbsp; <a href="index.html">FKiSS Editor Introduction</a></p>
+
+<p align="left">Copyright (c) 2002-2023 William Miles</p>
+
+<p>
+&nbsp;
+</p>
+
+</body>
+
+</html>

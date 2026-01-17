@@ -1,0 +1,94 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta name="generator" content="Bluefish 2.2.12" >
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>string</title>
+</head>
+
+<body>
+
+<h4><a name="destroy" id="destroy">destroy</a>()</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp;
+destroy (object)</p>
+<p>
+The destroy() statement destroy the specified group object.  The object group is removed from all pages on which it appears.  All cels within the group are also destroyed.  The group object is removed from the configuration.</p>
+<p>It follows that if the object is removed from the configuration and the configuration is saved or reloaded that new object numbers could be assigned when the configuration is processed.  This could evaluate existing FKiSS code.  Accodingly, destroyed objects should only be objects that have been previously cloned.</p>
+<p>The <em>object</em> must be an object group specifier or a variable containing an object group identifier.</p>
+<p>&nbsp;</p>
+<p> Related actions: <a href="clone.html">clone()</a></p>
+<p>&nbsp; </p>
+<p>&nbsp;  </p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+    <table border="1" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td width="20%">FKiSS 5 &nbsp;</td>
+        <td width="30%">destroy(#3)&nbsp; </td>
+        <td>Group object #3 is destroyed. </td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<table width="80%"  border="1" align="center" cellpadding="5" cellspacing="5" bordercolor="#000000" bgcolor="#FFFF99">
+  <tr>
+    <td><div align="center">Note: The UltraKiss destroy() command is viewer specific and not compatible with other viewers. </div></td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+    <table border="1" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td width="20%">VariableCase</td>
+        <td width="30%">variable names are case sensitive</td>
+        <td>default value &quot;<font color="#0000FF">false</font>&quot; (Compatibility option)</td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<div align="center"></div>
+<p><font color="#FF0000"><b>&nbsp;Example:&nbsp;</b></font></p>
+<p>
+<font face="Courier New">
+;@destroy(N,&quot;shirt.cel&quot;)&nbsp;;&nbsp;N contains the current height for the specified cel<br>
+;@destroy(N,#3)&nbsp;;&nbsp;N contains the current height for object #3<br></font></p>
+<p>&nbsp; </p>
+<p><font color="#FF0000"><b>&nbsp;Example:&nbsp;</b></font></p>
+<font face="Courier New">
+;[Cel Section]<br>
+#1   sailormoon.gif      : 0                                ;
+#3   button2.button      : 0                                ;%size[157,50] %attributes[text="Destroy Sailormoon"] <br>
+#2   button1.button      : 0                                ;%size[151,50] %attributes[text="Clone Sailormoon"] <br>
+ <br>
+;[Page Set Section]<br>
+; Page 0<br>
+$0 * 358,185 104,50 642,62<br>
+ <br>
+;[FKiSS Section]<br>
+;@EventHandler<br>
+ <br>
+;@initialize()                                              ; <br>
+;@ let(PriorGroup,#1)                                       ; <br>
+<br>
+;@release(#2)                                               ; creating cloned objects on press() events may not draw the original object<br>
+;@ clone(NewGroup,PriorGroup)                               ; <br>
+;@ movebyx(NewGroup,PriorGroup,20)                          ; <br>
+;@ map(NewGroup)                                            ; <br>
+;@ let(PriorGroup,NewGroup)                                 ; <br>
+ <br>
+;@press(#3)                                                 ; <br>
+;@ letcloned(Original,PriorGroup)                           ; <br>
+;@ iflessthan(Original,0) exitevent() endif()               ; PriorGroup is not a cloned object<br>
+;@ destroy(PriorGroup)                                      ; <br>
+;@ let(PriorGroup,Original)                                 ; <br>
+<br>
+</body>
+</font>
+</html>
