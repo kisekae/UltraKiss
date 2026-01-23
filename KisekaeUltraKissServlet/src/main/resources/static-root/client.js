@@ -58,7 +58,8 @@ var receivedFileSize = 0 ;   // received size of downloaded file message chunk
 var expectedAudioSize = 0 ;  // expected size of audio downloaded from server
 var receivedAudioSize = 0 ;  // received size of downloaded file message chunk
 var retransmitCount = 0 ;    // number of retransmissions attempted
-var playerstopped = true ;   // true if midi player is stopped
+var playerstopped = true ;   // true if MIDI player is stopped
+var player ;                 // MIDI player
 
 // Translation maps to convert a java object unique id to an audio source node 
 // and an audio source node to a file name.
@@ -294,14 +295,14 @@ ws.onclose = function(event) {
     if (reason === null || reason.length === 0) reason = "Unknown" ;
     console.log("Reason for closure: " + reason);
     if (reason.startsWith("UltraKiss")) return ;
-    console.log("Reconnecting...");
-    ws = null ;
+//    console.log("Reconnecting...");
 //    setTimeout(initwebsocket,reconnectInterval,host,port,ssl) ;
 };
 
 ws.onerror = function(err) {
     console.log("Websocket error.");
-    alert("Server is not available.");
+    if (!(player === undefined)) { player.stop() ; }
+//  alert("Server is not available.");
 };
 
 // This is the general WebSocket message receipt function for the client.  
@@ -327,7 +328,7 @@ ws.onmessage = function (evt) {
        
         // Show file open dialog to begin uploading a client file to the server.
         // This is the click() event that initiates the uploadFile() process.
-        // "fileopen id classname import"
+        // "fileopen id classname import multiple extension-list"
         
         else if (tokens[0] === "fileopen")
         {
@@ -451,11 +452,12 @@ ws.onmessage = function (evt) {
                     source.buffer = buffer;
                     source.connect(audioContext.destination);
                     console.log("Playback begins for "+audioNameMap.get(source));
-                    ws.send("notify playback begins for "+fileName) ;
+                    ws.send("notify playback begins for "+audioNameMap.get(source)) ;
                     source.start(0); // Play immediately
                     
                     source.onended = () => {
                        console.log("Playback finished for "+audioNameMap.get(source));
+                       ws.send("notify playback finished for "+audioNameMap.get(source)) ;
                        // Send an audiostop message for this sound back to the server.
                        for (const [key, value] of audioSourceMap) 
                        {
@@ -486,20 +488,23 @@ ws.onmessage = function (evt) {
             const url = URL.createObjectURL(blob);
     
             // https://github.com/fraigo/javascript-midi-player
-            var player = new MIDIPlayer(url) ;
+            player = new MIDIPlayer(url) ;
             console.log("new player assigned") ;
             
             
             // the load event is triggered when the player is loaded
             player.onload = function(song){
+                console.log("Playback begins for "+audioNameMap.get(player));
+                ws.send("notify playback begins for "+audioNameMap.get(player)) ;
                 player.play() ;
                 playerstopped = false ;
             } ;
             
             // The end event is triggered when the song ends
             player.onend=function(){
-                console.log("Playback finished for "+audioNameMap.get(player));
                 player.stop() ;  // necessary to terminate the player.
+                console.log("Playback finished for "+audioNameMap.get(player));
+                ws.send("notify playback finished for "+audioNameMap.get(player)) ;
                 playerstopped = true ;
                 console.log("Removing windows events for " + tokens[1]);
                 window.onblur = null ;
@@ -559,9 +564,15 @@ ws.onmessage = function (evt) {
             }
             if (tokens[2] === "all" || source instanceof MIDIPlayer)
             {
-                console.log("Removing windows events for " + tokens[2]);
-                window.onblur = null ;
-                window.onfocus = null ;
+               if (!(player === undefined)) 
+               { 
+                   player.stop() ;
+                   playerstopped = true ;
+                   ws.send("audiostop " + tokens[1] + " " + audioNameMap.get(player)) ;
+               }
+               console.log("Removing windows events for " + tokens[2]);
+               window.onblur = null ;
+               window.onfocus = null ;
             }
         }
         
@@ -603,6 +614,15 @@ ws.onmessage = function (evt) {
         else if (tokens[0] === "notifycancel")
         {
             hideNonBlockingAlert() ;                
+        }
+        
+        // A "browser" message attempts to open a new browser window.
+        // Run this in a setTimeout() function to bypass pop-up blockers.
+        // "browser url"
+        
+        else if (tokens[0] === "browser")
+        {
+            setTimeout(() => { window.open(tokens[1], '_blank'); }, 100);    
         }
         
         // Close the session websocket.

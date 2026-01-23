@@ -107,7 +107,7 @@ else
 fi
 
 echo "Starting $Application on display $1"
-DISPLAY=:$1 java -XX:MaxRAMPercentage=50 -jar $Application "" "" "" "" "" "" "$2" "$3" > server$2.log 2>&1 &
+DISPLAY=:$1 java -XX:MaxRAMPercentage=50 -jar $Application "portal" "" "" "" "" "" "$2" "$3" > server$2.log 2>&1 &
 ULTRAKISS_PID=$!
 
 if ps -p $ULTRAKISS_PID > /dev/null
