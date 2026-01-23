@@ -164,6 +164,7 @@ public class Kisekae extends Applet
    private static boolean manualexpire = false ;   // True if set is expired
    private static boolean tipsinstalled = true ;   // True if tips system
    private static boolean showtips = true ;        // True if tips allowed
+   private static boolean hyperlinkactivated = false ; // True websocket dialog
    private boolean suspended = false ;					// True if applet suspended
    private boolean error = false ;						// True if error occured
 
@@ -190,7 +191,7 @@ public class Kisekae extends Applet
 
       LogFile.start() ;
       builddate = Calendar.getInstance() ;
-      builddate.set(2026,1-1,17) ;
+      builddate.set(2026,1-1,22) ;
       
       // Restore the properties.
       
@@ -900,7 +901,7 @@ public class Kisekae extends Applet
 
 
    // This stops UltraKiss.  
-   // This interface is used if a WebSocket is closed.
+   // This method is used if a WebSocket is closed.
    
    static public void exit() 
    {
@@ -908,8 +909,8 @@ public class Kisekae extends Applet
       batchframe = null ;
       if (mainframe != null)
       {
-         System.out.println("Kisekae: exit, MainFrame.close()") ;
-         mainframe.close() ;
+         PrintLn.println("Kisekae: exit, MainFrame.close(true)") ;
+         mainframe.close(true) ;
          mainframe = null ;
       }      
       System.exit(0) ;
@@ -1560,12 +1561,25 @@ public class Kisekae extends Applet
    {
       accept = b ; 
    }
+
+   // When we are a server (websocket) we do not know the client screen size
+   // until such time that the socket is established and the client sends a 
+   // "screen" message to the server.  At that time we allow the main() method
+   // to proceed (clientscreen = true).
    
    public static void setScreenSize(Dimension d) 
    {
       screensize = d ; 
-      if (websocket) clientscreen = true ;
       if (mainframe == null) return ;
+      
+      if (!javax.swing.SwingUtilities.isEventDispatchThread())
+      {
+      	Runnable runner = new Runnable()
+			{ public void run() { setScreenSize(d) ; } } ;
+   		javax.swing.SwingUtilities.invokeLater(runner) ;
+         return ;
+      }
+      
      	Dimension screenArea = Kisekae.getScreenSize() ;
       if (!websocket) screenArea.height = (int) (screenArea.height*0.95f) ;
 		mainframe.setSize(screenArea) ;
@@ -1573,6 +1587,8 @@ public class Kisekae extends Applet
 		mainframe.centerpanel() ;
       mainframe.repaint() ;      
    }
+
+   public static void setClientScreen() { clientscreen = true ; }
 
    public static void requestScreenFocus() 
    {
@@ -2525,6 +2541,7 @@ public class Kisekae extends Applet
          if (websocket) 
          {
             showtips = false ;
+            hyperlinkactivated = false ;
             
             // for copying style
             JLabel label = new JLabel();
@@ -2553,7 +2570,7 @@ public class Kisekae extends Applet
                 + "If you do not know what KiSS is, see the UltraKiss documentation using <a href=\"file://helpcontents\">Help-Contents</a>.<br>"
                 + "To learn how to make or visually edit KiSS sets within UltraKiss see <a href=\"file://helptutorial\">Help-Tutorials</a>.</p>"
                 + "</body></html>");
-
+            
             // handle link events
             ep.addHyperlinkListener(new HyperlinkListener()
             {
@@ -2577,6 +2594,7 @@ public class Kisekae extends Applet
                      {
                         URL url = e.getURL() ;
                         String s = url.toExternalForm() ;
+                        hyperlinkactivated = true ;
                         
                         // Internal hyperlink to open portal
                         
@@ -2593,7 +2611,7 @@ public class Kisekae extends Applet
                                  mm.openportal.doClick() ;
                               } 
                            } ;
-                  			SwingUtilities.invokeLater(awt) ;
+                           SwingUtilities.invokeLater(awt) ;
                         }
                         else if (s.contains("helpcontents"))
                         {
@@ -2641,7 +2659,16 @@ public class Kisekae extends Applet
                   			SwingUtilities.invokeLater(awt) ;
                         }
                         else
-                           Desktop.getDesktop().browse(e.getURL().toURI()); // roll your own link launcher or use Desktop if J6+
+                        {
+                           if (Kisekae.isWebsocket())
+                           {
+                              JettyWebSocketEndpoint endpoint = Kisekae.getServerEndpoint() ;
+                              if (endpoint != null) 
+                                 endpoint.send("browser " + e.getURL().toExternalForm());                              
+                           }   
+                           else
+                              Desktop.getDesktop().browse(e.getURL().toURI()); // roll your own link launcher or use Desktop if J6+
+                        }
                      }
                   }
                   catch (Exception ex) 
@@ -2664,6 +2691,10 @@ public class Kisekae extends Applet
                   int wait = 0 ;
                   int sleeptime = 20 ;
                   int maxconnection = 10000 ;
+
+                  // clientscreen is set when the client sends a "screen" message
+                  // to us, the server.  Wait for this.  It confirms that the
+                  // websocket is established.
                   
                   while (!clientscreen)
                   {
@@ -2687,8 +2718,10 @@ public class Kisekae extends Applet
                         return ;
                      }
                   }  
-                  System.out.println("Kisekae: websocket connection time was " + wait + " ms.") ;                 
-           
+                  PrintLn.println("Kisekae: websocket connection time was " + wait + " ms.") ;                 
+
+                  // Show the websocket modal dialog on the EDT thread.
+                  
                	Runnable runner = new Runnable()
                	{ 
                      public void run() 
@@ -2707,10 +2740,44 @@ public class Kisekae extends Applet
                         int y = (screenSize.height - h) / 2;
                         if (x < 0) x = 0 ;
                         if (y < 0) y = 0 ;
-                        websocketdialog.setLocation(x,y); 
+                        websocketdialog.setLocation(x,y) ;                         
                         websocketdialog.setVisible(true) ;
+ 
+                        // This dialog was modal.  If we are here then the
+                        // dialog has been closed.  
+                        
+                        // If the portal is visible make sure it is at the front
+                        // unless a hyperlink closed the dialog.  If a hyperlink
+                        // closed the dialog terminate the portal.
+                        
+                        Vector v = KissFrame.getWindowFrames() ;
+                        for (int i = 0 ; i < v.size() ; i++)
+                        {
+                           KissFrame wf = (KissFrame) v.elementAt(i) ;
+                           String sw = wf.getTitle().toLowerCase() ; 
+                           if (sw.contains("portal"))
+                           {
+                           	Runnable runner2 = new Runnable()
+                     			{ public void run() 
+                                 { 
+                                    if (hyperlinkactivated)
+                                       wf.close();
+                                    else
+                                       wf.toFront();
+                                 } 
+                              } ;
+                        		javax.swing.SwingUtilities.invokeLater(runner2) ;
+                              return ;
+                           }
+                        }                        
                      } 
                   } ;
+                  
+                  // Wait a bit before we show the websocket dialog to ensure that 
+                  // the mainframe window is established with the correct screen size.
+                  
+                  try { Thread.currentThread().sleep(1000) ; }
+                  catch (InterruptedException e) { return ; }
             		javax.swing.SwingUtilities.invokeLater(runner) ;
                }               
             }) ;

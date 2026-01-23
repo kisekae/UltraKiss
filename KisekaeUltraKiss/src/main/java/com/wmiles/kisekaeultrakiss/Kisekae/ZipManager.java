@@ -106,6 +106,11 @@ final public class ZipManager extends KissFrame
    private String savecallback = null ;				// Method to call on file save
    private boolean callreturn = false ; 				// True if callback processed
 
+	// Our update callback button that other components can attach
+	// listeners to.
+
+	protected CallbackButton callback = new CallbackButton(this,"ZipManager Callback") ;
+
    // Help set objects
 
 	private HelpLoader helper = null ;
@@ -270,10 +275,14 @@ final public class ZipManager extends KissFrame
 
    // Constructor to create a new archive preset to the CNF files.
 
-	public ZipManager(KissObject kiss)
+  	public ZipManager(KissObject kiss)
+   { this(kiss,null) ; }
+
+	public ZipManager(KissObject kiss, ActionListener writelistener)
 	{
 		super(Kisekae.getCaptions().getString("ArchiveManagerTitle")) ;
       init() ;
+      if (writelistener != null) callback.addActionListener(writelistener) ;
       createArchive() ;
       if (zip == null) return ;
 
@@ -1141,6 +1150,15 @@ final public class ZipManager extends KissFrame
    private void addArchiveCallback()
    {
       if (zip == null) return ;
+      if (Kisekae.isWebsocket())
+      {        
+         clearBusy() ;
+         // Run the callback on the EDT thread.         
+         Runnable runner = new Runnable()
+         { public void run() { callback.doClick() ; } } ;
+         javax.swing.SwingUtilities.invokeLater(runner) ;         
+         return ;
+      }
       openArchive(zip.getName()) ;
       closeArchiveFile() ;
       clearBusy() ;

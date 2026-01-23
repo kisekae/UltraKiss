@@ -68,7 +68,7 @@ import javax.swing.* ;
 import javax.swing.filechooser.FileFilter ;
 
 
-final class FileSave
+final class FileSave implements ActionListener
 {
 	static final int save = 0 ;                  // Save (only updated)
 	static final int saveset = 1 ;               // Save As  (everything)
@@ -92,6 +92,7 @@ final class FileSave
 	private ArchiveFile zip = null ;				   // Zip file object
 	private ArchiveEntry ze = null ;				   // Zip entry object
    private ActionListener writelistener = null ; // Listener for write termination
+   private File sourcefile = null ;             // File source for websocket show()
 	private int saveoption = 0 ;			   		// Save option
 
    // File Filters
@@ -195,6 +196,47 @@ final class FileSave
 	}
 
 
+	// The action method is used to process control events.
+
+	public void actionPerformed(ActionEvent evt)
+	{
+ 	 	Object source = evt.getSource() ;
+
+		// The FileWriter is finished writing an updated configuration to
+      // a temporary file (sourcefile).  This is a websocket callback.  
+      // The updated file must be sent to the client.
+
+      try
+      {
+         if ("FileWriter Callback".equals(evt.getActionCommand()))
+         {
+            if (Kisekae.isWebsocket())
+            {
+               if (OptionsDialog.getDebugWebSocket())
+                  PrintLn.println("FileSave: Websocket kiss object is " + kiss + ", source is " + source);            
+               JettyWebSocketEndpoint endpoint = Kisekae.getServerEndpoint() ;
+               int id = (parent instanceof KissFrame) ? ((KissFrame)parent).getUniqueIdentifier() : 0 ;
+               long n = (sourcefile != null) ? sourcefile.length() : 0 ;
+               if (endpoint != null) 
+               {
+                  String name = endpoint.removeSpaces(filename,"_"); 
+                  endpoint.send("filesave " + id + " " + name + " " + n) ;
+                  endpoint.sendFile(sourcefile) ;
+               } 
+            }
+         }
+      }
+      
+		// Watch for internal faults during action events.
+
+		catch (Throwable ex)
+		{
+			PrintLn.println("FileSave: Internal fault, action " + evt.getActionCommand()) ;
+			ex.printStackTrace() ;
+      }
+   }
+
+
 	// Object utility methods
 	// ----------------------
 
@@ -216,74 +258,92 @@ final class FileSave
       // If we are as a server pass the request to the client and transfer the
       // existing source file set when this object was created.
             
-      File sourcefile = null ;
-      if (Kisekae.isWebsocket() && JettyWebSocketEndpoint.isSessionOpen())
+      sourcefile = null ;
+      if (Kisekae.isWebsocket())
       {
-         JettyWebSocketEndpoint endpoint = Kisekae.getServerEndpoint() ;
-         int id = (parent instanceof KissFrame) ? ((KissFrame)parent).getUniqueIdentifier() : 0 ;
-         
-         // We can be saving a file (downloaded archive or text file), or we
-         // can be saving a KissObject from an archive such as a CNF or CEL.
-
-         try
+         if (JettyWebSocketEndpoint.isSessionOpen())
          {
-            if (kiss instanceof Configuration)
+            JettyWebSocketEndpoint endpoint = Kisekae.getServerEndpoint() ;
+            int id = (parent instanceof KissFrame) ? ((KissFrame)parent).getUniqueIdentifier() : 0 ;
+         
+            // We can be saving a file (downloaded archive or text file), or we
+            // can be saving a KissObject from an archive such as a CNF or CEL.
+            // If we are saving an updated configuration then we need to write
+            // an updated archive file before we send the file to the client.
+
+            try
             {
-               Configuration config = ((Configuration) kiss) ;
-               ArchiveFile af = config.getZipFile() ;
-               if (af != null) 
+               if (kiss instanceof Configuration)
                {
-                  filename = af.getPath() ;
-                  sourcefile = new File(filename) ;
+                  Configuration config = ((Configuration) kiss) ;
+                  ArchiveFile af = config.getZipFile() ;
+                  if (af != null) 
+                  {
+                     filename = af.getPath() ;
+                     if (!config.isUpdated())
+                        sourcefile = new File(filename) ;
+                     else
+                     {
+                        int n = filename.lastIndexOf('.') ;    
+                        String ext = filename.substring(n) ;
+                        sourcefile = File.createTempFile("UltraKiss-",ext) ;
+                        String tmpfile = sourcefile.getPath() ;
+                        FileWriter w = new FileWriter(null,config,filename,tmpfile,0) ;
+                     	w.callback.addActionListener(this) ;
+                  		Thread thread = new Thread(w) ;
+                        thread.start() ;
+                        return ;
+                     }
+                  }
+               }
+               else if (kiss instanceof TextObject)
+               {
+                  TextObject text = ((TextObject) kiss) ;
+                  filename = text.getWriteName() ;
+                  int n = filename.lastIndexOf('.') ;               
+                  InputStream is = text.getInputStream() ;
+                  sourcefile = File.createTempFile("UltraKiss-", filename.substring(n)) ;
+                  copyStream(is,sourcefile) ;
+               }
+               else if (kiss instanceof Palette)
+               {
+                  Palette palette = ((Palette) kiss) ;
+                  filename = palette.getWriteName() ;
+                  int n = filename.lastIndexOf('.') ;               
+                  byte[] b = palette.write() ;
+                  InputStream is = new ByteArrayInputStream(b) ;
+                  sourcefile = File.createTempFile("UltraKiss-", filename.substring(n)) ;
+                  copyStream(is,sourcefile) ;
+               }
+               else if (kiss instanceof Cel)
+               {
+                  Cel cel = ((Cel) kiss) ;
+                  filename = cel.getWriteName() ;
+                  int n = filename.lastIndexOf('.') ;               
+                  byte[] b = cel.write() ;
+                  InputStream is = new ByteArrayInputStream(b) ;
+                  sourcefile = File.createTempFile("UltraKiss-", filename.substring(n)) ;
+                  copyStream(is,sourcefile) ;
+               }
+               else
+               {
+                  sourcefile = (source != null) ? new File(source) : null ;
+               }
+
+               if (OptionsDialog.getDebugWebSocket())
+                  PrintLn.println("FileSave: Websocket kiss object is " + kiss + ", source is " + source);            
+               long n = (sourcefile != null) ? sourcefile.length() : 0 ;
+               if (endpoint != null) 
+               {
+                  String name = endpoint.removeSpaces(filename,"_"); 
+                  endpoint.send("filesave " + id + " " + name + " " + n) ;
+                  endpoint.sendFile(sourcefile) ;
                }
             }
-            else if (kiss instanceof TextObject)
+            catch (IOException e)
             {
-               TextObject text = ((TextObject) kiss) ;
-               filename = text.getWriteName() ;
-               int n = filename.lastIndexOf('.') ;               
-               InputStream is = text.getInputStream() ;
-               sourcefile = File.createTempFile("UltraKiss-", filename.substring(n)) ;
-               copyStream(is,sourcefile) ;
+               PrintLn.println("FileSave: WebSocket exception, " + e.getMessage());
             }
-            else if (kiss instanceof Palette)
-            {
-               Palette palette = ((Palette) kiss) ;
-               filename = palette.getWriteName() ;
-               int n = filename.lastIndexOf('.') ;               
-               byte[] b = palette.write() ;
-               InputStream is = new ByteArrayInputStream(b) ;
-               sourcefile = File.createTempFile("UltraKiss-", filename.substring(n)) ;
-               copyStream(is,sourcefile) ;
-            }
-            else if (kiss instanceof Cel)
-            {
-               Cel cel = ((Cel) kiss) ;
-               filename = cel.getWriteName() ;
-               int n = filename.lastIndexOf('.') ;               
-               byte[] b = cel.write() ;
-               InputStream is = new ByteArrayInputStream(b) ;
-               sourcefile = File.createTempFile("UltraKiss-", filename.substring(n)) ;
-               copyStream(is,sourcefile) ;
-            }
-            else
-            {
-               sourcefile = (source != null) ? new File(source) : null ;
-            }
-
-            PrintLn.println("FileSave: Websocket kiss object is " + kiss + ", source is " + source + ", source file is " + sourcefile);            
-            if (sourcefile != null) PrintLn.println("FileSave: Websocket source file exists: " + sourcefile.exists());            
-            long n = (sourcefile != null) ? sourcefile.length() : 0 ;
-            if (endpoint != null) 
-            {
-               String name = endpoint.removeSpaces(filename,"_"); 
-               endpoint.send("filesave " + id + " " + name + " " + n) ;
-               endpoint.sendFile(sourcefile) ;
-            }
-         }
-         catch (IOException e)
-         {
-            PrintLn.println("FileSave: WebSocket exception, " + e.getMessage());
          }
          return ;
       }

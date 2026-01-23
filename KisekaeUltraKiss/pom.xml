@@ -45,9 +45,15 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-nop</artifactId>
             <version>2.0.17</version> <!-- Use the appropriate version -->
-            <scope>runtime</scope> <!--  if it's only needed at runtime -->
         </dependency>   
-            
+
+        <!-- Logback Classic (SLF4J implementation) -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.5.21</version> <!-- Use a Jakarta-compatible version -->
+        </dependency>
+                
         <!-- Library JAR for UltraKiss -->
         <dependency>
             <groupId>KisekaeUltraKiss</groupId>

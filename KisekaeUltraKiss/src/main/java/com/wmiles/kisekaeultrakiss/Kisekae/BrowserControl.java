@@ -55,6 +55,7 @@ package com.wmiles.kisekaeultrakiss.Kisekae ;
 */
 
 
+import com.wmiles.kisekaeultrakiss.WebSocket.JettyWebSocketEndpoint;
 import java.awt.Desktop;
 import java.io.* ;
 import java.net.URL ;
@@ -119,7 +120,10 @@ public class BrowserControl
                String s = url.trim() ;
                if (s.length() == 0) url = "https://www.google.com" ;
                URL testURL = new URL(url) ;
-               Desktop.getDesktop().browse(testURL.toURI()); // roll your own link launcher or use Desktop if J6+
+               JettyWebSocketEndpoint endpoint = Kisekae.getServerEndpoint() ;
+               if (endpoint != null) 
+                  endpoint.send("browser " + testURL.toExternalForm());                              
+//               Desktop.getDesktop().browse(testURL.toURI()); // roll your own link launcher or use Desktop if J6+
                return ;
             }
             catch (Exception ex) 

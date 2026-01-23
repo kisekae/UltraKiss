@@ -58,6 +58,8 @@ import java.awt.* ;
 import java.awt.event.* ;
 import javax.help.* ;
 import javax.swing.* ;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
 
 
 final class HelpSetBroker extends DefaultHelpBroker
@@ -107,6 +109,35 @@ final class HelpSetBroker extends DefaultHelpBroker
          if (screen >= 0) pres.setScreen(screen) ;
          frame.setIconImage(parent.getIconImage());
          frame.addWindowListener(wl); 
+
+         // Attach a hyperlink listener to the help window JEditorPane 
+         // so that proper cursors can be sent to the client browser
+         // if we are running a websocket.
+
+         if (!Kisekae.isWebsocket()) return ;
+         if (!(frame instanceof JFrame)) return ;
+         Container contentPane = ((JFrame) frame).getContentPane() ;
+         if (contentPane == null) return ;
+         Component o = contentPane.getComponent(0) ;
+         if (!(o instanceof JHelp)) return ;
+         JHelpContentViewer viewer = ((JHelp) o).getContentViewer() ;
+         JEditorPane helpeditor = findEditorPane(viewer) ;
+         if (helpeditor != null) 
+            helpeditor.addHyperlinkListener(new HyperlinkListener() {
+            public void hyperlinkUpdate(HyperlinkEvent e) {
+               if (e.getEventType() == HyperlinkEvent.EventType.ENTERED) 
+               {
+                  Kisekae.setCursor(viewer,Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)) ;
+                  return ;
+               }
+      
+               if (e.getEventType() == HyperlinkEvent.EventType.EXITED) 
+               {
+                  Kisekae.setCursor(viewer,Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
+                  return ;
+               }
+            }            
+         }) ;
       }
       catch (Throwable e)
       {
@@ -114,6 +145,32 @@ final class HelpSetBroker extends DefaultHelpBroker
          e.printStackTrace() ;
       }
    }
+   
+   
+   public JEditorPane findEditorPane(JHelpContentViewer viewer) 
+   {
+      // Traverse components to find JEditorPane
+      Component [] components = viewer.getComponents() ;
+      return findEditorPane1(components) ;
+   }
+    
+   public JEditorPane findEditorPane1(Component [] components) 
+   {
+      // Breadth first recursive search
+      if (components == null) return null ;      
+      for (Component c : components) 
+      {
+         if (c instanceof JEditorPane) {
+            return (JEditorPane) c ;
+         } else if (c instanceof Container) {
+            Object o = findEditorPane1(((Container) c).getComponents()) ;
+            if ((o instanceof JEditorPane)) 
+               return (JEditorPane) o ;
+         }
+     }
+     return null;
+   }
+
    
    public void doWindowClosed()
    {

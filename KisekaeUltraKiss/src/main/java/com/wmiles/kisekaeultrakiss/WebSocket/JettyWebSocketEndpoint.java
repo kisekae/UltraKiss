@@ -76,7 +76,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Queue;
 import javax.imageio.ImageIO;
 import javax.swing.SwingUtilities;
 import org.eclipse.jetty.websocket.api.Session;
@@ -103,9 +105,10 @@ public class JettyWebSocketEndpoint
    private Thread timeoutThread ;
 	private static ArrayList<JettyWebSocketEndpoint> sessions = new ArrayList<JettyWebSocketEndpoint>();
    private final Map<Session, FileUploadClass> fosMap = Collections.synchronizedMap(new HashMap<>());
-   private byte[] imageheader = {0} ;
-   private byte[] fileheader = {1} ;
-   private byte[] soundheader = {2} ;
+   private final Queue<String> queue = new LinkedList<>();
+   private final byte[] imageheader = {0} ;
+   private final byte[] fileheader = {1} ;
+   private final byte[] soundheader = {2} ;
    private boolean socketBusy = false ;   // Set true if file transfer to client
    private boolean bufferBusy = false ;   // Set true if partial buffer is sent
    private boolean audioIsPlaying = false ;   // Set true audio sent and no stop
@@ -145,7 +148,7 @@ public class JettyWebSocketEndpoint
                  || message.startsWith("close") || message.startsWith("screen")
                  || message.startsWith("retransmit") || message.startsWith("notify")))
          {
-            System.out.println("[" + time + "] "+"Message: " + message);
+            System.out.println("[" + time + "] "+"Message receive: " + message);
          }
       }
       
@@ -243,6 +246,7 @@ public class JettyWebSocketEndpoint
             int width = Integer.parseInt(tokens[1]) ;
             int height = Integer.parseInt(tokens[2]) ;
             Kisekae.setScreenSize(new Dimension(width,height)) ;
+            Kisekae.setClientScreen();
 			} 
          catch (Exception e) 
          {
@@ -381,6 +385,7 @@ public class JettyWebSocketEndpoint
       {
 			try 
          {
+            MainFrame mf = Kisekae.getMainFrame() ;
             String [] tokens = message.split(" ") ;
             if ("fileupload".equals(tokens[0]))
             {
@@ -393,6 +398,7 @@ public class JettyWebSocketEndpoint
                fosMap.put(session, new FileUploadClass(f,os)) ;               
                if (OptionsDialog.getDebugWebSocket())
                   System.out.println("[" + time + "] "+"JettyWebSocketEndpoint: file upload to server start, " + f.getPath()) ;
+               if (mf != null) mf.showStatus("WebSocket downloading file " + filename + " from client browser.") ;
             }
             if ("fileuploadend".equals(tokens[0]))
             {
@@ -401,6 +407,7 @@ public class JettyWebSocketEndpoint
                FileUploadClass attributes = fosMap.get(session);
                if (OptionsDialog.getDebugWebSocket())
                   System.out.println("[" + time + "] "+"JettyWebSocketEndpoint: file upload to server end, " + filename) ;
+               if (mf != null) mf.showStatus(null) ;
                if (attributes == null) throw new Exception("No file attributes for session " + session) ;
                File f = attributes.file ;    
                FileOutputStream os = attributes.os ;
@@ -462,6 +469,7 @@ public class JettyWebSocketEndpoint
                FileUploadClass attributes = fosMap.get(session);
                if (OptionsDialog.getDebugWebSocket())
                   System.out.println("[" + time + "] "+"JettyWebSocketEndpoint: upload logfile to server end, " + filename) ;
+               if (mf != null) mf.showStatus(null) ;
                if (attributes == null) throw new Exception("No logfile attributes for session " + session) ;
                File f = attributes.file ;    
                FileOutputStream os = attributes.os ;
@@ -649,21 +657,61 @@ public class JettyWebSocketEndpoint
 
    // Messages are sent to the client as text data.   
    
-	synchronized public void send(String message) 
+	public void send(String message) 
    {
 		if (session == null) return;	
 		time = System.currentTimeMillis() - createtime ;
-            
+   
+      if (javax.swing.SwingUtilities.isEventDispatchThread())
+      {
+      	Thread thread = new Thread()
+			{ 
+            public void run() 
+            { 
+               setName("SendText " + message) ;
+               send(message) ; 
+            } 
+         } ;
+   		thread.start() ;
+         return ;
+      }
+      
 		try 
-      {        	
+      {  
+         while (socketBusy)
+         {
+            try { Thread.currentThread().sleep(busywait) ; }
+            catch (InterruptedException e) { }
+         }
+         
+         socketBusy = true ;
          if (!(message.startsWith("mouse") || message.startsWith("cursor")))
-            System.out.println("[" + time + "] "+"Message: send " + message);
-			session.sendText(message, Callback.NOOP);
+            System.out.println("[" + time + "] "+"Message send: " + message);
+         session.sendText(message, new Callback() {
+            @Override
+            public void succeed() {
+               // Handle success (optional)
+               socketBusy = false ;
+            }
+                
+            @Override
+            public void fail(Throwable cause) {
+               // Handle failure (e.g., client disconnected)
+        	   	time = System.currentTimeMillis() - createtime ;
+               System.out.println("[" + time + "] "+"JettyWebSocketEndpoint: sendText failed: " + cause.getMessage());
+               socketBusy = false ;
+               session.close(); // Consider closing the session on failure
+            }
+         });
       } 
       catch (Exception e) 
       { 
-         System.out.println("[" + time + "] "+"JettyWebSocketEndpoint: send exception " + e.getMessage());   
+         System.out.println("[" + time + "] "+"JettyWebSocketEndpoint: sendText exception " + e.getMessage());   
          e.printStackTrace(); 
+      }
+      finally
+      {
+         socketBusy = false ;         
       }
    }
    
@@ -671,11 +719,30 @@ public class JettyWebSocketEndpoint
    // File data is sent to the client as binary data.  This sends the complete
    // file in chunks which is then reassembled into one message by the client.
    
-	synchronized public void sendFile(File file) 
+	public void sendFile(File file) 
    {
 		if (session == null)	return;		
       if (file == null) return ;
+     
+      if (javax.swing.SwingUtilities.isEventDispatchThread())
+      {
+			time = System.currentTimeMillis() - createtime ;
+         System.out.println("[" + time + "] "+"JettyWebSocketEndpoint: sendFile "+file.getName()+" on EDT, starting new thread for websocket transfer.") ;   
+      	Thread thread = new Thread()
+			{ 
+            public void run() 
+            { 
+               setName("SendFile " + file.getName()) ;
+               sendFile(file) ; 
+            } 
+         } ;
+   		thread.start() ;
+         return ;
+      }
       
+      MainFrame mf = Kisekae.getMainFrame() ;
+      if (mf != null) mf.showStatus("WebSocket uploading file " + file.getName() + " to client browser.") ;
+                         
 		try 
       {  
          while (socketBusy)
@@ -729,7 +796,6 @@ public class JettyWebSocketEndpoint
                   session.close(); // Consider closing the session on failure
                }
             });
-				data.clear();            
                   
             // Wait for the partial buffer to complete sending.  This is to handle
             // backpressure so we don't send faster than the network can handle.
@@ -749,6 +815,7 @@ public class JettyWebSocketEndpoint
                   break ;
                }
             }
+				data.clear();            
          }
          
          setTimeoutStart() ;
@@ -767,16 +834,41 @@ public class JettyWebSocketEndpoint
          System.out.println("[" + time + "] "+"JettyWebSocketEndpoint: sendFile exception " + e.getMessage()) ;   
          e.printStackTrace() ; 
       }
+      finally
+      {
+         socketBusy = false ;         
+         if (mf != null) mf.showStatus(null) ;
+      }
    }
    
  
    // File data is sent to the client as binary data.  This sends the complete
    // file in chunks which is then reassembled into one message by the client.
-   
-	synchronized public void sendAudio(InputStream stream, String name, int length) 
+   // Audio is not played on the EDT thread so a websocket transfer is safe.
+  
+	public void sendAudio(InputStream stream, String name, int length) 
    {
 		if (session == null)	return ;		
       if (stream == null) return ;
+      
+      if (javax.swing.SwingUtilities.isEventDispatchThread())
+      {
+			time = System.currentTimeMillis() - createtime ;
+         System.out.println("[" + time + "] "+"JettyWebSocketEndpoint: sendAudio "+name+" on EDT, starting new thread for websocket transfer.") ;   
+      	Thread thread = new Thread()
+			{ 
+            public void run() 
+            { 
+               setName("SendAudio " + name) ;
+               sendAudio(stream,name,length) ; 
+            } 
+         } ;
+   		thread.start() ;
+         return ;
+      }
+      
+      MainFrame mf = Kisekae.getMainFrame() ;
+      if (mf != null) mf.showStatus("WebSocket uploading audio " + name + " to client browser.") ;                         
       
 		try 
       {  
@@ -832,7 +924,6 @@ public class JettyWebSocketEndpoint
                   session.close(); // Consider closing the session on failure
                }
             });
-				data.clear();        
                   
             // Wait for the partial buffer to complete sending.  This is to handle
             // backpressure so we don't send faster than the network can handle.
@@ -852,6 +943,7 @@ public class JettyWebSocketEndpoint
                   break ;
                }
             }
+				data.clear();        
          }
 
          // Did we send MIDI data?
@@ -876,6 +968,11 @@ public class JettyWebSocketEndpoint
 			time = System.currentTimeMillis() - createtime ;
          System.out.println("[" + time + "] "+"JettyWebSocketEndpoint: sendAudio exception " + e.getMessage()) ;   
          e.printStackTrace() ; 
+      }
+      finally
+      {
+         socketBusy = false ;         
+         if (mf != null) mf.showStatus(null) ;
       }
    }
 
@@ -949,6 +1046,9 @@ public class JettyWebSocketEndpoint
          try {Thread.currentThread().sleep(500) ; }
          catch (InterruptedException e) { }
          
+  			time = System.currentTimeMillis() - createtime ;
+         System.out.println("[" + time + "] "+"JettyWebSocketEndpoint: " + this.getName() + " starts."); 
+                   
          while (session != null && !error)
          {
 				try 
@@ -1052,6 +1152,9 @@ public class JettyWebSocketEndpoint
       @Override
       public void run()
       {     
+  			time = System.currentTimeMillis() - createtime ;
+         System.out.println("[" + time + "] "+"JettyWebSocketEndpoint: " + this.getName() + " starts."); 
+
          try 
          {
             while (true)

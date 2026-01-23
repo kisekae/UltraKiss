@@ -71,7 +71,6 @@ import java.net.URL ;
 import javax.swing.* ;
 import javax.swing.event.* ;
 import javax.swing.undo.* ;
-import com.wmiles.kisekaeultrakiss.WebSocket.JettyWebSocketEndpoint;
 
 
 final class PanelFrame extends JPanel
@@ -8277,6 +8276,7 @@ final class PanelFrame extends JPanel
          {
             if (g == null) return ;
             GroupDialog gd = new GroupDialog(parent,g,p,config) ;
+            Kisekae.setCursor(parent,Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
             gd.show() ;
          }
 
@@ -8284,6 +8284,7 @@ final class PanelFrame extends JPanel
          {
             if (c == null) return ;
             CelDialog cd = new CelDialog(parent,c,g,config) ;
+            Kisekae.setCursor(parent,Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
             cd.show() ;
          }
 

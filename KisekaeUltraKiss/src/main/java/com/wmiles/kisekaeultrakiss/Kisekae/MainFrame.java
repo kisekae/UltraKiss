@@ -260,17 +260,23 @@ final public class MainFrame extends KissFrame
 			return ;
 		}
 
-      // If our named file is the special keyword for the UltraKiss Browser,
-      // start the browser.
+      // If our named file is the special keyword for the UltraKiss Portal,
+      // start the portal.
 
-      if ("browser".equalsIgnoreCase(file))
+      if ("portal".equalsIgnoreCase(file))
       {
-         final WebFrame wf = new WebFrame(this) ;
-         wf.setVisible(true) ;
 			Runnable runner = new Runnable()
-			{ public void run() { try { Thread.currentThread().sleep(500) ; } catch (Exception e) { } wf.toFront() ; } } ;
-         Thread thread = new Thread(runner) ;
-         thread.start() ;
+			{ 
+            public void run() 
+            { 
+               try { Thread.currentThread().sleep(500) ; } 
+               catch (Exception e) { } 
+               final WebFrame wf = new WebFrame(me) ;
+               wf.setVisible(true) ;
+               wf.toFront() ; 
+            } 
+         } ;
+  			SwingUtilities.invokeLater(runner) ;
          return ;
       }
 
@@ -1452,7 +1458,7 @@ final public class MainFrame extends KissFrame
 
 	// Display a status message in the status bar.
 
-	void showStatus(String s)
+	public void showStatus(String s)
 	{
 		if (s == null) s = Kisekae.getCopyright() ;
       if (OptionsDialog.getDebugControl())
@@ -2521,12 +2527,14 @@ final public class MainFrame extends KissFrame
 
 
 	// Close this main window frame.  This terminates the program.
+   // If the force option is true no file save is performed.
 
-	public void close()
+	public void close() { close(false) ; }
+	public void close(boolean force)
 	{
       try
       {
-         if (!callreturn)
+         if (!callreturn && !force)
          {
             savecallback = "close" ;
             if (checksave()) return ;

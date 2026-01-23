@@ -95,7 +95,8 @@ final class PanelMenu extends KissMenu
    private boolean importnewgroup = false ;  // for eventImportImage
    private Cel newcel = null ;            // cel for createCelPalette1
    private ArchiveEntry originalze = null ;   // source image type for createCelPalette
-
+   private ZipManager zm = null ;         // for Save As Archive or Save As Files
+   
    // MenuBar definitions
 
    private JMenu m[] = new JMenu[7];
@@ -1195,6 +1196,40 @@ final class PanelMenu extends KissMenu
             parent.importvideo((Video) o) ;
             return ;
          }
+         
+         // A ZipManager callback occurs from a Save As Archive request
+         // when running as a websocket.  For Websocket, Save As Archive 
+         // becomes a Save As for the new archive file.  This lets Websocket 
+         // upload the file to the client computer.  The ZipManager with 
+         // Websocket has automatically created a temporary file and initiated 
+         // a FileWriter thread to write all the configuration elements.
+         
+         if ("ZipManager Callback".equals(evt.getActionCommand()))
+         {
+            if (Kisekae.isWebsocket())
+            {
+               Configuration config = parent.getConfig() ;
+               if (zm == null) return ;
+               if (config == null) return ;
+               ArchiveFile zip = zm.getZipFile() ;
+               if (zip == null) return ;
+               config.setZipFile(zip) ;
+               
+               Runnable awt = new Runnable()
+               { 
+                  public void run() 
+                  { 
+                     PrintLn.println("PanelMenu Websocket Save As Archive, config=" + config + " zip=" + zip) ;
+                     FileSave fd = new FileSave(parent,config) ;
+                     fd.showall() ;   
+                  } 
+               } ;
+                  
+               // Perform the Save As if the archive was written successfully.
+                  
+               if (!zm.isError()) SwingUtilities.invokeLater(awt) ;
+            }
+         }
 
          // A Threads request shows the state of the EventHandler and Timer
          // threads.
@@ -1775,70 +1810,13 @@ final class PanelMenu extends KissMenu
       if (type == 2)        // Save As Archive
       {
          Kisekae.setCursor(parent,Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
-         ZipManager zm = new ZipManager(config) ;
+         zm = new ZipManager(config,(Kisekae.isWebsocket() ? this : null)) ;
          Kisekae.setCursor(parent,Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
-
-         // For Websocket, Save As Archive becomes a Save As for the new archive file.
-         // This lets Websocket upload the file to the client computer.  Th ZipManager
-         // with Websocket has automatically created a temporary file and initiated 
-         // a FileWriter thread to write all the configuration elements.  We must
-         // wait for the FileWriter thread to finish before we do the Save As.  
-         
-         String s = zm.getFilename() ;
-         if (Kisekae.isWebsocket() && s != null)
-         {
-            ArchiveFile zip = zm.getZipFile() ;
-            config.setZipFile(zip) ;
-            Thread t1 = new Thread(new Runnable() 
-            {
-               final int maxtime = 60 ;  // seconds for Save As Archive
-               public void run()
-               {
-                  int n = 0 ;
-                  while (zm.isBusy() && !zm.isError())
-                  {
-                     try { Thread.sleep(1000) ; }
-                     catch (InterruptedException e) { break ; }
-                     if (++n > maxtime) break ;
-                  }
-                  
-                  final int timecounter = n ;                  
-                  if (timecounter > maxtime)
-                     PrintLn.println("PanelMenu: Websocket Save As Archive timeout.") ;
-                  if (zm.isError())
-                     PrintLn.println("PanelMenu: Websocket Save As Archive error.") ;
-                  
-                  Runnable awt = new Runnable()
-                  { 
-                     public void run() 
-                     { 
-                        if (timecounter > maxtime)
-                        {
-                           int n = JOptionPane.showConfirmDialog(parent,
-                              "Creation of archive file timeout.  Continue?", 
-                              "Save As Archive Timeout", 
-                              JOptionPane.YES_NO_OPTION);
-                           if (n == JOptionPane.NO_OPTION) return ;
-                        }
-                        PrintLn.println("PanelMenu Websocket Save As Archive, config=" + config + " zip=" + zip) ;
-                        FileSave fd = new FileSave(parent,config) ;
-                        fd.showall() ;   
-                     } 
-                  } ;
-                  
-                  // Perform the Save As is the archive was written successfully.
-                  
-                  if (!zm.isError())
-                     SwingUtilities.invokeLater(awt) ;
-               }
-            });  
-            t1.start();            
-         }
       }
       if (type == 3)        // Save As Files
       {
          Kisekae.setCursor(parent,Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
-         ZipManager zm = new ZipManager(config.getZipFile(),config) ;
+         zm = new ZipManager(config.getZipFile(),config) ;
          Kisekae.setCursor(parent,Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
       }
    }
