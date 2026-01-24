@@ -14,7 +14,7 @@ Press this button to run UltraKiss.
 **KisekaeUltraKiss 5.0** is a new GitHub release that provides a websocket server environment to run UltraKiss with modern web browsers.   
 **KisekaeUltraKissServlet 5.0** is a new GitHub release that provides the client environment to run UltraKiss with modern web browsers.   
 
-$${\color{red}Webswing service is no longer available due to licensing issues.}$$  A replacement service using a Jetty server has been developed.
+**$${\color{red}Webswing}$$** service is no longer available due to licensing issues.  A replacement service using a Jetty server has been developed.
 
 #### How does this magic work?
 
