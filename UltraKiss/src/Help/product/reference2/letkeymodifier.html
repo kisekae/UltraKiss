@@ -1,0 +1,47 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>ifstatements</title>
+</head>
+
+<body>
+
+<h4><a name="letkeymodifier" id="letkeymodifier">letkeymodifier</a>()</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; letkeymodifier(variable)</p>
+<p> The letkeymodifier() statement sets the variable to a character string identifying the modifier keys pressed on the last key entry. Modifier keys are the 'shift' key, 'alt' key, and 'ctrl' key. </p>
+<p>The returned values are strings concatenated with a plus (+) sign when multiple modifier keys are concurrently pressed. If no modifier characters are used then an empty string is returned. </p>
+<p>The letkeymodifier() statement is typically used in conjunction with the letkeychar() statement to isolate modifer values on key input.</p>
+<p>Some viewers may only recognize keyboard entry while a key is actually being pressed. This can lead to viewer compatibility problems as the letkeychar() statement may only function within keypress() events. </p>
+<p>&nbsp;</p>
+<p>Related events: <a href="keypress.html">keypress()</a>, <a href="keyrelease.html">keyrelease()</a>, <a href="keytype.html">keytype()</a><br>
+</a>Related actions: <a href="letkeymap.html">letkeymap()</a>, <a href="letkeychar.html">letkeychar()</a>, <a href="letkeycode.html">letkeycode()</a>, <a href="letkeystring.html">letkeystring()</a>, <a href="letkeymodifier.html">letkeymodifier()</a></p>
+<p>&nbsp;</p>
+<div align="center"></div>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+    <table border="1" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td width="20%">KeyCase</td>
+        <td width="30%">Enable keyboard upper/lower case key entry </td>
+        <td>default value &quot;<font color="#0000FF">false</font>&quot; (FKiSS option)</td>
+      </tr>
+      <tr>
+        <td>RetainKey</td>
+        <td>Remember last key pressed </td>
+        <td>default value &quot;<font color="#0000FF">true</font>&quot; (Compatibility option)</td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>&nbsp;Example:&nbsp;</b></font></p>
+<p><font face="Courier New">;@letkeymodifier(M)&nbsp;; Sets variable M to the modifier string, or an empty string<br>
+</font><font face="Courier New"><br>
+</font></p>
+</body>
+
+</html>

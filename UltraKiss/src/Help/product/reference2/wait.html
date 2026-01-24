@@ -1,0 +1,102 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>map</title>
+</head>
+
+<body>
+
+<h4><a name="wait" id="wait">wait</a>()&nbsp;</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; waitl(lock[,delay])</p>
+<p>The wait() command is used to synchronize processing control between multiple activities within a system by signalling all activities suspended on a wait() lock to begin execution. This command only has relevance in a system that can support multiple concurrent activities that execute simulltaneously. </p>
+<p>With multiple simultaneous activities it sometimes is important to stop execution and wait until another activity has completed its work. In this situation the activty that wishes to wait stops execution using the wait() command. It is reactivated when  a signal is received from another activity. The lock variable is used as the communication method between the multiple activities. The wait() activity sets a lock on the lock variable and will be suspended. A different activity, through the signal() command, can clear the lock on the lock variable and reactivate the suspended activity. </p>
+<p>The lock argument is an object in the KiSS set. The lock is set on the object specified. If a variable is used then the lock argument is the object that the variable references.</p>
+<p>The optional delay parameter must be an integer literal or a variable that contains an integer value. The delay specifies the number of milliseconds that the activity will wait for a signal before reuming execution. If the delay parameter is not specified then the activity can wait forever, leading to a hang condition. </p>
+<p>UltraKiss repaints the screen and activates any alarms scheduled through timer() commands on termination of current activities. Thus, if an activity is suspended through a wait() command it is recommended that a paint() command precede the wait() statement to ensure that any prior cel mapping is displayed. </p>
+<p>&nbsp;</p>
+<p>Related actions: <a href="wait.html">wait()</a>, <a href="sleep.html">sleep(),</a> <a href="paint.html">paint()</a> </p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+    <table border="1" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td width="20%">UltraKiss Extension</td>
+        <td width="30%">wait(X) </td>
+        <td>suspends the  activity  on lock X</td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<table width="80%"  border="1" align="center" cellpadding="5" cellspacing="5" bordercolor="#000000" bgcolor="#FFFF99">
+  <tr>
+    <td><div align="center">Note: The UltraKiss wait() command is viewer specific and not compatible with other viewers. </div></td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td>ImmediateEvent&nbsp;</td>
+      <td>enforces sequential event processing&nbsp;&nbsp;</td>
+      <td>default value &quot;<font color="#0000FF">false</font>&quot; (Compatibility option)</td>
+    </tr>
+    <tr>
+      <td>EventQueues</td>
+      <td>number of simultaneous event handlers </td>
+      <td>must be greater than 1 for multiple activity capability </td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>&nbsp;Example:&nbsp;<br>
+</b></font></p>
+<p><font face="Courier New, Courier, mono">#8 S2.label : 0 ;%u %size[100,50] %attributes[text=&quot;Sending Signal&quot;,fc=16711731] <br>
+  #7 S1.label : 0 ;%u %size[100,50] %attributes[text=&quot;Processing&quot;,fc=26163] <br>
+  #5 W1.label : 0 ;%u %size[100,50] %attributes[text=&quot;Waiting&quot;,fc=13209] <br>
+</font></p>
+<p><font face="Courier New, Courier, mono">
+;@begin()                                                   ; <br>
+;@ let(Lock1,&quot;Lock1&quot;) ; <br>
+;@ timer(1,1) ; Start consumer activity 1 which waits<br>
+;@ timer(2,1) ; Start producer activity 2 which signals</font></p>
+<p><font face="Courier New, Courier, mono">;@alarm(1) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;; Activity 1<br>
+  ;@ while(Lock1) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;; loop forever<br>
+  ;@ map(&quot;W1.label&quot;) &nbsp;&nbsp;; <br>
+  ;@ unmap(&quot;S1.label&quot;) ; paint is required <br>
+  ;@ paint() &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;; wait for work<br>
+  ;@ wait(Lock1) ; <br>
+  ;@ unmap(&quot;W1.label&quot;) ; <br>
+  ;@ map(&quot;S1.label&quot;) &nbsp;&nbsp;; processing stage<br>
+  ;@ paint() &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;; <br>
+  ;@ random(@N,500,5000) ; <br>
+  ;@ sleep(@N) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;; <br>
+  ;@ endwhile(Lock1) &nbsp;&nbsp;; <br>
+</font></p>
+<p><font face="Courier New, Courier, mono">;@alarm(2) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;; Activity 2<br>
+  ;@ map(&quot;S2.label&quot;) &nbsp;&nbsp;; <br>
+  ;@ signal(Lock1) &nbsp;&nbsp;&nbsp;&nbsp;; signal work to do<br>
+  ;@ paint() &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;; <br>
+  ;@ sleep(500) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;; <br>
+  ;@ unmap(&quot;S2.label&quot;) ; <br>
+  ;@ random(@N,1500,2500) ; wait a bit<br>
+  ;@ timer(2,@N) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;; </font><br>
+</p>
+<p><font face="Courier New">
+</font></p>
+<p><font face="Courier New"></font></p>
+</body>
+
+</html>

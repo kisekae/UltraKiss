@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='ISO-8859-1'  ?>
+<!DOCTYPE toc
+  PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp TOC Version 1.0//EN"
+         "http://java.sun.com/products/javahelp/toc_1_0.dtd">
+<toc version="1.0">
+  <tocitem text="">
+   <tocitem text="UltraKiss">
+    <tocitem text="Introduction" target="kisekae.index"/>
+    <tocitem text="Menu Commands" target="kisekae.menu"/>
+    <tocitem text="Toolbar Commands" target="kisekae.toolbar"/>
+    <tocitem text="Program Options" target="kisekae.options"/>
+    <tocitem text="Object Properties" target="kisekae.objects"/>
+    <tocitem text="Edit Functions" target="kisekae.editing"/>
+   </tocitem>
+  </tocitem>
+</toc>
+
+

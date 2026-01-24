@@ -1,0 +1,264 @@
+<html>
+	<head>
+		<title>Visual Editing Lesson 3</title></head>
+	<body>
+		<h1 align="center"><font color="#000000">Visual Editing Tutorial</font></h1>
+		<h1 align="center"><font color="#ff0000">Lesson 3. Working With Cels and Objects</font></h1>
+		<p>&nbsp;</p>
+		<ol>
+			<li>
+				This tutorial will start to build an animated object using our balls.&nbsp; You will learn more about 
+				ambiguous cels and object or cel group frames.  You will also learn more about the configuration CNF
+				file and how this file is structured. If you are continuing from lesson 2
+				you can skip to step 3.  Otherwise, ensure that UltraKiss is showing the main logo screen. 
+				Close any existing set.
+				<p>&nbsp;</p>
+                This tutorial requires <FONT color="#cc6600">image files</FONT>.  If the necessary files cannot be found 
+                on your computer download the tutorial files using <FONT color="#000099">Help-Tutorial Files</FONT>.
+				<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">File-Open</FONT>&nbsp; to load the configuration file
+				<FONT color="#cc6600">CNF2.cnf</FONT> from the Tutorial/Visual Editing directory or the directory
+				you used in lesson 1.&nbsp; This will load the Visual Editing set that you created in lesson 2.
+				<p>&nbsp;</p>
+				The set will open to page 0.  Four buttons should show.  Two are button components and two are
+				cel images that look like buttons.  One of those buttons has been programmed with an event to 
+				switch to page 1 of your KiSS set.
+				<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">View-Page Set</FONT> and select page 1 from the pop-up menu.  Or, press the Page 1 button
+                that is on the UltraKiss toolbar.	Or, use the <FONT color="#cc6600">PgDn</FONT> button on your keyboard to switch to 
+				the next page in your set. Or, press the button that you programmed in the previous lesson to change to page set 1.
+				UltraKiss will automatically switch to view this page.  
+				<p>&nbsp;</p>
+				A green ball should show in the upper left corner of your set.  Two <FONT color="#cc6600">Press Me</FONT> buttons should
+				be in the upper right corner of the page.					
+				<p>&nbsp;</p>
+				The green ball is one object made up of nine individual ball cels superimposed on each other.  
+				<FONT color="#cc6600">Right-click</FONT>
+				on the green ball and choose <FONT color="#000099">Object Context-Properties</FONT> from the menu.  Observe nine cels 
+				listed that are numbered from 0 to 8.  These nine cels all have then name <FONT color="#cc6600">BALL.CEL</FONT> and are all 
+				individual frames in the object group <FONT color="#cc6600">#7</FONT>.  
+				<p>&nbsp;</p>
+				Each individual frame in an object group has a name just like the cel name <FONT color="#cc6600">BALL.CEL</FONT>. The name
+				is of the form <FONT color="#cc6600">"!#G:n"</FONT> where "G" is the object number and "n" is the frame number. 
+				For example, the name of the fifth frame in object group 7 is "!#7:4".	This name can be used in FKiSS code to 
+				identify a unique cel in an object.
+				<p>&nbsp;</p>
+				Press the <FONT color="#cc6600">OK</FONT> button to close the dialog window.
+				<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#cc6600">Tools-FKISS Editor</FONT> to open the FKiSS Editor tool.  This tool is used to write
+				FKiSS code and debug FKiSS code in your KiSS set.
+				<p>&nbsp;</p>
+				Use <FONT color="#cc6600">File-New Event</FONT> to open a text editor to create a new FKiSS event.  
+				In the editor type or paste the following FKiSS code:<br><br>
+				<FONT face="Courier New">
+				;@initialize()                                              ; <br>
+				;@ let(G,7)                                                 ; G is circle object number <br><br>
+
+				</FONT>
+				FKiSS programming allows for a special <FONT face="Courier New">;@initialize()</FONT> event that is run
+				whenever a KiSS set is first loaded.  We are using this event to set a global variable that refers to our
+				object with all the balls.<br>
+				<br>
+				<FONT color="#cc6600">Note:&nbsp; If you copy and paste these lines from the help
+					documentation into your configuration file you must ensure that the semicolon
+					and at-sign combination appears <u>at the beginning of every line</u>.&nbsp; You can
+					copy the help text by selecting the text and pressing Ctrl-C to copy the text
+					to the clipboard. Use Ctrl-V to paste the text into the configuration file.</FONT>				<BR>
+				<p>&nbsp;</p>
+			<li>
+				Once again use <FONT color="#cc6600">File-New Event</FONT> to open a text editor to create a new FKiSS event.  
+				This time type or paste the following FKiSS code in the editor:<br><br>
+				<FONT face="Courier New">
+				;@label(Init)                                               ; <br>
+				;@ let(R,50)                                                ; R is 50 pixels radius <br>
+				;@ div(S,6.28,9)                                            ; S is 1/9 of full circle segment <br>
+				;@ for(N,0,8)                                               ; loop for 9 balls <br>
+				;@  concat(V,"!#",G,":",N)                                  ; identify Nth cel frame "!#7:n" <br>
+				;@  mul(A,S,N)                                              ; angle A to position Nth ball (N*S) <br>
+				;@  math(Cos,"cos",A) math(Sin,"sin",A)                     ; <br>
+				;@  mul(X,R,Cos) mul(Y,R,Sin)                               ; x = R*cos(a), y = R*sin(a) <br>
+				;@  moveto(V,X,Y)                                           ; move Nth ball onto circle <br>
+				;@ next(N)                                                  ; <br>
+				</FONT>
+				These instructions are used to move the ball cels to points around a circle. If you remember your trigonometry
+				the equations to find a point (x,y) at angle A on a circle of radius R centered at the origin is:  x = R*cos(A) and
+				y = R*sin(A).<br>
+				<br>
+				<FONT color="#cc6600">Note:&nbsp; If you copy and paste these lines from the help
+					documentation into your configuration file you must ensure that the semicolon
+					and at-sign combination appears <u>at the beginning of every line</u>.&nbsp; You can
+					copy the help text by selecting the text and pressing Ctrl-C to copy the text
+					to the clipboard. Use Ctrl-V to paste the text into the configuration file.</FONT>				<BR>
+				<p>&nbsp;</p>
+			<li>
+				Exit the text editor with <FONT color="#000099">File-Exit</FONT> to create the new event. Apply the changes.
+				If there are no syntax errors in the event code it will become part of the new event code for
+				the set and you should see the code listed in the FKiSS Editor.
+				<p>&nbsp;</p>
+				If there is a syntax error you will receive an error message and the Text
+				Editor can be invoked so that the error can be corrected.
+				<p>&nbsp;</p>
+				Close the editor with <FONT color="#000099">File-Exit</FONT>. 
+				<p>&nbsp;</p>
+			<li>
+				<FONT color="#cc6600">Right-click</FONT> on the first button with the label <FONT color="#cc6600">Press Me!</FONT>. 
+				A contexual selection popup window will show. Select <FONT color="#000099">Image Context</FONT> and then select 
+				<FONT color="#000099"> Event Wizard</FONT>.
+				<p>&nbsp;</p>
+		    <li>
+				The <FONT color="#000099">FKiSS Event Wizard</FONT> dialog will show. The Event Source should be set to 
+				'<FONT color="#cc6600">KissCel&nbsp;n button1.cel</FONT>', the first button, where 'n' is probably 10 but 
+				could be another cel number.  Follow the instructions in the Wizard window. Choose the '<FONT color="#cc6600">press</FONT>'
+				event from the Event selection box.
+				<p>&nbsp;</p>
+		    <li>
+				The text area should now display the generated FKiSS code for a <FONT color="#cc6600">press</FONT>
+				event on the selected button cel. The cel is referenced by its name "<FONT color="#cc6600">button1.cel</FONT>".
+				A default action statement to display a notify dialog is automatically generated for you.
+				<p>&nbsp;</p>
+			<li>
+				Overtype or replace the complete <FONT face="Courier New">;@press("button1.cel")</FONT> event code with the 
+				following FKiSS code:<br><br>
+				<FONT face="Courier New">
+				;@press("button1.cel")                                      ; <br>
+				;@ timer(Rotate,0)                                          ; stop any animation <br>
+				;@ gosub(Init)                                              ; set up circle <br><br>				                                  		
+				;@ moveto(G,325,225)                                        ; move circle to center of playfield <br><br>			
+				</FONT>
+				These instructions are used to initialize our circle of balls. <br>
+				<br>
+				<FONT color="#cc6600">Note:&nbsp; If you copy and paste these lines from the help
+					documentation into your configuration file you must ensure that the semicolon
+					and at-sign combination appears <u>at the beginning of every line</u>.&nbsp; You can
+					copy the help text by selecting the text and pressing Ctrl-C to copy the text
+					to the clipboard. Use Ctrl-V to paste the text into the configuration file.</FONT>				<BR>
+				<p>&nbsp;</p>
+			<li>
+				Click <FONT color="#000099">OK</FONT> to create the new event. If there are no
+				syntax errors in the event code it will become part of the new event code for
+				the set and you can actually try out the event. Go to the next step to continue.
+				<p>&nbsp;</p>
+				If there is a syntax error you will receive an error message and the Text
+				Editor will be automatically invoked so that the error can be corrected.
+				<p>&nbsp;</p>
+			<li>
+				<FONT color="#cc6600">Press the button</FONT> with the label <FONT color="#cc6600">Press Me!</FONT>. If everything is
+				correct you should see a nice circle of balls appear at the center of screen.  But, this probably will not happen.  
+				The balls may appear to be all scrunched up.  What has happened is that the FKiSS code that moved the balls into a circle 
+				has the movement restricted to the playfield.  Balls could not move outside the playfield and so were placed at the boundary. 
+				<p>&nbsp;</p>
+				Use <FONT color="#000099">Options-Options</FONT>. In the lower right corner of the options screen there is a Movement
+				option <FONT color="#cc6600">Limit FKiSS Moves</FONT> that may be set.  Click on the option setting to clear this option 
+				then press <FONT color="#000099">OK</FONT>.
+				<p>&nbsp;</p>
+				Press the button with the label <FONT color="#cc6600">Press Me!</FONT> again.
+				<p>&nbsp;</p>
+			<li>
+				It would be instructive to look at the configuration CNF file, particularly if the circle is still not correct.
+				Use <FONT color="#000099">View-Active Configuration</FONT> or press <FONT color="#cc6600">F11</FONT>
+				to open the Text Editor tool to view the CNF configuration element that has been created for this
+				new KiSS set.    
+				<p>&nbsp;</p>
+				Note that there is now an <FONT color="#cc6600">[Option Section]</FONT> at the beginning of the file and the "constrainfkiss" 
+				option is set to false.  This option is now automatically set whenever this configuration is loaded.
+				<p>&nbsp;</p>
+				Also verify that the group object number in the CNF file (#7) is the same number that has been set for the 
+				<FONT color="#cc6600" face="Courier New">;@ let(G,7)</FONT> statement in the <FONT face="Courier New">;@initialize()</FONT> event.
+				If the object number in the event is different from the actual object number for the cels the circle will not be correct.
+				<p>&nbsp;</p>
+				Also note that the ball cel declarations in the <FONT color="#cc6600">[Cel Section]</FONT> of the file all have %offset[] 
+				specifiers.  These offsets are used to position the individual cel image.  The offsets are relative to the upper left corner 
+				of the group object in which the cel resides.  Ambiguous cels always require offsets for correct positioning.  These offsets 
+				will change if the cels are moved within the object, either through an ungroup and movement of a cel with the mouse or with 
+				an FKISS movement command using cel object frame identifier.
+				<p>&nbsp;</p>				
+				Use <FONT color="#000099">File-Exit</FONT> to close the text editor.  If you made a change to the CNF file to correct an error
+				apply the change to load the corrected configuration.			
+				<p>&nbsp;</p>
+			<li>
+				Now that we have a ring of balls we will change the color of one of the balls.  Once again use 
+				<FONT color="#000099">View-Active Configuration</FONT> or press <FONT color="#cc6600">F11</FONT>
+				to open the Text Editor tool to view the CNF configuration element.
+				<p>&nbsp;</p>
+				In the <FONT color="#cc6600">[Cel Section]</FONT> of the file select one of the <FONT color="#cc6600">BALL.CEL</FONT> entries.
+				Change the palette specifier "*0" on the line to <FONT color="#cc6600">"*0.1"</FONT>.  Our palette file <FONT color="#cc6600">BALL.KCF</FONT>
+				has more than one palette in the file.  These are called multipalettes.  The specification "*0.1" will select multipalette 1 from 
+				palette file 0.  Your cel specifier line should now look like <FONT color="#cc6600" face="Courier New">#7 BALL.CEL *0.1   : 1  ;%offset[85,17]</FONT> 
+				where the offset values may be different depending on which cel you selected.
+				<p>&nbsp;</p>
+				Use <FONT color="#000099">File-Exit</FONT> to close the text editor.  Apply the change to load the modified configuration.			
+				<p>&nbsp;</p
+			<li>
+				Now, if you switch to page 1 and press the first <FONT color="#cc6600">Press Me!</FONT> button you should see a circle where
+				one of the balls has a yellow color.  All other balls should have a blue-green color. 
+				<p>&nbsp;</p>				
+				If you do not see a ring of balls go back to step 4 and step 5 and examine the event code in the configuration file.  
+				<p>&nbsp;</p>
+			<li>
+				Next, <FONT color="#cc6600">right-click</FONT> on the second button with the <FONT color="#cc6600">No - Press Me!</FONT> label.
+				Choose <FONT color="#000099">Image Context-Event Wizard</FONT>.  This time specify a <FONT color="#cc6600">Press</FONT> event 
+				from the event type drop-down selection list.  The event source should be the second button "KissCel 9 button2.cel".  Two lines
+				of code for a press() event with a notify() message will be generated for you.
+				<p>&nbsp;</p>
+				This time overtype or paste the generate event code with the notify() message with the following code:<br><br>
+				<FONT face="Courier New">
+				;@press("button2.cel")                                      ;  <br>
+				;@ let(P,0)                                                 ; initialize  <br>
+				;@ timer(Rotate,1,0)                                        ; start rotation <br>
+ <br>
+				;@alarm(Rotate,@N)                                          ;  <br>
+				;@ while(P,0)                                               ; search for colored ball <br>
+				;@  concat(V1,"!#",G,":",@N)                                ; identify Nth cel frame "!#G:n" <br>
+				;@  add(@N,@N,1) mod(@N,@N,9)                               ; @N is next ball (0-8) <br>
+				;@  letpal(P,V1)                                            ; get Nth ball palette <br>
+				;@ endwhile(P)                                              ;  <br>
+				;@ concat(V2,"!#",G,":",@N)                                 ; identify N+1 cel frame "!#G:n" <br>
+				;@ setpal(V2,P) setpal(V1,0) let(P,0)                       ; change next ball palette <br>
+				;@ timer(Rotate,500,@N)                                     ; repeat in 500 ms <br> <br>
+				</FONT>
+				Two different events are being created.  One is the <FONT face="Courier New">press()</FONT> event on the button.  
+				The second is an <FONT face="Courier New">alarm(Rotate,@N)</FONT> event.  The name of the alarm is "Rotate" and it has
+				one local parameter. This alarm executes every 500 milliseconds.  This alarm changes the color of next ball in the circle 
+				to the yellow color each time the alarm runs.  This makes it look like the colored ball is moving around the circle.<br>
+				<br>
+				<FONT color="#cc6600">Note:&nbsp; If you copy and paste these lines from the help
+					documentation into your configuration file you must ensure that the semicolon
+					and at-sign combination appears <u>at the beginning of every line</u>.&nbsp; You can
+					copy the help text by selecting the text and pressing Ctrl-C to copy the text
+					to the clipboard. Use Ctrl-V to paste the text into the configuration file.</FONT>				<BR>
+				<p>&nbsp;</p>
+			<li>
+				<FONT color="#000099">Press the button</FONT> with the label <FONT color="#cc6600">No, Press Me!</FONT>. If everything is
+				correct you should see the yellow colored ball start moving around the circle. You can stop the ball by pressing the
+				first button with the label <FONT color="#cc6600">Press Me!</FONT>. 
+				<p>&nbsp;</p>
+				Once again, if you do not see the colored ball move around the ring go back to the previous step and examine the 
+				event code in the configuration file.  
+				<p>&nbsp;</p>
+		    <li>			
+				Use <FONT color="#000099">View-Restart</FONT> to reset the initial cel offsets in the configuration file.
+				If you do not do this then the current offset values for all ambiguous cels will be written to the CNF file
+				when the set is saved.  A restart of the set will restore the initial offets that were first used.
+				<p>&nbsp;</p>				
+				If you happen to inadvertently save the set with current offsets then when you reload the set your balls will
+				appear as a circle.  You will have to edit the configuration with <FONT color="#000099">View-Active Configuration</FONT> 
+				and remove all <FONT color="#cc6600" face="Courier New">%offset[]</FONT> tags from all cel specifications.
+				<p>&nbsp;</p>
+				Use <FONT color="#000099">File-Save As</FONT> to save your work.&nbsp; Save the new KiSS set to the 
+				Tutorial/Visual Editing directory or a directory of your choice.&nbsp; The configuration element name 
+				should be <FONT color="#cc6600">CNF3.cnf</FONT> if you began this tutorial after first starting UltraKiss.
+				You can overwrite any existing element of the same name.
+				<p>&nbsp;</p>
+		  </li>
+		</ol>
+		<p align="left">&nbsp;</p>
+		<hr>
+		<p align="left">Next Document:&nbsp; <A href="lesson4.html">Visual Editing Tutorial Lesson 4<br>
+			</A>Prior Document:&nbsp; <A href="lesson2.html">Visual Editing Tutorial Lesson 2</A></p>
+		<p align="left">Copyright (c) 2002-2025 William Miles</p>
+
+	</body>
+</html>

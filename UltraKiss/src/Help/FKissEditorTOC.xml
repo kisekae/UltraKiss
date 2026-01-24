@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='ISO-8859-1'  ?>
+<!DOCTYPE toc
+  PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp TOC Version 1.0//EN"
+         "http://java.sun.com/products/javahelp/toc_1_0.dtd">
+<toc version="1.0">
+  <tocitem text="">
+   <tocitem text="FKiSS Editor">
+    <tocitem text="Introduction" target="fkisseditor.index"/>
+    <tocitem text="Menu Commands" target="fkisseditor.menu"/>
+    <tocitem text="Toolbar Commands" target="fkisseditor.toolbar"/>
+   </tocitem>
+  </tocitem>
+</toc>
+
+

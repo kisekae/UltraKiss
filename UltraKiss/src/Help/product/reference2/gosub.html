@@ -1,0 +1,69 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>map</title>
+</head>
+
+<body>
+
+<h4><a name="gosub" id="gosub">gosub</a>()&nbsp;</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; gosub
+(labelname)</p>
+<p>The gosub()  command is a subroutine call that transfers code execution to the specified label  module. The next FKiSS statement executed is the first statement in the label module. When the label module completes execution, either by executing all statements in the module or by executing an exitevent() command, control returns to the  event statement immediately following the gosub() command. </p>
+<p>The gosub() statement and label modules were introduced in FKiSS 3 as a means to structure FKiSS code so that common functions could be isolated and called as required. </p>
+<p>The label identifier can be an integer or a name. Label identifiers must be unique within the set of all label modules.</p>
+<p>The gosub() command will fail silently if the specified label module does not exist. </p>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>FKiSS 5 Syntax:</b></font>&nbsp;&nbsp;&nbsp;&nbsp; gosub (labelname[, argument1, argument2, ...])</p>
+<p>FKiSS 5  extended the notion of labels to allow for parameter specification and return values. Previous FKiSS versions were incapable of implementing recursive label modules or functions. FKiSS 5 implements local label variables and this provides the ability to support label parameters and function return values. Local variables are module specific and eliminate the requirement for the programmer to manage global variables.</p>
+<p>The optional argument list specifies a set of  variable names that must be referenced as local variables within the label  module. </p>
+<p>Local variable names are prefixed with an '<font face="Courier New, Courier, mono">@</font>' sign. Thus, the variable '<font face="Courier New, Courier, mono">@N</font>' is a local variable declared and referenced within the module and is distinct from any global variable '<font face="Courier New, Courier, mono">N</font>'. Calling the label module recursively creates new instances of all local variables distinct from any other local variable of the same name.</p>
+<p>Return values can be specified for label modules by assigning a value to a local variable of the same name as the label module. The following example shows how to specify label parameters and return values.</p>
+<p>&nbsp; </p>
+<p>Related actions: <a href="label.html">label</a>, <a href="gosubrandom.html">gosubrandom()</a>,
+<a href="goto.html">goto()</a>, <a href="gotorandom.html">gotorandom()</a></p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td>VariableCase</td>
+      <td>variable names are case sensitive</td>
+      <td>default value &quot;<font color="#0000FF">false</font>&quot; (Compatibility option)</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>Example:</b></font></p>
+<p><font face="Courier New">;@ let(I,3) let(J,2)<br>
+;@ debug(&quot;about to multiply&quot;)<br>
+;@ gosub(Multiply)<br>
+;@ debug(&quot;back from multiply&quot;)</font></p>
+<p><font face="Courier New">;@label(Multiply)<br>
+  ;@ debug(&quot;doing a multiply&quot;)&nbsp;<br>
+;@&nbsp;mul(X,I,J)</font><font face="Courier New"><br>
+  <br>
+</font></p>
+<p><font color="#FF0000"><strong>FKiSS 5 Example:</strong></font></p>
+<p><font face="Courier New">;@begin()&nbsp;<br>
+;@ gosub(Factorial,5)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; 5 is an argument to the factorial label routine<br>
+;@ notify(&quot;5! is &quot;,@Factorial)&nbsp;; the return value is in local variable @Factorial<br>
+<br>
+;@label(Factorial,@N)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; local variable @N is the function parameter<br>
+;@ iflessthan(@N,2)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; factorial of 2 is 2, 1 is 1, 0 is 0<br>
+;@&nbsp; let(@Factorial,@N)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; set the function return value<br>
+;@&nbsp; exitevent()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; exit<br>
+;@&nbsp; endif()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;<br>
+;@ sub(@N1,@N,1)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; N1 is N - 1&nbsp;<br>
+;@ gosub(Factorial,@N1)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; this is a recursive call to Factorial(N-1)<br>
+;@ mul(@X,@N,@Factorial)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; factorial of N is N*Factorial(N-1)<br>
+;@ let(@Factorial,@X)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; local variable @Factorial is the return value</font></p>
+<p></p>
+</body>
+
+</html>

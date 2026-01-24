@@ -1,0 +1,123 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="generator" content="Bluefish 2.2.12" >
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>map</title>
+</head>
+
+<body>
+
+<h4><a name="detach" id="attach"></a>detach()&nbsp;</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; detach(object)</p>
+<p>The detach action command removes an attachment relationship between two group objects. The specified object is detached from its parent group object.</p>
+<p>When an attachment is broken movement of the parent object no longer moves the detached object.</p>
+<p>If the detached object was fixed and restricted in movement through restrictx() and restricty() limits then these limits may have restricted 
+movement of the parent object.  These restrictions on the parent object movement are removed and restrictions are recalculated at the time of detachment.</p>
+<p>All detached() events associated with the detached object are fired with the object is detached. </p>
+
+<p>More than one
+detached() event can exist for the same object and these events will be
+scheduled in the same order as the exist in the configuration file. Note that
+there is no defined order for event processing in KiSS. The detached() event is
+asynchronous and single threaded
+viewers that do not support concurrent events can process the detached()
+event at any time. Furthermore, multiple detachments can occur in any sequence.
+No assumptions should be made for the sequence in which mouse events, unfix(), detached(), and
+collision events are processed.
+</p>
+
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>
+<br>
+Related events: <a href="unfix.html"> unfix()</a>, <a href="detached.html">detached()</a><br>
+Related actions: <a href="attach.html">attach()</a>,
+<a href="glue.html">glue()</a>, <a href="letparent.html">letparent()</a>, <a href="letsibling.html">letsibling()</a>,
+<a href="restrictx.html">restrictx()</a>, <a href="restricty.html">restricty()</a>
+</p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+  <table border="1" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td width="20%">FKiSS5</td>
+      <td width="30%">implements strong attachments</td>
+      <td></td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+  <table border="1" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td width="20%">DetachRestricted</td>
+      <td width="30%">Enable detachment on movement when restricted objects reach
+        restriction limits</td>
+      <td>default value &quot;<font color="#0000FF">true</font>&quot;
+        (Compatibility option)</td>
+    </tr>
+    <tr>
+      <td width="20%">DetachMove</td>
+      <td width="30%">Enable detachment on FKiSS movement if moved object is attached</td>
+      <td>default value &quot;<font color="#0000FF">true</font>&quot;
+        (Compatibility option)</td>
+    </tr>
+    <tr>
+      <td width="20%">DetachFix</td>
+      <td width="30%">Enable strong attachments for fixed objects</td>
+      <td>default value &quot;<font color="#0000FF">true</font>&quot;
+        (Compatibility option)</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>&nbsp;Example:&nbsp;</b></font><br></p>
+<p><font face="Courier New">
+;[Cel Section]<br>
+#4   button2.button      : 0                                ;%size[179,50] %offset[0,63] %attributes[text="Attach Saucer to Table"] <br>
+#4   button1.button      : 0                                ;%size[179,50] %attributes[text="Attach Teacup to Saucer"] <br>
+#3   teacup1.png         : 0                                ;<br>
+#2   saucer1.png         : 0                                ;<br>
+#1   table1.png          : 0                                ;<br>
+ <br>
+;[Page Set Section]<br>
+; Page 0<br>
+$0 * 183,108 385,202 420,153 0,0<br>
+ <br><br>
+ <br>
+;[FKiSS Section]<br>
+;@EventHandler<br>
+ <br>
+;@initialize()                                              ; <br>
+;@ let(Teacup,#3)                                           ; Set variable names for objects.  These can be used in action statements but not events.<br>
+;@ let(Saucer,#2)                                           ; <br>
+;@ let(Table,#1)                                            ; <br>
+<br>
+;@press("button1.button")                                   ; <br>
+;@ notify("attach Teacup to Saucer")                        ; <br>
+;@ attach(Teacup,Saucer)                                    ; <br>
+<br>
+;@press("button2.button")                                   ; <br>
+;@ notify("attach Saucer to Table")                         ; <br>
+;@ attach(Saucer,Table)                                     ; <br>
+<br>
+;@detached(#3)                                              ; <br>
+;@ notify("Teacup detached")                                ; <br>
+<br>
+;@detached(#2)                                              ; <br>
+;@ notify("Saucer detached")                                ; <br>
+<br>
+;@detached(#1)                                              ; <br>
+;@ notify("Table detached")                                 ; This cannot happen as Table is not attached to anything <br>
+<br></font>
+
+</body>
+
+</html>

@@ -1,0 +1,1808 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0054)http://www.argonet.co.uk/users/tigger/KISS/fkref4.html -->
+<HTML><HEAD><TITLE>FKISS Reference</TITLE>
+<META content="text/html; charset=windows-1252" http-equiv=Content-Type>
+<META content="MSHTML 5.00.3103.1000" name=GENERATOR></HEAD>
+<BODY background="FKISS Reference_files/textur.gif">
+<CENTER>
+<H1>FKISS Reference</H1></CENTER>
+<H3>Introduction</H3>
+<P>This FKISS reference assumes that the reader is familiar with the KISS 
+General Specification (KISS/GS), and understands the format of the configuration 
+file (.CNF), and the basic concepts of cels, palettes and objects. 
+<UL>
+  <H4>Index</H4>
+  <LI><A 
+  href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#overview">FKISS 
+  Overview</A> 
+  <LI><A 
+  href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#cel_ambiguity">Cel 
+  ambiguity</A> 
+  <LI><A 
+  href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#cel_groups">Cel 
+  groups</A> 
+  <LI><A 
+  href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#variables">Variables 
+  and symbolic names</A> 
+  <LI><A 
+  href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#parameter_types">Parameter 
+  types</A> 
+  <LI><A 
+  href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#events_table">Event 
+  descriptions</A> 
+  <LI><A 
+  href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#actions_table">Action 
+  descriptions</A> </LI></UL>
+<P>
+<HR>
+
+<P><A name=overview>
+<H3>FKISS Overview</H3></A>
+<P>FKISS scripting instructions are embedded in the KiSS configuration file. All 
+FKISS lines begin with the characters ";@" (the leading ";" means that non-FKISS 
+programs will at least be able to load the doll and show something, as the FKISS 
+script will be read as comments). 
+<P>All FKISS scripts must begin with the line: 
+<P><CODE>;@EventHandler</CODE> 
+<P>This enables the FKISS engine in the player program, and warns it to expect 
+further script. It is required, and must precede any other FKISS code. Although 
+some players treat this as case-insensitive (i.e. they will accept 
+"@eventhandler"), strictly it is case-sensitive, and if the set is to be 
+portable the line should be exactly as given. Note that unlike all other 
+scripting commands, there are no brackets. However, some players allow the 
+brackets to be present. 
+<P>After the EventHandler line, FKISS scripts consist of events (or triggers) 
+followed by a sequence of actions that must be executed when that event occurs. 
+A further FKISS event automatically terminates the handler for the preceding 
+event. For example: 
+<P><CODE>;@alarm(1)<BR>;@ unmap(#2)<BR>;@ unmap(#3)<BR>;@alarm(2)<BR>;@ 
+map(#2)<BR>;@ map(#3)<BR></CODE>
+<P>This defines two event handlers. The first is triggered when timer number 1 
+expires, the second when timer number 2 expires. 
+<P>The "@" character must immediately follow the ";", but other than this most 
+whitespace is ignored. It is also legal to have multiple FKISS functions on the 
+same line. Thus, the example above could be written as: 
+<P><CODE>;@alarm(1) unmap(#2) unmap(#3)<BR>;@alarm(2) map(#2) map(#3)<BR></CODE>
+<P>Ordering of FKISS scripting commands is often misunderstood by FKISS 
+programmers. There are two rules here: 
+<OL>
+  <LI>The order that events occur in the script is (almost) completely 
+  irrelevant. The example above could equally well be written as: 
+  <P><CODE>;@alarm(2) map(#2) map(#3)<BR>;@alarm(1) unmap(#2) 
+  unmap(#3)<BR></CODE>
+  <P>(ie with the events in reverse order), and the end result would be 
+  identical. If what you think you are doing contravenes this rule, then it will 
+  not work as you intend. </P>
+  <LI>Actions in the event handler will be executed in the order they appear in 
+  the script; note, however, that FKISS3 introduces actions that can override 
+  this rule in limited ways. </LI></OL>
+<P>Rule 1 above include the word "almost"; this is because it is legal to have a 
+script that includes two or more handlers for the same event. For example: 
+<P><CODE>;@alarm(1) unmap(#2) unmap(#3)<BR>;@alarm(2) map(#2) 
+map(#3)<BR>;@alarm(1) unmap(#4) unmap(#5)<BR></CODE>
+<P>includes two "alarm(1)" handlers. Different FKISS players can be expected to 
+handle this in different ways. Some players will treat them as two separate 
+events triggered one after the other (with the order in which they are processed 
+being indeterminate); other players will combine the two handlers into one, with 
+the order of the two sets of actions being different from player to player; 
+still others process the first handler and completely ignore the second. 
+!PlayKISS uses the second approach, and processes the actions lexically; 
+internally, therefore, !PlayKISS will convert the example above to: 
+<P><CODE>;@alarm(1) unmap(#2) unmap(#3) unmap(#4) unmap(#5)<BR>;@alarm(2) 
+map(#2) map(#3)<BR></CODE>
+<P>Because if this indeterminacy, <B>it is strongly recommended that multiple 
+handlers for the same event are avoided</B>. 
+<P>
+<HR>
+
+<P><A name=cel_ambiguity>
+<H3>Cel ambiguity</H3></A>
+<P>The KISS specification allows an artist to use the same cel in more than one 
+object, as in: 
+<P><CODE>#1 tharg.cel<BR>#2 tharg.cel<BR></CODE>
+<P>Although legal, this can cause problems in FKISS players if the duplicated 
+cel is used in an FKISS event or action, as in: 
+<P><CODE>;@press("tharg.cel")<BR>;@ unmap("tharg.cel")<BR></CODE>
+<P>The ambiguity is obvious - which of the two "tharg.cel" is being referenced 
+in the press and unmap? Different players handle this in different ways, and are 
+often internally inconsistant (e.g. unmap("tharg.cel") unmaps all instances of 
+tharg.cel, but press("tharg.cel") is only invoked for the first instance of 
+tharg.cel. 
+<P>The use of ambiguous cel names in FKISS functions will therefore behave 
+differently in differect players;<STRONG> it is therefore recommended that such 
+ambiguity is avoided.</STRONG> 
+<P>
+<HR>
+
+<P><A name=cel_groups>
+<H3>Cel groups</H3></A>
+<P>FKISS4 introduces a new concept to KISS, namely the "cel group". Cel groups 
+are a named assemblage of cels, optionally split into 1 or more <EM>frames</EM>. 
+The format of a group name is an exclamation mark (!) followed by an alphabetic 
+character, followed by up to 31 additional alphanumeric characters (e.g. !Group, 
+!G173, !Body are all legal group names). Group names are case-insensitive. 
+<P>Groups can be used in FKISS function (event or action) anywhere that a single 
+cel name can be used, in which case the FKISS function applies to all the cels 
+in the group. For example <CODE>@unmap(!Uniform)</CODE> will unmap all the cels 
+that are part of group !Uniform. Similarly, the event <CODE>@press(!Body)</CODE> 
+will be invoked whenever any of the cels that make up !Body are clicked on with 
+the mouse. 
+<P>In addition, there are two FKISS actions that specifically relate to groups, 
+@setframe and @letframe. These are described in the <A 
+href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#actions_table">actions 
+table</A> below. 
+<P>Cel membership of groups is controlled by extensions to the cel definition 
+line described in KISS/GS. The original KISS/GS format is: 
+<P><CODE>#&lt;mark&gt;[.&lt;Fix&gt;] &lt;cel&gt; [*&lt;palnum&gt;] 
+[:&lt;setnum&gt;...] </CODE>
+<P>while the extended format is: 
+<P><CODE>#&lt;mark&gt;[.&lt;Fix&gt;] &lt;cel&gt; [*&lt;palnum&gt;] 
+[:&lt;setnum&gt;...] [; [%t&lt;transp&gt;][%g][&lt;group&gt; 
+[:&lt;frame&gt;...]]] </CODE>
+<P>Note that the extensions are preceded by a semi-colon (";"), which means that 
+earlier KISS players will treat the text following as a comment. Considering 
+each new entry in turn: 
+<UL>
+  <LI>%t&lt;transp&gt; sets the initial transparency of the cel to 
+  &gt;transp&lt; (see <A 
+  href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#transparent"><CODE>@transparent</CODE></A>). 
+  NB This extension to the cel definition line is not new, but was introduced at 
+  about the same time as the <CODE>@transparent</CODE> action. 
+  <LI>%g make the cel a ghost (see <A 
+  href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#ghost"><CODE>@ghost</CODE></A>). 
+
+  <LI>&lt;group&gt; makes the cel being defined part of the specified group. 
+  <LI>&lt;frame&gt; makes the cel being defined part of a specific frame number 
+  in the group. Frame numbers start at zero, and there is no significant upper 
+  limit on the number of frames in a group. </LI></UL>
+<P>It is also possible to add further group membership details by following the 
+cel definition line with additional lines of the form: 
+<P><CODE>;&lt;group&gt; [:&gt;frame&gt;...] </CODE>
+<P>A cel that uses all the possible features could look like this: 
+<P><CODE>#5.10 bubble.cel *2 : 1 2 ;%t128 %g !Bubbles : 1 2 4 <BR>;!Bubbles 7 9 
+<BR>;!Balls </CODE>
+<P>In addition to the features that are part of KISS/GS, "bubble.cel" starts off 
+with a transparency of 128 and is a ghost. It appears in frames 1, 2, 4, 7 and 9 
+of group "!Bubbles". It also appears in group "!Balls", but is not a member of 
+any frames in that group. 
+<P>
+<HR>
+
+<P><A name=variables>
+<H3>Variables and symbolic names</H3></A>
+<P>Variables (FKISS3 and later) consist of a single letter, or a letter followed 
+by a single digit, and are case-insensitive (e.g. n3 and N3 are the same 
+variable). There are therefore 286 possible variable names (a-z, 
+a0-z0,...a9-z9). They are signed 32-bit values. 
+<P>In FKISS4, variable names are extended to allow 32 alphanumeric characters 
+(starting with an alhpabetic). 
+<P>FKISS4 also allows both alarms and labels to be given symbolic names, with 
+the same format as variables. For example: <CODE><BR>;@alarm(Blink) <BR>:@ 
+&lt;something or other&gt; <BR>;@ randomtimer(Blink,5000,1000) 
+<BR><BR>;@label(CheckCollision) <BR>;@ gosub(CheckOverlap) </CODE>
+<P>Note that although these symbolic names appear to be variables, they so not 
+have a value and should not be used in any of the "let" functions. It is legal 
+to use the same name for an alarm, a timer, and a variable, which leads to the 
+following issues: <CODE><BR>;@&lt;some event&gt; <BR>;@ let(Count,3) <BR>;@ 
+timer(Count,1000) <BR>;@ gosub(Count) <BR><BR>;@alarm(3) <BR>; &lt;something&gt; 
+<BR><BR>;@alarm(Count) <BR>; &lt;something&gt; <BR><BR>;@label(3) <BR>; 
+&lt;something&gt; <BR><BR>;@label(Count) <BR>; &lt;something&gt; </CODE>
+<P>Which timer is set? Timer number 3, or the timer called "Count"? And which 
+label is the target of the gosub, label number 3 or the label called "Count"? In 
+such cases FKISS4 follows the rule that symbolic names for timers and alarms 
+always have precedence over the value of variables; hence, 
+<CODE>timer(Count,1000)</CODE> will set the timer associated with 
+<CODE>label(Count)</CODE>, and <CODE>gosub(Count)</CODE> will invoke the 
+<CODE>label(Count)</CODE> handler. 
+<P>Although the rules of FKISS4 mean that there is no confusion caused by 
+overloading variables and labels or timers, doing so results in confusing and 
+difficult-to-follow scripts, so it is disrecommended. 
+<P>
+<HR>
+
+<P><A name=parameter_types>
+<H3>Parameter types</H3></A>
+<P>Parameters to FKISS events and action fall into a number of basic types, 
+described in the table below. The "Usage" column is the code used in the event 
+and action tables below to reference the parameter type. 
+<P><STRONG>These parameters should be strictly adhered to - if an fkiss function 
+specifies an object reference (o), using an number (n) or a variable (v) will 
+yield undefined results.</STRONG> 
+<CENTER>
+<TABLE border=3 cellPadding=1>
+  <TBODY>
+  <TR align=middle>
+    <TH>Usage</TH>
+    <TH>Meaning</TH>
+    <TH>Description</TH>
+    <TH>Examples</TH></TR>
+  <TR align=middle>
+    <TD>c</TD>
+    <TD>Cel reference</TD>
+    <TD>The name of a cel.</TD>
+    <TD>"eyes.cel"</TD></TR>
+  <TR align=middle>
+    <TD>o</TD>
+    <TD>Object reference</TD>
+    <TD>The mark of an object.</TD>
+    <TD>#1</TD></TR>
+  <TR align=middle>
+    <TD>ov</TD>
+    <TD>Object (inc variable)</TD>
+    <TD>The mark of an object, or a variable containing the object number.</TD>
+    <TD>#1<BR>ObjectNumber</TD></TR>
+  <TR align=middle>
+    <TD>oc</TD>
+    <TD>Cel or object reference</TD>
+    <TD>Either the name of a cel or the mark of an object.</TD>
+    <TD>#4<BR>"shirt.cel"</TD></TR>
+  <TR align=middle>
+    <TD>ovc</TD>
+    <TD>Cel or object (inc variable)</TD>
+    <TD>Either the name of a cel or the mark of an object, or a variable 
+      containing the object number</TD>
+    <TD>#4<BR>"shirt.cel"</TD></TR>
+  <TR align=middle>
+    <TD>g</TD>
+    <TD>Group</TD>
+    <TD>The name of a cel group.</TD>
+    <TD>!Body</TD></TR>
+  <TR align=middle>
+    <TD>cg</TD>
+    <TD>Cel or group</TD>
+    <TD>The name of a cel, or the name of a group.</TD>
+    <TD>"eyes.cel"<BR>!MyGroup</TD></TR>
+  <TR align=middle>
+    <TD>ocg</TD>
+    <TD>Cel, group or object reference</TD>
+    <TD>The name of a cel or group, or the mark of an object</TD>
+    <TD>"jacket.cel"<BR>!Group2<BR>#19</TD></TR>
+  <TR align=middle>
+    <TD>ovgc</TD>
+    <TD>Cel, object (inc var) or group</TD>
+    <TD>Any of cel name, group, object number, or variable</TD>
+    <TD>"fred.cel"<BR>#1<BR>!MainGroup<BR>ObjNum</TD></TR>
+  <TR align=middle>
+    <TD>n</TD>
+    <TD>Number</TD>
+    <TD>A numeric (integer) value</TD>
+    <TD>17</TD></TR>
+  <TR align=middle>
+    <TD>s</TD>
+    <TD>String</TD>
+    <TD>Any text</TD>
+    <TD>"Hello there"</TD></TR>
+  <TR align=middle>
+    <TD>v</TD>
+    <TD>Variable</TD>
+    <TD>Variable name</TD>
+    <TD>n6 (FKISS3) <BR>Count (FKISS4)</TD></TR>
+  <TR align=middle>
+    <TD>i</TD>
+    <TD>Identifier</TD>
+    <TD>Numeric (integer) value, or a symbolic name for a label or an 
+alarm.</TD>
+    <TD>GetObj<BR>23</TD></TR>
+  <TR align=middle>
+    <TD>d</TD>
+    <TD>Number or Variable</TD>
+    <TD>A literal number or a variable identifier.</TD>
+    <TD>75<BR>k4</TD></TR>
+  <TR align=middle>
+    <TD>f</TD>
+    <TD>Filename</TD>
+    <TD>String containing a filename.</TD>
+    <TD>"bang.wav"</TD></TR>
+  <TR align=middle>
+    <TD>k</TD>
+    <TD>Keylist</TD>
+    <TD>String containing the names or one or more keyboard keys.<BR><EM>In 
+      some cases only a single key name is allowed.</EM></TD>
+    <TD>"abcd"<BR>"updownleftright"</TD></TR></TBODY></TABLE></CENTER>
+<P>In some case, these parameters may be followed by a number to allow the event 
+or action description to refer to specific parameters [eg timer(d1,d2), 
+movebyx(o1,o2,d)]. 
+<P>Legal key names in Keylist parameters (FKISS4 and later) are the alphanumeric 
+keys ("a"-"z" and "0"-"9") plus the special keys "up", "down", "left" and 
+"right" only. Key names are case-insensitive (i.e. "a" &amp; "A" are the same). 
+<P>
+<HR>
+
+<P><A name=events_table>
+<H3>Events</H3></A>
+<P>The table below gives a complete list of all FKISS events currently defined, 
+the version of FKISS in which they appear, and a brief description. In some 
+cases, the format of the event is different for different versions of FKISS - in 
+such cases, there are multiple entries. More detailed information can be 
+obtained by following the links. 
+<P><!-- Events reference table -->
+<TABLE border=3 cellPadding=1>
+  <TBODY>
+  <TR align=middle>
+    <TH><A name=alarm></A>Event</TH>
+    <TH>Version</TH>
+    <TH>Example</TH>
+    <TH>Description</TH>
+    <TH>Related events</TH>
+    <TH>Related actions</TH></TR>
+  <TR align=middle>
+    <TD><A name=apart></A>alarm(n)</TD>
+    <TD>1</TD>
+    <TD>alarm(3)</TD>
+    <TD align=left rowSpan=2>A timer reaches zero.</TD>
+    <TD rowSpan=2>-</TD>
+    <TD rowSpan=2><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#timer">timer</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#randomtimer">randomtimer</A></TD></TR>
+  <TR align=middle>
+    <TD>alarm(i)</TD>
+    <TD>4</TD>
+    <TD>alarm(Blink)</TD></TR>
+  <TR align=middle>
+    <TD><A name=begin></A>apart(c,c)</TD>
+    <TD>2.1</TD>
+    <TD>apart("skirt.cel","body.cel")</TD>
+    <TD align=left rowSpan=2>The two cels do not overlap, taking transparent 
+      pixels into account.<BR>Triggers only if the cels did overlap before one 
+      of them was moved by the user.</TD>
+    <TD rowSpan=2><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#collide">collide</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#in">in</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#out">out</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#stillin">stillin</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#stillout">stillout</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#unfix">unfix</A></TD>
+    <TD rowSpan=2>-</TD></TR>
+  <TR align=middle>
+    <TD>apart(cg,cg)</TD>
+    <TD>4</TD>
+    <TD>apart(!Furniture,"skirt.cel")</TD></TR>
+  <TR align=middle>
+    <TD><A name=catch>begin()</A></TD>
+    <TD>1</TD>
+    <TD></A>begin()</TD>
+    <TD align=left>This event is triggered <EM>after</EM> the initialize event 
+      and <EM>before</EM> the version event.</TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#initialize">initialize</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#version">version</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#end">end</A></TD>
+    <TD>-</TD></TR>
+  <TR align=middle>
+    <TD><A name=col></A>catch(oc)</TD>
+    <TD>1</TD>
+    <TD>catch(#2)<BR>catch("body.cel")</TD>
+    <TD align=left rowSpan=2>The user clicks on the object or cel.<BR>Applies 
+      to all cels &amp; objects except those with a maximal fix value.</TD>
+    <TD rowSpan=2><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#press">press</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#fixcatch">fixcatch</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#release">release</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#drop">drop</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#fixdrop">fixdrop</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#unfix">unfix</A></TD>
+    <TD rowSpan=2>-</TD></TR>
+  <TR align=middle>
+    <TD>catch(g)</TD>
+    <TD>4</TD>
+    <TD>catch(!Body)</TD></TR>
+  <TR align=middle>
+    <TD><A name=collide></A>col(n)</TD>
+    <TD>1</TD>
+    <TD>col(2)</TD>
+    <TD align=left>The user changes the palette to that specified</TD>
+    <TD>-</TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#changecol">changecol</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#letpal">letpal</A></TD></TR>
+  <TR align=middle>
+    <TD><A name=detached></A>collide(c,c)</TD>
+    <TD>2.1</TD>
+    <TD>collide("shirt.cel","body.cel")</TD>
+    <TD align=left rowSpan=2>The two cels touch, taking transparent pixels 
+      into account.<BR>Triggers only if the cels did not overlap before one of 
+      them was moved by the user.</TD>
+    <TD rowSpan=2><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#apart">apart</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#in">in</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#out">out</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#stillin">stillin</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#stillout">stillout</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#unfix">unfix</A></TD>
+    <TD rowSpan=2>-</TD></TR>
+  <TR align=middle>
+    <TD>collide(cg,cg)</TD>
+    <TD>4</TD>
+    <TD>collide(!Body,!Uniform)</TD></TR>
+  <TR align=middle>
+    <TD><A name=drop></A>detached(o)</TD>
+    <TD>4</TD>
+    <TD>detached(#21)</TD>
+    <TD align=left>The object is no longer attached to its parent object. This 
+      may be triggered eitherby the FKISS action "detach" or if the object is 
+      detached from its parent by a user drag.</TD>
+    <TD>-</TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#attach">attach</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#detach">detach</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#glue">glue</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#letparent">letparent</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#letchild">letchild</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#letsibling">letsibling</A></TD></TR>
+  <TR align=middle>
+    <TD><A name=end></A>drop(oc)</TD>
+    <TD>1</TD>
+    <TD>drop("skirt.cel")<BR>drop(#2)</TD>
+    <TD align=left rowSpan=2>The user releases the mouse on the object or 
+      cel.<BR>Applies only to all cels &amp; objects except those with a maximal 
+      fix value.</TD>
+    <TD rowSpan=2><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#catch">catch</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#press">press</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#fixcatch">fixcatch</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#release">release</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#fixdrop">fixdrop</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#unfix">unfix</A></TD>
+    <TD rowSpan=2>-</TD></TR>
+  <TR align=middle>
+    <TD>drop(g)</TD>
+    <TD>4</TD>
+    <TD>drop(!Stuff)</TD></TR>
+  <TR align=middle>
+    <TD><A name=fixcatch></A>end()</TD>
+    <TD>1</TD>
+    <TD>end()</TD>
+    <TD align=left>The user quits the player or closes the doll</TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#initialize">initialise</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#begin">begin</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#version">version</A></TD>
+    <TD>-</TD></TR>
+  <TR align=middle>
+    <TD><A name=fixdrop></A>fixcatch(oc)</TD>
+    <TD>1</TD>
+    <TD>fixcatch("skirt.cel")<BR>fixcatch(#1)</TD>
+    <TD align=left rowSpan=2>The user clicks on the object or cel.<BR>Applies 
+      only to fixed cels &amp; objects</TD>
+    <TD rowSpan=2><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#press">press</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#catch">catch</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#release">release</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#drop">drop</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#fixdrop">fixdrop</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#unfix">unfix</A></TD>
+    <TD rowSpan=2>-</TD></TR>
+  <TR align=middle>
+    <TD>fixcatch(g)</TD>
+    <TD>4</TD>
+    <TD>fixcatch(!Clothes)</TD></TR>
+  <TR align=middle>
+    <TD><A name=in></A>fixdrop(oc)</TD>
+    <TD>1</TD>
+    <TD>fixdrop("skirt.cel")<BR>fixdrop(#2)</TD>
+    <TD align=left rowSpan=2>The user releases the mouse on the object or 
+      cel.<BR>Applies only to fixed cels &amp; objects</TD>
+    <TD rowSpan=2><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#press">press</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#catch">catch</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#release">release</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#drop">drop</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#fixcatch">fixcatch</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#unfix">unfix</A></TD>
+    <TD rowSpan=2>-</TD></TR>
+  <TR align=middle>
+    <TD>fixdrop(g)</TD>
+    <TD>4</TD>
+    <TD>fixdrop(!Group)</TD></TR>
+  <TR align=middle>
+    <TD><A name=initialize></A>in(o,o)</TD>
+    <TD>2</TD>
+    <TD>in(#1,#2)</TD>
+    <TD align=left>The two objects overlap, ignoring transparency.<BR>Triggers 
+      only if the objects did not overlap before one of them was moved by the 
+      user.</TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#apart">apart</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#collide">collide</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#out">out</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#stillin">stillin</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#stillout">stillout</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#unfix">unfix</A></TD>
+    <TD>-</TD></TR>
+  <TR align=middle>
+    <TD><A name=keypress></A>initialize()</TD>
+    <TD>1</TD>
+    <TD>initialize()</TD>
+    <TD align=left>Before the doll is displayed after loading</TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#begin">begin</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#version">version</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#end">end</A></TD>
+    <TD>-</TD></TR>
+  <TR align=middle>
+    <TD><A name=keyrelease></A>keypress(k)</TD>
+    <TD>4</TD>
+    <TD>keypress("a")<BR>keypress("up")</TD>
+    <TD align=left>The user has pressed the specified key. This event is 
+      triggered once when the key is pressed - there is no 
+      autorepeat.<BR><EM>Only a single key name is allowed.</EM></TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#keyrelease">keyrelease</A></TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#letkey">letkey</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#letkeymap">letkeymap</A></TD></TR>
+  <TR align=middle>
+    <TD><A name=label></A>keyrelease(k)</TD>
+    <TD>4</TD>
+    <TD>keyrelease("7")<BR>keyrelease("left")</TD>
+    <TD align=left>The user has released the specified key (i.e. is no longer 
+      pressing it).<BR><EM>Only a single key name is allowed.</EM></TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#keypress">keypress</A></TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#letkey">letkey</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#letkeymap">letkeymap</A></TD></TR>
+  <TR align=middle>
+    <TD><A name=mousein></A>label(n)</TD>
+    <TD>3</TD>
+    <TD>label(3)</TD>
+    <TD align=left rowSpan=2>Not really an event, but a way of sharing common 
+      actions.<BR>The handler is triggered by a goto or gosub action from 
+      another handler</TD>
+    <TD rowSpan=2>-</TD>
+    <TD rowSpan=2><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#goto">goto</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#gosub">gosub</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#gotorandom">gotorandom</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#gosubrandom">gosubrandom</A></TD></TR>
+  <TR align=middle>
+    <TD>label(i)</TD>
+    <TD>4</TD>
+    <TD>label(Count)</TD></TR>
+  <TR align=middle>
+    <TD><A name=mouseout></A>mousein(ocg)</TD>
+    <TD>4</TD>
+    <TD>mousein("body.cel")<BR>mousein(#1)<BR>mousein(!Body)</TD>
+    <TD align=left>Triggered when the mouse pointer moves over the cel, object 
+      or group.<BR>The event is only triggered if the cel, object or group is 
+      not occluded by either cels (i.e. if a mouse click would invoke a "press" 
+      event</TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#mouseout">mouseout</A></TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#letmousex">letmousex</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#letmousey">letmousey</A></TD></TR>
+  <TR align=middle>
+    <TD><A name=never></A>mouseout(ocg)</TD>
+    <TD>4</TD>
+    <TD>mouseout(!MyGroup)<BR>mouseout(#21)<BR>mouseout("cage.cel")</TD>
+    <TD align=left>Triggered when the mouse pointer moves away from the cel, 
+      object or group.</TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#mousein">mousein</A></TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#letmousex">letmousex</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#letmousey">letmousey</A></TD></TR>
+  <TR align=middle>
+    <TD><A name=out></A>never()</TD>
+    <TD>1b</TD>
+    <TD>never()</TD>
+    <TD>This event is never triggered.<BR>Intended for debugging purposes 
+      during doll development.</TD>
+    <TD>-</TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#debug">debug</A></TD></TR>
+  <TR align=middle>
+    <TD><A name=overflow></A>out(o,o)</TD>
+    <TD>2</TD>
+    <TD>out(#2,#3)</TD>
+    <TD align=left>The two objects do not overlap, ignoring 
+      transparency.<BR>Triggers only if the objects did overlap before one of 
+      them was moved by the user.</TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#apart">apart</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#collide">collide</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#in">in</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#stillin">stillin</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#stillout">stillout</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#unfix">unfix</A></TD>
+    <TD>-</TD></TR>
+  <TR align=middle>
+    <TD><A name=press></A>overflow()</TD>
+    <TD>3</TD>
+    <TD>overflow()</TD>
+    <TD align=left>Triggered when an FKISS3 expression evaluation causes an 
+      error.<BR>eg division by zero.</TD>
+    <TD>-</TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#let">let</A><BR><EM>etc</EM></TD></TR>
+  <TR align=middle>
+    <TD><A name=release></A>press(oc)</TD>
+    <TD>1</TD>
+    <TD>press("skirt.cel")<BR>press(#1)</TD>
+    <TD align=left rowSpan=2>The user clicks on the object or cel.<BR>Applies 
+      to all cels &amp; objects.</TD>
+    <TD rowSpan=2><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#catch">catch</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#fixcatch">fixcatch</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#release">release</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#drop">drop</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#fixdrop">fixdrop</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#unfix">unfix</A></TD>
+    <TD rowSpan=2>-</TD></TR>
+  <TR align=middle>
+    <TD>press(g)</TD>
+    <TD>4</TD>
+    <TD>press(!Body)</TD></TR>
+  <TR align=middle>
+    <TD><A name=set></A>release(oc)</TD>
+    <TD>1</TD>
+    <TD>release("skirt.cel")<BR>press(#1)</TD>
+    <TD align=left rowSpan=2>The user releases the object or cel.<BR>Applies 
+      to all cels &amp; objects.</TD>
+    <TD rowSpan=2><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#catch">catch</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#fixcatch">fixcatch</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#press">press</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#drop">drop</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#fixdrop">fixdrop</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#unfix">unfix</A></TD>
+    <TD rowSpan=2>-</TD></TR>
+  <TR align=middle>
+    <TD>release(g)</TD>
+    <TD>4</TD>
+    <TD>release(!Uniform)</TD></TR>
+  <TR align=middle>
+    <TD><A name=stillin></A>set(n)</TD>
+    <TD>1</TD>
+    <TD>set(3)</TD>
+    <TD align=left>The user changes the set to that specified</TD>
+    <TD>-</TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#changeset">changeset</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#letset">letset</A></TD></TR>
+  <TR align=middle>
+    <TD><A name=stillout></A>stillin(o,o)</TD>
+    <TD>2</TD>
+    <TD>stillin(#2,#3)</TD>
+    <TD align=left>The two objects overlap, ignoring transparency.<BR>Triggers 
+      irrespective of the state of the two objects before movement</TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#apart">apart</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#collide">collide</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#in">in</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#out">out</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#stillout">stillout</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#unfix">unfix</A></TD>
+    <TD>-</TD></TR>
+  <TR align=middle>
+    <TD><A name=unfix></A>stillout(o,o)</TD>
+    <TD>2</TD>
+    <TD>stillout(#2,#3)</TD>
+    <TD align=left>The two objects do not overlap, ignoring 
+      transparency.<BR>Triggers irrespective of the state of the two objects 
+      before movement</TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#apart">apart</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#collide">collide</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#in">in</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#out">out</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#stillin">stillin</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#unfix">unfix</A></TD>
+    <TD>-</TD></TR>
+  <TR align=middle>
+    <TD><A name=version></A>unfix(oc)</TD>
+    <TD>1</TD>
+    <TD>unfix("skirt.cel")<BR>unfix(#2)</TD>
+    <TD align=left rowSpan=2>A previously-fixed cel or object becomes free to 
+      move.</TD>
+    <TD rowSpan=2><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#apart">apart</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#collide">collide</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#in">in</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#out">out</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#stillin">stillin</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#stillout">stillout</A></TD>
+    <TD rowSpan=2><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#setfix">setfix</A></TD></TR>
+  <TR align=middle>
+    <TD>unfix(g)</TD>
+    <TD>4</TD>
+    <TD>unfix(!StickyStuff)</TD></TR>
+  <TR align=middle>
+    <TD rowSpan=2>version(n)</TD>
+    <TD>2</TD>
+    <TD>version(2)</TD>
+    <TD align=left>After begin, but only if the version code is supported by 
+      the current program.<BR>Version codes are:
+      <UL>
+        <LI>0 : FKISS 1
+        <LI>1 : FKISS 1b
+        <LI>2 : FKISS 2
+        <LI>3 : FKISS 2.1
+        <LI>4 : FKISS 3
+        <LI>5 : FKISS 4</LI></UL></TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#initialize">initialize</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#begin">begin</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#end">end</A></TD>
+    <TD>-</TD></TR></TBODY></TABLE>
+<P>
+<HR>
+
+<P><!-- Actions reference table --><A name=actions_table>
+<H3>Actions</H3></A>
+<P>The table below gives a complete list of all FKISS actions currently defined, 
+the version of FKISS in which they appear, and a brief description. In some 
+cases, the format of the action is different for different versions of FKISS - 
+in such cases, there are multiple entries. More detailed information can be 
+obtained by following the links. 
+<TABLE border=3 cellPadding=1>
+  <TBODY>
+  <TR align=middle>
+    <TH><A name=add></A>Action</TH>
+    <TH>Version</TH>
+    <TH>Example(s)</TH>
+    <TH>Description</TH>
+    <TH>Related events</TH>
+    <TH>Related actions</TH></TR>
+  <TR align=middle>
+    <TD><A name=altmap></A>add(v,d1,d2)</TD>
+    <TD>3</TD>
+    <TD>add(a1,a2,a3)<BR>add(b,3,c1)</TD>
+    <TD align=left>v := d1 + d2</TD>
+    <TD>-</TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#sub">sub</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#div">div</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#mod">mod</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#mul">mul</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#let">let</A><BR><EM>etc</EM></TD></TR>
+  <TR align=middle>
+    <TD><A name=attach></A>altmap(oc)</TD>
+    <TD>1</TD>
+    <TD>altmap(#1)<BR>altmap("eyes1.cel")</TD>
+    <TD align=left rowSpan=2>If the object/cel is mapped (ie part of the 
+      image) unmap it; if it is unmapped (ie not map of the image) map 
+      it.<BR>This applies in all sets.</TD>
+    <TD rowSpan=2>-</TD>
+    <TD rowSpan=2><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#map">map</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#unmap">unmap</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#ifmapped">ifmapped</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#ifnotmapped">ifnotmapped</A></TD></TR>
+  <TR align=middle>
+    <TD>altmap(ovcg)</TD>
+    <TD>4</TD>
+    <TD>altmap(!MyGroup)<BR>altmap(ObjNum)</TD></TR>
+  <TR align=middle>
+    <TD><A name=changecol></A>attach(ov1,ov2)</TD>
+    <TD>4</TD>
+    <TD>attach(#9,#2)</TD>
+    <TD align=left>Attach object o1 to object o2. If o1 is already attached to 
+      another object, detach it first (triggering a "detached" event if 
+      appropriate). After this action, object o2 is the "parent" of object o1, 
+      andmoving o2 will cause o1 to move so as to retain the same separation. 
+      Moving o1 (unless it is fixed)will cause the attachment to br broken.</TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#detached">detached</A></TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#detach">detach</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#glue">glue</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#letparent">letparent</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#letchild">letchild</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#letsibling">letsibling</A></TD></TR>
+  <TR align=middle>
+    <TD><A name=changeset></A>changecol(d)</TD>
+    <TD>1</TD>
+    <TD>changecol(3)<BR>changecol(a1)</TD>
+    <TD align=left>Change the current palette group to that specified.</TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#col">col</A></TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#changeset">changeset</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#letpal">letpal</A></TD></TR>
+  <TR align=middle>
+    <TD><A name=debug></A>changeset(d)</TD>
+    <TD>1</TD>
+    <TD>changeset(0)<BR>changeset(s)</TD>
+    <TD align=left>Change the current set to that specified.</TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#set">set</A></TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#changecol">changecol</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#letset">letset</A></TD></TR>
+  <TR align=middle>
+    <TD><A name=detach></A>debug(s)</TD>
+    <TD>1b</TD>
+    <TD>debug("Hi there")</TD>
+    <TD align=left>Display the text to the user.<BR><EM>The exact form of the 
+      display (error box, message to terminal) is dependent on the 
+    platform.</EM></TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#never">never</A></TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#notify">notify</A></TD></TR>
+  <TR align=middle>
+    <TD><A name=div></A>detach(ov)</TD>
+    <TD>4</TD>
+    <TD>detach(#16)<BR>detach(Child)</TD>
+    <TD align=left>Detaches object o from whatever parent it may have had.</TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#detached">detached</A></TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#attach">attach</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#glue">glue</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#letparent">letparent</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#letchild">letchild</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#letsibling">letsibling</A></TD></TR>
+  <TR align=middle>
+    <TD><A name=else></A>div(v,d1,d2)</TD>
+    <TD>3</TD>
+    <TD>div(a1,a2,10)<BR>div(b,z5,z2)</TD>
+    <TD align=left>v1 := d1 / d2<BR>(Integer division)</TD>
+    <TD>-</TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#add">add</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#sub">sub</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#mod">mod</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#mul">mul</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#let">let</A><BR><EM>etc</EM></TD></TR>
+  <TR align=middle>
+    <TD><A name=elseifequal></A>else()</TD>
+    <TD>3</TD>
+    <TD>else()</TD>
+    <TD align=left>Part of a structured if/else/endif</TD>
+    <TD>-</TD>
+    <TD><EM><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#ifequal">various 
+      ifs</A></EM><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#endif">endif</A></TD></TR>
+  <TR align=middle>
+    <TD><A name=elseifgreaterthan></A>elseifequal(d1,d2)</TD>
+    <TD>4</TD>
+    <TD>elseifequal(Count,0)</TD>
+    <TD align=left>Part of a structured if/elseif/else/endif</TD>
+    <TD>-</TD>
+    <TD><EM><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#ifequal">various 
+      ifs</A></EM><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#else">else</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#endif">endif</A></TD></TR>
+  <TR align=middle>
+    <TD><A name=elseiflessthan></A>elseifgreaterthan(d1,d2)</TD>
+    <TD>4</TD>
+    <TD>elseifgreaterthan(NumObj,0)</TD>
+    <TD align=left>Part of a structured if/elseif/else/endif</TD>
+    <TD>-</TD>
+    <TD><EM><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#ifequal">various 
+      ifs</A></EM><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#else">else</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#endif">endif</A></TD></TR>
+  <TR align=middle>
+    <TD><A name=elseifnotequalthan></A>elseiflessthan(d1,d2)</TD>
+    <TD>4</TD>
+    <TD>elseiflessthan(X,6)</TD>
+    <TD align=left>Part of a structured if/elseif/else/endif</TD>
+    <TD>-</TD>
+    <TD><EM><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#ifequal">various 
+      ifs</A></EM><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#else">else</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#endif">endif</A></TD></TR>
+  <TR align=middle>
+    <TD><A name=endif></A>elseifnotequal(d1,d2)</TD>
+    <TD>4</TD>
+    <TD>elseifnotequal(Count,1)</TD>
+    <TD align=left>Part of a structured if/elseif/else/endif</TD>
+    <TD>-</TD>
+    <TD><EM><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#ifequal">various 
+      ifs</A></EM><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#else">else</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#endif">endif</A></TD></TR>
+  <TR align=middle>
+    <TD><A name=exitevent></A>endif()</TD>
+    <TD>3</TD>
+    <TD>endif()</TD>
+    <TD align=left>Terminator for structured if/else/endif</TD>
+    <TD>-</TD>
+    <TD><EM><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#ifequal">various 
+      ifs</A></EM><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#else">else</A></TD></TR>
+  <TR align=middle>
+    <TD><A name=ghost></A>exitevent()</TD>
+    <TD>3</TD>
+    <TD>exitevent()</TD>
+    <TD align=left>Aborts the current event handler.</TD>
+    <TD>-</TD>
+    <TD>-</TD></TR>
+  <TR align=middle>
+    <TD><A name=glue></A>ghost(oc,d)</TD>
+    <TD>3</TD>
+    <TD>ghost("eyes.cel",1)<BR>ghost(#1,a0)</TD>
+    <TD align=left rowSpan=2>If d is not zero, oc becomes a "ghost", otherwise 
+      it is unghosted.<BR>A ghost object or cel cannot be dragged with the mouse 
+      - mouse clicks will be passed down to the next cel below.</TD>
+    <TD rowSpan=2>-</TD>
+    <TD rowSpan=2>-</TD></TR>
+  <TR align=middle>
+    <TD>ghost(ovcg,d)</TD>
+    <TD>4</TD>
+    <TD>ghost(!Body,1)<BR>ghost(ObjNum,1)</TD></TR>
+  <TR align=middle>
+    <TD><A name=gosub></A>glue(ov1,ov2)</TD>
+    <TD>4</TD>
+    <TD>glue(#3,#7)<BR>glue(Child,Parent)</TD>
+    <TD align=left>This acts exactly as attach (q.v.), except that moving the 
+      child object does not detach it fromits parent.</TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#detached">detached</A></TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#attach">attach</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#detach">detach</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#letparent">letparent</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#letchild">letchild</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#letsibling">letsibling</A></TD></TR>
+  <TR align=middle>
+    <TD><A name=gosubrandom></A>gosub(d)</TD>
+    <TD>3</TD>
+    <TD>gosub(100)<BR>gosub(b2)</TD>
+    <TD align=left rowSpan=2>Triggers the event handler for label d.<BR>When 
+      the label event finishes, processing of the current handler will 
+    continue.</TD>
+    <TD rowSpan=2><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#label">label</A></TD>
+    <TD rowSpan=2><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#gosubrandom">gosubrandom</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#goto">goto</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#gotorandom">gotorandom</A></TD></TR>
+  <TR align=middle>
+    <TD>gosub(i)</TD>
+    <TD>4</TD>
+    <TD>gosub(CountObj)</TD></TR>
+  <TR align=middle>
+    <TD><A name=goto></A>gosubrandom(d1,d2,d3)</TD>
+    <TD>3</TD>
+    <TD>gosubrandom(50,1,2)<BR>gosubrandom(b3,b1,5)</TD>
+    <TD align=left rowSpan=2>Performs a gosub to d2 or d3. d1 is the 
+      percentage chance that d2 is chosen rather than d3.</TD>
+    <TD rowSpan=2><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#label">label</A></TD>
+    <TD rowSpan=2><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#goto">goto</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#gosub">gosub</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#gotorandom">gotorandom</A></TD></TR>
+  <TR align=middle>
+    <TD>gosubrandom(d,i1,i2)</TD>
+    <TD>4</TD>
+    <TD>gosubrandom(P,Map1,Map2)</TD></TR>
+  <TR align=middle>
+    <TD><A name=gotorandom></A>goto(d)</TD>
+    <TD>3</TD>
+    <TD>goto(5)<BR>goto(b2)</TD>
+    <TD align=left rowSpan=2>Triggers the event handler for label d.<BR>When 
+      the label event finishes, processing of the current handler will also 
+      terminate.</TD>
+    <TD rowSpan=2><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#label">label</A></TD>
+    <TD rowSpan=2><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#gosub">gosub</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#gosubrandom">gosubrandom</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#gotorandom">gotorandom</A></TD></TR>
+  <TR align=middle>
+    <TD>goto(i)</TD>
+    <TD>4</TD>
+    <TD>goto(CountObj)</TD></TR>
+  <TR align=middle>
+    <TD><A name=ifequal></A>gotorandom(d1,d2,d3)</TD>
+    <TD>3</TD>
+    <TD>gotorandom(20,5,10)<BR>gotorandom(m1,5,c2)</TD>
+    <TD align=left rowSpan=2>As gosubrandom, but performs a random goto rather 
+      than a random gosub.</TD>
+    <TD rowSpan=2><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#label">label</A></TD>
+    <TD rowSpan=2><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#gosub">gosub</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#gosubrandom">gosubrandom</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#goto">goto</A></TD></TR>
+  <TR align=middle>
+    <TD>gotorandom(d,i1,i2)</TD>
+    <TD>4</TD>
+    <TD>gotorandom(25,Map1,Map2)</TD></TR>
+  <TR align=middle>
+    <TD><A name=iffixed></A>ifequal(d1,d2)</TD>
+    <TD>3</TD>
+    <TD>ifequal(b,0)<BR>ifequal(5,c)</TD>
+    <TD align=left>Begins a structured if. The test is true if d1=d2.</TD>
+    <TD>-</TD>
+    <TD><EM>other ifs</EM><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#else">else</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#endif">endif</A></TD></TR>
+  <TR align=middle>
+    <TD><A name=ifgreaterthan></A>iffixed(o,d1,d2)</TD>
+    <TD>2.1</TD>
+    <TD>iffixed(#1,10,15)<BR>iffixed(#21,a3,a1)</TD>
+    <TD align=left rowSpan=2>If o is fixed (ie not freely movable), set timer 
+      d1 to trigger after time d2</TD>
+    <TD rowSpan=2><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#alarm">alarm</A></TD>
+    <TD rowSpan=2><EM>other ifs</EM><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#timer">timer</A></TD></TR>
+  <TR align=middle>
+    <TD>iffixed(ov,i,d2)</TD>
+    <TD>4</TD>
+    <TD>iffixed(ThisObj,Blink,500)</TD></TR>
+  <TR align=middle>
+    <TD><A name=iflessthan></A>ifgreaterthan(d1,d2)</TD>
+    <TD>3</TD>
+    <TD>ifgreaterthan(a0,5)<BR>ifgreaterthan(5,t1)</TD>
+    <TD align=left>Begins a structured if. The test is true if d1 &gt; d2</TD>
+    <TD>-</TD>
+    <TD><EM>other ifs</EM><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#else">else</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#endif">endif</A></TD></TR>
+  <TR align=middle>
+    <TD><A name=ifmapped></A>iflessthan(d1,d2)</TD>
+    <TD>3</TD>
+    <TD>iflessthan(b1,0)<BR>iflessthan(0,b1)</TD>
+    <TD align=left>Begins a structured if. The test is true if d1 &lt; d2</TD>
+    <TD>-</TD>
+    <TD><EM>other ifs</EM><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#else">else</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#endif">endif</A></TD></TR>
+  <TR align=middle>
+    <TD><A name=ifmoved></A>ifmapped(c,d1,d2)</TD>
+    <TD>2.1</TD>
+    <TD>ifmapped("shoes.cel",10,15)<BR>ifmapped("skirt.cel",a9,b1)</TD>
+    <TD align=left>If c is mapped, set timer d1 to trigger after time d2</TD>
+    <TD rowSpan=2><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#alarm">alarm</A></TD>
+    <TD rowSpan=2><EM>other ifs</EM><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#timer">timer</A></TD></TR>
+  <TR align=middle>
+    <TD>ifmapped(cg,i,d)</TD>
+    <TD>4</TD>
+    <TD>ifmapped(!Uniform,Wave,500)</TD>
+    <TD align=left>Timer is only set if all cels in cg are mapped</TD></TR>
+  <TR align=middle>
+    <TD><A name=ifnotequal></A>ifmoved(o,d1,d2)</TD>
+    <TD>2.1</TD>
+    <TD>ifmoved(#1,1,1000)<BR>ifmoved(#2,a1,a2)</TD>
+    <TD align=left rowSpan=2>If o has moved from its original position (in the 
+      current set), set timer d1 to trigger after time d2</TD>
+    <TD rowSpan=2><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#alarm">alarm</A></TD>
+    <TD rowSpan=2><EM>other ifs</EM><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#timer">timer</A></TD></TR>
+  <TR align=middle>
+    <TD>ifmoved(ov,i,d)</TD>
+    <TD>4</TD>
+    <TD>ifmoved(Jacket,Show,50)</TD></TR>
+  <TR align=middle>
+    <TD><A name=ifnotfixed></A>ifnotequal(d1,d2)</TD>
+    <TD>3</TD>
+    <TD>ifnotequal(5,a)<BR>ifnotequal(x1,x2)</TD>
+    <TD align=left>Begins a structured if. The test is true if d1 &lt;&gt; 
+    d2.</TD>
+    <TD>-</TD>
+    <TD><EM>other ifs</EM><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#else">else</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#endif">endif</A></TD></TR>
+  <TR align=middle>
+    <TD><A name=ifnotmapped></A>ifnotfixed(o,d1,d2)</TD>
+    <TD>2.1</TD>
+    <TD>ifnotfixed(#10,a1,1000)<BR>ifnotfixed(#11,1,a2)</TD>
+    <TD align=left rowSpan=2>If o is not fixed, set timer d1 to trigger after 
+      time d2</TD>
+    <TD rowSpan=2><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#alarm">alarm</A></TD>
+    <TD rowSpan=2><EM>other ifs</EM><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#timer">timer</A></TD></TR>
+  <TR align=middle>
+    <TD>ifnotfixed(ov,i,d)</TD>
+    <TD>4</TD>
+    <TD>ifnotfixed(This,Count,5000)</TD></TR>
+  <TR align=middle>
+    <TD><A name=ifnotmoved></A>ifnotmapped(c,d1,d2)</TD>
+    <TD>2.1</TD>
+    <TD>ifnotmapped("C.cel",10,15)<BR>ifnotmapped("D.cel",a,a1)</TD>
+    <TD align=left>If c is not mapped, set timer d1 to trigger after time 
+d2</TD>
+    <TD rowSpan=2><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#alarm">alarm</A></TD>
+    <TD rowSpan=2><EM>other ifs</EM><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#timer">timer</A></TD></TR>
+  <TR align=middle>
+    <TD>ifnotmapped(cg,i,d)</TD>
+    <TD>4</TD>
+    <TD>ifnotmapped(!Grp,Count,500)</TD>
+    <TD align=left>Timer is only set if no cels in cg are mapped</TD></TR>
+  <TR align=middle>
+    <TD><A name=let></A>ifnotmoved(o,d1,d2)</TD>
+    <TD>2.1</TD>
+    <TD>ifnotmoved(#6,10,1200)<BR>ifnotmoved(#5,a1,a2)</TD>
+    <TD align=left rowSpan=2>If o has not moved from its original location, 
+      set timer d1 to trigger after time d2</TD>
+    <TD rowSpan=2><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#alarm">alarm</A></TD>
+    <TD rowSpan=2><EM>other ifs</EM><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#timer">timer</A></TD></TR>
+  <TR align=middle>
+    <TD>ifnotmoved(ov,i,d)</TD>
+    <TD>4</TD>
+    <TD>ifnotmoved(Cover,1,Delay)</TD></TR>
+  <TR align=middle>
+    <TD><A name=letcatch></A>let(v,d)</TD>
+    <TD>3</TD>
+    <TD>let(a,10)<BR>let(b1,b2)</TD>
+    <TD align=left>v := d</TD>
+    <TD>-</TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#add">add</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#sub">sub</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#div">div</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#mod">mod</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#mul">mul</A><BR><EM>etc</EM></TD></TR>
+  <TR align=middle>
+    <TD><A name=letchild></A>letcatch(v)</TD>
+    <TD>3</TD>
+    <TD>letcatch(a1)</TD>
+    <TD align=left>Sets v to the object number currently being dragged.<BR>If 
+      no object is being dragged, v is set to -1.</TD>
+    <TD>-</TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#let">let</A><BR><EM>etc</EM></TD></TR>
+  <TR align=middle>
+    <TD><A name=letcollide></A>letchild(v,o)</TD>
+    <TD>4</TD>
+    <TD>letchild(C1,#1)</TD>
+    <TD align=left>Sets v to the lowest numbered object currently attached to 
+      o.<BR>If no objects are attached,v is set to -1.</TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#detached">detached</A></TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#attach">attach</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#detach">detach</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#glue">glue</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#letparent">letparent</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#letsibling">letsibling</A></TD></TR>
+  <TR align=middle>
+    <TD><A name=letfix></A>letcollide(v,c1,c2)</TD>
+    <TD>3</TD>
+    <TD>letcollide(d1,"A.cel","B.cel")</TD>
+    <TD align=left>If c1 and c2 overlap (taking account of transparency), v is 
+      set to 1. Otherwise, v is set to 0.</TD>
+    <TD rowSpan=2><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#collide">collide</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#apart">apart</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#in">in</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#out">out</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#stillin">stillin</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#stillout">stillout</A></TD>
+    <TD rowSpan=2><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#letinside">letinside</A><BR><EM>etc</EM></TD></TR>
+  <TR align=middle>
+    <TD>letcollide(v,cg1,cg2)</TD>
+    <TD>4</TD>
+    <TD>letcollide(x,!Unif,"a.cel")</TD>
+    <TD align=left>v is set to 1 if any cel in cg1 overlaps any cel in 
+  cg2</TD></TR>
+  <TR align=middle>
+    <TD><A name=letframe></A>letfix(v,o)</TD>
+    <TD>3</TD>
+    <TD>letfix(a1,#1)</TD>
+    <TD align=left rowSpan=2>Sets v to the current fix value of o</TD>
+    <TD rowSpan=2>-</TD>
+    <TD rowSpan=2><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#setfix">setfix</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#let">let</A><BR><EM>etc</EM></TD></TR>
+  <TR align=middle>
+    <TD>letfix(v,ov)</TD>
+    <TD>4</TD>
+    <TD>letfix(fixval,Lever)</TD></TR>
+  <TR align=middle>
+    <TD><A name=letheight></A>letframe(v,g)</TD>
+    <TD>4</TD>
+    <TD>letframe(framno,!Blink)</TD>
+    <TD align=left>Sets v to the current frame of g.<BR>If no setframe has 
+      been executed for g, v is set to -1.</TD>
+    <TD>-</TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#setframe">setframe</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#let">let</A><BR><EM>etc</EM></TD></TR>
+  <TR align=middle>
+    <TD><A name=letinitx></A>letheight(v,ov)</TD>
+    <TD>4</TD>
+    <TD>letheight(height,thisobj)</TD>
+    <TD align=left>Sets v to the current height of ov, excluding any unmapped 
+      cels</TD>
+    <TD>-</TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#letwidth">letwidth</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#let">let</A><BR><EM>etc</EM></TD></TR>
+  <TR align=middle>
+    <TD><A name=letinity></A>letinitx(v,ov)</TD>
+    <TD>4</TD>
+    <TD>letinitx(StartX,Obj)<BR>letinitx(X,#1)</TD>
+    <TD align=left>Sets v to the initial x ordinate of o (in the current 
+    set).</TD>
+    <TD>-</TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#letinity">letinity</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#letobjectx">letobjectx</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#letobjecty">letobjecty</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#let">let</A><BR><EM>etc</EM></TD></TR>
+  <TR align=middle>
+    <TD><A name=letinside></A>letinity(v,ov)</TD>
+    <TD>4</TD>
+    <TD>letinity(StartY,Tiara)<BR>letinity(Y,#7)</TD>
+    <TD align=left>Sets v to the initial y ordinate of o (in the current 
+    set).</TD>
+    <TD>-</TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#letinitx">letinitx</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#letobjectx">letobjectx</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#letobjecty">letobjecty</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#let">let</A><BR><EM>etc</EM></TD></TR>
+  <TR align=middle>
+    <TD><A name=letkey></A>letinside(v,o1,o2)</TD>
+    <TD>3</TD>
+    <TD>letinside(t2,#2,#3)</TD>
+    <TD align=left rowSpan=2>If o1 and o2 overlap (without taking account of 
+      transparency), v is set to 1, otherwise 0.</TD>
+    <TD rowSpan=2><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#letcollide">collide</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#apart">apart</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#in">in</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#out">out</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#stillin">stillin</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#stillout">stillout</A></TD>
+    <TD rowSpan=2><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#letcollide">letcollide</A><BR><EM>etc</EM></TD></TR>
+  <TR align=middle>
+    <TD>letinside(v,ov1,ov2)</TD>
+    <TD>4</TD>
+    <TD>letinside(I,Body,#2)</TD></TR>
+  <TR align=middle>
+    <TD><A name=letkeymap></A>letkey(v,k)</TD>
+    <TD>4</TD>
+    <TD>letkey(k0,"updownleftright")</TD>
+    <TD align=left>Sets v to the index of the first key in k that is pressed. 
+      Indexing starts at 1</TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#keypress">keypress</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#keyrelease">keyrelease</A></TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#letkeymap">letkeymap</A></TD></TR>
+  <TR align=middle>
+    <TD><A name=letmapped></A>letkeymap(v,k)</TD>
+    <TD>4</TD>
+    <TD>letkeymap(k1,"updown")</TD>
+    <TD align=left>For each key in k that is pressed, the equivalent bit in v 
+      is set.</TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#keypress">keypress</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#keyrelease">keyrelease</A></TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#letkey">letkey</A></TD></TR>
+  <TR align=middle>
+    <TD><A name=letmousex></A>letmapped(v,c)</TD>
+    <TD>3</TD>
+    <TD>letmapped(m1,"shoes.cel")</TD>
+    <TD align=left>Sets v to 1 if c is mapped, otherwise 0.</TD>
+    <TD rowSpan=2>-</TD>
+    <TD rowSpan=2><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#map">map</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#unmap">unmap</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#altmap">altmap</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#let">let</A><BR><EM>etc</EM></TD></TR>
+  <TR align=middle>
+    <TD>letmapped(v,cg)</TD>
+    <TD>4</TD>
+    <TD>letmapped(nmap,!Uniform)</TD>
+    <TD align=left>Sets v to the number of cels in cg that are mapped</TD></TR>
+  <TR align=middle>
+    <TD><A name=letmousey></A>letmousex(v)</TD>
+    <TD>3</TD>
+    <TD>letmousex(x1)</TD>
+    <TD align=left>Sets v to the current mouse x position. If the mouse it 
+      outside the bounds of the image, v is set to -1.</TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#mousein">mousein<BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#mouseout">mouseout</A></TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#letmousey">letmousey</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#let">let</A><BR><EM>etc</EM></TD></TR>
+  <TR align=middle>
+    <TD><A name=letobjectx></A>letmousey(v)</TD>
+    <TD>3</TD>
+    <TD>letmousey(x2)</TD>
+    <TD align=left>Sets v to the current mouse y position. If the mouse it 
+      outside the bounds of the image, v is set to -1.</TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#mousein">mousein<BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#mouseout">mouseout</A></TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#letmousex">letmousex</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#let">let</A><BR><EM>etc</EM></TD></TR>
+  <TR align=middle>
+    <TD><A name=letobjecty></A>letobjectx(v,o)</TD>
+    <TD>3</TD>
+    <TD>letobjectx(x1,#2)</TD>
+    <TD align=left rowSpan=2>Sets v to the x ordinate of o.</TD>
+    <TD rowSpan=2>-</TD>
+    <TD rowSpan=2><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#letobjecty">letobjecty</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#letinitx">letinitx</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#letinity">letinity</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#let">let</A><BR><EM>etc</EM></TD></TR>
+  <TR align=middle>
+    <TD>letobjectx(v,ov)</TD>
+    <TD>4</TD>
+    <TD>letobjectx(x1,ObjNum)</TD></TR>
+  <TR align=middle>
+    <TD><A name=letpal></A>letobjecty(y,o)</TD>
+    <TD>3</TD>
+    <TD>letobjecty(x2,#2)</TD>
+    <TD align=left rowSpan=2>Sets v to the y ordinate of o.</TD>
+    <TD rowSpan=2>-</TD>
+    <TD rowSpan=2><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#letobjectx">letobjectx</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#letinitx">letinitx</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#letinity">letinity</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#let">let</A><BR><EM>etc</EM></TD></TR>
+  <TR align=middle>
+    <TD>letobjecty(v,ov)</TD>
+    <TD>4</TD>
+    <TD>letobjecty(y,ObjNum)</TD></TR>
+  <TR align=middle>
+    <TD><A name=letparent></A>letpal(v)</TD>
+    <TD>3</TD>
+    <TD>letpal(p1)</TD>
+    <TD align=left>Sets v to the currently selected palette group.</TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#col">col</A></TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#changecol">changecol</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#let">let</A><BR><EM>etc</EM></TD></TR>
+  <TR align=middle>
+    <TD><A name=letset></A>letparent(v,o)</TD>
+    <TD>4</TD>
+    <TD>letparent(p,#32)</TD>
+    <TD align=left rowSpan=2>Sets v to the number of the object to which o is 
+      currently attached.<BR>If o is not attached, v is set to -1.</TD>
+    <TD rowSpan=2><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#detached">detached</A></TD>
+    <TD rowSpan=2><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#attach">attach</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#detach">detach</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#glue">glue</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#letchild">letchild</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#letsibling">letsibling</A></TD></TR>
+  <TR align=middle>
+    <TD>letparent(v,ov)</TD>
+    <TD>4</TD>
+    <TD>letparent(parent,child)</TD></TR>
+  <TR align=middle>
+    <TD><A name=letsibling></A>letset(v)</TD>
+    <TD>3</TD>
+    <TD>letset(s1)</TD>
+    <TD align=left>Sets v to the currently selected set.</TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#set">set</A></TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#changeset">changepal</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#let">let</A><BR><EM>etc</EM></TD></TR>
+  <TR align=middle>
+    <TD><A name=lettransparent></A>letsibling(v,o)</TD>
+    <TD>4</TD>
+    <TD>letsibling(s,#14)</TD>
+    <TD align=left rowSpan=2>Sets v to the next lowest numbered object 
+      currently attached to the parent of o.<BR>If o is not attached, or o is 
+      the highest-numbered object attached to its parent, v is set to -1.</TD>
+    <TD rowSpan=2><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#detached">detached</A></TD>
+    <TD rowSpan=2><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#attach">attach</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#detach">detach</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#glue">glue</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#letchild">letchild</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#letparent">letparent</A></TD></TR>
+  <TR align=middle>
+    <TD>letsibling(v,ov)</TD>
+    <TD>4</TD>
+    <TD>letsibling(sib,sib)</TD></TR>
+  <TR align=middle>
+    <TD><A name=letwidth></A>lettransparent(v,c)</TD>
+    <TD>3</TD>
+    <TD>lettransparent(r1,"dress.cel")</TD>
+    <TD align=left>Sets v to the transparency value of c</TD>
+    <TD rowSpan=2>-</TD>
+    <TD rowSpan=2><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#transparent">transparent</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#let">let</A><BR><EM>etc</EM></TD></TR>
+  <TR align=middle>
+    <TD>lettransparent(v,cg)</TD>
+    <TD>4</TD>
+    <TD>lettransparent(t,!Blinds)</TD>
+    <TD align=left>If all cels in cg have the same transparency, v is set to 
+      this value.<BR>If cels have different transparencies, v is set to 
+-1.</TD></TR>
+  <TR align=middle>
+    <TD><A name=map></A>letwidth(v,ov)</TD>
+    <TD>4</TD>
+    <TD>letwidth(w,thisobj)<BR>letwidth(width,#2)</TD>
+    <TD>Sets v to the current width of ov, excluding any unmapped cels</TD>
+    <TD>-</TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#letheight">letheight</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#let">let</A><BR><EM>etc</EM></TD></TR>
+  <TR align=middle>
+    <TD><A name=mod></A>map(oc)</TD>
+    <TD>1</TD>
+    <TD>map(#2)<BR>map("eyes1.cel")</TD>
+    <TD align=left rowSpan=2>Makes oc part of the current image.</TD>
+    <TD rowSpan=2>-</TD>
+    <TD rowSpan=2><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#unmap">unmap</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#altmap">altmap</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#ifmapped">ifmapped</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#ifnotmapped">ifnotmapped</A></TD></TR>
+  <TR align=middle>
+    <TD>map(ovcg)</TD>
+    <TD>4</TD>
+    <TD>map(!Uniform)<BR>map(Objno)</TD></TR>
+  <TR align=middle>
+    <TD><A name=move></A>mod(v,d1,d2)</TD>
+    <TD>3</TD>
+    <TD>mod(a1,b,c2)<BR>mod(b2,10,b1)</TD>
+    <TD align=left>v := d1 modulus d2 (remainder)</TD>
+    <TD>-</TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#add">add</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#sub">sub</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#div">div</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#mul">mul</A><BR><EM>etc</EM></TD></TR>
+  <TR align=middle>
+    <TD><A name=movebyx></A>move(o,d1,d2)</TD>
+    <TD>1</TD>
+    <TD>move(#1,10,202)<BR>move(#10,a1,a2)</TD>
+    <TD align=left rowSpan=2>Moves o (d1,d2) pixels relative to its current 
+      position</TD>
+    <TD rowSpan=2>-</TD>
+    <TD rowSpan=2><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#movebyx">movebyx</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#movebyy">movebyy</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#moverandx">moverandx</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#moverandy">moverandy</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#moveto">moveto</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#movetorand">movetorand</A></TD></TR>
+  <TR align=middle>
+    <TD>move(ov,d1,d2)</TD>
+    <TD>4</TD>
+    <TD>move(Jacket,dx,dy)</TD></TR>
+  <TR align=middle>
+    <TD><A name=movebyy></A>movebyx(o1,o2,d)</TD>
+    <TD>2</TD>
+    <TD>movebyx(#2,#3,10)<BR>movebyx(#3,#10,a1)</TD>
+    <TD align=left rowSpan=2>Sets the x ordinate of o1 to the x ordinate of o2 
+      plus d</TD>
+    <TD rowSpan=2>-</TD>
+    <TD rowSpan=2><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#move">move</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#movebyy">movebyy</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#moverandx">moverandx</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#moverandy">moverandy</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#moveto">moveto</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#movetorand">movetorand</A></TD></TR>
+  <TR align=middle>
+    <TD>movebyx(ov1,ov2,d)</TD>
+    <TD>4</TD>
+    <TD>movebyx(Obj,Obj,10)</TD></TR>
+  <TR align=middle>
+    <TD><A name=moverandx></A>movebyy(o1,o2,d)</TD>
+    <TD>2</TD>
+    <TD>movebyy(#4,#7,10)<BR>movebyy(#11,#12,x2)</TD>
+    <TD align=left rowSpan=2>Sets the y ordinate of o1 to the y ordinate of o2 
+      plus d</TD>
+    <TD rowSpan=2>-</TD>
+    <TD rowSpan=2><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#move">move</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#movebyx">movebyx</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#moverandx">moverandx</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#moverandy">moverandy</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#moveto">moveto</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#movetorand">movetorand</A></TD></TR>
+  <TR align=middle>
+    <TD>movebyy(ov1,ov2,d)</TD>
+    <TD>4</TD>
+    <TD>movebyy(Jacket,#15,0)</TD></TR>
+  <TR align=middle>
+    <TD><A name=moverandy></A>moverandx(o,d1,d2)</TD>
+    <TD>2.1</TD>
+    <TD>moverandx(#5,100,200)<BR>movebyrandx(#10,a1,a2)</TD>
+    <TD align=left rowSpan=2>Sets the x ordinate of o to a random number in 
+      the range d1 to d2</TD>
+    <TD rowSpan=2>-</TD>
+    <TD rowSpan=2><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#move">move</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#movebyx">movebyx</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#movebyy">movebyy</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#moverandy">moverandy</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#moveto">moveto</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#movetorand">movetorand</A></TD></TR>
+  <TR align=middle>
+    <TD>moverandx(ov,d1,d2)</TD>
+    <TD>4</TD>
+    <TD>moverandx(obj,min,max)</TD></TR>
+  <TR align=middle>
+    <TD><A name=moveto></A>moverandy(o,d1,d2)</TD>
+    <TD>2.1</TD>
+    <TD>moverandy(#6,0,500)<BR>moverandy(#12,x1,x2)</TD>
+    <TD align=left rowSpan=2>Sets the y ordinate of o to a random number in 
+      the range d1 to d2</TD>
+    <TD rowSpan=2>-</TD>
+    <TD rowSpan=2><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#move">move</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#movebyx">movebyx</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#movebyy">movebyy</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#moverandx">moverandx</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#moveto">moveto</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#movetorand">movetorand</A></TD></TR>
+  <TR align=middle>
+    <TD>moverandy(ov,d1,d2)</TD>
+    <TD>4</TD>
+    <TD>moverandy(Tiara,300,700)</TD></TR>
+  <TR align=middle>
+    <TD><A name=movetorand></A>moveto(o,d1,d2)</TD>
+    <TD>2</TD>
+    <TD>moveto(#10,100,200)<BR>moveto(#12,x,y)</TD>
+    <TD align=left rowSpan=2>Moves o to (d1,d2) absolute position.</TD>
+    <TD rowSpan=2>-</TD>
+    <TD rowSpan=2><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#move">move</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#movebyx">movebyx</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#movebyy">movebyy</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#moverandx">moverandx</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#moverandy">moverandy</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#movetorand">movetorand</A></TD></TR>
+  <TR align=middle>
+    <TD>moveto(ov,d1,d2)</TD>
+    <TD>4</TD>
+    <TD>moveto(Tharg,x,y)</TD></TR>
+  <TR align=middle>
+    <TD><A name=mul></A>movetorand(o)</TD>
+    <TD>2.1</TD>
+    <TD>movetorand(#12)</TD>
+    <TD align=left rowSpan=2>Randomises the position of o</TD>
+    <TD rowSpan=2>-</TD>
+    <TD rowSpan=2><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#move">move</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#movebyx">movebyx</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#movebyy">movebyy</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#moverandx">moverandx</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#moverandy">moverandy</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#moveto">moveto</A></TD></TR>
+  <TR align=middle>
+    <TD>movetorand(ov)</TD>
+    <TD>4</TD>
+    <TD>movetorand(obj)</TD></TR>
+  <TR align=middle>
+    <TD><A name=music></A>mul(v,d1,d2)</TD>
+    <TD>3</TD>
+    <TD>mul(a1,a1,a2)<BR>mul(a2,m2,12)</TD>
+    <TD align=left>v := d1 * d2</TD>
+    <TD>-</TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#add">add</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#div">div</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#mod">mod</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#sub">sub</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#let">let</A><BR><EM>etc</EM></TD></TR>
+  <TR align=middle>
+    <TD><A name=nop></A>music(f)</TD>
+    <TD>2</TD>
+    <TD>music("song.mid")</TD>
+    <TD align=left>Plays the midi file f</TD>
+    <TD>-</TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#sound">sound</A></TD></TR>
+  <TR align=middle>
+    <TD><A name=notify></A>nop()</TD>
+    <TD>1</TD>
+    <TD>nop()</TD>
+    <TD align=left>Does nothing.</TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#never">never</A></TD>
+    <TD>-</TD></TR>
+  <TR align=middle>
+    <TD><A name=quit></A>notify(s)</TD>
+    <TD>2</TD>
+    <TD>notify("Goodbye")</TD>
+    <TD align=left>Display the text to the user.<BR><EM>The exact form of the 
+      display (error box, message to terminal) is dependent on the 
+    platform.</EM></TD>
+    <TD>-</TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#debug">debug</A></TD></TR>
+  <TR align=middle>
+    <TD><A name=random></A>quit()</TD>
+    <TD>1b</TD>
+    <TD>quit()</TD>
+    <TD align=left>Exit the player.<BR><EM>Different players treat this in 
+      different ways - some simply close the doll, others quit the 
+    player.</EM></TD>
+    <TD>-</TD>
+    <TD>-</TD></TR>
+  <TR align=middle>
+    <TD><A name=randomtimer></A>random(v,d1,d2)</TD>
+    <TD>3</TD>
+    <TD>random(r1,a1,a2)<BR>random(r,1,1000)</TD>
+    <TD align=left>v1 is set to a random number in the range d1 to d2</TD>
+    <TD>-</TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#let">let</A><BR><EM>etc</EM></TD></TR>
+  <TR align=middle>
+    <TD><A name=restrictx></A>randomtimer(d1,d2,d3)</TD>
+    <TD>1</TD>
+    <TD>randomtimer(7,20,1200)<BR>randomtimer(t,r1,r2)</TD>
+    <TD align=left rowSpan=2>Sets timer d1 to expire in a random time in the 
+      range d2 to (d2+d3)</TD>
+    <TD rowSpan=2><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#alarm">alarm</A></TD>
+    <TD rowSpan=2><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#timer">timer</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#iffixed">iffixed</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#ifnotfixed">ifnotfixed</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#ifmapped">ifmapped</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#ifnotmapped">ifnotmapped</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#ifmoved">ifmoved</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#ifnotmoved">ifnotmoved</A></TD></TR>
+  <TR align=middle>
+    <TD>randomtimer(i,d1,d2)</TD>
+    <TD>4</TD>
+    <TD>randomtimer(Blink,1000,100)</TD></TR>
+  <TR align=middle>
+    <TD><A name=restricty></A>restrictx(ov,d1,d2)</TD>
+    <TD>4</TD>
+    <TD>restrictx(#1,x1,x2)<BR>restrictx(rod,200,400)</TD>
+    <TD align=left>Restricts all movement (user drags of FKISS "move" 
+      functions) such that (the left of) ov remains between d1 and d2.<BR>If ov 
+      is outside the range when this function is executed, it is moved to the 
+      nearest point of the range.<BR><EM>If d1 is greater than d2, this function 
+      is ignored.</EM></TD>
+    <TD>-</TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#restricty">restricty</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#move">move</A><BR><EM>etc</EM></TD></TR>
+  <TR align=middle>
+    <TD><A name=setfix></A>restricty(ov,d1,d2)</TD>
+    <TD>4</TD>
+    <TD>restricty(obj,ymin,ymax)<BR>restricty(#3,0,50)</TD>
+    <TD align=left>Restricts all movement (user drags of FKISS "move" 
+      functions) such that (the top of) ov remains between d1 and d2.<BR>If ov 
+      is outside the range when this function is executed, it is moved to the 
+      nearest point of the range.<BR><EM>If d1 is greater than d2, this function 
+      is ignored.</EM></TD>
+    <TD>-</TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#restrictx">restrictx</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#move">move</A><BR><EM>etc</EM></TD></TR>
+  <TR align=middle>
+    <TD><A name=setframe></A>setfix(o,d)</TD>
+    <TD>2.1</TD>
+    <TD>setfix(#3,100)<BR>setfix(#10,a1)</TD>
+    <TD align=left rowSpan=2>Set the fix attribute of o to d</TD>
+    <TD rowSpan=2><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#unfix">unfix</A></TD>
+    <TD rowSpan=2><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#letfix">letfix</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#iffixed">iffixed</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#ifnotfixed">ifnotfixed</A></TD></TR>
+  <TR align=middle>
+    <TD>setfix(ov,d)</TD>
+    <TD>4</TD>
+    <TD>setfix(Skirt,10)</TD></TR>
+  <TR align=middle>
+    <TD><A name=sound></A>setframe(g,d)</TD>
+    <TD>4</TD>
+    <TD>setframe(!Clock,10)<BR>setframe(!Group,fno)</TD>
+    <TD align=left>All cels that are in frame d of group g are mapped, and all 
+      cels that are in group g but not in frame d are unmapped.</TD>
+    <TD>-</TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#letframe">letframe</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#map">map</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#unmap">unmap</A></TD></TR>
+  <TR align=middle>
+    <TD><A name=sub></A>sound(f)</TD>
+    <TD>1</TD>
+    <TD>sound("bong.wav")</TD>
+    <TD align=left>Plays the wav or au file f</TD>
+    <TD>-</TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#music">music</A></TD></TR>
+  <TR align=middle>
+    <TD><A name=timer></A>sub(v,d1,d2)</TD>
+    <TD>3</TD>
+    <TD>sub(x1,100,s2)<BR>sub(x3,s2,t7)</TD>
+    <TD align=left>v := d1 - d2</TD>
+    <TD>-</TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#add">add</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#div">div</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#mod">mod</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#mul">mul</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#let">let</A><BR><EM>etc</EM></TD></TR>
+  <TR align=middle>
+    <TD><A name=transparent></A>timer(d1,d2)</TD>
+    <TD>1</TD>
+    <TD>timer(10,1100)<BR>timer(t0,n2)</TD>
+    <TD align=left rowSpan=2>Sets timer d1 to expire (i.e. trigger the 
+      associated alarm event) after d2 milliseconds, unless d2 is zero. If d2 is 
+      zero, the timer is cancelled without triggering the alarm.</TD>
+    <TD rowSpan=2><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#alarm">alarm</A></TD>
+    <TD rowSpan=2><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#randomtimer">randomtimer</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#iffixed">iffixed</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#ifnotfixed">ifnotfixed</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#ifmapped">ifmapped</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#ifnotmapped">ifnotmapped</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#ifmoved">ifmoved</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#ifnotmoved">ifnotmoved</A></TD></TR>
+  <TR align=middle>
+    <TD>timer(i,d)</TD>
+    <TD>4</TD>
+    <TD>timer(WaveArm,50)</TD></TR>
+  <TR align=middle>
+    <TD><A name=unmap></A>transparent(co,d)</TD>
+    <TD>1b</TD>
+    <TD>transparent("ban.cel",64)<BR>transparent(#1,-50)<BR>transparent(#3,b1)</TD>
+    <TD align=left rowSpan=2>Changes the transparency of co by d.<BR>The 
+      transparency of a cel is between 0 (the cel is as rendered exactly as the 
+      cel file) and 255 (completely transparent).</TD>
+    <TD rowSpan=2>-</TD>
+    <TD rowSpan=2><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#lettransparent">lettransparent</A></TD></TR>
+  <TR align=middle>
+    <TD>transparent(ovcg,d)</TD>
+    <TD>4</TD>
+    <TD>transparent(!Bubbles,128)</TD></TR>
+  <TR align=middle>
+    <TD><A name=viewport></A>unmap(oc)</TD>
+    <TD>1</TD>
+    <TD>unmap(#5)<BR>unmap("eyes2.cel")</TD>
+    <TD align=left rowSpan=2>Removes oc from the current image</TD>
+    <TD rowSpan=2>-</TD>
+    <TD rowSpan=2><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#map">map</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#altmap">altmap</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#ifmapped">ifmapped</A><BR><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#ifnotmapped">ifnotmapped</A></TD></TR>
+  <TR align=middle>
+    <TD>unmap(ovcg)</TD>
+    <TD>4</TD>
+    <TD>unmap(!Jacket)<BR>unmap(ObjNum)</TD></TR>
+  <TR align=middle>
+    <TD><A name=windowsize></A>viewport(d1,d2)</TD>
+    <TD>1b</TD>
+    <TD>viewport(100,80)<BR>viewport(x0,y0)</TD>
+    <TD align=left>Sets the top right of the visible area of the image to 
+      (d1,d2)<BR><EM>This function is not widely supported, and even less widely 
+      used.</EM></TD>
+    <TD>-</TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#windowsize">windowsize</A></TD></TR>
+  <TR align=middle>
+    <TD>windowsize(d1,d2)</TD>
+    <TD>1b</TD>
+    <TD>windowsize(400,200)<BR>windowsize(x1,y1)</TD>
+    <TD align=left>Sets the visible size of the image to (d1,d2)<BR><EM>This 
+      function is not widely supported, and even less widely used.</EM></TD>
+    <TD>-</TD>
+    <TD><A 
+      href="http://www.argonet.co.uk/users/tigger/KISS/fkref4.html#viewport">viewport</A></TD></TR></TBODY></TABLE></P></BODY></HTML>

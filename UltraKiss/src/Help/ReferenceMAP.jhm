@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE map
+  PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Map Version 1.0//EN"
+         "http://java.sun.com/products/javahelp/map_1_0.dtd">
+
+<map version="1.0">
+	<mapID target="reference.index" url="product/reference/index.html" />
+	<mapID target="reference.kiss" url="product/reference/gs_spec.txt" />
+	<mapID target="reference.fkiss1" url="product/reference/fkiss.txt" />
+	<mapID target="reference.fkiss2" url="product/reference/fkiss2.txt" />
+	<mapID target="reference.fkiss3" url="product/reference/fkiss2qr.txt" />
+	<mapID target="reference.fkiss4" url="product/reference/fkiss4.txt" />
+	<mapID target="reference.fkiss5" url="product/reference/fkiss5.html" />
+	<mapID target="reference.guicomponents" url="product/reference/guicomponents.html" />
+	<mapID target="reference.lzh" url="product/reference/lzhformat.txt" />
+	<mapID target="reference.gif89a" url="product/reference/gif89a.txt" />
+	<mapID target="reference.png" url="product/reference/pngformat.txt" />
+	<mapID target="reference.pbm" url="product/reference/pbmformat.txt" />
+	<mapID target="reference.pbm" url="product/reference/pbmformat.txt" />
+	<mapID target="reference.ppm" url="product/reference/ppmformat.txt" />
+	<mapID target="reference.bmp" url="product/reference/bmpformat.txt" />
+	<mapID target="reference.gamma" url="product/reference/gammafaq.pdf" />
+	<mapID target="reference.color" url="product/reference/colorfaq.pdf" />
+</map>

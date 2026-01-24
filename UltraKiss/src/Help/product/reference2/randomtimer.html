@@ -1,0 +1,83 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>ifstatements</title>
+</head>
+
+<body>
+
+<h4><font face="Courier New"></font><a name="randomtimer" id="randomtimer">randomtimer</a>()</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; randomtimer (alarmname,delay,range)</p>
+<p> The randomtimer() statement schedules an alarm of the specified name to begin execution after a random delay, in milliseconds, is computed using the formula (delay + rnd()*range), where the rnd() function returns a random fraction between 0 and 1. The alarm delay, if 0, can be used to cancel or stop any future alarm execution that has been previously scheduled.</p>
+<p>Note that there can only be one instance of a specific alarm active at any instance in time. Different alarms can be active at the same time, but the same alarm cannot be active more than once. If an alarm is scheduled with a randomtimer() command and a subsequent timer command is issued for the same alarm, then the new timer delay is applied to the alarm.</p>
+<p>Timer delay is specified in milliseconds. Viewers that use a periodic polling method to determine if alarms should be invoked may not fire the alarm at the exact millisecond specified. These viewers should process the alarm on their next poll cycle. Therefore, time accuracy of alarm firing may not be perfectly precise.</p>
+<p>Note that there is no defined order for event processing in KiSS, thus the sequence of alarms that are supposed to start at the same time is indeterminate. Single threaded viewers that do not support concurrent events may process alarm() events in the order in which timer() commands were processed, however this assumption can make your code viewer dependent.</p>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>FKiSS 5 Syntax:</b></font>&nbsp;&nbsp;&nbsp;&nbsp;  randomtimer (alarmname,delay,range[,operand1,operand2,operand3,...])</p>
+<p>UltraKiss FKiSS5 introduces the ability to pass parameters to the alarm code module, similar to parameters on label modules. The optional parameter list specifies a set of variables or literal constants that can be referenced as local variables within the alarm code module. With FKiSS 5 the alarm name can also be specified through a variable that has a string value, providing that the variable name is not the same as an existing alarm name. </p>
+<p>&nbsp; </p>
+<p> Related actions: <a href="alarm.html">alarm()</a>, <a href="timer.html">timer()</a>, <a href="lettimer.html">lettimer()</a>, <a href="ifmapped.html">ifmapped()</a>, <a href="ifnotmapped.html">ifnotmapped()</a>, <a href="iffixed.html">iffixed()</a>, <a href="ifnotfixed.html">ifnotfixed()</a>, <a href="ifmoved.html">ifmoved()</a>, <a href="ifnotmoved.html">ifnotmoved()</a> </p>
+<p> <font face="Courier New"> </font></p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+    <table border="1" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td width="20%">FKiSS 1 allows numeric alarm identifiers.</td>
+        <td width="30%">randomtimer(12,100,500)</td>
+        <td>alarm 12 triggered in 100 to 600 ms </td>
+      </tr>
+      <tr>
+        <td width="20%">FKiSS 2 allows named identifiers.&nbsp;&nbsp;</td>
+        <td width="30%">randomtimer(Ring,200,0)</td>
+        <td>alarm 'Ring' triggered in 200 ms </td>
+      </tr>
+      <tr>
+        <td width="20%">FKiSS 5 allows alarm parameters</td>
+        <td width="30%">randomtimer(Ring,200,500,X,Y)</td>
+        <td>alarm 'Ring' triggered in 200 to 700 ms with arguments X and Y passed to the alarm.</td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+    <table border="1" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td width="20%">TimerPeriod</td>
+        <td width="30%">the polling period in milliseconds for firing alarms</td>
+        <td>default value &quot;<font color="#0000FF">10</font>&quot; (FKiSS option)</td>
+      </tr>
+      <tr>
+        <td width="20%">EventQueues&nbsp;</td>
+        <td width="30%">the number of concurrent alarms that can run&nbsp;</td>
+        <td>default value &quot;<font color="#0000FF">1</font>&quot; (FKiSS option)</td>
+      </tr>
+      <tr>
+        <td width="20%">TimerOption</td>
+        <td width="30%">enables timer processing</td>
+        <td>default value &quot;<font color="#0000FF">true</font>&quot; (FKiSS option)</td>
+      </tr>
+      <tr>
+        <td width="20%">EventOption&nbsp;</td>
+        <td width="30%">enables alarm processing&nbsp;&nbsp;</td>
+        <td>default value &quot;<font color="#0000FF">true</font>&quot; (FKiSS option)</td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>&nbsp;Example:&nbsp;</b></font></p>
+<p><font face="Courier New">;@randomtimer(12,1000,5000) ; Starts alarm 12 at a random time between 1 and 6 seconds &nbsp;<br>
+</font> <font face="Courier New">;@randomtimer(Alarm1,N,5000)&nbsp;</font><font face="Courier New">; Starts 'Alarm1' at a random time between N and N+5 seconds &nbsp;</font><br>
+<font face="Courier New">;@randomtimer(FYS,1000,0,Param1,&quot;P2&quot;) ; Starts 'FYS' in 1 second passing parameters &nbsp;</font></p>
+<p>&nbsp;</p>
+<h4><font face="Courier New"></font></h4>
+</body>
+
+</html>

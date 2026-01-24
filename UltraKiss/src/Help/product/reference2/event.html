@@ -1,0 +1,107 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>map</title>
+</head>
+
+<body>
+
+<h4><a name="event" id="event">event</a>()&nbsp;</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; event(eventname[,argument1, argument2, ...])</p>
+<p>The event() statement programmatically invokes any defined event in the FKISS configuration. An event, if invoked, is queued for execution and can start immediately if the viewer supports concurrent event execution. </p>
+<p>The eventname can be a literal string value or a variable that specifies one of the event types in the table below. </p>
+<p>The arguments in the event() statement are literal strings or variables with string values that must match the signature of a defined event for the event to be scheduled. The signature of an event is the list of arguments that apply to the event. For example, a <font face="Courier New, Courier, mono">;@press(#3)</font> event has a signature of &quot;<font face="Courier New, Courier, mono">#3</font>&quot;. </p>
+<p>If the eventname is not known or the arguments do not match a defined event signature then the event() statement will fail silently. </p>
+<p>&nbsp;</p>
+<p><font face="Courier New, Courier, mono">&quot;begin&quot;, &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;[2] Triggers when data set is first viewed<br>
+&quot;catch&quot;, &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;[3] Triggers on mouse down if object is movable<br>
+&quot;col&quot;, &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;[4] Activates when the palette group is changed<br>
+&quot;drop&quot;, &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;[5] Triggers on mouse up if object is movable<br>
+&quot;end&quot;, &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;[6] Activates when a data set is closed<br>
+&quot;fixcatch&quot;,  &nbsp;&nbsp;&nbsp;[7] Triggers on mouse down if object is fixed<br>
+&quot;fixdrop&quot;, &nbsp;&nbsp; &nbsp;[8] Triggers on mouse up if object is fixed<br>
+&quot;initialize&quot;,  &nbsp;[9] Triggers when a data set is initialized<br>
+&quot;never&quot;, &nbsp;&nbsp;&nbsp;&nbsp; [10] This event is never triggered<br>
+&quot;nothing&quot;, &nbsp;&nbsp; [11] This event is never triggered<br>
+&quot;press&quot;, &nbsp;&nbsp;&nbsp;&nbsp; [12] Triggers on mouse down regardless of fix<br>
+&quot;release&quot;, &nbsp;&nbsp; [13] Triggers on mouse up regardless of fix<br>
+&quot;set&quot;, &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [14] Activates when the page set is changed<br>
+&quot;unfix&quot;, &nbsp;&nbsp;&nbsp;&nbsp; [15] Triggers when object fix value becomes zero<br>
+  </font><font face="Courier New, Courier, mono">&quot;in&quot;, &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [16] Triggers when object bounding boxes overlap<br>
+&quot;out&quot;, &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [17] When object bounding boxes no longer overlap<br>
+&quot;stillin&quot;, &nbsp;&nbsp; [18] When object bounding boxes still overlap<br>
+&quot;stillout&quot;, &nbsp; [19] When object bounding boxes still do not overlap<br>
+&quot;version&quot;, &nbsp;&nbsp; [20] When viewer version greater than command version<br>
+  </font><font face="Courier New, Courier, mono">&quot;apart&quot;, &nbsp;&nbsp;&nbsp;&nbsp; [21] Triggers when touching cels come apart<br>
+&quot;collide&quot;, &nbsp;&nbsp; [22] Triggers when non-touching cels touch<br>
+  </font><font face="Courier New, Courier, mono">
+&quot;overflow&quot;, &nbsp; [24] Exception handler for errors<br>
+  </font><font face="Courier New, Courier, mono">&quot;mousein&quot;, &nbsp;&nbsp; [25] Triggers when mouse enters cel or group<br>
+&quot;mouseout&quot;, &nbsp; [26] Triggers when mouse leaves cel or group<br>
+&quot;detached&quot;, &nbsp; [27] Signals object no longer attached to parent<br>
+&quot;keypress&quot;, &nbsp; [28] Activates when the user presses a key<br>
+&quot;keyrelease&quot;,  [29] Activates when the user releases a key<br>
+  </font><font face="Courier New, Courier, mono">&quot;keytype&quot;, &nbsp;&nbsp; [30] Activates when the user types a key<br>
+&quot;mediastart&quot;, [31] Fires when a media file starts<br>
+&quot;mediastop&quot;,&nbsp;&nbsp;[32] Fires when a media file stops<br>
+  </font><font face="Courier New, Courier, mono">&quot;unknown&quot; &nbsp;&nbsp;&nbsp;&nbsp;[33] This event is never triggered</font><br>
+</p>
+<p>&nbsp;</p>
+<p>Related actions: <a href="exitevent.html">exitevent()</a></p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+    <table border="1" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td width="20%">UltraKiss Extension</td>
+        <td width="30%">event(&quot;begin&quot;) </td>
+        <td>invokes the begin() event </td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<table width="80%"  border="1" align="center" cellpadding="5" cellspacing="5" bordercolor="#000000" bgcolor="#FFFF99">
+  <tr>
+    <td><div align="center">Note: The UltraKiss event() command is viewer specific and not compatible with other viewers. </div></td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td>ImmediateEvent&nbsp;</td>
+      <td>enforces sequential event processing&nbsp;&nbsp;</td>
+      <td>default value &quot;<font color="#0000FF">false</font>&quot; (Compatibility option)</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>&nbsp;Example:&nbsp;<br>
+</b></font>
+</p>
+<p>
+<font face="Courier New">;@press(#3) <br>
+;@ repeat(label1,4,N)<br>
+;@release(#3) <br>
+;@ notify(&quot;release(#3) released&quot;) </font></p>
+<p><font face="Courier New">;@label(label1)<br>
+  ;@ ifequal(N,1) event(&quot;press&quot;,&quot;#1&quot;) endif()<br>
+  ;@ ifequal(N,2) event(&quot;in&quot;,&quot;#1&quot;,#2&quot;) endif()<br>
+  ;@ ifequal(N,3) event(&quot;release&quot;,&quot;#3&quot;) endif()<br>
+;@ ifequal(N,4) event(&quot;begin&quot;) endif()</font></p>
+<p><font face="Courier New">;@begin()<br>
+  ;@ notify(&quot;set begins&quot;) <br>
+  <br>
+</font></p>
+<p>&nbsp;</p>
+</body>
+
+</html>

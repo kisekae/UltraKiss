@@ -1,0 +1,64 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>map</title>
+</head>
+
+<body>
+
+<h4><a name="goto" id="goto">goto</a>()&nbsp;</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; goto
+(labelname)</p>
+<p>The goto()  command transfers code execution to the specified label  module. The next FKiSS statement executed is the first statement in the label module. There is no return to the calling event or the label module with the goto() statement, all  code statement following the goto() are not processed.</p>
+<p>The goto() statement and label modules were introduced in FKiSS 3 as a means to structure FKiSS code so that common functions could be isolated and called as required. </p>
+<p>The label identifier can be an integer or a name. Label identifiers must be unique within the set of all label modules.</p>
+<p>The goto() command will fail silently if the specified label module does not exist. </p>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>FKiSS 5 Syntax:</b></font>&nbsp;&nbsp;&nbsp;&nbsp; goto (labelname[, argument1, argument2, ...])</p>
+<p>FKiSS 5  extended the notion of labels to allow for parameter specification and return values. Previous FKiSS versions were incapable of implementing recursive label modules or functions. FKiSS 5 implements local label variables and this provides the ability to support recursion and function return values. Local variables are label specific and eliminate the requirement for the programmer to manage global variables.</p>
+<p>The optional argument list specifies a set of variable names that must be referenced as local variables within the label module. </p>
+<p>Local variable names are prefixed with an '<font face="Courier New, Courier, mono">@</font>' sign. Thus, the variable '<font face="Courier New, Courier, mono">@N</font>' is a local variable declared and referenced within the module and is distinct from any global variable '<font face="Courier New, Courier, mono">N</font>'. Calling the label module recursively creates new instances of all local variables distinct from any other local variable of the same name.</p>
+<p>There can be no return from a label module invoked through a goto() statement. The following example shows how to specify label parameters for a module invoked through a goto() statement.</p>
+<p>&nbsp; </p>
+<p>Related actions: <a href="label.html">label</a>, <a href="gosubrandom.html">gosubrandom()</a>,
+<a href="gosub.html">gosub()</a>, <a href="gotorandom.html">gotorandom()</a></p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td>VariableCase</td>
+      <td>variable names are case sensitive</td>
+      <td>default value &quot;<font color="#0000FF">false</font>&quot; (Compatibility option)</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>&nbsp;Example:</b></font></p>
+<p><font face="Courier New">;@ let(I,3) let(J,2)<br>
+;@ debug(&quot;about to multiply&quot;)<br>
+;@ goto(Multiply)<br>
+;@ debug(&quot;back from multiply&quot;) ; this is never executed </font></p>
+<p><font face="Courier New">;@label(Multiply)<br>
+  ;@ debug(&quot;doing a multiply&quot;)&nbsp;<br>
+;@&nbsp;mul(X,I,J)</font><font face="Courier New"><br>
+  <br>
+</font></p>
+<p><font color="#FF0000"><b>FKiSS 5 Example:</b></font></p>
+<p><font face="Courier New">;@EventHandler<br>
+;@begin()&nbsp;<br>
+;@ goto(Add,5,3)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;; 5 and 3 are arguments to the Add label routine<br>
+;@ notify(&quot;This should not be displayed&quot;)&nbsp;; this statement will never be executed <br>
+<br>
+;@label(Add,@N1,@N2)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; local variable @N1 and @N2 are the parameters<br>
+;@ add(X,@N1,@N2)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; X is a global variable <br>
+;@ notify(&quot;Sum is &quot;,X)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; show the sum </font></p>
+<p><font face="Courier New"></font></p>
+</body>
+
+</html>

@@ -1,0 +1,75 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta name="generator" content="Bluefish 2.2.12" >
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>string</title>
+</head>
+
+<body>
+
+<h4><a name="letparent" id="letparent">letparent</a>()</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp;
+letparent (variable,object)</p>
+<p>
+The letparent() statement returns the parent object in the attachment chain for the specified object. </p>
+<p>If no parent object exists the variable is set to -1.</p>
+<p>The <em>object</em> must be an object group specifier or a variable containing an object group identifier.</p>
+<p>&nbsp;</p>
+<p> Related actions: <a href="attach.html">attach()</a> <a href="detach.html">detach()</a> <a href="letsibling.html">letsiblingx()</a> <a href="letchild.html">letchild()</a></p>
+<p>&nbsp; </p>
+<p>&nbsp;  </p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+    <table border="1" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td width="20%">FKiSS 5 &nbsp;</td>
+        <td width="30%">letparent(N,#3)&nbsp; </td>
+        <td>Variable N is set to the only parent of group object 3.  </td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+    <table border="1" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td width="20%">VariableCase</td>
+        <td width="30%">variable names are case sensitive</td>
+        <td>default value &quot;<font color="#0000FF">false</font>&quot; (Compatibility option)</td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<div align="center"></div>
+<p><font color="#FF0000"><b>&nbsp;Example:&nbsp;</b></font></p>
+<p>
+<font face="Courier New">
+;@letparent(N,&quot;shirt.cel&quot;)&nbsp;;&nbsp;N contains the current height for the specified cel<br>
+;@letparent(N,#3)&nbsp;;&nbsp;N contains the current height for object #3<br></font></p>
+<p>&nbsp; </p>
+<p><font color="#FF0000"><b>&nbsp;Example:&nbsp;</b></font></p>
+<font face="Courier New">
+;[Cel Section]<br>
+#4   rightshoe.gif       : 0                                ;<br>
+#4   leftshoe.gif        : 0                                ;<br>
+#4   sailormoon.gif      : 0                                ;<br>
+ &nbsp;<br>
+
+;[FKiSS Section]<br>
+;@EventHandler<br>
+ &nbsp;<br>
+;@press(#4)                                                 ; <br>
+;@ letparent(N,#4)                                         ; <br>
+;@ notify("press Group 4 sailormoon.gif - current height ",N)    ; <br>
+;@ letparent(N,"leftshoe.gif")                                         ; <br>
+;@ notify("press Group 4 leftshoe.gif - current height ",N)    ; <br>
+
+</body>
+</font>
+</html>

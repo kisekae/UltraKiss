@@ -1,0 +1,100 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>map</title>
+</head>
+
+<body>
+
+<h4><a name="move" id="move">move</a>()&nbsp;</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; move
+(target,X,Y[,noconstrain])</p>
+<p>This action moves the target object or image cel by the specified amount in the X and Y direction. </p>
+<p>The <em>target</em> may be a literal name of an image
+  file or  an object group identifier, or a variable that contains an object number or cel image name. The X and Y parameters are integer values that identify pixel distances to move the target. Movement to the right and down are specified by positive numbers and movement to the left and up are specified by negative numbers. </p>
+<p>The optional <em>noconstrain</em> parameter, if non-zero, allows unconstrained movement beyond the playfield boundaries. In most cases FKiSS object movement is constrained to the playfield boundaries, or within the playfield boundaries if restrictx() or restricty() commands have been applied to the object. This global playfield restriction can becontrolled through an UltraKiss program option.</p>
+<p>Fixed and maximum fixed objects can always be moved with a move() command. Movement of an object with FKiSS does not affect the object fix count. </p>
+<p>FKiSS object movement can affect objects under mouse control if the movement command is applied through alarms or other events that concurrently fire. The specification as to whether the mouse has control or the FKiSS command has control is not consistent between different viewers. UltraKiss provides two compatiblity options to manage this behaviour.</p>
+<p>Collision events are recognized and processed  after the object or cel image has been moved. The KiSS specifications are poor and there is no clarity as to whether  collisions are supposed to be recognized after the each FKiSS action statement or after each FKiSS event has completed. Foe example, if an event was to move object A to point P and then move the object back to its starting position, should collision events be recognized at point P? UltraKiss provides a compatibility option to enable collision event recognition after each interim move() statement, or at the completion of the event at the final positions. </p>
+<p>If object movement is restricted through restrictx() or restricty() commands then the random movement is constrained by the restricted bounds. The object will move as close as possible to the relative point (X,Y). </p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>FKiSS 5 Extension:</b></font>&nbsp;&nbsp;&nbsp;&nbsp; </p>
+<p>UltraKiss FKiSS5 introduces the ability to move image cels within an object group. Previously, the move() command would only apply to objects. When image cels are moved the offset of the image within the object is changed. This offset change can adjust the size and location of the object group. Note that for object groups of one cel image only, a move() command for the cel image is logically equivalent to a move() command for the object group. </p>
+<p>Cel movement applied to ambiguous cels, where the same cel image is in more than one object, should not be specified. </p>
+<p>&nbsp;</p>
+<p>Releated events: <a href="in.html">in()</a>, <a href="out.html">out()</a>, <a href="stillin.html">stillin()</a>, <a href="stillout.html">stillout()</a>, <a href="collide.html">collide()</a>, <a href="apart.html">apart()</a> </p>
+<p>Related actions: <a href="moveto.html">moveto(</a>), <a href="movebyx.html">movebyx()</a>, <a href="movebyy.html">movebyy()</a>, <a href="movetorand.html">movetorand()</a>, <a href="moverandx.html">moverandx()</a>, <a href="moverandy.html">moverandy()</a>, <a href="restrictx.html">restrictx()</a>, <a href="restricty.html">restricty()</a>, <a href="letobjectx.html">letobjectx()</a>, <a href="letobjecty.html">letobjecty()</a>, <a href="letinitx.html">letinitx()</a>, <a href="letinity.html">letinity()</a>, <a href="letinside.html">letinside()</a>, <a href="letcollide.html">letcollide()</a> </p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td>FKiSS 1 allows cel literal names or objects.</td>
+      <td> move(#1,10,-10)</td>
+      <td>Moves object #1 10 pixels up and 10 pixels to the right.</td>
+    </tr>
+    <tr>
+      <td>FKiSS 3 allows variables for objects.&nbsp;&nbsp;</td>
+      <td>let(X,10) move (X,-5,5)&nbsp;</td>
+      <td>Moves object #10 5 pixels down and 5 pixels to the left.</td>
+    </tr>
+    <tr>
+      <td>FKiSS 5 allows variables for all names</td>
+      <td>move (&quot;a.cel&quot;,X,Y)&nbsp;</td>
+      <td>Moves image cel &quot;a.cel&quot; X pixels horizontally and Y pixels vertically.</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td>ConstrainFKiSS</td>
+      <td>restrict FKiSS movement to playfield boundaries </td>
+      <td>default value &quot;<font color="#0000FF">true</font>&quot;
+        (General option)</td>
+    </tr>
+    <tr>
+      <td>ReleaseMove</td>
+      <td>enable FKiSS movement on mouse controlled objects </td>
+      <td>default value &quot;<font color="#0000FF">true</font>&quot;
+        (Compatibility option)</td>
+    </tr>
+    <tr>
+      <td>DragMove</td>
+      <td>retain mouse control after FKiSS object movement </td>
+      <td>default value &quot;<font color="#0000FF">false</font>&quot; (Compatibility option)</td>
+    </tr>
+    <tr>
+      <td>ImmediateColliide</td>
+      <td>apply collision events immediately after move() statement </td>
+      <td>default value &quot;<font color="#0000FF">true</font>&quot; (Compatibility option)</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>&nbsp;Example:&nbsp;<br>
+</b></font>
+</p>
+<p><font face="Courier New">#1.999 button.cel       : 0                              ;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+#3.999    fk4b3a.cel       : 0                              ;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font></p>
+
+<p>
+<font face="Courier New">;@move(#1,10,10)&nbsp;&nbsp; map(#3)&nbsp; ;&nbsp;<br>
+;@release(#1) let(X,10) add(Y,X,10) move(#3,X,Y)                                               ;&nbsp;<br>
+<br>
+</font><font face="Courier New"><br>
+</font></p>
+
+</body>
+
+</html>

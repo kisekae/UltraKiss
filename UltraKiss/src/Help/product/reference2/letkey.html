@@ -1,0 +1,50 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>ifstatements</title>
+</head>
+
+<body>
+
+<h4><a name="letkey" id="letkey">letkey</a>()</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; letkey (variable,keyset)</p>
+<p> The letkey() statement sets the variable to the character index in the keyset string of the last key pressed, or the value 0 if the key is not in the list. </p>
+<p>The <em>keyset</em> parameter can be a string literal or a variable that contains a string. Each character in the string should represent one possible character on the keyboard that can be tested. For example, the string &quot;abcxyz&quot; is a set of six possible characters that are to be tested for keyboard input.</p>
+<p>The letkey() startement will also recognize the four cursor control keys 'up', 'down', 'left', and 'right' as special entries within the keyset. For example, the keyset &quot;abcrightleft&quot; recognizes the first three letters of the alphabet plus two cursor control keys, with returned values 1, 2, 3, 4, and 9. </p>
+<p>The letkey() statement does not distinguish between upper and lower case characters unless the UltraKiss keyboard case option is set. The letkey() statement is also not capable of recognizing most special keys on the keyboard. </p>
+<p>Some viewers may only recognize keyboard entry while a key is actually being pressed. This can lead to viewer compatibility problems as the letkey() statement may only function within keypress() events. </p>
+<p>This oddity with cursor keys illustrates the original design problems with FKiSS. The letkey() statement is deprecated in favour of the UltraKiss letkeychar() statement.</p>
+<p>&nbsp;</p>
+<p>Related events: <a href="keypress.html">keypress()</a>, <a href="keyrelease.html">keyrelease()</a>, <a href="keytype.html">keytype()</a><br>
+</a>Related actions: <a href="letkeymap.html">letkeymap()</a>, <a href="letkeychar.html">letkeychar()</a>, <a href="letkeycode.html">letkeycode()</a>, <a href="letkeystring.html">letkeystring()</a>, <a href="letkeymodifier.html">letkeymodifier()</a></p>
+<p>&nbsp;</p>
+<div align="center"></div>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+    <table border="1" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td width="20%">KeyCase</td>
+        <td width="30%">Enable keyboard upper/lower case key entry </td>
+        <td>default value &quot;<font color="#0000FF">false</font>&quot; (FKiSS option)</td>
+      </tr>
+      <tr>
+        <td>RetainKey</td>
+        <td>Remember last key pressed </td>
+        <td>default value &quot;<font color="#0000FF">true</font>&quot; (Compatibility option)</td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>&nbsp;Example:&nbsp;</b></font></p>
+<p><font face="Courier New">;@letkey(N,&quot;a&quot;)&nbsp;; Sets variable N to 1 if the &quot;a&quot; key is pressed, 0 otherwise<br>
+;@letkey(N,&quot;012345xyzabcupdown&quot;)&nbsp;; Sets variable N to 10 if the &quot;a&quot; key is pressed</font></p>
+<p><font face="Courier New"><br>
+</font></p>
+</body>
+
+</html>

@@ -1,0 +1,600 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-ca">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>UltraKiss Object Properties</title>
+</head>
+
+<body>
+
+<h1><font color="#FF0000">UltraKiss Object Properties</font></h1>
+<hr>
+
+<p><font face="Arial">The UltraKiss Object Properties subsystem is a hierarchical system that
+supports the display of all object properties for any object used within the
+UltraKiss program.&nbsp; This includes the data set configuration object, all
+cel and
+group objects, palette objects, audio and video objects, FKiSS events and action
+objects, and the FKiSS variable objects.</font></p>
+
+<p>&nbsp;</p>
+
+
+
+<h3><font color="#0000FF" face="Arial"><a name="Introduction">Introduction</a></font></h3>
+
+<p><font face="Arial">The Objects Properties subsystem can be invoked in different ways.&nbsp; The <a href="menu.html#ViewDataObjects">Active
+Objects</a> command on the UltraKiss View program menu is the direct entry into this subsystem.&nbsp;
+The <a href="menu.html#FileProperties">Properties</a> menu command available on
+the File menu of most Kisekae tools will also display the characteristics for the
+current object of interest.&nbsp; The contextual popup menu for any visible object on the screen
+can be used to invoke the properties dialog for the chosen object.</font></p>
+
+<p><font face="Arial">Property screens generally have a consistent format and
+structure.&nbsp; The screen usually has three sections.&nbsp; The top
+section displays various fixed attributes and characteristics of the
+object.&nbsp; The middle section identifies visual
+characteristics of the object, provides controls to manipulate the object, or
+shows other objects related to the object in a parent relationship.&nbsp; The
+lower section provides either a free form textual description
+of the object or shows various objects related to the object in a
+child relationship.&nbsp;&nbsp;</font></p>
+
+<p align="left">&nbsp;</p>
+
+<h3><font color="#0000FF" face="Arial"><a name="Data Set Object Characteristics">Kiss
+Set
+Properties</a></font></h3>
+
+<p><font face="Arial">All data set objects can be examined through the View-Active Objects command on
+the UltraKiss program menu.&nbsp; This screen lists all objects defined for the
+current data set configuration.&nbsp; Objects can be selected and viewed by
+expanding the list tree entries and either double clicking on a specific object
+or pressing the View Object button.</font></p>
+
+<p align="left">&nbsp;</p>
+
+<p align="center"><font face="Arial"><img border="0" src="images/object_01.gif" width="528" height="437"></font></p>
+
+<p align="center"><font face="Arial">Figure 1</font></p>
+
+<p align="left">&nbsp;</p>
+
+<p align="left">&nbsp;</p>
+
+<h3><font color="#0000FF" face="Arial"><a name="Configuration Object Properties">Configuration
+Object Properties</a></font></h3>
+
+<p><font face="Arial">The Configuration Properties dialog displays the current attributes of the
+active data set configuration.&nbsp; This screen is invoked from the File
+Properties command on the UltraKiss program menu or by selecting Properties for
+the configuration object shown in the View Active Objects dialog (see Figure 1).</font></p>
+
+<p><font face="Arial">The configuration object properties show the number of cels, groups,
+palettes, page sets, events, and variables associated with the
+configuration.&nbsp; The width and height of the visible window area is shown,
+as is the border color value for the area outside of the visible panel
+window.&nbsp; The border color is either an index into the first palette file
+defined in the configuration or an RGB value of a specific color.</font></p>
+
+<p><font face="Arial">Configuration objects are writable.&nbsp; The updated flag is set if
+the configuration has been edited or modified since loaded.</font></p>
+
+<p>&nbsp;</p>
+
+<p align="center"><font face="Arial"><img border="0" src="images/object_02.gif" width="528" height="437"></font></p>
+
+<p align="center"><font face="Arial">Figure 2.</font></p>
+
+<p align="left">&nbsp;</p>
+
+<p align="left"><font face="Arial">The View Objects button will invoke the data set objects dialog as
+seen in Figure 1.&nbsp;&nbsp; The Active Configuration button will invoke the Text Editor
+tool to examine or edit the current configuration file contents.</font></p>
+
+<p align="left"><font face="Arial">The List Events button will display the event list in the text
+window for all FKiSS events defined in this configuration.&nbsp; The event list
+is a hierarchical tree that lists all events and defined actions for each
+event.&nbsp; Figure 3 shows a configuration object event list display.</font></p>
+
+<p align="left">&nbsp;</p>
+
+<p align="center"><font face="Arial"><img border="0" src="images/object_03.gif" width="528" height="437"></font></p>
+
+<p align="center"><font face="Arial">Figure 3.</font></p>
+
+<p align="left">&nbsp;</p>
+
+<p align="left"><font face="Arial">From the Event List display either events or actions may be
+selected.&nbsp; The View Event button or View Action button shows the object
+properties for the selected event or action object.&nbsp; Figure 8 and Figure 9
+describe the dialog display for events and actions respectively.</font></p>
+
+<p align="left"><font face="Arial">The List Text button will show the configuration object textual
+characteristics as seen in Figure 2.</font></p>
+
+<p align="left">&nbsp;</p>
+
+<p align="left">&nbsp;</p>
+
+<h3><font color="#0000FF" face="Arial"><a name="Audio Object Properties">Audio Object
+Properties</a></font></h3>
+
+<p><font face="Arial">Audio objects are created when sound files of type AU, WAV, MIDI, AIFF, RMF
+or MP3 files are referenced through FKiSS sound or music action commands.&nbsp;
+Audio objects have a time duration in seconds, a time position, and a latency
+time before the sound commences.&nbsp; These attributes are characteristics of
+the sound file.&nbsp; A media player is used to play the sound file.&nbsp; The
+player, if realized, has been&nbsp; loaded in preparation to play a sound
+file.&nbsp; The player can be in a stopped, started, or prefetched state.&nbsp; A
+prefetched player has read the initial section of the sound file in preparation
+to play the sound.&nbsp;</font></p>
+
+<p align="left">&nbsp;</p>
+
+<p align="center"><font face="Arial"><img border="0" src="images/object_04.gif" width="528" height="437"></font></p>
+
+<p align="center"><font face="Arial">Figure 4.</font></p>
+
+<p align="left">&nbsp;</p>
+
+<p align="left"><font face="Arial">If a player has been realized then it can be controlled.&nbsp;
+The Player control as shown in Figure 4 can be used to start, stop, or position
+the audio file as required.&nbsp; If the player has not yet been realized then a
+Play button will be seen rather than the player control.&nbsp; Pressing the Play
+button will realize the player and start the audio playback.</font></p>
+
+<p align="left">&nbsp;</p>
+
+<p align="left">&nbsp;</p>
+
+<h3><font color="#0000FF" face="Arial"><a name="Video Object Properties">Video Object
+Properties</a></font></h3>
+
+<p><font face="Arial">Video objects are image cels created when movie files of type MPG, AVI,
+or other supported video format files are referenced on configuration cel lines.&nbsp;
+Video objects are a type of image cel.&nbsp; Video objects have a time duration in seconds, a time position, and a latency
+time before the movie commences.&nbsp; These attributes are characteristics of
+the movie file.&nbsp; A media player is used to play the movie file.&nbsp; The
+player, if realized, has been&nbsp; loaded in preparation to play the movie.&nbsp; The player can be
+in a stopped, started, or prefetched state.&nbsp; A
+prefetched player has read the initial section of the video file in preparation
+to play the movie.&nbsp;The image cel is visible if the movie is
+playing.&nbsp;&nbsp;&nbsp;</font></p>
+
+<p align="left">&nbsp;</p>
+
+<p align="center"><font face="Arial"><img border="0" src="images/object_08.gif" width="528" height="437"></font></p>
+
+<p align="center"><font face="Arial">Figure 5.</font></p>
+
+<p align="left">&nbsp;</p>
+
+<p align="left"><font face="Arial">If a player has been realized then it can be controlled.&nbsp;
+The Player control as shown in Figure 5 can be used to start, stop, or position
+the movie as required.&nbsp; If the player has not yet been realized then a
+Play button will be seen rather than the player control.&nbsp; Pressing the Play
+button will realize the player and start the movie playback.&nbsp; The movie
+will play in the preview window.</font></p>
+
+<p align="left">&nbsp;</p>
+
+<p align="left">&nbsp;</p>
+
+<h3><font color="#0000FF" face="Arial">Image <a name="Cel Object Properties">Cel Properties</a></font></h3>
+
+<p><font face="Arial">Image cel objects are graphic objects that are displayed on the screen.&nbsp; Cel
+objects have a rectangular bounding area that defines their size and location on
+the screen.&nbsp; Cels can have a location offset, thus the actual bounding box
+that defines where the cel is drawn depends on both the cel location and its
+offset.</font></p>
+
+<p><font face="Arial">Image cels can be transparent or opaque.&nbsp; A transparency value of 255
+indicates that the cel is completely opaque.&nbsp; A value of 0 is fully
+transparent.&nbsp; The transparency value is a specific transparency that is
+applied to every pixel within the image.&nbsp; The transparency value is initially
+set with the %t tag attribute read from the configuration file.</font></p>
+
+<p><font face="Arial">Image cels, if visible, are drawn.&nbsp; Cel visibility is changed with FKiSS map
+and unmap action commands.&nbsp; Ghosted cels are drawn if visible but cannot be
+selected with the mouse.&nbsp; The ghost attribute is initially set with the %g tag attribute read from the configuration file, or through the FKiSS
+ghost&nbsp; action command.</font></p>
+
+<p><font face="Arial">Truecolor cels do not have palettes.&nbsp; Every pixel in a truecolor image
+is defined with its own 32 bit RGB color value.&nbsp; Truecolor cels are also
+known as CherryKiss cels.&nbsp;&nbsp;</font></p>
+
+<p><font face="Arial">Images are copied if the same cel is used in more than one object group in the
+active configuration.&nbsp; The copy state attribute indicates that the image cel
+object shares its base image with another object in the configuration.</font></p>
+
+<p><font face="Arial">The flex attribute shows the initial cel sticky value read from the
+configuration file.&nbsp; This attribute is used to establish the group object
+fix value used to limit the group object movement.&nbsp; The group object flex
+value is set to the maximum value of all cels in the group.&nbsp;&nbsp;</font></p>
+
+<p><font face="Arial">The frames attribute shows the number of individual image frames contained
+within this cel.&nbsp; Animated cels, such as GIF images can contain multiple
+frames.&nbsp;&nbsp;&nbsp;</font></p>
+
+<p align="left">&nbsp;</p>
+
+<p align="center"><font face="Arial"><img border="0" src="images/object_05.gif" width="528" height="437"></font></p>
+
+<p align="center"><font face="Arial">Figure 6.</font></p>
+
+<p align="left">&nbsp;</p>
+
+<p align="left"><font face="Arial">A image cel can be associated with many different object groups.&nbsp;
+The object group drop down box lists all groups that reference this cel.&nbsp; If a
+different group is selected the object property attributes will change to
+show the image state as it appears within the new group.&nbsp; The View
+Object button will invoke the object group properties dialog as shown in Figure
+7 for
+the selected group.</font></p>
+
+<p align="left"><font face="Arial">If the Edit Palette button is pressed the Color Editor tool is
+invoked to examine or change the image colors.&nbsp;&nbsp;&nbsp;</font></p>
+
+<p align="left"><font face="Arial">The context preview window show an image of the image as it
+appears in the current object group.&nbsp; A portion of the image can be selected and
+magnified if the left mouse button is held down and a rectangular selection box
+is drawn in the preview window.&nbsp; Pressing the right mouse button will
+restore the image to its normal size.&nbsp;</font></p>
+
+<p align="left"><font face="Arial">Image cels can have FKiSS events attached to them.&nbsp; The List
+Events button will display the event list in the text window for all FKiSS
+events defined for this cel.&nbsp; The event list is a hierarchical tree that
+lists all events and defined actions for each event.&nbsp; Figure 3 shows an
+event list display from which event and action objects can be selected.</font></p>
+
+<p align="left">&nbsp;</p>
+
+<p align="left">&nbsp;</p>
+
+<h3><font color="#0000FF" face="Arial"><a name="Cel Group Properties">Cel Group
+Properties</a></font></h3>
+
+<p><font face="Arial">Cel Group objects are a recent FKiSS 4 extension used to group image cels
+into various classes.&nbsp; Cel groups are a way for the programmer to direct
+FKiSS actions to a class of image cels, rather than an object group. Cel groups have a
+rectangular bounding area that defines the total area for all cels within the
+group.&nbsp; Cel groups have a location offset equal to the minimum location
+offset for all image cels.&nbsp; The group bounding box defines where a cel
+group object&nbsp; is drawn and depends on both the group location and its offset.</font></p>
+
+<p><font face="Arial">The cel group attributes show the number of cels contained within the group and
+the number of FKiSS events associated with the group.&nbsp;&nbsp;</font></p>
+
+<p><font face="Arial">The state attributes show the characteristics of the group.&nbsp; The Visible
+group attribute is not used..&nbsp;&nbsp;</font></p>
+
+<p>&nbsp;</p>
+
+<p align="center"><font face="Arial"><img border="0" src="images/object_09.gif" width="528" height="437"></font></p>
+
+<p align="center"><font face="Arial">Figure 7.</font></p>
+
+<p align="left">&nbsp;</p>
+
+<p align="left"><font face="Arial">An cel group can be associated with many different image cels.&nbsp;
+The image cel list display shows the characteristics for all cels in the group.&nbsp; If a cel entry is selected and the View Image
+button is pressed, the image cel properties for the image will be shown (see
+Figure 5).</font></p>
+
+<p align="left"><font face="Arial">Cel groups have FKiSS events.&nbsp; The List
+Events button will display the event list in the text window for all FKiSS
+events related to this group.&nbsp; The event list is a hierarchical tree that
+lists all events and defined actions for each event.&nbsp; Figure 3 shows an
+event list display from which event and action objects can be selected.</font></p>
+
+<p align="left">&nbsp;</p>
+
+<p align="left">&nbsp;</p>
+
+<h3><font color="#0000FF" face="Arial"><a name="Group Object Properties"> Object Group
+Properties</a></font></h3>
+
+<p><font face="Arial">Group objects contain one or more image cels.&nbsp; Object groups have a
+rectangular bounding area that defines the total area for all cels within the
+group.&nbsp; Groups have a location offset equal to the minimum location
+offset for all group cels.&nbsp; The group bounding box defines where the object
+group
+is drawn and depends on both the group location and its offset.</font></p>
+
+<p><font face="Arial">The object group attributes show the number of cels contained within the group and
+the number of FKiSS events associated with the group.&nbsp; The lock value
+attribute indicates if the object group can be dragged with the mouse.</font></p>
+
+<p><font face="Arial">The state attributes show the characteristics of the group.&nbsp; Visible
+groups can be drawn.&nbsp; Constrained groups cannot be moved outside of the
+panel area window.&nbsp; Group movement is always constrained during an FKiSS
+move action unless the unconstrain movement parameter flag is set.&nbsp; Group
+movement is never constrained during mouse dragging unless the Limit Moves
+program option has been set.</font></p>
+
+<p><font face="Arial">The unfix transition state is set upon a change in the group object fix state
+from sticky (non-zero) to mobile (zero).&nbsp; This state attribute is used to
+recognize unfix event actions.</font></p>
+
+<p>&nbsp;</p>
+
+<p align="center"><font face="Arial"><img border="0" src="images/object_06.gif" width="528" height="437"></font></p>
+
+<p align="center"><font face="Arial">Figure 8.</font></p>
+
+<p align="left">&nbsp;</p>
+
+<p align="left"><font face="Arial">An object group can be associated with many different page sets.&nbsp;
+The page set drop down box lists all pages that reference this group.&nbsp; If a
+different page set is selected the object group property attributes will change
+to show the group state as it appears within the new page set.&nbsp; The View
+Page Set button will invoke the page set object properties dialog as shown in
+Figure 9 for the selected page set.</font></p>
+
+<p align="left"><font face="Arial">The image preview window show a picture of the group as it
+appears in the current page.&nbsp; A portion of the image can be selected and
+magnified if the left mouse button is held down and a rectangular selection box
+is drawn in the preview image.&nbsp; Pressing the right mouse button will
+restore the image to its normal size.&nbsp;</font></p>
+
+<p align="left"><font face="Arial">The image cel list display shows the characteristics for all cels
+associated with this group.&nbsp; If a cel entry is selected and the View Image button is pressed, the
+image cel properties for the image will be shown (see
+Figure 5).</font></p>
+
+<p align="left"><font face="Arial">Object groups can have FKiSS events attached to them.&nbsp; The List
+Events button will display the event list in the text window for all FKiSS
+events defined for this group.&nbsp; The event list is a hierarchical tree that
+lists all events and defined actions for each event.&nbsp; Figure 3 shows an
+event list display from which event and action objects can be selected.</font></p>
+
+<p align="left">&nbsp;</p>
+
+<p align="left">&nbsp;</p>
+
+<h3><font color="#0000FF" face="Arial"><a name="Page Set Object Properties">Page Set Object
+Properties</a></font></h3>
+
+<p align="left"><font face="Arial">Each page set within the active configuration can contain one or
+more object groups.&nbsp; The page set object properties is used to list all
+object groups on the page and all FKiSS events associated with these groups.</font></p>
+
+<p align="left"><font face="Arial">Page sets are always located at location (0,0) and span the full
+size of the configuration panel area.&nbsp; The page set object
+properties will show the number of object groups and events associated with the
+page.&nbsp;&nbsp;</font></p>
+
+<p><font face="Arial">Page sets are associated with a specific palette group.&nbsp; This value is
+defined in the configuration file where the page set definitions occur.&nbsp;
+All KiSS image cels on this page set will be drawn
+with the palette group colors for the specified palette group.&nbsp;&nbsp;</font></p>
+
+<p><font face="Arial">A page set is visible if it is the current page set being displayed by
+UltraKiss.</font></p>
+
+<p align="left">&nbsp;</p>
+
+<p align="center"><font face="Arial"><img border="0" src="images/object_07.gif" width="528" height="437"></font></p>
+
+<p align="center"><font face="Arial">Figure 9.</font></p>
+
+<p align="left">&nbsp;</p>
+
+<p align="left"><font face="Arial">The object group list shows the characteristics for all object groups
+associated with this page.&nbsp; If a group entry is selected and the View
+Object button is pressed, the group properties dialog for the group will be shown (see
+Figure 8).</font></p>
+
+<p align="left"><font face="Arial">The List Events button will display the event list in the text
+window for all FKiSS events defined on this page.&nbsp; The event list is a
+hierarchical tree that lists all events and defined actions for each
+event.&nbsp; Figure 3 shows an event list display from which event and action
+objects can be selected.</font></p>
+
+<p align="left">&nbsp;</p>
+
+<p align="left">&nbsp;</p>
+
+<h3><font color="#0000FF" face="Arial"><a name="Event Object Properties">Event Object
+Properties</a></font></h3>
+
+<p align="left"><font face="Arial">Events are defined by FKiSS commands.&nbsp; Each event can
+contain many FKiSS action commands.&nbsp; Events have parameters and the event
+object property dialog enables the viewing of parameter properties.</font></p>
+
+<p align="left"><font face="Arial">An event, when processed, can update the screen.&nbsp; For
+example, actions associated with a mouse press event may move objects on the
+screen or modify the display in some way.&nbsp; When all actions actions
+associated with an event have been processed the event bounding box defines the location
+and size of the screen area that needs to be redrawn.&nbsp; The event bounding
+area is the union of all event action screen updates.</font></p>
+
+<p align="left"><font face="Arial">The event object attributes shows the number of activations of
+this event and the average elapsed activation time in seconds.&nbsp; These
+statistics may be useful for performance tuning.&nbsp; The count of the action
+commands attached to the event is a measure of the event size.</font></p>
+
+<p align="left"><font face="Arial">The event breakpoint state, if set, is used to interrupt event
+processing when this event is fired.&nbsp; The program debug module is invoked
+to facilitate event action command debugging.&nbsp;&nbsp;&nbsp;</font></p>
+
+<p align="left"><font face="Arial">The skip actions state is set if action commands are being
+skipped due to a conditional statement failure.&nbsp; This could occur during
+if-else-endif&nbsp; action command processing.</font></p>
+
+<p align="left"><font face="Arial">The collision state is set if objects are moved on the screen
+and a collision event is associated with the moving object.&nbsp; This state is
+used to determine if an FKiSS collision event needs to be fired.&nbsp;</font></p>
+
+<p align="left">&nbsp;</p>
+
+<p align="center"><font face="Arial"><img border="0" src="images/object_10.gif" width="528" height="437"></font></p>
+
+<p align="center"><font face="Arial">Figure 10.</font></p>
+
+<p align="left">&nbsp;</p>
+
+<p align="left"><font face="Arial">The Parameters list shows all parameters associated with the
+event.&nbsp; Parameters may be of any object or variable types.&nbsp; The actual
+parameter object type is identified and the object image is displayed in the
+context preview window.&nbsp; A portion of the image can be selected and
+magnified if the left mouse button is held down and a rectangular selection box
+is drawn in the preview image.&nbsp; Pressing the right mouse button will
+restore the image to its normal size.&nbsp;</font></p>
+
+<p align="left"><font face="Arial">The View Image button in Figure 10 is an example of a contextual
+button used to show the properties for the event parameter object.&nbsp; This
+button may show an object group or an image cel object or some other object in the
+active configuration.</font></p>
+
+<p align="left"><font face="Arial">From the Event List display either events or actions may be
+selected.&nbsp; The View Event button or View Action button shows the object
+properties for the selected event or action object.&nbsp; Figure 11 and Figure
+12
+describe the dialog display for events and actions respectively.</font></p>
+
+<p align="left">&nbsp;</p>
+
+<p align="left">&nbsp;</p>
+
+<h3><font color="#0000FF" face="Arial"><a name="Action Object Properties">Action Object
+Properties</a></font></h3>
+
+<p align="left"><font face="Arial">Actions are defined by FKiSS commands.&nbsp; Each action is one FKiSS
+command.&nbsp; Actions have parameters and the action object property dialog
+enables viewing of parameter object properties.</font></p>
+
+<p align="left"><font face="Arial">An action, when processed, can update the screen.&nbsp; For
+example, actions associated with object movements may modify the display in some
+way.&nbsp; The action bounding box reflects only the area of the screen that
+need to be updated for the specific action. When all actions actions associated
+with an event have been processed the event bounding box describes the total
+screen area that needs to be redrawn.&nbsp;&nbsp;</font></p>
+
+<p align="left"><font face="Arial">The action breakpoint, if set, is used to interrupt event
+processing when this action is processed.&nbsp; The program debug module is
+invoked to facilitate event action command debugging.&nbsp;&nbsp;</font></p>
+
+<p align="left">&nbsp;</p>
+
+<p align="center"><font face="Arial"><img border="0" src="images/object_11.gif" width="528" height="437"></font></p>
+
+<p align="center"><font face="Arial">Figure 11.</font></p>
+
+<p align="left"><font face="Arial">The Parameters list shows all parameters associated with the
+action.&nbsp; Parameters may be of any object or variable types.&nbsp; The
+actual parameter object type is identified and the object image is displayed in
+the context preview window.&nbsp; A portion of the image can be selected and
+magnified if the left mouse button is held down and a rectangular selection box
+is drawn in the preview image.&nbsp; Pressing the right mouse button will
+restore the image to its normal size.&nbsp;</font></p>
+
+<p align="left"><font face="Arial">The View Audio button in Figure 11 is an example of a contextual
+button used to show the properties for the event parameter object.&nbsp; This
+button may show an object group or an image cel object or some other object in the
+active configuration.</font></p>
+
+<p align="left"><font face="Arial">From the Event List display either events or actions may be
+selected.&nbsp; The View Event button or View Action button shows the object
+properties for the selected event or action object.&nbsp; Figure 11 and Figure
+12
+describe the dialog display for events and actions respectively.</font></p>
+
+<p align="left">&nbsp;</p>
+
+<p align="left">&nbsp;</p>
+
+<h3><font color="#0000FF" face="Arial"><a name="Palette Object Properties">Palette Object
+Properties</a></font></h3>
+
+<p><font face="Arial">Palette objects apply to one or more image cels.&nbsp; Palette objects may contain
+multiple color palettes known as palette groups.&nbsp; A palette is a set of
+colors.&nbsp; Images that use palettes reference the colors in the palette by
+their index value.&nbsp; Every image pixel is an index into the color palette.</font></p>
+
+<p><font face="Arial">Certain colors&nbsp; can be set as the palette transparent color or
+background color.&nbsp; The background color is used to set the page background
+before any image is drawn. If an image pixel refers to the transparent color
+then this pixel is transparent.&nbsp; Anything underneath the image will show
+through.&nbsp;&nbsp; Thus, if there is nothing beneath an image other than the
+background, then the background color will show for all transparent pixels.</font></p>
+
+<p>&nbsp;</p>
+
+<p align="center"><font face="Arial"><img border="0" src="images/object_12.gif" width="528" height="437"></font></p>
+
+<p align="center"><font face="Arial">Figure 12.</font></p>
+
+<p align="left">&nbsp;</p>
+
+<p align="left"><font face="Arial">The palette group drop down box lists all palette groups defined
+for the palette.&nbsp; The preview window shows the palette group colors.&nbsp;
+If a new palette group is selected the preview window colors will change.</font></p>
+
+<p align="left"><font face="Arial">The Edit Palette button can be used to invoke the Color Editor
+tool to change the palette colors.</font></p>
+
+<p align="left"><font face="Arial">The List Images button will display a list of all image cels that use
+this palette.&nbsp; Figure 13 shows an image cel list display.</font></p>
+
+<p align="left">&nbsp;</p>
+
+<p align="center"><font face="Arial"><img border="0" src="images/object_13.gif" width="528" height="437"></font></p>
+
+<p align="center"><font face="Arial">Figure 13.</font></p>
+
+<p align="left">&nbsp;</p>
+
+<p align="left"><font face="Arial">To view image cel properties, select a cel from the list and
+either double click or press the View Image button.&nbsp; This will invoke the
+Image Object Properties dialog as shown in Figure 5.</font></p>
+
+<p align="left">&nbsp;</p>
+
+<p align="left">&nbsp;</p>
+
+<h3><font color="#0000FF" face="Arial"><a name="Variable Object Properties">Variable Object
+Properties</a></font></h3>
+
+<p><font face="Arial">The Variable Object Properties shows all FKiSS variables currently defined
+for the active configuration.&nbsp; The display may be sorted by variable name
+or value as required, by clicking on the appropriate column.&nbsp;&nbsp;</font></p>
+
+<p><font face="Arial">The variable display is updated every five seconds.&nbsp; Values can change
+if FKiSS events are being processed while the variable object properties dialog
+is on display.</font></p>
+
+<p align="left">&nbsp;</p>
+
+<p align="center"><font face="Arial"><img border="0" src="images/object_14.gif" width="528" height="437"></font></p>
+
+<p align="center"><font face="Arial">Figure 14.</font></p>
+
+<p align="left">&nbsp;</p>
+
+<p align="left">&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<hr>
+
+<p align="left">Next Document:&nbsp; <a href="editing.html">Edit Functions<br>
+</a>Prior Document:&nbsp; <a href="compatibility.html">Compatibility Options</a></p>
+<p align="left">Copyright (c) 2002-2023 William Miles</p>
+
+
+
+
+
+
+
+
+
+
+</body>
+
+</html>

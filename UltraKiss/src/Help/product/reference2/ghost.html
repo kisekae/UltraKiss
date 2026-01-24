@@ -1,0 +1,86 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>ghost</title>
+</head>
+
+<body>
+
+<h4><a name="ghost">ghost</a>()&nbsp;</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; ghost (target,integer)</p>
+<p>This action sets or disables the responsiveness of the target to mouse
+activities. The target may be a literal name of an image
+file or a cel group name or an object group identifier. The integer parameteris an 
+on/off switch. A value of 0 clears any ghost behaviour and a non-zero value sets
+ghost behaviour.</p>
+<p>Ghosted images do not respond to mouse activity. Such images cannot be moved
+with the mouse. Ghosted images will not respond to FKiSS events that require
+mouse activity such as press(), release(), catch(), drop(), and so on.&nbsp;
+Ghosted images can respond to collision events and other events initiated
+through FKiSS actions.</p>
+<p>Ghost operations applied to an object group or a cel group apply to all image
+cels in the group.</p>
+<p><br>
+Related actions: <a href="altmap.html">altmap()</a>, <a href="map.html">map()</a>,
+<a href="unmap.html">unmap()</a></p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td width="20%">FKiSS 3 allows variables for objects.&nbsp;&nbsp;</td>
+      <td width="30%">ghost(#2,1) ghost (X,0)&nbsp;</td>
+      <td>Sets or Clears the ghost behaviour of the all cels in the specified
+        object.</td>
+    </tr>
+    <tr>
+      <td width="20%">FKiSS 4 allows cel group names.&nbsp;&nbsp;</td>
+      <td width="30%">ghost (!Table,1)&nbsp;</td>
+      <td>Sets ghost behaviour for all cels in the cel group.</td>
+    </tr>
+    <tr>
+      <td width="20%">FKiSS 5 allows variables for all names</td>
+      <td width="30%">let(Cel,&quot;a.cel&quot;) ghost (Cel,1)&nbsp;</td>
+      <td>Sets ghost behaviour of the specified cel, or all cels in the object
+        group or cel group.</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td>AllAmbiguous</td>
+      <td>apply ghost to all ambiguous cels</td>
+      <td>default value &quot;<font color="#0000FF">false</font>&quot;
+        (Compatibility option)</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>Example:&nbsp;<br>
+</b></font>
+</p>
+<p><font face="Courier New">#1.999 button.cel       : 0                              ;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+#3.999    fk4b3a.cel       : 0                              ;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+normal image<br>
+</font>
+<br>
+<font face="Courier New">;@press(#1)&nbsp;&nbsp; ghost(#3,1)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;the release cannot occur once #1 is ghosted.<br>
+;@release(#1) ghost(&quot;button.cel&quot;,0)&nbsp;&nbsp; ;&nbsp;<br>
+<br>
+</font><font face="Courier New"><br>
+</font></p>
+
+</body>
+
+</html>

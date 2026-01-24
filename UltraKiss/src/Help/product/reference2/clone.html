@@ -1,0 +1,92 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta name="generator" content="Bluefish 2.2.12" >
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>string</title>
+</head>
+
+<body>
+
+<h4><a name="clone" id="clone">clone</a>()</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp;
+clone (variable,object)</p>
+<p>
+The clone() statement creates a clone or duplicate of the specified object.  The new object identifier is returned in the variable.
+The new cloned object contains new references to all the cels in the original object.  The cels are all clones of the original group object cels.</p>
+<p>The cloned group object is added in the same place to all the pages that the original object used.  It is not mapped or visible.</p>
+<p>The cloned object and the cloned cels are marked as internal objects to the set configuration.  Internal objects are not reported in the CNF file.  This means that these object and cels are not permanent and will only exist for the current invocaction.</p>
+<p>Further, cloned cels and group objects retain the same draw level as the original object.  This means that the cloned object cels are drawn on the screen in the same relatve order as before.</p>
+<p>The <em>object</em> must be an object group specifier or a variable containing an object group identifier.</p>
+<p>&nbsp;</p>
+<p> Related actions: <a href="destroy.html">destroy()</a></p>
+<p>&nbsp; </p>
+<p>&nbsp;  </p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+    <table border="1" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td width="20%">FKiSS 5 &nbsp;</td>
+        <td width="30%">clone(N,#3)&nbsp; </td>
+        <td>Variable N is set to the group object number for a new duplicate of object #3.  </td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<table width="80%"  border="1" align="center" cellpadding="5" cellspacing="5" bordercolor="#000000" bgcolor="#FFFF99">
+  <tr>
+    <td><div align="center">Note: The UltraKiss clone() command is viewer specific and not compatible with other viewers. </div></td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+    <table border="1" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td width="20%">VariableCase</td>
+        <td width="30%">variable names are case sensitive</td>
+        <td>default value &quot;<font color="#0000FF">false</font>&quot; (Compatibility option)</td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<div align="center"></div>
+<p><font color="#FF0000"><b>&nbsp;Example:&nbsp;</b></font></p>
+<p>
+<font face="Courier New">
+;@clone(N,#3)&nbsp;;&nbsp;N contains the new object number for a clone of object #3<br></font></p>
+<p>&nbsp; </p>
+<p><font color="#FF0000"><b>&nbsp;Example:&nbsp;</b></font></p>
+<font face="Courier New">
+;[Cel Section]  <br>
+#2   button2.button      : 0                                ;%size[152,50] %offset[0,64] %attributes[text="Destroy Sailormoon"] <br>
+#2   button1.button      : 0                                ;%size[151,50] %attributes[text="Clone Sailormoon"] <br>
+#1   sailormoon.cel      : 0                                ;<br>
+ <br>
+;[Page Set Section]<br>
+; Page 0<br>
+$0 * 284,278 81,78 * * *<br>
+ <br>
+;[FKiSS Section]<br>
+;@EventHandler<br>
+ <br>
+;@initialize()                                              ;<br>
+;@ let(PriorGroup,#1)                                       ;<br>
+ <br>
+;@press("button1.button")                                   ; <br>
+;@ clone(NewGroup,PriorGroup)                               ; <br>
+;@ notify("Cloned group is ",NewGroup)                      ; <br>
+;@ movebyx(NewGroup,PriorGroup,20)                          ; <br>
+;@ map(NewGroup)                                            ; <br>
+;@ let(PriorGroup,NewGroup)                                 ; <br>
+<br>
+</font>
+</body>
+</font>
+</html>

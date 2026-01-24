@@ -1,0 +1,40 @@
+; Kisekae UltraKiss configuration file created on Wed Jul 20 10:22:17 MDT 2005
+ 
+;[Screen Section]
+[0
+(800,600)
+ 
+ 
+;[Palette Section]
+%Bearman\background.kcf
+ 
+;[Cel Section]
+#7   Bearman\human.gif      : 3                             ;
+#4   ruri.jpg               : 2                             ;
+#3   rei.jpg                : 1                             ;
+#2   button2.cel            : 0                             ;
+#1   button1.cel            : 0                             ;
+ 
+;[Page Set Section]
+; Kisekae UltraKiss Page 0
+$0 * 336,234 337,314 * * * * *
+; Kisekae UltraKiss Page 1
+$0 * * * 249,148 * * * *
+; Kisekae UltraKiss Page 2
+$0 * * * * 148,48 * * *
+; Kisekae UltraKiss Page 3
+$0 * * * * * * * 220,108
+ 
+;[FKiSS Section]
+;@EventHandler
+;@press(#4)                                                 
+
+;@ changeset(0)                                             
+;@press(#3)                                                 
+
+;@ changeset(0)                                             
+;@press(#1)                                                 
+;@ changeset(1)                                             
+ 
+;@catch("button2.cel")                                      
+;@ changeset(2)                                             

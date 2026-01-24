@@ -1,0 +1,417 @@
+------------------------------------------------------------------------------
+
+
+                             KISS FORMAT DOCUMENT
+                                       
+   This is a poor translation of kissgs.doc. Comments, questions and
+   corrections are greatly welcomed.
+   
+   _KISS/GS ( KISS General Specification ) Manual by K.O.S._
+   
+   >>>>>>>
+   
+   This is an abridged translation of the official document about KISS
+   data format. However parts of it are undefined and will be updated
+   gradually.
+     _________________________________________________________________
+   
+Outline
+
+    1. Introduction
+    2. Abstract of New Specification
+    3. Basic Concepts
+    4. KISS/GS New features
+    5. Details of the Configuration File
+    6. Details of Cel Files
+    7. Palette File Detail
+    8. KISS/GS Ranks
+    9. Appendix
+       
+   
+     _________________________________________________________________
+   
+    1. _Introduction_
+       
+       KISS - a paper doll program has been developped for computers
+       based on NEC PC-9801VM2 architecture since March 1991. Many people
+       have enjoyed and implemented KISS for other computers. Now KISS is
+       running on many platforms.
+       
+       Now we make a reference manual about new KISS data format, that
+       is,
+       
+
+        KISS General Specification : KISS/GS
+
+   and release this.
+       
+    2. _Abstract of new specification_
+       
+       New style KISS data is upper compatible with the old style.
+       
+
+* color (cel)           16 colors   ->  16 or 256 colors
+* color (palette)       4096 colors ->  4096 or 16,777,216 colors
+* screen size           640 x 400   ->  768 x 480 or more
+* cel and object max    128         ->  256 or more
+
+   Multiple palette files available.
+       (-> 4-1 multipalette)
+       
+       A header is added to cel/palette files to store additional
+       information. At implemention some limitations may exist about
+       hardware and software resources. So implementation level is
+       indicated in the following form:
+       
+       _KISS/GSn ( n = 1,2,3,... )_
+       
+       (-> 7 KISS/GS Ranks)
+       
+    3. _Basic Concepts_
+       
+        _ 3-1:_ _KISS Functions_
+                KISS is a image viewer program with transparency
+                processing. It is able to display overlapped pictures and
+                allow the user to manipulate them with real-time mouse
+                operation.
+                
+        _3-2: _ _Files_
+                KISS needs the following files.
+                
+               o Cel file
+                 Image data to be moved. An array of pixels. Pixel code 0
+                 is transparent pixel.
+               o Palette file
+                 Defines actual colors of pixels.
+               o Configuration file
+                 Describes the overlapping order and positions of cels,
+                 etc. KISS reads this first and refers it to read other
+                 files. This file is a text file created with a text
+                 editor. Some parts of it may be changed by KISS
+                 program's save function.
+                 
+        _3-3: _ _Technical terms_
+                
+               o Cel
+                 A minimum element of pictures.
+               o Object
+                 A unit of pictures for moving; composed of one or more
+                 cels.
+               o Palette group
+                 Color information of one screen.
+               o Set
+                 Data composed of a palette group and object positions.
+    4. _ GS-KISS New Feature _
+       
+        _4-1: _ _Multipalette _
+                Before KISS/GS, all cels are drawn according to a single
+                palette table in the palette file. Now, cels can be drawn
+                with individual palette tables.
+                
+                The total number of colors must be less than or equal to
+                256.
+                
+                Each cel requires information about which palette it
+                uses.
+                
+    5. _ Details of the configuration file _
+       
+       Each line must be shorter than 256 bytes.
+       
+       Palette/cel filenames are composed of the basename (max 8 bytes) +
+       the suffix (max 3 bytes). Upper and lower cases are identical. The
+       character set used in filenames is [_0-9a-z].
+       
+       The character at the top of each line is one of the following:
+          + _ '='_ _Memory size _
+            
+            Description: =<memory >K
+            
+            For KISS v1.0 compatibility. KISS v2.0 or later ignores it.
+            Its use is discouraged.
+            
+            Example:
+            
+|
+|=260K
+|
+
+          + _'('_ _ Screen size_
+            
+            Description: (<horizontal size >, <vertical size >)
+            
+            Defines the screen size.
+            If omitted, (448,320) is assumed for KISS v2.18
+            compatibility. Maximum size of screen is (640,400) on
+            KISS/GS2. (-> 7 KISS/GS Ranks)
+            
+            Example:
+            
+|
+|(640,400)
+|
+
+          + _'%'_ _Palette file_
+            
+            Description: % <Palette filename >
+            
+            Describes a palette file. Palette files are numbered as
+            0,1,2... in the order of appearance.
+            
+            All colors in the palette file #0 are used. But the first
+            (transparent) color in the other palette files is ignored.
+            Total number of colors must be less than or equal to 256.
+            
+            All palette files must be described before description about
+            cel files.
+            
+            Example:
+            
+
+|
+|%COL.KCF
+|%COL2.KCF
+|
+
+          + _'['_ _ Border color_
+            
+            Description: [ <Border color's pixel code >
+            
+            Outside of the screen is filled with this pixel code.
+            Example:
+            
+
+|
+|[12
+|
+
+          + _'#'_ _ Cel file_
+            
+            Description: #<Mark >.<Fix > <Cel filename > [* <Palette
+            number >] [: <Set number >...]
+            
+              <Mark >:
+                      Identification number to specify object. Cels of
+                      the same Mark are unified and make an object.
+                      Object number is from 0 to 255 on KISS/GS2. (->7
+                      KISS/GS Ranks)
+                      
+              <Fix >:
+                      Fixed value. Specify this for fixed objects such as
+                      the doll's body. An object with a big value is hard
+                      to move. Value is a number from 0 to 32767. If
+                      omitted, treated as 0 (not fixed).
+                      
+              <Cel filename >:
+                      Describes the filename with suffix.
+                      
+              <Palette number >:
+                      Indicates which palette file this cel uses. If
+                      omitted, treated as 0.
+                      
+              <Set number >:
+                      The cel is drawn only in the sets specified here. 0
+                      - 9 is available. If omitted, this cel is drawn in
+                      all sets. The order of cel file descriptions
+                      determines the priority in drawing cels. The number
+                      of cels is max 256. (- >7 KISS/GS Ranks)
+                      
+        Example:
+            
+
+|
+|#2     data1.cel               ; forward (near)
+|#3     data2.cel       :2 3 4  ;
+|#4.255 data3.cel               ; fixed
+|#5     data4.cel  *1   :5      ;
+|#2     data1_.cel              ; backward (far)
+|
+
+        data1.cel and data1_.cel make one object.
+            
+          + _'$'_ _ Set information_
+            
+            Description: $ <Palette group > [ <xpos,ypos >...]
+            
+            Palette group and positions of object for each set. There are
+            max 10 sets. This section can be overwritten by KISS save
+            function.
+            
+            A long description is folded, and the following lines start
+            with a ' ' (blank) character to indicate that the lines are
+            continued from the previous line.
+            
+              <Palette group >:
+                      Palette group number. 0 ... 9.
+                      
+              <xpos,ypos >:
+                      Position of object (from object mark 0). Max 256
+                      positions are described on KISS/GS2. (- >7 KISS/GS
+                      Ranks) '*' means a non-existent object.
+                      
+        Example:
+            
+
+|
+|$2 192,11 * 56,176 55,21 259,62 15,24 375,63
+|$3 43,115 154,62 372,108 253,156 * * * 165,207
+| * 162,198 * 119,56 152,44 * * *
+| 16,355 394,362 108,355 * * * 125,261
+|$0 192,11 * 56,176 55,21 259,62 15,24 375,63
+|
+
+          + _';'_ _ Comment_
+            
+            Description: ; <Comment >
+            
+            This line is ignored.
+            
+            Future extension may determine how to include various
+            information of the data (title, author etc.) as comments.
+            
+          + Others
+            
+            Reserved for extention.
+            
+    6. _ Details of cel files _
+       
+       Cel files have a 32-byte header.
+       
+
+offset  size    contents
++0      4B      Identifier 'KiSS' ( 4Bh 69h 53h 53h )
++4      B       Cel file mark ( 20h )
++5      B       bits per pixel ( 4 or 8 )
++6      W       Reserved
++8      W(L,H)  Width ( 1 ... XMAX )
++10     W(L,H)  Height ( 1 ... YMAX )
++12     W(L,H)  x-offset ( 0 ... XMAX-1 )
++14     W(L,H)  y-offset ( 0 ... YMAX-1 )
++16     16B     Reserved
+
+   Caution: the reserved field must be filled with 0.
+       
+       Cels of the same object are aligned at the top left corner.
+       X,y-offsets are the offsets from this alignment point.
+       
+       +32... _Pixel data_
+       
+          + Pixel data order (4 bits/pixel)
+            
+            One raster:
+            
+
+||  ||  ||
+MSB         LSB  MSB         LSB  MSB         LSB
+
+| pix0 | pix1 |  | pix2 | pix3 |  | pix4 | pix5 |  ......... | pixN |
+
+        If the width is odd, add a padding pixel of color 0. The number
+            of rasters is indicated in the height field.
+            
+          + Pixel data order (8 bits/pixel)
+            
+            One raster:
+            
+
+||  ||  ||
+MSB         LSB  MSB         LSB  MSB         LSB
+
+|     pix0    |  |     pix1    |  |     pix2    | ...  |     pixN    |
+
+        The number of rasters is indicated in the height field.
+   
+       
+       If the top 4-byte identifier is not 'KiSS', the file format is as
+       follows:
+       
+
++0      W(L,H)  Width
++2      W(L,H)  Height
++4...   Pixel data
+
+   4 bits/pixel. X and y-offset are 0. This is the conventional format.
+       
+    7. _Palette file detail _
+       
+       Palette files have a 32-byte header.
+       
+
+offset  size    contents
++0      4B      Identifier 'KiSS' ( 4Bh 69h 53h 53h )
++4      B       Palette file mark ( 10h )
++5      B       bits per color ( 12 or 24 )
++6      W       Reserved
++8      W(L,H)  number of colors in one palette group ( 1 ... 256 )
++10     W(L,H)  number of palette groups ( 1 ... 10 )
++12     W       Reserved
++14     W       Reserved
++16     16B     Reserved
+
+   Caution: the reserved fields must be filled with 0.
+       
+       +32... _Palette data_
+       
+          + Palette data order (12 bits = 4096 colors)
+            
+            A color consists of 2 bytes. 4 bits each for red, green,
+            blue.
+            
+
+||  ||
+MSB         LSB  MSB         LSB
+
+| rrrr | bbbb |  | 0000 | gggg | ....
+
+          + Palette data order (24 bit = 16,777,216 colors) A color
+            consists of 3 bytes. 8 bits each for red, green, blue.
+            
+
+||  ||  ||
+MSB         LSB  MSB         LSB  MSB         LSB
+
+|  rrrrrrrr   |  |  gggggggg   |  |  bbbbbbbb   | ...
+
+        If the number of palette groups is less than 10, colors of the
+            remaining palette groups will be copied from Group 0.
+            
+   If the top 4-byte identifier is not 'KiSS', the file format is as
+       follows:
+       
+       +0... palette data
+       
+       12 bits/color, 16 colors in a palette group, 10 groups. This is
+       the conventional format.
+       
+    8. _ KISS/GS Ranks _
+       
+
+Rank            size      colors max cels
+--------------- ---------- ---- ----------
+  KISS/GS1      640 x 400   16     128          ; KISS v2.24c
+  KISS/GS2      640 x 400   256    256          ; KISS v2.37
+  KISS/GS3      768 x 480   256    256          ; draft
+  KISS/GS4      768 x 480   256    512          ; draft
+--------------- ---------- ---- ----------
+
+   These are just standards. When you implement a KISS program on your
+       system, you should support the maximum ability of the hardware.
+       When you create KISS data you are encouraged to consider these
+       ranks. The lower rank the data conforms to, the more users can
+       play with it. However, you don't have to conform it to
+       unnecessarily low ranks.
+       
+    9. _ Appendix _
+       
+       This document is in public domain. Send bug reports, questions,
+       comments and problems to _ UHD98984@pcvan.or.jp _ (yav). Thank
+       you.
+       
+       
+         _____________________________________________________________
+       
+     _ ITO Takayuki <yuki@is.s.u-tokyo.ac.jp >
+     Graduate student, Department of Information Science,
+     Faculty of Science, University of Tokyo, Japan.
+     _
+

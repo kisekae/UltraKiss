@@ -1,0 +1,90 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>removeAll</title>
+</head>
+
+<body>
+
+<h4><a name="removeAll" id="removeAll">removeAll</a>()&nbsp;</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; removeAll
+(component)</p>
+<p>This action removes all items from a list component or
+combobox component.. The
+component may be a literal name of a list or combobox cel or a variable whose
+value is a string name of a list or combobox. The action command name 'removeAll'
+is case sensitive.</p>
+<p>This command fails silently if the specified component does not maintain
+items.&nbsp;</p>
+<p>Components are declared as cels within a KiSS configuration as shown in
+the example below.&nbsp; Component cel identifiers use specific extensions such
+as .button, .list, or .textarea to identify the component type.&nbsp;&nbsp;</p>
+<font SIZE="2">
+<p><font face="Courier New">#1.9999 List-1.List&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :
+0&nbsp;&nbsp;&nbsp;&nbsp; ;%size[146,207] %offset[12,121] %attributes[wrap,vsb]<br>
+#1.9999 TextArea-1.TextArea&nbsp;&nbsp; : 0&nbsp;&nbsp;&nbsp;&nbsp; ;%size[269,49]
+%offset[227,176] %attributes[wrap]<br>
+#1.9999 Button1.Button&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : 0&nbsp;&nbsp;&nbsp;&nbsp; ;%size[135,25]
+%offset[325,267] %attributes[text=&quot;Press Me&quot;]</font></p>
+</font>
+<p>The example above defines a List component with vertical scroll bars, a
+TextArea component that performs word-wrap, and a Button.&nbsp; The size and
+location of these components within the object are specified with the %size[]
+and %offset[] tags.&nbsp; Component attributes are specified with the
+%attributes[] tag.&nbsp;&nbsp;</p>
+<p>FKiSS press() and release() events can be attached to component
+objects.&nbsp; These events fire when the user interacts with a component
+to either press a button, change the state of a checkbox, or select an item from
+a list or combo box.&nbsp;&nbsp;</p>
+<p><br>
+Related actions: <a href="additem.html">addItem()</a>, <a href="removeitem.html">removeItem()</a>,
+<a href="getItemCount.html">getItemCount()</a>, <a href="getSelectedItem.html#getSelectedItem">getSelectedItem()</a>,
+<a href="getSelectedItem.html#setSelectedItem">setSelectedItem()</a></p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+  <table border="1" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td width="20%">UltraKiss Extension</td>
+      <td width="30%">removeAll (&quot;list1.list&quot;),&nbsp; removeAll (List)&nbsp;</td>
+      <td>removes all the items from the named component</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<table width="80%"  border="1" align="center" cellpadding="5" cellspacing="5" bordercolor="#000000" bgcolor="#FFFF99">
+  <tr>
+    <td><div align="center">Note: The UltraKiss removeAll() command is viewer specific and not compatible with other viewers. </div></td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b> Example:&nbsp;<br>
+</b></font>
+</p>
+<p><font face="Courier New">#3.999   textfield1.textfield&nbsp;&nbsp;      : 0                      ;%size[318,26]&nbsp;&nbsp;&nbsp;&nbsp;
+%attributes[text=&quot;Item Description"]&nbsp;<br>
+#3.999   list1.list&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                : 0                      ;%size[175,177]&nbsp;&nbsp;&nbsp;
+%attributes[vsb]&nbsp;<br>
+</font>
+</p>
+<p>
+<font face="Courier New">;@press("button1.cel")                                      ;&nbsp;<br>
+;@ removeAll(&quot;list1.list&quot;)                                             ;&nbsp;<br>
+<br>
+;@press(&quot;button2.cel&quot;)                                      ;<br>
+;@ let(List,&quot;combobox1.combobox&quot;)<br>
+;@ removeAll(List)                                             ;&nbsp;<br>
+<br>
+</font>
+</p>
+<p><font face="Courier New"><br>
+</font></p>
+
+</body>
+
+</html>

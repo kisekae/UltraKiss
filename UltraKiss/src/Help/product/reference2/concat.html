@@ -1,0 +1,58 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>string</title>
+</head>
+
+<body>
+
+<h4><a name="concat" id="concat">concat</a>()</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; concat (variable,operand1,operand2,operand3,...)</p>
+<p>
+The concat() statement concatenates a list of operands and returns the string result in the specified variable. Operands may be string literals, character literals, numbers, or variables that contain strings, characters, or numbers. All operand vaules are converted to string representation. The concat() statement allows for an unlimited number of operands. </p>
+<p>
+Related actions: <a href="substr.html">substr()</a>, <a href="replacestr.html">replacestr</a>(), <a href="strlen.html">strlen</a>(), <a href="indexof.html">indexof</a>() </p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+    <table border="1" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td width="20%">FKiSS 5 &nbsp;</td>
+        <td width="30%">concat (S,&quot;The&quot;,&quot; quick brown &quot;,'\n',&quot;fox&quot;)&nbsp; </td>
+        <td>S becomes &quot;The quick brown \nfox&quot; </td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+    <table border="1" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td width="20%">VariableCase</td>
+        <td width="30%">variable names are case sensitive</td>
+        <td>default value &quot;<font color="#0000FF">false</font>&quot; (Compatibility option)</td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<div align="center"></div>
+<p><font color="#FF0000"><b>&nbsp;Example:&nbsp;<br>
+</b></font></p>
+<p>
+<font face="Courier New">
+;@concat(A,&quot;The number is &quot;,1)&nbsp;<br>
+</font>
+<font face="Courier New">;@concat(A,&quot;The value is &quot;,N)&nbsp;</font><br>
+<font face="Courier New">;@concat(S,&quot;Line 1&quot;,'\n',&quot;Line 2&quot;)<br>
+</font></p>
+<p><font face="Courier New"></font></p>
+</body>
+
+</html>

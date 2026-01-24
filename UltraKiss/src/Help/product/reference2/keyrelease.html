@@ -1,0 +1,148 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>keyrelease</title>
+</head>
+
+<body>
+
+<h4><a name="keyrelease">keyrelease</a>()&nbsp;</h4>
+<p><font color="#FF0000"><b>Syntax:</b></font>&nbsp;&nbsp;&nbsp;&nbsp;
+keyrelease (keyliteral)</p>
+<p>This event is triggered by releasing the key with the specified letter or
+number. There is no difference between uppercase and lowercase characters.
+Cursor keys are specified as &quot;left&quot;, &quot;right&quot;, &quot;up&quot;
+and &quot;down&quot;. The key literal should be enclosed within double quotation
+marks.</p>
+<p>FKiSS 4 introduced keyboard control, but it is limited and incomplete. FKiSS
+4 only allows keyrelease() events for the digits 0 through 9 and the alphabetic
+characters A through&nbsp; Z. Note that there is no means to determine
+case.&nbsp; A special exception was made to allow keyrelease() events for cursor
+control keys.</p>
+<p>FKiSS 5 extends the keyrelease() event by recognizing all keys pressed.
+Non-display characters such as Shift, Alt, Ctrl, Backspace, function keys and so
+on are specified with their mnemonic name. The table below provides the names
+for all keys on a standard IBM keyboard.&nbsp;</p>
+<p>Note that FKiSS 5 keyrelease() events remain case insensitive. This is
+because multi-key combinations such as Shift-A generate two keyrelease() events.
+One is for the Shift key and the other is for the letter A. For case sensitive
+entry of keyboard events, FKiSS 5 introduced the keytype() event, This event
+fires on mouse release and properly recognizes key modifiers such as Shift,
+Ctrl, and Alt. To obtain the actual case sensitive key pressed and modifier keys
+in use, FKiSS 5 introduced the letkeychar() and letkeymodifier() action
+commands. These commands set string variables to the appropriate values.</p>
+<p>Specifying keypress() or keyrelease() events for key combinations that are
+typically used by the viewer should override viewer standard action. This allows
+the keys to be processed by the KiSS application.</p>
+<p>More than one keyrelease() event can be specified for a specific key. If sequential event processing is enforced each event will fire in
+the sequence in which it was defined, otherwise they are queued for concurrent
+processing.&nbsp;
+</p>
+<p>Note that there is no defined order for event processing in KiSS. Single threaded viewers that do not support concurrent events will typically
+process the keyrelease() event after the keypress() and keytype() events.
+However, for multithreaded viewers that support concurrent event processing
+there is no guarantee that the keypress() event will complete before the
+keyrelease() event begins. No assumptions should be made for the sequence in
+which events are processed.</p>
+<p>&nbsp;</p>
+<p>Key Names</p>
+<p>; CONTROL KEYS<br>
+;@keypress("Shift")                                         ;&nbsp;<br>
+;@keypress(&quot;Ctrl&quot;)                                          ;&nbsp;<br>
+;@keypress(&quot;Alt&quot;)                                           ;&nbsp;<br>
+;;@keypress(&quot;Enter&quot;)                                         ;&nbsp;<br>
+;@keypress(&quot;Escape&quot;)                                        ;&nbsp;<br>
+;@keypress(&quot;Pause&quot;)                                         ;&nbsp;<br>
+;<br>
+; NUM LOCK and CAPS LOCK STATE<br>
+;@keypress("Caps Lock")                                     ;&nbsp;<br>
+;@keypress(&quot;Num Lock")                                      ;&nbsp;<br>
+<br>
+; EDIT KEYS<br>
+;@keypress("Space")                                         ;&nbsp;<br>
+;@keypress(&quot;Tab&quot;)                                           ;&nbsp;<br>
+;;@keypress(&quot;Backspace&quot;)                                     ;&nbsp;<br>
+;@keypress(&quot;Delete&quot;)                                        ;&nbsp;<br>
+;@keypress(&quot;Insert&quot;)                                        ;&nbsp;<br>
+;@keypress(&quot;Home&quot;)                                          ;&nbsp;<br>
+;@keypress(&quot;End&quot;)                                           ;&nbsp;<br>
+;@keypress(&quot;Page Up")                                       ;&nbsp;<br>
+;@keypress(&quot;Page Down")                                     ;&nbsp;<br>
+<br>
+; FUNCTION KEYS<br>
+;@keypress("F1")                                            ;&nbsp;<br>
+;@keypress(&quot;F2&quot;)                                            ;&nbsp;<br>
+;@keypress(&quot;F3&quot;)                                            ;&nbsp;<br>
+;@keypress(&quot;F4&quot;)                                            ;&nbsp;<br>
+;@keypress(&quot;F5&quot;)                                            ;&nbsp;<br>
+;@keypress(&quot;F6&quot;)                                            ;&nbsp;<br>
+;@keypress(&quot;F7&quot;)                                            ;&nbsp;<br>
+;@keypress(&quot;F8&quot;)                                            ;&nbsp;<br>
+;@keypress(&quot;F9&quot;)                                            ;&nbsp;<br>
+;@keypress(&quot;F10&quot;)                                           ;&nbsp;<br>
+;@keypress(&quot;F11&quot;)                                           ;&nbsp;<br>
+;@keypress(&quot;F12&quot;)                                           ;&nbsp;<br>
+</p>
+<p>Related events: <a href="keypress.html">keypress()</a>, <a href="keytype.html">keytype()</a> <br>
+Related actions: <a href="letkey.html">letkey()</a>, <a href="letkeymodifier.html">letkeymodifier(),</a> <a href="letkeymap.html">letkeymap()</a>, <a href="letkeychar.html">leykeychar()</a>, <a href="letkeycode.html">letkeycode()</a>, <a href="letkeystring.html">letkeystring()</a></p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+  <table border="1" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td width="20%">FKiSS 4 allows numeric and alphabetic keys</td>
+      <td width="30%">keyrelease (&quot;a&quot;), keyrelease (&quot;0&quot;)</td>
+      <td>Triggered when the key is released on the keyboard.</td>
+    </tr>
+    <tr>
+      <td width="20%">FKiSS 5 allows all keys.&nbsp;</td>
+      <td width="30%">keyrelease (&quot;Num Lock&quot;)&nbsp; or&nbsp; keyrelease
+        (&quot;Space&quot;)</td>
+      <td>Triggered when the key is released on the keyboard.</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+  <table border="1" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td width="20%">KeyCase</td>
+      <td width="30%">enable or disable key case recognition</td>
+      <td>default value &quot;<font color="#0000FF">true</font>&quot; (FKiSS option)</td>
+    </tr>
+    <tr>
+      <td width="20%">RetainKey&nbsp;</td>
+      <td width="30%">active key press is required for letkey() and letkeymap()
+        actions&nbsp;</td>
+      <td>default value &quot;<font color="#0000FF">true</font>&quot;
+        (Compatibility option)</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p>
+<font color="#FF0000"><b>FKiSS 4 Example:&nbsp;<br>
+</b></font>
+<br>
+<font face="Courier New">;@keyrelease(&quot;a&quot;) ;&nbsp;<br>
+;@ notify(&quot;A key released&quot;)                        ;&nbsp;<br>
+<br>
+</font><br>
+<font color="#FF0000"><b>FKiSS 5 Example:&nbsp;</b></font></p>
+<p><font face="Courier New">;@keyrelease(&quot;Shift&quot;)                                ;&nbsp;<br>
+;@ notify(&quot;Shift key released&quot;)                    ;&nbsp;<br>
+<br>
+</font></p>
+<p><br>
+</p>
+</body>
+
+</html>

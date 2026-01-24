@@ -1,0 +1,119 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>altmap</title>
+</head>
+
+<body>
+
+<h4><a name="altmap">altmap</a>()&nbsp;</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; altmap
+(target)</p>
+<p>This action inverts the mapping or visibility of the target. The <em>target</em> may be a literal name of an image
+file or a cel group name or an object group identifier.</p>
+<p>For object groups or cel groups, each image cel in the group is inverted
+separately.</p>
+<p>FKiSS adjustment of cel visibility through altmap()
+commands can trigger collision events if the viewer supports visibility
+collisions.&nbsp;For example, an image collide() event could fire when the cel
+becomes visible, or an apart() event could fire when the cel was hidden.</p>
+<p>Altmap() is a binary toggle generally useful for objects with one or two
+image cels. If the object contains only one cel, altmap() is a visibility switch
+for the object. If the object contains two image cels where one cel is unmapped
+and the other cel is mapped, altmap() becomes a toggle for alternately showing
+each image. For objects that contain more than two cels, altmap() capability is
+better managed by cel group frames for individual image frame mapping.&nbsp;</p>
+<p><br>
+Related actions: <a href="map.html">map()</a>, <a href="unmap.html">unmap()</a>,
+<a href="setframe.html">setframe()</a>, <a href="letframe.html">letframe(),</a> <a href="ghost.html">ghost()</a></p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+  <table border="1" cellpadding="5" cellspacing="0" width="100%">
+    <tr>
+      <td width="20%">FKiSS 1 allows cel literal names or objects.</td>
+      <td width="30%">altmap (&quot;cel1.cel&quot;) or altmap(#1)</td>
+      <td>Inverts the mapping of the specified cel, or all cels in the object
+        group.</td>
+    </tr>
+    <tr>
+      <td width="20%">FKiSS 3 allows variables for objects.&nbsp;&nbsp;</td>
+      <td width="30%">let(X,10) altmap (X)&nbsp;</td>
+      <td>Inverts the mapping of the all cels in the object group specified by
+        variable X.</td>
+    </tr>
+    <tr>
+      <td width="20%">FKiSS 4 allows cel group names.&nbsp;&nbsp;</td>
+      <td width="30%">altmap (!Table)&nbsp;</td>
+      <td>Inverts the mapping of all cels in the cel group.</td>
+    </tr>
+    <tr>
+      <td width="20%">FKiSS 5 allows variables for all names</td>
+      <td width="30%">let(Cel,&quot;a.cel&quot;) altmap (Cel)&nbsp;</td>
+      <td>Inverts the mapping of the specified cel, or all cels in the object
+        group or cel group.</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+  <table border="1" cellpadding="5" cellspacing="0" width="100%">
+    <tr>
+      <td width="20%">AllAmbiguous</td>
+      <td width="30%">apply altmap to all ambiguous cels</td>
+      <td>default value &quot;<font color="#0000FF">false</font>&quot;
+        (Compatibility option)</td>
+    </tr>
+    <tr>
+      <td width="20%">MapCollide</td>
+      <td width="30%">apply collision events on visibility changes</td>
+      <td>default value &quot;<font color="#0000FF">false</font>&quot;
+        (Compatibility option)</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>MouseOver Code Example (FKiSS4):&nbsp;<br>
+</b></font>
+</p>
+<p><font face="Courier New">#3.999    fk4b3a.cel       : 0                              ;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+normal image<br>
+#3.999    fk4b3b.cel       : 0                              ;%u&nbsp;&nbsp;&nbsp;
+highlight image<br>
+</font>
+<br>
+<font face="Courier New">;@mousein(#3) altmap(#3)&nbsp; ;&nbsp;<br>
+;@mouseout(#3) altmap(#3)                                               ;&nbsp;<br>
+<br>
+</font></p>
+<p><br>
+<font color="#FF0000"><b>ToggleButton Code Example (FKiSS1):&nbsp;<br>
+</b></font></p>
+<p><font face="Courier New">#13.999   fk4b5a.cel       : 0                              ;&nbsp;&nbsp;&nbsp;
+button released image&nbsp;&nbsp;&nbsp;<br>
+#13.999   fk4b5b.cel       : 0                              ;&nbsp;&nbsp;&nbsp;
+button pressed image</font></p>
+<p><font face="Courier New">;@initialize()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;<br>
+;@ unmap</font><font face="Courier New">(&quot;fk4b5b.cel&quot;) ;<br>
+<br>
+;@press("fk4b5a.cel")&nbsp; ; press toggle<br>
+;@ altmap(#13)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;&nbsp;<br>
+<br>
+;@press("fk4b5b.cel")&nbsp; ; release toggle<br>
+;@ altmap(#13)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;&nbsp;<br>
+</font></p>
+<p><font face="Courier New"><br>
+</font></p>
+
+</body>
+
+</html>

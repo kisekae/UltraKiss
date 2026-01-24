@@ -1,0 +1,146 @@
+<html>
+	<head>
+		<title>Animation Lesson 3</title>
+		<meta http-equiv="Content-Language" content="en-ca">
+		<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+		<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+		<meta name="ProgId" content="FrontPage.Editor.Document">
+	</head>
+	<body>
+		<h1 align="center">Animation Tutorial</h1>
+		<h1 align="center"><font color="#ff0000">Lesson 3. Adding Animation Control</font></h1>
+		<p>&nbsp;</p>
+		<ol>
+			<li>
+				When testing the airplane movement from lesson 2 you may have noticed that the
+				plane stopped moving once it ran up against the right side of the
+				playfield.&nbsp; We would like to fix this.&nbsp; The plane should start again
+				from the left side of the screen once it reaches the right side.&nbsp; Ensure
+				that UltraKiss is showing the main logo screen.&nbsp; Close any existing data
+				set.
+				<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">File-Open</FONT> to load the configuration file
+				CNF2.cnf from your directory.&nbsp; This will load the data set that you
+				created in exercise 2.
+				<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">Edit-Import Image to New Object</FONT>.&nbsp; Select
+				the <FONT color="#cc6600">block.gif</FONT> file from the Tutorial/Kisimi
+				directory.&nbsp; This is a one pixel wide vertical line that we will use as a
+				boundary at the right side of the screen.&nbsp; It's also transparent so you
+				can't see it, although you will be able to see the blue selection marquee
+				box.&nbsp; The image will be loaded and positioned near the upper left corner
+				of the playfield.&nbsp; Leave the image where it is, as it is invisible and
+				quite impossible to move.
+				<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">View-Active Configuration</FONT> to open the text
+				editor for the current configuration file.&nbsp; When the set loads we want to
+				move our invisible block to the right side of the screen.&nbsp; The block.gif
+				image should be object group #3.&nbsp; If it is not, use your object group
+				number as seen in your configuration file.&nbsp; Remember that our playfield is
+				640 pixels wide.&nbsp; Adjust the begin() event as follows:<br>
+				<br>
+				<font face="Courier New">;@begin()<br>
+					;@ timer(1,1000)<br>
+					;@ moveto(#3,639,0)<br>
+					<br>
+				</font><FONT color="#cc6600">Note:&nbsp; If you copy and paste these lines from the
+					help documentation into your configuration file you must ensure that the
+					semicolon and at-sign combination appears at the beginning of every line.</FONT>
+				<BR>
+				<BR>
+				The moveto() action command moves the block object (#3) to the position (639,0)
+				on the playfield.&nbsp; This is the upper right corner of the playfield. The
+				invisible vertical line will descend all the way down to the lower right
+				corner.
+				<p>&nbsp;</p>
+			<li>
+				Now we want to recognize when the airplane touches the block.&nbsp; If this
+				happens we will move the airplane back to the left side of the playfield.&nbsp;
+				We use an <FONT color="#cc6600">in()</FONT> event for this purpose.&nbsp; The
+				in() event fires whenever the bounding area for two objects overlap.&nbsp; The
+				following code assumes that the airplane object is #2 and the block object is
+				#3.&nbsp; Use the correct object group numbers as shown in your configuration
+				file for the airplane object and the block object.&nbsp;&nbsp; Add the
+				following to the end of the configuration file.<br>
+				<br>
+				<font face="Courier New">;@in(#2,#3)<br>
+					;@ movebyx(#2,#3,-640)<br>
+					<br>
+				</font><FONT color="#cc6600">Note:&nbsp; If you copy and paste these lines from the
+					help documentation into your configuration file you must ensure that the
+					semicolon and at-sign combination appears at the beginning of every line.</FONT>
+				<BR>
+                                <BR>        
+				The movebyx() action command moves the airplane object group (#2) to the
+				x-coordinate of the block object (#3), biased to the left by 640 pixels.
+				<p>&nbsp;</p>
+			<li>
+				Use the <FONT color="#000099">File-Exit</FONT> command in the text editor to
+				apply your changes.&nbsp; If you happen to have made a typing mistake you will
+				see an error when the changes are applied.&nbsp; If this occurs, re-edit the
+				configuration file to correct any mistakes.&nbsp; If there are no errors the
+				data set should reload and open to page 0.&nbsp; The airplane should start to
+				move across the screen.&nbsp; It should return to the left side when it touches
+				the invisible block at the right.
+				<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">View-Restart</FONT> to commit your changes and reload
+				the data set.
+				<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">File-Save As</FONT> to save your work.&nbsp; If you saving
+                                your work as elements inside a directory change the name to <FONT color="#cc6600">CNF3.cnf</FONT> .&nbsp; 
+                                The new configuration file with the event code will be saved in the same directory as
+				the original CNF2.cnf file.  If your files are maintained within an archive file,
+                                save the archive file to a new name.  
+				<p>&nbsp;</p>
+			<li>
+				Check your work.&nbsp; If you want you can pick up the airplane and move it
+				around as required.&nbsp; Try the <FONT color="#000099">View-Reset</FONT> command
+                                to restore the objects to their original positions.<br>
+                                <br>
+                                If you have difficulty picking up the airplane ensure that the compatibility option
+                                (Options-Options-Compatibility-Interface) to Enable FKiSS object moves on mouse controlled objects
+                                is off.  
+				<p>&nbsp;</p>
+			<li>
+				The <FONT color="#000099">View-Reset</FONT> shows up an unexpected quirk.&nbsp;
+				If a View-Reset is performed the invisible block is moved to the left side of
+				the screen where it was initially set after being imported.&nbsp; Now, the
+				airplane no longer moves back to the left when it reaches the right side of the
+				playfield.&nbsp;&nbsp;This is not good.
+				<p>&nbsp;</p>
+			<li>
+				We can fix this as follows.&nbsp; Use <FONT color="#000099">Options-Options</FONT>
+				to open the program options dialog.&nbsp; Select the FKiSS tab and clear the <FONT color="#cc6600">
+					Enable Timer</FONT> check box.&nbsp; Now do a <FONT color="#000099">View-Restart</FONT>
+				to reload the data set.&nbsp; The airplane no longer moves as timer actions are
+				disabled, however the initialize() and begin() events will have been
+				processed.&nbsp; So, the invisible block will now be sitting at the right side
+				of the screen.&nbsp;&nbsp;<br>
+				<br>
+				Use <FONT color="#000099">Edit-Write Page</FONT> to set the required initial
+				positions for all future resets. Now, use <FONT color="#000099">Options-Options</FONT>
+				and set the <FONT color="#cc6600">Enable Timer</FONT> check box on the FKiSS
+				tab, and do a <FONT color="#000099">View-Restart</FONT> to reload the data set.
+				<p>&nbsp;</p>
+			<li>
+				Now check the airplane behaviour after a <FONT color="#000099">View-Reset</FONT>.
+				<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">File-Save</FONT> to save your work.
+				<p>&nbsp;</p>
+			</li>
+		</ol>
+		<p align="left">&nbsp;</p>
+		<hr>
+		<p align="left">Next Document:&nbsp; <a href="lesson4.html">Animation Lesson 4<br>
+			</a>Prior Document:&nbsp; <a href="lesson2.html">Animation Lesson 2</a></p>
+		<p align="left">Copyright (c) 2002-2025 William Miles</p>
+
+		<p>&nbsp;</p>
+	</body>
+</html>

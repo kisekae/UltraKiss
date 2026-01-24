@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE map
+  PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Map Version 1.0//EN"
+         "http://java.sun.com/products/javahelp/map_1_0.dtd">
+
+<map version="1.0">
+	<mapID target="mediaplayer.index" url="product/mediaplayer/index.html" />
+	<mapID target="mediaplayer.menu" url="product/mediaplayer/menu.html" />
+
+	<mapID target="mediaplayer.menu.FileNew" url="product/mediaplayer/menu.html#FileNew" />
+	<mapID target="mediaplayer.menu.FileOpen" url="product/mediaplayer/menu.html#FileOpen" />
+	<mapID target="mediaplayer.menu.FileAdd" url="product/mediaplayer/menu.html#FileAdd" />
+	<mapID target="mediaplayer.menu.FileClose" url="product/mediaplayer/menu.html#FileClose" />
+	<mapID target="mediaplayer.menu.FileSave" url="product/mediaplayer/menu.html#FileSave" />
+	<mapID target="mediaplayer.menu.FileSaveAs" url="product/mediaplayer/menu.html#FileSaveAs" />
+	<mapID target="mediaplayer.menu.FileQueue" url="product/mediaplayer/menu.html#FileQueue" />
+	<mapID target="mediaplayer.menu.FileDelete" url="product/mediaplayer/menu.html#FileDelete" />
+	<mapID target="mediaplayer.menu.FileExit" url="product/mediaplayer/menu.html#FileExit" />
+	<mapID target="mediaplayer.menu.OptionsCenterFrame" url="product/mediaplayer/menu.html#OptionsCenterFrame" />
+	<mapID target="mediaplayer.menu.OptionsLoopPlayback" url="product/mediaplayer/menu.html#OptionsLoopPlayback" />
+	<mapID target="mediaplayer.menu.OptionsMinimizeAudio" url="product/mediaplayer/menu.html#OptionsMinimizeAudio" />
+	<mapID target="mediaplayer.menu.OptionsFullScreenVideo" url="product/mediaplayer/menu.html#OptionsFullScreenVideo" />
+	<mapID target="mediaplayer.menu.OptionsRetainAspectRatio" url="product/mediaplayer/menu.html#OptionsRetainAspectRatio" />
+	<mapID target="mediaplayer.menu.HelpContents" url="product/mediaplayer/menu.html#HelpContents" />
+	<mapID target="mediaplayer.menu.HelpAbout" url="product/mediaplayer/menu.html#HelpAbout" />
+</map>

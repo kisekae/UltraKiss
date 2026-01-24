@@ -1,0 +1,56 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE map
+  PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Map Version 1.0//EN"
+         "http://java.sun.com/products/javahelp/map_1_0.dtd">
+
+<map version="1.0">
+	<mapID target="archivemanager.index" url="product/archivemanager/index.html" />
+	<mapID target="archivemanager.menu" url="product/archivemanager/menu.html" />
+	<mapID target="archivemanager.toolbar" url="product/archivemanager/toolbar.html" />
+	<mapID target="archivemanager.extract" url="product/archivemanager/extract.html" />
+	<mapID target="archivemanager.add" url="product/archivemanager/add.html" />
+
+	<mapID target="archivemanager.menu.FileNew" url="product/archivemanager/menu.html#FileNew" />
+	<mapID target="archivemanager.menu.FileOpen" url="product/archivemanager/menu.html#FileOpen" />
+	<mapID target="archivemanager.menu.FileClose" url="product/archivemanager/menu.html#FileClose" />
+	<mapID target="archivemanager.menu.FileCopy" url="product/archivemanager/menu.html#FileCopy" />
+	<mapID target="archivemanager.menu.FileRename" url="product/archivemanager/menu.html#FileRename" />
+	<mapID target="archivemanager.menu.FileDelete" url="product/archivemanager/menu.html#FileDelete" />
+	<mapID target="archivemanager.menu.FileExit" url="product/archivemanager/menu.html#FileExit" />
+	<mapID target="archivemanager.menu.EditAdd" url="product/archivemanager/menu.html#EditAdd" />
+	<mapID target="archivemanager.menu.EditExtract" url="product/archivemanager/menu.html#EditExtract" />
+	<mapID target="archivemanager.menu.EditDelete" url="product/archivemanager/menu.html#EditDelete" />
+	<mapID target="archivemanager.menu.EditView" url="product/archivemanager/menu.html#EditView" />
+	<mapID target="archivemanager.menu.EditFind" url="product/archivemanager/menu.html#EditFind" />
+	<mapID target="archivemanager.menu.EditSelectAll" url="product/archivemanager/menu.html#EditSelectAll" />
+	<mapID target="archivemanager.menu.EditUnselectAll" url="product/archivemanager/menu.html#EditUnselectAll" />
+	<mapID target="archivemanager.menu.OptionsSort" url="product/archivemanager/menu.html#OptionsSort" />
+	<mapID target="archivemanager.menu.OptionsViewAsText" url="product/archivemanager/menu.html#OptionsViewAsText" />
+	<mapID target="archivemanager.menu.HelpContents" url="product/archivemanager/menu.html#HelpContents" />
+	<mapID target="archivemanager.menu.HelpAbout" url="product/archivemanager/menu.html#HelpAbout" />
+
+	<mapID target="archivemanager.add.FileSelection" url="product/archivemanager/add.html#FileSelection" />
+	<mapID target="archivemanager.add.FileName" url="product/archivemanager/add.html#FileName" />
+	<mapID target="archivemanager.add.FilesOfType" url="product/archivemanager/add.html#FilesOfType" />
+	<mapID target="archivemanager.add.AddReplace" url="product/archivemanager/add.html#AddReplace" />
+	<mapID target="archivemanager.add.AddRefresh" url="product/archivemanager/add.html#AddRefresh" />
+	<mapID target="archivemanager.add.NormalCompression" url="product/archivemanager/add.html#NormalCompression" />
+	<mapID target="archivemanager.add.NoCompression" url="product/archivemanager/add.html#NoCompression" />
+	<mapID target="archivemanager.add.RecurseFolders" url="product/archivemanager/add.html#RecurseFolders" />
+	<mapID target="archivemanager.add.SaveAbsolutePath" url="product/archivemanager/add.html#SaveAbsolutePath" />
+	<mapID target="archivemanager.add.SaveRelativePath" url="product/archivemanager/add.html#SaveRelativePath" />
+	<mapID target="archivemanager.add.AddButton" url="product/archivemanager/add.html#AddButton" />
+	<mapID target="archivemanager.add.CancelButton" url="product/archivemanager/add.html#CancelButton" />
+	<mapID target="archivemanager.add.HelpButton" url="product/archivemanager/add.html#HelpButton" />
+
+	<mapID target="archivemanager.extract.DirectorySelection" url="product/archivemanager/extract.html#DirectorySelection" />
+	<mapID target="archivemanager.extract.SelectedFiles" url="product/archivemanager/extract.html#SelectedFiles" />
+	<mapID target="archivemanager.extract.AllFiles" url="product/archivemanager/extract.html#AllFiles" />
+	<mapID target="archivemanager.extract.OverwiteExistingFiles" url="product/archivemanager/extract.html#OverwiteExistingFiles" />
+	<mapID target="archivemanager.extract.SkipOlderFiles" url="product/archivemanager/extract.html#SkipOlderFiles" />
+	<mapID target="archivemanager.extract.UsePathNames" url="product/archivemanager/extract.html#UsePathNames" />
+	<mapID target="archivemanager.extract.ExtractButton" url="product/archivemanager/extract.html#ExtractButton" />
+	<mapID target="archivemanager.extract.CancelButton" url="product/archivemanager/extract.html#CancelButton" />
+	<mapID target="archivemanager.extract.HelpButton" url="product/archivemanager/extract.html#HelpButton" />
+	<mapID target="archivemanager.extract.NewFolder" url="product/archivemanager/extract.html#NewFolder" />
+</map>

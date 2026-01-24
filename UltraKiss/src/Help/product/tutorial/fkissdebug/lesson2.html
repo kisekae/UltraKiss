@@ -1,0 +1,220 @@
+<html>
+	<head>
+		<title>Image Tutorial Lesson 1</title></head>
+	<body>
+		<h1 align="center"><font color="#000000">Debugging FKiSS Tutorial</font></h1>
+		<h1 align="center"><font color="#ff0000"> Lesson 2.&nbsp;The FKiSS Editor</font></h1>
+		<p>&nbsp;</p>
+		<ol>
+			<li>
+				We are now going to edit the behavior of the simple calculator buttons we created in
+				lesson 1.&nbsp; If you are continuing from lesson 1 you can skip to step
+				3.&nbsp; Otherwise, ensure that UltraKiss is showing the main logo
+				screen.&nbsp; Close any existing data set.
+				<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">File-Open</FONT>&nbsp; to load the configuration file <FONT color="#cc6600">
+					CNF1.cnf</FONT> from the Tutorial/FKiSS directory or the directory you used
+				in lesson 1.&nbsp; This will load the button set that you created in lesson 1.
+				<p>&nbsp;</p>
+			<li>
+                Right-click on one of the calculator buttons. Select <font color="#000099">Image
+                Context</font> from the pop-up menu and select the <font color="#000099">Event
+                Wizard</font>. When the wizard dialog shows, choose a <font color="#CC6600"> press</font>
+                event from the Event Type drop down combo box. You will see
+                simple skeleton event code for a press event on the button cel generated for you.<br>
+                <br>When digit buttons are pressed we need to update our
+                calculator display. We need to know which numeral was pressed,
+                but every button will behave in the same way.&nbsp; We will use
+                a label module to centralize our display update logic.<br>
+                <br>Replace the <font face="Courier New">;@notify(...)</font>
+                statement in the generated skeleton code with the following
+                line, using the correct digit value for the button that you are working
+                with:<br>
+                <br><font face="Courier New">;@ let(Digit,9) goto(DigitPressed)</font><br>
+                <br>Repeat this step for all other digit buttons. Make sure that
+                you use the correct numeral for the button that you are working
+                with:<br>
+				<p>&nbsp;</p>
+			<li>
+                We will now code the DigitPressed label module. Use <font color="#000099">Tools-FKiSS
+                Editor</font> to launch the FKiSS Editor tool. Choose <font color="#000099">File-New
+                Event</font> to open a text editor window for the new event
+                code. In the text editor, add the following code:<br>
+                <br><font face="Courier New">;@label(DigitPressed)<br>
+                ;@ mul(N,N,10) add(N,N,Digit) setText(&quot;textbox1.textbox&quot;,N)<br>
+                <br>
+                </font><FONT color="#cc6600">Note:&nbsp; If you copy and paste these lines from the help
+					documentation into the text editor you must ensure that the semicolon
+					and at-sign combination appears at the beginning of every line.&nbsp; You can
+					copy the help text by selecting the text and pressing Ctrl-C to copy the text
+					to the clipboard. Use Ctrl-V to paste the text into the configuration file.</FONT><BR>
+                <br>The variable N represents our calculator number and the textbox is our display
+                window. Each time we press a digit button the digit is appended
+                to our calculator button.<br>
+                <br>
+                The setText(...) action command is a simple way to set the
+                display field to the numeric value of the variable. Note that this
+                is an UltraKiss specific command and the name
+                &quot;textbox1.textbox&quot; must refer to the name of the
+                textbox component added in the previous lesson.&nbsp; UltraKiss components
+                simplifies the development of user interface code. With standard KiSS
+                we would have to
+                build many digit images to maintain a
+                multi-digit display and this is far too complex for this
+                tutorial.<br>
+                <br>Exit the text editor and apply the changes to create the
+                DigitPressed label event.<br>
+				<p>&nbsp;</p>
+			<li>
+                You should now see the new label event in the FKiSS Editor
+                event list. We will now test our code. Press the <img border="0" src="../../fkisseditor/images/toolbar_03.gif" align="center" width="25" height="25">&nbsp;
+                pause breakpoint button on the FKiSS Editor toolbar or use <font color="#000099">Run-Program
+                Pause</font>. This will
+                temporarily hide the FKiSS Editor. It will return to show you
+                the FKiSS code execution on the next event execution.<br>
+                <br>The main UltraKiss window should now be visible. The FKiSS
+                run indicator at the right end of the toolbar should now be
+                yellow to show that a pause breakpoint is in effect. This
+                indicator is green when FKiSS code is running normally,
+                and red when stopped.<br>
+                <br>On your main UltraKiss screen, press one of the calculator
+                buttons. Observe that the FKiSS Editor immediately opens to the
+                button event with
+                the first action statement highlighted. The FKiSS Editor window title should begin with the word
+                'Breakpoint'. This shows you that the editor is in breakpoint
+                mode and is stepping through FKiSS code statements. The action statement <font face="Courier New">;@&nbsp;let(Digit,...)</font> should be highlighted.<br>
+				<p>&nbsp;</p>
+			<li>
+                In the FKiSS Editor, use <font color="#000099">Run-Execute
+                Statement</font> or press F3 or click on the <img border="0" src="../../fkisseditor/images/toolbar_05.gif" align="center" width="25" height="25">&nbsp;
+                toolbar icon. This will execute the highlighted FKiSS action
+                statement. Observe that the current value for the Digit variable
+                shows up in the variable list in the left pane of the window.
+                This variable list shows you current values for all your code
+                variables.<br>
+                <br>Continue to step through the code one statement at a time.
+                Use <font color="#000099">Run-Execute Statement</font> or F3
+                or press the <img border="0" src="../../fkisseditor/images/toolbar_05.gif" align="center" width="25" height="25">&nbsp;
+                toolbar icon.. Observe how the DigitPressed label routine is
+                automatically entered through the goto() action. Also observe
+                how the variable N is automatically created on first reference
+                with an assumed initial value of 0.<br>
+                <br>
+                When you reach the last statement of the label event which is
+                the setText() action command, you should see a popup dialog
+                indicating that the breakpoint event has ended. The FKiSS Editor
+                preview image pane should also have been updated with the new
+                digit showing in the calculator textbox.&nbsp;<br>
+				<p>&nbsp;</p>
+			<li>
+                When the event has finished, press the <img border="0" src="../../fkisseditor/images/toolbar_04.gif" align="center" width="25" height="25">&nbsp;
+                toolbar button or use <font color="#000099">Run-Program Resume</font>
+                to return to normal processing. This will hide the FKiSS Editor
+                tool. With normal processing breakpoints are no longer pending.
+                You can play with your set without invoking the FKiSS Editor.<br>
+                <br>
+                With the main UltraKiss window visible the FKiSS run indicator
+                at the right end of the toolbar should be green. Test all your
+                buttons and verify that the calculator display textbox
+                accurately maintains the number as you enter different digits.<br>
+                <br>
+                You will eventually exceed the display limits as you keep
+                appending digits to your number. You may also see incorrect
+                values show up when the number is large. If this happens numeric overflow has occurred. To continue
+                testing after overflow, use <font color="#000099">View-Restart</font>
+                to reset the calculator. In lesson 3 we will add buttons to
+                reset the calculator properly.<br>
+                <br>
+                If you do observe a fault, press the <img border="0" src="../../fkisseditor/images/toolbar_03.gif" align="center" width="25" height="25">&nbsp;
+                pause breakpoint button on the UltraKiss toolbar to activate the FKiSS Editor
+                on the next event. Now, repeat the
+                test that exhibited the fault and trace your FKiSS code
+                execution to locate the problem.<br>
+                <br>
+                You will most likely find that you have a typing error or
+                incorrect digit value specified for the button that you are
+                pressing. If this is the case you will have to correct your
+                FKiSS code. The following steps explain how to do this and are
+                instructive to follow even if no errors exits.
+				<p>&nbsp;</p>
+			<li>
+                The
+                FKiSS Editor can be used to change the values of variables as you
+                step through your code. You can also edit your event logic to permanently
+                correct any mistakes.<br>
+                <br>
+                Ensure that you are in normal processing mode and not
+                currently debugging code in the FKiSS Editor. If you are
+                currently breakpointed, press the <img border="0" src="../../fkisseditor/images/toolbar_04.gif" align="center" width="25" height="25">&nbsp;
+                toolbar button in the FKISS Editor or use <font color="#000099">Run-Program Resume</font>
+                to return to normal processing. Then, within the main UltraKiss window, set a pause breakpoint on the next event by&nbsp; pressing the <img border="0" src="../../fkisseditor/images/toolbar_03.gif" align="center" width="25" height="25">&nbsp;
+                pause breakpoint button on the UltraKiss toolbar.<br>
+                <br>
+                Next, press one of your calculator buttons. This should
+                automatically invoke the FKiSS Editor in breakpoint mode for a
+                button press() event. The action statement <font face="Courier New">;@&nbsp;let(Digit,...)</font> should be highlighted.
+				<p>&nbsp;</p>
+			<li>
+                As we did in Step 6, in the FKiSS Editor use <font color="#000099">Run-Execute
+                Statement</font> or press F3 or click on the <img border="0" src="../../fkisseditor/images/toolbar_05.gif" align="center" width="25" height="25">&nbsp;
+                toolbar icon. This will execute the highlighted FKiSS action
+                statement. Observe that the current value for the Digit variable
+                shows up in the variable list in the left pane of the window.<br>
+                <br>
+                We can change this variable value. Double-click the value field
+                in the variable list table to select it. Then, type a new value for
+                the variable, replacing its current value.<br>
+                <br>
+                Continue stepping through the code or press the <img border="0" src="../../fkisseditor/images/toolbar_07.gif" align="center" width="25" height="25">&nbsp;
+                toolbar button to execute all code to the end of the event.
+                Observe how the new variable value is used in all subsequent
+                action commands. You can temporarily change any variable value in this way
+                as you test your code. This is sometimes useful to confirm
+                subsequent code correctness once you have located a problem and
+                know how to fix it.
+				<p>&nbsp;</p>
+			<li>
+                When you want to edit your FKiSS code select an action
+                statement or event statement in the FKiSS Editor event list and
+                use <font color="#000099">File-Edit Event</font> to open a Text
+                Editor tool for the selected event. Your event code will be
+                displayed in the editor. Make your editing changes and exit the
+                Text Editor to apply your changes.<br>
+                <br>
+                If you want to create new events, use <font color="#000099">File-New
+                Event</font> as we did in Step 4. You can also create new events while editing any
+                existing event, simply by writing new
+                event declarations and code after the event being edited. When
+                you exit the Text Editor the edited event code and all new
+                events will be added to the KiSS set.<br>
+                <br>
+                Edited event code is always checked for valid syntax. If you
+                make a typing mistake or some other problem exists with your
+                code the syntax errors will be displayed and you will have an
+                opportunity to re-edit the adjusted event code to correct your
+                mistakes.<br>
+                <br>
+                If you choose to cancel the edit, no changes are made to the
+                FKiSS code.
+				<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">File-Save As</FONT> to save your work.&nbsp; Save the
+				new KiSS set to the Tutorial/FKiSS directory or a directory of your
+				choice.&nbsp; The configuration element name should be changed
+                to <FONT color="#cc6600">CNF2.cnf</FONT>
+				if you began this tutorial after first starting UltraKiss.&nbsp; You can
+				overwrite any existing element of the same name.
+				<p>&nbsp;</p>
+			</li>
+		</ol>
+		<p align="left">&nbsp;</p>
+		<hr>
+        <p align="left">Next Document:&nbsp; <a href="lesson3.html">Event Tutorial Lesson
+        3<br>
+        </a>Prior Document:&nbsp; <a href="lesson1.html">Event Tutorial Lesson
+        1</a></p>
+		<p align="left">Copyright (c) 2002-2023 William Miles</p>
+
+	</body>
+</html>

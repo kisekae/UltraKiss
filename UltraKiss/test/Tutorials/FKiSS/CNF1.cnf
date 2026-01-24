@@ -1,0 +1,24 @@
+; Kisekae UltraKiss configuration file created on Wed Jul 20 08:19:29 MDT 2005
+ 
+;[Screen Section]
+[0
+(800,600)
+ 
+;[Cel Section]
+#2   button2.cel      : 0                                   ;
+#1   button1.cel      : 0                                   ;
+ 
+;[Page Set Section]
+; Kisekae UltraKiss Page 0
+$0 * 197,182 197,258
+ 
+;[FKiSS Section]
+;@EventHandler
+;@press(#1)                                                 
+
+;@ notify("press Group 1 button1.cel")                      
+
+;@catch("button2.cel")                                      
+
+;@ notify("catch KissCel 2 button2.cel")                    
+

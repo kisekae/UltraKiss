@@ -1,0 +1,96 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>string</title>
+</head>
+
+<body>
+
+<h4><a name="letframe" id="letframe">letframe</a>()</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp;
+letframe (variable,target)</p>
+<p>
+The letframe() statement sets the variable to the  frame number that is currently visible in the target, or to -1 if no frame has been set for the target. In KiSS, a frame is a collection of cels in a cel group, or  one cel in an object group, or a separate frame within an image cel such as a GIF image. When a frame is set for the group all images within the frame are made visible, or mapped, and all other images within the group are unmapped. </p>
+<p>The <em>target</em> can be a cel group or an object group or a cel name specifier. </p>
+<p>FKiSS 4 only considered the notion of frames within cel groups. FKiSS 5 extends the frame concept to object groups and animated image cels.</p>
+<p>Note that it is possible for frames to be set for a group   where no such frame has been defined. In this case all images in the group are unmapped and the group as a whole is unmapped. The value returned by letframe() for a completely unmapped group is -1. </p>
+<p>&nbsp;</p>
+<h4><font color="#FF0000">Cel Group frames</font> </h4>
+<p>For cel groups, individual cels can be identified as being in a sub-collection of cels, or frame. This sub-collection can be made visible or mapped with a setframe() command. When a frame is mapped all other frames in the group are unmapped.</p>
+<p>For cel groups, f rames are specified using the ! tag on the cel definition line in the KiSS configuration file. </p>
+<p>Tag Syntax:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font face="Courier New">; !&lt;name&gt; [: n1 n2 n3]</font><br>
+  <br>
+The celgroup tag is the cel group name starting with an exclamation mark, and optionally a frame definition which is a colon followed by frame numbers. As the example below shows, one cel instance can be assigned to many different cel groups. The example shows that  cels 'three.cel' and 'four.cel' both participate in the !Number and !Card groups, but individually in the !Three and !Four groups. Also note that within the !Card group, both image cels participate within frame number 1, but only the 'three.cel' image participates in frame number 2.</p>
+<p>Example:</p>
+<p><font face="Courier New">#10.100 three.cel : 0 ; !Number :3&nbsp;<br>
+  ;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; !Card :1&nbsp;2<br>
+  ;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; !Three<br>
+  #10.100 four.cel&nbsp; : 0 ; !Number :4&nbsp;<br>
+  ;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; !Card :1&nbsp;<br>
+  ;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; !Four<br>
+</font></p>
+<h4><font color="#FF0000">Object Group frames</font> </h4>
+<p>For object groups, each cel within the group is automatically identified by its sequence within the KiSS configuration file. Object group frame numbers begin from zero. Object group frames simplify the selection and visibility mapping of an individual cel within an object. </p>
+<p><font face="Courier New">#10.100 one.cel&nbsp;&nbsp; : 0 ; this is implicit frame 0 <br>
+#10.100 two.cel &nbsp;&nbsp;: 0 ; this is implicit frame 1 <br>
+#10.100 three.cel : 0 ; this is implicit frame 2 <br>
+#10.100 four.cel &nbsp;: 0 ; this is implicit frame 3 </font></p>
+<p>&nbsp;</p>
+<h4><font color="#FF0000">Image Cel frames</font> </h4>
+<p>For image cels that support multiple internal frames, the letframe() and setframe() commands can be used to selectively identify and display a specific frame in an animated image. UltraKiss currently provides frame support for  GIF image cels.</p>
+<p>&nbsp;</p>
+<p>Related events: <a href="ifmapped.html">ifmapped()</a>, <a href="ifnotmapped.html">ifnotmapped()</a> </p>
+<p> Related actions: <a href="setframe.html">setframe()</a>, <a href="map.html">map()</a>, <a href="unmap.html">unmap()</a>, <a href="letmapped.html">letmapped()</a> </p>
+<p>&nbsp; </p>
+<p>&nbsp;  </p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+    <table border="1" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td width="20%">FKiSS 5 &nbsp;</td>
+        <td width="30%">letframe(N,&quot;counter.gif&quot;)&nbsp; </td>
+        <td>Variable N is set to the current visible frame in &quot;counter.gif&quot; </td>
+      </tr>
+      <tr>
+        <td>FKiSS 5 </td>
+        <td>letframe(N,#1)&nbsp; </td>
+        <td>Variable N is set to the current visible frame in object #1 </td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+    <table border="1" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td width="20%">VariableCase</td>
+        <td width="30%">variable names are case sensitive</td>
+        <td>default value &quot;<font color="#0000FF">false</font>&quot; (Compatibility option)</td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<div align="center"></div>
+<p><font color="#FF0000"><b>&nbsp;Example:&nbsp;</b></font></p>
+<p>
+<font face="Courier New">;@letfix(N,&quot;shirt.cel&quot;)&nbsp;;&nbsp;N contains the fix value for the specified cel<br> 
+;@letfix(N,#3)&nbsp;;&nbsp;N contains the largest fix value for all cels in the object #3<br>
+<br>
+<br>
+</font></p>
+<p>&nbsp; </p>
+</body>
+
+</html>

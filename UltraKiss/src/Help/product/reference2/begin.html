@@ -1,0 +1,141 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>begin</title>
+</head>
+
+<body>
+
+<h4><a name="begin">begin</a>()</h4>
+<p><b><font color="#FF0000">Syntax:</font></b> begin()<br>
+<br>
+This event is triggered by opening the set, after initialize() and version(). This event fires after the cels on the first page have been mapped.
+</p>
+<p>The begin() event is often used to initiate alarms and activate sounds
+when the set first becomes visible. The begin() event is an immediate event and will complete execution
+before any other event starts.&nbsp;More than one begin() event can be specified. If sequential event processing is enforced each event should fire in
+the sequence in which it was defined.&nbsp;Cels that are mapped and moved within the begin() event can fire collision
+events.&nbsp;
+</p>
+<p>The begin() event will be processed before any set() events or col() events are fired for
+the starting page. Note that there is
+no defined order for event processing in KiSS, so any logic coded that assumes
+one event has completed before another starts becomes viewer dependent. However,
+it is usually safe to assume that initialize(), version(), and begin() events
+are processed sequentially and completely during set initialization.
+</p>
+<p>
+<br>
+Related events: <a href="initialize.html">initialize()</a>, <a href="end.html">end()</a>,
+<a href="version.html">version()</a></p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+  <table border="1" cellpadding="5" cellspacing="0" width="100%">
+    <tr>
+      <td width="20%">ImmediateEvent&nbsp;</td>
+      <td width="30%">enforces sequential event processing&nbsp;&nbsp;</td>
+      <td>default value &quot;<font color="#0000FF">false</font>&quot;
+        (Compatibility option)</td>
+    </tr>
+    <tr>
+      <td width="20%">TimerPeriod</td>
+      <td width="30%">the polling period in milliseconds for firing alarms</td>
+      <td>default value &quot;<font color="#0000FF">10</font>&quot; (FKiSS
+        option)</td>
+    </tr>
+    <tr>
+      <td width="20%">EventQueues&nbsp;</td>
+      <td width="30%">the number of concurrent events that can run&nbsp;</td>
+      <td>default value &quot;<font color="#0000FF">1</font>&quot; (FKiSS
+        option)</td>
+    </tr>
+    <tr>
+      <td width="20%">TimerOption</td>
+      <td width="30%">enables timer processing</td>
+      <td>default value &quot;<font color="#0000FF">true</font>&quot; (FKiSS
+        option)</td>
+    </tr>
+    <tr>
+      <td width="20%">EventOption&nbsp;</td>
+      <td width="30%">enables alarm processing&nbsp;&nbsp;</td>
+      <td>default value &quot;<font color="#0000FF">true</font>&quot; (FKiSS
+        option)</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;
+
+</p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">FKiSS 1 Example:</font></b></p>
+<p><font face="Courier New">#9   button1.cel&nbsp; :0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; An overlay picture
+</font></p>
+<p><font face="Courier New">;@begin()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+;@ sound("smc181-2.wav")&nbsp;&nbsp; ;&nbsp;<br>
+;@
+timer(1,500)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;&nbsp;<br>
+;@ timer(2,4000)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;&nbsp;<br>
+<br>
+;@alarm(1)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; Fade the overlay<br>
+;@ transparent(#9,3)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;&nbsp;<br>
+;@ timer(1,40)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+<br>
+;@alarm(2)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; Erase the overlay<br>
+;@ unmap(#9)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+;@ timer(1,0)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+</font></p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">FKiSS 2 Example:</font></b></p>
+<p><font face="Courier New">#12 label4.cel :0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; apart messages<br>
+#12   label3.cel       :0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;<br>
+#4    rboot.cel&nbsp;&nbsp; :0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;<br>
+#4    lboot.cel&nbsp;&nbsp; :0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;<br>
+#1    smoon.cel&nbsp;&nbsp; :0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;<br>
+</font></p>
+<p><font face="Courier New"> ;@initialize()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;&nbsp;<br>
+  ;@ unmap("label4.cel")&nbsp;&nbsp;&nbsp;&nbsp; ;&nbsp;<br>
+  <br>
+  ;@begin()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;&nbsp;<br>
+  ;@ sound("smc181-2.wav")&nbsp;&nbsp; ; Begin sound<br>
+  ;@ timer(1,1)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;&nbsp;<br>
+  ;@ timer(2,3500)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;&nbsp;<br>
+  ;@ movebyx(#4,#1,140)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;&nbsp;<br>
+  <br>
+  ;@alarm(1)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; Fade the overlay<br>
+  ;@ transparent(#9,3)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;&nbsp;<br>
+  ;@ timer(1,40)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;&nbsp;<br>
+  <br>
+  ;@alarm(2)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; Stop the fade<br>
+  ;@ unmap(#9)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;&nbsp;<br>
+  ;@ timer(1,0)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;&nbsp;<br>
+  <br>
+  ;@apart("lboot.cel","smoon.cel")                            ; movebyx apart<br>
+  ;@ unmap("label3.cel")&nbsp;&nbsp;&nbsp;&nbsp; ;&nbsp;<br>
+  ;@ map("label4.cel")&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;&nbsp;<br>
+  <br>
+</font></p>
+<p>&nbsp;</p>
+<p><br>
+<br>
+</p>
+
+</body>
+
+</html>

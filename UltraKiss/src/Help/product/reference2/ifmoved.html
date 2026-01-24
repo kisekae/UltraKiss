@@ -1,0 +1,113 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>ifmoved</title>
+</head>
+
+<body>
+
+<h4><a name="ifmoved">ifmoved</a>()</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; ifmoved (target,alarmname,duration)</p>
+<p>The ifmoved() statement tests a target object or image cel to determine if it
+is positioned at its original page location from when the set was first initialized.
+If the target has moved a timer is set for the specified alarm, to fire after
+the specified time duration. Note that movement is context dependent on the current visible page, thus an ifmoved() command will schedule the alarm on any page where the object or image cel has moved and not schedule the alarm on any page where the object or image cel has not moved. </p>
+<p>If cels are moved the offset of the cel within the object group is changed. This can imply that the object has moved as the object location may change. This will occur if the cel is moved above or to the left of the current object location.</p>
+<p>The <em>target</em> can be a literal object number or a cel name, or a variable that maintains a valid representation of an object or cel name. The ifmoved() command does not apply to cel groups. </p>
+<p>The <em>alarmname</em> is an identifier for an alarm or a string variable that contains the name of an alarm. If the object has a non-zero fix value a timer is set for the specified alarm, to fire after the specified time duration. </p>
+<p>The <em>duration</em> is an integer number or a variable with an integer value that specifies the duration time in milliseconds. </p>
+<p>An object initial position is specified in the page set specification in the configuration file. This command is context sensitive and applies to initial object tpositions on the current page. </p>
+<p>Movement of objects can occur through mouse movement or FKiSS movement.&nbsp;
+Note that if an abject is moved then all contained cels in the object have also
+moved.</p>
+<p>Note also that it is possible to restore an object to its initial location
+using an FKiSS move command. The object's original x and y coordinates can be
+retrieved through the letinitx() and letinity() commands. If the object position
+is restored then the ifmoved() command considers that the object has not moved.</p>
+<p>This command fails silently if the target or alarm does not exist.</p>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>FKiSS 5 Syntax:</b></font>&nbsp;&nbsp;&nbsp;&nbsp; ifmoved(target,alarmname,duration[, argument1, argument2, ...])</p>
+<p>UltraKiss FKiSS5 introduces the ability to pass parameters to the alarm code module, similar to parameters on label modules. The optional parameter list specifies a set of variables or literal constants that can be referenced as local variables within the alarm code module. With FKiSS 5 the alarm name can also be specified through a variable that has a string value, providing that the variable name is not the same as an existing alarm name. </p>
+<p>The optional argument list specifies a set of variable names that must be referenced as local variables within the alarm module. </p>
+<p>Local variable names are prefixed with an '<font face="Courier New, Courier, mono">@</font>' sign. Thus, the variable '<font face="Courier New, Courier, mono">@N</font>' is a local variable declared and referenced within the module and is distinct from any global variable '<font face="Courier New, Courier, mono">N</font>'. Calling any module recursively creates new instances of all local variables distinct from any other local variable of the same name.</p>
+<p>&nbsp;</p>
+<p>Related actions: <a href="#ifnotmoved">ifnotmoved()</a>, <a href="ifmapped.html">ifmapped()</a>,
+<a href="iffixed.html">iffixed()</a>, <a href="#ifmoved">move()</a>
+</p>
+<p>&nbsp;</p>
+<p>&nbsp; </p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+    <table border="1" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td width="20%">FKiSS 2</td>
+        <td width="30%">ifmoved(#5,12,1000)</td>
+        <td>object comparisons, integer alarm identifiers</td>
+      </tr>
+      <tr>
+        <td>FKiSS 5</td>
+        <td>ifmoved(Target,NextAlarm,Time) or ifmoved(&quot;face.cel&quot;,12,T,Param1,Param2)</td>
+        <td>variables for objects and cels, with alarm parameters </td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+    <table border="1" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td width="20%">VariableCase</td>
+        <td width="30%">variable names are case sensitive</td>
+        <td>default value &quot;<font color="#0000FF">false</font>&quot; (Compatibility option)</td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>Example Code (FKiSS5):&nbsp; </b></font></p>
+<p><font face="Courier New, Courier, mono">;@press(#7) ; <br>
+  ;@ ifmoved(#2,Object2Moved,1) ; <br>
+;@ ifnotmoved(#2,Object2NotMoved,1) ; </font></p>
+<p><font face="Courier New, Courier, mono">;@press(&quot;button6.button&quot;) ; <br>
+  ;@ ifmoved(&quot;angelven.cel&quot;,CelVenusMoved,1) ; <br>
+  ;@ ifnotmoved(&quot;angelven.cel&quot;,CelVenusNotMoved,1) ; </font></p>
+<p><font face="Courier New, Courier, mono">;@drop(#11) ; <br>
+  ;@ ifmoved(&quot;angelmar.cel&quot;,CelMarsMoved,1) ; <br>
+  ;@ ifnotmoved(&quot;angelmar.cel&quot;,CelMarsNotMoved,1) ; </font></p>
+<p><font face="Courier New, Courier, mono">;@catch(&quot;button5.button&quot;) ; <br>
+  ;@ ifmoved(#4,Object4Moved,1) ; <br>
+  ;@ ifnotmoved(#4,Object4NotMoved,1) ; </font></p>
+<p><font face="Courier New, Courier, mono">;@alarm(Object2Moved) ; <br>
+  ;@ notify(&quot;Object #2 has moved&quot;) ; </font></p>
+<p><font face="Courier New, Courier, mono">;@alarm(Object2NotMoved) ; <br>
+  ;@ notify(&quot;Object #2 has not moved&quot;) ; </font></p>
+<p><font face="Courier New, Courier, mono">;@alarm(Object4Moved) ; <br>
+  ;@ notify(&quot;Object #4 has moved&quot;) ; </font></p>
+<p><font face="Courier New, Courier, mono">;@alarm(Object4NotMoved) ; <br>
+  ;@ notify(&quot;Object #4 has not moved&quot;) ; </font></p>
+<p><font face="Courier New, Courier, mono">;@alarm(CelVenusMoved) ; <br>
+  ;@ notify(&quot;Cel angelven has moved&quot;) ; </font></p>
+<p><font face="Courier New, Courier, mono">;@alarm(CelVenusNotMoved) ; <br>
+  ;@ notify(&quot;Cel angelven has not moved&quot;) ; </font></p>
+<p><font face="Courier New, Courier, mono">;@alarm(CelMarsMoved) ; <br>
+  ;@ notify(&quot;Cel angelmar has moved&quot;) ; </font></p>
+<p><font face="Courier New, Courier, mono">;@alarm(CelMarsNotMoved) ; <br>
+  ;@ notify(&quot;Cel angelmar has not moved&quot;) ; </font></p>
+<p><font face="Courier New, Courier, mono">;@drop(#6) ; <br>
+  ;@ movetorand(&quot;angelmar.cel&quot;) ; </font></p>
+<p><font face="Courier New, Courier, mono">;@release(#5) ; <br>
+  ;@ movetorand(#2) ; </font></p>
+<p>&nbsp;
+  
+</p>
+<h4><font face="Courier New"><br>
+</font></h4>
+</body>
+
+</html>

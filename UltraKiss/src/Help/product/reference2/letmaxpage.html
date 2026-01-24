@@ -1,0 +1,41 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>map</title>
+</head>
+
+<body>
+
+<h4><a name="letmaxpage" id="letmaxpage">letmaxpage</a>()&nbsp;</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; letmaxpage
+(variable)</p>
+<p>This action returns the maximum number of pages currently defined in the KiSS set. Note that page numbers begin from 0. Note that with FKiSS 5 an unlimited number of pages can be created for a KiSS set. </p>
+<p>Related actions: <a href="set.html">set()</a>, <a href="changeset.html">changeset()</a>, <a href="letmaxcolor.html">letmaxcolor()</a> </p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td width="12%">MaxPageSet</td>
+        <td width="67%">specifies the maximum number of pages displayed on the Ultrakiss toolbar. This is not the maximum number of pages that can be defined for the set. </td>
+        <td width="21%">default value &quot;<font color="#0000FF">10</font>&quot; (Compatibility option)</td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>&nbsp;Example:&nbsp;<br>
+</b></font></p>
+<p><font face="Courier New">;@letmaxpage(N)&nbsp;&nbsp;&nbsp; ;<br>
+;@notify(&quot;This set has &quot;,N,&quot; pages&quot;)&nbsp;&nbsp;&nbsp; ;&nbsp;&nbsp;<br>
+
+<br>
+</font><br>
+</p>
+</body>
+
+</html>

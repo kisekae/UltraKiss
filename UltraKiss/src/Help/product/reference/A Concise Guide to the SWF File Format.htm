@@ -1,0 +1,419 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0050)http://bfox.chat.ru/flashformat/SWFfileformat.html -->
+<HTML><HEAD><TITLE>A Concise Guide to the SWF File Format</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=iso-8859-1">
+<STYLE type=text/css>H1 {
+	FONT-WEIGHT: 900; FONT-SIZE: 24pt; FONT-FAMILY: Arial, Helvetica, sans-serif
+}
+H2 {
+	FONT-WEIGHT: 700; FONT-SIZE: 18pt; FONT-FAMILY: Arial, Helvetica, sans-serif
+}
+H3 {
+	FONT-WEIGHT: 700; FONT-SIZE: 14pt; FONT-FAMILY: Arial, Helvetica, sans-serif
+}
+H4 {
+	FONT-WEIGHT: 700; FONT-SIZE: 12pt; FONT-FAMILY: Arial, Helvetica, sans-serif
+}
+H5 {
+	FONT-WEIGHT: 500; FONT-SIZE: 12pt; FONT-FAMILY: Arial, Helvetica, sans-serif
+}
+.runInHead {
+	FONT-WEIGHT: 700; FONT-SIZE: 11pt; FONT-FAMILY: Arial, Helvetica, sans-serif
+}
+</STYLE>
+
+<META content="MSHTML 5.50.4913.1100" name=GENERATOR></HEAD>
+<BODY text=#000000 vLink=#333399 link=#ff0000 bgColor=#ffffff><A 
+name=h1FileFormat></A>
+<H1 align=center>SWF File Format Specification</H1>
+<P>The SWF (pronounced 'swiff') file format was designed from the ground up to 
+deliver graphics and animation over the Internet. The SWF file format was 
+designed as a very efficient delivery format and not as a format for exchanging 
+graphics between graphics editors. It was designed to meet the following goals: 
+</P>
+<UL>
+  <LI><SPAN class=runInHead>On-screen Display—</SPAN>The format is primarily 
+  intended for on-screen display and so it supports anti-aliasing, fast 
+  rendering to a bitmap of any color format, animation and interactive buttons. 
+  <LI><SPAN class=runInHead>Extensibility—</SPAN>The format is a tagged format, 
+  so the format can be evolved with new features while maintaining backwards 
+  compatibility with older players. 
+  <LI><SPAN class=runInHead>Network Delivery—</SPAN>The files can be delivered 
+  over a network with limited and unpredictable bandwidth. The files are 
+  compressed to be small and support incremental rendering through streaming. 
+  <LI><SPAN class=runInHead>Simplicity—</SPAN>The format is simple so that the 
+  player is small and easily ported. Also, the player depends upon only a very 
+  limited set of operating system functionality. 
+  <LI><SPAN class=runInHead>File Independence—</SPAN>Files can be displayed 
+  without any dependence on external resources such as fonts. 
+  <LI><SPAN class=runInHead>Scalability—</SPAN>Different computers have 
+  different monitor resolutions and bit depths. Files work well on limited 
+  hardware, while taking advantage of more expensive hardware when it is 
+  available. 
+  <LI><SPAN class=runInHead>Speed—</SPAN>The files are designed to be rendered 
+  at a high quality very quickly. </LI></UL>
+<P>The following document describes the file format in detail. </P><A 
+name=h2BasicConcepts></A>
+<H2>Basic Concepts</H2><A name=h3ContainerFormat></A>
+<H3>Container Format</H3>
+<P>SWF files are stored in files with the extension .swf and currently for 
+historical reasons the MIME type is application/x-shockwave-flash. SWF files are 
+binary files stored as 8-bit bytes. The container format consists of a header 
+block with the structure shown below. </P>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Signature</TD>
+    <TD width="33%">UI8</TD>
+    <TD width="33%">Signature byte 1 - always 'F'</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Signature</TD>
+    <TD width="33%">UI8</TD>
+    <TD width="33%">Signature byte 2 - always 'W'</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Signature</TD>
+    <TD width="33%">UI8</TD>
+    <TD width="33%">Signature byte 3 - always 'S'</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Version </TD>
+    <TD width="33%">UI8</TD>
+    <TD width="33%">Single byte file version</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">File Length</TD>
+    <TD width="33%">UI32</TD>
+    <TD width="33%">Length of entire file in bytes</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Frame Size</TD>
+    <TD width="33%">RECT</TD>
+    <TD width="33%">Frame size in TWIPS</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Frame Rate</TD>
+    <TD width="33%">UI16</TD>
+    <TD width="33%">Frame delay in 8.8 fixed number of frames per second</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Frame Count</TD>
+    <TD width="33%">UI16</TD>
+    <TD width="33%">Total number of frames in movie</TD></TR></TBODY></TABLE>
+<P>Following the header are a series of tagged data blocks. Each data block has 
+a tag type (stag) and a length. There is both a short and long tag format. Short 
+tags are used for blocks with 62 bytes of data or less and large tags can be 
+used for any size block. A short tag has 9 bits used for the block type and 6 
+bits used for a block length in number of bytes. If a block is 63 bytes or 
+longer, it should be stored in a long tag which consists of a short tag whose 
+length is 0x3f and is followed by a 32-bit length. </P>
+<P>The following tables show the structure of both short and long tag record 
+headers. </P>
+<H5>Short header - for records less than 63 bytes in length</H5>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Tag</TD>
+    <TD width="33%">UB[10]</TD>
+    <TD width="33%">Tag id</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Length</TD>
+    <TD width="33%">UB[6]</TD>
+    <TD width="33%">Length of tag</TD></TR></TBODY></TABLE>
+<H5>Long header - for records 63 bytes in length or greater</H5>
+<TABLE borderColor=#000000 cellSpacing=2 cellPadding=7 width="100%" border=1>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="33%" bgColor=#cccccc><B>Field</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Type</B></TD>
+    <TD width="33%" bgColor=#cccccc><B>Comment</B></TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Tag</TD>
+    <TD width="33%">UB[10]</TD>
+    <TD width="33%">Tag id</TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Long Header Flag</TD>
+    <TD width="33%">UB[6]</TD>
+    <TD width="33%">Always 0x3F </TD></TR>
+  <TR vAlign=top>
+    <TD width="33%">Length</TD>
+    <TD width="33%">UI32</TD>
+    <TD width="33%">Length of tag</TD></TR></TBODY></TABLE>
+<P>Any program parsing a SWF file can skip over blocks it does not understand. 
+Data blocks can point to offsets within the block, but they should never point 
+to an offset in another block. This enables tags to be removed, inserted, or 
+modified by tools that process a SWF file. With some network transports like 
+RealFlash, data blocks can be reordered and delivered with different priorities. 
+</P>
+<P>Currently, many useful block types are defined. Tag numbers 0-511 are 
+reserved for future use. Tag numbers 512-1023 are reserved for use by third 
+party applications. For more information on developing extension mechanisms, see 
+the extension mechanism section. </P><A name=h3TypesofTags></A>
+<H3>Types of Tags</H3>
+<P>Definition tags are used to add character information to the dictionary. 
+Definition tags define data that can be reused in a file like shapes, bitmaps, 
+buttons, text, fonts and sounds. Control tags manipulate characters and provide 
+administrative functions. For example, control tags are used to move objects on 
+the screen, show frames, and start sounds. For information on specific tags, see 
+the Tag Reference section. </P><A name=h3TagOrderingandStreaming></A>
+<H3>Tag Ordering and Streaming</H3>
+<P>Tags can occur in the file in any order. Definition tags must occur in the 
+file before any control tags that refer to the character that is defined. The 
+order of control tags defines the order of the animation. </P>
+<P>This ordering of tags is how the SWF file format supports streaming. The rule 
+is that a given tag should only depend on tags that come before it. A tag should 
+never depend on a tag that comes later in the file. </P>
+<P>The End tag should be used at the end of the file to indicate the file's end. 
+</P><A name=h3CharactersandtheDictionary></A>
+<H3>Characters and the Dictionary</H3>
+<P>In order to support streaming and references between tags, SWF uses the 
+concept of characters and a dictionary of characters that have been encountered 
+so far in a file. A character has a 16-bit numeric name. Every character in a 
+file must have a unique name. Typically, the first character is #1, the second 
+character is #2 and so on. Character #0 is special and considered a null 
+character. </P>
+<P>Characters are entered into the dictionary when a define tag is encountered 
+in the .swf file. Characters are looked up in the dictionary based on the 
+character identification number. </P><A name=h3DisplayList></A>
+<H3>Display List</H3>
+<P>Conceptually, the SWF file format can be considered as two interleaved 
+streams of data. The definition stream adds characters to the dictionary and the 
+control stream performs operations on the display list using the characters that 
+have been defined in the dictionary. </P>
+<P>In SWF 1 and 2, the display list was a flat list of the objects that are 
+present on the screen at any given point in time. For SWF 3, this list has been 
+extended to a hierarchical list where an element on the display can have a list 
+of child elements. </P>
+<P>Objects on the display list are referred to by a depth number. The object at 
+depth 0 is the bottom of the stacking order. Only one object can exist at any 
+given depth. </P>
+<P>There are three basic operations on the display list: </P>
+<UL>
+  <LI><SPAN class=runInHead>Place an object—</SPAN>Place an character on at a 
+  given depth level using a specified transform. 
+  <LI><SPAN class=runInHead>Move an object—</SPAN>Modify the object at the given 
+  depth level. Both the transform and the character can be modified. 
+  <LI><SPAN class=runInHead>Remove an object—</SPAN>Remove the object at a given 
+  depth number from the display. </LI></UL>
+<P>Note that for SWF 1 and 2, the only operations are Place and Remove. Move was 
+added to support sprites and as a size optimization for SWF 3. </P><A 
+name=h3NumbersandCoordinates></A>
+<H3>Numbers and Coordinates</H3>
+<P>SWF uses integers and fixed point numbers for all of its coordinates and 
+transformation matrices. The coordinate space is defined by integer coordinates. 
+This coordinate space can be mapped to the display in any way that a player 
+might want. By convention, coordinates are specified where one unit equal 1/1440 
+inches. On a typical 72 dpi display this is equivalent to saying that a single 
+pixel is divided into 20 units. This choice of units provides a good compromise 
+between giving a high resolution for zooming in and precise placement of 
+objects. A higher resolution would increased the file size because of the extra 
+bits needed for precision. </P><A name=h3Transforms></A>
+<H3>Transforms</H3>
+<P><SPAN class=runInHead>Matrices—</SPAN>Object positioning is specified by a 
+standard 2x3 transformation matrix using 16.16 fixed point numbers for the first 
+four elements and integers for the last two elements. </P>
+<P><SPAN class=runInHead>Color Transforms—</SPAN>SWF uses color transforms to 
+perform effects like fading in or out from an object on the display. The color 
+transform consists of a simple linear equation that is applied to each color 
+element of an object. </P>
+<P><SPAN class=runInHead>Ratio—</SPAN>For some objects like morphed shapes, a 
+16-bit ratio is used to control what point in the morph should be displayed. The 
+ratio is also used to track the lifetime of sprite objects. </P>
+<P><SPAN class=runInHead>Clip depth—</SPAN>An object on the SWF display list can 
+be used as a clipping path for range of objects. This is controlled by the clip 
+depth field for Place object. </P><A name=h3ProcessingaSWFFile></A>
+<H3>Processing a SWF File</H3>
+<P>The model for processing a stream is that all tags are processed in a stream 
+until a ShowFrame tag is encountered. At that point, the display list is copied 
+to the screen and the player is idle until it is time to process the next frame. 
+</P>
+<P>A SWF file is divided into numbered frames by ShowFrame tags. Frame 1 is 
+defined by performing all the control operations before the first ShowFrame tag. 
+Frame 2 is defined by performing all the control operations before the second 
+ShowFrame tag and so on. </P><A name=h3FileCompressionStrategy></A>
+<H3>File Compression Strategy</H3>
+<P>Since SWF files are frequently delivered over a network connection, it is 
+important that they be as compact as possible. There are several techniques that 
+are used to accomplish this: </P>
+<UL>
+  <LI><SPAN class=runInHead>Reuse—</SPAN>The structure of the character 
+  dictionary makes it very easy to reuse elements in a SWF file. For example, a 
+  shape, button, sound, font, or bitmap can be stored in a file once and 
+  referenced many times. 
+  <LI><SPAN class=runInHead>Compression—</SPAN>The contents of tags are 
+  compressed. SWF supports a variety of compression techniques. Bitmaps can be 
+  compressed with JPEG or a PNG-like zlib compression. Sound is compressed with 
+  various levels of ADPCM compression. Shapes are compressed using a very 
+  efficient delta encoding scheme. 
+  <LI><SPAN class=runInHead>Bit Packing—</SPAN>Whenever possible, numbers are 
+  packed into the smallest possible number of bits for a particular value. 
+  Coordinates are commonly stored using variable-sized bit fields, where a few 
+  bits are used to indicate how many bits are needed by subsequent values. See 
+  RECT for an example. 
+  <LI><SPAN class=runInHead>Default values—</SPAN>Some structures like matrices 
+  and color transforms have common fields that are used more often than others. 
+  For example, for a matrix, the most common field is the translation field. 
+  Scaling and rotation are less common. Therefore if the scaling field is not 
+  present, it is assumed to be 100%. If the rotation field is not present, it is 
+  assumed that there is no rotation. This use of default values helps to 
+  minimize file sizes. 
+  <LI><SPAN class=runInHead>Change Encoding—</SPAN>As a rule, SWF files just 
+  store the changes between states. This is reflected in shape data structures 
+  and in the place/move/remove model used by the display list. 
+  <LI><SPAN class=runInHead>Shape Data Structure—</SPAN>The shape data structure 
+  uses a unique structure to minimize the size of shapes and to render 
+  anti-aliased shapes very efficiently on the screen. </LI></UL>
+<P>Note that although the individual components of a SWF file are compressed, 
+there is no overall compression applied to the .swf file. This makes it possible 
+for a player to process the file structure directly out of RAM without 
+decompressing it. Various elements of the file such as bitmaps, shapes and 
+sounds can be decompressed as they are needed. </P><A 
+name=h3ExtensionMechanism></A>
+<H3>Extension Mechanism</H3>
+<P>In order to let applications define their own tag types, it is possible to 
+define an AppExtension tag that contains the name of the application 
+functionality being implemented and a tag range that describe what tags will be 
+used by this extension set. The extension sets should be similar to a MIME type 
+where they take the form of the following string: </P><PRE>&lt;company name&gt;/&lt;extension set&gt;
+</PRE>
+<P>For the entire file, these tag types will be interpreted in the context of 
+the named extension. Applications should be able to remap the tag range for a 
+particular file to avoid conflicts between two extension sets. </P>
+<P>The extension must be in the 512-1023 tag type range. </P><A 
+name=h2SampleSWFFiles></A>
+<H2>Sample SWF Files</H2>
+<P>The following section shows a SWF file. Syntax is displayed in monospaced 
+font. Explanations of the syntax appear in normal font. </P><PRE>***** Dumping SWF File Information *****
+----- Reading the file header -----
+FWS
+File version    3
+File size       741
+Movie width     550
+Movie height    400
+Frame rate      12
+Frame count     10
+</PRE>
+<P>The file header shows much information. FWS indicates that the file is a SWF 
+file; its version is 3.0 file. The file size is 741 bytes. The movie width is 
+550; its height is 400 pixels. The frame rate is 12 frames per second; there are 
+ten frames in this movie. </P><PRE>----- Reading movie details -----
+&lt;----- dumping frame 0        file offset 21       -----&gt;
+</PRE>
+<P>The offset of Frame 0 is 21 bytes into the file. </P><PRE>tagLen        3: tagSetBackgroundColor  RGB_HEX ffffff
+</PRE>
+<P>TagLen specifies the actual length of the tag, in this case, 3 bytes 
+(ffffff). .This tagSetBackgroundColor sets the background color to white. </P><PRE>tagLen        2: tagDoAction
+                 action code   7 stop
+                 action code   0
+</PRE>
+<P>Pauses the frame. (DoAction's action is Stop. Action code 0 means that there 
+are no more actions.) </P><PRE>tagLen       32: tagDefineShape         tagid 1
+</PRE>
+<P>Defines the first shape. </P><PRE>tagLen       10: tagPlaceObject2        flags 1     depth 26
+                 tag 1
+                 pos matrix hex [ a_fixed   b_fixed] = [00010000   00000000]
+                                [ c_fixed   d_fixed]   [00000000   00010000]
+                                [tx_fixed  ty_fixed]   [000010a4   00000410]
+</PRE>
+<P>Inserts the first shape (tag 1) on the display list. The object's position on 
+the stage is defined by the matrix. </P><PRE>tagLen      201: tagDefineShape2        tagid 2
+tagLen       76: tagDefineShape         tagid 3
+tagLen      190: tagDefineShape2        tagid 4
+tagLen       33: tagDefineButton2       tagid 5
+</PRE>
+<P>Defines more shapes and a button. </P><PRE>tagLen       15: tagPlaceObject2        flags 2     depth 26
+                 tag 5
+                 pos matrix hex [ a_fixed   b_fixed] = [0004dbd3   00000000]
+                                [ c_fixed   d_fixed]   [00000000   0004dbd3]
+                                [tx_fixed  ty_fixed]   [00000600   00000a1c]
+</PRE>
+<P>Inserts the button (tag 5) on display list. </P><PRE>tagLen        0: tagShowFrame
+</PRE>
+<P>Displays contents of display list on the screen. </P><PRE>&lt;----- dumping frame 1        file offset 627      -----&gt;
+tagLen        2: tagRemoveObject2 depth 2
+</PRE>
+<P>Removes button from the display list. </P><PRE>tagLen        8: tagPlaceObject2        flags 1     depth 26
+                 pos matrix hex [ a_fixed   b_fixed] = [00010000   00000000]
+                                [ c_fixed   d_fixed]   [00000000   00010000]
+                                [tx_fixed  ty_fixed]   [000012ea   00000690]
+</PRE>
+<P>Moves square left to right, top to bottom, diagonally on the stage. </P><PRE>tagLen        0: tagShowFrame
+</PRE>
+<P>Displays display list contents on the screen. </P><PRE>&lt;----- dumping frame 2        file offset 643      -----&gt;
+tagLen        8: tagPlaceObject2        flags 1     depth 26
+                 pos matrix hex [ a_fixed   b_fixed] = [00010000   00000000]
+                                [ c_fixed   d_fixed]   [00000000   00010000]
+                                [tx_fixed  ty_fixed]   [00001530   00000910]
+</PRE>
+<P>Moves square left to right, top to bottom, diagonally on the stage. </P><PRE>tagLen        0: tagShowFrame
+</PRE>
+<P>Displays contents of display list on the screen. </P><PRE>&lt;----- dumping frame 3        file offset 655      -----&gt;
+tagLen        8: tagPlaceObject2        flags 1     depth 26
+                 pos matrix hex [ a_fixed   b_fixed] = [00010000   00000000]
+                                [ c_fixed   d_fixed]   [00000000   00010000]
+                                [tx_fixed  ty_fixed]   [00001776   00000b90]
+</PRE>
+<P>Moves square left to right, top to bottom, diagonally on the stage. </P><PRE>tagLen        0: tagShowFrame
+</PRE>
+<P>Displays contents of display list on the screen. </P><PRE>&lt;----- dumping frame 4        file offset 667      -----&gt;
+tagLen        8: tagPlaceObject2        flags 1     depth 26
+                 pos matrix hex [ a_fixed   b_fixed] = [00010000   00000000]
+                                [ c_fixed   d_fixed]   [00000000   00010000]
+                                [tx_fixed  ty_fixed]   [000019bc   00000e10]
+</PRE>
+<P>Moves square left to right, top to bottom, diagonally on the stage. </P><PRE>tagLen        0: tagShowFrame
+</PRE>
+<P>Displays contents of display list on the screen. </P><PRE>&lt;----- dumping frame 5        file offset 679      -----&gt;
+tagLen        8: tagPlaceObject2        flags 1     depth 26
+                 pos matrix hex [ a_fixed   b_fixed] = [00010000   00000000]
+                                [ c_fixed   d_fixed]   [00000000   00010000]
+                                [tx_fixed  ty_fixed]   [00001c03   00001090]
+</PRE>
+<P>Moves square left to right, top to bottom, diagonally on the stage. </P><PRE>tagLen        0: tagShowFrame
+</PRE>
+<P>Displays contents of display list on the screen. </P><PRE>&lt;----- dumping frame 6        file offset 691      -----&gt;
+tagLen        8: tagPlaceObject2        flags 1     depth 26
+                 pos matrix hex [ a_fixed   b_fixed] = [00010000   00000000]
+                                [ c_fixed   d_fixed]   [00000000   00010000]
+                                [tx_fixed  ty_fixed]   [00001e49   00001310]
+</PRE>
+<P>Moves square left to right, top to bottom, diagonally on the stage. </P><PRE>tagLen        0: tagShowFrame
+</PRE>
+<P>Displays contents of display list on the screen. </P><PRE>&lt;----- dumping frame 7        file offset 703      -----&gt;
+tagLen        8: tagPlaceObject2        flags 1     depth 26
+                 pos matrix hex [ a_fixed   b_fixed] = [00010000   00000000]
+                                [ c_fixed   d_fixed]   [00000000   00010000]
+                                [tx_fixed  ty_fixed]   [0000208f   00001590]
+</PRE>
+<P>Moves square left to right, top to bottom, diagonally on the stage. </P><PRE>tagLen        0: tagShowFrame
+</PRE>
+<P>Displays contents of display list on the screen. </P><PRE>&lt;----- dumping frame 8        file offset 715      -----&gt;
+tagLen        8: tagPlaceObject2        flags 1     depth 26
+                 pos matrix hex [ a_fixed   b_fixed] = [00010000   00000000]
+                                [ c_fixed   d_fixed]   [00000000   00010000]
+                                [tx_fixed  ty_fixed]   [000022d5   00001810]
+</PRE>
+<P>Moves square left to right, top to bottom, diagonally on the stage. </P><PRE>tagLen        0: tagShowFrame
+</PRE>
+<P>Displays contents of display list on the screen. </P><PRE>&lt;----- dumping frame 9        file offset 727      -----&gt;
+tagLen        8: tagPlaceObject2        flags 1     depth 26
+                 pos matrix hex [ a_fixed   b_fixed] = [00010000   00000000]
+                                [ c_fixed   d_fixed]   [00000000   00010000]
+                                [tx_fixed  ty_fixed]   [0000251b   00001a90]
+</PRE>
+<P>Moves square left to right, top to bottom, diagonally on the stage. </P><PRE>tagLen        0: tagShowFrame
+</PRE>
+<P>Displays contents of display list on the screen. </P><PRE>&lt;----- dumping frame 10       file offset 739      -----&gt;
+tagLen        0: tagEnd
+</PRE>
+<P>tagEnd indicates the end of the file. </P><PRE>***** Finished Dumping SWF File Information *****
+</PRE><BR><BR>
+<HR>
+SWF File Format Specification<BR><A 
+href="http://bfox.chat.ru/flashformat/SWFfilereference.html">SWF File 
+Reference</A><BR><A 
+href="http://bfox.chat.ru/flashformat/terminology.html">Terminology</A><BR>
+<HR>
+<BR><BR></BODY></HTML>

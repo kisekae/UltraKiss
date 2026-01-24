@@ -1,0 +1,59 @@
+; Kisekae UltraKiss configuration file created on Tue Jul 02 15:33:12 MDT 2002
+ 
+;[Screen Section]
+[16777215
+(600,400)
+ 
+;[Cel Section]
+#9	cat.gif	*0	:1 	;
+#10	leftshoe.gif	*0	:1 	;
+#11	rightshoe.gif	*0	:1 	;
+#12	shirt.gif	*0	:1 	;
+#13	skirt.gif	*0	:1 	;
+#5	fuku.gif	*0	:0 1 	;
+#6	leftglove.gif	*0	:0 1 	;
+#7	rightglove.gif	*0	:0 1 	;
+#8	bow.gif	*0	:0 1 	;
+#4	leftboot.gif	*0	:0 1 	;
+#4	rightboot.gif	*0	:0 1 	;
+#1	sailormoon.gif	*0	:0 1 	;
+ 
+;[Page Set Section]
+; Kisekae UltraKiss Page 0
+$0 * 207,111 * * 219,232 233,146 216,170 295,131 245,156 * * * * *
+; Kisekae UltraKiss Page 1
+$0 * 207,111 * * 219,232 233,146 216,170 295,131 245,156 423,160 217,275 283,277 225,141
+   230,175
+ 
+;[FKiss Event Section]
+;@EventHandler
+;@set(1)                                                    
+;@ unmap(#4) unmap(#5) unmap(#6) unmap(#7) unmap(#8)        
+;@ map(#10) map(#11) map(#12) map(#13)                      
+                
+;@set(0)                                                    
+;@ map(#4) map(#5) map(#6) map(#7) map(#8)                  
+
+;@press(#9)                                                 
+;@ letmapped(A,"fuku.gif")                                  
+;@ ifequal(A,1)                                             
+;@  unmap(#4) unmap(#5) unmap(#6) unmap(#7) unmap(#8)       
+;@  map(#10) map(#11) map(#12) map(#13)                     
+;@ else()                                                   
+;@  unmap(#10) unmap(#11) unmap(#12) unmap(#13)             
+;@  map(#4) map(#5) map(#6) map(#7) map(#8)                 
+;@ endif()                                                  
+
+;@begin()                                                   
+;@ sound("smc181-2.wav")                                    
+
+;@end()                                                     
+;@ sound("smc308-2.wav")                                    
+                                 
+;@release(#9)                                               
+;@ random(A,0,9)                                            
+;@ iflessthan(A,7) sound("cat.wav")                         
+;@  elseiflessthan(A,8) sound("catsound.wav")               
+;@  elseifequal(A,8) sound("catscrm.wav")                   
+;@  elseifequal(A,9) sound("angrycat.wav")                  
+;@ endif()                                                  

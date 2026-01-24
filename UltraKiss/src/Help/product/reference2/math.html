@@ -1,0 +1,175 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>math</title>
+</head>
+
+<body>
+
+<h4><a name="math">math</a>()</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; math
+(function,result,operand1,operand2,...)</p>
+<p>This command computes mathematical functions of one or more numbers. The
+function is specified as a string literal or variable and the result variable is is
+assigned the computed value of the function..&nbsp; The result must be a variable.
+The operands can be numeric
+literal values or variables that represent numeric values.&nbsp;</p>
+<p> result = function(operand1,operand2,...)</p>
+<p> The available functions are as follows:</p>
+<table border="0" cellpadding="5" cellspacing="0">
+  <tr>
+    <td><font face="Courier New">&quot;abs&quot;</font></td>
+    <td>Returns the absolute value of a number.</td>
+  </tr>
+  <tr>
+    <td><font face="Courier New">&quot;acos&quot;</font></td>
+    <td>Returns the arc cosine of an angle, in the range of 0.0 through <i>pi</i>.</td>
+  </tr>
+  <tr>
+    <td><font face="Courier New">&quot;asin&quot;</font></td>
+    <td>Returns the arc sine of an angle, in the range of -<i>pi</i>/2 through <i>pi</i>/2.</td>
+  </tr>
+  <tr>
+    <td><font face="Courier New">&quot;atan&quot;</font></td>
+    <td>Returns the arc tangent of an angle, in the range of -<i>pi</i>/2
+      through <i>pi</i>/2.</td>
+  </tr>
+  <tr>
+    <td><font face="Courier New">&quot;ceil&quot;</font></td>
+    <td>Returns the smallest (closest to negative infinity) real number that is
+      greater than or equal to the argument and is equal to a mathematical
+      integer.</td>
+  </tr>
+  <tr>
+    <td><font face="Courier New">&quot;cos&quot;</font></td>
+    <td>Returns the trigonometric cosine of an angle.</td>
+  </tr>
+  <tr>
+    <td><font face="Courier New">&quot;exp&quot;</font></td>
+    <td>Returns Euler's number <i>e</i> raised to the power of a real number.</td>
+  </tr>
+  <tr>
+    <td><font face="Courier New">&quot;floor&quot;</font></td>
+    <td>Returns the largest (closest to positive infinity) real number that is
+      less than or equal to the argument and is equal to a mathematical integer.</td>
+  </tr>
+  <tr>
+    <td><font face="Courier New">&quot;log&quot;</font></td>
+    <td>Returns the natural logarithm (base <i>e</i>) of a <code>double</code>
+      value.</td>
+  </tr>
+  <tr>
+    <td><font face="Courier New">&quot;max&quot;</font></td>
+    <td>Returns the greater of two values.</td>
+  </tr>
+  <tr>
+    <td><font face="Courier New">&quot;min&quot;</font></td>
+    <td>Returns the lesser of two values.</td>
+  </tr>
+  <tr>
+    <td><font face="Courier New">&quot;pow&quot;</font></td>
+    <td>Returns the value of the first argument raised to the power of the
+      second argument.</td>
+  </tr>
+  <tr>
+    <td><font face="Courier New">&quot;random&quot;</font></td>
+    <td>Returns a real number with a positive sign, greater than or equal to <code>0.0</code>
+      and less than <code>1.0</code>.</td>
+  </tr>
+  <tr>
+    <td><font face="Courier New">&quot;rint&quot;</font></td>
+    <td>Returns the real number that is closest in value to the argument and is
+      equal to a mathematical integer.</td>
+  </tr>
+  <tr>
+    <td><font face="Courier New">&quot;round&quot;</font></td>
+    <td>Returns the closest integer to the argument.</td>
+  </tr>
+  <tr>
+    <td><font face="Courier New">&quot;sin&quot;</font></td>
+    <td>Returns the trigonometric sine of an angle.</td>
+  </tr>
+  <tr>
+    <td><font face="Courier New">&quot;sqrt&quot;</font></td>
+    <td>Returns the correctly rounded positive square root of a real number.</td>
+  </tr>
+  <tr>
+    <td><font face="Courier New">&quot;tan&quot;</font></td>
+    <td>Returns the trigonometric tangent of an angle.</td>
+  </tr>
+  <tr>
+    <td><font face="Courier New">&quot;todegrees&quot;</font></td>
+    <td>Converts an angle measured in radians to an approximately equivalent
+      angle measured in degrees.</td>
+  </tr>
+  <tr>
+    <td><font face="Courier New">&quot;toradians&quot;</font></td>
+    <td>Converts an angle measured in degrees to an approximately equivalent
+      angle measured in radians.</td>
+  </tr>
+</table>
+<p>&nbsp; </p>
+<p> UltraKiss FKiSS 5 provides support for
+floating point numbers and long integers that can range from
+-9223372036854775808 to 9223372036854775807, inclusive. With FKiSS5 implicit
+conversion between variables is automatically performed and all calculations
+maintain the appropriate precision.&nbsp;</p>
+<p>Numeric overflow may occur if the resulting difference cannot be accurately
+represented by the computer.&nbsp;</p>
+<p>
+Related actions: <a href="add.html">add()</a>, <a href="sub.html">sub()</a>, <a href="mul.html">mul()</a>,
+<a href="div.html">div()</a>, <a href="mod.html">mod()</a>, <a href="sqrt.html">sqrt(),</a>
+<a href="random.html">random()</a><br>
+</p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+  <table border="1" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td width="20%">FKiSS 5</td>
+      <td width="30%">math(&quot;log&quot;,MyVariable,3.145) or math(&quot;max&quot;,999999999999,-3.4)</td>
+      <td>integer, string, floating point values, long variable names</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+  <table border="1" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td width="20%">VariableCase</td>
+      <td width="30%">variable names are case sensitive</td>
+      <td>default value &quot;<font color="#0000FF">false</font>&quot;
+        (Compatibility option)</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>Example Code (FKiSS5):&nbsp;
+</b></font>
+</p>
+<p><font face="Courier New">;@let(Apple,4) let(Pear,8)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;<br>
+;@math(&quot;sqrt&quot;,X,Apple)&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;X = 2.0<br>
+;@math(&quot;sqrt&quot;,X,Pear)&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;X = 2.8284...<br>
+;@math(&quot;floor&quot;,X1,X)&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;X1 =
+2.0<br>
+;@math(&quot;round&quot;,X2,X1)&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;X2 =
+2<br>
+;@math(&quot;round&quot;,X3,X)&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;X3 = 3<br>
+</font>
+</p>
+<p><font face="Courier New"><br>
+</font></p>
+
+</body>
+
+</html>

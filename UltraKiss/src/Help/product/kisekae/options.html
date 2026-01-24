@@ -1,0 +1,843 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-ca">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>UltraKiss Options</title>
+</head>
+
+<body>
+
+<h1><font color="#FF0000"> UltraKiss Program Options</font></h1>
+<hr>
+
+<p>The Kisekae UltraKiss Program Options screen is a tabbed control panel that can be
+invoked through the <a href="menu.html#ToolsOptions">Options</a> menu.&nbsp;
+Buttons may be found at the bottom of the screen to accept any option changes,
+cancel changes, save the current options permanently, and reset all option
+values to factory initial values.</p>
+
+<p>&nbsp;</p>
+
+<h3><font color="#000080">General Options&nbsp;</font></h3>
+
+<p align="center"><img border="0" src="../images/optionsmain.gif" width="637" height="464"></p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<h4>User Interface Options</h4>
+
+<p><a name="HostSystem"><font color="#800000">Host System</font></a>.&nbsp; This option sets the user
+interface to follow the host operating system look and feel.&nbsp;&nbsp;</p>
+<p><a name="CrossPlatform"><font color="#800000">Cross Platform</font></a>.&nbsp; This option sets the user
+interface to follow the Java standard cross platform look and feel.</p>
+<p><a name="AppleSystem"><font color="#800000">Apple System</font></a>.&nbsp; This option
+is set automatically if running on an Apple system.&nbsp;</p>
+<p>&nbsp;</p>
+<h4>Language Options</h4>
+<p><a name="English"><font color="#800000">English</font></a>.&nbsp; If set, all
+program menu commands and
+all dialog messages will appear in English.</p>
+<p><a name="Japanese"><font color="#800000">Japanese</font></a>.&nbsp; If set,
+all program menu commands and
+all dialog messages will appear in Japanese.</p>
+<p>&nbsp;</p>
+<h4>File Access Options</h4>
+<p><font color="#800000"><a name="KeepFileBackup">Keep a file backup</a></font>.&nbsp; If
+this option is set, the source file for every file
+written will will be renamed using a .BAK extension.&nbsp;
+Only one backup copy is retained.&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p><font color="#800000"><a name="SaveFromSource">Save from source</a></font>.&nbsp; If
+this option is set, all files will be written as a copy of their original source
+contents if their contents have not changed.&nbsp; If this option is cleared, unchanged files will be
+written from their current memory contents.&nbsp;&nbsp;</p>
+<p><font color="#800000"><a name="CloseOnLoad">Close on load</a></font>.&nbsp; If
+this option is set, any previously loaded KiSS set&nbsp;is closed before a new
+set is loaded. If the option is not set then the currently active set is
+retained in memory and is restored if the new set load fails.</p>
+<p><font color="#800000"><a name="KeepFileBackup">Show download prompt</a></font>.&nbsp; If
+this option is set downloads of KiSS sets using the UltraKiss browser will
+prompt to save or open the set. If the option is cleared KiSS sets will be
+automatically opened.</p>
+<p>&nbsp;</p>
+<h4>Memory Cache Options</h4>
+<p><a name="CacheImages"><font color="#800000">Cache Images</font></a>.&nbsp; This option, if set,
+enables Java 1.4 volatile image enhancements for improved graphic performance.&nbsp;
+Graphics rendering will use hardware characteristics of the video card.&nbsp;
+Results vary, so this option is not enabled by default.&nbsp;&nbsp;&nbsp;</p>
+<p><a name="CacheAudio"><font color="#800000">Cache Audio</font></a>.&nbsp; This option, if set,
+will retain
+the raw audio file data in memory and the audio file will be referenced from its
+memory contents.&nbsp; If this option is set then high memory
+utilization may occur.&nbsp; If this option is not set then audio file data is read
+and processed from the source file.&nbsp;&nbsp;</p>
+
+<p><a name="CacheVideo"><font color="#800000">Cache Video</font></a>.&nbsp; This option, if set,
+will retain
+the raw video file data in memory.&nbsp; Video files are played from their
+memory contents.&nbsp; If this option is set high memory
+utilization may occur.&nbsp; If this option is not set then video file data will
+be read
+from the source file.&nbsp;&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<h4>Initial State Options</h4>
+<p><a name="ShowStatusbar"><font color="#800000">Show Status Bar</font></a>.&nbsp;
+If this option is set the program status bar will be initially displayed when
+the program is started.&nbsp; This option is linked to the initial setting for the
+program menu <a href="menu.html#ViewStatusBar"> View Status Bar</a> selection.</p>
+<p><a name="ShowToolbar"><font color="#800000">Show Toolbar</font></a>.&nbsp;
+If this option is set the program toolbar will be initially displayed when the
+program is started.&nbsp; This option is linked to the initial setting for the
+program menu <a href="menu.html#ViewToolbar"> View Toolbar</a> selection.</p>
+<p><a name="ScaleToFit"><font color="#800000">Show Tips on Start-up</font></a>.&nbsp;
+If this option is set the helpful tips display is activated when the UltraKiss program is
+first started.</p>
+
+<p>&nbsp;</p>
+
+<h4>Movement Options</h4>
+<p><a name="AutoScroll"><font color="#800000">Auto Scroll</font></a>.&nbsp;
+This option enables automatic scrolling of the screen viewing area if the
+configuration screen size exceeds the available screen size and an object is
+dragged outside of the viewing area.&nbsp;&nbsp;&nbsp; The viewport will scroll
+automatically as the object is dragged.&nbsp; If this option is not set then the
+viewport will not scroll and it will be possible to drag the object outside the
+viewport limits.</p>
+<p><a name="LimitMouseMoves"><font color="#800000">Limit Mouse Moves</font></a>.&nbsp;
+This option can be used to limit user movement of objects to the active
+configuration screen size.&nbsp; The user will not be able to drag an object
+beyond the screen.&nbsp; If the option is not set then the user will be able to
+drag an object outside of the playing area.&nbsp; Any object dropped completely
+outside of the playing area cannot be picked up.&nbsp; Note that objects moved
+with FKiSS actions are, by default, limited to the playing area unless the move
+command specifies otherwise.&nbsp;&nbsp;</p>
+<p><a name="LimitFKiSSMoves"><font color="#800000">Limit FKiSS Moves</font></a>.&nbsp;
+This option can be used to limit FKiSS programmed movement of objects to the active
+configuration screen size.&nbsp; Programmed moves will not be able to position an object
+beyond the screen.&nbsp; If the option is not set then programmed moves will be able to
+position an object outside of the playing area.&nbsp; Note that objects moved
+with FKiSS actions can override this limitation if the command specifies otherwise.&nbsp;&nbsp;</p>
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<h3><font color="#000080">KiSS Options&nbsp;</font></h3>
+
+<p align="center"><img border="0" src="images/options_02.gif" width="634" height="461"></p>
+
+<p align="left">&nbsp;</p>
+
+<p align="left">&nbsp;</p>
+
+<h4>Toolbar Limits</h4>
+
+<p><font color="#800000"><a name="PageSets">Page Sets</a></font>.&nbsp; This
+sets the maximum number of page set buttons to show on the toolbar.&nbsp; If too
+many pages exist then a page shift control button will be shown on the
+toolbar.&nbsp; The page shift control updates the toolbar to show the next or
+prior group of page set buttons.</p>
+
+<p><font color="#800000"><a name="ColorSets">Color Sets</a></font>.&nbsp; This
+sets the maximum number of color set buttons to show on the toolbar.&nbsp; If
+too many palette groups exist then a color shift control button will be shown on
+the toolbar.&nbsp; The color shift control updates the toolbar to show the next
+or prior group of palette buttons.</p>
+
+<p>&nbsp;</p>
+
+<h4>Flex Limits</h4>
+
+<p><a name="FixedLockValue"><font color="#800000">Fixed Lock Value</font></a>.&nbsp;
+This parameter sets the maximum value for a sticky cel lock limit.&nbsp; Cels
+whose lock limits equal or exceed this value are permanently fixed in place and
+cannot be moved.&nbsp; Cels whose lock limits are greater than zero but less
+than this limit can move slightly but will snap back into place when
+dragged.&nbsp; Cels with lock values less than the fixed lock value will have
+their lock limit decreased by one each time the
+cel is accessed with the mouse.&nbsp; Cels whose lock limits are zero can be
+freely moved on the screen.&nbsp;</p>
+
+<p><a name="MaximumLockValue"><font color="#800000">Maximum Lock Value</font></a>.&nbsp;
+This parameter sets the maximum lock value for image cels.&nbsp; This value
+should be greater than or equal to the fixed lock value.&nbsp; Cels
+whose lock value equals or exceed this value are permanently fixed in place and
+will only respond to <a href="../reference/fkiss1.html#press">press()</a> or <a href="../reference/fkiss1.html#release">release()</a>
+events.&nbsp; Fixcatch(), catch(), fixdrop() or drop() events will not fire for
+cels that have maximum lock values.</p>
+
+<p><a name="StickyFlexArea"><font color="#800000">Sticky Flex Area</font></a>.&nbsp;
+This parameter specifies, in pixels, the maximum distance that a sticky cel can
+move before snapping back into place.&nbsp; The actual distance that a sticky
+cel can move is calculated as a factor of the sticky flex limit based upon the
+ratio of the current flex limit over the original flex limit.&nbsp; As the flex
+limit decreases the sticky cel can move further away from its starting
+location.&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<h4>Last Referenced History</h4>
+
+<p><a name="LastReferencedLimit"><font color="#800000">Limit</font></a>.&nbsp;
+This parameter specifies the number of history items displayed on the File menu
+list. The history list can be cleared if required.</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<h3><font color="#000080">FKiSS Options&nbsp;</font></h3>
+
+<p align="center"><img border="0" src="images/options_03.gif" width="636" height="462"></p>
+
+<p align="left">&nbsp;</p>
+
+<p align="left">&nbsp;</p>
+
+<h4>Event Options</h4>
+
+<p><a name="EnableTimer"><font color="#800000">Enable Timer</font></a>.&nbsp;
+This option, when set, enables the Alarm timer activity.&nbsp; This option must
+be set for FKiSS timer actions are to be processed.</p>
+
+<p><a name="EnableEvents"><font color="#800000">Enable Events</font></a>.&nbsp;
+This option, when set, enables all Event processing activities.&nbsp; This
+option must be set if FKiSS events are to be processed.</p>
+
+<p><a name="EnableSounds"><font color="#800000">Enable Sounds</font></a>.&nbsp;
+This option, when set, enables all FKiSS sound and music actions.&nbsp;&nbsp;</p>
+
+<p><a name="EnableMovies"><font color="#800000">Enable Movies</font></a>.&nbsp;
+This option, when set, enables the FKiSS movie action.</p>
+
+<p><a name="EnableAnimation"><font color="#800000">Enable Animation</font></a>.&nbsp;
+This option, when set, enables all animated GIF graphic file display.&nbsp; If
+this option is not set animated GIF files will behave as normal GIF files.</p>
+
+<p>&nbsp;</p>
+
+<h4>Variables Options</h4>
+
+<p><a name="CaseSensitive"><font color="#800000">Case Sensitive</font></a>.&nbsp;
+This option, when set, ensures that all variable names are case sensitive.&nbsp;
+With case sensitive variables, the variable XyZ is not the same as variable XYZ.</p>
+
+<p><a name="KeyEventCase"><font color="#800000">Key Event Case</font></a>.&nbsp;
+This option, when set, ensures that keyboard events are case sensitive.&nbsp;
+Specifically, if this option is set the key character returned on any keyboard action
+command will be an upper or lower case character.&nbsp; UltraKiss supports
+string variables and is capable of performing case sensitive comparisons. If the option is not set
+the character returned will always be an upper case character. This option is
+applicable to FKiSS 5 string processing commands.</p>
+
+<p>&nbsp;</p>
+
+<h4>Timer Options</h4>
+
+<p><font color="#800000"><a name="TimerPeriod">Timer Period</a></font>.&nbsp;
+This value sets the heartbeat period in milliseconds for the event timer
+activity.&nbsp; Increasing this value will reduce computation overhead but the
+UltraKiss program may become less responsive to FKiSS animation loops. To
+observe GNOMEKiSS performance this value should be set to 1.</p>
+
+<p><a name="AnimationPeriod"><font color="#800000">Animation Period</font></a>.&nbsp;
+This value sets the GIF animation heartbeat period in milliseconds.&nbsp; This
+value should not be changed as the animated GIF specification delay assume a 100
+millisecond heartbeat.&nbsp; Animated GIF images will run faster or slower if
+this value is reduced or increased.</p>
+
+<p><a name="EventHandlers"><font color="#800000">Event Handlers</font></a>.&nbsp;
+This value sets the number of concurrent FKiSS event handlers that run
+simultaneously.&nbsp; Events are queued until an event handler is available to
+process the event.&nbsp; Increasing the number of event handlers beyond 2 can increase system overhead.&nbsp;To maintain
+consistency with single threaded KiSS viewers this value should be set to 1.
+Note that concurrent events cannot be processed until this value is greater than
+1.</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<h3><font color="#000080">UKiss Options&nbsp;</font></h3>
+
+<p align="center"><img border="0" src="images/options_07.gif" width="634" height="463"></p>
+
+<p align="left">&nbsp;</p>
+
+<p align="left">&nbsp;</p>
+
+<h4>UltraKiss Directories</h4>
+
+<p><a name="UkissWebSite"><font color="#800000">Web Site</font></a>.&nbsp;
+This specifies the URL of the UltraKiss website. This is the default website
+used for Help file access if local help files are not found on your system.</p>
+
+<p><a name="UkissWebPortal"><font color="#800000">Web Portal</font></a>.&nbsp;
+This specifies the URL of the initial page for the UltraKiss portal. This, by
+default, refers to a predefined page that will point to the UltraKiss website.</p>
+
+<p><a name="UkissFileDirectory"><font color="#800000">File Directory</font></a>.&nbsp;
+This specifies the path to the default directory for KiSS sets. &nbsp;This, by
+default, refers to the program installation directory.</p>
+
+<p><a name="UkissHelpFiles"><font color="#800000">Help Files</font></a>.&nbsp;
+This specifies the location of the UltraKiss Help system, relative to the
+program installation directory.</p>
+
+<p><a name="UkissBackImages"><font color="#800000">Back Images</font></a>.&nbsp;
+This specifies the location of the UltraKiss background images, relative to the
+program installation directory.</p>
+
+<p><a name="UkissBackImages"><font color="#800000">Icon Images</font></a>.&nbsp;
+This specifies the location of the UltraKiss image icons, relative to the
+program installation directory.</p>
+
+<p align="left">&nbsp;</p>
+
+<h4>Icon Image</h4>
+
+<p>This control can be used to alter the UltraKiss image icon.</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<h3><font color="#000080">Compatibility Options&nbsp;- Events</font></h3>
+
+<p align="center"><img border="0" src="images/options_08a.gif" width="636" height="461"></p>
+
+<h4>&nbsp;</h4>
+
+<h4>Event Options</h4>
+
+<p><a name="OptionImmediateEvent"><font color="#800000">Apply FKiSS Events
+Immediately</font></a>.&nbsp; This option, if set, executes FKiSS events
+immediately. If the option is cleared events are queued for independent
+execution at the system's discretion. Single thread event models should set this
+option. Multithreaded event models should clear this option.</p>
+
+<p><a name="OptionImmediateCollide"><font color="#800000">Apply collision events
+on every action statement</font></a>.&nbsp; This option, if set, checks for
+movement collisions after every event action statement. If the option is cleared
+collisions are verified only at the termination of the event. If an event has
+multiple movements for the same object and collisions are to be recognized on
+each movement then this option should be set.</p>
+
+<p><a name="OptionVisibleCollide"><font color="#800000">Enable collision events
+on visibility changes</font></a>.&nbsp; This option, if set, will fire collision
+events if object visibility changes. If a collision is to be recognized when a
+hidden object overlays a visible object and the hidden object is made visible,
+then this option should be set. Currently, no known KiSS viewer implements this
+capability.</p>
+
+<p><a name="OptionMovebyCollide"><font color="#800000">Enable collision events
+on movebyx/y commands</font></a>.&nbsp; This option, if set, will fire collision
+events on individual movebyx/y action commands.&nbsp;Some KiSS viewers will not
+fire collisions for these move actions as positioning an object can require
+movement in both the X and Y dimensions, thereby causing multiple collision
+events to fire.</p>
+
+<p><a name="OptionDropFixDrop"><font color="#800000">Enable Drop events
+on fixed or sticky objects</font></a>.&nbsp; This option, if set, will fire drop
+events when objects with a non zero fix count are released with the mouse. Some
+viewers will only fire drop events id the fix count is zero.</p>
+
+<p><a name="OptionCatchFixCatch"><font color="#800000">Enable Catch events
+on fixed or sticky objects</font></a>.&nbsp; This option, if set, will fire
+catch events when objects with a non zero fix count are picked up with the
+mouse. Some viewers will only fire catch events id the fix count is zero.</p>
+
+<p><a name="OptionUnfixVisible"><font color="#800000">Restrict Unfix events to
+visible objects</font></a>.&nbsp; This option, if set, will restrict unfix
+events to visible objects. This restriction applies to both mouse initiated
+activities and FKiSS initiated activities. Note that most viewers do not
+consider visibility when unfixing objects.&nbsp;</p>
+
+<p><a name="OptionEarlyUnfix"><font color="#800000">Set fix value prior to mouse
+down events</font></a>.&nbsp; This option, if set, will alter the time at which
+the fix count is computed for unfix event recognition. Some viewers do this
+immediately upon mouse down. Other viewers do this computation later, after drop
+and fixdrop events have been processed. If this option is not set, unfix
+computations are made after the mouse is pressed and before the mouse is
+released.</p>
+
+<p><a name="OptionDetachOnRestrict"><font color="#800000">Allow detatchments
+when restrictions released</font></a>.&nbsp; This option, if set, will permit
+object detachment when restriction bounds are reached. DirectKiss has not
+implemented this behaviour and this is considered to be a DirectKiss
+fault.&nbsp;</p>
+
+<p><a name="OptionDetachOnFKiSS"><font color="#800000">Allow detatchments on
+moves of detached objects</font></a>.&nbsp; This option, if set, will detach
+objects if they are moved with an FKiSS command. DirectKiss has not implemented
+this behaviour and this is considered to be a DirectKiss fault.&nbsp;</p>
+
+<p><a name="OptionStrongAttach"><font color="#800000">Enable strong attachments
+for fixed objects</font></a>.&nbsp; This option, if set, will allow child
+objects to move an attachment chain if the child object is fixed. DirectKiss has
+not implemented this behaviour and this is considered to be a DirectKiss
+fault.&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<h3><font color="#000080">Compatibility Options&nbsp;- Interface</font></h3>
+
+<p align="center"><img border="0" src="images/options_08b.gif" width="635" height="462"></p>
+
+<p>&nbsp;</p>
+
+<p><a name="OptionPageContext"><font color="#800000">Use page context for
+ambiguous cels</font></a>.&nbsp; This option, if set, uses the current page
+context to disambiguate ambiguous image cels. The FKiSS specification does not
+define how cels are to be selected if the same cel is used in more than one
+object. If this option is not selected the first cel identified will be chosen
+for ambiguous commands.&nbsp;</p>
+
+<p><a name="OptionAllAmbiguous"><font color="#800000">Apply action commands to
+all ambiguous cels</font></a>.&nbsp; This option, if set, applies cel action
+commands to all cels with the same name. If this option is not selected the
+first cel identified will be chosen for ambiguous commands.&nbsp;</p>
+
+<p><a name="OptionMouseFKiss"><font color="#800000">Enable FKiSS object moves on
+mouse controlled objects</font></a>.&nbsp; This option, if set, applies FKiSS
+moves to mouse selected objects. This can move the selected object away from the
+mouse, although the mouse may still retain movement control.&nbsp;</p>
+
+<p><a name="OptionPageContext"><font color="#800000">Retain mouse control after
+FKiSS object movement</font></a>.&nbsp; This option, if set, applies FKiSS moves
+to mouse selected objects. This can move the selected object away from the
+mouse, although the mouse still retains movement control.&nbsp; If this option
+is clear then the mouse loses control of the object.</p>
+
+<p><a name="OptionVisibleBounds"><font color="#800000">Apply mouse movement
+limits to visible bounds</font></a>.&nbsp; This option, if set, prevents
+dragging of objects off the playfield area.</p>
+
+<p><a name="OptionVisibleBounds"><font color="#800000">Active key press is
+required for letkey and letkeymap</font></a>.&nbsp; This option, if set, ensures
+that letkey() and letkeymap() action commands will only receive valid keystroke
+information if the action command is executed while a key is pressed. If this
+option is clear the key commands can receive the keystroke at any time.</p>
+
+<p>&nbsp;</p>
+
+<h3><font color="#000080">Compatibility Options&nbsp;- Viewer</font></h3>
+
+<p align="center"><img border="0" src="images/options_08c.gif" width="635" height="462"></p>
+
+<p align="center">&nbsp;</p>
+
+<p><a name="OptionDirectKissXY"><font color="#800000">Maintain DirectKiss %x and
+%y image offsets</font></a>.&nbsp; This option, if set, writes cel offsets to
+the configuration file as individual %x and %y values. If this option is not
+set, offsets are written as a point with a %offset(x,y) syntax.</p>
+
+<p align="left"><a name="OptionDirectKissAbsWindow"><font color="#800000">Implement
+DirectKiss absolute window positioning fault</font></a>.&nbsp; This option, if set,
+interprets FKiSS windowsize() and viewport() command arguments as absolute
+offsets into the playfield. The original Japanese specification defines these
+offset values as relative values to the current window state.</p>
+
+<p align="left"><a name="OptionDirectKissMouse"><font color="#800000">Use
+DirectKiss mouse event bounding boz recognition</font></a>.&nbsp; This option, if set,
+attempts to correct for DirectKiss errors with bounding box recognition on
+restrict() and detach() commands.</p>
+
+<p align="left"><a name="OptionPlayFKissGhost"><font color="#800000">Invert
+PlayFKiss ghost setting logic</font></a>.&nbsp; This option, if set, inverts the
+effect of ghost(0) and ghost(1) action commands.</p>
+
+<p align="left"><a name="OptionPlayFKissSetfix"><font color="#800000">Implement
+PlayFKiss setfix() fault</font></a>.&nbsp; This option, if set, alters setfix()
+processing to emulate PlayFKiss.</p>
+
+<p>&nbsp;</p>
+
+<h3><font color="#000080">Compatibility Options&nbsp;- Miscellaneous</font></h3>
+
+<p align="center"><img border="0" src="images/options_08d.gif" width="634" height="462"></p>
+
+<p align="center">&nbsp;</p>
+
+<p align="left"><a name="OptionAllowShell"><font color="#800000">Allow shell
+command to execute programs</font></a>.&nbsp; This option, if set, enables
+execution of shell programs outside of UltraKiss.</p>
+
+<p align="left"><a name="OptionStrictSyntax"><font color="#800000">Enforce
+strict FKiSS syntax checks and block structure</font></a>.&nbsp; This option, if set,
+flags improper syntax and block structures in FKiSS code.</p>
+
+<p align="left"><a name="OptionShowUndefs"><font color="#800000">Show undefined
+variables and object declarations</font></a>.&nbsp; This option, if set, will
+identify unused or undefined variables and objects in FKiSS code.</p>
+
+<p align="left"><a name="OptionRetainExpansion"><font color="#800000">Retain
+prior event declarations on Expansion set loads</font></a>.&nbsp; This option, if set,
+retains previous event code when expansion sets are loaded. If the expansion set
+contains updated or replaced definitions of prior events then the new
+definitions are used.</p>
+
+<p align="left"><a name="OptionAutoEndif"><font color="#800000">Automatically
+generate missing endif() statements</font></a>.&nbsp; This option, if set,
+automatically generates missing endif() statements where necessary.&nbsp;</p>
+
+<p align="left">&nbsp;</p>
+
+<p align="left">&nbsp;</p>
+
+<h3><font color="#000080">Export Options&nbsp;</font></h3>
+
+<p align="center"><img border="0" src="images/options_09.gif" width="636" height="461"></p>
+
+<p align="center">&nbsp;</p>
+
+<h4>Import Control Options</h4>
+
+<p align="left"><a name="OptionRelativePath"><font color="#800000">Set relative
+paths on image imports</font></a>.&nbsp; This option, if set, retains relative
+directory paths for cel images imported from subordinate directories to the CNF
+configuration file. If this option is clear the cel name does not retain
+directory information.</p>
+
+<p align="left"><a name="OptionImportCel"><font color="#800000">Import all
+images as CEL files</font></a>.&nbsp; This option, if set, converts all imported
+images to CEL format. The CNF configuration file refers to the image as a cel
+image. This option can be used to perform automatic image conversion during
+import. FKiSS statements coded after import must reference the cel name.</p>
+
+<p align="left">&nbsp;</p>
+
+<h4>Export Control Options</h4>
+
+<p align="left"><a name="OptionWriteCelOffsets"><font color="#800000">Write
+image offsets to CEL files</font></a>.&nbsp; This option, if set, ensures that
+cel offset values are saved when the image cel is written. If ambiguous cels
+exist in the set with different offsets this can cause image placement problems
+when the set is reloaded. If offset values are not written to the cel file then
+offsets are maintained in the CNF with %offset(x,y) tags.</p>
+
+<p align="left"><a name="OptionExportComponentCel"><font color="#800000">Export
+GUI components as CEL files</font></a>.&nbsp; This option, if set, will convert
+all non-input or read only UltraKiss component cels such as buttons and labels
+to cel images when the set is saved. Note that input components such as lists
+and comboboxes cannot be converted to a single CEL image and will be retained as
+component cels.</p>
+
+<p align="left"><a name="OptionExportImageCel"><font color="#800000">Export all
+images as CEL files</font></a>.&nbsp; This option, if set, converts all images
+to CEL or other image formats when the set is saved. This option can be used to
+convert KiSS images. FKiSS statements in the CNF file are automatically adjusted
+to reference the new image type.&nbsp;</p>
+
+<p align="left">&nbsp;</p>
+
+<p align="left">&nbsp;</p>
+
+<h3><font color="#000080">Window Options&nbsp;</font></h3>
+
+<p align="center"><img border="0" src="images/options_10.gif" width="635" height="462"></p>
+
+<p align="left">&nbsp;</p>
+
+<h4>Initial State Options</h4>
+
+<p align="left"><a name="OptionSizeOnLoad"><font color="#800000">Size window to
+fit set</font></a>.&nbsp; This option, if set, automatically resizes the
+UltraKiss window size to fit the playfield size of the loaded set.</p>
+
+<p align="left"><a name="OptionScaleOnLoad"><font color="#800000">Scale set to
+fit window</font></a>.&nbsp; This option, if set, will automatically scale the
+set to fit the UltraKiss window size. Note that sets are only magnified and not
+reduced in size.</p>
+
+<p align="left"><a name="OptionRetainSize"><font color="#800000">Save the last
+window size</font></a>.&nbsp; This option, if set, retains the last known window
+size and location for UltraKiss and all tools when UltraKiss is terminated.
+Windows will be restored to the proper size and position on next execution.</p>
+
+<p align="left"><a name="OptionMaximizeWindow"><font color="#800000">Maximize
+window on load</font></a>.&nbsp; This option, if set, automatically maximizes
+the UltraKiss window and all tools to fit the full screen, when loaded.</p>
+
+<p align="left"><a name="OptionBorderBoundary"><font color="#800000">Maximize
+window on load</font></a><font color="#800000">.</font> This option, if set,
+displays a border around the playfield.</p>
+
+<p align="left">&nbsp;</p>
+
+<h4>Toolbar Options</h4>
+
+<p align="left"><a name="OptionShowTool"><font color="#800000">Show Tool
+Selection</font></a>.&nbsp; This option, if set, displays the UltraKiss tool
+buttons on the toolbar.</p>
+
+<p align="left"><a name="OptionShowColor"><font color="#800000">Show Color Set
+Selection</font></a>.&nbsp; This option, if set, displays the set color buttons
+on the toolbar.</p>
+
+<p align="left"><a name="OptionShowPage"><font color="#800000">Show Page Set
+Selection</font></a>.&nbsp; This option, if set, displays the page buttons on
+the toolbar.</p>
+
+<p align="left"><a name="OptionShowEdit"><font color="#800000">Show Editing
+Controls</font></a>.&nbsp; This option, if set, displays the UltraKiss edit
+selection buttons on the toolbar.</p>
+
+<p align="left"><a name="OptionShowViewer"><font color="#800000">Show Viewer
+Compatibility</font></a>.&nbsp; This option, if set, displays the UltraKiss
+viewer compatibility buttons on the toolbar.</p>
+
+<p align="left">&nbsp;</p>
+
+<p align="left">&nbsp;</p>
+
+<h3><font color="#000080">Media Options&nbsp;</font></h3>
+
+<p align="center"><img border="0" src="images/options_04.gif" width="634" height="463"></p>
+
+<h4>&nbsp;</h4>
+
+<h4>Media Player Options</h4>
+
+<p><a name="UseJavaSound"><font color="#800000">Use Java Sound</font></a>.&nbsp; This option, if set,
+requests that the Java Sound system be used for playback of sequencer files such
+as MIDI.&nbsp; If this option is not set Java Media Framework will be used for
+all audio and video files.&nbsp; If Java Media Framework is not installed Java
+Sound will be used for all audio playback regardless of this setting.</p>
+
+<p><a name="CacheAudioMedia"><font color="#800000"> Audio</font></a>.&nbsp; This option, if set, retains
+the raw audio file data in memory.&nbsp; Audio files are played from their
+memory contents.&nbsp; If this option is not set then audio file data is read
+from the source file.&nbsp; If this option is set, high memory
+utilization may occur.</p>
+
+<p><a name="CacheVideoMedia"><font color="#800000"> Video</font></a>.&nbsp; This option, if set, retains
+the raw video file data in memory.&nbsp; Video files are played from their
+memory contents.&nbsp; If this option is not set then video file data is read
+from the source file.&nbsp; If this option is set, high memory
+utilization may occur.</p>
+
+<p><a name="LoopPlayback"><font color="#800000">Loop Playback</font></a>.&nbsp;
+This is a <a href="../mediaplayer/index.html"> Media Player</a> option.&nbsp; This option instructs the Media Player to
+repeat the playback of the active media file or play list upon completion of the
+media file.</p>
+
+<p><a name="MinimizeAudio"><font color="#800000">Minimize Audio</font></a>.&nbsp;
+This is a <a href="../mediaplayer/index.html"> Media Player</a> option.&nbsp; This option instructs the Media Player to
+minimize itself when an audio media file begins.</p>
+
+<p><font color="#800000"><a name="MaximizeVideo">Full Screen Video</a></font>.&nbsp;
+This is a <a href="../mediaplayer/index.html"> Media Player</a> option.&nbsp; This option instructs the Media Player to
+show video files in a maximized window when the media file begins.</p>
+
+<p><a name="CenterFrame"><font color="#800000">Center Frame</font></a>.&nbsp;
+This is a <a href="../mediaplayer/index.html"> Media Player</a> option.&nbsp; This option instructs the Media Player to
+center the frame in the screen when the media file begins.</p>
+
+<p><a name="RetainAspectRatio"><font color="#800000">Retain Aspect Ratio</font></a>.&nbsp;
+This is a <a href="../mediaplayer/index.html"> Media Player</a> option.&nbsp; This option instructs the Media Player to
+maintain the original video aspect ratio if the window is resized.&nbsp; If this
+option is not set the movie will be scaled to fit within the actual window size.&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<h4>Music Control Options</h4>
+
+<p><font color="#800000"><a name="StopMusic">Stop Music when switching to a new
+page set</a></font><a name="Suspend Media Music">.</a>&nbsp;
+This option, if set,&nbsp;will stop any music files that are actively playing
+when a new page set is selected.&nbsp; If this option is on the ability to Resume
+Media Player when Music stops is disabled.</p>
+
+<p><font color="#800000"><a name="SuspendMediaMusic">Suspend Media Player when
+Music starts</a></font><a name="Suspend Media Music">.</a>&nbsp;
+This option, if set,&nbsp;will suspend any media player output if a music
+command is initiated from the data set. This option can be used to
+ensure that the media player does not compromise playing of data set music.&nbsp;</p>
+
+<p><a name="ResumeMediaMusic"><font color="#800000">Resume Media Player when
+Music stops</font></a>.&nbsp;
+This option, if set,&nbsp;will restart any suspended media player after a data
+set music file ends.&nbsp;&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<h3><font color="#000080">Edit Options&nbsp;</font></h3>
+
+<p align="center"><img border="0" src="images/options_11.gif" width="635" height="462"></p>
+
+<h4>&nbsp;</h4>
+
+<h4>Edit Limits Options</h4>
+
+<p><a name="OptionUndoLimit"><font color="#800000">Undo Limit</font></a>.&nbsp; This
+option specifies the maximum number of undo actions that are queued. Edits that
+exceed this number cannot be undone.</p>
+
+<p><a name="OptionCnfComment"><font color="#800000">CNF file comment column</font></a>.&nbsp; This
+option specifies the minimum column number which will be used for comments on
+FKiSS code or other CNF statements.&nbsp;</p>
+
+<p><a name="OptionFKissIndent"><font color="#800000">FKiSS block indent spacing</font></a>.&nbsp; This
+option specifies the number of spaces that FKiSS code will be indented for
+nested if-statements or loop commands.&nbsp;</p>
+
+<h4>&nbsp;</h4>
+
+<h4>Edit Control Options</h4>
+
+<p><a name="OptionEnableEdit"><font color="#800000">Enable Edits</font></a>.&nbsp; This
+option, if set, enables all UltraKiss edit features. If this option is cleared
+edit functions cannot be used.&nbsp;</p>
+
+<p><a name="OptionEnableSecurity"><font color="#800000">Enable Security</font></a>.&nbsp; This
+option, if set, disables all UltraKiss edit features and all ability to view or
+change the set configuration. The ability to change options is also disabled.</p>
+
+<p><a name="OptionEnableEdit"><font color="#800000">Use alt key for edit
+selection</font></a>.&nbsp; This option, if set, allows alt-key selection of
+objects on the screen. This generally applies to Windows systems. Linux systems
+may require that this option be disabled. Apple systems use the command key
+instead of the alt key.</p>
+
+<p><a name="OptionEnableEdit"><font color="#800000">Edit selection on</font></a>.&nbsp; This
+option, if set, enables initial edit selection when UltraKiss is started. This
+feature can be turned off as right mouse clicks may interfere with play if edit
+features are not desired.</p>
+
+<p>&nbsp;</p>
+
+<h4>Event Options</h4>
+
+<p><a name="OptionPauseOnEvent"><font color="#800000">Pause on Event</font></a>.&nbsp; This
+toggle sets the FKiSS Editor option to breakpoint on the next event or the next
+action statement executed.<br>
+<a name="OptionPauseOnAction"><font color="#800000">Pause on Action</font></a>.&nbsp; This
+toggle sets the FKiSS Editor option to breakpoint on the next event or the next
+action statement executed.</p>
+
+<p><a name="OptionUndoLimit"><font color="#800000">Show breakpoint end message</font></a>.&nbsp; This
+option enables the FKiSS editor display of a popup dialog when the end of a
+breakpoint event is reached. This display can be disabled if desired.</p>
+
+<p><a name="OptionUndoLimit"><font color="#800000">Close FKiSS statements with a
+comment</font></a>.&nbsp; This option ensures that every FKiSS statement is
+written with a terminating semicolon comment if the set is saved.</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<h3><font color="#000080">Debug Options&nbsp;</font></h3>
+
+<p align="center"><img border="0" src="images/options_06.gif" width="634" height="462"></p>
+
+<p align="left">&nbsp;</p>
+
+<p align="left"><a name="LogFile"><font color="#800000">Log File</font></a>.&nbsp;
+This text box identifies the name of the UltraKiss log file.&nbsp;This log file
+is created in the initial program directory.</p>
+
+<p align="left"><a name="ShowObjectSelection"><font color="#800000">Show
+Object Selection</font></a>.&nbsp; This option, if set, will display the name of
+the selected group object and cel object in the program status bar when
+selected.</p>
+
+<p align="left"><a name="LogControlMessages"><font color="#800000">Log Control
+Messages</font></a>.&nbsp; This option, if set, writes various UltraKiss
+diagnostic control messages to the log file.&nbsp; Control messages show event
+handler activation and termination messages, configuration initialization and
+termination messages, and other control functions.</p>
+
+<p align="left"><a name="LogLoadMessages"><font color="#800000">Log Load
+Messages</font></a>.&nbsp; This option, if set, writes log messages to
+the UltraKiss log file for each file loaded by the program.</p>
+
+<p align="left"><a name="LogEditMessages"><font color="#800000">Log Edit
+Messages</font></a>.&nbsp; This option, if set, writes a log record of user edit
+actions such as cut, copy, paste, select, move, and import activities to the log
+file.</p>
+
+<p align="left"><a name="LogImageTransforms"><font color="#800000">Log Image
+Transforms</font></a>.&nbsp; This option, if set, writes a log record of all image
+edit operations to the UltraKiss log file.</p>
+
+<p align="left"><font color="#800000"><a name="LogFKiSSBreakpoints.">Log FKiSS
+Breakpoints.</a></font>&nbsp; This option, if set, traces the FKiSS Editor
+diagnostic breakpoint activities. Log file entries are written for each
+breakpoint processed.</p>
+
+<p align="left"><a name="LogMediaEvents"><font color="#800000">Log Media
+Events</font></a>.&nbsp; This option, if set, writes low level media stream
+processing events to the UltraKiss log file.&nbsp; This option can create a
+significant amount of trace output.</p>
+
+<p align="left"><a name="LogEventSequences"><font color="#800000">Log Event
+Sequences</font></a>.&nbsp; This option, if set, traces UltraKiss FKiSS
+events.&nbsp; Each event processed is time stamped and written to the log file.</p>
+
+<p align="left"><a name="LogEventActions"><font color="#800000">Log Event
+Actions</font></a>.&nbsp; This option, if set, traces all UltraKiss FKiSS action
+commands.&nbsp; This option can create a significant amount of trace output.</p>
+
+<p align="left"><font color="#800000"><a name="LogVariableAssignment">Log
+Variable Assignment</a>s</font>.&nbsp; This option, if set, writes a record of
+all assignments to FKiSS variables during UltraKiss event processing.&nbsp; This
+option can create a significant amount of trace output.</p>
+
+<p align="left"><a name="LogSoundEvents"><font color="#800000">Log Sound
+Events</font></a>.&nbsp; This option, if set, writes all high level audio media
+control events to the UltraKiss log file.</p>
+
+<p align="left"><a name="LogMovieEvents"><font color="#800000">Log Movie
+Events</font></a>.&nbsp; This option, if set, writes all high level video media
+control events to the UltraKiss log file.</p>
+
+<p align="left"><font color="#800000"><a name="LogView">View</a></font>.&nbsp; The View command
+will show the current log file in the text editor.</p>
+
+<p align="left"><font color="#800000"><a name="LogClear">Clear</a></font>.&nbsp; The Clear command will erase the current log file contents.</p>
+
+<p align="left"><font color="#800000"><a name="LogPrint">Print</a></font>.&nbsp; The Print command will print the current log file on the system printer.</p>
+
+<p align="left">&nbsp;</p>
+
+<p align="left">&nbsp;</p>
+
+<h3><font color="#000080">Search Options&nbsp;</font></h3>
+
+<p align="center"><img border="0" src="images/options_12.gif" width="635" height="462"></p>
+
+<h4>&nbsp;</h4>
+
+<h4>General Options</h4>
+
+<p align="left"><a name="LogFile"><font color="#800000">Use Default Search
+Options</font></a>.&nbsp;
+This option, if set, disables the remaining options in this section and defaults
+values for KiSS file indexing and directory search operations.</p>
+
+<p>&nbsp;</p>
+
+<hr>
+<p align="left">Next Document:&nbsp; <a href="objects.html">Object Properties<br>
+</a>Prior Document:&nbsp; <a href="toolbar.html">Toolbar Commands</a></p>
+<p align="left">Copyright (c) 2002-2023 William Miles</p>
+
+
+
+
+
+
+
+
+
+
+</body>
+
+</html>

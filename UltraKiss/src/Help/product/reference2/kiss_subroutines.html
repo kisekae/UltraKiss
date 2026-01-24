@@ -1,0 +1,71 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>FKiSS Variables</title>
+</head>
+
+<body>
+
+<h2 align="center"><font face="Arial" color="#FF0000">FKiSS Functions and Subroutines </font></h2>
+<p>FKiSS 3 introduced variables, logic statements, and label
+blocks into the purely event driven and previously non-procedural KiSS
+program language. This extension transformed the FKiSS language
+from a non-procedural language specification into a procedural specification. With FKiSS
+3 the language now had the ability to maintain state information and
+could consider sequences of operations over time.</p>
+<p>The label() event was defined as the way to reuse code in different actual events. The label() event serves to block FKiSS code into a named structure that can be invoked through various FKiSS action commands such as goto() and gosub(). </p>
+<p>With the rudimentarty and limited implementation of FKiSS 3 no facilities were provided to parameterize label blocks. The FKiSS code in a label block could reference all defined FKiSS variables and create new variables as necessary, as FKiSS 3  had only global variables. This limitation ensured that there was no easy way to invoke the reusable code with different sets of parameters without first presetting known variables. </p>
+<p>FKiSS 5 corrected this situation and introduced the notion of functions and subroutines by implementing local variables and parameterized calls to label blocks. This provides a more structured way to reference reusable code and return results to the calling module. </p>
+<p>&nbsp;</p>
+<h2><font color="#FF0000"><a name="Variables">Label Blocks </a></font></h2>
+<p>  A label is an FKiSS code module that specifies actions to be performed on a gosub() or goto() action command.&nbsp;The label identifier can be an integer or a name. Label identifiers must be unique.</p>
+<p>The label() specifier is not truly an event. It is a mechanism by which structured code modules can be developed. Label() code is normally invoked through other commands such as the goto() or gosub() command variants.</p>
+<p>FKiSS 5 has extended the notion of labels to allow for parameter specification and return values. Previous FKiSS versions were incapable of implementing recursive label modules or functions. FKiSS 5 implements local label variables and this provides the ability to support recursion and functions. Local variables are label specific and eliminate the requirement for the coder to manage global variables.</p>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>FKiSS 5 Syntax:</b></font>&nbsp;&nbsp;&nbsp;&nbsp; label (identifier[, parameter list])</p>
+<p>The optional parameter list specifies a set of variables or literal constants or variables that can be referenced as local variables within the alarm code module.</p>
+<p>Local variable names are prefixed with an '@' sign. Thus, the variable '@N' is a local variable declared and referenced within the module and is distinct from any global variable 'N'. Calling the label module recursively creates new instances of all local variables distinct from any other local variable of the same name.</p>
+<p>Return values can be specified for label modules by assigning a value to a local variable of the same name as the label module. The following example shows how to specify label parameters and return values.</p>
+<p>Example:</p>
+<p><font face="Courier New">  ;@begin()&nbsp;<br>
+  ;@ gosub(Factorial,5)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; 5 is an argument to the factorial label routine<br>
+  ;@ notify(&quot;5! is &quot;,@Factorial)&nbsp;; the return value is in local variable @Factorial<br>
+  <br>
+  ;@label(Factorial,@N)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; local variable @N is the function parameter<br>
+  ;@ iflessthan(@N,2)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; factorial of 2 is 2, 1 is 1, 0 is 0<br>
+  ;@&nbsp; let(@Factorial,@N)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; set the function return value<br>
+  ;@&nbsp; exitevent()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; exit<br>
+  ;@&nbsp; endif()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;<br>
+  ;@ sub(@N1,@N,1)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; N1 is N - 1&nbsp;<br>
+  ;@ gosub(Factorial,@N1)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; this is a recursive call to Factorial(N-1)<br>
+  ;@ mul(@X,@N,@Factorial)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; factorial of N is N*Factorial(N-1)<br>
+  ;@ let(@Factorial,@X)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; local variable @Factorial is the return value</font></p>
+<p></p>
+<p>&nbsp;</p>
+<p>Example:</p>
+<p><font face="Courier New, Courier, mono">; ---------------------------------------------------------------------------<br>
+  ; Assign a new object to the next wheel image to appear. Label parameters <br>
+  ; @N1,@N2,@N3 are the object numbers that should not be assigned as they <br>
+  ; are currently showing on the wheel. @F1, @F2, @F3 are frames that should<br>
+  ; not be assigned as they are also showing. Object and frame numbers begin <br>
+; at 0.</font></p>
+<p><font face="Courier New, Courier, mono">;@label(GetFrame,@N1,@N2,@N3,@F1,@F2,@F3) ;<br>
+  ;@ random(@N,0,99) ; random choice <br>
+  ;@ ifequal(@N,@N1) goto(GetFrame) endif() ; do not accept @N1 <br>
+  ;@ ifequal(@N,@N2) goto(GetFrame) endif() ; do not accept @N2 <br>
+  ;@ ifequal(@N,@N3) goto(GetFrame) endif() ; do not accept @N3 <br>
+  ;@ mul(@I,@N,4) add(@J,@I,4) substr(@S,WS,@I,@J) ; isolate wheel symbol [nn]<br>
+  ;@ substr(@S,@S,1,3) sub(@F,@S,1) ; convert to frame number<br>
+  ;@ ifequal(@F,@F1) goto(GetFrame) endif() ; do not accept @F1<br>
+  ;@ ifequal(@F,@F2) goto(GetFrame) endif() ; do not accept @F2<br>
+  ;@ ifequal(@F,@F3) goto(GetFrame) endif() ; do not accept @F3<br>
+  ;@ let(@GetFrame,@N) ; set label return value</font><br>
+</p>
+<p><font face="Courier New, Courier, mono"></font></p>
+</body>
+
+</html>

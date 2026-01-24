@@ -1,0 +1,111 @@
+<html>
+	<head>
+		<title>Visual Editing Lesson 4</title></head>
+	<body>
+		<h1 align="center"><font color="#000000">Visual Editing Tutorial</font></h1>
+		<h1 align="center"><font color="#ff0000">Lesson 4. Edit Undo and Redo</font></h1>
+		<p>&nbsp;</p>
+		<ol>
+			<li>
+				This tutorial will explore the undo and redo operations that exist for most visual editing commands.
+				If you are continuing from lesson 3 you can skip to step 3.  Otherwise, ensure that UltraKiss is showing 
+				the main logo screen.  Close any existing set.
+				<p>&nbsp;</p>
+                This tutorial requires <FONT color="#cc6600">image files</FONT>.  If the necessary files cannot be found 
+                on your computer download the tutorial files using <FONT color="#000099">Help-Tutorial Files</FONT>.
+				<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">File-Open</FONT>&nbsp; to load the configuration file
+				<FONT color="#cc6600">CNF3.cnf</FONT> from the Tutorial/Visual Editing directory or the directory
+				you used in lesson 1.&nbsp; This will load the Visual Editing set that you created in lesson 3.
+				<p>&nbsp;</p>
+				The set will open to page 0.  Four buttons should show.  Two are button components and two are
+				cel images that look like buttons.  One of those buttons has been programmed with an event to 
+				switch to page 1 of your KiSS set.
+				<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">Edit-Add Page</FONT> to create new page 2. 
+				UltraKiss will automatically switch to view this empty page.  It will be the default color of the set palette. 
+				<p>&nbsp;</p>
+				Use <FONT color="#000099">View-Page Set</FONT> and choose set 0 from the pop-up menu to return to our menu page.	                                
+				<p>&nbsp;</p>
+			<li>
+				Next, <FONT color="#cc6600">right-click</FONT> on the first component button with the label <FONT color="#cc6600">button2</FONT>. 
+				A contexual selection popup window will show. Select <FONT color="#000099">Image Context</FONT> and then select 
+				<FONT color="#000099"> Event Wizard</FONT>.
+				<p>&nbsp;</p>
+			<li>
+				The <FONT color="#000099">FKiSS Event Wizard</FONT> dialog will show. The Event Source should be set to 
+				'<FONT color="#cc6600">JavaCel n button5.button</FONT>', the first component button, where 'n' is probably 3 but 
+				could be another number.  Follow the instructions in the Wizard window. Choose the '<FONT color="#cc6600">press</FONT>'
+				event from the Event selection box.
+				<p>&nbsp;</p>
+		  <li>
+				The text area should now display the generated FKiSS code for a <FONT color="#cc6600">press</FONT>
+				event on the selected button object. The object number '<FONT color="#cc6600">#n</FONT>'
+				from above is used. A default action statement to display a notify dialog is automatically generated for you.
+				<p>&nbsp;</p>
+			<li>
+				Overtype or replace the <FONT face="Courier New">;@notify</FONT> action statement with 
+				<FONT face="Courier New">;@ changeset(2)</FONT> statement. 
+				This statement causes a switch to page set 2.  If your button is object 3,
+				your new event code should look as shown below:
+				<p>&nbsp;</p>
+				<FONT face="Courier New">;@press("button5.button")<BR>
+					;@ changeset(2)<BR>
+				</FONT>
+				<br>
+				<FONT color="#cc6600">Note:&nbsp; If you copy and paste these lines from the help
+					documentation into your configuration file you must ensure that the semicolon
+					and at-sign combination appears <u>at the beginning of every line</u>.&nbsp; You can
+					copy the help text by selecting the text and pressing Ctrl-C to copy the text
+					to the clipboard. Use Ctrl-V to paste the text into the configuration file.</FONT>				<BR>
+				<p>&nbsp;</p>
+			<li>
+				Click <FONT color="#000099">OK</FONT> to create the new event. If there are no
+				syntax errors in the event code it will become part of the new event code for
+				the set and you can actually try out the event. Go to the next step to continue.
+				<p>&nbsp;</p>
+				If there is a syntax error you will receive an error message and the Text
+				Editor will be automatically invoked so that the error can be corrected.
+				<p>&nbsp;</p>
+				Note, if you happen to paste the <FONT face="Courier New" color="#cc6600">;@ changeset(2)</FONT> statement on the same line
+				as the <FONT face="Courier New" color="#cc6600">;@press()</FONT> statement you will not see an error, but the button
+				press will not work.  The semicolon on the ;@ changeset(2) statement is 
+				being treated as a comment applied to the press() event.  The changeset(2) statement is being ignored.
+				<p>&nbsp;</p>
+				Also, if you skipped Step 3 and did not create a new page 2, the button will not work.  Ensure that
+				page 2 actually exists.  Use <FONT color="#000099">View-Page Set</FONT> and verify that the pop-up menu shows
+				both page 0 and 1 and 2.  
+				<p>&nbsp;</p>
+				If you have problems close this set with <FONT color="#000099">File-Close</FONT> and start again.  There are other
+				ways to correct FKiSS code using the FKiSS Editor tool, but that is the topic of another lesson.  
+				<p>&nbsp;</p>
+			<li>
+				<FONT color="#cc6600">Press the button</FONT>.	Or use <FONT color="#000099">View-Page Set</FONT> and choose 
+				set <FONT color="#cc6600">2</FONT> from the pop-up menu. UltraKiss will switch to page 2 and show an empty screen.				
+				<p>&nbsp;</p>
+		    <li>			
+				Use <FONT color="#000099">View-Restart</FONT> to reset the initial cel offsets in the configuration file.
+				If you do not do this then the current offset values for all ambiguous cels will be written to the CNF file
+				when the set is saved.  A restart of the set will restore the initial offets that were first used.
+				<p>&nbsp;</p>				
+				If you happen to inadvertently save the set with current offsets then when you reload the set your balls will
+				appear as a circle.  You will have to edit the configuration with <FONT color="#000099">View-Active Configuration</FONT> 
+				and remove all <FONT color="#cc6600" face="Courier New">%offset[]</FONT> tags from all cel specifications.
+				<p>&nbsp;</p>
+				Use <FONT color="#000099">File-Save As</FONT> to save your work.&nbsp; Save the new KiSS set to the 
+				Tutorial/Visual Editing directory or a directory of your choice.&nbsp; The configuration element name 
+				should be <FONT color="#cc6600">CNF4.cnf</FONT> if you began this tutorial after first starting UltraKiss.
+				You can overwrite any existing element of the same name.
+				<p>&nbsp;</p>
+		  </li>
+		</ol>
+		<p align="left">&nbsp;</p>
+		<hr>
+		<p align="left">Next Document:&nbsp; <A href="lesson4.html">Visual Editing Tutorial Lesson 4<br>
+			</A>Prior Document:&nbsp; <A href="lesson2.html">Visual Editing Tutorial Lesson 2</A></p>
+		<p align="left">Copyright (c) 2002-2025 William Miles</p>
+
+	</body>
+</html>

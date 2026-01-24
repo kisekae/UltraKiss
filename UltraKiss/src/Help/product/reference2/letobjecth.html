@@ -1,0 +1,81 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta name="generator" content="Bluefish 2.2.12" >
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>string</title>
+</head>
+
+<body>
+
+<h4><a name="letobjecth" id="letobjecth">letobjecth</a>()</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp;
+letobjecth (variable,target)</p>
+<p>
+The letobjecth() statement returns the current height of a cel or object on the currently visible page. </p>
+<p>The same object on different page can have a different height.</p>
+<p>The <em>target</em>  can be a cel name or an object group specifier. FKiSS 3 allowed only object groups for the letobjecth() statement, FKiSS 5 allows cel names.</p>
+<p>&nbsp;</p>
+<p> Related actions: <a href="letobjectw.html">letobjectw()</a> <a href="letobjectx.html">letobjectx()</a> <a href="letobjecty.html">letobjecty()</a></p>
+<p>&nbsp; </p>
+<p>&nbsp;  </p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+    <table border="1" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td width="20%">FKiSS 5 &nbsp;</td>
+        <td width="30%">letobjecth(N,&quot;shirt.cel&quot;)&nbsp; </td>
+        <td>Variable N is set to the current height of &quot;shirt.cel&quot;.  </td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<table width="80%"  border="1" align="center" cellpadding="5" cellspacing="5" bordercolor="#000000" bgcolor="#FFFF99">
+  <tr>
+    <td><div align="center">Note: The UltraKiss letobjecth() command is viewer specific and not compatible with other viewers. </div></td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+    <table border="1" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td width="20%">VariableCase</td>
+        <td width="30%">variable names are case sensitive</td>
+        <td>default value &quot;<font color="#0000FF">false</font>&quot; (Compatibility option)</td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<div align="center"></div>
+<p><font color="#FF0000"><b>&nbsp;Example:&nbsp;</b></font></p>
+<p>
+<font face="Courier New">
+;@letobjecth(N,&quot;shirt.cel&quot;)&nbsp;;&nbsp;N contains the current height for the specified cel<br> 
+;@letobjecth(N,#3)&nbsp;;&nbsp;N contains the current height for object #3<br></font></p>
+<p>&nbsp; </p>
+<p><font color="#FF0000"><b>&nbsp;Example:&nbsp;</b></font></p>
+<font face="Courier New">
+;[Cel Section]<br>
+#4   rightshoe.gif       : 0                                ;<br>
+#4   leftshoe.gif        : 0                                ;<br>
+#4   sailormoon.gif      : 0                                ;<br>
+ &nbsp;<br>
+ 
+;[FKiSS Section]<br>
+;@EventHandler<br>
+ &nbsp;<br>
+;@press(#4)                                                 ; <br>
+;@ letobjecth(N,#4)                                         ; <br>
+;@ notify("press Group 4 sailormoon.gif - current height ",N)    ; <br>
+;@ letobjecth(N,"leftshoe.gif")                                         ; <br>
+;@ notify("press Group 4 leftshoe.gif - current height ",N)    ; <br>
+
+</body>
+</font>
+</html>

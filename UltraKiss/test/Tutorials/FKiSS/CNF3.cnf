@@ -1,0 +1,76 @@
+; Kisekae UltraKiss configuration file created on Wed Jul 20 10:24:10 MDT 2005
+ 
+;[Screen Section]
+[0
+(800,600)
+ 
+;[Palette Section]
+%Bearman\background.kcf
+ 
+;[Cel Section]
+#14   Bearman\undies.gif              : 3                   ;
+#13   Bearman\rightleg.gif            : 3                   ;
+#12   Bearman\rightarm.gif            : 3                   ;
+#11   Bearman\leftleg.gif             : 3                   ;
+#10   Bearman\leftarm.gif             : 3                   ;
+#9    Bearman\helmet.gif              : 3                   ;
+#8    Bearman\chestplate.gif          : 3                   ;
+#7    Bearman\human.gif               : 3                   ;
+#8    Bearman\chestplateback.gif      : 3                   ;%offset[47,1] 
+#14   Bearman\undiesback.gif          : 3                   ;
+#4    ruri.jpg                        : 2                   ;
+#3    rei.jpg                         : 1                   ;
+#2    button2.cel                     : 0                   ;
+#1    button1.cel                     : 0                   ;
+ 
+;[Page Set Section]
+; Kisekae UltraKiss Page 0
+$0 * 336,234 337,314 * * * * * * * * * * * *
+; Kisekae UltraKiss Page 1
+$0 * * * 249,148 * * * * * * * * * * *
+; Kisekae UltraKiss Page 2
+$0 * * * * 148,48 * * * * * * * * * *
+; Kisekae UltraKiss Page 3
+$1 * * * * * * * 220,108 49,162 70,50 523,168 59,288 656,173 592,328 533,45
+ 
+;[FKiSS Section]
+;@EventHandler
+;@in(#8,#7)                                                 
+;@ movebyx(#8,#7,37)                                        
+;@ movebyy(#8,#7,35)                                        
+
+;@in(#9,#7)                                                 
+;@ movebyx(#9,#7,80)                                        
+;@ movebyy(#9,#7,-3)                                        
+
+;@in(#12,#7)                                                
+;@ movebyx(#12,#7,160)                                      
+;@ movebyy(#12,#7,59)                                       
+
+;@in(#10,#7)                                                
+;@ movebyx(#10,#7,-6)                                       
+;@ movebyy(#10,#7,58)                                       
+
+;@in(#11,#7)                                                
+;@ movebyx(#11,#7,22)                                       
+;@ movebyy(#11,#7,149)                                      
+
+;@in(#13,#7)                                                
+;@ movebyx(#13,#7,129)                                      
+;@ movebyy(#13,#7,143)                                      
+
+;@in(#14,#7)                                                
+;@ movebyx(#14,#7,59)                                       
+;@ movebyy(#14,#7,120)                                      
+
+;@press(#3)                                                 
+;@ changeset(0)   
+                                          
+;@press(#4)                                                 
+;@ changeset(0)                                             
+
+;@press(#1)                                                 
+;@ changeset(1)                                             
+ 
+;@catch("button2.cel")                                      
+;@ changeset(2)                                             

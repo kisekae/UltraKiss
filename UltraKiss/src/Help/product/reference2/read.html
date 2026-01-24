@@ -1,0 +1,78 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>map</title>
+</head>
+
+<body>
+
+<h4><a name="read" id="read">read</a>()&nbsp;</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; read(status,filename,string,line)</p>
+<p>UltraKiss file I/O is designed to support reading and writing of text files in a plain text or encrypted mode. The read() command accesses a previously opened file for reading. </p>
+<p>The <em>status</em> parameter must be a variable in which the number of bytes read from the file is returned. For single and double byte characters the byte count is dependent on the file encoding chosen in the UltraKiss options. If there is an error reading the file then the returned status valued  will be -1.</p>
+<p>The <em>filename</em> parameter is a literal string or a variable that contains the name of the file that has been opened for reading. The filename must be a relative name that refer to files in the same directory or archive file from which the set configuration was loaded. If the file has not been opened then the original status value and returned string remain unchanged. </p>
+<p>The <em>string</em> parameter must be a variable. This variable  will be set to the value of the text that was read from the specified line of the file. </p>
+<p>The <em>line</em> parameter is an interger value specified as a literal value or a variable that identifies the line number in the file to be read. File line numbers begin from 0. If the line does not exit then the returned string will be set to an empty string of length 0, and the status value will be set to -1. Note that the first line in the file begins with line number 0. </p>
+<p>When reading a file data is actually read from a text buffer established when the file was first opened. The complete contents of the file were read into the text buffer and all subsequent read() and write() statements access the memory contents of the text buffer. </p>
+<p>&nbsp;</p>
+<p>Related actions: <a href="open.html">open()</a>, <a href="write.html">write(),</a> <a href="close.html">close()</a>, <a href="edit.html">edit()</a> </p>
+<p>&nbsp;</p>
+<table width="80%"  border="1" align="center" cellpadding="5" cellspacing="5" bordercolor="#000000" bgcolor="#FFFF99">
+  <tr>
+    <td height="31"><div align="center">Note: The UltraKiss read() command is viewer specific and not compatible with other viewers. </div></td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+    <table border="1" cellpadding="5" cellspacing="0" width="100%">
+      <tr>
+        <td width="20%">UltraKiss Extension</td>
+        <td width="30%">read(N,S,12,&quot;myfile.txt&quot;) </td>
+        <td>read line 12 of file &quot;myfile.txt&quot;</td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+    <table border="1" cellpadding="5" cellspacing="0" width="100%">
+      <tr>
+        <td>Encoding&nbsp;</td>
+        <td>file encoding based upon language &nbsp;&nbsp;</td>
+        <td>default value &quot;<font color="#0000FF">cp1252</font>&quot; (Compatibility option)</td>
+      </tr>
+    </table>
+  </center>
+</div>
+<div align="center"></div>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>&nbsp;Example:&nbsp;<br>
+</b></font></p>
+<p><font face="Courier New, Courier, mono">;@press(#4) ; <br>
+  ;@ open(N,&quot;test.txt&quot;,&quot;r&quot;) ; <br>
+  ;@ notify(&quot;File test.txt opened for read, status &quot;,N) ; <br>
+  <br>
+  ;@press(#5) ; <br>
+  ;@ for(I,1,12) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;; <br>
+  ;@ sub(L,I,1) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;; Line 1 starts at 0<br>
+  ;@ read(N,&quot;test.txt&quot;,S,L,) ; <br>
+  ;@ debug(&quot;Read test.txt, line &quot;,I,&quot; data: &quot;,S,&quot; status: &quot;,N) ; <br>
+  ;@ next(I) ; </font><br>
+  <font face="Courier New, Courier, mono"><br>
+  ;@press(#6) ; <br>
+  ;@ close(N,&quot;test.txt&quot;) ; <br>
+;@ notify(&quot;Close test.txt without commit, status &quot;,N) ; </font></p>
+<p></p>
+<p>  <br>
+</p>
+</body>
+
+</html>

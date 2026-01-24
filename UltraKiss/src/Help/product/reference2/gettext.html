@@ -1,0 +1,83 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>getText</title>
+</head>
+
+<body>
+
+<h4><a name="getText" id="getText">getText</a>()&nbsp;</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; getText (variable,component)</p>
+<p>This action sets the  variable value to the text attribute of the specified component. The
+  <em>component</em> may be a literal name of a button or list or combobox or any other component, or a variable whose
+value is a string name of a component. Note that the action command name 'getText'
+is case sensitive and must be speified as shown. </p>
+<p>This command returns an empty string if the specified component does not maintain
+a text attribute. Component types that maintain text attributes are: <br>
+label, textbox, textarea, textfield, passwordfield, button, togglebutton, radiobutton, or any other component to which a text attribute has been assigned, </p>
+<p>Components are declared as cels within a KiSS configuration as shown in
+the example below.&nbsp; Component cel identifiers use specific extensions such
+as .button, .list, or .textarea to identify the component type.&nbsp;&nbsp;</p>
+<font SIZE="2">
+<p><font face="Courier New">#1.9999 List-1.List&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+: 0&nbsp;&nbsp;&nbsp;&nbsp; ;%size[146,207] %offset[12,121] %attributes[wrap,vsb]<br>
+#1.9999 TextArea-1.TextArea&nbsp;&nbsp; : 0&nbsp;&nbsp;&nbsp;&nbsp; ;%size[269,49]
+%offset[227,176] %attributes[wrap]<br>
+#1.9999 Button1.Button&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : 0&nbsp;&nbsp;&nbsp;&nbsp; ;%size[135,25]
+%offset[325,267] %attributes[text=&quot;Press Me&quot;]</font></p>
+</font>
+<p>The example above defines a List component with vertical scroll bars, a
+TextArea component that performs word-wrap, and a Button.&nbsp; The size and
+location of these components within the object are specified with the %size[]
+and %offset[] tags.&nbsp; Component attributes are specified with the
+%attributes[] tag.&nbsp;&nbsp;</p>
+<div align="center"><font face="Courier New"></font></div>
+<p><br>
+Related actions: <a href="setText.html">setText()</a></p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+  <table border="1" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td width="20%">UltraKiss Extension</td>
+      <td width="30%">getText (S,&quot;list1.list&quot;)</td>
+      <td>adds the specified item string to the named component</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<table width="80%"  border="1" align="center" cellpadding="5" cellspacing="5" bordercolor="#000000" bgcolor="#FFFF99">
+  <tr>
+    <td><div align="center">Note: The UltraKiss getText() command is viewer specific and not compatible with other viewers. </div></td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>Example:&nbsp;<br>
+</b></font>
+</p>
+<p><font face="Courier New">#3.999   textfield1.textfield&nbsp;&nbsp; : 0                      ;%size[318,26]&nbsp;&nbsp;&nbsp;&nbsp;
+%attributes[text=&quot;Item Description"]&nbsp;<br>
+#3.999   list1.list&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+: 0                      ;%size[175,177]&nbsp;&nbsp;&nbsp; %attributes[vsb]&nbsp;<br>
+</font>
+</p>
+<p>
+<font face="Courier New">;@press("button1.cel")                                      ;&nbsp;<br>
+;@ getText(S,"textfield1.textfield")                        ;&nbsp;<br>
+;@ addItem(&quot;list1.list&quot;,S)                                             ;&nbsp;<br>
+<br>
+</font>
+<font face="Courier New">;@press(&quot;button2.cel&quot;)                                      ;<br>
+;@ let(List,&quot;combobox1.combobox&quot;)<br>
+;@ getText(S,&quot;textfield1.textfield&quot;)                        ;&nbsp;<br>
+;@ addItem(List,S)                                             ;&nbsp;<br>
+</font></p>
+<p>&nbsp;</p>
+</body>
+
+</html>

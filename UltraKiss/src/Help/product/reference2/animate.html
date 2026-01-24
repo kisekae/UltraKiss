@@ -1,0 +1,102 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>animate</title>
+</head>
+
+<body>
+
+<h4><a name="apart">animate</a>()&nbsp;</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; animate (target,period)</p>
+<p>This is a new FKiSS5 action to animate the target entity. The target may be a literal name of an image
+file or a cel group name or an object group identifier. The animation time
+period is specified in milliseconds.</p>
+<p>If the target is an image cel then the cel must be of a type that contains
+multiple frames, such as an animated GIF image. The animation period, if
+non-zero, starts the animation.</p>
+<p>If the target is an object group or cel group, the animate() command will
+display each image frame in the group for the specified period. For cel groups
+with specified frames, the images are displayed in frame order. For cel groups
+without frames or object groups the images are displayed in cel specification
+order in the configuration file.</p>
+<p>An animation period value of zero stops the target animation.</p>
+<p><br>
+Related actions: <a href="map.html">map()</a>, <a href="unmap.html">unmap()</a>,
+<a href="setframe.html">setframe()</a>, <a href="letframe.html">letframe()</a></p>
+<p>&nbsp;</p>
+<table width="80%"  border="1" align="center" cellpadding="5" cellspacing="5" bordercolor="#000000" bgcolor="#FFFF99">
+  <tr>
+    <td height="31"><div align="center">Note: The UltraKiss animate() command is viewer specific and not compatible with other viewers. </div></td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+  <table border="1" cellpadding="5" cellspacing="0" width="100%">
+    <tr>
+      <td width="20%">UltraKiss Extension </td>
+      <td width="30%">animate(&quot;a.gif&quot;,1) or animate(CelGroup,250)&nbsp;or
+        animate(#1,N)</td>
+      <td>Animates all image frames in the group or animated image cel</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+  <table border="1" cellpadding="5" cellspacing="0" width="100%">
+    <tr>
+      <td width="20%">AllAmbiguous</td>
+      <td width="30%">apply animate to all ambiguous cels</td>
+      <td>default value &quot;<font color="#0000FF">false</font>&quot;
+        (Compatibility option)</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>Example:&nbsp;</b></font></p>
+<p><font face="Courier New, Courier, mono">#10 cbunny0.cel : 0 ;!Bunny :8 <br>
+  #11 cbunny1.cel : 0 ;!Bunny :7 <br>
+  #12 cbunny2.cel : 0 ;!Bunny :6 <br>
+  #13 cbunny3.cel : 0 ;!Bunny :5 <br>
+  #14 cbunny4.cel : 0 ;!Bunny :4 <br>
+  #15 cbunny5.cel : 0 ;!Bunny :3 <br>
+  #16 cbunny6.cel : 0 ;!Bunny :2 <br>
+  #17 cbunny7.cel : 0 ;!Bunny :1 <br>
+  #18 cbunny8.cel : 0 ;!Bunny :0 <br>
+  #4 cbunny0.cel : 0 ;<br>
+  #4 cbunny1.cel : 0 ;<br>
+  #4 cbunny2.cel : 0 ;<br>
+  #4 cbunny3.cel : 0 ;<br>
+  #4 cbunny4.cel : 0 ;<br>
+  #4 cbunny5.cel : 0 ;<br>
+  #4 cbunny6.cel : 0 ;<br>
+  #4 cbunny7.cel : 0 ;<br>
+  #4 cbunny8.cel : 0 ;<br>
+</font></p>
+<p><font face="Courier New, Courier, mono">;@press(&quot;objani1.button&quot;) ; animate object<br>
+  ;@ animate(#4,100) ; <br>
+  ;@ altmap(#21) ; <br>
+  ;@press(&quot;objani2.button&quot;) ; <br>
+  ;@ animate(#4,0) ; <br>
+  ;@ altmap(#21) ; <br>
+  <br>
+  ;@press(&quot;cg1ani1.button&quot;) ; animate cel group<br>
+  ;@ animate(!Bunny,200) ; <br>
+  ;@ altmap(#19) ; <br>
+  ;@press(&quot;cg1ani2.button&quot;) ; <br>
+  ;@ animate(!Bunny,0) ; <br>
+  ;@ setframe(!Bunny,0) ; <br>
+  </font><font face="Courier New"><br>
+</font></p>
+</body>
+
+</html>

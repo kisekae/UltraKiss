@@ -1,0 +1,75 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>getText</title>
+</head>
+
+<body>
+
+<h4><a name="getSelected" id="getSelected">getSelected</a>()&nbsp;</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; getSelected (variable,component)</p>
+<p>This is a component command to retrieve the selected state of an abstract button component. The
+  <em>component</em> may be a literal name of a button or togglebutton or menu item. Note that the action command name 'getSelected'
+is case sensitive and must be specified as shown.</p>
+<p>Buttons, when pressed, are considered to be selected and when released are unselected. Toggle buttons maintain state and each time a toggle button is pressed the component will switch between a selected state and an unselected state. Menu items are also treated like a button and when pressed are in a selected state. </p>
+<p>This command returns an integer valueof 1 if the component is in a selected state, 0 if not in a selected state, and -1 if the specified component does not maintain selection states.</p>
+<p>Components are declared as cels within a KiSS configuration as shown in
+the example below.&nbsp; Component cel identifiers use specific extensions such
+as .button, .list, or .textarea to identify the component type.&nbsp;&nbsp;</p>
+<font SIZE="2">
+<p><font face="Courier New">#1.9999 List-1.List&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+: 0&nbsp;&nbsp;&nbsp;&nbsp; ;%size[146,207] %offset[12,121] %attributes[wrap,vsb]<br>
+#1.9999 TextArea-1.TextArea&nbsp;&nbsp; : 0&nbsp;&nbsp;&nbsp;&nbsp; ;%size[269,49]
+%offset[227,176] %attributes[wrap]<br>
+#1.9999 Button1.Button&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : 0&nbsp;&nbsp;&nbsp;&nbsp; ;%size[135,25]
+%offset[325,267] %attributes[text=&quot;Press Me&quot;]</font></p>
+</font>
+<p>The example above defines a List component with vertical scroll bars, a
+TextArea component that performs word-wrap, and a Button.&nbsp; The size and
+location of these components within the object are specified with the %size[]
+and %offset[] tags.&nbsp; Component attributes are specified with the
+%attributes[] tag.&nbsp;&nbsp;</p>
+<div align="center"><font face="Courier New"></font></div>
+<p><br>
+Related actions: <a href="setselected.html">setSelected()</a>, <a href="getselectedindex.html">getSelectedIndex()</a>, <a href="getnextselectedindex.html">getNextSelectedIndex()</a>, <a href="setselectedindex.html">setSelectedIndex()</a>, <a href="getselectedvalue.html">getSelectedValue()</a>, <a href="setselectedvalue.html">setSelectedValue()</a>, <a href="getselecteditem.html">getSelectedItem()</a>, <a href="#getSelectedValue"></a><a href="setselecteditem.html">setSelectedItem()</a></p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+  <table border="1" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td width="20%">UltraKiss Extension</td>
+      <td width="30%">getSelected (On,&quot;button1.togglebutton&quot;)</td>
+      <td>Sets the 'On' variable to 1 if the toggle button has been selected </td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<table width="80%"  border="1" align="center" cellpadding="5" cellspacing="5" bordercolor="#000000" bgcolor="#FFFF99">
+  <tr>
+    <td><div align="center">Note: The UltraKiss getSelected() command is viewer specific and not compatible with other viewers. </div></td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>Example:&nbsp;<br>
+</b></font>
+</p>
+<p><font face="Courier New">#3.999   button1.button&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: 0                      ;%size[318,26]&nbsp;&nbsp;&nbsp;&nbsp;
+%attributes[text=&quot;Press Me!"]&nbsp;<br>
+#3.999   list1.list&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+: 0                      ;%size[175,177]&nbsp;&nbsp;&nbsp; %attributes[vsb]&nbsp;<br>
+</font>
+</p>
+<p>
+<font face="Courier New">;@press("button1.button")                                      ;&nbsp;<br>
+;@ getSelected(N,"button1.button")                        ;&nbsp;<br>
+;@ notify(&quot;button selection is &quot;,N)                                             ;&nbsp;<br>
+</font></p>
+<p><font face="Courier New">  </font></p>
+</body>
+
+</html>

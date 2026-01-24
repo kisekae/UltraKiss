@@ -1,0 +1,112 @@
+<html>
+	<head>
+		<title>Sailor Moon Lesson 6</title>
+	</head>
+	<body>
+		<h1 align="center"><font color="#000000">Sailor Moon Tutorial</font></h1>
+		<h1 align="center"><font color="#ff0000">Lesson 6. Adding Sound</font></h1>
+		<p>&nbsp;</p>
+		<ol>
+			<li>
+				We will now add sounds to our KiSS set.&nbsp; It is often appropriate to add
+				start-up and shut-down sounds.&nbsp; If you are continuing on from lesson 5 you
+				can skip to step 3.&nbsp;Otherwise, ensure that UltraKiss is showing the main
+				logo screen.&nbsp; Close any existing data set.
+If you want to ensure that your new KiSS set is created to be compatible with other viewers, press one of the viewer compatibility preset buttons on the toolbar.
+				<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">File-Open</FONT>.&nbsp; Load the configuration file <FONT color="#cc6600">
+					CNF4.cnf</FONT> from the Tutorial/Sailor Moon directory or the directory
+				you used in lesson 5.&nbsp; This will load the corrected Sailor Moon KiSS set
+				created in the last exercise 5.
+				<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">Edit-Import Other-Import Audio</FONT> to open a file selection dialog to add audio files into your KiSS set.
+				Select the sound files "<FONT color="#cc6600">smc181-2.wav</FONT>", "<FONT color="#cc6600">smc308-2.wav</FONT>",
+				"<FONT color="#cc6600">cat.wav</FONT>", "<FONT color="#cc6600">catsound.wav</FONT>",
+				"<FONT color="#cc6600">angrycat.wav</FONT>", and "<FONT color="#cc6600">catscrm.wav</FONT>"
+				from the Tutorial/Sailor Moon directory and import these files.
+				<p>&nbsp;</p>
+			<li>
+				Use <FONT color="#000099">View-Active Configuration</FONT> or press <b>F11</b> to open the text
+				editor for the current configuration file.&nbsp; Position the cursor at the end
+				of the file.
+				<p>&nbsp;</p>
+			<li>
+				Initial actions for a KiSS set are coded in a begin() event.&nbsp; Terminating
+				actions for a  set are coded in an end() event.&nbsp; We will use the audio
+				files "<FONT color="#cc6600">smc181-2.wav</FONT>" and "<FONT color="#cc6600">smc308-2.wav</FONT>
+				" for start-up and shut-down sounds.&nbsp;  Add the following
+				lines to the end of the configuration file:<br>
+				<br>
+				<font face="Courier New">;@begin()<br>
+					;@ sound("smc181-2.wav")<br>
+					<br>
+					;@end()<br>
+					;@ sound("smc308-2.wav")
+				</font>
+				<p><FONT color="#cc6600">Note:&nbsp; If you copy and paste these lines from the help
+						documentation into your configuration file you must ensure that the semicolon
+						and at-sign combination appears <u>at the beginning of every line</u>.&nbsp; You can
+						copy the help text by selecting the text and pressing Ctrl-C to copy the text
+						to the clipboard. Use Ctrl-V to paste the lines into the text editor.</FONT><BR>
+                                </p><br>
+		  <li>
+				We may as well add some cat sounds.&nbsp; We will have the cat make a random sound
+				when the mouse is clicked while on the cat.&nbsp; Code a release() event for
+				the cat as follows:<br>
+				<br>
+				<font face="Courier New">;@release(#9)<br>
+					;@ random(A,0,9)<br>
+					;@ iflessthan(A,7) sound("cat.wav")<br>
+					;@ elseiflessthan(A,8) sound("catsound.wav")<br>
+					;@ elseifequal(A,8) sound("angrycat.wav")<br>
+					;@ elseifequal(A,9) sound("catscrm.wav")<br>
+					;@ endif()<br>
+				</font>
+				<br>
+				This event generates a random number and uses this to select a cat sound.&nbsp;
+				Most of the time you should hear "<FONT color="#cc6600">cat.wav</FONT>" but
+				occasionally you may hear another sound.  Make sure you use the correct object
+                                number from your configuration file on the release(#9) event if the cat is not 
+                                object 9.
+				<p>&nbsp;</p>
+		  <li>
+				Use the <FONT color="#000099">File-Exit</FONT> command in the text editor to
+				apply your changes.&nbsp; If you made a typing mistake you may see an error
+				when the changes are applied.&nbsp; If this happens, re-edit the configuration
+				file to correct any mistakes.&nbsp; Otherwise, the data set should reload and open to page 0.&nbsp; You should hear the begin sound
+				as the revised data set restarts. Test the changes.
+				<p>&nbsp;</p>
+		  <li>
+				Use <FONT color="#000099">File-Save As</FONT> to save your work.&nbsp; Use a
+				new <FONT color="#cc6600">CNF5.cnf</FONT> file name.&nbsp; This new
+				configuration will contain the sound event code and the sound files should be saved to your directory.
+				<p>&nbsp;</p>
+		  <li>
+				Restart the data set with the <FONT color="#000099">View-Restart</FONT> command.&nbsp;
+				This will close and reload the current configuration.&nbsp; You should hear the begin sound
+				as the revised data set restarts.
+				<p>&nbsp;</p>
+		  <li>
+				Press on the cat on page 1 and you should hear a random cat sound.
+				<p>&nbsp;</p>
+		  <li>
+				Use <FONT color="#000099">File-Close</FONT> to close the data set and you
+                                should hear the end sound.<br><br>
+This completes the tutorial to create your first KiSS set.
+				<p>&nbsp;</p>
+		  </li>
+		</ol>
+		<br>
+		<hr>
+		<p align="left">Next Document:&nbsp; <a href="../../tutorials.html">UltraKiss Tutorials<br>
+			</a>Prior Document:&nbsp; <a href="lesson5.html">Sailor Moon Lesson 5</a></p>
+		<p align="left">Copyright (c) 2002-2025 William Miles</p>
+
+		<p>
+			<br>
+		</p>
+		<p>&nbsp;</p>
+	</body>
+</html>

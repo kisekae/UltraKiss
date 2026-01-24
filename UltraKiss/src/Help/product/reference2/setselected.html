@@ -1,0 +1,54 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>getText</title>
+</head>
+
+<body>
+
+<h4><a name="setSelected" id="setSelected">setSelected</a>()&nbsp;</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; setSelected(component,boolean)</p>
+<p>This action sets the component selected state to the specified state. The <em>component</em> may be a literal name of a button or togglebutton or menu item. The <em>boolean</em>  may be an literal integer specification, a literal string specification, or a variable that is an integer or string. An integer value of 0 clears the selection state and a non-zero value will set the selection state. A string value of &quot;1&quot; or &quot;true&quot; will set the selection state and any other string value will clear the selection state. Note that the action command name 'setSelected' is case sensitive and must be specified as shown. </p>
+<p>This command fails silently if the specified component does not maintain a selection attribute. </p>
+<p>Components are declared as cels within a KiSS configuration as shown in the example below.&nbsp; Component cel identifiers use specific extensions such as .button, .list, or .textarea to identify the component type.&nbsp;&nbsp;</p>
+<p><font size="2" face="Courier New">#1.9999 List-1.List&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : 0&nbsp;&nbsp;&nbsp;&nbsp; ;%size[146,207] %offset[12,121] %attributes[wrap,vsb]<br>
+  #1.9999 TextArea-1.TextArea&nbsp;&nbsp; : 0&nbsp;&nbsp;&nbsp;&nbsp; ;%size[269,49] %offset[227,176] %attributes[wrap]<br>
+  #1.9999 Button1.Button&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : 0&nbsp;&nbsp;&nbsp;&nbsp; ;%size[135,25] %offset[325,267] %attributes[text=&quot;Press Me&quot;]</font></p>
+<p>The example above defines a List component with vertical scroll bars, a TextArea component that performs word-wrap, and a Button.&nbsp; The size and location of these components within the object are specified with the %size[] and %offset[] tags.&nbsp; Component attributes are specified with the %attributes[] tag.&nbsp;&nbsp;</p>
+<div align="center"><font face="Courier New"></font></div>
+<p><br>
+  Related actions: <a href="getselected.html">getSelected()</a>, <a href="getselectedindex.html">getSelectedIndex()</a>, <a href="getnextselectedindex.html">getNextSelectedIndex()</a>, <a href="setselectedindex.html">setSelectedIndex()</a>, <a href="getselectedvalue.html">getSelectedValue()</a>, <a href="setselectedvalue.html">setSelectedValue()</a>, <a href="getselecteditem.html">getSelectedItem()</a>, <a href="#getSelectedValue"></a><a href="setselecteditem.html">setSelectedItem()</a></p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+    <table border="1" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td width="20%">UltraKiss Extension</td>
+        <td width="30%">setSelected (&quot;title.button&quot;,&quot;true&quot;)</td>
+        <td>sets the specified component selection state </td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<table width="80%"  border="1" align="center" cellpadding="5" cellspacing="5" bordercolor="#000000" bgcolor="#FFFF99">
+  <tr>
+    <td><div align="center">Note: The UltraKiss setSelected() command is viewer specific and not compatible with other viewers. </div></td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>Example:&nbsp;<br>
+</b></font> </p>
+<p><font face="Courier New">#3.999 b1.togglebutton&nbsp;&nbsp; : 0 ;%size[318,26]&nbsp;&nbsp;&nbsp;&nbsp; %attributes[text=&quot;Item Description"]&nbsp;</font></p>
+<p><font face="Courier New">  </font> <font face="Courier New">;@press("button1.cel") ;&nbsp;<br>
+  ;@ setSelected("b1.togglebutton",1) ;&nbsp;<br>
+</font></p>
+<p>&nbsp;</p>
+<h4><font face="Courier New">  </font></h4>
+</body>
+
+</html>

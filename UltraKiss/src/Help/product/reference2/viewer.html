@@ -1,0 +1,877 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>viewer</title>
+</head>
+
+<body>
+
+<h4><a name="viewer">viewer</a>()</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; viewer
+(function,operand1,operand2,...)</p>
+<p>This command invokes specialized functions specific to the viewer program. The
+  <em>function</em> is specified as a string literal or variable and the <em>operands</em> can be
+literal values or variables that represent function specific values.&nbsp;</p>
+<h4> Viewer Functions</h4>
+<div align="left">
+  <table border="1" cellpadding="5" width="100%">
+    <tr>
+      <td>&quot;reset&quot;</td>
+      <td>This causes a viewer reset, similar to invoking the View-Reset menu
+        function.</td>
+    </tr>
+    <tr>
+      <td>&quot;restart&quot;</td>
+      <td>This causes a viewer restart, similar to invoking the View-Restart
+        menu function.</td>
+    </tr>
+    <tr>
+      <td>&quot;getoption&quot;</td>
+      <td>This gets the value of an UltraKiss viewer options.&nbsp; The argument arg1 is the option
+        name and arg 2 is a variable for the returned value. Option names are shown below.&nbsp;&nbsp;
+      </td>
+    </tr>
+    <tr>
+      <td>&quot;setoption&quot;</td>
+      <td>This sets or clears UltraKiss viewer options.&nbsp; The argument arg1 is the option
+        name and arg 2 is the required value. Option names are shown below.&nbsp;&nbsp;
+      </td>
+    </tr>
+    <tr>
+      <td>&quot;select&quot;</td>
+      <td>Shows a configuration selection dialog, similar to invoking the
+        View-Select menu function.</td>
+    </tr>
+    <tr>
+      <td>&quot;open&quot;</td>
+      <td>Opens the file specified in arg1.&nbsp; If the file is a CNF
+        configuration file a new configuration will be loaded, otherwise the
+        appropriate tool is accessed.  This command opens files from the 
+        default directory.</td>
+    </tr>
+    <tr>
+      <td>&quot;openarchive&quot;</td>
+      <td>Opens the archive file specified in arg1.&nbsp; If the file contains only one CNF
+        configuration file this new configuration will be loaded.  If it contains more than
+        one CNF element a selection dialog will be opened to choose the correct configuration
+        file.  If no CNF element is found nothing is opened.</td>
+    </tr>
+    <tr>
+      <td>&quot;openURL&quot;</td>
+      <td>Opens the archive file specified in arg1.&nbsp; The file specified must be a valid 
+          URL with an http:// or https:// protocol.  The URL file will be downloaded into cache.
+          If the file contains more than one CNF element a selection dialog will be opened to choose the correct configuration
+        file.  If no CNF element is found nothing is opened.</td>
+    </tr>
+    <tr>
+      <td>&quot;view&quot;</td>
+      <td>Opens a text editor to display the specified KiSS file entity
+        specified in arg1.&nbsp; The file entity is a file object previously opened with an 'open()' command.</td>
+    </tr>
+    <tr>
+      <td>&quot;print&quot;</td>
+      <td>Opens the print subsystem to print the specified file entity specified in
+        arg1.&nbsp;&nbsp;The file entity is any
+        file object previously opened with an 'open()' command.&nbsp;</td>
+    </tr>
+    <tr>
+      <td>&quot;exit&quot;</td>
+      <td>Exits the program and terminates the UltraKiss viewer.&nbsp;&nbsp;</td>
+    </tr>
+    <tr>
+      <td>&quot;setmenu&quot;</td>
+      <td>Replaces the UltraKiss menu bar with a user specified menu.&nbsp; For
+        menu specifications see the example.  When user menus are set the UltraKiss
+        toolbar and status bar are hidden.
+      </td>
+    </tr>
+    <tr>
+      <td>&quot;restoremenu&quot;</td>
+      <td>Replaces any user menu bar with the UltraKiss standard menu.&nbsp; For
+        menu specifications see the example.  When the UltraKiss menu is restored
+        the UltraKiss toolbar and status bar are restored to their initial option state.
+      </td>
+    </tr>
+    <tr>
+      <td>&quot;seticon&quot;</td>
+      <td>Replaces the UltraKiss icon image with a user specified image.&nbsp;
+        The argument arg1 should specify a cel name that is to be used for the icon
+        image.&nbsp;</td>
+    </tr>
+    <tr>
+      <td>&quot;settitle&quot;</td>
+      <td>Sets the UltraKiss main window title.&nbsp; The argument arg1 should specify the
+        text string that is to be used for the window title.</td>
+    </tr>
+    <tr>
+      <td>&quot;redirect&quot;</td>
+      <td>Sets the Portal to redirect a URL to an event specified in the KiSS set.  The argument arg1
+      should be a string that specifies a valid URL with http: or https: protocol.  The second argument arg2 should be 
+      the name of an event such as press() or label() or some other event name.  The third and 
+      following arguments are literal strings or variables specifying the event parameters.</td>
+    </tr>
+    <tr>
+      <td>&quot;menu&quot;</td>
+      <td>Invokes an UltraKiss menu command.&nbsp; The argument arg1 specifies the
+        required menu item as specified in the Viewer Menu Items list below.
+      </td>
+    </tr>
+  </table>
+</div>
+<p>&nbsp; </p>
+<h4> Viewer Option Items</h4>
+<div align="left">
+  <table border="1" cellpadding="5" width="100%">
+    <tr>
+      <td><b>Option</b></td>
+      <td><b>Type</b></td>
+      <td><b>Description</b></td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;sound&quot;
+</p>
+      </td>
+      <td>boolean</td>
+      <td>Enables audio output</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;movie&quot;
+</p>
+      </td>
+      <td>boolean</td>
+      <td>Enables video output</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;event&quot;
+</p>
+      </td>
+      <td>boolean</td>
+      <td>Enables event processing for the data set</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;animate&quot;
+</p>
+      </td>
+      <td>boolean</td>
+      <td>Activates GIF animation for new data sets</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;timer&quot;
+</p>
+      </td>
+      <td>boolean</td>
+      <td>Activates the timer for the data set</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;editenable&quot;
+</p>
+      </td>
+      <td>boolean</td>
+      <td>If set, editing functions are enabled</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;debugmouse&quot;
+</p>
+      </td>
+      <td>boolean</td>
+      <td>Shows attributes of the selected object in the program status bar</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;debugcontrol&quot;
+</p>
+      </td>
+      <td>boolean</td>
+      <td>Writes program control messages to the log file</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;debugload&quot;
+</p>
+      </td>
+      <td>boolean</td>
+      <td>Writes data set load messages to the log file</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;debugedit&quot;
+</p>
+      </td>
+      <td>boolean</td>
+      <td>Writes editing status messages to the log file</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;debugimage&quot;
+</p>
+      </td>
+      <td>boolean</td>
+      <td>Writes image edit status messages to the log file</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;debugevent&quot;
+</p>
+      </td>
+      <td>boolean</td>
+      <td>Writes FKiSS event traces to the log file</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;debugaction&quot;
+</p>
+      </td>
+      <td>boolean</td>
+      <td>Writes FKiSS action traces to the log file</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;debugvariable&quot;
+</p>
+      </td>
+      <td>boolean</td>
+      <td>Writes FKiSS variable assignment traces to the log file</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;debugfkiss&quot;
+</p>
+      </td>
+      <td>boolean</td>
+      <td>Writes FKiSS editing traces to the log file</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;debugsound&quot;
+</p>
+      </td>
+      <td>boolean</td>
+      <td>Writes sound playback events to the log file</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;debugmovie&quot;
+</p>
+      </td>
+      <td>boolean</td>
+      <td>Writes movie playback events to the log file</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;debugmedia&quot;
+</p>
+      </td>
+      <td>boolean</td>
+      <td>Writes low level media stream events to the log file</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;javasound&quot;
+</p>
+      </td>
+      <td>boolean</td>
+      <td>Use Java Sound for known audio files</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;systemlf&quot;
+</p>
+      </td>
+      <td>boolean</td>
+      <td>Sets the user interface to match the host system</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;javalf&quot;
+</p>
+      </td>
+      <td>boolean</td>
+      <td>Sets the user interface to match the Java standard</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;englishon&quot;
+</p>
+      </td>
+      <td>boolean</td>
+      <td>Sets the language encoding for English</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;japaneseon&quot;
+</p>
+      </td>
+      <td>boolean</td>
+      <td>Sets the language encoding for Japanese</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;backup&quot;
+</p>
+      </td>
+      <td>boolean</td>
+      <td>Creates a backup file for each file written</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;savesource&quot;
+</p>
+      </td>
+      <td>boolean</td>
+      <td>Copies unmodified files from the source file</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;showdlprompt&quot;
+</p>
+      </td>
+      <td>boolean</td>
+      <td>Shows a save or open dialog for downloaded archive files</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;loadclose&quot;
+</p>
+      </td>
+      <td>boolean</td>
+      <td>Closes the KiSS data set before loading a new set</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;cacheaudio&quot;
+</p>
+      </td>
+      <td>boolean</td>
+      <td>Retains audio files in memory</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;cachevideo&quot;
+</p>
+      </td>
+      <td>boolean</td>
+      <td>Retains video files in memory</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;cacheimage&quot;
+</p>
+      </td>
+      <td>boolean</td>
+      <td>Retains all page images in memory</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;suspendmedia&quot;
+</p>
+      </td>
+      <td>boolean</td>
+      <td>Suspends the media player on playback of a music file</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;stopmusic&quot;
+</p>
+      </td>
+      <td>boolean</td>
+      <td>Stops audio playback if a new page is selected</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;scaletofit&quot;
+</p>
+      </td>
+      <td>boolean</td>
+      <td>Scales the images to fit the window size</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;sizetofit&quot;
+</p>
+      </td>
+      <td>boolean</td>
+      <td>Adjust the window size to fit the KiSS set playfield</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;inittoolbar&quot;
+</p>
+      </td>
+      <td>boolean</td>
+      <td>Shows the toolbar</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;initstatusbar&quot;
+</p>
+      </td>
+      <td>boolean</td>
+      <td>Show the status bar</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;constrainmoves&quot;
+</p>
+      </td>
+      <td>boolean</td>
+      <td>Limit mouse object movement to the playfield area</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;constrainfkiss&quot;
+</p>
+      </td>
+      <td>boolean</td>
+      <td>Limit FKiSS object movement to the playfield area</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;autoscroll&quot;
+</p>
+      </td>
+      <td>boolean</td>
+      <td>Scroll the viewport when objects are dragged</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;dragmove&quot;
+</p>
+      </td>
+      <td>boolean</td>
+      <td>Retain Mouse Control after FKiSS Object Movement</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;releasemove&quot;
+</p>
+      </td>
+      <td>boolean</td>
+      <td>Enable FKiSS Object Moves on Mouse Controlled Objects</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;dropfixdrop&quot;
+</p>
+      </td>
+      <td>boolean</td>
+      <td>Enable Catch/Drop Events on Fixed or Sticky Objects</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;unfixfixdrop&quot;
+</p>
+      </td>
+      <td>boolean</td>
+      <td>Allow Fixdrop Event when Object is Unfixed</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;invertghost&quot;
+</p>
+      </td>
+      <td>boolean</td>
+      <td>Invert Ghost Setting standard Boolean Logic</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;mapcollide&quot;
+</p>
+      </td>
+      <td>boolean</td>
+      <td>Enable collision events on object visibility changes</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;autoloop&quot;
+</p>
+      </td>
+      <td>boolean</td>
+      <td>Repeat media files in media player</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;autofullscreen&quot;
+</p>
+      </td>
+      <td>boolean</td>
+      <td>Shows video movies in full screen</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;mediaminimize&quot;
+</p>
+      </td>
+      <td>boolean</td>
+      <td>Minimize the player when audio playback starts</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;mediacenter&quot;
+</p>
+      </td>
+      <td>boolean</td>
+      <td>Center the media player on the screen</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;mediamusicresume&quot;
+</p>
+      </td>
+      <td>boolean</td>
+      <td>Resume the media player when music stops</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;keepaspect&quot;
+</p>
+      </td>
+      <td>boolean</td>
+      <td>Retains the video aspect ratio on resize</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;keycase&quot;
+</p>
+      </td>
+      <td>boolean</td>
+      <td>If set, key events are case sensitive</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;variablecase&quot;
+</p>
+      </td>
+      <td>boolean</td>
+      <td>If set, variable names are case sensitive</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;expandevents&quot;
+</p>
+      </td>
+      <td>boolean</td>
+      <td>If set, new expansion set events will add to and replace prior events</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;alteditdrag&quot;
+</p>
+      </td>
+      <td>boolean</td>
+      <td>If set, the alt key must be pressed for edit selections</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;importrelative&quot;
+</p>
+      </td>
+      <td>boolean</td>
+      <td>If set, imported cel names will retain directory names</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;writeceloffset&quot;
+</p>
+      </td>
+      <td>boolean</td>
+      <td>If set, CEL images will retain new image offset values</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;eventpause&quot;
+</p>
+      </td>
+      <td>boolean</td>
+      <td>For pause breakpoints, pause on the next event execution</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;actionpause&quot;
+</p>
+      </td>
+      <td>boolean</td>
+      <td>For pause breakpoints, pause on the next action statement execution</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;retainkey&quot;
+</p>
+      </td>
+      <td>boolean</td>
+      <td>Active key press is required for letkey and letkeymap</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;strictsyntax&quot;
+</p>
+      </td>
+      <td>boolean</td>
+      <td>Enforce strict FKiSS syntax checks and block structure</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;immediatecollide&quot;
+</p>
+      </td>
+      <td>boolean</td>
+      <td>Apply FKiSS collision events on every action statement</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;eventqueues&quot;
+</p>
+      </td>
+      <td>integer</td>
+      <td>Sets the number of concurrent event processing threads</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;timerperiod&quot;
+</p>
+      </td>
+      <td>integer</td>
+      <td>Sets the FKiSS timer period</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;gifperiod&quot;
+</p>
+      </td>
+      <td>integer</td>
+      <td>Sets the GIF animation period</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;stickyflex&quot;
+</p>
+      </td>
+      <td>integer</td>
+      <td>The maximum limit, in pixels, that sticky cels can move</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;maxflex&quot;
+</p>
+      </td>
+      <td>integer</td>
+      <td>The minimum lock value that fixes cels in place</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;maxlock&quot;
+</p>
+      </td>
+      <td>integer</td>
+      <td>The maximum lock value after which mouse events no longer apply</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;maxpageset&quot;
+</p>
+      </td>
+      <td>integer</td>
+      <td>The number of page sets visible on the toolbar</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;maxcolorset&quot;
+</p>
+      </td>
+      <td>integer</td>
+      <td>The number of color sets visible on the toolbar</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;jpegquality&quot;
+</p>
+      </td>
+      <td>integer</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;undolimit&quot;
+</p>
+      </td>
+      <td>integer</td>
+      <td>The maximum number of undo actions retained</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;commentcol&quot;
+</p>
+      </td>
+      <td>integer</td>
+      <td>Sets the configuration line column for comments</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;indentspace&quot;
+</p>
+      </td>
+      <td>integer</td>
+      <td>Sets the indent spacing for FKiSS statement blocks</td>
+    </tr>
+    <tr>
+      <td>
+<p>&quot;kissweb&quot;
+</p>
+      </td>
+      <td>string</td>
+      <td>Sets the home page URL for the UltraKiss browser</td>
+    </tr>
+  </table>
+</div>
+<p>&nbsp; </p>
+<h4> Viewer Menu Items</h4>
+        <div align="left">
+          <table border="1" cellpadding="5" width="100%">
+            <tr>
+              <td>&quot;reset&quot;</td>
+              <td>Equivalent to a viewer(&quot;reset&quot;) command</td>
+            </tr>
+            <tr>
+              <td>&quot;restart&quot;</td>
+              <td>Equivalent to a viewer(&quot;restart&quot;) command</td>
+            </tr>
+            <tr>
+              <td>&quot;magnify&quot;</td>
+              <td>Increases the screen magnification by 1.66 times</td>
+            </tr>
+            <tr>
+              <td>&quot;reduce&quot;</td>
+              <td>Decreases the screen magnification by 0.66 times</td>
+            </tr>
+            <tr>
+              <td>&quot;scale&quot;</td>
+              <td>Shows a scale dialog for entry of a general scaling factor</td>
+            </tr>
+            <tr>
+              <td>&quot;sizetofit&quot;</td>
+              <td>Adjusts the UltraKiss window to fit the current KiSS playfield
+                size</td>
+            </tr>
+            <tr>
+              <td>&quot;scaletofit&quot;</td>
+              <td>Scales the screen to fit the current UltraKiss window size</td>
+            </tr>
+            <tr>
+              <td>&quot;logfile&quot;</td>
+              <td>Displays the UltraKiss log file in a text edit window</td>
+            </tr>
+            <tr>
+              <td>&quot;statusbar&quot;</td>
+              <td>Inverts the visibility of the UltraKiss status bar</td>
+            </tr>
+            <tr>
+              <td>&quot;toolbar&quot;</td>
+              <td>Inverts the visibility of the UltraKiss tool bar</td>
+            </tr>
+            <tr>
+              <td>&quot;openweb&quot;</td>
+              <td>Launches the default web browser</td>
+            </tr>
+            <tr>
+              <td>&quot;openportal&quot;</td>
+              <td>Launches the UltraKiss web portal</td>
+            </tr>
+            <tr>
+              <td>&quot;activecnf&quot;</td>
+              <td>Displays the active configuration file in a text edit window</td>
+            </tr>
+            <tr>
+              <td>&quot;selectcnf&quot;</td>
+              <td>Displays the CNF selection dialog to choose a new CNF file</td>
+            </tr>
+            <tr>
+              <td>&quot;importcnf&quot;</td>
+              <td>Displays a dialog to load a CNF not in the set</td>
+            </tr>
+            <tr>
+              <td>&quot;appendcnf&quot;</td>
+              <td>Displays a dialog to append a CNF from the set INCLUDE files</td>
+            </tr>
+            <tr>
+              <td>&quot;clearcache&quot;</td>
+              <td>Displays a dialog to clear the download cache </td>
+            </tr>
+          </table>
+        </div>
+<p>&nbsp; </p>
+<h4> Viewer SetMenu Example</h4>
+Viewer &quot;setmenu&quot; arguments arg1, arg2, arg3, ... and so on specify the user menu items in pairs,
+        where the first argument is the menu name and the second argument refers
+        to an object group that contains a set of MenuItem or CheckBoxMenuItem components for the menu.&nbsp;&nbsp; The following command would
+        create a three item menu bar:
+<p><font face="Courier New">viewer(&quot;menu&quot;,&quot;File&quot;,#20,&quot;Options&quot;,#21,&quot;Help&quot;,#22)&nbsp;</font></p>
+<p>The object definitions for objects #20, #21, and #22 should contain MenuItem or
+        CheckBoxMenuItem components as shown below:</p>
+        <p><font face="Courier New">#20&nbsp; filenew.MenuItem&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        ; %attributes[text=&quot;New&quot;]<br>
+        #20&nbsp; fileopen.MenuItem&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        ; %attributes[text=&quot;Open&quot;]<br>
+        #20&nbsp; fileclose.MenuItem&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        ; %attributes[text=&quot;Close&quot;]</font></p>
+        <p><font face="Courier New">#21&nbsp; optionshow.CheckBoxMenuItem&nbsp;&nbsp;&nbsp;&nbsp;
+        ; %attributes[text=&quot;Show
+        Colors&quot;]<br>
+        #21&nbsp; optionhide.CheckBoxMenuItem&nbsp;&nbsp;&nbsp;&nbsp; ; %attributes[text=&quot;Hide
+        Background&quot;]</font>
+<p> <font face="Courier New">#22&nbsp; filehelp.MenuItem&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+; %attributes[text=&quot;Help&quot;]</font></p>
+<p>&nbsp; </p>
+<p>
+Related actions: <a href="environment.html">environment()</a><br>
+</p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+  <table border="1" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td width="20%">UltraKiss Extension</td>
+      <td width="30%">viewer(&quot;reset&quot;) or
+        viewer(&quot;menu&quot;,&quot;activecnf&quot;)</td>
+      <td>invoke viewer specific functions</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<table width="80%"  border="1" align="center" cellpadding="5" cellspacing="5" bordercolor="#000000" bgcolor="#FFFF99">
+  <tr>
+    <td><div align="center">Note: The UltraKiss viewer() command is viewer specific and not compatible with other viewers. </div></td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>Example Code (FKiSS5):&nbsp;
+</b></font>
+</p>
+<p><font face="Courier New">;@press(#79)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+;@ viewer("menu","activecnf")&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; show source code<br>
+</font>
+</p>
+<p><font face="Courier New">;@press(#80)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&nbsp;<br>
+;@ viewer(&quot;option&quot;,&quot;sound&quot;,&quot;false&quot;)                               ;
+turn all sound off<br>
+</font></p>
+<p><font face="Courier New">;@press(#81)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;&nbsp;<br>
+;@ viewer(&quot;reset&quot;) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;; invokes a 'reset' menu command <br>
+;@ viewer("menu","reset")&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; this is equivalent to the previous command</font></p>
+<p>&nbsp;</p>
+<p><font face="Courier New"></font></p>
+</body>
+
+</html>

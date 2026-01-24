@@ -1,0 +1,67 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>map</title>
+</head>
+
+<body>
+
+<h4><a name="changecol" id="changecol">changecol</a>()&nbsp;</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; changecol
+(integer)</p>
+<p>This action sets the color set or palette group to be used when displaying all cels on the current page. KiSS palette files can contain many different color sets and each cel image is associated with a specific palette or KCF file. Every page within the set configuration is associated with a default palette group number. When multiple palettes are used within KCF files, this feature allows for different color variations to be applied to various images on different pages.</p>
+<p>Palette groups, or multipalettes, begin from 0. Note that the changecol() command will fire all col() events defined for the specified color set. </p>
+<p>Not all KCF files are required to have multiple palette groups defined. If an image cel cel is associated with a palette file that does not contain the identified palette group then this image cannot change colors. In this case the image will be displayed using the colors found in the last palette group of the associated palette file. </p>
+<p>Truecolor cels, or Cherry Kiss cels, do not have an associated palette file and are not affected by a changecol() command.</p>
+<p>The changecol() command should not be used in initialize() events, but can be used in begin() events. </p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Extension:</font></b>&nbsp; </p>
+<p>UltraKiss introduced the capability to fix a specific multipalette specification to a specific image cel. This fixed specification is provided on the cel definition line in the set configuration (CNF) file. The optional &lt;Palette group&gt; specifier is an integer number that fixes the multipalette to be used when displaying the image. When fixed palette groups are specified the image will not change colors through a changecol() command. </p>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp; #&lt;Object&gt;[.&lt;Fix&gt;] &lt;Cel filename&gt; [*&lt;Palette number&gt;[.&lt;Palette group &gt;]] [:&lt;Page Set number&gt;...] <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [; [&lt;%Tag&gt;...] [&lt;!Cel group [: &lt;frame ...&gt;] ...] comment] </p>
+<p><br>
+Related actions: <a href="col.html">col()</a>, <a href="changeset.html">changeset()</a>, <a href="letmaxcolor.html">letmaxcolor()</a> </p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+  <table border="1" cellpadding="5" cellspacing="0" width="100%">
+    <tr>
+      <td width="20%">FKiSS 1 allows cel literal names or objects.</td>
+      <td width="30%">changecol (3)</td>
+      <td>Sets the color mapping to the fourth multipalette for all images using KCF files.</td>
+    </tr>
+    <tr>
+      <td width="20%">FKiSS 3 allows variables for objects.&nbsp;&nbsp;</td>
+      <td width="30%">let(X,10) changecol (X)&nbsp;</td>
+      <td>Sets the color mapping of the all cels to the multipalette specified by
+        variable X.</td>
+    </tr>
+    <tr>
+      <td width="20%">FKiSS 5 allows  an unlimited number</td>
+      <td width="30%">changecol(25)</td>
+      <td>Previous FKiSS versions were limited to a maximum 10 palette groups.</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><font color="#FF0000"><b>&nbsp;Example:&nbsp;<br>
+</b></font></p>
+<p><font face="Courier New, Courier, mono">%palette0.kcf</font></p>
+<p><font face="Courier New">#1.999 button.cel       : 0                              ;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+#3.999    fk4b3a.cel       : 0                              ;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font></p>
+
+<p>
+<font face="Courier New">;@changecol(3)&nbsp;&nbsp;&nbsp; ;&nbsp;<br>
+
+<br>
+</font><br>
+<font face="Courier New"></font></p>
+
+</body>
+
+</html>

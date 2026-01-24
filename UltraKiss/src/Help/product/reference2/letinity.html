@@ -1,0 +1,78 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta name="generator" content="Bluefish 2.2.12" >
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>string</title>
+</head>
+
+<body>
+
+<h4><a name="letinity" id="letinity">letinity</a>()</h4>
+<p><b><font color="#FF0000">Syntax:</font></b>&nbsp;&nbsp;&nbsp;&nbsp;
+letinity (variable,target)</p>
+<p>
+The letinity() statement returns the initial Y ordinate of a cel or object on the currently visible page. </p>
+<p>The same object on different page can have a different position.</p>
+<p>The <em>target</em>  can be a cel name or an object group specifier. FKiSS 3 allowed only object groups for the letinity() statement, FKiSS 5 allows cel names.</p>
+<p>&nbsp;</p>
+<p> Related actions: <a href="letinitx.html">letinitx()</a> <a href="letobjectx.html">letobjectx()</a> <a href="letobjecty.html">letobjecty()</a></p>
+<p>&nbsp; </p>
+<p>&nbsp;  </p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+    <table border="1" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td width="20%">FKiSS 5 &nbsp;</td>
+        <td width="30%">letinity(N,&quot;shirt.cel&quot;)&nbsp; </td>
+        <td>Variable N is set to the initial Y ordinate of &quot;shirt.cel&quot;.  This may not be the current location of the target if it has been moved. </td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+    <table border="1" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td width="20%">VariableCase</td>
+        <td width="30%">variable names are case sensitive</td>
+        <td>default value &quot;<font color="#0000FF">false</font>&quot; (Compatibility option)</td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<div align="center"></div>
+<p><font color="#FF0000"><b>&nbsp;Example:&nbsp;</b></font></p>
+<p>
+<font face="Courier New">
+;@letinity(N,&quot;shirt.cel&quot;)&nbsp;;&nbsp;N contains the initial Y for the specified cel<br> 
+;@letinity(N,#3)&nbsp;;&nbsp;N contains the initial Y for object #3<br></font></p>
+<p>&nbsp; </p>
+<p><font color="#FF0000"><b>&nbsp;Example:&nbsp;</b></font></p>
+<font face="Courier New">
+;[Cel Section]<br>
+#4   rightshoe.gif       : 0                                ;<br>
+#4   leftshoe.gif        : 0                                ;<br>
+#4   sailormoon.gif      : 0                                ;<br>
+ &nbsp;<br>
+ 
+;[FKiSS Section]<br>
+;@EventHandler<br>
+ &nbsp;<br>
+;@press(#4)                                                 ; <br>
+;@ letinity(N,#4)                                           ; <br>
+;@ notify("press Group 4 sailormoon.gif - initial Y ",N)    ; <br>
+;@ move(#4,10,0)                                            ; <br>
+;@ letobjecty(N,#4)                                         ; <br>
+;@ notify("press Group 4 sailormoon.gif - current Y ",N)    ; <br>
+;@ letinity(N,#4)                                           ; <br>
+;@ notify("press Group 4 sailormoon.gif - initial Y ",N)    ; <br>
+
+</body>
+</font>
+</html>

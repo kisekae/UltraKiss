@@ -1,0 +1,152 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>keytype</title>
+</head>
+
+<body>
+
+<h4><a name="keyrelease">keytype</a>()&nbsp;</h4>
+<p><font color="#FF0000"><b>Syntax:</b></font>&nbsp;&nbsp;&nbsp;&nbsp; keytype (keyliteral)</p>
+<p>This event is triggered by releasing the key with the specified value. The
+keytype() event is case sensitive, therefore keytype(&quot;a&quot;) and
+keytype(&quot;A&quot;) are two different events. The keytype() event applies to
+all printable keys on the keyboard. The key literal should be enclosed within
+double quotation marks.</p>
+<p>FKiSS 5 introduced the keytype() event to enable case sensitive input of
+keyboard entries. This event is paired with the letkeycase() and letkeymodifier()
+action commands to pick up the actual key combination pressed and
+released.&nbsp;With FKiSS 5 string processing functions and the letkeystring()
+action command the capability now exists to pick up keyboard input and process
+it in a case sensitive and context sensitive way.&nbsp;</p>
+<p>More than one keytype() event can be specified for a specific key. If sequential event processing is enforced each event will fire in
+the sequence in which it was defined, otherwise they are queued for concurrent
+processing.&nbsp;
+</p>
+<p>Note that there is no defined order for event processing in KiSS. Single threaded viewers that do not support concurrent events will typically
+process the keytype() event after the keypress() and before the keyrelease() events.
+However, for multithreaded viewers that support concurrent event processing
+there is no guarantee that the keypress() event will complete before the keytype()
+event begins. No assumptions should be made for the sequence in
+which events are processed.</p>
+<p>&nbsp;</p>
+<p>Key Names</p>
+<p>; ALPHABETIC KEYS<br>
+;@keytype(&quot;a&quot;)                                         ;&nbsp;<br>
+;@keytype(&quot;A&quot;)                                         ;&nbsp;<br>
+;@keytype(&quot;z&quot;)                                         ;&nbsp;<br>
+;@keytype(&quot;Z&quot;)                                         ;&nbsp;</p>
+<p>; NUMERIC KEYS<br>
+;@keytype(&quot;0&quot;)                                         ;&nbsp;<br>
+;@keytype(&quot;9&quot;)                                         ;&nbsp;<br>
+<br>
+; PUNCTUATION KEYS<br>
+;@keytype(&quot;@&quot;)                                         ;&nbsp;<br>
+;@keytype(&quot;\\&quot;)                                         ;&nbsp;<br>
+;@keytype(&quot;!&quot;)                                         ;&nbsp;<br>
+;@keytype(&quot;#&quot;)                                         ;&nbsp;<br>
+;@keytype(&quot;$&quot;)                                         ;&nbsp;<br>
+;@keytype(&quot;%&quot;)                                         ;&nbsp;<br>
+;@keytype(&quot;^&quot;)                                         ;&nbsp;<br>
+;@keytype(&quot;&amp;&quot;)                                         ;&nbsp;<br>
+;@keytype(&quot;*&quot;)                                         ;&nbsp;<br>
+;@keytype(&quot;(&quot;)                                         ;&nbsp;<br>
+;@keytype(&quot;)&quot;)                                         ;&nbsp;<br>
+;@keytype(&quot;_&quot;)                                         ;&nbsp;<br>
+;@keytype(&quot;-&quot;)                                         ;&nbsp;<br>
+;@keytype(&quot;+&quot;)                                         ;&nbsp;<br>
+;@keytype(&quot;=&quot;)                                         ;&nbsp;<br>
+;@keytype(&quot;|&quot;)                                         ;&nbsp;<br>
+;@keytype(&quot;{&quot;)                                         ;&nbsp;<br>
+;@keytype(&quot;}&quot;)                                         ;&nbsp;<br>
+;@keytype(&quot;:&quot;)                                         ;&nbsp;<br>
+;@keytype(&quot;;)                                         ;&nbsp;<br>
+;@keytype(&quot;\&quot;&quot;)                                         ;&nbsp;<br>
+;@keytype(&quot;'&quot;)                                         ;&nbsp;<br>
+;@keytype(&quot;&lt;&quot;)                                         ;&nbsp;<br>
+;@keytype(&quot;&gt;&quot;)                                         ;&nbsp;<br>
+;@keytype(&quot;,&quot;)                                         ;&nbsp;<br>
+;@keytype(&quot;.)                                         ;&nbsp;<br>
+;@keytype(&quot;?&quot;)                                         ;&nbsp;<br>
+;@keytype(&quot;/&quot;)                                         ;&nbsp;<br>
+<br>
+; EDIT KEYS<br>
+;@keytype(&quot;Space&quot;)                                         ;&nbsp;<br>
+;@keytype(&quot;Tab&quot;)                                           ;&nbsp;<br>
+;;@keytype(&quot;Backspace&quot;)                                     ;&nbsp;<br>
+;@keytype(&quot;Delete&quot;)                                        ;&nbsp;<br>
+;@keytype(&quot;Insert&quot;)                                        ;&nbsp;<br>
+;@keytype(&quot;Home&quot;)                                          ;&nbsp;<br>
+;@keytype(&quot;End&quot;)                                           ;&nbsp;<br>
+;@keytype(&quot;Page Up")                                       ;&nbsp;<br>
+;@keytype(&quot;Page Down")                                     ;&nbsp;<br>
+<br>
+; FUNCTION KEYS<br>
+;@keytype(&quot;F1&quot;)                                            ;&nbsp;<br>
+;@keytype(&quot;F2&quot;)                                            ;&nbsp;<br>
+;@keytype(&quot;F3&quot;)                                            ;&nbsp;<br>
+;@keytype(&quot;F4&quot;)                                            ;&nbsp;<br>
+;@keytype(&quot;F5&quot;)                                            ;&nbsp;<br>
+;@keytype(&quot;F6&quot;)                                            ;&nbsp;<br>
+;@keytype(&quot;F7&quot;)                                            ;&nbsp;<br>
+;@keytype(&quot;F8&quot;)                                            ;&nbsp;<br>
+;@keytype(&quot;F9&quot;)                                            ;&nbsp;<br>
+;@keytype(&quot;F10&quot;)                                           ;&nbsp;<br>
+;@keytype(&quot;F11&quot;)                                           ;&nbsp;<br>
+;@keytype(&quot;F12&quot;)                                           ;&nbsp;<br>
+</p>
+<p>Related events: <a href="keypress.html">keypress()</a>, <a href="keyrelease.html">keyrelease()</a><br>
+Related actions: <a href="letkey.html">letkey()</a>, <a href="letkeymodifier.html">letkeymodifier(),</a> <a href="letkeymap.html">letkeymap()</a>, <a href="letkeychar.html">leykeychar()</a>, <a href="letkeycode.html">letkeycode()</a>, <a href="letkeystring.html">letkeystring()</a></p>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">Compatibility:</font></b></p>
+<div align="center">
+  <center>
+  <table border="1" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td width="20%">FKiSS 5 allows all keys.&nbsp;</td>
+      <td width="30%">keytype (&quot;a&quot;)&nbsp; or&nbsp; keytype (&quot;Space&quot;)</td>
+      <td>Triggered when the key is released on the keyboard.</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p><b><font color="#FF0000">UltraKiss Options:</font></b></p>
+<div align="center">
+  <center>
+  <table border="1" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td width="20%">KeyCase</td>
+      <td width="30%">enable or disable key case recognition</td>
+      <td>default value &quot;<font color="#0000FF">true</font>&quot; (FKiSS option)</td>
+    </tr>
+    <tr>
+      <td width="20%">RetainKey&nbsp;</td>
+      <td width="30%">active key press is required for letkey() and letkeymap()
+        actions&nbsp;</td>
+      <td>default value &quot;<font color="#0000FF">true</font>&quot;
+        (Compatibility option)</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<p>
+<br>
+<font color="#FF0000"><b>FKiSS 5 Example:&nbsp;</b></font></p>
+<p><font face="Courier New">;@keytype(&quot;A&quot;)                                ;&nbsp;<br>
+;@ notify(&quot;A key typed&quot;)                    ;&nbsp;<br>
+<br>
+;@keytype(&quot;a&quot;)                                ;&nbsp;<br>
+;@ notify(&quot;a key typed&quot;)                    ;&nbsp;<br>
+</font><font face="Courier New"><br>
+</font></p>
+<p><br>
+</p>
+
+</body>
+
+</html>

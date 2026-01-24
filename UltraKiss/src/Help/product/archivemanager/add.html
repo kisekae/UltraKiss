@@ -1,0 +1,326 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-ca">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>Archive Manager Add Function</title>
+</head>
+
+<body>
+
+<h1><font color="#FF0000">Archive Manager Add Function</font></h1>
+<hr>
+
+<p><font face="Arial">Welcome to the Kisekae Archive Manager program documentation. The Archive
+Manager Add Function is used to add new elements to an archive file.&nbsp; This
+document describes the Add options and features.&nbsp;</font></p>
+
+
+
+<p> <font face="Arial"> The Add function instructs the Archive Manager to add new file elements to
+the archive.&nbsp; The standard Add screen is shown in Figure 1.&nbsp;&nbsp;</font></p>
+
+<p> &nbsp;</p>
+
+<p align="center"> <font face="Arial"> <img border="0" src="images/menu_07.gif" width="449" height="415"></font></p>
+
+<p align="center"> <font face="Arial"> Figure 1.&nbsp; Add Screen</font></p>
+
+<p>&nbsp;</p>
+
+<h3><a name="FileSelection"><font color="#800000" face="Arial">File Selection</font></a></h3>
+
+<p><font face="Arial">Files must be selected to be added to an archive.&nbsp; The directory
+pop-down box, the scrollable directory tree list, and the icon buttons at the
+top of the Add screen all help navigate through your existing system directory
+structure to find the relevant files.&nbsp; Figure 2
+shows how the directory pop-down box can be used to locate the appropriate
+directory that contains your files.&nbsp;&nbsp;</font></p>
+
+<p>&nbsp;</p>
+
+<p align="center"><font face="Arial"><img border="0" src="images/add_02.gif" width="508" height="418"></font></p>
+
+<p align="center"><font face="Arial">Figure 2.&nbsp; Directory Navigation</font></p>
+
+<p align="left">&nbsp;</p>
+<p><font face="Arial">The directory tree list shows all files within the selected directory.&nbsp;
+Figure 3 illustrates how two files, sailortop.gif and sasu01b.jpg have been
+selected to be added to the current archive file.&nbsp; Files can be selected by
+clicking on their name in the directory tree list.&nbsp; To select multiple
+files hold the Ctrl key down while clicking with the mouse button.&nbsp; To
+select a set of consecutive files select the first file and then press the Shift
+key while clicking on a file entry further down in the list.&nbsp; To unselect a
+file click on a selected file with the Ctrl key down.&nbsp; Note that only the
+first element selected will show in the File Name field.</font></p>
+
+<p>&nbsp;</p>
+
+<p align="center"><font face="Arial"><img border="0" src="images/add_03.gif" width="508" height="418"></font></p>
+
+<p align="center"><font face="Arial">Figure 3.&nbsp; File Selection</font></p>
+
+<p align="left">&nbsp;</p>
+<p>&nbsp;</p>
+
+<h3><a name="FileName"><font color="#800000" face="Arial">File Name</font></a></h3>
+
+<p> <font face="Arial"> The File Name field can be used to specify a specific file name or class of
+names to be added to the archive.&nbsp;&nbsp; An absolute file name such as 'C:\myfiles\kiss
+data\shirt.cel' can be used.&nbsp; A file name relative to the current directory
+can also be used.&nbsp; The wildcard character (*) can specify names that match a partial search pattern.&nbsp; Wildcards can be used as name
+prefixes or name suffixes for either the file name or file extension.&nbsp; For
+example, the pattern 'sailor*' will select all element names beginning with the
+characters 'sailor'.&nbsp; The pattern '*top' will select all element names ending
+with the characters 'top'.&nbsp; A stand alone wildcard character can be used to
+match with any name or extension.&nbsp; When using wildcard characters all files
+that match the criteria will be added to the archive file.&nbsp;</font></p>
+
+<p align="center"> &nbsp;</p>
+
+<h3><a name="FilesOfType"><font color="#800000" face="Arial">Files of Type</font></a></h3>
+
+<p> <font face="Arial"> The Files of Type pop-down box is a control that can be used to filter files
+within the directory list to show only files of a particular type.&nbsp; File names can be filtered as text files, image files, or palette
+file types.&nbsp; Figure 4 shows a file name filter in use.&nbsp; When a
+filter is chosen the directory tree list will show only files that have the
+matching file name extension.</font></p>
+
+<p> &nbsp;</p>
+
+<p align="center"> <font face="Arial"> <img border="0" src="images/add_04.gif" width="508" height="418"></font></p>
+
+<p align="center"> <font face="Arial"> Figure 4.&nbsp; File Name Filtering</font></p>
+
+<p align="left"> &nbsp;</p>
+
+<p>&nbsp;</p>
+
+<h3><a name="AddReplace"><font color="#800000" face="Arial">Add and Replace Action</font></a></h3>
+
+<p> <font face="Arial"> When element files are added to an existing archive file the elements can
+either unconditionally replace any existing archive element with the same name,
+or conditionally replace the archive element if the new element has changed
+since the archive was created.&nbsp; The Add and Replace option unconditionally
+replaces archive elements.&nbsp; Every selected element will replace any
+similarly named element in the archive.&nbsp;</font></p>
+
+<p align="center"> &nbsp;</p>
+
+<h3><a name="AddRefresh"><font color="#800000" face="Arial">Add and Refresh Action</font></a></h3>
+
+
+
+
+
+
+
+<p> <font face="Arial"> When element files are added to an existing archive file the elements can
+either unconditionally replace any existing archive element with the same name,
+or conditionally replace the archive element if the new element has changed
+since the archive was created.&nbsp; The Add and Refresh option conditionally
+replaces archive elements.&nbsp; Selected elements will only replace a similarly
+named archive element if the new element has an update or creation date that is
+later than the date of the element in the archive.&nbsp; The Add and Refresh
+option prevents a later modified element from being replaced with an earlier
+version of the element.&nbsp;</font></p>
+
+<p align="left"> &nbsp;</p>
+
+<h3><a name="NormalCompression"><font color="#800000" face="Arial">Normal Compression</font></a></h3>
+
+
+
+
+
+
+
+<p align="left"> <font face="Arial"> New elements added to an archive file are normally
+compressed.&nbsp;&nbsp;</font></p>
+
+<p align="left"> &nbsp;</p>
+
+<h3><a name="NoCompression"><font color="#800000" face="Arial">No Compression</font></a></h3>
+
+
+
+
+
+
+
+<p align="left"><font face="Arial">The No Compression option adds new elements to the archive
+without compressing the element data.</font></p>
+
+<p align="left"> &nbsp;</p>
+
+<h3><a name="Recurse Folders"><font color="#800000" face="Arial">Recurse Folders</font></a></h3>
+
+
+
+
+
+
+
+<p align="left"><font face="Arial">The Recurse Folders option is used to add all related elements
+from selected subordinate folders in the directory structure to the
+archive.&nbsp; If this option is set the Archive Manager will add the selected
+elements from the current directory, plus search all selected folders for
+additional elements matching the file name pattern or file type pattern
+identified in the <a href="#FileSelection"> File Selection</a> area.</font></p>
+
+<p align="left"><font face="Arial">The Recurse Folders option is commonly used to add files from a
+complete directory tree to the archive.&nbsp; It is important to select the Save
+Absolute Path or Save Relative Path option when this is done.&nbsp; If these
+options are not set the added files will not contain path information and the
+directory structure cannot be recreated if elements from the archive file are
+subsequently extracted.&nbsp;&nbsp; For further information see the <a href="extract.html">Extract
+Function</a> document.</font></p>
+
+<p align="left"> &nbsp;</p>
+
+<h3><a name="SaveAbsolutePath"><font color="#800000" face="Arial">Save Absolute Path</font></a></h3>
+
+
+
+
+
+
+
+<p align="left"> <font face="Arial"> The Save Absolute Path option ensures that the element path
+information is retained in the archive for all files added.&nbsp; The absolute
+path is the full file name including all directory names from the root
+directory.&nbsp; If absolute path names are saved the files can be extracted
+from the archive and the original directory structure can be recreated on
+extraction.&nbsp; For further information see the <a href="extract.html">Extract
+Function</a> document.</font></p>
+
+<p align="left"> &nbsp;</p>
+
+<h3><a name="SaveRelativePath"><font color="#800000" face="Arial">Save Relative Path</font></a></h3>
+
+
+
+
+
+
+
+<p align="left"> <font face="Arial"> The Save Relative Path option ensures that relative element
+path information is retained in the archive for all files added.&nbsp; The
+relative path is the full file name including all subordinate directory names
+from the current directory.&nbsp; If relative path names are saved the files can
+be extracted from the archive and a similar directory structure can be recreated
+within the selected directory on extraction.&nbsp; For further information see
+the <a href="extract.html">Extract Function</a> document.</font></p>
+
+<p align="left"> &nbsp;</p>
+
+<h3><a name="AddButton"><font color="#800000" face="Arial">Add Button</font></a></h3>
+
+
+
+
+
+
+
+<p align="left"> <font face="Arial"> The Add button initiate the archive file update.&nbsp; When
+files are added to an archive the complete archive file is rewritten.&nbsp; All
+new elements are added.&nbsp; All duplicate elements in the archive are replaced
+with the new files depending on the <a href="#AddReplace">Add and Replace</a>
+action or the <a href="#AddRefresh">Add and Refresh</a> action setting.&nbsp;
+All other elements in the archive are retained in the new archive file.</font></p>
+
+
+
+
+
+
+
+<p align="left"> <font face="Arial"> The archive file update occurs as a background write
+activity.&nbsp; Figure 5 shows a write operation in progress.&nbsp; This
+operation can be cancelled if necessary.&nbsp; When the file update is complete
+the Archive Manager will display the contents of the updated archive file.</font></p>
+
+
+
+
+
+
+
+<p align="left"> &nbsp;</p>
+
+
+
+
+
+
+
+<p align="center"> <font face="Arial"> <img border="0" src="images/add_05.gif" width="400" height="200"></font></p>
+
+
+
+
+
+
+
+<p align="center"> <font face="Arial"> Figure 5.&nbsp; Archive File Write</font></p>
+
+
+
+
+
+
+
+<p align="left"> &nbsp;</p>
+
+<h3><a name="CancelButton"><font color="#800000" face="Arial">Cancel Button</font></a></h3>
+
+
+
+
+
+
+
+<p align="left"> <font face="Arial"> The Cancel button closes the Add screen dialog without updating
+the archive file.</font></p>
+
+<p align="left"> &nbsp;</p>
+
+<h3><a name="HelpButton"><font color="#800000" face="Arial">Help Button</font></a></h3>
+
+
+
+
+
+
+
+<p align="left"> <font face="Arial"> The Help button shows this online help document.</font></p>
+
+<p align="left"> &nbsp;</p>
+
+
+
+
+
+
+
+<p align="left">&nbsp;</p>
+<hr>
+<p align="left">Next Document:&nbsp; <a href="extract.html">Extract Function<br>
+</a>Prior Document:&nbsp; <a href="toolbar.html">Toolbar Commands</a></p>
+
+<p align="left">Copyright (c) 2002-2023 William Miles</p>
+
+
+<p align="left">&nbsp;</p>
+
+
+
+
+
+
+
+</body>
+
+</html>
