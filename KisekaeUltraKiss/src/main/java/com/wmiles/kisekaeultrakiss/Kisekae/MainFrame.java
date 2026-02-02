@@ -179,6 +179,9 @@ final public class MainFrame extends KissFrame
 		// Create our options dialog and about dialog.  This creates
       // the menu, toolbar, and status bar.
 
+      Dimension d = Kisekae.getScreenSize() ;
+      PrintLn.println("MainFrame: create new instance, setSize " + d.width + " " + d.height);
+      setSize(d) ;
       updateUI() ;
       setNewSplashPane(true) ;
       try { if (OptionsDialog.getAppleMac()) new AboutHandler() ; }
@@ -265,18 +268,28 @@ final public class MainFrame extends KissFrame
 
       if ("portal".equalsIgnoreCase(file))
       {
-			Runnable runner = new Runnable()
-			{ 
-            public void run() 
-            { 
+         Thread startportal = new Thread()
+         {
+            public void run()
+            {
                try { Thread.currentThread().sleep(500) ; } 
                catch (Exception e) { } 
-               final WebFrame wf = new WebFrame(me) ;
-               wf.setVisible(true) ;
-               wf.toFront() ; 
-            } 
+         		Runnable runner = new Runnable()
+      			{ 
+                  public void run() 
+                  { 
+                     final WebFrame wf = new WebFrame(me) ;
+                     Dimension d = Kisekae.getScreenSize() ;
+                     PrintLn.println("MainFrame: load portal, set WebFrame size to " + d.width + " " + d.height) ;
+                     wf.setSize(d) ;
+                     wf.setVisible(true) ;
+                     wf.toFront() ; 
+                  } 
+               } ;
+        			SwingUtilities.invokeLater(runner) ;
+            }
          } ;
-  			SwingUtilities.invokeLater(runner) ;
+         startportal.start() ;
          return ;
       }
 
@@ -2849,6 +2862,7 @@ final public class MainFrame extends KissFrame
 
 		public void paintComponent (Graphics g)
 		{
+         Dimension framesize = getSize() ;
          String copyright = Kisekae.getCopyrightDate() ;
          String releaselevel = Kisekae.getReleaseLevel() ;
          g.setFont(new Font("SansSerif",Font.BOLD,12)) ;
@@ -2856,30 +2870,32 @@ final public class MainFrame extends KissFrame
          FontMetrics fm = g.getFontMetrics() ;
 			super.paintComponent(g) ;
 
+         int w = framesize.width ;
+         int h = framesize.height ;
 			int w1 = (backimage != null) ? backimage.getWidth(null) : 0 ;
 			int h1 = (backimage != null) ? backimage.getHeight(null) : 0 ;
-			int x1 = (w1 < 0) ? 0 : ((getSize().width - w1) >> 1) ;
-			int y1 = (h1 < 0) ? 0 : ((getSize().height - h1) >> 1) ;
+			int x1 = (w1 < 0) ? 0 : ((w - w1) >> 1) ;
+			int y1 = (h1 < 0) ? 0 : ((h - h1) >> 1) ;
 			int w2 = (splashimage != null) ? splashimage.getWidth(null) : 0 ;
 			int h2 = (splashimage != null) ? splashimage.getHeight(null) : 0 ;
-			int x2 = (w2 < 0) ? 0 : ((getSize().width - w2) >> 1) ;
-			int y2 = (h2 < 0) ? 0 : ((getSize().height - h2) >> 1) ;
+			int x2 = (w2 < 0) ? 0 : ((w - w2) >> 1) ;
+			int y2 = (h2 < 0) ? 0 : ((h - h2) >> 1) ;
 			int w3 = (ultraimage != null) ? ultraimage.getWidth(null) : 0 ;
 			int h3 = (ultraimage != null) ? ultraimage.getHeight(null) : 0 ;
-			int x3 = (w3 < 0) ? 0 : ((getSize().width - w3) >> 1) ;
-			int y3 = (h3 < 0) ? 0 : ((getSize().height - h3) >> 1) ;
+			int x3 = (w3 < 0) ? 0 : ((w - w3) >> 1) ;
+			int y3 = (h3 < 0) ? 0 : ((h - h3) >> 1) ;
          int w4 = fm.stringWidth(copyright) ;
          int h4 = fm.getAscent() ;
-			int x4 = (w4 < 0) ? 0 : ((getSize().width - w4) >> 1) ;
-			int y4 = (h4 < 0) ? 0 : ((getSize().height - 20) - h4) ;
+			int x4 = (w4 < 0) ? 0 : ((w - w4) >> 1) ;
+			int y4 = (h4 < 0) ? 0 : ((h - 20) - h4) ;
          int w5 = fm.stringWidth(releaselevel) ;
          int h5 = fm.getAscent() ;
-			int x5 = (w5 < 0) ? 0 : ((getSize().width - w5) >> 1) ;
-			int y5 = (h5 < 0) ? 0 : ((getSize().height - 20) - (h4+h5+(h5/2))) ;
+			int x5 = (w5 < 0) ? 0 : ((w - w5) >> 1) ;
+			int y5 = (h5 < 0) ? 0 : ((h - 20) - (h4+h5+(h5/2))) ;
          int w6 = fm.stringWidth(description) ;
          int h6 = fm.getAscent() ;
-			int x6 = (w6 < 0) ? 0 : ((getSize().width - w6) >> 1) ;
-			int y6 = (h6 < 0) ? 0 : ((getSize().height - h6)) ;
+			int x6 = (w6 < 0) ? 0 : ((w - w6) >> 1) ;
+			int y6 = (h6 < 0) ? 0 : ((h - h6)) ;
          
 			if (backimage != null)
 				g.drawImage(backimage,x1,y1,this) ;

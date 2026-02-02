@@ -100,15 +100,15 @@ public class JettyWebSocketEndpoint
    private static int busywait = 10 ;          // sleep time while waiting
    private long createtime = 0 ;
    private long time = 0 ;
-	private Session session ;
-   private Thread processThread ;
-   private Thread timeoutThread ;
+	private Session session ;                   // set on websocket open
+   private Thread processThread ;              // sends screen image to client
+   private Thread timeoutThread ;              // watches for no activity
 	private static ArrayList<JettyWebSocketEndpoint> sessions = new ArrayList<JettyWebSocketEndpoint>();
    private final Map<Session, FileUploadClass> fosMap = Collections.synchronizedMap(new HashMap<>());
    private final Queue<String> queue = new LinkedList<>();
-   private final byte[] imageheader = {0} ;
-   private final byte[] fileheader = {1} ;
-   private final byte[] soundheader = {2} ;
+   private final byte[] imageheader = {0} ;    // binary type for image transfer
+   private final byte[] fileheader = {1} ;     // binary type for file transfer
+   private final byte[] soundheader = {2} ;    // binary type for audio transfer
    private boolean socketBusy = false ;   // Set true if file transfer to client
    private boolean bufferBusy = false ;   // Set true if partial buffer is sent
    private boolean audioIsPlaying = false ;   // Set true audio sent and no stop
@@ -1031,6 +1031,7 @@ public class JettyWebSocketEndpoint
    class ProcessThread extends Thread 
    {
       int delay = 100 ;  // screen capture period
+//      int delay = 5000 ;  // screen capture period
       int iterations = 0 ;
       long totaltime = 0 ;
       long maxtime = 0 ;
@@ -1043,12 +1044,42 @@ public class JettyWebSocketEndpoint
       public void run()
       {
          // Wait a bit on startup.
-         try {Thread.currentThread().sleep(500) ; }
+         try { Thread.currentThread().sleep(500) ; }
          catch (InterruptedException e) { }
          
   			time = System.currentTimeMillis() - createtime ;
          System.out.println("[" + time + "] "+"JettyWebSocketEndpoint: " + this.getName() + " starts."); 
-                   
+         
+         if (Kisekae.getMainFrame() == null)
+         {
+            int waittime = 0 ;
+            int maxconnection = Kisekae.getMaxConnectionTime() ;
+     			time = System.currentTimeMillis() - createtime ;
+            System.out.println("[" + time + "] "+"JettyWebSocketEndpoint: MainFrame is not yet available, waiting ..."); 
+            while (Kisekae.getMainFrame() == null)
+            {
+               try { Thread.currentThread().sleep(delay) ; }
+               catch (InterruptedException e) 
+               { 
+                  error = true ;
+                  break ; 
+               }   
+               waittime += delay ;
+               if (waittime > maxconnection)
+               {
+           			time = System.currentTimeMillis() - createtime ;
+                  System.out.println("[" + time + "] "+"JettyWebSocketEndpoint: MainFrame is not created, screen capture unable to continue ..."); 
+                  error = true ;
+                  break ;
+               }
+            }
+            if (Kisekae.getMainFrame() != null)
+            {
+        			time = System.currentTimeMillis() - createtime ;
+               System.out.println("[" + time + "] "+"JettyWebSocketEndpoint: MainFrame established, continuing with screen capture ...");                
+            }
+         }
+                                     
          while (session != null && !error)
          {
 				try 
@@ -1105,7 +1136,7 @@ public class JettyWebSocketEndpoint
          }
          
          timeoutThread.interrupt() ;
-         long averagetime = totaltime / iterations ;
+         long averagetime = (iterations > 0) ? totaltime / iterations : 0 ;
          System.out.println("JettyWebSocketEndpoint: screen capture stops, average capture time="+averagetime+"ms");
          System.out.println("JettyWebSocketEndpoint: screen capture maxtime="+maxtime+"ms, mintime="+mintime+"ms");
          

@@ -70,6 +70,7 @@ import javax.swing.event.HyperlinkListener ;
 import com.wmiles.kisekaeultrakiss.WebSocket.JettyServer ;
 import com.wmiles.kisekaeultrakiss.WebSocket.JettyWebSocketEndpoint;
 import com.wmiles.kisekaeultrakiss.WebSocket.CursorNameMapper;
+import java.lang.reflect.InvocationTargetException;
 
 /**                     Kisekae UltraKiss Version 3.4
  *
@@ -138,7 +139,11 @@ public class Kisekae extends Applet
    private static String kissweb = "http://" ;     // Our command line web arg
    private static int maxdownload = 1024 ;         // Maximum download size KB
    private static int globalexception = 0 ;        // Global exception count
-   private static int websocketport = 49152 ;       // Port for websocket server
+   private static int websocketport = 49152 ;      // Port for websocket server
+   private static int maxconnection = 10000 ;      // Max websocket connection
+   private static int waittime = 0 ;               // Connection wait time
+   private static int sleeptime = 100 ;            // Time to sleep while wait
+
    private static long processid = 0 ;             // Process identifer (PID)
 
 
@@ -191,7 +196,7 @@ public class Kisekae extends Applet
 
       LogFile.start() ;
       builddate = Calendar.getInstance() ;
-      builddate.set(2026,1-1,22) ;
+      builddate.set(2026,1-1,30) ;
       
       // Restore the properties.
       
@@ -291,7 +296,7 @@ public class Kisekae extends Applet
       // Get the load splash image.  Display the splash pane only
       // if we are performing a new initialization.
 
-      if (mainframe == null)
+/*    if (mainframe == null)
       {
          try
          {
@@ -334,7 +339,7 @@ public class Kisekae extends Applet
             PrintLn.printErr("Kisekae: Error loading splash image " + s) ;
          }
       }
-
+*/
       // Set the initial language font.
 
       try
@@ -1041,6 +1046,7 @@ public class Kisekae extends Applet
    public static boolean isLicensed() { return currentdate.before(warningdate) ; }
    public static boolean isExpired() { return !currentdate.before(expiredate) || manualexpire ; }
    public static boolean isRestricted() { return currentdate.after(restrictdate) ; }
+   public static int getMaxConnectionTime() { return maxconnection ; }
    public static ResourceBundle getCaptions() { return captions ; }
    static TipsBox getTipsBox() { return tips ; }
    static URL getBase() { return codebase ; }
@@ -1570,21 +1576,29 @@ public class Kisekae extends Applet
    public static void setScreenSize(Dimension d) 
    {
       screensize = d ; 
-      if (mainframe == null) return ;
+      if (mainframe == null) 
+      {
+         PrintLn.println("Kisekae: setScreenSize, MainFrame is not yet established.");
+         return ;
+      }
       
       if (!javax.swing.SwingUtilities.isEventDispatchThread())
       {
+         PrintLn.println("Kisekae: setScreenSize, " + Thread.currentThread().getName() + " switching to EDT thread");
       	Runnable runner = new Runnable()
 			{ public void run() { setScreenSize(d) ; } } ;
-   		javax.swing.SwingUtilities.invokeLater(runner) ;
+   		try { javax.swing.SwingUtilities.invokeAndWait(runner) ; }
+         catch (InterruptedException e) { }
+         catch (InvocationTargetException e) { }
          return ;
       }
       
      	Dimension screenArea = Kisekae.getScreenSize() ;
       if (!websocket) screenArea.height = (int) (screenArea.height*0.95f) ;
+      PrintLn.println("Kisekae: setScreenSize " + screenArea.width + " " + screenArea.height);
 		mainframe.setSize(screenArea) ;
 		mainframe.validate() ;
-		mainframe.centerpanel() ;
+		mainframe.centerpanel() ; 
       mainframe.repaint() ;      
    }
 
@@ -2520,7 +2534,37 @@ public class Kisekae extends Applet
             }
          }
 
-         // Fire up the program.
+         // Fire up the program.  If running as a server ensure that a
+         // session is established and that we have received a screen
+         // size message from the client before we start.
+         
+         if (websocket)
+         {
+            JettyWebSocketEndpoint endpoint = Kisekae.getServerEndpoint() ;
+            if (endpoint == null)
+               throw new Throwable("Kisekae: websocket endpoint is null.  Server not started.") ;
+            if (!endpoint.isSessionOpen())
+            {
+               PrintLn.println("Kisekae: waiting for session to open ...") ;
+               
+               // clientscreen is set when the client sends a "screen" message
+               // to us, the server.  Wait for this.  It confirms that the
+               // websocket is established.
+               
+               while (!(endpoint.isSessionOpen() && clientscreen))
+               {
+                  try { Thread.currentThread().sleep(sleeptime) ; }
+                  catch (InterruptedException e) { break ; }
+                  waittime += sleeptime ;
+                  if (waittime > maxconnection) break ;
+               }
+               if (!endpoint.isSessionOpen())
+                  throw new Throwable("Kisekae: websocket session not established.  Wait time exceeds " + maxconnection + " ms.") ;
+               if (!clientscreen)
+                  throw new Throwable("Kisekae: websocket client screen not established.  Wait time exceeds " + maxconnection + " ms.") ;
+            }            
+            PrintLn.println("Kisekae: session is open, continuing ...") ;
+         }
 
          mainframe = new MainFrame(kisekae,file) ;
          if (splashwindow != null)
@@ -2533,7 +2577,7 @@ public class Kisekae extends Applet
          }
          mainframe.toFront() ;
 
-         // Provide a Websocket prompt.  Websocket, when it starts, can timeout
+         // Provide a websocket prompt.  Websocket, when it starts, can timeout
          // on a 10 second no-response fault.  The "openportal" hyperlink on
          // this prompt attempts to put any web access delay to another time
          // unrelated to the startup time for UltraKiss.
@@ -2688,37 +2732,7 @@ public class Kisekae extends Applet
             {
                public void run()
                {
-                  int wait = 0 ;
-                  int sleeptime = 20 ;
-                  int maxconnection = 10000 ;
-
-                  // clientscreen is set when the client sends a "screen" message
-                  // to us, the server.  Wait for this.  It confirms that the
-                  // websocket is established.
-                  
-                  while (!clientscreen)
-                  {
-                     try { Thread.currentThread().sleep(sleeptime) ; }
-                     catch (InterruptedException e) { return ; }
-                     wait += sleeptime ;
-                     if (wait > maxconnection) 
-                     {
-                        String s = "Websocket connection time exceeds " + maxconnection + " ms." ;       
-                        System.out.println("Kisekae: " + s) ;
-                     	Runnable runner = new Runnable()
-               			{ public void run() 
-                           { 
-                              JOptionPane.showMessageDialog(null, s, "InternalError", JOptionPane.ERROR_MESSAGE) ;
-                           } 
-                        } ;
-                  		javax.swing.SwingUtilities.invokeLater(runner) ;                    
-                        try { Thread.currentThread().sleep(maxconnection) ; }
-                        catch (InterruptedException e) { }
-                        System.exit(-1) ;
-                        return ;
-                     }
-                  }  
-                  PrintLn.println("Kisekae: websocket connection time was " + wait + " ms.") ;                 
+                  PrintLn.println("Kisekae: websocket connection time was " + waittime + " ms.") ;                 
 
                   // Show the websocket modal dialog on the EDT thread.
                   
@@ -2829,6 +2843,10 @@ public class Kisekae extends Applet
          EventHandler.stopEventHandler() ;
          PrintLn.println("Kisekae: Internal fault.") ;
          e.printStackTrace() ;
+         
+         if (Kisekae.isWebsocket())
+            System.exit(-1) ;
+         
          String s = "InternalError" + " - " ;
          s += "ExecutionTerminates" ;
          if (captions != null)
