@@ -115,7 +115,7 @@ public class UltraKissServlet extends HttpServlet
          out.println("}");
          out.println("</style>");
          out.println("</head>");
-         out.println("<body>");         
+         out.println("<body>");   
          out.println("<div><div id='custom-alert' style='display: none; padding: 15px; background-color: white; color: black; border: 2px solid red; position: absolute; width: fit-content; left: 0; right: 0; margin-inline: auto; top: 30%; z-index: 1000;'>");
          out.println("<span id='alert-message'></span>");
          out.println("</div></div>");                  
@@ -142,16 +142,24 @@ public class UltraKissServlet extends HttpServlet
       
       try 
       {
-         // Wait for existing invocations of UltraKiss to close on a browser 
-         // refresh.  This frees up the port for reuse.
-         try { Thread.currentThread().sleep(3000) ; }
-         catch (InterruptedException e) { }
-         
          int activeprocesses = cleanPidFile(pidPath) ;
          if (activeprocesses >= maxsessions || freeport < port)
          {            
-            response.getWriter().println("Too many sessions.  Maximum number of concurrent sessions is " + maxsessions + ".") ;            
-            return -1 ;
+            // Wait for existing invocations of UltraKiss to close on a browser 
+            // refresh.  This frees up the port for reuse.  Try again for a 
+            // free port.
+            
+            try { Thread.currentThread().sleep(3000) ; }
+            catch (InterruptedException e) { }            
+            activeprocesses = cleanPidFile(pidPath) ;
+            
+            // If still no free port, exit.
+            
+            if (activeprocesses >= maxsessions || freeport < port)
+            {                        
+               response.getWriter().println("Too many sessions.  Maximum number of concurrent sessions is " + maxsessions + ".") ;            
+               return -1 ;
+            }
          }
          
          int display = freeport % 100 ;

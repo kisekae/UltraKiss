@@ -73,7 +73,14 @@ var port = document.currentScript.getAttribute('port'); //
 var ssl = document.currentScript.getAttribute('ssl'); // 
 
 let consolelog = 'client' + port + '.log' ; // console log file name
-const reconnectInterval = 5000; // 5 seconds
+const reconnectInterval = 1000; // 1 seconds
+var reconnectcount = 0 ;        // reconnect attempts
+const maxreconnect = 1 ;        // maximum reconnects
+
+const canvas = document.getElementById('myCanvas');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
 
 // Override console.log to capture output in a file.
@@ -114,25 +121,6 @@ window.downloadLogs = function () {
 // Timestamp our console log file.
 const now = new Date() ;
 console.log(now) ;
-
-
-// Establish websocket connection.
-
-console.log("Host=" + host + " Port=" + port + " SSL=" + ssl);  
-initwebsocket(host,port,ssl) ;
-
-function initwebsocket(host,port,ssl)
-{
-    if (host === null) host = "127.0.0.1" ;
-    if (port === null) port = "49152" ;
-    var url = "ws://"+host+":"+port+"/ultrakiss" ;
-    if (ssl === "true") { 
-        url = "wss://"+host+":"+port+"/ultrakiss" ; 
-    }
-    console.log("WebSocket URL is " + url);   
-    ws = new WebSocket(url) ;
-    ws.binaryType = "arraybuffer";
-}
 
 
 // Detect browser closing.  Perform an orderly shutdown on the server.
@@ -282,12 +270,39 @@ function sendBlobInChunks(ws, blob, chunkSize) {
  * WebSocket events.  
  */
 
-ws.onopen = function() {
-//  alert("Opened");
-    if (ws.readyState === WebSocket.OPEN) {
-        ws.send("screen " + canvas.width + " " + canvas.height);
+
+// Establish websocket connection.
+
+function initwebsocket(host,port,ssl)
+{
+    console.log("Host=" + host + " Port=" + port + " SSL=" + ssl);  
+    if (host === null) host = "127.0.0.1" ;
+    if (port === null) port = "49152" ;
+    var url = "ws://"+host+":"+port+"/ultrakiss" ;
+    if (ssl === "true") { 
+        url = "wss://"+host+":"+port+"/ultrakiss" ; 
     }
-};
+    console.log("Connection WebSocket URL is " + url);   
+    ws = new WebSocket(url) ;
+    ws.binaryType = "arraybuffer";
+}
+
+
+function connectWebSocket() {
+    initwebsocket(host,port,ssl) ;
+
+    ws.onopen = function(event) {
+        console.log('Connection established');
+        // Clear any previous reconnection timer on successful connection
+        if (window.reconnectTimeoutId) {
+            clearTimeout(window.reconnectTimeoutId);
+            window.reconnectTimeoutId = null;
+        }
+        if (ws.readyState === WebSocket.OPEN) {
+            ws.send("screen " + canvas.width + " " + canvas.height);
+        }
+    };
+
 
 ws.onclose = function(event) {
     console.log("Connection closed with code: " + event.code);
@@ -295,13 +310,25 @@ ws.onclose = function(event) {
     if (reason === null || reason.length === 0) reason = "Unknown" ;
     console.log("Reason for closure: " + reason);
     if (reason.startsWith("UltraKiss")) return ;
-//    console.log("Reconnecting...");
-//    setTimeout(initwebsocket,reconnectInterval,host,port,ssl) ;
+    if (reconnectcount <= maxreconnect)
+    {
+        console.log("Reconnecting...");
+        // Implement a delay before attempting to reconnect to prevent rapid, continuous attempts
+        if (!window.reconnectTimeoutId) { // Prevent multiple timers from firing
+            window.reconnectTimeoutId = setTimeout(function() {
+                reconnectcount++ ;
+                connectWebSocket();
+            }, 5000); // Reconnect after 5 seconds (5000 milliseconds)
+        }
+    }
+    else
+        console.log("Maximum reconnection attempts exceeded.") ;
 };
 
 ws.onerror = function(err) {
-    console.log("Websocket error.");
+    console.log("Websocket error. host="+host+" port="+port+" ssl="+ssl);
     if (!(player === undefined)) { player.stop() ; }
+    ws.close() ;
 //  alert("Server is not available.");
 };
 
@@ -624,7 +651,7 @@ ws.onmessage = function (evt) {
         {
             setTimeout(() => { window.open(tokens[1], '_blank'); }, 100);    
         }
-        
+                
         // Close the session websocket.
         
         else if (tokens[0] === "close")
@@ -668,7 +695,7 @@ ws.onmessage = function (evt) {
                 const cw = canvas.width ;
                 const ch = canvas.height ;
                 
-                if (w === cw)     
+                if (w === cw && h === ch)     
                     ctx.drawImage(img, 0, 0); 
                 else
                 {
@@ -719,6 +746,7 @@ ws.onmessage = function (evt) {
         }       
     }
 };
+}
 
 
 // This is an explicit request to capture a screen image from the server.
@@ -758,24 +786,25 @@ function sendAudioStop(source)
  * send these to the server.
  */
 
-const canvas = document.getElementById('myCanvas');
-const ctx = canvas.getContext('2d');
-
 function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     // Redraw content here if needed after resizing
     // Example: ctx.fillRect(0, 0, canvas.width, canvas.height);
+    console.log("Resize canvas, width=" + canvas.width + " height=" + canvas.height);  
     if (ws.readyState === WebSocket.OPEN) {
         ws.send("screen " + canvas.width + " " + canvas.height);
     }
 }
 
 // Initial resize
-resizeCanvas();
+// resizeCanvas();
 
 // Resize when the window is resized
 window.addEventListener('resize', resizeCanvas);  
+
+// Initial connection attempt
+connectWebSocket();
 
 
 // Mouse events 

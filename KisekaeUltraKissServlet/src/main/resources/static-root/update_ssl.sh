@@ -31,6 +31,8 @@ fi
 
 # 2. Convert the new PEM files to PKCS12 format using openssl
 # The -in argument should ideally use a file that includes the full chain (cert + intermediate CAs)
+#    -in "$CA_BUNDLE_PEM" \
+#    -in "$NEW_CERT_PEM" \
 openssl pkcs12 -export \
     -name jetty_ssl \
     -out "$TARGET_P12_FILE.tmp" \

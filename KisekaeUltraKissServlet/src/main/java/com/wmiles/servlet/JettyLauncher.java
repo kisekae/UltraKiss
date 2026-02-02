@@ -53,6 +53,23 @@
 // ========================================================================
 //
 
+
+// This is the main program to listen on ports 8080 and 8443 for HTTP/1 
+// connection requests from a client browser.  We use a Jetty servlet
+// that responds to the connection.  The servlet page (UltraKissServlet)
+// containd the HTML and Javascript code to deliver the canvas object 
+// to maintan the UltraKiss screen in the browser.
+//
+// This listener program runs in the background as a server thread.  
+//
+// It manages connections.  We allow for up to 3 simultaneous instances
+// of UltraKiss.  Each instance communicates over a web socket on ports
+// 49152, 49153, and 49154.
+//
+// SSL connections require a certificate.  We use the Let's Encrypt certificate
+// on the server.
+
+
 package com.wmiles.servlet;
 
 import java.io.File;
