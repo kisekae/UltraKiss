@@ -85,8 +85,9 @@ public abstract class KissFrame extends JFrame
 			SwingUtilities.invokeLater(awt) ;
 			return ;
 		}
-      
-   	Kisekae.setCursor(this,Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
+
+      MainFrame mf = Kisekae.getMainFrame() ;
+   	Kisekae.setCursor(mf,Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
       windows.remove(this) ;
       if (Kisekae.isVolatileImage())
          KissPreferences.closePreferences(this) ;
