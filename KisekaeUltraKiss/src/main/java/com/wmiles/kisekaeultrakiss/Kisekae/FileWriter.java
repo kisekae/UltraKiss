@@ -2157,6 +2157,17 @@ final class FileWriter extends KissFrame
       				PrintLn.println("FileWriter: Unable to close " + fs.getName() + " for backup file " + fsb.getPath()) ;
                } 
             }
+            if (parent instanceof ZipManager)
+            {
+               ZipManager zm = (ZipManager) parent ;
+               czip = (zm != null) ? zm.getZipFile() : null ;               
+               open = (czip != null) ? czip.isOpen() : false ;
+               if (open && czip != null) try { czip.close() ; }
+               catch (IOException e) 
+               { 
+      				PrintLn.println("FileWriter: Unable to close " + fs.getName() + " for backup file " + fsb.getPath()) ;
+               } 
+            }
          }
 
          // This is the recovery if we had to close the source file.  

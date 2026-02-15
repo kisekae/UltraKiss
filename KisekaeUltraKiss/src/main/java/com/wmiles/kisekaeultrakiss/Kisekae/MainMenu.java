@@ -1561,12 +1561,14 @@ final public class MainMenu extends KissMenu
                String kissweb = OptionsDialog.getWebSite() ;
                try
                {
-                  Kisekae.setCursor(parent,Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
                   if (Kisekae.isWebsocket())
                      BrowserControl.displayURL("") ;
                   else
+                  {
+                     Kisekae.setCursor(parent,Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
                      BrowserControl.displayURL(kissweb) ;
-                  Kisekae.setCursor(parent,Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
+                     Kisekae.setCursor(parent,Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
+                  }
                }
                catch (Exception ex) { }
             }

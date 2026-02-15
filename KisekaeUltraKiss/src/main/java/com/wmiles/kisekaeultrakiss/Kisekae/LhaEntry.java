@@ -56,6 +56,8 @@ package com.wmiles.kisekaeultrakiss.Kisekae ;
 */
 
 import java.io.*;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.*;
 
 
@@ -204,7 +206,7 @@ class LhaEntry extends ArchiveEntry
 		{
 		case 0:
 			packsize = skipsize ;
-			datetime = toGeneric(time) ;
+			datetime = toGeneric(time,level) ;
 			namelen = readByte() ;
 			for (int i = 0 ; i < namelen ; i++)
 				name += (char) readByte() ;
@@ -213,7 +215,7 @@ class LhaEntry extends ArchiveEntry
 			break ;
 			
 		case 1:
-			datetime = toGeneric(time) ;
+			datetime = toGeneric(time,level) ;
 			namelen = readByte() ;
 			for (int i = 0 ; i < namelen ; i++)
 				name += (char) readByte() ;
@@ -223,7 +225,7 @@ class LhaEntry extends ArchiveEntry
 			break ;
 			
 		case 2:
-         datetime = toGeneric(time) ;
+         datetime = toGeneric(time,level) ;
 			packsize = skipsize ;
 			crc16 = littleEndian(readShort()) ;
 			os = (char) readByte() ;
@@ -370,6 +372,11 @@ class LhaEntry extends ArchiveEntry
 	// Return the requested element name.
 
 	public String getName() { return name ; }
+
+
+	// Return the header level.
+
+	public int getHeaderLevel() { return level ; }
 
 
    // Returns the full path name of the file.  If the directory is
@@ -552,13 +559,16 @@ class LhaEntry extends ArchiveEntry
 
 	// Given a GMT time and date in Msdos format, convert it to milliseconds.
 
-	static long toGeneric(long time)
+	static long toGeneric(long time, int level)
 	{
 		int year, month, day, hour, min, sec ;
 		long longtime ;
 
 		int t = (int) (time & 0xffffffff) ;
 		if (t == 0)	return 0 ;
+      
+      // Unix time 
+      if (level == 2) return time * 1000 ;
 
       // Isolate year, month, day, hours, minutes, seconds.
 
@@ -586,6 +596,41 @@ class LhaEntry extends ArchiveEntry
 		return (longtime) ;
 	}
 
+   
+   /**
+   * Converts MS-DOS date and time integers to a Unix timestamp (seconds since epoch).
+   *
+   * @param dosDate The 16-bit MS-DOS date value.
+   * @param dosTime The 16-bit MS-DOS time value.
+   * @return The Unix timestamp in seconds.
+   */
+   
+   static long toUnixTime(int dosDate, int dosTime) 
+   {
+      // Decode date components
+      int year = ((dosDate >> 9) & 0x7F) + 1980;
+      int month = (dosDate >> 5) & 0x0F;
+      int day = dosDate & 0x1F;
+
+      // Decode time components
+      int hour = (dosTime >> 11) & 0x1F;
+      int minute = (dosTime >> 5) & 0x3F;
+      int second = (dosTime & 0x1F) * 2; // Stored in 2-second intervals
+
+      // Use the modern Java 8+ Date-Time API (java.time)
+      LocalDateTime ldt = LocalDateTime.of(year, month, day, hour, minute, second);
+    
+      // Unix time is the number of seconds since January 1, 1970, 00:00:00 UTC
+      // Assuming the DOS time is in the local system's time zone for simplicity. 
+      // If a specific time zone is required, adjust accordingly.
+      // Here we use the system default timezone's offset.
+//      return ldt.toEpochSecond(ZoneOffset.systemDefault().getRules().getOffset(ldt));
+      return ldt.toEpochSecond(ZoneOffset.ofHours(-9));
+   }
+
+      
+
+   
    // Generic routines to read from a random access file or a memory file.
 
    byte readByte() throws IOException

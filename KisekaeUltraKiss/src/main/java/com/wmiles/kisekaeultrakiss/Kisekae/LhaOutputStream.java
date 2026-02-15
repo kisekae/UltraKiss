@@ -288,10 +288,15 @@ final class LhaOutputStream extends ByteArrayOutputStream
       Putword(0, out) ;
 
       // The element creation date-time.
-      Putword(LhaEntry.toMsdos(le.getTime()), out) ;
+      long time = le.getTime() ;
+      int dosDateTime = LhaEntry.toMsdos(time) ;
+      int dosDate = (dosDateTime >> 16) ;
+      int dosTime = (dosDateTime & 0xFF) ;
+      int unixTime = (int) LhaEntry.toUnixTime(dosDate, dosTime) ;
+      Putword(unixTime, out) ;
 
       // Reserved.
-      Putbyte((byte) 0, out) ;
+      Putbyte((byte) 0x20, out) ;
 
       // Header level (2)
       Putbyte((byte) 2, out) ;
@@ -360,8 +365,8 @@ final class LhaOutputStream extends ByteArrayOutputStream
 		h[headercrclocation] = (byte) (crc & 0xff) ;
 		h[headercrclocation+1] = (byte) ((crc >> 8) & 0xff) ;
 	}
-
-
+   
+   
 	// Inner class to create a specialized output stream to write to a
 	// random access file.
 

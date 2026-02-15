@@ -1141,7 +1141,7 @@ final public class ZipManager extends KissFrame
 	private void addArchive()
 	{
       if (zip == null) return ;
-		setBusy() ;
+//		setBusy() ;
       ZipAdd ae = new ZipAdd(this,zip) ;
       savecallback = "add" ;
       ae.setVisible(true);
@@ -1786,6 +1786,9 @@ final public class ZipManager extends KissFrame
          {
             // Process the callback request as per our return indicator.
 
+            this.toFront() ;
+            MainFrame mf = Kisekae.getMainFrame() ;
+            Kisekae.setCursor(mf,Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
             if (savecallback == null) return ;
             callreturn = true ;
             if ("copy".equals(savecallback)) copyArchiveCallback() ;
@@ -2239,7 +2242,8 @@ final public class ZipManager extends KissFrame
    	      while (enum1 != null && enum1.hasMoreElements())
    	      {
    	      	ze = (ArchiveEntry) enum1.nextElement() ;
-   				Date d = new Date(ze.getTime()) ;
+               long time = ze.getTime() ;
+   				Date d = new Date(time) ;
    	         long size = ze.getSize() ;
    	         long packed = ze.getCompressedSize() ;
    	         int ratio = (size == 0) ? 0 :
