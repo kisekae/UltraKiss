@@ -74,7 +74,9 @@ final class LhaOutputStream extends ByteArrayOutputStream
    private long endpointer = 0 ;
 	private int byteswritten = 0 ;
 	private int headercrclocation = 0 ;
+	private int filecrclocation = 0 ;
    private int headersize = 0 ;
+   private int headersum = 0 ;
    private int packsize = 0 ;
    private int origsize = 0 ;
    private int crc = 0 ;
@@ -107,7 +109,10 @@ final class LhaOutputStream extends ByteArrayOutputStream
    	closeEntry() ;
       this.le = le ;
       header = new ByteArrayOutputStream() ;
-      writeHeader(header) ;
+      if (OptionsDialog.getLzhHeader2())
+         writeHeader2(header) ;
+      else
+         writeHeader1(header) ;
    }
 
 
@@ -235,7 +240,7 @@ final class LhaOutputStream extends ByteArrayOutputStream
    // Function to write out a byte to the LHA file.
 
    void Putbyte(byte b, OutputStream outs) throws IOException
-   { outs.write(b) ; byteswritten++ ; }
+   { outs.write(b) ; byteswritten++ ; headersum += b ; }
 
 
    // Function to construct an LHA file element header.   We write level 2
@@ -273,7 +278,7 @@ final class LhaOutputStream extends ByteArrayOutputStream
 	// ---------------------
 
 
-	private void writeHeader(OutputStream out) throws IOException
+	private void writeHeader2(OutputStream out) throws IOException
 	{
    	// Total header size.  Set to zero and we fix this later.
 		Putshort(0, out) ;
@@ -302,6 +307,7 @@ final class LhaOutputStream extends ByteArrayOutputStream
       Putbyte((byte) 2, out) ;
 
       // File CRC value.  We set this to zero and fix it later.
+		filecrclocation = byteswritten ;
       Putshort(0, out) ;
 
       // The OS level.  M is MSDOS.  U is UNIX.  m is MAC.
@@ -333,16 +339,68 @@ final class LhaOutputStream extends ByteArrayOutputStream
       // Not sure why we end our extended headers this way.
 		Putshort(0, out);
 	}
+   
+   // This function constructs a level 1 LHA file element header.   
 
+	private void writeHeader1(OutputStream out) throws IOException
+	{
+   	// Header size and header sum.  Set to zero and we fix this later.
+		Putshort(0, out) ;
+
+      // Method id.  Set to the element compression method (-lh5- or -lh0-).
+      Putstring(le.getMethodText(), out) ;
+
+      // The packed size.  Set to zero and we fix this later.
+		Putword(0, out) ;
+
+      // The original file size.  Set this to zero and fix it later.
+      Putword(0, out) ;
+
+      // The element creation date-time.
+      long time = le.getTime() ;
+      int dosDateTime = LhaEntry.toMsdos(time) ;
+      int dosDate = (dosDateTime >> 16) ;
+      int dosTime = (dosDateTime & 0xFF) ;
+      int unixTime = (int) LhaEntry.toUnixTime(dosDate, dosTime) ;
+      Putword(dosDateTime, out) ;
+
+      // Reserved.
+      Putbyte((byte) 0x20, out) ;
+
+      // Header level (1)
+      Putbyte((byte) 1, out) ;
+
+   	// Filename length.  
+      String name = le.getName() ;
+      int length = name.length() ;
+      byte b = (byte) length ;
+		Putbyte(b, out);
+
+   	// Filename
+      Putstring(name, out) ;
+
+      // File CRC value.  We set this to zero and fix it later.
+		filecrclocation = byteswritten ;
+      Putshort(0, out) ;
+
+      // The OS level.  M is MSDOS.  U is UNIX.  m is MAC.
+      Putbyte((byte) 'M', out) ;
+
+      // Not sure why we end our extended headers this way.
+		Putshort(0, out);
+	}
 
 	// Method to correct our header fields after the data has been written.
 
 	private void updateHeader(byte [] h)
    	throws IOException
 	{
-   	// Set the correct header size.
-      h[0] = (byte) (headersize & 0xff) ;
-      h[1] = (byte) ((headersize >> 8) & 0xff) ;
+   	// Set the correct header size.  This is for level 2 headers.
+      if (headercrclocation > 0)  
+      {
+         h[0] = (byte) (headersize & 0xff) ;
+         h[1] = (byte) ((headersize >> 8) & 0xff) ;
+      }
 
       // Set the correct compressed file size.
       h[7] = (byte) (packsize & 0xff) ;
@@ -357,13 +415,30 @@ final class LhaOutputStream extends ByteArrayOutputStream
       h[14] = (byte) ((origsize >> 24) & 0xff) ;
 
       // Set the correct compressed data CRC.
-      h[21] = (byte) (crc & 0xff) ;
-      h[22] = (byte) ((crc >> 8) & 0xff) ;
+      h[filecrclocation] = (byte) (crc & 0xff) ;
+      h[filecrclocation+1] = (byte) ((crc >> 8) & 0xff) ;
 
       // Set the correct header CRC.
-		crc = LhaCrc16.calcCRC(h);
-		h[headercrclocation] = (byte) (crc & 0xff) ;
-		h[headercrclocation+1] = (byte) ((crc >> 8) & 0xff) ;
+      if (headercrclocation > 0)
+      {
+   		crc = LhaCrc16.calcCRC(h);
+   		h[headercrclocation] = (byte) (crc & 0xff) ;
+   		h[headercrclocation+1] = (byte) ((crc >> 8) & 0xff) ;
+      }
+      
+      // Compute the header sum.  This is only used for header type 0 or 1.
+      
+      if (headercrclocation == 0)   
+      {
+         headersum = 0 ;
+         for (int i = 2 ; i < headersize ; i++)
+         {
+            byte b = h[i] ;
+            headersum += b ;
+         }
+         h[0] = (byte) ((headersize-2) & 0xff) ;
+         h[1] = (byte) (headersum & 0xff);
+      }
 	}
    
    

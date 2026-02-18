@@ -65,10 +65,10 @@ class LhaEntry extends ArchiveEntry
 {
 	static final public int LH0 = 0 ;      // Compression method code for -lh0-
 	static final public int LH1 = 1 ;  		// Compression method code for -lh1-
-	static final public int LH5 = 5 ;		// Compression method code for -lh5-
+	static final public int LH5 = 5 ;      // Compression method code for -lh5-
 	static final public int LH6 = 6 ;		// Compression method code for -lh6-
 	static final public int LH7 = 7 ;		// Compression method code for -lh7-
-	static final public int LHD = 0 ;		// Compression method code for -lhd-
+	static final public int LHD = 99 ;		// Compression method code for -lhd-
 
 	private RandomAccessFile in = null ;	// Reference to the file
 	private long filepointer = -1 ;			// Offset to this entry

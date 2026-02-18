@@ -201,6 +201,7 @@ final public class OptionsDialog extends KissDialog
    private static boolean defaultplayfkiss = false ;
    private static boolean acceptcnferrors = false ;
    private static boolean pagesarescenes = false ;
+   private static boolean lzhheader2 = false ;
    private static boolean multipleevents = true ;
    private static String eventqueues = "1" ;
    private static String timerperiod = "10" ;
@@ -370,6 +371,7 @@ final public class OptionsDialog extends KissDialog
    private static boolean initdefaultplayfkiss = defaultplayfkiss ;
    private static boolean initacceptcnferrors = acceptcnferrors ;
    private static boolean initpagesarescenes = pagesarescenes ;
+   private static boolean initlzhheader2 = lzhheader2 ;
    private static boolean initmultipleevents = multipleevents ;
    private static boolean initdirectkiss = directkiss ;
    private static boolean initgnomekiss = gnomekiss ;
@@ -688,6 +690,7 @@ final public class OptionsDialog extends KissDialog
 	private JCheckBox DefaultPlayFKiss = new JCheckBox();
 	private JCheckBox AcceptCnfErrors = new JCheckBox();
 	private JCheckBox PagesAreScenes = new JCheckBox();
+	private JCheckBox LzhHeader2 = new JCheckBox();
 	private JCheckBox MultipleEvents = new JCheckBox();
 	private JRadioButton AltEditDrag = new JRadioButton();
 	private JRadioButton ShiftEditDrag = new JRadioButton();
@@ -1708,6 +1711,9 @@ final public class OptionsDialog extends KissDialog
 		PagesAreScenes.setText(Kisekae.getCaptions().getString("OptionsPagesAreScenes"));
       PagesAreScenes.setToolTipText(Kisekae.getCaptions().getString("ToolTipPagesAreScenes"));
 		PagesAreScenes.setSelected(pagesarescenes);
+		LzhHeader2.setText(Kisekae.getCaptions().getString("OptionsLzhHeader2"));
+      LzhHeader2.setToolTipText(Kisekae.getCaptions().getString("ToolTipLzhHeader2"));
+		LzhHeader2.setSelected(lzhheader2);
 		MultipleEvents.setText(Kisekae.getCaptions().getString("OptionsMultipleEvents"));
       MultipleEvents.setToolTipText(Kisekae.getCaptions().getString("ToolTipMultipleEvents"));
 		MultipleEvents.setSelected(multipleevents);
@@ -1935,6 +1941,7 @@ final public class OptionsDialog extends KissDialog
 		jPanel43.add(DefaultPlayFKiss, null);
 		jPanel43.add(AcceptCnfErrors, null);
 		jPanel43.add(PagesAreScenes, null);
+		jPanel43.add(LzhHeader2, null);
 
 		jPanel23.add(jPanel40, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0
             ,GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 10, 0, 0), 0, 0));
@@ -2389,6 +2396,7 @@ final public class OptionsDialog extends KissDialog
    static public boolean getDefaultPlayFKiss() { return defaultplayfkiss ; }
    static public boolean getAcceptCnfErrors() { return acceptcnferrors ; }
    static public boolean getPagesAreScenes() { return pagesarescenes ; }
+   static public boolean getLzhHeader2() { return lzhheader2 ; }
    static public boolean getMultipleEvents() { return multipleevents ; }
 
    static public boolean getPlayFKissCompatibility() { return playfkiss ; }
@@ -2750,6 +2758,7 @@ final public class OptionsDialog extends KissDialog
    static public void setDefaultPlayFKiss(boolean b) { defaultplayfkiss = b ; }
    static public void setAcceptCnfErrors(boolean b) { acceptcnferrors = b ; }
    static public void setPagesAreScenes(boolean b) { pagesarescenes = b ; }
+   static public void setLzhHeader2(boolean b) { lzhheader2 = b ; }
    static public void setMultipleEvents(boolean b) { multipleevents = b ; }
 
    static public void setLruFile(String s) 
@@ -3106,6 +3115,7 @@ final public class OptionsDialog extends KissDialog
       else if ("defaultplayfkiss".equalsIgnoreCase(option)) setDefaultPlayFKiss(b) ;
       else if ("acceptcnferrors".equalsIgnoreCase(option)) setAcceptCnfErrors(b) ;
       else if ("pagesarescenes".equalsIgnoreCase(option)) setPagesAreScenes(b) ;
+      else if ("lzhheader2".equalsIgnoreCase(option)) setLzhHeader2(b) ;
       else if ("multipleevents".equalsIgnoreCase(option)) setMultipleEvents(b) ;
    }
 
@@ -3313,6 +3323,7 @@ final public class OptionsDialog extends KissDialog
       DefaultPlayFKiss.setSelected(defaultplayfkiss);
       AcceptCnfErrors.setSelected(acceptcnferrors);
       PagesAreScenes.setSelected(pagesarescenes);
+      LzhHeader2.setSelected(lzhheader2);
       MultipleEvents.setSelected(multipleevents);
       Backup.setSelected(backup);
       SaveSource.setSelected(savesource);
@@ -3554,6 +3565,7 @@ final public class OptionsDialog extends KissDialog
       defaultplayfkiss = DefaultPlayFKiss.isSelected() ;
       acceptcnferrors = AcceptCnfErrors.isSelected() ;
       pagesarescenes = PagesAreScenes.isSelected() ;
+      lzhheader2 = LzhHeader2.isSelected() ;
       multipleevents = MultipleEvents.isSelected() ;
       backup = Backup.isSelected() ;
       savesource = SaveSource.isSelected() ;
@@ -3787,6 +3799,7 @@ final public class OptionsDialog extends KissDialog
 		defaultplayfkiss = initdefaultplayfkiss ;
 		acceptcnferrors = initacceptcnferrors ;
 		pagesarescenes = initpagesarescenes ;
+		lzhheader2 = initlzhheader2;
 		multipleevents = initmultipleevents ;
 		timer = inittimer ;
 		event = initevent ;
@@ -4066,6 +4079,7 @@ final public class OptionsDialog extends KissDialog
       initdefaultplayfkiss = defaultplayfkiss ;
       initacceptcnferrors = acceptcnferrors ;
       initpagesarescenes = pagesarescenes ;
+      initlzhheader2 = lzhheader2 ;
       initmultipleevents = multipleevents ;
 	   initsplashdir = new String(splashdir) ;
    }
@@ -4192,6 +4206,7 @@ final public class OptionsDialog extends KissDialog
       defaultplayfkiss = false ;
       acceptcnferrors = false ;
       pagesarescenes = false ;
+      lzhheader2 = false ;
       multipleevents = true ;
       compatapply = false ;
       eventqueues = "1" ;
@@ -4249,6 +4264,7 @@ final public class OptionsDialog extends KissDialog
       if (initdefaultplayfkiss != DefaultPlayFKiss.isSelected()) return true ;
       if (initacceptcnferrors != AcceptCnfErrors.isSelected()) return true ;
       if (initpagesarescenes != PagesAreScenes.isSelected()) return true ;
+      if (initlzhheader2 != LzhHeader2.isSelected()) return true ;
       if (initmultipleevents != MultipleEvents.isSelected()) return true ;
       if (initeditenable != EditEnable.isSelected()) return true ;
       if (initsecurityenable != SecurityEnable.isSelected()) return true ;
@@ -4386,6 +4402,7 @@ final public class OptionsDialog extends KissDialog
       if (defaultplayfkiss != DefaultPlayFKiss.isSelected()) return true ;
       if (acceptcnferrors != AcceptCnfErrors.isSelected()) return true ;
       if (pagesarescenes != PagesAreScenes.isSelected()) return true ;
+      if (lzhheader2 != LzhHeader2.isSelected()) return true ;
       if (multipleevents != MultipleEvents.isSelected()) return true ;
       if (editenable != EditEnable.isSelected()) return true ;
       if (securityenable != SecurityEnable.isSelected()) return true ;
@@ -4613,6 +4630,7 @@ final public class OptionsDialog extends KissDialog
 	   defaultplayfkiss = toBoolean1(p.getProperty("defaultplayfkiss"),defaultplayfkiss) ;
 	   acceptcnferrors = toBoolean1(p.getProperty("acceptcnferrors"),acceptcnferrors) ;
 	   pagesarescenes = toBoolean1(p.getProperty("pagesarescenes"),pagesarescenes) ;
+	   lzhheader2 = toBoolean1(p.getProperty("lzhheader2"),lzhheader2) ;
 	   multipleevents = toBoolean1(p.getProperty("multipleevents"),multipleevents) ;
 	   directkiss = toBoolean1(p.getProperty("directkiss"),directkiss) ;
 	   gnomekiss = toBoolean1(p.getProperty("gnomekiss"),gnomekiss) ;
@@ -4821,6 +4839,7 @@ final public class OptionsDialog extends KissDialog
       p.put("defaultplayfkiss",toString2(defaultplayfkiss)) ;
       p.put("acceptcnferrors",toString2(acceptcnferrors)) ;
       p.put("pagesarescenes",toString2(pagesarescenes)) ;
+      p.put("lzhheader2",toString2(lzhheader2)) ;
       p.put("multipleevents",toString2(multipleevents)) ;
       p.put("directkiss",toString2(directkiss)) ;
       p.put("gnomekiss",toString2(gnomekiss)) ;
@@ -6442,6 +6461,7 @@ final public class OptionsDialog extends KissDialog
 //    if (defaultplayfkiss) writeLine(out,"; defaultplayfkiss = " + defaultplayfkiss) ;
       if (acceptcnferrors != initacceptcnferrors) writeLine(out,"; acceptcnferrors = " + acceptcnferrors) ;
       if (pagesarescenes != initpagesarescenes) writeLine(out,"; pagesarescenes = " + pagesarescenes) ;
+      if (lzhheader2 != initlzhheader2) writeLine(out,"; lzhheader2 = " + lzhheader2) ;
       if (multipleevents != initmultipleevents && !b) writeLine(out,"; multipleevents = " + multipleevents) ;
 //	   if (backup != initbackup) writeLine(out,"; backup = " + backup) ;
 //	   if (savesource != initsavesource) writeLine(out,"; savesource = " + savesource) ;

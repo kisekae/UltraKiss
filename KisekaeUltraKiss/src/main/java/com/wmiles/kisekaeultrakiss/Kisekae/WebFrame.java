@@ -1126,6 +1126,22 @@ final public class WebFrame extends KissFrame
                   String s = Kisekae.getCaptions().getString("SaveDownloadFileText") ;
                   pathname = selectArchive(s, filename, FileDialog.SAVE) ;
                   if (pathname == null) return ;
+      
+                  // Prompt if we are overwriting a file.
+
+                  f = new File(pathname) ;
+                  if (f.exists())
+                  {
+                     s = Kisekae.getCaptions().getString("FileSaveReplaceFile") ;
+                     int i1 = s.indexOf('[') ;
+                     int j1 = s.indexOf(']') ;
+                     if (i1 >= 0 && j1 > i1)
+                        s = s.substring(0,i1+1) + filename + s.substring(j1) ;
+                     int i = JOptionPane.showConfirmDialog(parent, s,
+            				Kisekae.getCaptions().getString("ReplaceFileText"),
+                        JOptionPane.WARNING_MESSAGE) ;
+                     if (i == JOptionPane.CANCEL_OPTION) return;
+                  }
                   
                   // Write downloaded archive file if archive
                   if (ArchiveFile.isArchive(pathname))

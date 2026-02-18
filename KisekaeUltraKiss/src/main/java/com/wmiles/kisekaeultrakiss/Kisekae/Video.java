@@ -921,6 +921,9 @@ final class Video extends Cel
       baseoffset = c.getBaseOffset() ;
       offset.x = baseoffset.x + initialoffset.x ;
       offset.y = baseoffset.y + initialoffset.y ;
+      adjustedoffset = c.getAdjustedOffset() ;
+      if (adjustedoffset.x != 0 || adjustedoffset.y != 0)
+         offset = new Point(adjustedoffset) ;
       ze = a.getZipEntry() ;
 		b = a.getVideoData() ;
 		bytes = a.getBytes() ;

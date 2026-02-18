@@ -1737,6 +1737,24 @@ final class PanelMenu extends KissMenu
             JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE) ;
          if (i != JOptionPane.YES_OPTION) return ;
       }
+      
+      // Show a warning if we are exporting cels in a different image 
+      // format and this is for a Save As Archive.  A conversion to or 
+      // from an archive does not convert images.
+      
+      if (OptionsDialog.getExportCel() && (type == 2))
+      {
+         String s = Kisekae.getCaptions().getString("ExportCelsOptionNo") ; 
+         int i1 = s.indexOf('[') ;
+         int j1 = s.indexOf(']') ;
+         if (i1 >= 0 && j1 > i1)
+            s = s.substring(0,i1+1) + OptionsDialog.getExportType() + s.substring(j1) ;
+         s += "\n" + Kisekae.getCaptions().getString("OptionsDialogChangedText3") ;
+         int i = JOptionPane.showConfirmDialog(parent,s,
+            Kisekae.getCaptions().getString("OptionsDialogWarningTitle"),
+            JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE) ;
+         if (i != JOptionPane.YES_OPTION) return ;
+      }
 
       // Save the state of the current page.
 
