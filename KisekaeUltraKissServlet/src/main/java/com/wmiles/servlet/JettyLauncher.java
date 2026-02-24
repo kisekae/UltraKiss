@@ -97,6 +97,7 @@ public class JettyLauncher
    static String port = "8080" ;
    static String sslport = "8443" ;
    static String keystore = "" ;
+   
    // The "keystore.p12" certificate file would typically reside in the
    // same directory from which this Java program jar file is run.
    // The default directory is System.getProperty("user.dir") ; 
@@ -128,22 +129,30 @@ public class JettyLauncher
       server.addConnector(httpConnector);
 
       // 2. Configure the HTTPS part
-      HttpConfiguration https = new HttpConfiguration();
-      https.addCustomizer(new SecureRequestCustomizer());
+      try
+      {
+         HttpConfiguration https = new HttpConfiguration();
+         https.addCustomizer(new SecureRequestCustomizer());
 
-      SslContextFactory.Server sslContextFactory = new SslContextFactory.Server();
-      sslContextFactory.setKeyStorePath(keystore+"/keystore.p12");
-      sslContextFactory.setKeyStorePassword("kisekaeultrakiss");
-      sslContextFactory.setKeyManagerPassword("kisekaeultrakiss"); // Often the same as keystore password
-      sslContextFactory.setKeyStoreType("PKCS12"); // Set the keystore type if not default
+         SslContextFactory.Server sslContextFactory = new SslContextFactory.Server();
+         sslContextFactory.setKeyStorePath(keystore+"/keystore.p12");
+         sslContextFactory.setKeyStorePassword("kisekaeultrakiss");
+         sslContextFactory.setKeyManagerPassword("kisekaeultrakiss"); // Often the same as keystore password
+         sslContextFactory.setKeyStoreType("PKCS12"); // Set the keystore type if not default
 
-      // 3. Create the SSL Connector      
-      ConnectionFactory sslConnectionFactory = new SslConnectionFactory(sslContextFactory, "http/1.1");
-      ConnectionFactory httpConnectionFactory = new HttpConnectionFactory(https);
+         // 3. Create the SSL Connector      
+         ConnectionFactory sslConnectionFactory = new SslConnectionFactory(sslContextFactory, "http/1.1");
+         ConnectionFactory httpConnectionFactory = new HttpConnectionFactory(https);
 
-      ServerConnector httpsConnector = new ServerConnector(server, sslConnectionFactory, httpConnectionFactory);
-      httpsConnector.setPort(httpsport);
-      server.addConnector(httpsConnector);
+         ServerConnector httpsConnector = new ServerConnector(server, sslConnectionFactory, httpConnectionFactory);
+         httpsConnector.setPort(httpsport);
+         server.addConnector(httpsConnector);
+      }
+      catch (Exception e)
+      {
+         System.err.println("JettyLauncher: Unable to establish SSL connection.");
+         System.err.println(e.toString());
+      }
 
       // 4. Figure out what path to serve content from
       ClassLoader cl = JettyLauncher.class.getClassLoader();
