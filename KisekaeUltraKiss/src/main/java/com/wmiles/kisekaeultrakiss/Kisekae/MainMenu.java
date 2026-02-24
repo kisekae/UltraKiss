@@ -96,7 +96,7 @@ final public class MainMenu extends KissMenu
 	private static String refset = "Help/Reference2.hs" ;
 	private static String refsection = "reference2.index" ;
    private static String portal = "HTML/WebAccess.html" ;
-   private static String urlbug = "issues" ;
+   private static String urlbug = "HELP/IssueForm.html" ;
    private static String urltutorialfiles = "releases" ;
    private static HelpLoader helper = null ;
 	private static HelpLoader helper2 = null ;
@@ -1591,20 +1591,21 @@ final public class MainMenu extends KissMenu
          if (webpage == null) webpage = new URL(s) ;
          if (webpage != null)
          {
-//            AppletContext browser = Kisekae.getContext() ;
-//            if (browser != null)
-//               browser.showDocument(webpage,"_blank") ;
-//            else
+            try
             {
-               String kissweb = OptionsDialog.getWebSite() ;
-               try
+               if (Kisekae.isWebsocket())
                {
+                  int n = urlbug.lastIndexOf(File.separatorChar) ;
+                  if (n >= 0) BrowserControl.displayURL("https://www.wmiles.com" + urlbug.substring(n)) ;
+               }
+               else
+               {                  
                   Kisekae.setCursor(parent,Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
-                  BrowserControl.displayURL(kissweb + urlbug) ;
+                  BrowserControl.displayURL(webpage.toExternalForm()) ;
                   Kisekae.setCursor(parent,Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
                }
-               catch (Exception ex) { }
             }
+            catch (Exception ex) { }
          }
       }
       catch (Exception e) { }

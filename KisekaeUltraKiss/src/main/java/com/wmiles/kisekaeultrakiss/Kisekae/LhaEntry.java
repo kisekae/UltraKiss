@@ -73,6 +73,7 @@ class LhaEntry extends ArchiveEntry
 	private RandomAccessFile in = null ;	// Reference to the file
 	private long filepointer = -1 ;			// Offset to this entry
 	private long datapointer = -1 ;			// Offset to the data
+	private long nextreadposition = -1 ;	// Offset to next element
 
 	// LHA file header attributes.
 	
@@ -267,11 +268,12 @@ class LhaEntry extends ArchiveEntry
 		// the header area.  
 		
 		if (level == 0)
-			seek(filepointer + headersize + 2) ;
+			nextreadposition = filepointer + headersize + 2 ;
 		if (level == 1)
-			seek(filepointer + headersize + extsize + 2) ;
+			nextreadposition = filepointer + headersize + extsize + 2 ;
 		if (level == 2)
-			seek(filepointer + headersize) ;
+			nextreadposition = filepointer + headersize ;
+		seek(nextreadposition) ;
 	}
 	
 	
@@ -426,18 +428,23 @@ class LhaEntry extends ArchiveEntry
 	
 //	public long getSize() { return (copy) ? 0 : (long) origsize ; }
 	public long getSize() { return (long) origsize ; }
-
 	
 	// Returns the compressed file size.
 
 //	public long getCompressedSize() { return (copy) ? 0 : (long) packsize ; }
 	public long getCompressedSize() { return (long) packsize ; }
+  
+	// Returns the next element position in the file.
 
+	public long getNextReadPosition() { return nextreadposition ; }
+   
+	// Returns the current read position in the random access file.
+
+	public long getFilePointer() { return filepointer ; }
 	
 	// Returns the file update or creation time.
 
 	public long getTime() { return datetime ; }
-
 
 	// Set the time of the file update or creation.
 

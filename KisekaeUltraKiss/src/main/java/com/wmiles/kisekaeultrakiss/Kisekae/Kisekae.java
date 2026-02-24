@@ -196,7 +196,7 @@ public class Kisekae extends Applet
 
       LogFile.start() ;
       builddate = Calendar.getInstance() ;
-      builddate.set(2026,2-1,18) ;
+      builddate.set(2026,2-1,24) ;
       
       // Restore the properties.
       
@@ -227,7 +227,13 @@ public class Kisekae extends Applet
          OptionsDialog.setFactoryOptions() ;
          OptionsDialog.setInitOptions() ;
          OptionsDialog.setDebugControl(true) ;
-               
+         
+         // Set random splash set.
+         
+         Random rand = new Random() ;
+         int n = rand.nextInt((3-1) + 1) + 2 ;
+         OptionsDialog.setSplashSetNumber(n) ;
+         
          // Reset preferences for each package class.
                
          Preferences prefs = Preferences.userNodeForPackage(Kisekae.class) ;
@@ -2609,10 +2615,10 @@ public class Kisekae extends Applet
                 + "To load and run your own KiSS sets packaged in LZH or ZIP files use <a href=\"file://fileopen\">File-Open</a>.<br>"
                 + "To save LZH or ZIP or other files from UltraKiss to your local computer use <a href=\"\">File-Save As</a>.<br>"
                 + "To run online KiSS demonstration sets available on the Internet use <a href=\"file://openportal\">File-Open Portal</a>.<br><br>"
-                + "For full features without limitations <a href=\"https://github.com/kisekae/UltraKiss/releases\">download and install UltraKiss</a> from GitHub.<br>"
-                + "To report bugs or provide suggestions for improvement <a href=\"https://github.com/kisekae/UltraKiss/issues\">file an issue report</a> on GitHub.<br><br>"
+                + "For full features without limitations <a href=\"https://github.com/kisekae/UltraKiss/releases\">download and install UltraKiss</a> from GitHub.<br><br>"
                 + "If you do not know what KiSS is, see the UltraKiss documentation using <a href=\"file://helpcontents\">Help-Contents</a>.<br>"
-                + "To learn how to make or visually edit KiSS sets within UltraKiss see <a href=\"file://helptutorial\">Help-Tutorials</a>.</p>"
+                + "To learn how to make or visually edit KiSS sets within UltraKiss see <a href=\"file://helptutorial\">Help-Tutorials</a>.<br>"
+                + "To submit an issue report or offer suggestions for improvement see <a href=\"file://helpbugreport\">Help-Bug Report</a>.</p>"
                 + "</body></html>");
             
             // handle link events
@@ -2698,6 +2704,21 @@ public class Kisekae extends Applet
                                  MainMenu mm = mainframe.getMainMenu() ;
                                  websocketdialog.setVisible(false) ;
                                  mm.open.doClick() ;
+                             } 
+                           } ;
+                  			SwingUtilities.invokeLater(awt) ;
+                        }
+                        else if (s.contains("helpbugreport"))
+                        {
+                           JOptionPane.getRootFrame().dispose();
+                  			Runnable awt = new Runnable()
+                  			{ 
+                              public void run() 
+                              { 
+                                 PrintLn.println("Websocket open file.") ;
+                                 MainMenu mm = mainframe.getMainMenu() ;
+                                 websocketdialog.setVisible(false) ;
+                                 mm.bugreport.doClick() ;
                              } 
                            } ;
                   			SwingUtilities.invokeLater(awt) ;

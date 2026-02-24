@@ -800,6 +800,7 @@ final public class ZipManager extends KissFrame
 			JOptionPane.showMessageDialog(this, e.getMessage(),
             Kisekae.getCaptions().getString("FileOpenException"),
             JOptionPane.ERROR_MESSAGE) ;
+			Kisekae.setCursor(this,Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
 			return ;
 		}
 
@@ -874,6 +875,7 @@ final public class ZipManager extends KissFrame
 			JOptionPane.showMessageDialog(this, filename + "\n" + e.getMessage(),
             Kisekae.getCaptions().getString("FileOpenException"),
             JOptionPane.ERROR_MESSAGE) ;
+			Kisekae.setCursor(this,Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
 			closeArchive() ;
 			return ;
 		}

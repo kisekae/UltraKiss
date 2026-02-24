@@ -6,13 +6,9 @@ NoGodsLand3 | NoGodsLand - Slavers Towns Approach (c) 2023 The Owl
 NoGodsLand4 | NoGodsLand - Mindy's Secret Place (c) 2023 The Owl 
 NoGodsLand5 | NoGodsLand - Dead City Central Place (c) 2023 The Owl  
 NoGodsLand6 | NoGodsLand - Deadly Sity Park (c) 2023 The Owl  
-NoGodsLand7 | NoGodsLand - Hall Of Arts (c) 2023 The Owl  
-NoGodsLand8 | NoGodsLand - Palace Of Joy (c) 2023 The Owl  
-NoGodsLand9 | NoGodsLand - Secret Mansion (c) 2023 The Owl  
-NoGodsLand10 | NoGodsLand - Ballroom (c) 2023 The Owl 
-NoGodsLand11 | NoGodsLand - Ballroom-sliding (c) 2023 The Owl 
-NoGodsLand12 | NoGodsLand - Deadly Sity Park 2 (c) 2023 The Owl 
-NoGodsLand13 | NoGodsLand - Mystic Couple (c) 2023 The Owl 
-NoGodsLand14 | NoGodsLand - The Land of Forever Spring (c) 2023 The Owl  
-NoGodsLand15 | NoGodsLand - All Things Store (c) 2023 The Owl  
-NoGodsLand16 | NoGodsLand - Training (c) 2023 The Owl 
+NoGodsLand7 | NoGodsLand - Palace Of Joy (c) 2023 The Owl  
+NoGodsLand8 | NoGodsLand - Secret Mansion (c) 2023 The Owl  
+NoGodsLand9 | NoGodsLand - Ballroom-sliding (c) 2023 The Owl 
+NoGodsLand10 | NoGodsLand - Deadly Sity Park 2 (c) 2023 The Owl 
+NoGodsLand11 | NoGodsLand - All Things Store (c) 2023 The Owl  
+NoGodsLand12 | NoGodsLand - Training (c) 2023 The Owl 

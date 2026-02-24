@@ -137,9 +137,25 @@ final class LhaFile extends ArchiveFile
 	         size += h.getSize() ;
             compressedsize += h.getCompressedSize() ;
 				h.skip();
+				if (OptionsDialog.getDebugLoad())
+            {
+               long nextposition = h.getNextReadPosition() + h.getCompressedSize() ;
+            	String s = "LhaFile: read " + h.getPath() + " at " + h.getFilePointer() + " size=" + h.getSize() + " next entry at " + nextposition ;
+            	PrintLn.println(s) ;
+            }
 			}
 		}
-		catch (EOFException e) { /* do nothing */ }
+		catch (EOFException e) 
+      { /* do nothing */ 
+         if (!("Zero sized LHA file".equals(e.getMessage())))
+         {
+            String s = "Unexpected End-Of-File" ;
+            LhaEntry h = (LhaEntry) contents.lastElement() ;
+            String s1 = "LHA last successful element: " + h.getName() ;
+            String s2 = "File: " + pathname ;
+            throw new IOException(s + "\n" + s2+ "\n" + s1) ;
+         }
+      }
       catch (IOException e)
       {
       	try { close() ; }

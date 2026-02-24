@@ -1101,6 +1101,7 @@ final public class FileOpen implements Cloneable
          error = true ;
          PrintLn.println("KiSS file open exception, " + e.toString()) ;
          String msg = e.getMessage() ;
+         if (msg == null) msg = e.toString() ;
          if (msg.contains("zip END header")) msg += "\nCheck download protocol, use https" ;
          if (!Kisekae.isBatch() && !silent)
    			JOptionPane.showMessageDialog(parent, msg,

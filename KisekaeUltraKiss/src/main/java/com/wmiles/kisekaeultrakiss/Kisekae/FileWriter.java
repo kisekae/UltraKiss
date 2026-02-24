@@ -966,6 +966,7 @@ final class FileWriter extends KissFrame
 			// but this will not be the case for new objects that are created
 			// dynamically.
 
+         int elements = 0 ;
 			while (enum1 != null && enum1.hasMoreElements())
 			{
 				int bytes = 0 ;
@@ -975,6 +976,7 @@ final class FileWriter extends KissFrame
 				Object o = enum1.nextElement() ;
 				if (o == null) continue ;
             boolean export = false ;
+            elements++ ;
 
 				// Determine the element name by the enumeration type.
             // The KiSS object contains the original name.  The next
@@ -1198,7 +1200,7 @@ final class FileWriter extends KissFrame
                   LhaEntry le = new LhaEntry(newname) ;
                   le.setTime(next.getTime()) ;
                   le.setMethod((next.isCompressed()) ? le.LH5 : le.LH0) ;
-                  if (next.getSize() == 0) le.setMethod(le.LH0); 
+                  if (next.getSize() == 0) le.setMethod(le.LHD); 
                   ((LhaOutputStream) out).putNextEntry(le) ;
                }
             }
@@ -1334,6 +1336,8 @@ final class FileWriter extends KissFrame
             	PrintLn.println(s) ;
             }
          }
+         
+       	PrintLn.println("Total elements written: " + elements + " to " + pathname) ;        
       }
 
       // Watch for KiSS exceptions.  These are thrown for planned early

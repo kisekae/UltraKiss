@@ -100,6 +100,13 @@ public class BrowserControl
 
    public static void displayURL(String url)
    {
+      Thread runner = new Thread()
+		{ public void run() { displayURL1(url) ; } };
+      runner.start() ;   
+   }
+
+   static void displayURL1(String url)
+   {
       secure = false ;
       String cmd = null ;
       Process p = null ;

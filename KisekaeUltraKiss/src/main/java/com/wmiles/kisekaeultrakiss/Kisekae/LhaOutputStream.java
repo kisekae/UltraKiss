@@ -57,6 +57,7 @@ package com.wmiles.kisekaeultrakiss.Kisekae ;
 */
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.zip.ZipException ;
 
@@ -75,6 +76,7 @@ final class LhaOutputStream extends ByteArrayOutputStream
 	private int byteswritten = 0 ;
 	private int headercrclocation = 0 ;
 	private int filecrclocation = 0 ;
+   private int headertype = 0 ;
    private int headersize = 0 ;
    private int headersum = 0 ;
    private int packsize = 0 ;
@@ -150,7 +152,6 @@ final class LhaOutputStream extends ByteArrayOutputStream
 
       byteswritten = 0 ;
       byte [] h = header.toByteArray() ;
-      headersize = h.length ;
       lhaout.write(h) ;
 
       // Compress the data.
@@ -214,7 +215,8 @@ final class LhaOutputStream extends ByteArrayOutputStream
 
    private void Putstring(String str, OutputStream outs) throws IOException
    {
-      byte[] buf = str.getBytes();
+      int n = str.length() ;
+      byte[] buf = str.getBytes(StandardCharsets.ISO_8859_1);
       outs.write(buf);
       byteswritten += buf.length ;
    }
@@ -280,6 +282,8 @@ final class LhaOutputStream extends ByteArrayOutputStream
 
 	private void writeHeader2(OutputStream out) throws IOException
 	{
+      headertype = 2 ;
+      
    	// Total header size.  Set to zero and we fix this later.
 		Putshort(0, out) ;
 
@@ -331,19 +335,28 @@ final class LhaOutputStream extends ByteArrayOutputStream
 		{
       	if (dir.endsWith(name))
          	dir = dir.substring(0,dir.length()-name.length()) ;
-			Putshort(dir.length() + 3, out);
-			Putbyte((byte) 2, out) ;
-			Putstring(dir, out) ;
+         if (dir.length() > 0)
+         {
+            char separator = 0xFF ;
+            String dir1 = dir.replace('/', separator) ;
+            dir1 = dir1.replace('\\', separator) ;
+            Putshort(dir1.length() + 3, out);
+            Putbyte((byte) 2, out) ;
+            Putstring(dir1, out) ;
+         }
 		}
 
       // Not sure why we end our extended headers this way.
 		Putshort(0, out);
+      headersize = byteswritten ;
 	}
    
    // This function constructs a level 1 LHA file element header.   
 
 	private void writeHeader1(OutputStream out) throws IOException
 	{
+      headertype = 1 ;
+      
    	// Header size and header sum.  Set to zero and we fix this later.
 		Putshort(0, out) ;
 
@@ -385,9 +398,34 @@ final class LhaOutputStream extends ByteArrayOutputStream
 
       // The OS level.  M is MSDOS.  U is UNIX.  m is MAC.
       Putbyte((byte) 'M', out) ;
+      headersize = byteswritten ;
+
+   	// Next extended header.  Directory name.  Extension type is 2.
+      String dir = le.getPath() ;
+		if (dir != null)
+		{
+      	if (dir.endsWith(name))
+         	dir = dir.substring(0,dir.length()-name.length()) ;
+         if (dir.length() > 0)
+         {
+            char separator = 0xFF ;
+            String dir1 = dir.replace('/', separator) ;
+            dir1 = dir1.replace('\\', separator) ;
+            Putshort(dir1.length() + 3, out);
+            Putbyte((byte) 2, out) ;
+            Putstring(dir1, out) ;
+         }
+		}
+      
+   	// First extended header.  CRC of the header.  Extension type is 0.
+      Putshort(5, out) ;
+		Putbyte((byte) 0, out) ;
+		headercrclocation = byteswritten ;
+		Putshort(0, out) ;
 
       // Not sure why we end our extended headers this way.
 		Putshort(0, out);
+      headersize = headersize + 2 ;
 	}
 
 	// Method to correct our header fields after the data has been written.
@@ -396,7 +434,7 @@ final class LhaOutputStream extends ByteArrayOutputStream
    	throws IOException
 	{
    	// Set the correct header size.  This is for level 2 headers.
-      if (headercrclocation > 0)  
+      if (headertype == 2)  
       {
          h[0] = (byte) (headersize & 0xff) ;
          h[1] = (byte) ((headersize >> 8) & 0xff) ;
@@ -428,7 +466,7 @@ final class LhaOutputStream extends ByteArrayOutputStream
       
       // Compute the header sum.  This is only used for header type 0 or 1.
       
-      if (headercrclocation == 0)   
+      if (headertype == 0 || headertype == 1)  
       {
          headersum = 0 ;
          for (int i = 2 ; i < headersize ; i++)
