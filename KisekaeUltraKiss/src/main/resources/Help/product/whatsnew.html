@@ -8,11 +8,24 @@
 	<body>
 		<h1 align="center"><font color="#ff0000" face="Arial, Helvetica, sans-serif">What's new in UltraKiss ?</font></h1>
 		<hr>
+                <p><B>February 24, 2026: UltraKiss V5.1 is released.</b> UltraKiss 5.1 implements a new issue reporting system that provides anonymous issue submission to GitHub.  No GitHub login is required<br>
+                                        UltraKiss is end-of-life.  Issues may be corrected if reported to project <a href="https://github.com/kisekae/UltraKiss">Kisekae UltraKiss</a> on GitHub or with Help-Bug Report from within UltraKiss.</P>
+					<OL>
+                      <LI><font face="Arial">1. A new HTML issue report form with server based PHP email notification and a GitHub REST API implementation for anonymous issue posting is provided.</font></p>
+                                        </OL>
                 <p><B>January 30, 2026: UltraKiss V5.0 is released.</b> UltraKiss 5.0 implements an embedded Jetty server to provide a client-server environment for browser access to KiSS sets.<br>
                                         UltraKiss is end-of-life.  Issues may be corrected if reported to project <a href="https://github.com/kisekae/UltraKiss">Kisekae UltraKiss</a> on GitHub. </P>
 					<OL>
                       <LI><font face="Arial">Numerous changes were implemented to provide a websocket and servlet environment to run UltraKiss as a client-server application.</font></p>
                       <LI><font face="Arial">To run UltraKiss as a server see the current documentation.  UltraKiss is available at <a href="https://www.wmiles.com/ultrakiss">https://www.wmiles.com/ultrakiss</a></font></br>
+                      <LI><font face="Arial">Save As Archive for new KiSS sets or sets loaded from a directory failed to create LZH archives properly as the file was in use.  This is corrected.</font></p>
+                      <LI><font face="Arial">Corrected Archive Manager LZH element times for different header types.  Header type 2 uses Unix time and not DOS time.</font></p>
+                      <LI><font face="Arial">Implemented a confirmation dialog to confirm replacement of an existing file on a download of a KiSS set from a URL.</font></p>
+                      <LI><font face="Arial">Implemented LZH header level 1 when writing LZH files.  UltraKiss previously used header level 2.  A new compatibility option is provided.</font></p>
+                      <LI><font face="Arial">Corrected a fault that encoded palette files using a directory compression method in LZH files. This was incompatible with DirectKiss.</font></p>
+                      <LI><font face="Arial">A restart of a set with an imported cel that had an adjusted offset failed to apply the adjusted offset when the cel was loaded. This is corrected.</font></p>
+                      <LI><font face="Arial">Implemented extended headers for header level 1 LZH files to maintain element directory and CRC information.</font></p>
+                      <LI><font face="Arial">A websocket implementation of UltraKiss now selects a random background image set for the main screen.</font></p>
                                         </OL>
                 <p><B>September 30, 2025: UltraKiss V4.2 is released.</b> UltraKiss 4.2 provides corrections to edit copy, cut, paste, and undo and redo for visual editing of image cels.<br>
                                         UltraKiss is end-of-life.  Issues may be corrected if reported to project <a href="https://github.com/kisekae/UltraKiss">Kisekae UltraKiss</a> on GitHub. </P>
