@@ -96,7 +96,7 @@ final public class MainMenu extends KissMenu
 	private static String refset = "Help/Reference2.hs" ;
 	private static String refsection = "reference2.index" ;
    private static String portal = "HTML/WebAccess.html" ;
-   private static String urlbug = "HELP/IssueForm.html" ;
+   private static String urlbug = "HTML/IssueForm.html" ;
    private static String urltutorialfiles = "releases" ;
    private static HelpLoader helper = null ;
 	private static HelpLoader helper2 = null ;
