@@ -98,6 +98,7 @@ public class Kisekae extends Applet
    // Run time variables
 
    private static String website = "https://github.com/kisekae/UltraKiss/" ; // Web site
+   private static String serverdomain = "www.wmiles.com" ; // Domain for server
    private static String splashname = "Images/splash.gif" ; // Splash image
    private static String websocketimg = "Images/KisekaeUltraKiss.png" ; // Websocket 
    private static String webstart = "HTML/KissWeb.html" ; // Portal page
@@ -196,7 +197,7 @@ public class Kisekae extends Applet
 
       LogFile.start() ;
       builddate = Calendar.getInstance() ;
-      builddate.set(2026,2-1,24) ;
+      builddate.set(2026,2-1,25) ;
       
       // Restore the properties.
       
@@ -1066,6 +1067,7 @@ public class Kisekae extends Applet
    static int getWebsocketPort() { return websocketport ; }
    static String getKissWeb() { return kissweb ; }
    static String getWebSite() { return website ; }
+   static String getServerDomain() { return serverdomain ; }
    static String getSplashDir() { return splashdir ; }
    static String getIconDir() { return icondir ; }
    static String getCacheDir() { return cachedir ; }

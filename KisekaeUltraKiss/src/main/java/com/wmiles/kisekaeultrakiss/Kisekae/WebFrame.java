@@ -1579,6 +1579,24 @@ final public class WebFrame extends KissFrame
                if (f.isDirectory()) urlname += File.separator ;
             }
 
+            // Capture any url links to main menu operations.
+            
+            if (urlname.contains("file:") && urlname.contains("helpbugreport"))
+            {
+            	Runnable awt = new Runnable()
+               { 
+                  public void run() 
+                  {
+                     MainFrame mainframe = Kisekae.getMainFrame() ;
+                     if (mainframe == null) return ;
+                     MainMenu mm = mainframe.getMainMenu() ;
+                     mm.bugreport.doClick() ;
+                  } 
+               } ;
+        			SwingUtilities.invokeLater(awt) ;
+               return ;
+            }                    
+            
             // Add this URL to our history list and show in the browser.
 
             v.addElement(urlname) ;

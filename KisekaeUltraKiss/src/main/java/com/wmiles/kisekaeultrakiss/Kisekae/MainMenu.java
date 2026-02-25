@@ -1578,6 +1578,8 @@ final public class MainMenu extends KissMenu
    }
 
    // Invoke the browser to show the GitHub bug report page.
+   // This page must be on the server as the BrowserControl class 
+   // cannot currently display HTML forms in JAR files.
 
    void eventBug()
    {
@@ -1589,24 +1591,8 @@ final public class MainMenu extends KissMenu
          String s = Kisekae.getLoadBase() + urlbug ;
          webpage = Kisekae.getResource(urlbug) ;
          if (webpage == null) webpage = new URL(s) ;
-         if (webpage != null)
-         {
-            try
-            {
-               if (Kisekae.isWebsocket())
-               {
-                  int n = urlbug.lastIndexOf(File.separatorChar) ;
-                  if (n >= 0) BrowserControl.displayURL("https://www.wmiles.com" + urlbug.substring(n)) ;
-               }
-               else
-               {                  
-                  Kisekae.setCursor(parent,Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
-                  BrowserControl.displayURL(webpage.toExternalForm()) ;
-                  Kisekae.setCursor(parent,Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
-               }
-            }
-            catch (Exception ex) { }
-         }
+         int n = urlbug.lastIndexOf('/') ;
+         if (n >= 0) BrowserControl.displayURL("https://" + Kisekae.getServerDomain() + urlbug.substring(n)) ;
       }
       catch (Exception e) { }
    }
