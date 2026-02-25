@@ -2797,7 +2797,7 @@ public class Kisekae extends Applet
                            	Runnable runner2 = new Runnable()
                      			{ public void run() 
                                  { 
-                                    if (hyperlinkactivated)
+                                    if (hyperlinkactivated && "portal".equals(file))
                                        wf.close();
                                     else
                                        wf.toFront();
