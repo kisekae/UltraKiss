@@ -1,6 +1,6 @@
 # UltraKiss
 
-**UltraKiss 5.0** is now released to provide browser access to KiSS sets.  You can now use UltraKiss to access all your KiSS sets directly from your browser without the need to install any software on your computer.  
+**UltraKiss 5.1** is now released. This release provides a new online Issue Reporting system for bug reports or suggestions for improvement.  A GitHub user login is no longer required.  Issue reports are submitted to GitHub anonymously and also emailed to the developer with a copy to the submitter.  You can now submit issues directly from within UltraKiss use **Help-Bug Report**.  
 
 ```diff
 January 3, 2026. UltraKiss version 5.0 now offers SSL secure connections to the server.
@@ -11,10 +11,10 @@ Press this button to run UltraKiss.
 [![UltraKiss](https://github.com/kisekae/UltraKiss/blob/master/src/Images/ultrakissbtn.svg)](https://www.wmiles.com/ultrakiss)
 
 
-**KisekaeUltraKiss 5.0** is a new GitHub release that provides a websocket server environment to run UltraKiss with modern web browsers.   
-**KisekaeUltraKissServlet 5.0** is a new GitHub release that provides the client environment to run UltraKiss with modern web browsers.   
+**KisekaeUltraKiss 5.1** is a modern GitHub release that provides a websocket server environment to run UltraKiss with HTML 5 capable web browsers.   
+**KisekaeUltraKissServlet 5.1** is a new GitHub release that provides the client environment to run UltraKiss with modern web browsers.   
 
-**$${\color{red}Webswing}$$** service is no longer available due to licensing issues.  A replacement service using a Jetty server has been developed.
+**$${\color{red}Webswing}$$** service is no longer available due to licensing issues.  Further, the replacement service provided with UltraKiss 5.0 and a Jetty server is more functionally capable than is possible with Webswing.
 
 #### How does this magic work?
 
@@ -91,15 +91,13 @@ In 2023, prompted by new KiSS work from [The Owl](http://followtheowl.com/) with
 ### How to get started with UltraKiss
 
 
-1. Download the current UltraKiss release from [GitHub](https://github.com/kisekae/UltraKiss/releases).  For automated installation, see the release downloads.
+1. Download the current UltraKiss release from [GitHub](https://github.com/kisekae/UltraKiss/releases).  For automated installation, see the release downloads.  Automated installers are provided for Windows, Linux, and Apple systems.  No additional software is required.  
 
-2. For manual installation, extract the files from the **UltraKiss_4.2.zip** (or later) download. This extract will create a folder named **ultrakiss**.
+2. For manual installation or 32 bit system installations extract the files from the **UltraKiss_4.2.zip** (or later) download. This extract will create a folder named **ultrakiss**.
 
    For local execution on a Windows system with or without Java installed, run **UltraKiss_4.2_jre8_201.exe** found in the **ultrakiss** folder. This program is a fully self-contained bundled application created with [Launch4j](https://launch4j.sourceforge.net/).
 
-   For local execution on a Linux or Apple system with Java already installed, run the **kisekae.jar** file from the **ultrakiss** folder using the **java -jar kisekae.jar** command.
-
-   If the **.jar** extension is configured in your system as a Java application then you can run the program by directly clicking on this file.
+   If Java is already installed, run the **kisekae.jar** file from the **ultrakiss** folder using the **java -jar kisekae.jar** command. If the **.jar** extension is configured in your system as a Java application then you can run the program by directly clicking on this file.
 
    On all systems, you must run the UltraKiss program from within the **ultrakiss** folder. This is required for access to the sound and help libraries. This folder also contains a standalone version of the Java Runtime Environment (JRE) version 8 for systems that do not have Java installed.
 
@@ -114,8 +112,10 @@ In 2023, prompted by new KiSS work from [The Owl](http://followtheowl.com/) with
    Use **Help-Demo Sets** to access the KiSS demonstration sets that are packaged with UltraKiss. Click on any of the listed sets to load the set in UltraKiss. To see the FKiSS code behind any KiSS set press F11 or use the **View-Active Configuration** menu command.
    
 4. To learn how to make KiSS sets of your own explore the tutorials provided with UltraKiss. See **Help-Tutorials**.  In particular, look at the FKiSS tutorial to learn how to use the UltraKiss FKiSS Editor debugging tool to breakpoint and step through your code execution.
+
+5. To submit bug reports or provide suggestions for improvements see **Help-Bug Reports**. Reports are emailed to the developer and submitted anonymously to the code repository on GitHub.
    
-5. Explore the reference documentation provided with UltraKiss.  Examine the **UltraKiss Introduction** section and the **FKiSS** section.
+6. Explore the reference documentation provided with UltraKiss.  Examine the **UltraKiss Introduction** section and the **FKiSS** section.
 
    The FKiSS event and action statement documentation describes the FKiSS language and provides illustrative examples to help you develop your own interactive KiSS sets.
 
