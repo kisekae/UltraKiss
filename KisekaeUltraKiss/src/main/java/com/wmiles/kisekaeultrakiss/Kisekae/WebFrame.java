@@ -1561,7 +1561,7 @@ final public class WebFrame extends KissFrame
 
          if (urlname.startsWith("file:")) inframe = true ;
          if (urlname.startsWith("jar:")) inframe = true ;
-         if (urlname.startsWith(s)) inframe = true ;
+         if (urlname.startsWith(s) && s.length() > 0) inframe = true ;
          if (inframe)
          {
             Vector v = getHistory() ;
@@ -1597,7 +1597,7 @@ final public class WebFrame extends KissFrame
                return ;
             }                    
             
-            // Add this URL to our history list and show in the browser.
+            // Add this URL to our history list and show in the portal.
 
             v.addElement(urlname) ;
             setPage(urlname) ;

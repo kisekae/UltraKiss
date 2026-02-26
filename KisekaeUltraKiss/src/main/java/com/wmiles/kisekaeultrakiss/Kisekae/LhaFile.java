@@ -149,11 +149,13 @@ final class LhaFile extends ArchiveFile
       { /* do nothing */ 
          if (!("Zero sized LHA file".equals(e.getMessage())))
          {
-            String s = "Unexpected End-Of-File" ;
-            LhaEntry h = (LhaEntry) contents.lastElement() ;
-            String s1 = "LHA last successful element: " + h.getName() ;
-            String s2 = "File: " + pathname ;
-            throw new IOException(s + "\n" + s2+ "\n" + s1) ;
+            if (OptionsDialog.getDebugControl())
+            {
+               PrintLn.println("LhaFile: Unexpected End-Of-File, File: " + pathname) ;
+               LhaEntry h = (LhaEntry) contents.lastElement() ;
+               PrintLn.println("LhaFile: Next read position: " + h.getNextReadPosition()) ;
+               PrintLn.println("LhaFile: LHA last successful element: " + h.getName()) ;
+            }
          }
       }
       catch (IOException e)

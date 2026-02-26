@@ -56,6 +56,7 @@ package com.wmiles.kisekaeultrakiss.Kisekae ;
 import java.awt.*;
 import java.awt.event.* ;
 import java.io.* ;
+import java.util.Arrays;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.filechooser.FileFilter;
@@ -110,8 +111,9 @@ final class CacheManager extends KissDialog
  		super(frame, title, true);
       parent = frame ;
 
-		// Populate the list with the array contents.
+		// Populate the list with the sorted array contents.
 
+      Arrays.sort(v) ;
       LIST = new JList(v) ;
       LIST.addListSelectionListener(listListener) ;
 		OK.setEnabled(false) ;

@@ -190,7 +190,7 @@ class LhaEntry extends ArchiveEntry
       // the end of the file and do not terminate it properly.
 
 		if (method.charAt(0) != '-')
-			throw new EOFException("Invalid LHA file signature") ;
+			throw new EOFException("Invalid LHA file signature, " + method) ;
 
 		// Continue reading the remainder of the header.
 			
