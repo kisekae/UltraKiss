@@ -1,6 +1,6 @@
 # UltraKiss
 
-**UltraKiss 5.1** is now released. This release provides a new online Issue Reporting system for bug reports or suggestions for improvement.  A GitHub user login is no longer required.  Issue reports are submitted to GitHub anonymously and also emailed to the developer with a copy to the submitter.  You can now submit issues directly from within UltraKiss use **Help-Bug Report**.  
+**UltraKiss 5.1** is now released. This release provides a new online Issue Reporting system for bug reports or suggestions for improvement.  A GitHub user login is no longer required.  Issue reports are submitted to GitHub anonymously and also emailed to the developer with a copy to the submitter.  You can now submit issues directly from within UltraKiss using the menu command **Help-Bug Report**.  
 
 ```diff
 January 3, 2026. UltraKiss version 5.0 now offers SSL secure connections to the server.
