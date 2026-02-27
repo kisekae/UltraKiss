@@ -42,7 +42,7 @@
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 echo " "
-echo "This is startUltraKiss.sh script version 1.1 2026/01/15"
+echo "This is startUltraKiss.sh script version 1.2 2026/02/25"
 echo "The current date and time is $(date)"
 echo "Display argument (argument 1) is $1"
 echo "Port argument (argument 2) is $2"
@@ -50,7 +50,7 @@ echo "SSL argument (argument 3) is $3"
 
 SCRIPT_DIR="$(dirname "$(readlink -f "$0")")" 
 Directory="$SCRIPT_DIR"
-Application="KisekaeUltraKiss-5.0.jar"
+Application="KisekaeUltraKiss-5.1.jar"
 
 echo "Home directory is $Directory"
 cd $Directory
@@ -107,7 +107,7 @@ else
 fi
 
 echo "Starting $Application on display $1"
-DISPLAY=:$1 java -XX:MaxRAMPercentage=50 -jar $Application "portal" "" "" "" "" "" "$2" "$3" > server$2.log 2>&1 &
+DISPLAY=:$1 java -XX:MaxRAMPercentage=50 -jar $Application "" "" "" "" "" "" "$2" "$3" > server$2.log 2>&1 &
 ULTRAKISS_PID=$!
 
 if ps -p $ULTRAKISS_PID > /dev/null
