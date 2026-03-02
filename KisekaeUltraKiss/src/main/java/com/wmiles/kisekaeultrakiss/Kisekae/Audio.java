@@ -834,7 +834,8 @@ public abstract class Audio extends KissObject
                JettyWebSocketEndpoint endpoint = Kisekae.getServerEndpoint() ;
                if (endpoint != null) 
                {
-                 endpoint.send("audiostop " + 0 + " " + s + " " + 0) ;
+                  if (t == null) t = "all" ;
+                  endpoint.send("audiostop " + 0 + " " + s + " " + 0 + " " + t) ;
                }               
             }
          }

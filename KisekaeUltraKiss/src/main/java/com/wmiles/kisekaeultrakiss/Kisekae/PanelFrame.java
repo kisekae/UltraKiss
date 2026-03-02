@@ -4637,7 +4637,10 @@ final class PanelFrame extends JPanel
       for (int i = celList.length-1 ; i >= 0 ; i--)
       {
          Cel c ;
-         int celNumber = celList[i] ;
+         int celNumber ;
+         // ArrayIndexOutOfBoundsException (260227). From MouseMoved line 7188
+         try { celNumber = celList[i] ; }  
+         catch (ArrayIndexOutOfBoundsException e) { return -1 ; }
          try { c = (Cel) cels.elementAt(celNumber) ; }
          catch (ArrayIndexOutOfBoundsException e) { continue ; }
          boolean mousevisible = checkMouse(c) ;

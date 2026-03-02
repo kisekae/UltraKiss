@@ -335,13 +335,24 @@ final class AudioWebSocket extends AudioSound
          if (OptionsDialog.getDebugSound())
             System.out.println("[" + time + "] AudioWebsocket: " + getName() + " Stop request.") ;
 
+         // Do not stop if this is music and we are stopping sound.  
+         
+         String s = getType() ;
+         if ("sound".equals(type) && !("sound".equals(s)))
+         {
+            if (OptionsDialog.getDebugSound())
+               System.out.println("[" + time + "] AudioWebsocket: " + getName() + " Stop ignored, stop sound not " + s) ;  
+            return ;
+         }
+
          JettyWebSocketEndpoint endpoint = Kisekae.getServerEndpoint() ;
          int id = getUniqueIdentifier() ;
          if (endpoint != null) 
          {
             String name = endpoint.removeSpaces(getName(),"_") ;
             int size = getBytes() ;
-            endpoint.send("audiostop " + id + " " + name + " " + size) ;
+            if (type == null) type = "all" ;
+            endpoint.send("audiostop " + id + " " + name + " " + size + " " + type) ;
          }
          
          // Perform a manual callback.

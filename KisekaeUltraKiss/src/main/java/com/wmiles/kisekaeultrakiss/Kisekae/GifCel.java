@@ -895,9 +895,12 @@ final class GifCel extends Cel
       baseoffset = c.getBaseOffset() ;
       offset.x = baseoffset.x + initialoffset.x ;
       offset.y = baseoffset.y + initialoffset.y ;
-      adjustedoffset = c.getAdjustedOffset() ;
-      if (adjustedoffset.x != 0 || adjustedoffset.y != 0)
-         offset = new Point(adjustedoffset) ;
+      if (isImported())
+      {
+         adjustedoffset = c.getAdjustedOffset() ;
+         offset.x += adjustedoffset.x ;
+         offset.y += adjustedoffset.y ;
+      }
 		truecolor = c.isTruecolor() ;
       encoding = c.getEncoding() ;
       animate = c.getAnimate() ;

@@ -1471,13 +1471,22 @@ abstract class Cel extends KissObject
       // Adjusted offset is from edits or cel moves within group object.
       // Initial offset is is from CNF %offset() tag.
       // Restart offset is initial offset on first load.
+      //
+      // Imported cels do not have their edit adjusted offset reset.
+      // A View-Restart needs to retain initial edits for imported cels that 
+      // may have been grouped or otherwise adjusted after import.
 
       Point p1 = getBaseOffset() ;
       Point p2 = getInitialOffset() ;
+      Point p3 = getAdjustedOffset() ;
       if (p1 == null) p1 = new Point(0,0) ;
       if (p2 == null) p2 = new Point(0,0) ;
+      if (p3 == null) p3 = new Point(0,0) ;
       setOffset(new Point(p1.x+p2.x,p1.y+p2.y)) ;
-      setAdjustedOffset(null) ;
+      if (isImported())
+         setOffset(new Point(p1.x+p2.x+p3.x,p1.y+p2.y+p3.y)) ;
+      else
+         setAdjustedOffset(null) ;
    }
 
    // Reset the cel to animation state.
