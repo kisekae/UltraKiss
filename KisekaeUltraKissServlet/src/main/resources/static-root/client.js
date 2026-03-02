@@ -59,6 +59,7 @@ var expectedAudioSize = 0 ;  // expected size of audio downloaded from server
 var receivedAudioSize = 0 ;  // received size of downloaded file message chunk
 var retransmitCount = 0 ;    // number of retransmissions attempted
 var playerstopped = true ;   // true if MIDI player is stopped
+var terminated = false ;     // true if UltraKiss terminated on server
 var player ;                 // MIDI player
 
 // Translation maps to convert a java object unique id to an audio source node 
@@ -310,6 +311,8 @@ ws.onclose = function(event) {
     if (reason === null || reason.length === 0) reason = "Unknown" ;
     console.log("Reason for closure: " + reason);
     if (reason.startsWith("UltraKiss")) return ;
+    if (terminated) return ;
+    
     if (reconnectcount <= maxreconnect)
     {
         console.log("Reconnecting...");
@@ -574,7 +577,7 @@ ws.onmessage = function (evt) {
         // from being played.  The client can be playing more than one sound
         // concurrently.  We use the source map to find the audio playback 
         // source based on the file name.
-        // "audiostop id filename filesize" ;
+        // "audiostop id filename filesize type" ;
         
         else if (tokens[0] === "audiostop")
         {
@@ -591,7 +594,7 @@ ws.onmessage = function (evt) {
             }
             if (tokens[2] === "all" || source instanceof MIDIPlayer)
             {
-               if (!(player === undefined)) 
+               if (!(player === undefined) && !("sound" === tokens[4])) 
                { 
                    player.stop() ;
                    playerstopped = true ;
@@ -659,6 +662,7 @@ ws.onmessage = function (evt) {
             console.log("Close socket request on client.");
             window.onblur = null ;
             window.onfocus = null ;
+            terminated = true ;
             ws.close(1000,"UltraKiss terminated.") ;
         }
     } 
