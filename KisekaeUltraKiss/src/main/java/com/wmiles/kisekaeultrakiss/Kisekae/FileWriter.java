@@ -1012,6 +1012,7 @@ final class FileWriter extends KissFrame
                ((DirEntry) next).setImported(ce.isImported()) ;
                ((DirEntry) next).setImportPath(ce.getImportPath()) ;
                ((DirEntry) next).setMemoryFile(ce.getMemoryFile()) ;
+               ((DirEntry) next).setMethod(ce.getMethod()) ;
 					if (ko.getName() == null) next.setPath(destination) ;
 					element = next.getPath() ;
 				}
@@ -1199,7 +1200,8 @@ final class FileWriter extends KissFrame
                {
                   LhaEntry le = new LhaEntry(newname) ;
                   le.setTime(next.getTime()) ;
-                  le.setMethod((next.isCompressed()) ? le.LH5 : le.LH0) ;
+                  boolean compressed = next.isCompressed() ;
+                  le.setMethod((compressed) ? le.LH5 : le.LH0) ;
                   if (next.getSize() == 0) le.setMethod(le.LHD); 
                   ((LhaOutputStream) out).putNextEntry(le) ;
                }

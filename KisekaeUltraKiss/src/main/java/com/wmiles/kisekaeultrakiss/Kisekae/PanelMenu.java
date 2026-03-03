@@ -65,6 +65,7 @@ import java.io.* ;
 import java.util.* ;
 import java.net.URL ;
 import java.net.MalformedURLException ;
+import java.util.zip.ZipEntry;
 import javax.swing.* ;
 import javax.swing.event.* ;
 import javax.swing.undo.* ;
@@ -2087,6 +2088,9 @@ final class PanelMenu extends KissMenu
       {
          zenew.setImported(true) ;
          zenew.setImportPath(zenew.getPath()) ;
+         if (zenew instanceof DirEntry) ((DirEntry) zenew).setMethod(DirEntry.COMPRESSED);
+         if (zenew instanceof LhaEntry) ((LhaEntry) zenew).setMethod(LhaEntry.LH5);
+         if (zenew instanceof PkzEntry) ((PkzEntry) zenew).setMethod(ZipEntry.DEFLATED);
          if (!zenew.isImage())
          {
             String name = zenew.getName() ;
@@ -2182,6 +2186,9 @@ final class PanelMenu extends KissMenu
       {
          zenew.setImported(true) ;
          zenew.setImportPath(zenew.getPath()) ;
+         if (zenew instanceof DirEntry) ((DirEntry) zenew).setMethod(DirEntry.COMPRESSED);
+         if (zenew instanceof LhaEntry) ((LhaEntry) zenew).setMethod(LhaEntry.LH5);
+         if (zenew instanceof PkzEntry) ((PkzEntry) zenew).setMethod(ZipEntry.DEFLATED);
          if (!zenew.isPalette())
          {
             String name = zenew.getName() ;
@@ -2271,6 +2278,9 @@ final class PanelMenu extends KissMenu
       {
          zenew.setImported(true) ;
          zenew.setImportPath(zenew.getPath()) ;
+         if (zenew instanceof DirEntry) ((DirEntry) zenew).setMethod(DirEntry.COMPRESSED);
+         if (zenew instanceof LhaEntry) ((LhaEntry) zenew).setMethod(LhaEntry.LH5);
+         if (zenew instanceof PkzEntry) ((PkzEntry) zenew).setMethod(ZipEntry.DEFLATED);
          Audio audio = createAudio(fd,zenew) ;
 
          // Confirm that the audio file loaded properly.
@@ -2334,6 +2344,9 @@ final class PanelMenu extends KissMenu
       {
          zenew.setImported(true) ;
          zenew.setImportPath(zenew.getPath()) ;
+         if (zenew instanceof DirEntry) ((DirEntry) zenew).setMethod(DirEntry.COMPRESSED);
+         if (zenew instanceof LhaEntry) ((LhaEntry) zenew).setMethod(LhaEntry.LH5);
+         if (zenew instanceof PkzEntry) ((PkzEntry) zenew).setMethod(ZipEntry.DEFLATED);
          Video video = createVideo(fd,zenew) ;
 
          // Confirm that the video file loaded properly.
@@ -2707,6 +2720,9 @@ final class PanelMenu extends KissMenu
                ae.setImportPath(importpath) ;
                newpalette.setZipEntry(ae) ;
                newpalette.setImported(true) ;
+               if (ae instanceof DirEntry) ((DirEntry) ae).setMethod(DirEntry.COMPRESSED);
+               if (ae instanceof LhaEntry) ((LhaEntry) ae).setMethod(LhaEntry.LH5);
+               if (ae instanceof PkzEntry) ((PkzEntry) ae).setMethod(ZipEntry.DEFLATED);
                
                // Convert the palette to a memory file.  This allows the
                // file to be written in the event of a Save As Archive.
@@ -3142,6 +3158,9 @@ final class PanelMenu extends KissMenu
          }
          zenew.setImported(true) ;
          zenew.setImportPath(zenew.getPath()) ;
+         if (zenew instanceof DirEntry) ((DirEntry) zenew).setMethod(DirEntry.COMPRESSED);
+         if (zenew instanceof LhaEntry) ((LhaEntry) zenew).setMethod(LhaEntry.LH5);
+         if (zenew instanceof PkzEntry) ((PkzEntry) zenew).setMethod(ZipEntry.DEFLATED);
          contents.add(zenew) ;
          zenew = fd.getZipEntry(++n) ;
       }
