@@ -1499,6 +1499,11 @@ final public class Configuration extends KissObject
                         playfkiss = true ;
                   }
 
+                  // The default for strict syntax is false, unless UltraKiss.
+                  
+                  if (ultrakiss)
+                     OptionsDialog.setStrictSyntax(true) ;
+
                   // Parse UltraKiss options.
 
                   if (s1.startsWith("[Option Section]"))

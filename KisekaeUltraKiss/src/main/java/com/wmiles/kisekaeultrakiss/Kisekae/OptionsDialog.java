@@ -186,7 +186,7 @@ final public class OptionsDialog extends KissDialog
 	private static boolean actionpause = false ;
 	private static boolean disableall = false ;
 	private static boolean retainkey = true ;
-	private static boolean strictsyntax = true ;
+	private static boolean strictsyntax = false ;
 	private static boolean showundefs = false ;
 	private static boolean autoendif = false ;
 	private static boolean immediatecollide = true ;
@@ -4193,7 +4193,7 @@ final public class OptionsDialog extends KissDialog
       actionpause = false ;
       disableall = false ;
       retainkey = true ;
-      strictsyntax = true ;
+      strictsyntax = false ;
       showundefs = false ;
       autoendif = false ;
       immediatecollide = true ;
@@ -5889,7 +5889,7 @@ final public class OptionsDialog extends KissDialog
       setDetachMove(true);
       setDetachFix(true);
       setRetainKey(true);
-      setStrictSyntax(true);
+      setStrictSyntax(false);
       setAutoEndif(false);
       setInvertGhost(false);
       setTransparentGroup(true);
@@ -5963,7 +5963,7 @@ final public class OptionsDialog extends KissDialog
       DetachMove.setSelected((b) ? false : true);
       DetachFix.setSelected((b) ? false : true);
       RetainKey.setSelected((b) ? false : true);
-      StrictSyntax.setSelected((b) ? true : true);
+      StrictSyntax.setSelected((b) ? false : false);
       AutoEndif.setSelected((b) ? true : false);
       InvertGhost.setSelected((b) ? true : false);
       TransparentGroup.setSelected((b) ? false : false);
@@ -6062,7 +6062,7 @@ final public class OptionsDialog extends KissDialog
       DetachMove.setSelected((b) ? false : true);
       DetachFix.setSelected((b) ? false : true);
       RetainKey.setSelected((b) ? false : true);
-      StrictSyntax.setSelected((b) ? false : true);
+      StrictSyntax.setSelected((b) ? false : false);
       AutoEndif.setSelected((b) ? true : false);
       InvertGhost.setSelected((b) ? false : false);
       TransparentGroup.setSelected((b) ? false : false);
@@ -6160,7 +6160,7 @@ final public class OptionsDialog extends KissDialog
       DetachMove.setSelected((b) ? false : true);
       DetachFix.setSelected((b) ? false : true);
       RetainKey.setSelected((b) ? true : true);
-      StrictSyntax.setSelected((b) ? true : true);
+      StrictSyntax.setSelected((b) ? false : false);
       AutoEndif.setSelected((b) ? true : false);
       InvertGhost.setSelected((b) ? false : false);
       TransparentGroup.setSelected((b) ? false : false);
@@ -6205,7 +6205,7 @@ final public class OptionsDialog extends KissDialog
       setDetachMove(false);
       setDetachFix(false);
       setRetainKey(true);
-      setStrictSyntax(true);
+      setStrictSyntax(false);
       setAutoEndif(true);
       setInvertGhost(false);
       setTransparentGroup(false);
@@ -6256,7 +6256,7 @@ final public class OptionsDialog extends KissDialog
       DetachMove.setSelected((b) ? false : true);
       DetachFix.setSelected((b) ? false : true);
       RetainKey.setSelected((b) ? true : true);
-      StrictSyntax.setSelected((b) ? true : true);
+      StrictSyntax.setSelected((b) ? false : false);
       AutoEndif.setSelected((b) ? true : false);
       InvertGhost.setSelected((b) ? false : false);
       TransparentGroup.setSelected((b) ? false : false);
@@ -6301,7 +6301,7 @@ final public class OptionsDialog extends KissDialog
       setDetachMove(false);
       setDetachFix(false);
       setRetainKey(true);
-      setStrictSyntax(true);
+      setStrictSyntax(false);
       setAutoEndif(true);
       setInvertGhost(false);
       setTransparentGroup(false);
