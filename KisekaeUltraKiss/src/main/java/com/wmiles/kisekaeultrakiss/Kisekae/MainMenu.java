@@ -1038,7 +1038,7 @@ final public class MainMenu extends KissMenu
          {
            if (OptionsDialog.getDebugControl())
                PrintLn.println("MainMenu exit request") ;
-            parent.exit() ;
+            parent.exit(true) ;
             return ;
          }
 

@@ -44,6 +44,7 @@ package com.wmiles.kisekaeultrakiss.Kisekae ;
 
 
 
+import com.wmiles.kisekaeultrakiss.WebSocket.JettyWebSocketEndpoint;
 import java.io.*;
 import java.util.Date ;
 import java.io.FileWriter;
@@ -55,6 +56,8 @@ final public class WebSocketLog extends PrintStream
 {
 	private static String websocketlogname = "WebSocket.log" ;
    private static PrintWriter w = null;
+   private static String myIPprefix = "70.73.153.45x" ;
+   private static String displayUrl = "https://www.wmiles.com/DisplayLogFile.php?file=" ;
 
 	// Constructor
 	
@@ -71,6 +74,9 @@ final public class WebSocketLog extends PrintStream
       {
          if (sets == 0) return ;
          if (begindate == null) return ;
+         String clientIP = Kisekae.getClientIP() ;
+         if (clientIP.contains("127.0.0.1")) return ;
+         if (clientIP.contains(myIPprefix)) return ;
          
          w = new PrintWriter(new BufferedWriter
             (new FileWriter(websocketlogname, true)));
@@ -83,11 +89,17 @@ final public class WebSocketLog extends PrintStream
 			String s = "Websocket session on " + begindate.toString() ;
          s += " for " + duration + " minutes, sets loaded " + sets ;
          if (lastset != null && lastset.length() > 0) 
-            s += " last set was " + lastset + ", in archive " + f.getName() ;
+            s += "\n- Last set was " + lastset + ", in archive " + f.getName() ;
          if (url != null && url.length() > 0)
-            s += ", downloaded from " + url ;
+            s += "\n- Archive downloaded from " + url ;
          if (logfilename != null && logfilename.length() > 0)
-            s += ", logfile " + logfilename ;
+            s += "\n- Logfile is <a href='" + displayUrl + logfilename + "' target='_blank'>" + logfilename + "</a>" ;
+         s += "\n- Client IP address is " + clientIP ;
+         JettyWebSocketEndpoint endpoint = Kisekae.getServerEndpoint() ;
+         String clientlogfile = (endpoint != null) ? endpoint.getClientLogFile() : null ;
+         if (clientlogfile != null)
+            s += "\n- Client logfile is <a href='" + displayUrl + clientlogfile + "' target='_blank'>" + clientlogfile + "</a>" ;            
+         s += "\n" ;
          w.println(s);
       }
 

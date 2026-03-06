@@ -758,7 +758,7 @@ abstract class KissObject
 
 	// Get the object loader frame.
 
-	static FileLoader getLoader() 
+	public static FileLoader getLoader() 
    { 
       return (loader instanceof FileLoader) ? (FileLoader) loader : null ;      
    }

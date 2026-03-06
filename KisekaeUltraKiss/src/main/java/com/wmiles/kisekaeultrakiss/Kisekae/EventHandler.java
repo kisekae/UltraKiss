@@ -1164,6 +1164,21 @@ final class EventHandler extends KissObject
 		return s ;
 	}
 
+
+	// Static method to determine if a string is prefixed by a valid event
+   // name. If it is we return the event name, otherwise we return the
+   // original string.  We also remove preceeding '@' signs.
+
+	static String findPartialEventName(String s)
+	{
+      if (s == null) return s ;
+      if (s.charAt(0) == '@') s = s.substring(1) ;
+      String s1 = s.toLowerCase() ;
+		for (int i = 0 ; i < definedEvents.length ; i++)
+			if (s1.startsWith(definedEvents[i])) return definedEvents[i] ;
+		return s ;
+	}
+
 	// Static method to determine an event or action signature string.
 
 	static String findSignature(String s)

@@ -6009,7 +6009,7 @@ final public class OptionsDialog extends KissDialog
       setDetachMove(false);
       setDetachFix(false);
       setRetainKey(false);
-      setStrictSyntax(true);
+      setStrictSyntax(false);
       setAutoEndif(true);
       setInvertGhost(true);
       setTransparentGroup(false);

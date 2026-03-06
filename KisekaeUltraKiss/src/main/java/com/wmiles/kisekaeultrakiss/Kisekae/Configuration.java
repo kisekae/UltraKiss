@@ -76,7 +76,7 @@ import java.net.URL ;
 import javax.swing.SwingUtilities;
 
 
-final class Configuration extends KissObject
+final public class Configuration extends KissObject
 {
 	// Class attributes
 
@@ -1883,6 +1883,7 @@ final class Configuration extends KissObject
 	void load()
 	{
 		if (error) return ;
+      if (zip == null) return ;
 
       // Ensure that the configuration archive is open.
       // On an edit of a web URL configuration load it is not open.
@@ -5247,13 +5248,26 @@ final class Configuration extends KissObject
 		StringTokenizer st = new StringTokenizer(s," \t(;") ;
 		String token = (st.hasMoreTokens()) ? st.nextToken() : " " ;
 		if (token.charAt(0) == ' ') return null ;
+      String name = token ;
 
       // Check for a recognized event name.  If we don't have one this is a
       // syntax error which terminates the event parse.  If we have an action 
       // name and a previous event was being parsed then this action applies 
       // to the previous event.
 
+      boolean strictsyntax = OptionsDialog.getStrictSyntax() ;
 		int eventcode = EventHandler.getEventNameKey(token.toLowerCase()) ;
+      if (eventcode < 0 && !strictsyntax)
+      {
+         String s1 = EventHandler.findPartialEventName(token) ;
+         eventcode = EventHandler.getEventNameKey(s1) ;
+         if (eventcode >= 0)
+         {
+     			showWarning("Line [" + line + "] Invalid event name "
+               + token + " corrected to " + s1) ;
+            name = s1 ;
+         }
+      }
 		if (eventcode < 0 && eventsection)
 		{
 			int actioncode = EventHandler.getActionNameKey(token) ;
@@ -5326,7 +5340,7 @@ final class Configuration extends KissObject
       // the loop iteration entries.  These are records to action
       // commands that loop.
 
-		FKissEvent event = new FKissEvent(token,this) ;
+		FKissEvent event = new FKissEvent(name,this) ;
 		event.setLine(line) ;
 		Vector parameters = new Vector() ;
 		Vector actions = new Vector() ;
@@ -5635,7 +5649,13 @@ final class Configuration extends KissObject
 				// If this is not an event name, skip it, along with
             // any parameters it might have.
 
-				if (EventHandler.getEventNameKey(token) < 0)
+            int eventcode = EventHandler.getEventNameKey(token) ;
+            if (eventcode < 0 && !strictsyntax)
+            {
+               String s1 = EventHandler.findPartialEventName(token) ;
+               eventcode = EventHandler.getEventNameKey(s1) ;
+            }
+				if (eventcode < 0)
 				{
                String badaction = token ;
    				if (line == lastline && a != null) a.addTrailComment(s) ;

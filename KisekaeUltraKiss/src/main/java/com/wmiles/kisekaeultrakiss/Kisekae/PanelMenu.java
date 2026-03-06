@@ -1732,6 +1732,7 @@ final class PanelMenu extends KissMenu
          int j1 = s.indexOf(']') ;
          if (i1 >= 0 && j1 > i1)
             s = s.substring(0,i1+1) + OptionsDialog.getExportType() + s.substring(j1) ;
+         s += "\n" + Kisekae.getCaptions().getString("ExportCelsOption2") ;
          s += "\n" + Kisekae.getCaptions().getString("OptionsDialogChangedText3") ;
          int i = JOptionPane.showConfirmDialog(parent,s,
             Kisekae.getCaptions().getString("OptionsDialogWarningTitle"),
@@ -1750,6 +1751,7 @@ final class PanelMenu extends KissMenu
          int j1 = s.indexOf(']') ;
          if (i1 >= 0 && j1 > i1)
             s = s.substring(0,i1+1) + OptionsDialog.getExportType() + s.substring(j1) ;
+         s += "\n" + Kisekae.getCaptions().getString("ExportCelsOptionNo2") ;
          s += "\n" + Kisekae.getCaptions().getString("OptionsDialogChangedText3") ;
          int i = JOptionPane.showConfirmDialog(parent,s,
             Kisekae.getCaptions().getString("OptionsDialogWarningTitle"),

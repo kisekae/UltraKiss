@@ -84,7 +84,7 @@ public class AboutHandler extends Application {
             MainFrame mf = Kisekae.getMainFrame() ;
             if (mf != null) 
             {
-               mf.exit() ;
+               mf.exit(true) ;
                event.setHandled(true) ;
            }
          }    

@@ -69,7 +69,7 @@ import java.util.Comparator ;
 import java.net.* ;
 import java.io.* ;
 
-final class FileLoader extends KissFrame
+final public class FileLoader extends KissFrame
 	implements WindowListener, ActionListener, Runnable
 {
 	private static int count = 0 ;			// Count of class instances
@@ -92,6 +92,7 @@ final class FileLoader extends KissFrame
 	private boolean expansion = false ;		// True if loading expansion set
    private boolean interrupted = false ;	// True if load is interrupted
    private boolean fatal = false ;			// True if fatal error
+   private boolean download = false ;		// True if download (include) 
 	private int errors = 0 ;					// Count of showError calls
 	private int warnings = 0 ;					// Count of showWarning calls
 	private int faults = 0 ;					// Errors plus Warnings
@@ -699,12 +700,13 @@ final class FileLoader extends KissFrame
          }
       }
 
-      // Open the URL session.
+      // Open the URL session.  Indicate download in progress.
 
       int bytes = 0 ;
       int completed = 0 ;
       InputStream is = null ;
       OutputStream os = null ;
+      download = true ; 
       
       try
       {
@@ -782,6 +784,7 @@ final class FileLoader extends KissFrame
 		showStatus(Kisekae.getCaptions().getString("CloseConnectionStatus")) ;
       if (is != null) is.close() ;
       if (os != null) os.close() ;
+      download = false ;
 
 		// Finished.
 
@@ -1225,8 +1228,12 @@ final class FileLoader extends KissFrame
    // Method to return our interrupt state.
 
    boolean isInterrupted() { return interrupted ; }
+
+   // Method to return our active download state.
+
+   public boolean isDownloading() { return download ; }
    
-   // Method to return our text object.
+   // Method to return our text object.  
    
    JTextPane getLoadText() { return TextWindow ; }
 

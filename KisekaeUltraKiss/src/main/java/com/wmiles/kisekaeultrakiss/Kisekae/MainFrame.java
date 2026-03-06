@@ -160,6 +160,7 @@ final public class MainFrame extends KissFrame
 		kisekae = kiss ;
       me = this ;
       if (begindate == null) begindate = new Date() ;
+      setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
       
       // On a restart, retain the same background image.
       
@@ -1528,7 +1529,7 @@ final public class MainFrame extends KissFrame
 
 	// Return a reference to our current configuration.
 
-	Configuration getConfig() { return config ; }
+	public Configuration getConfig() { return config ; }
 
 	// Return a reference to our new configuration.
 
@@ -2675,8 +2676,20 @@ final public class MainFrame extends KissFrame
    // the AWT thread.  This enables timeout recognition in the event
    // the termination fails.
    
-   public void exit()
+   public void exit() { exit(false) ; }
+   public void exit(boolean fileexit)
    {
+      if (!fileexit )
+      {
+         int i = JOptionPane.showConfirmDialog(this,
+         Kisekae.getCaptions().getString("MainFrameExitText"),
+         Kisekae.getCaptions().getString("OptionsDialogWarningTitle"),
+         JOptionPane.YES_NO_OPTION) ;
+         if (i == JOptionPane.NO_OPTION) return ;        
+      }
+      
+      // Manual exit.  File-Exit was used rather than closing the window.
+      
       terminate = true ;
 		if (config != null)
 		{

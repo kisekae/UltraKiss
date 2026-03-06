@@ -48,6 +48,7 @@ package com.wmiles.kisekaeultrakiss.WebSocket;
  */
 import com.wmiles.kisekaeultrakiss.Kisekae.Audio;
 import com.wmiles.kisekaeultrakiss.Kisekae.ColorFrame;
+import com.wmiles.kisekaeultrakiss.Kisekae.Configuration;
 import com.wmiles.kisekaeultrakiss.Kisekae.ImageFrame;
 import com.wmiles.kisekaeultrakiss.Kisekae.Kisekae;
 import com.wmiles.kisekaeultrakiss.Kisekae.KissFrame;
@@ -55,7 +56,7 @@ import com.wmiles.kisekaeultrakiss.Kisekae.MainFrame;
 import com.wmiles.kisekaeultrakiss.Kisekae.MediaFrame;
 import com.wmiles.kisekaeultrakiss.Kisekae.OptionsDialog;
 import com.wmiles.kisekaeultrakiss.Kisekae.TextFrame;
-import com.wmiles.kisekaeultrakiss.Kisekae.PrintLn;
+import com.wmiles.kisekaeultrakiss.Kisekae.FileLoader;
 import com.wmiles.kisekaeultrakiss.Kisekae.ZipManager;
 import java.awt.AWTException;
 import java.awt.Dimension;
@@ -109,10 +110,10 @@ public class JettyWebSocketEndpoint
    private final byte[] imageheader = {0} ;    // binary type for image transfer
    private final byte[] fileheader = {1} ;     // binary type for file transfer
    private final byte[] soundheader = {2} ;    // binary type for audio transfer
-   private boolean socketBusy = false ;   // Set true if file transfer to client
-   private boolean bufferBusy = false ;   // Set true if partial buffer is sent
-   private boolean audioIsPlaying = false ;   // Set true audio sent and no stop
-
+   private boolean socketBusy = false ;        // Set true if file transfer to client
+   private boolean bufferBusy = false ;        // Set true if partial buffer is sent
+   private boolean audioIsPlaying = false ;    // Set true audio sent and no stop
+   private String clientlogfile = null ;       // Client log file name
    
    /*
    * WebSocket functions
@@ -126,7 +127,9 @@ public class JettyWebSocketEndpoint
       JettyServer server = Kisekae.getServer() ;
       createtime = server.getCreateTime() ;
 		time = System.currentTimeMillis() - createtime ;
-      System.out.println("[" + time + "] "+"JettyWebSocketEndpoint: connect to " + session.getRemoteSocketAddress());
+      String clientIP = session.getRemoteSocketAddress().toString() ;
+      System.out.println("[" + time + "] "+"JettyWebSocketEndpoint: connect to " + clientIP);
+      Kisekae.setClientIP(clientIP) ;
       processThread = new ProcessThread() ;
       processThread.setName("Screen Capture " + (id++)) ;
       processThread.start() ;      
@@ -491,7 +494,8 @@ public class JettyWebSocketEndpoint
                int length;
                while ((length = in.read(buffer)) > 0) {
                   out.write(buffer, 0, length);
-               }                  
+               } 
+               clientlogfile = (f != null) ? f.getPath() : null ;
                if (OptionsDialog.getDebugWebSocket())
                   System.out.println("[" + time + "] "+"JettyWebSocketEndpoint: logfile " + filename + " successfully saved.");
             }
@@ -635,6 +639,8 @@ public class JettyWebSocketEndpoint
    {
 		return sessions;
 	}
+   
+	public String getClientLogFile() { return clientlogfile ; }
 
    // Images are sent to the client as binary data.   
    
@@ -1193,6 +1199,15 @@ public class JettyWebSocketEndpoint
                long timeoutend = new Date().getTime() ;
                if (timeoutstart == 0) timeoutstart = timeoutend ;
                long duration = timeoutend - timeoutstart ;
+               
+               // If we are in the midst of a lengthy INCLUDE file download
+               // do not timeout.
+               
+               MainFrame mf = Kisekae.getMainFrame() ;
+               Configuration config = (mf != null) ? mf.getConfig() : null ;
+               FileLoader loader = (config != null) ? config.getLoader() : null ;
+               if (loader != null && loader.isDownloading()) 
+                  setTimeoutStart() ;             
                
                // If duration is increasing we may timeout.
                // If duration drops we had movement.

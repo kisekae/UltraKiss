@@ -138,13 +138,13 @@ public class Kisekae extends Applet
    private static String directory = null ;        // Our command line dir arg
    private static String language = "" ;           // Our command line lang arg
    private static String kissweb = "http://" ;     // Our command line web arg
+   private static String clientIP = "" ;           // Websocket client
    private static int maxdownload = 1024 ;         // Maximum download size KB
    private static int globalexception = 0 ;        // Global exception count
    private static int websocketport = 49152 ;      // Port for websocket server
    private static int maxconnection = 10000 ;      // Max websocket connection
    private static int waittime = 0 ;               // Connection wait time
    private static int sleeptime = 100 ;            // Time to sleep while wait
-
    private static long processid = 0 ;             // Process identifer (PID)
 
 
@@ -197,7 +197,7 @@ public class Kisekae extends Applet
 
       LogFile.start() ;
       builddate = Calendar.getInstance() ;
-      builddate.set(2026,3-1,2) ;
+      builddate.set(2026,3-1,5) ;
       
       // Restore the properties.
       
@@ -921,7 +921,7 @@ public class Kisekae extends Applet
       batchframe = null ;
       if (mainframe != null)
       {
-         PrintLn.println("Kisekae: exit, MainFrame.close(true)") ;
+         PrintLn.println("Kisekae: exit, MainFrame.close(true), no file save is performed.") ;
          mainframe.close(true) ;
          mainframe = null ;
       }      
@@ -1065,6 +1065,7 @@ public class Kisekae extends Applet
    static Locale getCurrentLocale() { return locale ; }
    static int getMaxDownload() { return maxdownload ; }
    static int getWebsocketPort() { return websocketport ; }
+   static String getClientIP() { return clientIP ; }
    static String getKissWeb() { return kissweb ; }
    static String getWebSite() { return website ; }
    static String getServerDomain() { return serverdomain ; }
@@ -1611,6 +1612,7 @@ public class Kisekae extends Applet
    }
 
    public static void setClientScreen() { clientscreen = true ; }
+   public static void setClientIP(String remoteaddress) { clientIP = remoteaddress ; }
 
    public static void requestScreenFocus() 
    {

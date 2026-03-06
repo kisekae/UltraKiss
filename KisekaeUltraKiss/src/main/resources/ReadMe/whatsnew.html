@@ -31,8 +31,13 @@
                       <p><font face="Arial">2. Corrected a failure to accept an LZH file with an unterminated zero header size as a valid end-of-file.</font></p>
                       <p><font face="Arial">3. Sorted the UltraKiss cache entries to make it easier to find a specific cache file for deletion.</font></p>
                       <p><font face="Arial">4. Websocket implementation was stopping MIDI music when the single sound option was set.  Only sound should stop.</font></p>
-                      <p><font face="Arial">5. Corrected fix 8 in UltraKiss V5.0 as this was causing improper drawing of imported group cels after a set restart.</font></p>
+                      <p><font face="Arial">5. Fix 8 in UltraKiss V5.0 was causing improper drawing of imported group cels after a set restart.  This is corrected.</font></p>
                       <p><font face="Arial">6. Elements imported to a new KiSS set were not compressed when written to LZH or other archives.</font></p>
+                      <p><font face="Arial">7. Introduced a dialog to confirm UltraKiss termination on a window close (X) operation.</font></p>
+                      <p><font face="Arial">8. Websocket implementation will no longer timeout due to inactivity if an INCLUDE file download is in progress.</font></p>
+                      <p><font face="Arial">9. A warning is shown if images are exported to a different format during a Save As Archive.  This is not possible.</font></p>
+                      <p><font face="Arial">10. Set the PlayFKiss strict syntax option to false.  Strict syntax was reporting errors when parsing KISS sets from OtakuWorld. </font></p>
+                      <p><font face="Arial">11. Introduced partial event name checks to allow non-strict syntax when parsing FKISS events. Sets from OtakuWorld did not always code events properly. </font></p>
           				</BLOCKQUOTE>
                                        <p>&nbsp;</p>
 					<p><B>January 30, 2026</B></p>
