@@ -1,0 +1,39 @@
+; Kisekae UltraKiss configuration file created on Wed Jul 03 00:30:43 MDT 2002
+ 
+;[Screen Section]
+[4
+(640,425)
+ 
+;[Palette Section]
+%SDKISMI.KCF
+ 
+;[Cel Section]
+#1	EAGLE.CEL	*0	:0 	;
+#2	block.gif	*0	:0 	;
+#1	SMOKE1.CEL	*0	:0 	;
+#1	SMOKE2.CEL	*0	:0 	;
+ 
+;[Page Set Section]
+; Kisekae UltraKiss Page 0
+$0 * 0,0 447,0
+ 
+;[FKiss Event Section]
+;@EventHandler
+;@initialize()                                              
+;@ unmap("smoke1.cel") unmap("smoke2.cel")                  
+
+;@begin()                                                   
+;@ timer(1,1000)                                            
+;@ moveto(#2,639,0)                                         
+
+;@alarm(1)                                                  
+;@ map("smoke1.cel") move(#1,9,0) timer(2,100)              
+
+;@alarm(2)                                                  
+;@ unmap("smoke1.cel") map("smoke2.cel") timer(3,100)       
+
+;@alarm(3)                                                  
+;@ unmap("smoke2.cel") timer(1,250)                         
+
+;@in(#1,#2)                                                 
+;@ movebyx(#1,#2,-640)                                      

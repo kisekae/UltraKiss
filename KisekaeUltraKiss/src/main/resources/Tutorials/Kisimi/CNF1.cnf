@@ -1,0 +1,17 @@
+; Kisekae UltraKiss configuration file created on Tue Jul 02 22:45:33 MDT 2002
+ 
+;[Screen Section]
+[4
+(640,425)
+ 
+;[Palette Section]
+%SDKISMI.KCF
+ 
+;[Cel Section]
+#1	EAGLE.CEL	*0	:0 	;
+#1	SMOKE1.CEL	*0	:0 	;
+#1	SMOKE2.CEL	*0	:0 	;
+ 
+;[Page Set Section]
+; Kisekae UltraKiss Page 0
+$0 * 0,0
