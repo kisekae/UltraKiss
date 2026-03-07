@@ -1503,6 +1503,8 @@ final public class Configuration extends KissObject
                   
                   if (ultrakiss)
                      OptionsDialog.setStrictSyntax(true) ;
+                  else
+                     OptionsDialog.setStrictSyntax(false) ;
 
                   // Parse UltraKiss options.
 

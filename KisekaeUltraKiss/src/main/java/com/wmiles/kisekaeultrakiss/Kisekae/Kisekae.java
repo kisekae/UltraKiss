@@ -197,7 +197,7 @@ public class Kisekae extends Applet
 
       LogFile.start() ;
       builddate = Calendar.getInstance() ;
-      builddate.set(2026,3-1,5) ;
+      builddate.set(2026,3-1,7) ;
       
       // Restore the properties.
       
@@ -217,7 +217,7 @@ public class Kisekae extends Applet
       
       if (Kisekae.isWebsocket())
       {
-         boolean ssl = isWebsocketSecure() ;
+         boolean ssl = isWebsocketSSL() ;
          PrintLn.println("Kisekae: Jetty server thread about to start.  Port = " + websocketport + " SSL = " + ssl) ;
          server = new JettyServer(websocketport,ssl) ;
          server.start() ;
@@ -232,7 +232,7 @@ public class Kisekae extends Applet
          // Set random splash set.
          
          Random rand = new Random() ;
-         int n = rand.nextInt((3-1) + 1) + 2 ;
+         int n = rand.nextInt((2-1) + 1) + 2 ;
          OptionsDialog.setSplashSetNumber(n) ;
          
          // Reset preferences for each package class.
@@ -1039,7 +1039,7 @@ public class Kisekae extends Applet
    public static boolean inApplet() { return inapplet ; }
    public static boolean isSecure() { return secure ; }
    public static boolean isWebsocket() { return websocket ; }
-   public static boolean isWebsocketSecure() { return websocketssl ; }
+   public static boolean isWebsocketSSL() { return websocketssl ; }
    public static boolean isBatch() { return batch ; }
    public static boolean isAccept() { return accept ; }
    public static boolean isLoaded() { return loaded ; }

@@ -6581,7 +6581,7 @@ final public class OptionsDialog extends KissDialog
       {
          if (!timerperiod.equals("60") && b) writeLine(out,"; timerperiod = \"" + timerperiod + "\"") ;
          if (releasemove != true && b) writeLine(out,"; releasemove = " + releasemove) ;  
-         if (strictsyntax != true && b) writeLine(out,"; strictsyntax = " + strictsyntax) ;  
+         if (strictsyntax != false && b) writeLine(out,"; strictsyntax = " + strictsyntax) ;  
          if (multipleevents != false && b) writeLine(out,"; multipleevents = " + multipleevents) ;
       }
    }

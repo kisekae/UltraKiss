@@ -54,9 +54,9 @@ import java.util.concurrent.TimeUnit;
 
 final public class WebSocketLog extends PrintStream
 {
-	private static String websocketlogname = "WebSocket.log" ;
+	private static String websocketlogname = "WebSocket1.log" ;
    private static PrintWriter w = null;
-   private static String myIPprefix = "70.73.153.45" ;
+   private static String myIPprefix = "70.73.153.45x" ;
    private static String displayUrl = "https://www.wmiles.com/DisplayLogFile.php?file=" ;
 
 	// Constructor

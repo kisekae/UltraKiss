@@ -53,6 +53,7 @@ package com.wmiles.kisekaeultrakiss.Kisekae ;
 *
 */
 
+import com.wmiles.kisekaeultrakiss.WebSocket.JettyWebSocketEndpoint;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
@@ -92,7 +93,9 @@ final public class ZipManager extends KissFrame
 	private String filename = null ;						// File name
 	private String elementname = null ;					// Element name
 	private String pathname = null ;						// Full path name
-	private String extension = null ;					// File extension
+	private String extension = null ;			 		// File extension
+	private String copyname = null ;				   	// Original filename
+	private String copypath = null ;				   	// Original path name
 	private ArchiveFile zip = null ;						// ZIP file object
 	private ArchiveEntry ze = null ;			 			// ZIP file entry
    private FileOpen fileopen = null ;					// Current fileopen object
@@ -187,13 +190,13 @@ final public class ZipManager extends KissFrame
 		public void valueChanged(ListSelectionEvent e)
       {
       	deleteaction.setEnabled(true) ;
-      	extractaction.setEnabled(true) ;
+      	extractaction.setEnabled(!Kisekae.isWebsocket()) ;
       	viewaction.setEnabled(true) ;
       	unselectaction.setEnabled(true) ;
       	findaction.setEnabled(true) ;
       	CLOSE.setEnabled(true) ;
-      	EXTRACT.setEnabled(true) ;
-      	DELETE.setEnabled(true) ;
+      	EXTRACT.setEnabled(!Kisekae.isWebsocket()) ;
+      	DELETE.setEnabled(!Kisekae.isWebsocket()) ;
       	VIEW.setEnabled(true) ;
       	FIND.setEnabled(true) ;
       }
@@ -758,11 +761,11 @@ final public class ZipManager extends KissFrame
 		setTitle(s) ;
       s = Kisekae.getCaptions().getString("NewArchiveTitle") ;
       statuslabel.setText(s + " " + filename.toUpperCase());
-      addaction.setEnabled(true);
+      addaction.setEnabled(!Kisekae.isWebsocket());
       closefile.setEnabled(true) ;
-      deletefile.setEnabled(true) ;
+      deletefile.setEnabled(!Kisekae.isWebsocket()) ;
       saveasfile.setEnabled(true) ;
-      renamefile.setEnabled(true) ;
+      renamefile.setEnabled(!Kisekae.isWebsocket()) ;
      	deleteaction.setEnabled(false);
      	extractaction.setEnabled(false);
      	viewaction.setEnabled(false);
@@ -770,7 +773,7 @@ final public class ZipManager extends KissFrame
      	unselectaction.setEnabled(false);
      	findaction.setEnabled(false) ;
       CLOSE.setEnabled(true) ;
-      ADD.setEnabled(true);
+      ADD.setEnabled(!Kisekae.isWebsocket());
       EXTRACT.setEnabled(false) ;
       DELETE.setEnabled(false) ;
       VIEW.setEnabled(false) ;
@@ -885,20 +888,20 @@ final public class ZipManager extends KissFrame
       String s = getTitle() ;
       if (pathname != null) s += " [" + pathname + "]";
 		setTitle(s) ;
-      addaction.setEnabled(true);
+      addaction.setEnabled(!Kisekae.isWebsocket());
       closefile.setEnabled(true) ;
-      deletefile.setEnabled(true) ;
+      deletefile.setEnabled(!Kisekae.isWebsocket()) ;
       saveasfile.setEnabled(true) ;
-      renamefile.setEnabled(true) ;
+      renamefile.setEnabled(!Kisekae.isWebsocket()) ;
      	deleteaction.setEnabled(false);
-     	extractaction.setEnabled(true);
+     	extractaction.setEnabled(!Kisekae.isWebsocket());
      	viewaction.setEnabled(false);
      	selectaction.setEnabled(true);
      	findaction.setEnabled(true) ;
       CLOSE.setEnabled(true) ;
-      ADD.setEnabled(true);
-      EXTRACT.setEnabled(true) ;
-      DELETE.setEnabled(true) ;
+      ADD.setEnabled(!Kisekae.isWebsocket());
+      EXTRACT.setEnabled(!Kisekae.isWebsocket()) ;
+      DELETE.setEnabled(!Kisekae.isWebsocket()) ;
       VIEW.setEnabled(false) ;
      	FIND.setEnabled(true) ;
 
@@ -1173,12 +1176,33 @@ final public class ZipManager extends KissFrame
    private void copyArchive()
    {
    	if (zip == null) return ;
+      copyname = filename ;
+      copypath = pathname ;
       pathname = selectArchive(null,
          Kisekae.getCaptions().getString("SaveAsArchiveTitle"),
          Kisekae.getCaptions().getString("SaveAsMessage")) ;
       if (pathname == null) return ;
       if (pathname.equalsIgnoreCase(zip.getName())) return ;
 
+      if (Kisekae.isWebsocket())
+      {
+         String sourcefile = zip.getName() ;
+         int n = (sourcefile != null) ? sourcefile.indexOf('.') : -1 ;
+         extension = (n >= 0) ? sourcefile.substring(n) : ".zip" ;
+         try
+         {
+            File f = File.createTempFile("UltraKiss-Archive", extension) ;
+            pathname = f.getPath() ;
+            f.deleteOnExit() ;
+         }
+         catch (Exception e)
+         {
+            PrintLn.printErr("ZipManager: " + e);
+            return ;
+         }         
+      }
+      
+      
 		// Open the zip file.
 
 		FileOpen fileopen = zip.getFileOpen() ;
@@ -1198,6 +1222,34 @@ final public class ZipManager extends KissFrame
    private void copyArchiveCallback()
    {
    	if (zip == null) return ;
+      
+      // If we have a websocket, send the new temporary file to the client.
+      
+      if (Kisekae.isWebsocket())
+      {
+         if (OptionsDialog.getDebugWebSocket())
+            PrintLn.println("ZipManager: Websocket file save as " + pathname);            
+         JettyWebSocketEndpoint endpoint = Kisekae.getServerEndpoint() ;
+         int id = getUniqueIdentifier() ;
+         File sourcefile = new File(pathname) ;
+         if (sourcefile.exists())
+         {
+            long n = sourcefile.length() ;
+            if (endpoint != null) 
+            {
+               String name = endpoint.removeSpaces(copyname,"_"); 
+               endpoint.send("filesave " + id + " " + name + " " + n) ;
+               endpoint.sendFile(sourcefile) ;
+            } 
+         }
+         filename = copyname ;
+         pathname = copypath ;
+         clearBusy() ;
+         return ;
+      }
+      
+      // Open the new archive.
+      
       openArchive(pathname) ;
       closeArchiveFile() ;
       clearBusy() ;
@@ -1404,7 +1456,7 @@ final public class ZipManager extends KissFrame
 
       if (viewastext.isSelected() || ze.isText() || ze.isRichText())
       {
-			Kisekae.setCursor(this,Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
+//			Kisekae.setCursor(this,Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
       	TextFrame tf = new TextFrame(ze,this) ;
 			Kisekae.setCursor(this,Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
          tf.setVisible(true) ;
@@ -1415,7 +1467,7 @@ final public class ZipManager extends KissFrame
 
       if (ze.isPalette())
       {
-			Kisekae.setCursor(this,Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
+//			Kisekae.setCursor(this,Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
       	ColorFrame cf = new ColorFrame(ze,this) ;
 			Kisekae.setCursor(this,Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
          cf.setVisible(true) ;
@@ -1426,7 +1478,7 @@ final public class ZipManager extends KissFrame
 
       if (ze.isAudio() || ze.isVideo())
 		{
-			Kisekae.setCursor(this,Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
+//			Kisekae.setCursor(this,Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
 			MediaFrame mf = new MediaFrame(ze) ;
 			Kisekae.setCursor(this,Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
          mf.setMinimized(false) ;
@@ -1438,7 +1490,7 @@ final public class ZipManager extends KissFrame
 
       if (ze.isImage())
       {
-			Kisekae.setCursor(this,Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
+//			Kisekae.setCursor(this,Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
 			ImageFrame mf = new ImageFrame(ze,this) ;
 			Kisekae.setCursor(this,Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
          mf.setVisible(true) ;
@@ -1458,7 +1510,7 @@ final public class ZipManager extends KissFrame
 
 		if (i == JOptionPane.YES_OPTION)
       {
-			Kisekae.setCursor(this,Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
+//			Kisekae.setCursor(this,Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
       	TextFrame tf = new TextFrame(ze,this) ;
 			Kisekae.setCursor(this,Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
          tf.setVisible(true) ;
@@ -1952,7 +2004,7 @@ final public class ZipManager extends KissFrame
          {
             BrowserControl browser = new BrowserControl() ;
             String helpurl = OptionsDialog.getWebSite() + OptionsDialog.getOnlineHelp() ;
-            Kisekae.setCursor(this,Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
+//          Kisekae.setCursor(this,Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
             browser.displayURL(helpurl+onlinehelp);
             Kisekae.setCursor(this,Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
             return ;
