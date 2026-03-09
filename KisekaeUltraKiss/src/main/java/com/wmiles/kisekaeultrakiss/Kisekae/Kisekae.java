@@ -197,7 +197,7 @@ public class Kisekae extends Applet
 
       LogFile.start() ;
       builddate = Calendar.getInstance() ;
-      builddate.set(2026,3-1,7) ;
+      builddate.set(2026,3-1,9) ;
       
       // Restore the properties.
       
@@ -775,16 +775,27 @@ public class Kisekae extends Applet
                splashimage = null ;
                splash = null ;
             }
-            mainframe.toFront() ;
-         
-            // Show tips if first time.
-         
-            if (OptionsDialog.getShowTips() && file == null && tipsinstalled)
+
+            // ... inside a background thread ...
+
+            SwingUtilities.invokeLater(new Runnable() 
             {
-               tips = new TipsBox(mainframe,Kisekae.getCaptions().getString("TipsBoxTitle"),true) ;
-               tips.show() ;
-            }
-         }
+               public void run() 
+               {
+            		mainframe.setVisible(true) ;
+                  mainframe.setFocus() ;
+                  mainframe.toFront() ;
+        
+                  // Show tips if first time.
+         
+                  if (OptionsDialog.getShowTips() && showtips && tipsinstalled && !websocket)
+                  {
+                     tips = new TipsBox(mainframe,Kisekae.getCaptions().getString("TipsBoxTitle"),true) ;
+                     tips.setVisible(true) ;
+                  }
+              }
+            });
+          }
       }
       
       // Establish the cache directory.  In some cases (Windows) we cannot
@@ -2228,7 +2239,12 @@ public class Kisekae extends Applet
       // The Run button opens the panel frame.
 
       if ("Run".equals(evt.getActionCommand()))
-      { mainframe = new MainFrame(this) ; }
+      { 
+         mainframe = new MainFrame(this) ; 
+     		mainframe.setVisible(true) ;
+         mainframe.setFocus() ;
+         mainframe.toFront() ;
+      }
    }
 
 
@@ -2262,6 +2278,9 @@ public class Kisekae extends Applet
       HelpLoader.clearTables() ;
       mainframe = new MainFrame(kisekae,file,true) ;
       if (mainframe1 != null) mainframe1.dispose() ;
+  		mainframe.setVisible(true) ;
+      mainframe.setFocus() ;
+      mainframe.toFront() ;
    }
   
    
@@ -2360,14 +2379,14 @@ public class Kisekae extends Applet
 
    public static void main(String[] args)
    {
-      if (!SwingUtilities.isEventDispatchThread())
+/*      if (!SwingUtilities.isEventDispatchThread())
 		{
 			Runnable runner = new Runnable()
 			{ public void run() { main(args) ; } } ;
 			javax.swing.SwingUtilities.invokeLater(runner) ;
          return ;
       }
-      
+*/      
       processid = ProcessHandle.current().pid() ;
       
       // If running as a server our PID will have been written to a "pid.txt"
@@ -2585,7 +2604,37 @@ public class Kisekae extends Applet
             splashimage = null ;
             splash = null ;
          }
+ 
+         // With the Java -splash option set wait a bit for Java warm-up.
+         // It doesn't seem to work after reboot, but ...
+
+         if (!websocket)
+         {
+            try { Thread.currentThread().sleep(5000) ; }
+            catch (InterruptedException e) { }
+         }
+         
+         // These commands are supposed to run on the EDT. They don't seem  
+         // to mess up the EDT when run here and don't show the odd load 
+         // content issues on Java startup with undecorated frames.
+         
+     		mainframe.setVisible(true) ;
+         mainframe.setFocus() ;
          mainframe.toFront() ;
+        
+         // Show tips if first time.
+         
+         if (OptionsDialog.getShowTips() && showtips && tipsinstalled && !websocket)
+         {
+            SwingUtilities.invokeLater(new Runnable() 
+            {
+               public void run() 
+               {
+                  tips = new TipsBox(mainframe,Kisekae.getCaptions().getString("TipsBoxTitle"),true) ;
+                  tips.setVisible(true) ;
+               }
+           });
+         }
 
          // Provide a websocket prompt.  Websocket, when it starts, can timeout
          // on a 10 second no-response fault.  The "openportal" hyperlink on
@@ -2821,14 +2870,6 @@ public class Kisekae extends Applet
                }               
             }) ;
             screenwait.start() ;
-         }
-        
-         // Show tips if first time.
-
-         if (OptionsDialog.getShowTips() && tipsinstalled && showtips)
-         {
-            tips = new TipsBox(mainframe,Kisekae.getCaptions().getString("TipsBoxTitle"),true) ;
-            tips.show() ;
          }
       }
 

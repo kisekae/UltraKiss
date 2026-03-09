@@ -207,6 +207,14 @@ final class PkzEntry extends ArchiveEntry
       return ze.getMethod() ;
    }
 
+	// Return the compression method.
+	
+	String getMethodText()
+   {
+      if (ze == null) return "unknown" ;
+      return (isCompressed()) ? "DEFLATED" : "STORED" ;
+   }
+
 	// Set the compression method.
 
 	void setMethod(int method)

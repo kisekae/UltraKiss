@@ -193,6 +193,7 @@ final class LhaFile extends ArchiveFile
       {
    		switch (((LhaEntry) le).getMethod())
    		{
+   		case LhaEntry.LHD:
    		case LhaEntry.LH0:
   				buf = new byte[(int) le.getSize()] ;
             in.read(buf, 0, (int) le.getSize()) ;

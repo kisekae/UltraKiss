@@ -82,10 +82,11 @@ final public class ZipManager extends KissFrame
    private static final int UNSORTED = 0 ;
    private static final int NAMESORT = 1 ;
    private static final int TIMESORT = 2 ;
-   private static final int SIZESORT = 3 ;
-	private static final int RATIOSORT = 4 ;
-   private static final int PACKEDSORT = 5 ;
-   private static final int PATHSORT = 6 ;
+   private static final int METHODSORT = 3 ;
+   private static final int SIZESORT = 4 ;
+	private static final int RATIOSORT = 5 ;
+   private static final int PACKEDSORT = 6 ;
+   private static final int PATHSORT = 7 ;
 
 	// File attributes
 
@@ -146,6 +147,7 @@ final public class ZipManager extends KissFrame
    private JCheckBoxMenuItem sorttime ;
    private JCheckBoxMenuItem sortratio ;
    private JCheckBoxMenuItem sortpacked ;
+   private JCheckBoxMenuItem sortmethod ;
    private JCheckBoxMenuItem sortpath ;
    private JCheckBoxMenuItem viewastext ;
    private ButtonGroup sortgroup ;
@@ -523,6 +525,9 @@ final public class ZipManager extends KissFrame
 		sortMenu.add((sortpacked = new JCheckBoxMenuItem(Kisekae.getCaptions().getString("ArchiveFieldPacked")))) ;
       if (!applemac) sortpacked.setMnemonic(KeyEvent.VK_A) ;
 		sortpacked.addActionListener(this) ;
+		sortMenu.add((sortmethod = new JCheckBoxMenuItem(Kisekae.getCaptions().getString("ArchiveFieldMethod")))) ;
+      if (!applemac) sortmethod.setMnemonic(KeyEvent.VK_M) ;
+		sortmethod.addActionListener(this) ;
 		sortMenu.add((sortpath = new JCheckBoxMenuItem(Kisekae.getCaptions().getString("ArchiveFieldPath")))) ;
       if (!applemac) sortpath.setMnemonic(KeyEvent.VK_P) ;
 		sortpath.addActionListener(this) ;
@@ -533,6 +538,7 @@ final public class ZipManager extends KissFrame
       sortgroup.add(sortsize) ;
       sortgroup.add(sortratio) ;
       sortgroup.add(sortpacked) ;
+      sortgroup.add(sortmethod) ;
       sortgroup.add(sortpath) ;
 		optionsMenu.addSeparator() ;
 		optionsMenu.add((viewastext = new JCheckBoxMenuItem(Kisekae.getCaptions().getString("MenuViewAsText")))) ;
@@ -1552,10 +1558,11 @@ final public class ZipManager extends KissFrame
       if (sortcolumn == 0) sortnosort.setSelected(true) ;
       if (sortcolumn == 1) sortname.setSelected(true) ;
       if (sortcolumn == 2) sorttime.setSelected(true) ;
-      if (sortcolumn == 3) sortsize.setSelected(true) ;
-      if (sortcolumn == 4) sortratio.setSelected(true) ;
-      if (sortcolumn == 5) sortpacked.setSelected(true) ;
-      if (sortcolumn == 6) sortpath.setSelected(true) ;
+      if (sortcolumn == 3) sortmethod.setSelected(true) ;
+      if (sortcolumn == 4) sortsize.setSelected(true) ;
+      if (sortcolumn == 5) sortratio.setSelected(true) ;
+      if (sortcolumn == 6) sortpacked.setSelected(true) ;
+      if (sortcolumn == 7) sortpath.setSelected(true) ;
 
       // Clear selection items.
 
@@ -1969,10 +1976,11 @@ final public class ZipManager extends KissFrame
          if (source == sortnosort) { sortcolumn = 0 ; setList() ; return ; }
          if (source == sortname)   { sortcolumn = 1 ; setList() ; return ; }
          if (source == sorttime)   { sortcolumn = 2 ; setList() ; return ; }
-         if (source == sortsize)   { sortcolumn = 3 ; setList() ; return ; }
-         if (source == sortratio)  { sortcolumn = 4 ; setList() ; return ; }
-         if (source == sortpacked) { sortcolumn = 5 ; setList() ; return ; }
-         if (source == sortpath)   { sortcolumn = 6 ; setList() ; return ; }
+         if (source == sortmethod) { sortcolumn = 3 ; setList() ; return ; }
+         if (source == sortsize)   { sortcolumn = 4 ; setList() ; return ; }
+         if (source == sortratio)  { sortcolumn = 5 ; setList() ; return ; }
+         if (source == sortpacked) { sortcolumn = 6 ; setList() ; return ; }
+         if (source == sortpath)   { sortcolumn = 7 ; setList() ; return ; }
          
          // Window display commands are of the form 'nn. title'. If we have
          // one of these bring the window to the front.
@@ -2229,15 +2237,17 @@ final public class ZipManager extends KissFrame
       public Long size ;
       public Integer ratio ;
       public Long packed ;
+      public String method ;
       public String dir ;
 
-      public VariableData(String name, String date, long size, int ratio, long packed, String dir)
+      public VariableData(String name, String date, long size, int ratio, long packed, String method, String dir)
       {
       	this.name = name ;
          this.date = date ;
          this.size = Long.valueOf(size) ;
          this.ratio = Integer.valueOf(ratio) ;
          this.packed = Long.valueOf(packed) ;
+         this.method = method ;
          this.dir = dir ;
       }
    }
@@ -2263,6 +2273,7 @@ final public class ZipManager extends KissFrame
    	final public ColumnData columns[] = {
       	new ColumnData(Kisekae.getCaptions().getString("ArchiveFieldName"),60,JLabel.LEFT),
          new ColumnData(Kisekae.getCaptions().getString("ArchiveFieldDate"),80,JLabel.LEFT),
+         new ColumnData(Kisekae.getCaptions().getString("ArchiveFieldMethod"),30,JLabel.LEFT),
          new ColumnData(Kisekae.getCaptions().getString("ArchiveFieldSize"),30,JLabel.RIGHT),
          new ColumnData(Kisekae.getCaptions().getString("ArchiveFieldRatio"),30,JLabel.RIGHT),
          new ColumnData(Kisekae.getCaptions().getString("ArchiveFieldPacked"),30,JLabel.RIGHT),
@@ -2300,6 +2311,7 @@ final public class ZipManager extends KissFrame
    				Date d = new Date(time) ;
    	         long size = ze.getSize() ;
    	         long packed = ze.getCompressedSize() ;
+   	         String method = ze.getMethodText() ;
    	         int ratio = (size == 0) ? 0 :
    	         	(int) (((float) (size-packed) / (float) size) * 100) ;
    	         String dir = ze.getPath() ;
@@ -2310,7 +2322,7 @@ final public class ZipManager extends KissFrame
    	         }
                if (dir == null) dir = "" ;
                vector.addElement(new VariableData(ze.getName(),
-               	sdf.format(d), size, ratio, packed, dir)) ;
+               	sdf.format(d), size, ratio, packed, method, dir)) ;
       		}
          }
 
@@ -2347,10 +2359,11 @@ final public class ZipManager extends KissFrame
          {
          	case 0: return rowvalue.name ;
             case 1: return rowvalue.date ;
-            case 2: return rowvalue.size ;
-            case 3: return rowvalue.ratio ;
-            case 4: return rowvalue.packed ;
-            case 5: return rowvalue.dir ;
+            case 2: return rowvalue.method ;
+            case 3: return rowvalue.size ;
+            case 4: return rowvalue.ratio ;
+            case 5: return rowvalue.packed ;
+            case 6: return rowvalue.dir ;
          }
          return null ;
       }
@@ -2371,7 +2384,7 @@ final public class ZipManager extends KissFrame
          for (int row = 0 ; row < vector.size() ; row++)
          {
             String name = (String) getValueAt(row,0) ;
-            String dir = (String) getValueAt(row,5) ;
+            String dir = (String) getValueAt(row,6) ;
             if (dir == "") dir = null ;
             String path = (new File(dir,name)).getPath() ;
             if (filename.equalsIgnoreCase(path)) return row ;
@@ -2411,18 +2424,22 @@ final public class ZipManager extends KissFrame
                break ;
 
             case 3:
-            	result = vd1.size.compareTo(vd2.size) ;
+            	result = vd1.method.compareTo(vd2.method) ;
                break ;
 
             case 4:
-            	result = vd1.ratio.compareTo(vd2.ratio) ;
+            	result = vd1.size.compareTo(vd2.size) ;
                break ;
 
             case 5:
-            	result = vd1.packed.compareTo(vd2.packed) ;
+            	result = vd1.ratio.compareTo(vd2.ratio) ;
                break ;
 
             case 6:
+            	result = vd1.packed.compareTo(vd2.packed) ;
+               break ;
+
+            case 7:
             	result = vd1.dir.compareTo(vd2.dir) ;
                break ;
          }

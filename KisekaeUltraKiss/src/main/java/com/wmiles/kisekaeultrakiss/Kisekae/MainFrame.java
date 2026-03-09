@@ -195,8 +195,6 @@ final public class MainFrame extends KissFrame
 		addComponentListener(this) ;
       if (Kisekae.isBatch()) setState(Frame.ICONIFIED) ;
  		setIconImage(Kisekae.getIconImage()) ;
-		setVisible(true) ;
-      setFocus() ;
 
       // Initiate a file load on a separate thread.  We have seen
       // intermittent exceptions with the fileopen reference being

@@ -1,0 +1,11 @@
+; Syntax:  splash image name | description | nosplash
+
+resinmodels1|Shiho Nagaoka, To Heart anime, resin model by William Miles
+resinmodels2|Akari Kamigishi, To Heart anime, resin model by William Miles
+resinmodels3|Kotone Himekawa, To Heart anime, resin model by William Miles
+resinmodels4|Rei Ayanami, Evangelion anime, resin model by William Miles
+resinmodels5|Simca, Air Gear anime, resin model by William Miles
+resinmodels6|Asuka Langley, Evangelion anime, resin model by William Miles
+resinmodels7|Sayuka Kōenji, Beat Angel Escalayer anime, resin model by William Miles
+resinmodels8|Asuka Langley, Evangelion anime, resin model by William Miles
+resinmodels9|Resin model by William Miles

@@ -295,6 +295,7 @@ abstract class ArchiveEntry
 	// Return the compression method.
 
 	int getMethod() { return -1 ; }
+	String getMethodText() { return "" ; }
 
 	// Set the compression method.
 
