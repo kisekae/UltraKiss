@@ -2189,6 +2189,15 @@ final class FKissAction extends KissObject
                if (group == null) break ;
                n1 = ((Integer) group.getIdentifier()).intValue() ;
                variable.setIntValue((String) parameters.elementAt(0),n1,event) ;
+               
+               // DirectKiss only returns an object number if the object is
+               // being dragged.  Otherwise it returns -1.
+               
+               if (directkiss)
+               {
+                  if (panel.isDragging()) break ;
+                  variable.setIntValue((String) parameters.elementAt(0),-1,event) ;
+               }
                break;
             }
 
@@ -2794,8 +2803,8 @@ final class FKissAction extends KissObject
             if (!OptionsDialog.getRetainKey()) s1 = panel.getKeyChar() ;
             o1 = variable.getValue((String) parameters.elementAt(1),event) ;
             s2 = (o1 == null) ? "" : o1.toString() ;
-            s1 = translateKey(s1) ;
-            s2 = translateKey(s2) ;
+            s1 = PanelFrame.translateKey(s1) ;
+            s2 = PanelFrame.translateKey(s2) ;
             n1 = s2.indexOf(s1) + 1 ;
             if (s1.length() == 0) n1 = 0 ;
             variable.setIntValue((String) parameters.elementAt(0),n1,event) ;
@@ -2812,8 +2821,8 @@ final class FKissAction extends KissObject
             if (!OptionsDialog.getRetainKey()) s1 = panel.getKeyCombination() ;
             o1 = variable.getValue((String) parameters.elementAt(1),event) ;
             s2 = (o1 == null) ? "" : o1.toString() ;
-            s1 = translateKey(s1) ;
-            s2 = translateKey(s2) ;
+            s1 = PanelFrame.translateKey(s1) ;
+            s2 = PanelFrame.translateKey(s2) ;
             n1 = 0 ;
             for (i = 0 ; i < s1.length() ; i++)
             {
@@ -4771,6 +4780,7 @@ final class FKissAction extends KissObject
             o1 = variable.getValue((String) parameters.elementAt(1),event) ;
             if (o1 == null) break ;
             o2 = getPoolValue(o1.toString()) ;
+            if (directkiss && "".equals(o2)) o2 = 0 ;
             variable.setValue((String) parameters.elementAt(0),o2,event) ;
             break ;
             
@@ -5125,29 +5135,6 @@ final class FKissAction extends KissObject
             }
          }
       }
-   }
-
-
-   // Function to translate cursor control key names into special characters.
-
-   private String translateKey(String s)
-   {
-      char c1 = 0xF0 ;
-      char c2 = 0xF1 ;
-      char c3 = 0xF2 ;
-      char c4 = 0xF3 ;
-
-      if (s == null) return "" ;
-      s = s.toUpperCase() ;
-      int i = s.indexOf("UP") ;
-      if (i >= 0) s = s.substring(0,i) + c1 + s.substring(i+2) ;
-      i = s.indexOf("DOWN") ;
-      if (i >= 0) s = s.substring(0,i) + c2 + s.substring(i+4) ;
-      i = s.indexOf("LEFT") ;
-      if (i >= 0) s = s.substring(0,i) + c3 + s.substring(i+4) ;
-      i = s.indexOf("RIGHT") ;
-      if (i >= 0) s = s.substring(0,i) + c4 + s.substring(i+5) ;
-      return s ;
    }
    
    

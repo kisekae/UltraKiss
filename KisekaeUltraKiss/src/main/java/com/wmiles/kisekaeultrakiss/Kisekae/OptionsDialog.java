@@ -74,6 +74,7 @@ final public class OptionsDialog extends KissDialog
    private boolean icondirapply = false ;          // True if icon dir change
    private boolean cachedirapply = false ;         // True if icon dir change
    private boolean splashdirapply = false ;        // True if splash dir change
+   private boolean maximizewindowapply = false ;   // True if splash dir change
    private Locale newlocale = null ;               // New locale to set
    private Object newencoding = null ;             // New encoding to set
 
@@ -126,7 +127,7 @@ final public class OptionsDialog extends KissDialog
 	private static boolean scaledownonly = true ;
 	private static boolean sizetofit = false ;
 	private static boolean retainwindowsize = false ;
-	private static boolean maximizewindow = false ;
+	private static boolean maximizewindow = true ;
 	private static boolean randomsplash = true ;
 	private static boolean showborder = true ;
 	private static boolean inittoolbar = true ;
@@ -137,10 +138,10 @@ final public class OptionsDialog extends KissDialog
 	private static boolean tbcompat = true ;		
 	private static boolean initstatusbar = true ;
 	private static boolean initmenubar = true ;
-	private static boolean importcel = false ;
-	private static boolean exportcel = false ;
-	private static boolean componentcel = false ;
-	private static boolean importcomponent = false ;
+	private static boolean importimageascel = false ;
+	private static boolean exportimageascel = false ;
+	private static boolean exportcomponentascel = false ;
+	private static boolean importcomponentascel = false ;
 	private static boolean constrainmoves = false ;
 	private static boolean constrainvisible = true ;
 	private static boolean constrainfkiss = true ;
@@ -154,6 +155,7 @@ final public class OptionsDialog extends KissDialog
 	private static boolean detachrestricted = true ;
 	private static boolean detachmove = true ;
 	private static boolean detachfix = true ;
+	private static boolean detachpage = false ;
 	private static boolean invertghost = false ;
 	private static boolean transparentgroup = true ;
 	private static boolean mapcollide = false ;
@@ -310,10 +312,10 @@ final public class OptionsDialog extends KissDialog
 	private static boolean inittbcompat = tbcompat ;		
 	private static boolean initinitstatusbar = initstatusbar ;
 	private static boolean initinitmenubar = initmenubar ;
-	private static boolean initimportcel = importcel ;
-	private static boolean initexportcel = exportcel ;
-	private static boolean initcomponentcel = componentcel ;
-	private static boolean initimportcomponent = importcomponent ;
+	private static boolean initimportimageascel = importimageascel ;
+	private static boolean initexportimageascel = exportimageascel ;
+	private static boolean initexportcomponentascel = exportcomponentascel ;
+	private static boolean initimportcomponentascel = importcomponentascel ;
 	private static boolean initconstrainmoves = constrainmoves ;
 	private static boolean initconstrainvisible = constrainvisible ;
 	private static boolean initconstrainfkiss = constrainfkiss ;
@@ -327,6 +329,7 @@ final public class OptionsDialog extends KissDialog
 	private static boolean initdetachrestricted = detachrestricted ;
 	private static boolean initdetachmove = detachmove ;
 	private static boolean initdetachfix = detachfix ;
+	private static boolean initdetachpage = detachpage ;
 	private static boolean initinvertghost = invertghost ;
 	private static boolean inittransparentgroup = transparentgroup ;
 	private static boolean initmapcollide = mapcollide ;
@@ -628,10 +631,10 @@ final public class OptionsDialog extends KissDialog
 	private JCheckBox TbCompat = new JCheckBox() ;		
 	private JCheckBox InitStatusBar = new JCheckBox();
 	private JCheckBox InitMenuBar = new JCheckBox();
-	private JCheckBox ImportCel = new JCheckBox();
-	private JCheckBox ExportCel = new JCheckBox();
-	private JCheckBox ComponentCel = new JCheckBox();
-	private JCheckBox ImportComponent = new JCheckBox();
+	private JCheckBox ImportImageAsCel = new JCheckBox();
+	private JCheckBox ExportImageAsCel = new JCheckBox();
+	private JCheckBox ExportComponentAsCel = new JCheckBox();
+	private JCheckBox ImportComponentAsCel = new JCheckBox();
 	private JCheckBox CacheImage = new JCheckBox();
 	private JCheckBox CacheInclude = new JCheckBox();
 	private JCheckBox CacheAudio = new JCheckBox();
@@ -651,6 +654,7 @@ final public class OptionsDialog extends KissDialog
 	private JCheckBox DetachRestricted = new JCheckBox();
 	private JCheckBox DetachMove = new JCheckBox();
 	private JCheckBox DetachFix = new JCheckBox();
+	private JCheckBox DetachPage = new JCheckBox();
 	private JCheckBox InvertGhost = new JCheckBox();
 	private JCheckBox TransparentGroup = new JCheckBox();
 	private JCheckBox MapCollide = new JCheckBox();
@@ -1348,6 +1352,7 @@ final public class OptionsDialog extends KissDialog
 		MaximizeWindow.setText(Kisekae.getCaptions().getString("OptionsMaximizeWindow"));
 		MaximizeWindow.setToolTipText(Kisekae.getCaptions().getString("ToolTipMaximizeWindow"));
 		MaximizeWindow.setSelected(maximizewindow);
+		MaximizeWindow.addActionListener(this);
 		RandomSplash.setText(Kisekae.getCaptions().getString("OptionsRandomSplash"));
 		RandomSplash.setToolTipText(Kisekae.getCaptions().getString("ToolTipRandomSplash"));
 		RandomSplash.setSelected(randomsplash);
@@ -1437,19 +1442,19 @@ final public class OptionsDialog extends KissDialog
 		InitMenuBar.setText(Kisekae.getCaptions().getString("MenuViewMenuBar"));
       InitMenuBar.setToolTipText(Kisekae.getCaptions().getString("ToolTipShowMenuBar"));
 		InitMenuBar.setSelected(initmenubar);
-		ImportCel.setText(Kisekae.getCaptions().getString("MenuViewImportCel"));
-      ImportCel.setToolTipText(Kisekae.getCaptions().getString("ToolTipImportCel"));
-		ImportCel.setSelected(importcel);
-		ExportCel.setText(Kisekae.getCaptions().getString("MenuViewExportCel"));
-      ExportCel.setToolTipText(Kisekae.getCaptions().getString("ToolTipExportCel"));
-		ExportCel.setSelected(exportcel);
-		ExportCel.addActionListener(this);
-		ComponentCel.setText(Kisekae.getCaptions().getString("MenuViewComponentCel"));
-      ComponentCel.setToolTipText(Kisekae.getCaptions().getString("ToolTipComponentCel"));
-		ComponentCel.setSelected(componentcel);
-		ImportComponent.setText(Kisekae.getCaptions().getString("MenuViewImportComponent"));
-      ImportComponent.setToolTipText(Kisekae.getCaptions().getString("ToolTipImportComponent"));
-		ImportComponent.setSelected(importcomponent);
+		ImportImageAsCel.setText(Kisekae.getCaptions().getString("MenuViewImportImageAsCel"));
+      ImportImageAsCel.setToolTipText(Kisekae.getCaptions().getString("ToolTipImportImageAsCel"));
+		ImportImageAsCel.setSelected(importimageascel);
+		ExportImageAsCel.setText(Kisekae.getCaptions().getString("MenuViewExportImageAsCel"));
+      ExportImageAsCel.setToolTipText(Kisekae.getCaptions().getString("ToolTipExportImageAsCel"));
+		ExportImageAsCel.setSelected(exportimageascel);
+		ExportImageAsCel.addActionListener(this);
+		ExportComponentAsCel.setText(Kisekae.getCaptions().getString("MenuViewExportComponentAsCel"));
+      ExportComponentAsCel.setToolTipText(Kisekae.getCaptions().getString("ToolTipExportComponentAsCel"));
+		ExportComponentAsCel.setSelected(exportcomponentascel);
+		ImportComponentAsCel.setText(Kisekae.getCaptions().getString("MenuViewImportComponentAsCel"));
+      ImportComponentAsCel.setToolTipText(Kisekae.getCaptions().getString("ToolTipImportComponentAsCel"));
+		ImportComponentAsCel.setSelected(importcomponentascel);
 		AutoScroll.setText(Kisekae.getCaptions().getString("OptionsAutoScroll"));
       AutoScroll.setToolTipText(Kisekae.getCaptions().getString("ToolTipAutoScroll"));
 		AutoScroll.setSelected(autoscroll);
@@ -1480,6 +1485,9 @@ final public class OptionsDialog extends KissDialog
 		DetachFix.setText(Kisekae.getCaptions().getString("OptionsDetachFix"));
       DetachFix.setToolTipText(Kisekae.getCaptions().getString("ToolTipDetachFix"));
 		DetachFix.setSelected(detachfix);
+		DetachPage.setText(Kisekae.getCaptions().getString("OptionsDetachPage"));
+      DetachPage.setToolTipText(Kisekae.getCaptions().getString("ToolTipDetachPage"));
+		DetachPage.setSelected(detachpage);
 		InvertGhost.setText(Kisekae.getCaptions().getString("OptionsInvertGhost"));
       InvertGhost.setToolTipText(Kisekae.getCaptions().getString("ToolTipInvertGhost"));
 		InvertGhost.setSelected(invertghost);
@@ -1914,6 +1922,7 @@ final public class OptionsDialog extends KissDialog
 		jPanel24.add(DetachRestricted, null);
 		jPanel24.add(DetachMove, null);
 		jPanel24.add(DetachFix, null);
+		jPanel24.add(DetachPage, null);
 		jPanel24.add(MultipleEvents, null);
 		jTabbedPane2.add(jPanel42, Kisekae.getCaptions().getString("InterfaceSettingsBoxText"));
 		jPanel42.add(ContextMap, null);
@@ -1970,8 +1979,8 @@ final public class OptionsDialog extends KissDialog
 		jPanel49.add(jPanel39, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
             ,GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 		jPanel39.add(ImportRelative, null) ;
-		jPanel39.add(ImportComponent, null) ;
-  		jPanel39.add(ImportCel, null) ;
+		jPanel39.add(ImportComponentAsCel, null) ;
+  		jPanel39.add(ImportImageAsCel, null) ;
 
       // The Export tab pane.
 
@@ -1979,8 +1988,8 @@ final public class OptionsDialog extends KissDialog
 		jPanel46.add(jPanel41, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
             ,GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(10, 0, 0, 0), 0, 0));
   		jPanel41.add(WriteCelOffset, null) ;
-  		jPanel41.add(ComponentCel, null) ;
-  		jPanel45.add(ExportCel, null) ;
+  		jPanel41.add(ExportComponentAsCel, null) ;
+  		jPanel45.add(ExportImageAsCel, null) ;
   		jPanel45.add(ExportBox, null) ;
   		jPanel41.add(jPanel45, null) ;
 
@@ -2330,10 +2339,10 @@ final public class OptionsDialog extends KissDialog
 	static public boolean getTbCompat() { return tbcompat ; }
 	static public boolean getInitStatusbar() { return initstatusbar ; }
 	static public boolean getInitMenubar() { return initmenubar ; }
-	static public boolean getImportCel() { return importcel ; }
-	static public boolean getExportCel() { return exportcel ; }
-	static public boolean getComponentCel() { return componentcel ; }
-	static public boolean getImportComponent() { return importcomponent ; }
+	static public boolean getImportImageAsCel() { return importimageascel ; }
+	static public boolean getExportImageAsCel() { return exportimageascel ; }
+	static public boolean getExportComponentAsCel() { return exportcomponentascel ; }
+	static public boolean getImportComponentAsCel() { return importcomponentascel ; }
 	static public boolean getConstrainMoves() { return constrainmoves ; }
 	static public boolean getConstrainVisible() { return constrainvisible ; }
 	static public boolean getConstrainFKiss() { return constrainfkiss ; }
@@ -2347,6 +2356,7 @@ final public class OptionsDialog extends KissDialog
 	static public boolean getDetachRestricted() { return detachrestricted ; }
 	static public boolean getDetachMove() { return detachmove ; }
 	static public boolean getDetachFix() { return detachfix ; }
+	static public boolean getDetachPage() { return detachpage ; }
 	static public boolean getInvertGhost() { return invertghost ; }
 	static public boolean getTransparentGroup() { return transparentgroup ; }
 	static public boolean getMapCollide() { return mapcollide ; }
@@ -2689,10 +2699,10 @@ final public class OptionsDialog extends KissDialog
 	static public void setTbCompat(boolean b) { tbcompat = b ; }
 	static public void setInitStatusbar(boolean b) { initstatusbar = b ; }
 	static public void setInitMenubar(boolean b) { initmenubar = b ; }
-	static public void setImportCel(boolean b) { importcel = b ; }
-	static public void setExportCel(boolean b) { exportcel = b ; }
-	static public void setComponentCel(boolean b) { componentcel = b ; }
-	static public void setImportComponent(boolean b) { importcomponent = b ; }
+	static public void setImportImageAsCel(boolean b) { importimageascel = b ; }
+	static public void setExportImageAsCel(boolean b) { exportimageascel = b ; }
+	static public void setExportComponentAsCel(boolean b) { exportcomponentascel = b ; }
+	static public void setImportComponentAsCel(boolean b) { importcomponentascel = b ; }
 	static public void setConstrainMoves(boolean b) { constrainmoves = b ; }
 	static public void setConstrainVisible(boolean b) { constrainvisible = b ; }
 	static public void setConstrainFKiss(boolean b) { constrainfkiss = b ; }
@@ -2706,6 +2716,7 @@ final public class OptionsDialog extends KissDialog
 	static public void setDetachRestricted(boolean b) { detachrestricted = b ; }
 	static public void setDetachMove(boolean b) { detachmove = b ; }
 	static public void setDetachFix(boolean b) { detachfix = b ; }
+	static public void setDetachPage(boolean b) { detachpage = b ; }
 	static public void setInvertGhost(boolean b) { invertghost = b ; }
 	static public void setTransparentGroup(boolean b) { transparentgroup = b ; }
 	static public void setMapCollide(boolean b) { mapcollide = b ; }
@@ -3025,10 +3036,10 @@ final public class OptionsDialog extends KissDialog
       else if ("tbcompat".equalsIgnoreCase(option)) setTbCompat(b) ;
       else if ("initstatusbar".equalsIgnoreCase(option)) setInitStatusbar(b) ;
       else if ("initmenubar".equalsIgnoreCase(option)) setInitMenubar(b) ;
-      else if ("importcel".equalsIgnoreCase(option)) setImportCel(b) ;
-      else if ("exportcel".equalsIgnoreCase(option)) setExportCel(b) ;
-      else if ("componentcel".equalsIgnoreCase(option)) setComponentCel(b) ;
-      else if ("importcomponent".equalsIgnoreCase(option)) setImportComponent(b) ;
+      else if ("importimageascel".equalsIgnoreCase(option)) setImportImageAsCel(b) ;
+      else if ("exportimageascel".equalsIgnoreCase(option)) setExportImageAsCel(b) ;
+      else if ("exportcomponentascel".equalsIgnoreCase(option)) setExportComponentAsCel(b) ;
+      else if ("importcomponentascel".equalsIgnoreCase(option)) setImportComponentAsCel(b) ;
       else if ("constrainmoves".equalsIgnoreCase(option)) setConstrainMoves(b) ;
       else if ("constrainvisible".equalsIgnoreCase(option)) setConstrainVisible(b) ;
       else if ("constrainfkiss".equalsIgnoreCase(option)) setConstrainFKiss(b) ;
@@ -3042,6 +3053,7 @@ final public class OptionsDialog extends KissDialog
       else if ("detachrestricted".equalsIgnoreCase(option)) setDetachRestricted(b) ;
       else if ("detachmove".equalsIgnoreCase(option)) setDetachMove(b) ;
       else if ("detachfix".equalsIgnoreCase(option)) setDetachFix(b) ;
+      else if ("detachpage".equalsIgnoreCase(option)) setDetachPage(b) ;
       else if ("invertghost".equalsIgnoreCase(option)) setInvertGhost(b) ;
       else if ("transparentgroup".equalsIgnoreCase(option)) setTransparentGroup(b) ;
       else if ("mapcollide".equalsIgnoreCase(option)) setMapCollide(b) ;
@@ -3182,10 +3194,10 @@ final public class OptionsDialog extends KissDialog
       else if ("tbcompat".equalsIgnoreCase(option)) s += getTbCompat() ;
       else if ("initstatusbar".equalsIgnoreCase(option)) s += getInitStatusbar() ;
       else if ("initmenubar".equalsIgnoreCase(option)) s += getInitMenubar() ;
-      else if ("importcel".equalsIgnoreCase(option)) s += getImportCel() ;
-      else if ("exportcel".equalsIgnoreCase(option)) s += getExportCel() ;
-      else if ("componentcel".equalsIgnoreCase(option)) s += getComponentCel() ;
-      else if ("importcomponent".equalsIgnoreCase(option)) s += getImportComponent() ;
+      else if ("importimageascel".equalsIgnoreCase(option)) s += getImportImageAsCel() ;
+      else if ("exportimageascel".equalsIgnoreCase(option)) s += getExportImageAsCel() ;
+      else if ("exportcomponentascel".equalsIgnoreCase(option)) s += getExportComponentAsCel() ;
+      else if ("importcomponentascel".equalsIgnoreCase(option)) s += getImportComponentAsCel() ;
       else if ("constrainmoves".equalsIgnoreCase(option)) s += getConstrainMoves() ;
       else if ("constrainvisible".equalsIgnoreCase(option)) s += getConstrainVisible() ;
       else if ("constrainfkiss".equalsIgnoreCase(option)) s += getConstrainFKiss() ;
@@ -3199,6 +3211,7 @@ final public class OptionsDialog extends KissDialog
       else if ("detachrestricted".equalsIgnoreCase(option)) s += getDetachRestricted() ;
       else if ("detachmove".equalsIgnoreCase(option)) s += getDetachMove() ;
       else if ("detachfix".equalsIgnoreCase(option)) s += getDetachFix() ;
+      else if ("detachpage".equalsIgnoreCase(option)) s += getDetachPage() ;
       else if ("invertghost".equalsIgnoreCase(option)) s += getInvertGhost() ;
       else if ("transparentgroup".equalsIgnoreCase(option)) s += getTransparentGroup() ;
       else if ("mapcollide".equalsIgnoreCase(option)) s += getMapCollide() ;
@@ -3364,10 +3377,10 @@ final public class OptionsDialog extends KissDialog
 		TbCompat.setSelected(tbcompat);
 		InitStatusBar.setSelected(initstatusbar);
 		InitMenuBar.setSelected(initmenubar);
-		ImportCel.setSelected(importcel);
-		ExportCel.setSelected(exportcel);
-		ComponentCel.setSelected(componentcel);
-		ImportComponent.setSelected(importcomponent);
+		ImportImageAsCel.setSelected(importimageascel);
+		ExportImageAsCel.setSelected(exportimageascel);
+		ExportComponentAsCel.setSelected(exportcomponentascel);
+		ImportComponentAsCel.setSelected(importcomponentascel);
 		ConstrainMoves.setSelected(constrainmoves);
 		ConstrainVisible.setSelected(constrainvisible);
 		ConstrainFKiss.setSelected(constrainfkiss);
@@ -3381,6 +3394,7 @@ final public class OptionsDialog extends KissDialog
 		DetachRestricted.setSelected(detachrestricted);
 		DetachMove.setSelected(detachmove);
 		DetachFix.setSelected(detachfix);
+		DetachPage.setSelected(detachpage);
 		InvertGhost.setSelected(invertghost);
 		TransparentGroup.setSelected(transparentgroup);
 		MapCollide.setSelected(mapcollide);
@@ -3604,10 +3618,10 @@ final public class OptionsDialog extends KissDialog
 		tbcompat = TbCompat.isSelected() ;
 		initstatusbar = InitStatusBar.isSelected() ;
 		initmenubar = InitMenuBar.isSelected() ;
-		importcel = ImportCel.isSelected() ;
-		exportcel = ExportCel.isSelected() ;
-		componentcel = ComponentCel.isSelected() ;
-		importcomponent = ImportComponent.isSelected() ;
+		importimageascel = ImportImageAsCel.isSelected() ;
+		exportimageascel = ExportImageAsCel.isSelected() ;
+		exportcomponentascel = ExportComponentAsCel.isSelected() ;
+		importcomponentascel = ImportComponentAsCel.isSelected() ;
 		constrainmoves = ConstrainMoves.isSelected() ;
 		constrainvisible = ConstrainVisible.isSelected() ;
 		constrainfkiss = ConstrainFKiss.isSelected() ;
@@ -3621,6 +3635,7 @@ final public class OptionsDialog extends KissDialog
 		detachrestricted = DetachRestricted.isSelected() ;
 		detachmove = DetachMove.isSelected() ;
 		detachfix = DetachFix.isSelected() ;
+		detachpage = DetachPage.isSelected() ;
 		invertghost = InvertGhost.isSelected() ;
 		transparentgroup = TransparentGroup.isSelected() ;
 		mapcollide = MapCollide.isSelected() ;
@@ -3859,10 +3874,10 @@ final public class OptionsDialog extends KissDialog
 //		tbcompat = inittbcompat ;
 		initstatusbar = initinitstatusbar ;
 		initmenubar = initinitmenubar ;
-		importcel = initimportcel ;
-		exportcel = initexportcel ;
-		componentcel = initcomponentcel ;
-		importcomponent = initimportcomponent ;
+		importimageascel = initimportimageascel ;
+		exportimageascel = initexportimageascel ;
+		exportcomponentascel = initexportcomponentascel ;
+		importcomponentascel = initimportcomponentascel ;
 		constrainmoves = initconstrainmoves ;
 		constrainvisible = initconstrainvisible ;
 		constrainfkiss = initconstrainfkiss ;
@@ -3876,6 +3891,7 @@ final public class OptionsDialog extends KissDialog
 		detachrestricted = initdetachrestricted ;
 		detachmove = initdetachmove ;
 		detachfix = initdetachfix ;
+		detachpage = initdetachpage ;
 		invertghost = initinvertghost ;
 		transparentgroup = inittransparentgroup ;
 		mapcollide = initmapcollide ;
@@ -4003,10 +4019,10 @@ final public class OptionsDialog extends KissDialog
 	   inittbcompat = tbcompat ;
 	   initinitstatusbar = initstatusbar ;
 	   initinitmenubar = initmenubar ;
-	   initimportcel = importcel ;
-	   initexportcel = exportcel ;
-	   initcomponentcel = componentcel ;
-	   initimportcomponent = importcomponent ;
+	   initimportimageascel = importimageascel ;
+	   initexportimageascel = exportimageascel ;
+	   initexportcomponentascel = exportcomponentascel ;
+	   initimportcomponentascel = importcomponentascel ;
 	   initconstrainmoves = constrainmoves ;
 	   initconstrainvisible = constrainvisible ;
 	   initconstrainfkiss = constrainfkiss ;
@@ -4020,6 +4036,7 @@ final public class OptionsDialog extends KissDialog
 	   initdetachrestricted = detachrestricted ;
 	   initdetachmove = detachmove ;
 	   initdetachfix = detachfix ;
+	   initdetachpage = detachpage ;
 	   initinvertghost = invertghost ;
 	   inittransparentgroup = transparentgroup ;
 	   initmapcollide = mapcollide ;
@@ -4133,7 +4150,7 @@ final public class OptionsDialog extends KissDialog
       scaledownonly = true ;
       sizetofit = false ;
       retainwindowsize = true ;
-      maximizewindow = false ;
+      maximizewindow = true ;
       randomsplash = true ;
       showborder = true ;
       inittoolbar = true ;
@@ -4144,10 +4161,10 @@ final public class OptionsDialog extends KissDialog
       tbcompat = true ;
       initstatusbar = true ;
       initmenubar = true ;
-      importcel = false ;
-      exportcel = false ;
-      componentcel = false ;
-      importcomponent = false ;
+      importimageascel = false ;
+      exportimageascel = false ;
+      exportcomponentascel = false ;
+      importcomponentascel = false ;
       constrainmoves = false ;
       constrainvisible = true ;
       constrainfkiss = true ;
@@ -4161,6 +4178,7 @@ final public class OptionsDialog extends KissDialog
       detachrestricted = true ;
       detachmove = true ;
       detachfix = true ;
+      detachpage = false ;
       invertghost = false ;
       transparentgroup = true ;
       mapcollide = false ;
@@ -4322,10 +4340,10 @@ final public class OptionsDialog extends KissDialog
 //	   if (inittbcompat != TbCompat.isSelected()) return true ;
 //	   if (initinitstatusbar != InitStatusBar.isSelected()) return true ;
 //	   if (initinitmenubar != InitMenuBar.isSelected()) return true ;
-//	   if (initimportcel != ImportCel.isSelected()) return true ;
-//	   if (initexportcel != ExportCel.isSelected()) return true ;
-//	   if (initcomponentcel != ComponentCel.isSelected()) return true ;
-//	   if (initimportcomponent != ImportComponent.isSelected()) return true ;
+//	   if (initimportimageascel != ImportImageAsCel.isSelected()) return true ;
+//	   if (initexportimageascel != ExportImageAsCel.isSelected()) return true ;
+//	   if (initexportcomponentascel != ExportComponentAsCel.isSelected()) return true ;
+//	   if (initimportcomponentascel != ImportComponentAsCel.isSelected()) return true ;
 //	   if (initexpandevents != ExpandEvents.isSelected()) return true ;
 	   if (initconstrainmoves != ConstrainMoves.isSelected()) return true ;
 	   if (initconstrainvisible != ConstrainVisible.isSelected()) return true ;
@@ -4340,6 +4358,7 @@ final public class OptionsDialog extends KissDialog
 	   if (initdetachrestricted != DetachRestricted.isSelected()) return true ;
 	   if (initdetachmove != DetachMove.isSelected()) return true ;
 	   if (initdetachfix != DetachFix.isSelected()) return true ;
+	   if (initdetachpage != DetachPage.isSelected()) return true ;
 	   if (initinvertghost != InvertGhost.isSelected()) return true ;
 	   if (inittransparentgroup != TransparentGroup.isSelected()) return true ;
 	   if (initmapcollide != MapCollide.isSelected()) return true ;
@@ -4460,10 +4479,10 @@ final public class OptionsDialog extends KissDialog
 //	   if (tbcompat != TbCompat.isSelected()) return true ;
 //	   if (initstatusbar != InitStatusBar.isSelected()) return true ;
 //	   if (initmenubar != InitMenuBar.isSelected()) return true ;
-//	   if (importcel != ImportCel.isSelected()) return true ;
-//	   if (exportcel != ExportCel.isSelected()) return true ;
-//	   if (componentcel != ComponentCel.isSelected()) return true ;
-//	   if (importcomponent != ImportComponent.isSelected()) return true ;
+//	   if (importimageascel != ImportImageAsCel.isSelected()) return true ;
+//	   if (exportimageascel != ExportImageAsCel.isSelected()) return true ;
+//	   if (exportcomponentascel != ExportComponentAsCel.isSelected()) return true ;
+//	   if (importcomponentascel != ImportComponentAsCel.isSelected()) return true ;
 //	   if (expandevents != ExpandEvents.isSelected()) return true ;
 	   if (constrainmoves != ConstrainMoves.isSelected()) return true ;
 	   if (constrainvisible != ConstrainVisible.isSelected()) return true ;
@@ -4478,6 +4497,7 @@ final public class OptionsDialog extends KissDialog
 	   if (detachrestricted != DetachRestricted.isSelected()) return true ;
 	   if (detachmove != DetachMove.isSelected()) return true ;
 	   if (detachfix != DetachFix.isSelected()) return true ;
+	   if (detachpage != DetachPage.isSelected()) return true ;
 	   if (invertghost != InvertGhost.isSelected()) return true ;
 	   if (transparentgroup != TransparentGroup.isSelected()) return true ;
 	   if (mapcollide != MapCollide.isSelected()) return true ;
@@ -4576,10 +4596,10 @@ final public class OptionsDialog extends KissDialog
 	   tbcompat = toBoolean1(p.getProperty("tbcompat"),tbcompat) ;
 	   initstatusbar = toBoolean1(p.getProperty("initstatusbar"),initstatusbar) ;
 	   initmenubar = toBoolean1(p.getProperty("initmenubar"),initmenubar) ;
-	   importcel = toBoolean1(p.getProperty("importcel"),importcel) ;
-	   exportcel = toBoolean1(p.getProperty("exportcel"),exportcel) ;
-	   componentcel = toBoolean1(p.getProperty("componentcel"),componentcel) ;
-	   importcomponent = toBoolean1(p.getProperty("importcomponent"),importcomponent) ;
+	   importimageascel = toBoolean1(p.getProperty("importimageascel"),importimageascel) ;
+	   exportimageascel = toBoolean1(p.getProperty("exportimageascel"),exportimageascel) ;
+	   exportcomponentascel = toBoolean1(p.getProperty("exportcomponentascel"),exportcomponentascel) ;
+	   importcomponentascel = toBoolean1(p.getProperty("importcomponentascel"),importcomponentascel) ;
 	   constrainmoves = toBoolean1(p.getProperty("constrainmoves"),constrainmoves) ;
 	   constrainvisible = toBoolean1(p.getProperty("constrainvisible"),constrainvisible) ;
 	   constrainfkiss = toBoolean1(p.getProperty("constrainfkiss"),constrainfkiss) ;
@@ -4593,6 +4613,7 @@ final public class OptionsDialog extends KissDialog
 	   detachrestricted = toBoolean1(p.getProperty("detachrestricted"),detachrestricted) ;
 	   detachmove = toBoolean1(p.getProperty("detachmove"),detachmove) ;
 	   detachfix = toBoolean1(p.getProperty("detachfix"),detachfix) ;
+	   detachpage = toBoolean1(p.getProperty("detachpage"),detachpage) ;
 	   invertghost = toBoolean1(p.getProperty("invertghost"),invertghost) ;
 	   transparentgroup = toBoolean1(p.getProperty("transparentgroup"),transparentgroup) ;
 	   mapcollide = toBoolean1(p.getProperty("mapcollide"),mapcollide) ;
@@ -4767,10 +4788,10 @@ final public class OptionsDialog extends KissDialog
       p.put("tbcompat",toString2(tbcompat)) ;
       p.put("initstatusbar",toString2(initstatusbar)) ;
       p.put("initmenubar",toString2(initmenubar)) ;
-      p.put("importcel",toString2(importcel)) ;
-      p.put("exportcel",toString2(exportcel)) ;
-      p.put("componentcel",toString2(componentcel)) ;
-      p.put("importcomponent",toString2(importcomponent)) ;
+      p.put("importimageascel",toString2(importimageascel)) ;
+      p.put("exportimageascel",toString2(exportimageascel)) ;
+      p.put("exportcomponentascel",toString2(exportcomponentascel)) ;
+      p.put("importcomponentascel",toString2(importcomponentascel)) ;
       p.put("constrainmoves",toString2(constrainmoves)) ;
       p.put("constrainvisible",toString2(constrainvisible)) ;
       p.put("constrainfkiss",toString2(constrainfkiss)) ;
@@ -4784,6 +4805,7 @@ final public class OptionsDialog extends KissDialog
       p.put("detachrestricted",toString2(detachrestricted)) ;
       p.put("detachmove",toString2(detachmove)) ;
       p.put("detachfix",toString2(detachfix)) ;
+      p.put("detachpage",toString2(detachpage)) ;
       p.put("invertghost",toString2(invertghost)) ;
       p.put("transparentgroup",toString2(transparentgroup)) ;
       p.put("mapcollide",toString2(mapcollide)) ;
@@ -4954,6 +4976,7 @@ final public class OptionsDialog extends KissDialog
       languageapply = false ;
       languagerestart = false ;
       suspendactions = false ;
+      maximizewindowapply = false ;
       IconList.clearSelection() ;
       SplashList.clearSelection() ;
       setVisible(false) ;
@@ -5383,6 +5406,33 @@ final public class OptionsDialog extends KissDialog
                   closeWindow() ;
                   return ;
                }
+               
+               // Revert option change on a No.
+               
+               if (source == PlayFKissBtn)
+               {
+                  PlayFKissBtn.setSelected(!PlayFKissBtn.isSelected()) ;
+                  setPlayFKissCompatibility(PlayFKissBtn.isSelected(),false) ;
+                  setCompatibilityControls(PlayFKissBtn.isSelected()) ;
+               }
+               if (source == DirectKissBtn)
+               {
+                  DirectKissBtn.setSelected(!DirectKissBtn.isSelected()) ;
+                  setDirectKissCompatibility(DirectKissBtn.isSelected(),false) ;
+                  setCompatibilityControls(DirectKissBtn.isSelected()) ;
+               }        
+               if (source == GnomeKissBtn)
+               {
+                  GnomeKissBtn.setSelected(!GnomeKissBtn.isSelected()) ;
+                  setGnomeKissCompatibility(GnomeKissBtn.isSelected(),false) ;
+                  setCompatibilityControls(GnomeKissBtn.isSelected()) ;
+               }         
+               if (source == KissLDBtn)
+               {
+                  KissLDBtn.setSelected(!KissLDBtn.isSelected()) ;
+                  setKissLDCompatibility(KissLDBtn.isSelected(),false) ;
+                  setCompatibilityControls(KissLDBtn.isSelected()) ;
+               }
             }
    		}
 
@@ -5424,7 +5474,7 @@ final public class OptionsDialog extends KissDialog
                   config.setOptionsChanged(true) ;
                   config.setRestartable(false) ;
                   setOptions() ;
-                  mf.restart() ;
+                  if (mf != null) mf.restart() ;
                   closeWindow() ;
                   return ;
                }
@@ -5459,6 +5509,11 @@ final public class OptionsDialog extends KissDialog
             }
    		}
          
+         if (source == MaximizeWindow)
+         {
+            maximizewindowapply = true ;
+         }
+
    		// An OK closes the dialog and retains the current option settings.
 
          if (source == OK)
@@ -5857,6 +5912,21 @@ final public class OptionsDialog extends KissDialog
          }
          return true ;
       }
+
+      // This window option requires a repaint.
+
+      if (maximizewindowapply)
+      {
+         if (mf != null)
+         {
+            mf.setVisible(false) ;
+            if (maximizewindow)
+               mf.setExtendedState(JFrame.MAXIMIZED_BOTH);
+            else
+               mf.setExtendedState(JFrame.NORMAL) ;
+            mf.setVisible(true) ;
+         }
+      }
       
       // Lastly, repaint the screen.
       
@@ -5888,6 +5958,7 @@ final public class OptionsDialog extends KissDialog
       setDetachRestricted(true);
       setDetachMove(true);
       setDetachFix(true);
+      setDetachPage(false);
       setRetainKey(true);
       setStrictSyntax(false);
       setAutoEndif(false);
@@ -5911,10 +5982,10 @@ final public class OptionsDialog extends KissDialog
       setConstrainFKiss(true) ;
       setDragMove(false) ;
       setConstrainVisible(true) ;
-      setImportCel(false) ;
-      setExportCel(false) ;
-      setImportComponent(false) ;
-      setComponentCel(false) ;
+      setImportImageAsCel(false) ;
+      setExportImageAsCel(false) ;
+      setImportComponentAsCel(false) ;
+      setExportComponentAsCel(false) ;
       setWriteCelOffset(true) ;
       setSoundSingle(false) ;
       setMultipleEvents(true) ;
@@ -5962,11 +6033,12 @@ final public class OptionsDialog extends KissDialog
       DetachRestricted.setSelected((b) ? false : true);
       DetachMove.setSelected((b) ? false : true);
       DetachFix.setSelected((b) ? false : true);
+      DetachPage.setSelected((b) ? true : false);
       RetainKey.setSelected((b) ? false : true);
       StrictSyntax.setSelected((b) ? false : false);
       AutoEndif.setSelected((b) ? true : false);
       InvertGhost.setSelected((b) ? true : false);
-      TransparentGroup.setSelected((b) ? false : false);
+      TransparentGroup.setSelected((b) ? false : true);
       MapCollide.setSelected((b) ? false : false);
       MoveXYCollide.setSelected((b) ? true : false);
       ImmediateCollide.setSelected((b) ? true : true);
@@ -5983,10 +6055,10 @@ final public class OptionsDialog extends KissDialog
       AllAmbiguous.setSelected((b) ? false : false);
       ConstrainMoves.setSelected((b) ? true : false) ;
       ConstrainVisible.setSelected((b) ? true : true) ;
-      ImportCel.setSelected((b) ? true : false) ;
-      ExportCel.setSelected((b) ? false : false) ;
-      ImportComponent.setSelected((b) ? false : false) ;
-//    ComponentCel.setSelected((b) ? true : false) ;
+      ImportImageAsCel.setSelected((b) ? true : false) ;
+      ExportImageAsCel.setSelected((b) ? true : false) ;
+      ImportComponentAsCel.setSelected((b) ? true : false) ;
+      ExportComponentAsCel.setSelected((b) ? true : false) ;
       WriteCelOffset.setSelected((b) ? true : true) ;
       SoundSingle.setSelected((b) ? true : false) ;
       MultipleEvents.setSelected((b) ? false : true) ;
@@ -6008,6 +6080,7 @@ final public class OptionsDialog extends KissDialog
       setDetachRestricted(false);
       setDetachMove(false);
       setDetachFix(false);
+      setDetachPage(true);
       setRetainKey(false);
       setStrictSyntax(false);
       setAutoEndif(true);
@@ -6030,14 +6103,14 @@ final public class OptionsDialog extends KissDialog
       setConstrainMoves(true) ;
       setDragMove(true) ;
       setConstrainVisible(true) ;
-      setImportCel(true) ;
-      setExportCel(false) ;
-      setImportComponent(false) ;
-      setComponentCel(true) ;
+      setImportImageAsCel(true) ;
+      setExportImageAsCel(true) ;
+      setImportComponentAsCel(true) ;
+      setExportComponentAsCel(true) ;
       setWriteCelOffset(true) ;
       setSoundSingle(true) ;
       setMultipleEvents(false) ;
-      setMaxLock("32768") ;
+      setMaxLock("32767") ;
       setMaxPageSet("10") ;
       MainFrame mf = Kisekae.getMainFrame() ;
       if (!mf.isRestart()) setTimerPeriod("60") ;
@@ -6061,6 +6134,7 @@ final public class OptionsDialog extends KissDialog
       DetachRestricted.setSelected((b) ? false : true);
       DetachMove.setSelected((b) ? false : true);
       DetachFix.setSelected((b) ? false : true);
+      DetachPage.setSelected((b) ? true : false);
       RetainKey.setSelected((b) ? false : true);
       StrictSyntax.setSelected((b) ? false : false);
       AutoEndif.setSelected((b) ? true : false);
@@ -6084,10 +6158,10 @@ final public class OptionsDialog extends KissDialog
       ConstrainFKiss.setSelected((b) ? false : true) ;
       DragMove.setSelected((b) ? false : false) ;
       ConstrainVisible.setSelected((b) ? false : true) ;
-      ImportCel.setSelected((b) ? true : false) ;
-      ExportCel.setSelected((b) ? false : false) ;
-      ImportComponent.setSelected((b) ? false : false) ;
-      ComponentCel.setSelected((b) ? true : false) ;
+      ImportImageAsCel.setSelected((b) ? true : false) ;
+      ExportImageAsCel.setSelected((b) ? false : false) ;
+      ImportComponentAsCel.setSelected((b) ? true : false) ;
+      ExportComponentAsCel.setSelected((b) ? false : false) ;
       WriteCelOffset.setSelected((b) ? true : true) ;
       MultipleEvents.setSelected((b) ? false : true) ;
  }
@@ -6107,6 +6181,7 @@ final public class OptionsDialog extends KissDialog
       setDetachRestricted(false);
       setDetachMove(false);
       setDetachFix(false);
+      setDetachPage(true);
       setRetainKey(false);
       setStrictSyntax(false);
       setShowUndefs(true);
@@ -6130,10 +6205,10 @@ final public class OptionsDialog extends KissDialog
       setDragMove(false) ;
       setConstrainVisible(true) ;
       setConstrainFKiss(false) ;
-      setImportCel(true) ;
-      setExportCel(false) ;
-      setImportComponent(false) ;
-      setComponentCel(true) ;
+      setImportImageAsCel(true) ;
+      setExportImageAsCel(false) ;
+      setImportComponentAsCel(true) ;
+      setExportComponentAsCel(false) ;
       setWriteCelOffset(true) ;
       setMultipleEvents(false) ;
       setMaxLock("32767") ;
@@ -6159,6 +6234,7 @@ final public class OptionsDialog extends KissDialog
       DetachRestricted.setSelected((b) ? false : true);
       DetachMove.setSelected((b) ? false : true);
       DetachFix.setSelected((b) ? false : true);
+      DetachPage.setSelected((b) ? true : false);
       RetainKey.setSelected((b) ? true : true);
       StrictSyntax.setSelected((b) ? false : false);
       AutoEndif.setSelected((b) ? true : false);
@@ -6181,10 +6257,10 @@ final public class OptionsDialog extends KissDialog
       ConstrainMoves.setSelected((b) ? true : false) ;
       DragMove.setSelected((b) ? false : false) ;
       ConstrainVisible.setSelected((b) ? false : true) ;
-      ImportCel.setSelected((b) ? true : false) ;
-      ExportCel.setSelected((b) ? false : false) ;
-      ImportComponent.setSelected((b) ? false : false) ;
-      ComponentCel.setSelected((b) ? true : false) ;
+      ImportImageAsCel.setSelected((b) ? true : false) ;
+      ExportImageAsCel.setSelected((b) ? false : false) ;
+      ImportComponentAsCel.setSelected((b) ? true : false) ;
+      ExportComponentAsCel.setSelected((b) ? false : false) ;
       WriteCelOffset.setSelected((b) ? true : true) ;
       MultipleEvents.setSelected((b) ? false : true) ;
  }
@@ -6204,6 +6280,7 @@ final public class OptionsDialog extends KissDialog
       setDetachRestricted(false);
       setDetachMove(false);
       setDetachFix(false);
+      setDetachPage(true);
       setRetainKey(true);
       setStrictSyntax(false);
       setAutoEndif(true);
@@ -6226,10 +6303,10 @@ final public class OptionsDialog extends KissDialog
       setConstrainMoves(true) ;
       setDragMove(false) ;
       setConstrainVisible(false) ;
-      setImportCel(true) ;
-      setExportCel(false) ;
-      setImportComponent(false) ;
-      setComponentCel(true) ;
+      setImportImageAsCel(true) ;
+      setExportImageAsCel(false) ;
+      setImportComponentAsCel(true) ;
+      setExportComponentAsCel(false) ;
       setWriteCelOffset(true) ;
       setMultipleEvents(false) ;
       setMaxLock("32767") ;
@@ -6255,6 +6332,7 @@ final public class OptionsDialog extends KissDialog
       DetachRestricted.setSelected((b) ? false : true);
       DetachMove.setSelected((b) ? false : true);
       DetachFix.setSelected((b) ? false : true);
+      DetachPage.setSelected((b) ? true : false);
       RetainKey.setSelected((b) ? true : true);
       StrictSyntax.setSelected((b) ? false : false);
       AutoEndif.setSelected((b) ? true : false);
@@ -6277,10 +6355,10 @@ final public class OptionsDialog extends KissDialog
       ConstrainMoves.setSelected((b) ? false : false) ;
       DragMove.setSelected((b) ? false : false) ;
       ConstrainVisible.setSelected((b) ? true : true) ;
-      ImportCel.setSelected((b) ? true : false) ;
-      ExportCel.setSelected((b) ? false : false) ;
-      ImportComponent.setSelected((b) ? false : false) ;
-      ComponentCel.setSelected((b) ? true : false) ;
+      ImportImageAsCel.setSelected((b) ? true : false) ;
+      ExportImageAsCel.setSelected((b) ? false : false) ;
+      ImportComponentAsCel.setSelected((b) ? true : false) ;
+      ExportComponentAsCel.setSelected((b) ? false : false) ;
       WriteCelOffset.setSelected((b) ? true : true) ;
       MultipleEvents.setSelected((b) ? false : true) ;
   }
@@ -6300,6 +6378,7 @@ final public class OptionsDialog extends KissDialog
       setDetachRestricted(false);
       setDetachMove(false);
       setDetachFix(false);
+      setDetachFix(true);
       setRetainKey(true);
       setStrictSyntax(false);
       setAutoEndif(true);
@@ -6322,10 +6401,10 @@ final public class OptionsDialog extends KissDialog
       setConstrainMoves(false) ;
       setDragMove(false) ;
       setConstrainVisible(true) ;
-      setImportCel(true) ;
-      setExportCel(false) ;
-      setImportComponent(false) ;
-      setComponentCel(true) ;
+      setImportImageAsCel(true) ;
+      setExportImageAsCel(false) ;
+      setImportComponentAsCel(true) ;
+      setExportComponentAsCel(false) ;
       setWriteCelOffset(true) ;
       setMultipleEvents(false) ;
       setMaxLock("32767") ;
@@ -6512,6 +6591,7 @@ final public class OptionsDialog extends KissDialog
 	   if (detachrestricted != initdetachrestricted && !b) writeLine(out,"; detachrestricted = " + detachrestricted) ;
 	   if (detachmove != initdetachmove && !b) writeLine(out,"; detachmove = " + detachmove) ;
 	   if (detachfix != initdetachfix && !b) writeLine(out,"; detachfix = " + detachfix) ;
+	   if (detachpage != initdetachpage && !b) writeLine(out,"; detachpage = " + detachpage) ;
 	   if (invertghost != initinvertghost && !b) writeLine(out,"; invertghost = " + invertghost) ;
 	   if (transparentgroup != inittransparentgroup && !b) writeLine(out,"; transparentgroup = " + transparentgroup) ;
 	   if (mapcollide != initmapcollide && !b) writeLine(out,"; mapcollide = " + mapcollide) ;
@@ -6523,10 +6603,10 @@ final public class OptionsDialog extends KissDialog
 	   if (keepaspect != initkeepaspect) writeLine(out,"; keepaspect = " + keepaspect) ;
 	   if (keycase != initkeycase) writeLine(out,"; keycase = " + keycase) ;
 	   if (variablecase != initvariablecase) writeLine(out,"; variablecase = " + variablecase) ;
-//	   if (importcel != initimportcel && !b) writeLine(out,"; importcel = " + importcel) ;
-//	   if (exportcel != initexportcel && !b) writeLine(out,"; exportcel = " + exportcel) ;
-//	   if (componentcel != initcomponentcel && !b) writeLine(out,"; componentcel = " + componentcel) ;
-//	   if (importcomponent != initimportcomponent && !b) writeLine(out,"; importcomponent = " + importcomponent) ;
+//	   if (importimageascel != initimportimageascel && !b) writeLine(out,"; importimageascel = " + importimageascel) ;
+//	   if (exportimageascel != initexportimageascel && !b) writeLine(out,"; exportimageascel = " + exportimageascel) ;
+//	   if (exportcomponentascel != initexportcomponentascel && !b) writeLine(out,"; exportcomponentascel = " + exportcomponentascel) ;
+//	   if (importcomponentascel != initimportcomponentascel && !b) writeLine(out,"; importcomponentascel = " + importcomponentascel) ;
 //	   if (expandevents != initexpandevents && !b) writeLine(out,"; expandevents = " + expandevents) ;
 //	   if (enableshell != initenableshell && !b) writeLine(out,"; enableshell = " + enableshell) ;
 //	   if (xyoffsets != initxyoffsets && !b) writeLine(out,"; xyoffsets = " + xyoffsets) ;

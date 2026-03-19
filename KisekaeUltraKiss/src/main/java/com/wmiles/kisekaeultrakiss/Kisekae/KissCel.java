@@ -315,6 +315,24 @@ final class KissCel extends Cel
             offset.y += initialoffset.y ;
 				bits = fixByte((byte) 0,b[5]) ;
 				start = 32 ;
+      
+            // If DirectKiss the %x %y are not offsets but rather replacements
+            // for the cel internal offset value, which is the baseoffset.
+            // They are not added to the cel offset but replace the offset. 
+      
+            if (OptionsDialog.getDirectKissCompatibility())
+            {
+               if (initialoffset.x != 0) 
+               {
+                  offset.x = initialoffset.x ;
+                  baseoffset.x = initialoffset.x ;
+               }
+               if (initialoffset.y != 0) 
+               {
+                  offset.y = initialoffset.y ;
+                  baseoffset.y = initialoffset.y ;
+               }
+            }
 			}
 			else
 			{
@@ -580,6 +598,28 @@ final class KissCel extends Cel
       baseoffset = c.getBaseOffset() ;
       offset.x = baseoffset.x + initialoffset.x ;
       offset.y = baseoffset.y + initialoffset.y ;
+      
+      // If DirectKiss the %x %y are not offsets but rather replacements
+      // for the cel internal offset value, which is the baseoffset.
+      // They are not added to the cel offset but replace the offset. 
+      
+      if (OptionsDialog.getDirectKissCompatibility())
+      {
+         if (initialoffset.x != 0) 
+         {
+            offset.x = initialoffset.x ;
+            baseoffset.x = initialoffset.x ;
+         }
+         if (initialoffset.y != 0) 
+         {
+            offset.y = initialoffset.y ;
+            baseoffset.y = initialoffset.y ;
+         }
+      }
+      
+      // If the cel is imported then any adjustments made must be 
+      // retained on a restart of the set.
+      
       if (isImported())
       {
          adjustedoffset = c.getAdjustedOffset() ;

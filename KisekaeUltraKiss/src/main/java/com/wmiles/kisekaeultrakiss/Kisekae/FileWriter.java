@@ -1536,7 +1536,7 @@ final class FileWriter extends KissFrame
             
             // Do not copy or save files in same directory if unchanged.
             
-            if (!OptionsDialog.getExportCel() && !cel.isUpdated())
+            if (!OptionsDialog.getExportImageAsCel() && !cel.isUpdated())
             {
                String s1 = (zip != null) ? zip.getDirectoryName() : "" ;
                s1 = s1.substring(0, s1.length() - (s1.endsWith("/") ? 1 : 0));
@@ -1567,7 +1567,7 @@ final class FileWriter extends KissFrame
             // a Save or a Save As.
 
             boolean exportcel = false ;
-            if (OptionsDialog.getExportCel())
+            if (OptionsDialog.getExportImageAsCel())
             {
                try
                {
@@ -1708,6 +1708,7 @@ final class FileWriter extends KissFrame
             if (!palette.isWritable()) continue ;
             if (palette.isFromInclude() && !palette.isUpdated()) continue ;
             String s1 = (zip != null) ? zip.getDirectoryName() : "" ;
+            if (s1 == null) s1 = "" ;
             s1 = s1.substring(0, s1.length() - (s1.endsWith("/") ? 1 : 0));
             s1 = s1.substring(0, s1.length() - (s1.endsWith("\\") ? 1 : 0));
             String s2 = (directory != null) ? directory : "" ;
@@ -1907,14 +1908,15 @@ final class FileWriter extends KissFrame
 				if (cel.isCopy()) continue ;
 				if (!cel.isWritable()) continue ;
             String s1 = (zip != null) ? zip.getDirectoryName() : "" ;
+            if (s1 == null) s1 = "" ;
             s1 = s1.substring(0, s1.length() - (s1.endsWith("/") ? 1 : 0));
             s1 = s1.substring(0, s1.length() - (s1.endsWith("\\") ? 1 : 0));
             String s2 = (directory != null) ? directory : "" ;
             s2 = s2.substring(0, s2.length() - (s2.endsWith("/") ? 1 : 0));
             s2 = s2.substring(0, s2.length() - (s2.endsWith("\\") ? 1 : 0));
-            if (mode == SAVE && !OptionsDialog.getComponentCel()) continue ;
+            if (mode == SAVE && !OptionsDialog.getExportComponentAsCel()) continue ;
             if (mode == COPY && zip != null && zip.isDirectory() && directory != null &&
-               s2.equalsIgnoreCase(s1) && !OptionsDialog.getComponentCel()) continue ;
+               s2.equalsIgnoreCase(s1) && !OptionsDialog.getExportComponentAsCel()) continue ;
             String name = cel.getName() ;
             int n = name.lastIndexOf('.') ;
             if (n >= 0) name = name.substring(0,n) + ".cel" ;
@@ -1924,13 +1926,17 @@ final class FileWriter extends KissFrame
             // not writable.
             
             cel.createImage() ;
-            if (cel.getImage() == null) continue ;
+            Image img = cel.getImage() ;
+            if (img == null) continue ;
+            Dimension size = cel.getBaseSize() ;
+            long bytes = size.height * size.width ;
 
       		// The KiSS object must be associated with its new output file name
       		// so that it is created properly when written to the destination
       		// output file.  
             
   				ze = new DirEntry(null,name,null) ;
+            ((DirEntry) ze).setFileSize(bytes) ;
   				ze.setName(name) ;
             ze.setWriting(true) ;
   				ze.setUpdated(true) ;

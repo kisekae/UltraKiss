@@ -1115,7 +1115,12 @@ final public class FileOpen implements Cloneable
       finally
       {
          if (parent != null)
-				Kisekae.setCursor(parent,Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
+            Kisekae.setCursor(parent,Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
+         else
+         {
+            MainFrame mf = Kisekae.getMainFrame() ;
+            Kisekae.setCursor(mf,Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
+         }
 		}
    }
 

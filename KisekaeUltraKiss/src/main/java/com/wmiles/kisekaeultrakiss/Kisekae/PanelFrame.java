@@ -324,21 +324,51 @@ final class PanelFrame extends JPanel
    String getKeyString() { return keytextline ; }
    String getKeyModifier() { return keymodifier ; }
    String getKeyCombination() { return multikey ; }
-   String getActiveKeyChar() { return (newmultikey) ? "" : "" + keychar ; }
+   String getActiveKeyChar() { return (newmultikey) ? "" : getKeyChar() ; }
    String getActiveKeyCombination() { return (newmultikey) ? "" : multikey ; }
 
 
    // Method to return the last key character. This is upper case unless
    // the keyboard case option is set. All control characters except for 
-   // newline are returned as null strings.
+   // newline are returned as empty strings.
 
    String getKeyChar() 
    {
       String s = "" + keychar ;
-      if (!Character.isDefined(keychar)) s = "" ;
-      if (Character.isISOControl(keychar) && keychar != '\n') s = "" ;
+      if (Character.isISOControl(keychar) && keychar == '\n') return s ;
+      if (keycode == KeyEvent.VK_UP) return translateKey("UP") ;
+      if (keycode == KeyEvent.VK_DOWN) return translateKey("DOWN") ;
+      if (keycode == KeyEvent.VK_LEFT) return translateKey("LEFT") ;
+      if (keycode == KeyEvent.VK_RIGHT) return translateKey("RIGHT") ;
+      if (!Character.isDefined(keychar)) return "" ;
       if (!OptionsDialog.getKeyCase()) s = s.toUpperCase() ;
       return s ; 
+   }
+
+
+   // Function to translate cursor control key names into special characters.
+   // The translation uses extended ascii character codes as these control keys
+   // do not have ascii values.
+
+   static String translateKey(String s)
+   {
+      char c1 = 0xF0 ;  // up
+      char c2 = 0xF1 ;  // down
+      char c3 = 0xF2 ;  // left
+      char c4 = 0xF3 ;  // right
+
+      if (s == null) return "" ;
+      s = s.toUpperCase() ;
+      int i = s.indexOf("UP") ;
+      if (i >= 0) s = s.substring(0,i) + c1 + s.substring(i+2) ;
+      i = s.indexOf("DOWN") ;
+      if (i >= 0) s = s.substring(0,i) + c2 + s.substring(i+4) ;
+      i = s.indexOf("LEFT") ;
+      if (i >= 0) s = s.substring(0,i) + c3 + s.substring(i+4) ;
+      i = s.indexOf("RIGHT") ;
+      if (i >= 0) s = s.substring(0,i) + c4 + s.substring(i+5) ;
+      if (!OptionsDialog.getKeyCase()) s = s.toUpperCase() ;
+      return s ;
    }
 
 
@@ -430,6 +460,11 @@ final class PanelFrame extends JPanel
       if (!(o instanceof Group)) return false ;
       return selection.contains(o) ;
    }
+   
+   
+   // Method to determine if we are currently dragging an object.
+   
+   boolean isDragging() { return mousedown ; }
 
 
 
@@ -4105,7 +4140,9 @@ final class PanelFrame extends JPanel
    // an FKissAction for proper drawing of the panel.
 
    public void setBackgroundColor(Color c)
-   { background = c ; }
+   { 
+      background = c ; 
+   }
 
    
    // When we paint the screen, we want to draw only within the

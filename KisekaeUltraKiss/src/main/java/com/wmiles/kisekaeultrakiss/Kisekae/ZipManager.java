@@ -1161,18 +1161,16 @@ final public class ZipManager extends KissFrame
    private void addArchiveCallback()
    {
       if (zip == null) return ;
-      if (Kisekae.isWebsocket())
-      {        
-         clearBusy() ;
-         // Run the callback on the EDT thread.         
-         Runnable runner = new Runnable()
-         { public void run() { callback.doClick() ; } } ;
-         javax.swing.SwingUtilities.invokeLater(runner) ;         
-         return ;
-      }
       openArchive(zip.getName()) ;
       closeArchiveFile() ;
       clearBusy() ;
+         
+      // Perform any callbacks required.  For websocket or File-Save As Archive
+      // from PanelMenu.
+         
+      Runnable runner = new Runnable()
+      { public void run() { callback.doClick() ; } } ;
+      javax.swing.SwingUtilities.invokeLater(runner) ;
    }
 
 
@@ -1806,6 +1804,48 @@ final public class ZipManager extends KissFrame
             else           
                v.add(ze) ;
 			}
+
+	      // Add the component cel object entries to the contents vector.
+         // These are written as truecolor CEL images if the appropriate 
+         // option is set. Otherwise they are never written as they are
+         // recreated on set load from the CNF entries.
+
+	      i = 0 ;
+	      Vector comps = c.getComponents() ;
+	      while (comps != null && i < comps.size())
+	      {
+            if (!OptionsDialog.getExportComponentAsCel()) break ;
+				JavaCel cel = (JavaCel) comps.elementAt(i++) ;
+            if (cel.isError()) continue ;
+				if (cel.isCopy()) continue ;
+				if (!cel.isWritable()) continue ;
+            String name = cel.getName() ;
+            int n = name.lastIndexOf('.') ;
+            if (n >= 0) name = name.substring(0,n) + ".cel" ;
+            
+            // We can only write components if they have an image.
+            // Input components such as lists and text areas are
+            // not writable.
+            
+            cel.createImage() ;
+            Image img = cel.getImage() ;
+            if (img == null) continue ;
+            Dimension size = cel.getBaseSize() ;
+            long bytes = size.height * size.width ;
+
+      		// The KiSS object must be associated with its new output file name
+      		// so that it is created properly when written to the destination
+      		// output file.  
+            
+  				ze = new DirEntry(null,name,null) ;
+            ((DirEntry) ze).setFileSize(bytes) ;
+  				ze.setName(name) ;
+            ze.setWriting(true) ;
+  				ze.setUpdated(true) ;
+            ze.setMethod(method) ;
+            cel.setZipEntry(ze) ;
+				v.add(cel) ;
+         }
 
 			// Add the other text object entries to the contents vector.
          // These are DirEntries as they were selected for import.

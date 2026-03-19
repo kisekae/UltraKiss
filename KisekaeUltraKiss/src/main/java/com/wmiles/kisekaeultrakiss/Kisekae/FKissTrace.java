@@ -58,7 +58,6 @@ import java.awt.* ;
 import java.awt.event.* ;
 import javax.swing.*;
 import javax.swing.text.* ;
-import javax.swing.border.*;
 
 
 final public class FKissTrace extends JPanel
@@ -69,7 +68,7 @@ final public class FKissTrace extends JPanel
 
    // User interface objects.
 
-   private JButton OK = new JButton();
+   private JButton CLOSE = new JButton();
    private JButton CLEAR = new JButton();
    private JToggleButton PAUSE = new JToggleButton();
    private JPanel jPanel1 = new JPanel();
@@ -123,7 +122,7 @@ final public class FKissTrace extends JPanel
       // Register for events.
 
       reset() ;
-      OK.addActionListener(this) ;
+      CLOSE.addActionListener(this) ;
       CLEAR.addActionListener(this) ;
       PAUSE.addActionListener(this) ;
    }
@@ -139,7 +138,7 @@ final public class FKissTrace extends JPanel
       jPanel2.setBorder(BorderFactory.createEmptyBorder(10,0,0,0));
       jPanel2.setLayout(new BoxLayout(jPanel2,BoxLayout.X_AXIS));
       titlelabel.setText((title != null) ? title : "") ;
-      OK.setText(Kisekae.getCaptions().getString("CloseMessage"));
+      CLOSE.setText(Kisekae.getCaptions().getString("CloseMessage"));
       CLEAR.setText(Kisekae.getCaptions().getString("LogClearMessage"));
       PAUSE.setText(Kisekae.getCaptions().getString("BreakpointTitle"));
 
@@ -148,7 +147,7 @@ final public class FKissTrace extends JPanel
       jPanel1.add(scroll,BorderLayout.CENTER) ;
  		this.add(jPanel2, BorderLayout.SOUTH);
       jPanel2.add(Box.createGlue()) ;
-      jPanel2.add(OK, null);
+      jPanel2.add(CLOSE, null);
       jPanel2.add(Box.createGlue()) ;
       jPanel2.add(CLEAR, null);
       jPanel2.add(Box.createGlue()) ;
@@ -201,17 +200,17 @@ final public class FKissTrace extends JPanel
 
       // An OK sets the trace window invisible. 
 
-      if (source == OK)
+      if (source == CLOSE)
       {
          setVisible(false) ;
          if (!(parent instanceof MainFrame)) return ;
          MainFrame mf = (MainFrame) parent ;
          if (mf == null) return ;
          MainMenu menu =  mf.getMainMenu() ;
-         if (menu == null) return ;
-         menu.tracefkiss.setSelected(false) ;
-         mf.validate() ;
+         if (menu != null) menu.tracefkiss.setSelected(false) ;
+         mf.revalidate() ;
          mf.centerpanel() ;
+         resetFocus() ;
          return ;
       }
 
@@ -220,6 +219,7 @@ final public class FKissTrace extends JPanel
       if (source == CLEAR)
       {
          reset() ;
+         resetFocus() ;
          return ;
       }
 
@@ -234,8 +234,17 @@ final public class FKissTrace extends JPanel
          if (!(parent instanceof MainFrame)) return ;
          ToolBar toolbar = ((MainFrame) parent).getToolBar() ;
          if (toolbar != null) toolbar.updateRunState() ;
+         resetFocus() ;
          return ;
       }
+   }
+   
+   private void resetFocus()
+   {      
+      if (!(parent instanceof MainFrame)) return ;
+      MainFrame mf = (MainFrame) parent ;
+      PanelFrame panel = mf.getPanel() ;
+      if (panel != null) panel.requestFocus() ;    
    }
 }
 

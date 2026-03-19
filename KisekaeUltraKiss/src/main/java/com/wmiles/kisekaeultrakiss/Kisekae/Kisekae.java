@@ -87,7 +87,7 @@ public class Kisekae extends Applet
    // Security variables
 
    private static String copyright = 
-      "Kisekae UltraKiss V5.1 (c) 2002-2026 William Miles" ;
+      "Kisekae UltraKiss V5.2 (c) 2002-2026 William Miles" ;
    private static Object authorize = null ;        // Seigen module
    private static Calendar warningdate = null ;    // Secure warning
    private static Calendar expiredate = null ;     // Licence expire
@@ -197,7 +197,7 @@ public class Kisekae extends Applet
 
       LogFile.start() ;
       builddate = Calendar.getInstance() ;
-      builddate.set(2026,3-1,9) ;
+      builddate.set(2026,3-1,19) ;
       
       // Restore the properties.
       
@@ -2617,7 +2617,7 @@ public class Kisekae extends Applet
          // These commands are supposed to run on the EDT. They don't seem  
          // to mess up the EDT when run here and don't show the odd load 
          // content issues on Java startup with undecorated frames.
-         
+
      		mainframe.setVisible(true) ;
          mainframe.setFocus() ;
          mainframe.toFront() ;

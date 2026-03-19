@@ -196,6 +196,11 @@ final public class MainFrame extends KissFrame
       if (Kisekae.isBatch()) setState(Frame.ICONIFIED) ;
  		setIconImage(Kisekae.getIconImage()) ;
 
+      // Open the frame maximized if required.
+      
+      if (OptionsDialog.getMaximizeWindow())
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+            
       // Initiate a file load on a separate thread.  We have seen
       // intermittent exceptions with the fileopen reference being
       // destroyed during init() if this is run directly.
@@ -483,7 +488,7 @@ final public class MainFrame extends KissFrame
 
 			if (c == null)
 			{
-				showStatus("Load cancelled ...") ;
+				showStatus("Load cancelled ...",true) ;
 				fileopen = (config == null) ? null : config.getFileOpen() ;
             KissMenu m = (menu instanceof UserMenu) ? panelmenu : menu ;
 				if (m != null) m.setFileOpen(fileopen) ;
@@ -527,8 +532,7 @@ final public class MainFrame extends KissFrame
             // includes the expansion file will initiate the load of
             // the expansion configuration.
             
-    			if (ArchiveFile.isArchive(archive))
-     				PrintLn.println("Open LRU archive " + archive) ;
+   			showStatus("Open LRU archive " + archive,true) ;
             final String archive1 = archive ;
             final String cnf1 = cnf ;
    			Runnable awt = new Runnable()
@@ -550,7 +554,7 @@ final public class MainFrame extends KissFrame
                Object o = entries.firstElement() ;
                if (!(o instanceof ArchiveEntry)) continue ;
                ArchiveEntry ze = (ArchiveEntry) o ;
-               PrintLn.println("Configuration element found: " + ze.getName());
+      			showStatus("Expansion Configuration element found: " + ze.getName(),true) ;
                b = c.appendInclude(ze) ;
                break ;
             }
@@ -599,7 +603,7 @@ final public class MainFrame extends KissFrame
                Object o = entries.firstElement() ;
                if (!(o instanceof ArchiveEntry)) continue ;
                ArchiveEntry ze = (ArchiveEntry) o ;
-               PrintLn.println("Configuration element found: " + ze.getName());
+      			showStatus("Append Configuration element found: " + ze.getName(),true) ;
                b = c.appendInclude(ze) ;
                if (!b) break ;
             }
@@ -640,7 +644,7 @@ final public class MainFrame extends KissFrame
 
 			closeconfig((c == config || restart),false) ;
 			config = c ;
-			showStatus("Initializing \"" + config.getName() + "\" (" + config.getID() + ")" + " ...") ;
+			showStatus("Initializing \"" + config.getName() + "\" (" + config.getID() + ")" + " ...",true) ;
    		setMainFrameCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
          if (loader != null) loadtext = loader.getLoadText() ;
          
@@ -697,8 +701,7 @@ final public class MainFrame extends KissFrame
          // dialog if required.
 
          restart = false ;
-			showStatus("Activating \"" + config.getName() + "\" (" + config.getID() + ")" + " ...") ;
-			PrintLn.println("Activating \"" + config.getName() + "\" (" + config.getID() + ")") ;
+			showStatus("Activating \"" + config.getName() + "\" (" + config.getID() + ")" + " ...",true) ;
          traceFKiss(mainmenu.tracefkiss.isSelected()) ;
 			config.activate(panel) ;
 			callback.doClick() ;
@@ -730,7 +733,7 @@ final public class MainFrame extends KissFrame
          AlarmTimer timer = config.getTimer() ;
          timer.resumeTimer(true) ;
          GifTimer animator = config.getAnimator() ;
-         animator.resumeTimer(true) ;
+         if (animator != null) animator.resumeTimer(true) ;
 			EventHandler handler = config.getEventHandler() ;
          handler.resumeEventHandler(OptionsDialog.getFKissOn()) ;
          
@@ -741,7 +744,7 @@ final public class MainFrame extends KissFrame
 
 			// Perform any events keyed on this set first becoming visible.
 
-			showStatus("Beginning \"" + config.getName() + "\" (" + config.getID() + ")" + " ...") ;
+			showStatus("Beginning \"" + config.getName() + "\" (" + config.getID() + ")" + " ...",true) ;
          panel.setVisible(true) ;
 			Vector v = handler.getEvent("begin") ;
 			EventHandler.fireEvents(v,panel,Thread.currentThread(),null) ;
@@ -751,10 +754,12 @@ final public class MainFrame extends KissFrame
          PageSet p = panel.getPage() ;
          Object o = (p != null) ? p.getIdentifier() : null ;
          int n = (o instanceof Integer) ? ((Integer) o).intValue() : 0 ;
+			showStatus("Initializing page " + n + " for \"" + config.getName() + "\" (" + config.getID() + ")" + " ...",true) ;         
 			panel.initpage(n) ;
          
          // Make the panel visible.
 
+			showStatus("Showing page " + n + " for \"" + config.getName() + "\" (" + config.getID() + ")" + " ...",true) ;
    		setMainFrameCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
 			panel.showpage() ;
 			showStatus(null) ;
@@ -901,7 +906,7 @@ final public class MainFrame extends KissFrame
 
 		if (config != null)
 		{
-			showStatus("Closing \"" + config.getName() + "\" (" + config.getID() + ")" + " ...") ;
+			showStatus("Closing \"" + config.getName() + "\" (" + config.getID() + ")" + " ...",true) ;
 			EventHandler handler = config.getEventHandler() ;
 			if (handler != null && !restart && handler.isActive())
 			{
@@ -1470,11 +1475,11 @@ final public class MainFrame extends KissFrame
 
 	// Display a status message in the status bar.
 
-	public void showStatus(String s)
+	public void showStatus(String s) { showStatus(s,false) ; }
+	public void showStatus(String s, boolean print)
 	{
 		if (s == null) s = Kisekae.getCopyright() ;
-      if (OptionsDialog.getDebugControl())
-      	PrintLn.println("Status " + s) ;
+      if (OptionsDialog.getDebugControl() || print) PrintLn.println(s) ;
 		if (statusBar != null) statusBar.showStatus(s) ;
 	}
 
@@ -2049,7 +2054,7 @@ final public class MainFrame extends KissFrame
          }
          else 
             trace.setVisible(true) ;
-         validate() ;
+         revalidate() ;
          centerpanel() ;
 		}
       PrintLn.println("debug: " + message) ;
@@ -2312,8 +2317,7 @@ final public class MainFrame extends KissFrame
       restart = true ;
       if (config != null)
       {
-         showStatus("Restart \"" + config.getName() + "\" (" + config.getID() + ")" + " ...") ;
-   		PrintLn.println("Restart configuration \"" + config.getName() + "\" (" + config.getID() + ")") ;
+         showStatus("Restart \"" + config.getName() + "\" (" + config.getID() + ")" + " ...",true) ;
          if (!config.isRestartable())
             init(config) ;
          else
@@ -2695,7 +2699,7 @@ final public class MainFrame extends KissFrame
          {
             public void run()
             {
-               showStatus("Exit \"" + config.getName() + "\" ...") ;
+               showStatus("Exit \"" + config.getName() + "\" ...",true) ;
                closetimer = new Timer(10000,Kisekae.getMainFrame()) ;
                EventHandler handler = config.getEventHandler() ;
                closetimer.setRepeats(false) ;

@@ -1209,8 +1209,8 @@ final class PanelMenu extends KissMenu
          {
             if (Kisekae.isWebsocket())
             {
-               Configuration config = parent.getConfig() ;
                if (zm == null) return ;
+               Configuration config = parent.getConfig() ;
                if (config == null) return ;
                ArchiveFile zip = zm.getZipFile() ;
                if (zip == null) return ;
@@ -1229,7 +1229,11 @@ final class PanelMenu extends KissMenu
                // Perform the Save As if the archive was written successfully.
                   
                if (!zm.isError()) SwingUtilities.invokeLater(awt) ;
+               zm.close() ;
+               return ;
             }
+            zm.close() ;
+            return ;
          }
 
          // A Threads request shows the state of the EventHandler and Timer
@@ -1711,7 +1715,7 @@ final class PanelMenu extends KissMenu
       // non-recoverable as the CNF component attributes are lost when 
       // the component image is saved.
       
-      if (OptionsDialog.getComponentCel() && config.getComponentCount() > 0)
+      if (OptionsDialog.getExportComponentAsCel() && config.getComponentCount() > 0)
       {
          String s = Kisekae.getCaptions().getString("SaveComponents") ;
          s += "\n" + Kisekae.getCaptions().getString("OptionsDialogChangedText3") ;
@@ -1725,40 +1729,40 @@ final class PanelMenu extends KissMenu
       // format to ensure this is desired.  This is for a Save or Save As 
       // because a conversion to or from an archive does not convert images.
       
-      if (OptionsDialog.getExportCel() && (type == 0 || type == 1))
+      if (OptionsDialog.getExportImageAsCel() && (type == 0 || type == 1))
       {
-         String s = Kisekae.getCaptions().getString("ExportCelsOption") ; 
+         String s = Kisekae.getCaptions().getString("ExportImageAsCelsOption") ; 
          int i1 = s.indexOf('[') ;
          int j1 = s.indexOf(']') ;
          if (i1 >= 0 && j1 > i1)
             s = s.substring(0,i1+1) + OptionsDialog.getExportType() + s.substring(j1) ;
-         s += "\n" + Kisekae.getCaptions().getString("ExportCelsOption2") ;
+         s += "\n" + Kisekae.getCaptions().getString("ExportImageAsCelsOption2") ;
          s += "\n" + Kisekae.getCaptions().getString("OptionsDialogChangedText3") ;
          int i = JOptionPane.showConfirmDialog(parent,s,
             Kisekae.getCaptions().getString("OptionsDialogWarningTitle"),
             JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE) ;
          if (i != JOptionPane.YES_OPTION) return ;
       }
-      
+/*      
       // Show a warning if we are exporting cels in a different image 
       // format and this is for a Save As Archive.  A conversion to or 
       // from an archive does not convert images.
       
-      if (OptionsDialog.getExportCel() && (type == 2))
+      if (OptionsDialog.getExportImageAsCel() && (type == 2))
       {
-         String s = Kisekae.getCaptions().getString("ExportCelsOptionNo") ; 
+         String s = Kisekae.getCaptions().getString("ExportImageAsCelsOptionNo") ; 
          int i1 = s.indexOf('[') ;
          int j1 = s.indexOf(']') ;
          if (i1 >= 0 && j1 > i1)
             s = s.substring(0,i1+1) + OptionsDialog.getExportType() + s.substring(j1) ;
-         s += "\n" + Kisekae.getCaptions().getString("ExportCelsOptionNo2") ;
+         s += "\n" + Kisekae.getCaptions().getString("ExportImageAsCelsOptionNo2") ;
          s += "\n" + Kisekae.getCaptions().getString("OptionsDialogChangedText3") ;
          int i = JOptionPane.showConfirmDialog(parent,s,
             Kisekae.getCaptions().getString("OptionsDialogWarningTitle"),
             JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE) ;
          if (i != JOptionPane.YES_OPTION) return ;
       }
-
+*/
       // Save the state of the current page.
 
       PanelFrame panel = parent.getPanel() ;
@@ -1789,7 +1793,7 @@ final class PanelMenu extends KissMenu
 
       if (config.isOptionChanged()) 
          config.setUpdated(true) ;
-      if (config.getComponentCount() > 0 && OptionsDialog.getComponentCel()) 
+      if (config.getComponentCount() > 0 && OptionsDialog.getExportComponentAsCel()) 
          config.setUpdated(true) ;
       if (config.isUpdated())
       {
@@ -1831,7 +1835,7 @@ final class PanelMenu extends KissMenu
       if (type == 2)        // Save As Archive
       {
          Kisekae.setCursor(parent,Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
-         zm = new ZipManager(config,(Kisekae.isWebsocket() ? this : null)) ;
+         zm = new ZipManager(config,this) ;
          Kisekae.setCursor(parent,Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
       }
       if (type == 3)        // Save As Files
@@ -2460,7 +2464,7 @@ final class PanelMenu extends KissMenu
       int n = JavaCel.getNextComponentNumber(type,config.getID()) ;
       String s = type + n ;
       String ext = type ;
-      if (OptionsDialog.getImportComponent()) 
+      if (OptionsDialog.getImportComponentAsCel()) 
       {
          if ("label".equals(type)) ext = "cel" ;
          if ("button".equals(type)) ext = "cel" ;
@@ -2657,7 +2661,7 @@ final class PanelMenu extends KissMenu
       // palette index 0 as a KCF palette requires. The cel is corrected
       // to the proper KiSS form when it is saved.
       
-      if (OptionsDialog.getImportCel())
+      if (OptionsDialog.getImportImageAsCel())
       {
          if (newcel != null && !(".cel".equals(originalze.getExtension())))
          {
