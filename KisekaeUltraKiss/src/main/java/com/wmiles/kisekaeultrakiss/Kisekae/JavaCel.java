@@ -702,8 +702,8 @@ final class JavaCel extends Cel
    { 
       if (input && !readonly) return false ;
       if (component instanceof JScrollPane) return false ;
-      if (OptionsDialog.getComponentCel()) return true ; 
-      if (OptionsDialog.getImportComponent() && isImported()) return true ; 
+      if (OptionsDialog.getExportComponentAsCel()) return true ; 
+      if (OptionsDialog.getImportComponentAsCel() && isImported()) return true ; 
       return false ;
    }
 
@@ -717,7 +717,7 @@ final class JavaCel extends Cel
    { 
       if (ze == null) return false ;
       if (!ze.isWriting()) return false ;
-      if (!OptionsDialog.getComponentCel() && ze.isComponent()) return false ;
+      if (!OptionsDialog.getExportComponentAsCel() && ze.isComponent()) return false ;
       
       // If we are exporting our component as an image type, then
       // our writable offset state depends on the type of image
@@ -1915,7 +1915,7 @@ final class JavaCel extends Cel
 
    // Return the relative name which will be of type CEL if we are 
    // writeable. Non-input components will be written as a truecolor  
-   // CEL if the ComponentCel option has been set.
+   // CEL if the ExportComponentAsCel option has been set.
 
    String getWriteName() 
    { 

@@ -170,8 +170,8 @@ final class ExportDialog extends KissDialog implements ActionListener, WindowLis
 		jLabel1.setText(Kisekae.getCaptions().getString("ExportDialogText"));
 		jLabel2.setText(Kisekae.getCaptions().getString("ExportDirectory"));
 		jLabel3.setText(Kisekae.getCaptions().getString("ExportPrefix"));
-		jLabel4.setText(Kisekae.getCaptions().getString("MenuViewExportCel"));
-      jLabel4.setToolTipText(Kisekae.getCaptions().getString("ToolTipExportCel"));
+		jLabel4.setText(Kisekae.getCaptions().getString("MenuViewExportImageAsCel"));
+      jLabel4.setToolTipText(Kisekae.getCaptions().getString("ToolTipExportImageAsCel"));
   		CANCEL.setText(Kisekae.getCaptions().getString("CancelMessage"));
   		OK.setText(Kisekae.getCaptions().getString("OkMessage"));
       Transparent.setText(Kisekae.getCaptions().getString("ExportTransparent")) ;

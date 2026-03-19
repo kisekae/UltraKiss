@@ -461,8 +461,13 @@ final class PageSet extends KissObject
 			g.drop() ;
 
          // Remember any collision events if the object moved.
+         // Detach if object was attached on old page. (DirectKiss)
 
-         if (dispX != 0 || dispY != 0) moved.add(g) ;
+         if (dispX != 0 || dispY != 0) 
+         {
+            moved.add(g) ;
+            if (OptionsDialog.getDetachPage()) g.detach() ;
+         }
 		}
 
       // We now check for restrictions.  Any object that has a restriction

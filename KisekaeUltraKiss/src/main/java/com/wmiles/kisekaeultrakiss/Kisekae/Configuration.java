@@ -549,6 +549,19 @@ final public class Configuration extends KissObject
 		return (p.getColor(0,border)) ;
 	}
 
+   // Convert an RGB color into a Windows system palette KiSS color.
+   // It doesn't quite work for grey scale, or even real colors.
+   
+	int getBorderColor(int rgb)
+	{
+      int r = (border & 0xff0000) >> 16 ;
+      int g = (border & 0x00ff00) >> 8 ;
+      int b = (border & 0x0000ff) ;
+      
+      int n = (r & 0xE0) | (g & 0xE0) >> 3 | (b & 0xC0) >> 6 ;
+      return n ;
+	}
+
 	// Method to return the configuration border color index.
 
 	int getBorder() { return (importborder >= 0) ? importborder : border ; }
@@ -700,6 +713,14 @@ final public class Configuration extends KissObject
 	// Return our UltraKiss indicator.
 
 	boolean isUltraKiss() { return ultrakiss ; }
+
+	// Return our DirectKiss indicator.
+
+	boolean isDirectKiss() { return directkiss ; }
+
+	// Return our PlayFKiss indicator.
+
+	boolean isPlayFKiss() { return playfkiss ; }
 
 	// Return our Cherry KiSS indicator.
 
@@ -1480,7 +1501,8 @@ final public class Configuration extends KissObject
                   if (line < 10)
                   {
                      if (s1.startsWith("Kisekae UltraKiss"))
-                        ultrakiss = true ;
+                        if (OptionsDialog.getCompatibilityMode() == null)
+                           ultrakiss = true ;
                   
                      if (s1.indexOf("This CNF file was written by Direct KiSS") >= 0)
                         directkiss = true ;
@@ -1501,7 +1523,7 @@ final public class Configuration extends KissObject
 
                   // The default for strict syntax is false, unless UltraKiss.
                   
-                  if (ultrakiss)
+                  if (ultrakiss && OptionsDialog.getCompatibilityMode() == null)
                      OptionsDialog.setStrictSyntax(true) ;
                   else
                      OptionsDialog.setStrictSyntax(false) ;
@@ -1540,6 +1562,7 @@ final public class Configuration extends KissObject
 
                   if (s1.startsWith("HINT"))
                   {
+                     directkiss = true ;
                      s1 = s1.substring("HINT".length()) ;
                      char c = (s1.length() > 0) ? s1.charAt(0) : 0 ;
                      if (Character.isWhitespace(c))
@@ -1825,6 +1848,17 @@ final public class Configuration extends KissObject
 //         OptionsDialog.setCacheImage(!OptionsDialog.getPagesAreScenes()) ;
 //         OptionsDialog.setCacheAudio(!OptionsDialog.getPagesAreScenes()) ;
 //         setRestartable(false) ;
+      }
+      
+      // If we had DirectKiss %x %y specifications and no FKiSS ensure that
+      // the compatibility mode is set.  Cel offsets depend on this on load.
+      
+      String compatibility = OptionsDialog.getCompatibilityMode() ;
+      if (directkiss && compatibility == null)
+      {
+         ultrakiss = false ;
+       	PrintLn.println("DirectKiss compatibility set.") ;
+         OptionsDialog.setDirectKissCompatibility("true") ;
       }
 	}
     
@@ -3049,12 +3083,17 @@ final public class Configuration extends KissObject
       timer.suspendTimer(true) ;
 
 		// If we have animated cels, start the GIF timer.
+      // This is very slow (kanjikiss.lzh) when many ambiguous cels.
+      // Only UltraKiss allows animation so bypass the problem.
 
-		animator = new GifTimer() ;
-		animator.startTimer(cels) ;
-      animator.suspendTimer(true) ;
-      animator.setEnabled(true) ;
-		animator.setPanelFrame(panel) ;
+      if (ultrakiss)
+      {
+   		animator = new GifTimer() ;
+   		animator.startTimer(cels) ;
+         animator.suspendTimer(true) ;
+         animator.setEnabled(true) ;
+   		animator.setPanelFrame(panel) ;
+      }
 
 		// If we are using pages as scenes, start the scene memory manager.
 
@@ -3668,10 +3707,23 @@ final public class Configuration extends KissObject
 	      enum1 = leadtext.elements() ;
 	      while (enum1.hasMoreElements()) writeLine(out,(String) enum1.nextElement()) ;
          StringBuffer sb = new StringBuffer() ;
-         if (rgbborder && !OptionsDialog.getPlayFKissCompatibility())
+         if (rgbborder && OptionsDialog.getCompatibilityMode() == null)
 	         sb.append("[" + ((border&0xFF0000) >> 16) + "," + ((border&0xFF00) >> 8) + "," + (border & 0xFF)) ;
          else
-            sb.append("[" + border) ;
+         {  // UltraKiss standard KiSS index color
+            if (OptionsDialog.getCompatibilityMode() == null)
+               sb.append("[" + border) ;
+            else
+            {  // PlayFKiss standard KiSS index color
+               if (border < 256)
+                  sb.append("[" + border) ; 
+               else
+               {
+                  int n = getBorderColor(border) ;
+                  sb.append("[" + (n % 256)) ;       
+               }
+            }
+         }
          int n = OptionsDialog.getCommentCol() ;
          if (n < 0) n = sb.length() + 1 ;
          if (n <= sb.length()) n = sb.length() + 1 ;
@@ -4589,7 +4641,7 @@ final public class Configuration extends KissObject
 
    			if (token.startsWith("%x"))
    			{
-               if (!ultrakiss) directkiss = true ;
+               directkiss = true ;
    				comment += token + " " ;
    				value = token.substring(2) ;
    				if (value.length() > 0)
@@ -4606,7 +4658,7 @@ final public class Configuration extends KissObject
          
    			if (token.startsWith("%y"))
    			{
-               if (!ultrakiss) directkiss = true ;
+               directkiss = true ;
    				comment += token + " " ;
    				value = token.substring(2) ;
    				if (value.length() > 0)
@@ -4762,12 +4814,12 @@ final public class Configuration extends KissObject
          
          // Set the offsets.  The base offset is read from the image file.
          // The offset is the base offset plus any %offset() value.
-         // The intial offset is the %offset() value.
+         // The initial offset is the %offset() value.
          // The restart offset is the first initial offset read on the CNF.
          //
          // On a View-Restart we restore the initial offset from the 
          // reference configuration restart offset.
-         
+
          Point p = c.getBaseOffset() ;
          if (p == null) p = new Point(0,0) ;
          c.setOffset(p.x+celoffsetx,p.y+celoffsety) ;
@@ -4899,8 +4951,9 @@ final public class Configuration extends KissObject
 			}
 
          // No colon specifier means the cel is on all frames.
+         // (unless we are DirectKiss where it means it is not on any frame)
 
-         else celgroup.setAllFrames(true) ;
+         else celgroup.setAllFrames(!directkiss) ;
 		}
 
       // Return whether we found a cel group or not.

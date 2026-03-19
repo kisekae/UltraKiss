@@ -1427,27 +1427,10 @@ final class ToolBar extends JPanel
             Configuration config = null ;
             if (parent != null) config = parent.getConfig() ;
             boolean b = (config == null) ;
-            OptionsDialog.setPlayFKissCompatibility(playfkiss.isSelected(),b) ;
+            OptionsDialog.setPlayFKissCompatibility(playfkiss.isSelected(),true) ;
             OptionsDialog.setCompatibilityControls(playfkiss.isSelected()) ;
             updateCompatibilityState() ;
-                  
-            // Configuration is not restartable if these options change.
-       
-            if (config != null) 
-            {
-               config.setOptionsChanged(true) ;
-               config.setRestartable(false) ;
-               String s = Kisekae.getCaptions().getString("OptionsDialogRestartText2") ;
-               int i1 = s.indexOf('[') ;
-               int j1 = s.indexOf(']') ;
-               if (i1 >= 0 && j1 > i1) 
-                   s = s.substring(0,i1+1) + config.getName() + s.substring(j1) ;
-               JOptionPane.showMessageDialog(parent,
-               Kisekae.getCaptions().getString("OptionsDialogRestartText1") + "\n" + s,
-               Kisekae.getCaptions().getString("OptionsDialogWarningTitle"),
-               JOptionPane.INFORMATION_MESSAGE) ;
-               parent.restart();
-            }
+            confirmRestart(config) ;
             return ;
          }
 
@@ -1458,9 +1441,10 @@ final class ToolBar extends JPanel
             Configuration config = null ;
             if (parent != null) config = parent.getConfig() ;
             boolean b = (config == null) ;
-            OptionsDialog.setDirectKissCompatibility(directkiss.isSelected(),b) ;
+            OptionsDialog.setDirectKissCompatibility(directkiss.isSelected(),true) ;
             OptionsDialog.setCompatibilityControls(directkiss.isSelected()) ;
             updateCompatibilityState() ;
+            confirmRestart(config) ;
             return ;
          }
 
@@ -1471,9 +1455,10 @@ final class ToolBar extends JPanel
             Configuration config = null ;
             if (parent != null) config = parent.getConfig() ;
             boolean b = (config == null) ;
-            OptionsDialog.setGnomeKissCompatibility(gnomekiss.isSelected(),b) ;
+            OptionsDialog.setGnomeKissCompatibility(gnomekiss.isSelected(),true) ;
             OptionsDialog.setCompatibilityControls(gnomekiss.isSelected()) ;
             updateCompatibilityState() ;
+            confirmRestart(config) ;
             return ;
          }
 
@@ -1484,9 +1469,10 @@ final class ToolBar extends JPanel
             Configuration config = null ;
             if (parent != null) config = parent.getConfig() ;
             boolean b = (config == null) ;
-            OptionsDialog.setKissLDCompatibility(kissld.isSelected(),b) ;
+            OptionsDialog.setKissLDCompatibility(kissld.isSelected(),true) ;
             OptionsDialog.setCompatibilityControls(kissld.isSelected()) ;
             updateCompatibilityState() ;
+            confirmRestart(config) ;
             return ;
          }
 
@@ -1628,6 +1614,27 @@ final class ToolBar extends JPanel
 		}
 	}
 
+   
+   // Configuration is not restartable if these options change.
+   
+   private void confirmRestart(Configuration config)
+   {
+      if (config != null) 
+      {
+         config.setOptionsChanged(true) ;
+         config.setRestartable(false) ;
+         String s = Kisekae.getCaptions().getString("OptionsDialogRestartText2") ;
+         int i1 = s.indexOf('[') ;
+         int j1 = s.indexOf(']') ;
+         if (i1 >= 0 && j1 > i1) 
+         s = s.substring(0,i1+1) + config.getName() + s.substring(j1) ;
+         JOptionPane.showMessageDialog(parent,
+            Kisekae.getCaptions().getString("OptionsDialogRestartText1") + "\n" + s,
+            Kisekae.getCaptions().getString("OptionsDialogWarningTitle"),
+            JOptionPane.INFORMATION_MESSAGE) ;
+         parent.restart();
+      }
+   }
 
 	// Inner class to create a color button.
 

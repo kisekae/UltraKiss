@@ -662,9 +662,15 @@ final class ThreadDialog extends KissDialog
       if (config != null)
       {
 	      if (item.startsWith("AlarmTimer"))
-	       	e = config.getTimer().getQueue() ;
+         {
+            AlarmTimer timer = config.getTimer() ;
+	       	if (timer != null) e = timer.getQueue() ;
+         }
 	      else if (item.startsWith("GifTimer"))
-	       	e = config.getAnimator().getQueue() ;
+         {
+            GifTimer animator = config.getAnimator() ;
+	       	if (animator != null) e = animator.getQueue() ;
+         }
       }
       if (item.startsWith("EventHandler"))
          e = EventHandler.getQueue() ;

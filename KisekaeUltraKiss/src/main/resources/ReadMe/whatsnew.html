@@ -21,27 +21,44 @@
 	releases, or problems and work-arounds that may affect you.&nbsp;</p>
                                         <p>&nbsp;</p>
                                        <p>&nbsp;</p>
+					<p><B>March 19, 2026</B></p>
+					<P>UltraKiss V5.2 is released. UltraKiss 5.2 corrects compatibility issues with DirectKiss and corrects set import and export of GUI components as cels.</P>
+					<P>UltraKiss 5.2 now correctly processes Dov Sherman's Final Fantasy set (mscloud2.lzh) and Kim McFarland's Kanji set (kanjkiss.lzh).</P>
+                                        <P>UltraKiss is end-of-life.  Issues may be corrected if reported to project <a href="https://github.com/kisekae/UltraKiss">Kisekae UltraKiss</a> on GitHub or with <a href=\"file://helpbugreport\">Help-Bug Report</a> within UltraKiss. </P>
+                                        <p>&nbsp;</p>
+					<h3><FONT face=Arial>Updates to V5.2&nbsp; </FONT></h3>
+					<BLOCKQUOTE>
+                      <p><font face="Arial">1. Set the DirectKiss loadvalue() property pool to return 0 when a value is undefined.  DirectKiss does not support string variables.</font></p>
+                      <p><font face="Arial">2. Defined a new compatibility option for DirectKiss to detach attached objects if objects were repositioned on a page change.</font></p>
+                      <p><font face="Arial">3. Revised the background color index specification for converted sets.  DirectKiss would abort when sets had RGB background color values. </font></p>
+                      <p><font face="Arial">4. Corrected letkey() to recognize cursor control keys UP DOWN LEFT and RIGHT when specified in a key list string. </font></p>
+                      <p><font face="Arial">5. Adjusted the DirectKiss %x and %y specifiers to replace the internal cel offset value.  This is different from the UltraKiss %offset() tag. </font></p>
+          				</BLOCKQUOTE>
+                                       <p>&nbsp;</p>
 					<p><B>February 24, 2026</B></p>
 					<P>UltraKiss V5.1 is released. UltraKiss 5.1 implements a new Issue Report system.  Email notification and anonymous GitHub issue posting is provided.  No GitHub login is necessary.  </P>
                                         <P>UltraKiss is end-of-life.  Issues may be corrected if reported to project <a href="https://github.com/kisekae/UltraKiss">Kisekae UltraKiss</a> on GitHub or with <a href=\"file://helpbugreport\">Help-Bug Report</a> within UltraKiss. </P>
                                         <p>&nbsp;</p>
 					<h3><FONT face=Arial>Updates to V5.1&nbsp; </FONT></h3>
 					<BLOCKQUOTE>
-                      <p><font face="Arial">1. A new HTML issue report form with server based PHP email notification and a GitHub REST API implementation for anonymous issue posting is provided.</font></p>
+                      <p><font face="Arial">1. <b>A new HTML issue report form with server based PHP email notification for anonymous issue posting is provided.</b></font></p>
                       <p><font face="Arial">2. Corrected a failure to accept an LZH file with an unterminated zero header size as a valid end-of-file.</font></p>
                       <p><font face="Arial">3. Sorted the UltraKiss cache entries to make it easier to find a specific cache file for deletion.</font></p>
-                      <p><font face="Arial">4. Websocket implementation was stopping MIDI music when the single sound option was set.  Only sound should stop.</font></p>
-                      <p><font face="Arial">5. Fix 8 in UltraKiss V5.0 was causing improper drawing of imported group cels after a set restart.  This is corrected.</font></p>
+                      <p><font face="Arial">4. A websocket implementation was stopping MIDI music when the single sound option was set.  Only sound should stop.</font></p>
+                      <p><font face="Arial">5. UltraKiss V5.0 was causing improper drawing of imported group cels after a set restart.  This is corrected.</font></p>
                       <p><font face="Arial">6. Elements imported to a new KiSS set were not compressed when written to LZH or other archives.</font></p>
                       <p><font face="Arial">7. Introduced a dialog to confirm UltraKiss termination on a window close (X) operation.</font></p>
-                      <p><font face="Arial">8. Websocket implementation will no longer timeout due to inactivity if an INCLUDE file download is in progress.</font></p>
+                      <p><font face="Arial">8. A websocket implementation will no longer timeout due to inactivity if an INCLUDE file download is in progress.</font></p>
                       <p><font face="Arial">9. A warning is shown if images are exported to a different format during a Save As Archive.  This is not possible.</font></p>
                       <p><font face="Arial">10. Set the default for strict syntax option to false, except for UltraKiss.  Strict syntax was reporting errors when parsing KISS sets from OtakuWorld. </font></p>
                       <p><font face="Arial">11. Introduced partial event name checks to allow non-strict syntax when parsing FKISS events. Sets from OtakuWorld did not always code events properly. </font></p>
                       <p><font face="Arial">12. Disabled access to the Archive Manager Add and Extract functions for websocket implementations.  These functions cannot access the client file system. </font></p>
                       <p><font face="Arial">13. Corrected the Archive Manager Save As function for websocket implementations to correctly access the client file system. </font></p>
-                      <p><font face="Arial">14. Introduced a compression method column to the Archive Manager element listing to show the compresson method used.</font></p>
+                      <p><font face="Arial">14. Introduced a compression method column to the Archive Manager element listing to show the compression method used.</font></p>
                       <p><font face="Arial">15. Added the Java -splash option to show a startup splash image and tried to improve MainFrame start-up time after boot.</font></p>
+          	      <p><font face="Arial">16. Resolved an issue with the debug trace window not always opening and returning focus to the main panel component.</font></p>
+                      <p><font face="Arial">17. Revised the factory initial option to maximize the main window on startup.  This ensures a consistent presentation. </font></p>
+                      <p><font face="Arial">18. Non-input component objects such as buttons and labels imported to new sets were not written correctly when converted to cels. </font></p>
           				</BLOCKQUOTE>
                                        <p>&nbsp;</p>
 					<p><B>January 30, 2026</B></p>
@@ -50,7 +67,7 @@
                                         <p>&nbsp;</p>
 					<h3><FONT face=Arial>Updates to V5.0&nbsp; </FONT></h3>
 					<BLOCKQUOTE>
-                      <p><font face="Arial">1. Numerous changes were implemented to provide a websocket and servlet environment to run UltraKiss as a client-server application.</font></p>
+                      <p><font face="Arial">1. <b>Numerous changes were implemented to provide a websocket and servlet environment to run UltraKiss as a client-server application.</b></font></p>
                       <p><font face="Arial">2. To run UltraKiss as a server see the current documentation.  UltraKiss is available at <a href="https://www.wmiles.com/ultrakiss">https://www.wmiles.com/ultrakiss</a></font></p>
                       <p><font face="Arial">3. Save As Archive for new KiSS sets or sets loaded from a directory failed to create LZH archives properly as the file was in use.  This is corrected.</font></p>
                       <p><font face="Arial">4. Corrected Archive Manager LZH element times for different header types.  Header type 2 uses Unix time and not DOS time.</font></p>
