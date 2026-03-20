@@ -1,6 +1,12 @@
 # UltraKiss
 
-**UltraKiss 5.1** is now released. This release provides a new online Issue Reporting system for bug reports or suggestions for improvement.  A GitHub user login is no longer required.  Issue reports are submitted to GitHub anonymously and also emailed to the developer with a copy to the submitter.  You can now submit issues directly from within UltraKiss using the menu command **Help-Bug Report**.  
+**UltraKiss 5.2** is now released. This release provides improved DirectKiss compatibility amd improved support for new UltraKiss components.  For all corrections use the UltraKiss menu command **Help-Read Me-What's New**.  
+
+**UltraKiss 5.1** provided a new online Issue Reporting system for bug reports or suggestions for improvement.  You can now submit issues directly from within UltraKiss using the menu command **Help-Bug Report**.  
+
+**KisekaeUltraKiss 5.0** and later is a modern GitHub release that provides a websocket server environment to run UltraKiss with HTML 5 capable web browsers.  **KisekaeUltraKissServlet 5.0** and later is a new GitHub release that provides the client environment to run UltraKiss with modern web browsers.   
+
+**$${\color{red}Webswing}$$** service is no longer available due to licensing issues.  Further, the replacement service provided with UltraKiss 5.0 and a Jetty server is more functionally capable than is possible with Webswing.
 
 ```diff
 January 3, 2026. UltraKiss version 5.0 now offers SSL secure connections to the server.
@@ -10,11 +16,6 @@ To run UltraKiss in your browser simply connect to “https://www.wmiles.com/ult
 Press this button to run UltraKiss.  
 [![UltraKiss](https://github.com/kisekae/UltraKiss/blob/master/src/Images/ultrakissbtn.svg)](https://www.wmiles.com/ultrakiss)
 
-
-**KisekaeUltraKiss 5.1** is a modern GitHub release that provides a websocket server environment to run UltraKiss with HTML 5 capable web browsers.   
-**KisekaeUltraKissServlet 5.1** is a new GitHub release that provides the client environment to run UltraKiss with modern web browsers.   
-
-**$${\color{red}Webswing}$$** service is no longer available due to licensing issues.  Further, the replacement service provided with UltraKiss 5.0 and a Jetty server is more functionally capable than is possible with Webswing.
 
 #### How does this magic work?
 
