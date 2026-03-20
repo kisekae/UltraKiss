@@ -323,7 +323,7 @@ final public class MainFrame extends KissFrame
 
       // If we have a selection, load it.
 
-//    if (ze == null) { fd.close() ; return ; }
+      if (ze == null) { fd.close() ; return ; }
       mainmenu.setFileOpen(fd) ;
       mainmenu.openContext(fd,ze) ;
 	}
