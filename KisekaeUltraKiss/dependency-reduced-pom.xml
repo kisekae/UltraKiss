@@ -49,8 +49,8 @@
     </dependency>
   </dependencies>
   <properties>
+    <jakartaee>11.0.0-M1</jakartaee>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <jetty.version>12.1.4</jetty.version>
-    <jakartaee>11.0.0-M1</jakartaee>
   </properties>
 </project>

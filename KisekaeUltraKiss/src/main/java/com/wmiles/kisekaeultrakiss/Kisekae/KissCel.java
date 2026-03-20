@@ -311,6 +311,8 @@ final class KissCel extends Cel
 				offset.y = fixByte(b[15],b[14]) ;
    			baseoffset.x = offset.x ;
    			baseoffset.y = offset.y ;
+            encoderoffset.x = offset.x ;
+            encoderoffset.y = offset.y ;
             offset.x += initialoffset.x ;
             offset.y += initialoffset.y ;
 				bits = fixByte((byte) 0,b[5]) ;
@@ -586,7 +588,7 @@ final class KissCel extends Cel
       imageheight = image.getHeight(null) ;
 
       // Set this cel's attributes from the cel copy.
-
+      
       sf = 1.0f ;
       copy = true ;
       scaled = false ;
@@ -595,7 +597,8 @@ final class KissCel extends Cel
 		size = c.getBaseSize() ;
 		bytes = c.getBytes() ;
       Point initialoffset = getInitialOffset() ;
-      baseoffset = c.getBaseOffset() ;
+      baseoffset = new Point(c.getEncoderOffset()) ;
+      encoderoffset = c.getEncoderOffset() ;
       offset.x = baseoffset.x + initialoffset.x ;
       offset.y = baseoffset.y + initialoffset.y ;
       

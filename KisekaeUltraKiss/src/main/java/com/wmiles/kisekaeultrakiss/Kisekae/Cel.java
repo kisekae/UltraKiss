@@ -90,7 +90,8 @@ abstract class Cel extends KissObject
    protected Dimension size = null ;			// The cel dimensions
    protected Dimension scaledsize = null ;  	// The cel scaled dimensions
    protected Point offset = null ;				// The cel offset
-   protected Point baseoffset = null ;			// The image offset from encoder
+   protected Point baseoffset = null ;			// The encoder offset or %x %y
+   protected Point encoderoffset = null ;		// The image offset from encoder
    protected Point initialoffset = null ;		// The offset from cnf %offset tag
    protected Point adjustedoffset = null ;	// The adjusted offset from move
    protected Point restartoffset = null ;    // The offset on first cnf load
@@ -391,9 +392,14 @@ abstract class Cel extends KissObject
    void setOffset(int x, int y) { offset.x = x ; offset.y = y ; }
 
    // Set the cel base offset.  This is the initial offset when the cel
-   // is loaded if the image contains offset values.  
+   // is loaded if the image contains offset values.  This can be %x %y
 
    void setBaseOffset(Point p) { baseoffset = p ; }
+
+   // Set the cel encoder offset.  This is the initial offset when the cel
+   // is loaded if the image contains offset values.  
+
+   void setEncoderOffset(Point p) { encoderoffset = p ; }
 
    // Set the cel adjusted offset.  This is the offset value if it is changed
    // through edit commands when the cel is moved.
@@ -409,7 +415,8 @@ abstract class Cel extends KissObject
    }
 
    // Set the cel initial offset.  This is the offset specification from the
-   // cel configuration line %offset tag in the CNF.
+   // cel configuration line %offset tag in the CNF.  Or %x %y if the encoder
+   // offset is (0,0).  
 
    void setInitialOffset(int x, int y) { initialoffset.x = x ; initialoffset.y = y ; }
    void setInitialOffset(Point p) 
@@ -773,6 +780,7 @@ abstract class Cel extends KissObject
       offset = (offset == null) ? new Point(0,0) : new Point(offset) ;
       initialoffset = (initialoffset == null) ? new Point(0,0) : new Point(initialoffset) ;
       baseoffset = (baseoffset == null) ? new Point(0,0) : new Point(baseoffset) ;
+      encoderoffset = (encoderoffset == null) ? new Point(0,0) : new Point(encoderoffset) ;
       placement = (placement == null) ? new Point(0,0) : new Point(placement) ;
       size = (size == null) ? new Dimension(0,0) : new Dimension(size) ;
       scaledsize = (scaledsize == null) ? new Dimension(0,0) : new Dimension(scaledsize) ;
@@ -952,9 +960,13 @@ abstract class Cel extends KissObject
 
    Point getRestartOffset() { return restartoffset ; }
 
-   // Return the cel base offset. This is the offset read from the image.
+   // Return the cel base offset. This is the offset read from the image or %x %y.
 
    Point getBaseOffset() { return baseoffset ; }
+
+   // Return the cel encoder offset. This is the offset read from the image.
+
+   Point getEncoderOffset() { return (encoderoffset == null) ? new Point(0,0) : encoderoffset ; }
 
    // Return the cel movement offset. This is the displacement when dragging.
 

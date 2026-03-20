@@ -197,9 +197,9 @@ final public class MainFrame extends KissFrame
  		setIconImage(Kisekae.getIconImage()) ;
 
       // Open the frame maximized if required.
-      
-      if (OptionsDialog.getMaximizeWindow())
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+      if (!Kisekae.isWebsocket() && OptionsDialog.getMaximizeWindow())
+         setExtendedState(JFrame.MAXIMIZED_BOTH);
             
       // Initiate a file load on a separate thread.  We have seen
       // intermittent exceptions with the fileopen reference being
@@ -1972,8 +1972,11 @@ final public class MainFrame extends KissFrame
 		panelsize.height += statusbarsize.height ;
 		if (panelsize.width < toolbarsize.width) panelsize.width = toolbarsize.width ;
      	Dimension screensize = Kisekae.getScreenSize() ;
-  		if (!Kisekae.isWebsocket()) screensize.height = (int) (screensize.height*0.95f) ;
-      if (!OptionsDialog.getMaximizeWindow() && !fit) screensize = getDefaultSize() ;
+  		if (!Kisekae.isWebsocket()) 
+      {
+         screensize.height = (int) (screensize.height*0.95f) ;
+         if (!OptionsDialog.getMaximizeWindow() && !fit) screensize = getDefaultSize() ;
+      }
       if (OptionsDialog.getRetainWindowSize() && !fit) screensize = getDefaultSize() ;
       if (mainmenu != null && mainmenu.isTutorialDisplayed()) screensize = getSize() ;
 		if (panelsize.width > screensize.width) panelsize.width = screensize.width ;
