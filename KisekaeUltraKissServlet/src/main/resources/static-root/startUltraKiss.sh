@@ -50,7 +50,7 @@ echo "SSL argument (argument 3) is $3"
 
 SCRIPT_DIR="$(dirname "$(readlink -f "$0")")" 
 Directory="$SCRIPT_DIR"
-Application="KisekaeUltraKiss-5.1.jar"
+Application="KisekaeUltraKiss-5.2.jar"
 
 echo "Home directory is $Directory"
 cd $Directory
