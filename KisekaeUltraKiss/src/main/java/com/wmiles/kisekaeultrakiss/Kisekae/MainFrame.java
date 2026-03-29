@@ -199,7 +199,8 @@ final public class MainFrame extends KissFrame
       // Open the frame maximized if required.
 
       if (!Kisekae.isWebsocket() && OptionsDialog.getMaximizeWindow())
-         setExtendedState(JFrame.MAXIMIZED_BOTH);
+         if (BrowserControl.isWindowsPlatform())
+            setExtendedState(JFrame.MAXIMIZED_BOTH);
             
       // Initiate a file load on a separate thread.  We have seen
       // intermittent exceptions with the fileopen reference being
@@ -214,6 +215,93 @@ final public class MainFrame extends KissFrame
         } 
       } ;
 		SwingUtilities.invokeLater(runner) ;
+   }
+
+
+   // A function to initiate a load an expansion file.
+   // This is called on a websocket file upload to the server.
+   
+   void loadexpand(String filename) 
+   {
+      if (OptionsDialog.getDebugWebSocket())
+         PrintLn.println("MainFrame: load websocket expansion file = " + filename) ;
+
+		if (!callreturn)
+		{
+			savecallback = "expand" ;
+			if (checksave()) return ;
+		}
+
+		// Run the file load as a separate thread.
+
+      expansion = true ;
+
+      // Identify the file characteristics.  
+
+      ArchiveFile zip = null ;
+      ArchiveEntry ze = null ;
+      File f = new File(filename) ;
+      String pathname = f.getPath() ;
+   	int i = filename.lastIndexOf(".") ;
+		String extension = (i < 0) ? "" : filename.substring(i).toLowerCase() ;
+      
+      FileOpen fdnew = new FileOpen(this) ;
+      fdnew.setLoadExpand(true) ;
+
+      try
+      {
+         if (".zip".equals(extension))
+           	zip = new PkzFile(fdnew,filename) ;
+         else if (".gzip".equals(extension))
+          	zip = new PkzFile(fdnew,filename) ;
+         else if (".jar".equals(extension))
+           	zip = new PkzFile(fdnew,filename) ;
+         else if (".lzh".equals(extension))
+           	zip = new LhaFile(fdnew,filename) ;
+      }
+      catch (IOException e)
+      {
+         PrintLn.println("MainFrame: load websocket expansion file, exception = " + e.toString()) ;
+         return ;
+      }
+      
+      if (zip == null) return ;
+      Vector v = zip.getEntryType(".cnf") ;
+      if (v != null)
+      {
+         Object o = v.elementAt(0) ;
+         if (o instanceof ArchiveEntry) ze = (ArchiveEntry) o ;
+         if (OptionsDialog.getDebugWebSocket())
+            PrintLn.println("MainFrame: load websocket expansion file, CNF is " + ze) ;
+      }
+       
+      // If there is a CNF in the expansion file use it.  If not, use the
+      // current configuration file.  
+      
+      if (ze == null)
+      {
+         if (OptionsDialog.getDebugWebSocket())
+            PrintLn.println("MainFrame: load websocket expansion file, CNF element not found in " + filename) ;
+         ze = config.getZipEntry() ;
+      }
+      if (ze == null) return ;
+
+      // Keep track of this expansion file.
+      
+      fdnew.setZipFile(zip) ;
+      fdnew.setZipEntry(ze) ;
+      Vector expandfiles = new Vector() ;
+      expandfiles.add(zip) ;
+      config.setExpandFiles(expandfiles) ;
+      PrintLn.println("Add expansion file " + zip.getFileName());      
+      if (mainmenu != null) mainmenu.setFileOpen(fdnew) ;
+      
+      // Expanded configurations load a new CNF.
+
+      PrintLn.println("Expansion loading new configuration \"" + ze.getName() + "\"") ;
+      loader = new FileLoader(this,config,zip,ze) ;
+		Thread loadthread = new Thread(loader) ;
+		loadthread.start() ;
    }
 
 
@@ -323,7 +411,7 @@ final public class MainFrame extends KissFrame
 
       // If we have a selection, load it.
 
-//    if (ze == null) { fd.close() ; return ; }
+      if (ze == null) { fd.close() ; return ; }
       mainmenu.setFileOpen(fd) ;
       mainmenu.openContext(fd,ze) ;
 	}
@@ -543,7 +631,7 @@ final public class MainFrame extends KissFrame
          }
 
          // If we are expanding this configuration apply the expansion CNF.
-         
+/*         
          if (expansion && expandfiles != null)
          {
             boolean b = false ;
@@ -572,7 +660,7 @@ final public class MainFrame extends KissFrame
                return ; 
             }           
          }
-                  
+*/                  
          // If APPEND files exist we must open the INCLUDE files and append   
          // any CNF elements found in these files to this configuration.   
          // The new cel declarations and event code become an addition to  

@@ -127,8 +127,6 @@ final class GifTimer extends Thread
 
       for (int i = gifs.size()-1 ; i >= 0 ; i--)
       {
-         if (i < 10200 && (i % 10) == 0)
-         i = i ;
          Object o = gifs.elementAt(i) ;
          if (!(gifs.elementAt(i) instanceof KissObject))
             { gifs.removeElementAt(i) ;  continue ; }

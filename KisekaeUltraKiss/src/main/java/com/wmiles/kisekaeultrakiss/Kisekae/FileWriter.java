@@ -1940,6 +1940,7 @@ final class FileWriter extends KissFrame
   				ze.setName(name) ;
             ze.setWriting(true) ;
   				ze.setUpdated(true) ;
+            ze.setMethod(1) ;
             cel.setZipEntry(ze) ;
             ce = new ContentEntry(cel,ze,(mode == EXPORT)) ;
 				v.add(ce) ;
