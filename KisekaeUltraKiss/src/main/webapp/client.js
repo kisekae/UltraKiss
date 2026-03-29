@@ -46,6 +46,9 @@ var ws ;
 var captureInProgress = false ;
 var fileName = "" ;          // name of file downloaded from server
 var fileopensource = "" ;    // Unique id for java object initiating file open
+var fileopenimport = "" ;    // if set then open for edit import
+var fileopenmultiple = "" ;  // if set then allow multiple file selection
+var fileopentype = "" ;      // if set then list of acceptable file types
 var filesavesource = "" ;    // Unique id for java object initiating file save
 var audiosource = "" ;       // Unique id for java object initiating audio sound
 var fileChunks = [] ;        // buffer for file transfer of binary data chunk
@@ -55,7 +58,9 @@ var receivedFileSize = 0 ;   // received size of downloaded file message chunk
 var expectedAudioSize = 0 ;  // expected size of audio downloaded from server
 var receivedAudioSize = 0 ;  // received size of downloaded file message chunk
 var retransmitCount = 0 ;    // number of retransmissions attempted
-var playerstopped = true ;   // true if midi player is stopped
+var playerstopped = true ;   // true if MIDI player is stopped
+var terminated = false ;     // true if UltraKiss terminated on server
+var player ;                 // MIDI player
 
 // Translation maps to convert a java object unique id to an audio source node 
 // and an audio source node to a file name.
@@ -69,7 +74,14 @@ var port = document.currentScript.getAttribute('port'); //
 var ssl = document.currentScript.getAttribute('ssl'); // 
 
 let consolelog = 'client' + port + '.log' ; // console log file name
-const reconnectInterval = 5000; // 5 seconds
+const reconnectInterval = 1000; // 1 seconds
+var reconnectcount = 0 ;        // reconnect attempts
+const maxreconnect = 1 ;        // maximum reconnects
+
+const canvas = document.getElementById('myCanvas');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
 
 // Override console.log to capture output in a file.
@@ -110,25 +122,6 @@ window.downloadLogs = function () {
 // Timestamp our console log file.
 const now = new Date() ;
 console.log(now) ;
-
-
-// Establish websocket connection.
-
-console.log("Host=" + host + " Port=" + port + " SSL=" + ssl);  
-initwebsocket(host,port,ssl) ;
-
-function initwebsocket(host,port,ssl)
-{
-    if (host === null) host = "127.0.0.1" ;
-    if (port === null) port = "49152" ;
-    var url = "ws://"+host+":"+port+"/ultrakiss" ;
-    if (ssl === "true") { 
-        url = "wss://"+host+":"+port+"/ultrakiss" ; 
-    }
-    console.log("WebSocket URL is " + url);   
-    ws = new WebSocket(url) ;
-    ws.binaryType = "arraybuffer";
-}
 
 
 // Detect browser closing.  Perform an orderly shutdown on the server.
@@ -199,7 +192,7 @@ function uploadFile(file, websocket) {
             var name = file.name.replaceAll(" ","_") ;            
             console.log("File transfer to server complete, " + name + " size=" + offset);
             if (websocket.readyState === WebSocket.OPEN) {
-                websocket.send("fileuploadend " + name + " " + offset + " " + fileopensource);
+                websocket.send("fileuploadend " + name + " " + offset + " " + fileopensource + " " + fileopenimport);
             }
         }
     };
@@ -218,7 +211,7 @@ function uploadFile(file, websocket) {
     
     if (websocket.readyState === WebSocket.OPEN) {
         var name = file.name.replaceAll(" ","_") ;            
-        websocket.send("fileupload " + name + " " + file.size);
+        websocket.send("fileupload " + name + " " + file.size + " " + fileopenimport);
     }
     readNextChunk();
 }
@@ -278,12 +271,39 @@ function sendBlobInChunks(ws, blob, chunkSize) {
  * WebSocket events.  
  */
 
-ws.onopen = function() {
-//  alert("Opened");
-    if (ws.readyState === WebSocket.OPEN) {
-        ws.send("screen " + canvas.width + " " + canvas.height);
+
+// Establish websocket connection.
+
+function initwebsocket(host,port,ssl)
+{
+    console.log("Host=" + host + " Port=" + port + " SSL=" + ssl);  
+    if (host === null) host = "127.0.0.1" ;
+    if (port === null) port = "49152" ;
+    var url = "ws://"+host+":"+port+"/ultrakiss" ;
+    if (ssl === "true") { 
+        url = "wss://"+host+":"+port+"/ultrakiss" ; 
     }
-};
+    console.log("Connection WebSocket URL is " + url);   
+    ws = new WebSocket(url) ;
+    ws.binaryType = "arraybuffer";
+}
+
+
+function connectWebSocket() {
+    initwebsocket(host,port,ssl) ;
+
+    ws.onopen = function(event) {
+        console.log('Connection established');
+        // Clear any previous reconnection timer on successful connection
+        if (window.reconnectTimeoutId) {
+            clearTimeout(window.reconnectTimeoutId);
+            window.reconnectTimeoutId = null;
+        }
+        if (ws.readyState === WebSocket.OPEN) {
+            ws.send("screen " + canvas.width + " " + canvas.height);
+        }
+    };
+
 
 ws.onclose = function(event) {
     console.log("Connection closed with code: " + event.code);
@@ -291,14 +311,28 @@ ws.onclose = function(event) {
     if (reason === null || reason.length === 0) reason = "Unknown" ;
     console.log("Reason for closure: " + reason);
     if (reason.startsWith("UltraKiss")) return ;
-    console.log("Reconnecting...");
-    ws = null ;
-//    setTimeout(initwebsocket,reconnectInterval,host,port,ssl) ;
+    if (terminated) return ;
+    
+    if (reconnectcount <= maxreconnect)
+    {
+        console.log("Reconnecting...");
+        // Implement a delay before attempting to reconnect to prevent rapid, continuous attempts
+        if (!window.reconnectTimeoutId) { // Prevent multiple timers from firing
+            window.reconnectTimeoutId = setTimeout(function() {
+                reconnectcount++ ;
+                connectWebSocket();
+            }, 5000); // Reconnect after 5 seconds (5000 milliseconds)
+        }
+    }
+    else
+        console.log("Maximum reconnection attempts exceeded.") ;
 };
 
 ws.onerror = function(err) {
-    console.log("Websocket error.");
-    alert("Server is not available.");
+    console.log("Websocket error. host="+host+" port="+port+" ssl="+ssl);
+    if (!(player === undefined)) { player.stop() ; }
+    ws.close() ;
+//  alert("Server is not available.");
 };
 
 // This is the general WebSocket message receipt function for the client.  
@@ -324,11 +358,32 @@ ws.onmessage = function (evt) {
        
         // Show file open dialog to begin uploading a client file to the server.
         // This is the click() event that initiates the uploadFile() process.
-        // "fileopen id classname"
+        // "fileopen id classname import multiple extension-list"
         
         else if (tokens[0] === "fileopen")
         {
+           const fileInput = document.getElementById('fileInput');
+           fileopenimport = " ";
+           fileopenmultiple = " ";
+           fileopentype = " ";
            fileopensource = tokens[1] ;
+           if (tokens.length > 3) fileopenimport = tokens[3] ;
+           if (tokens.length > 4) 
+           {
+               fileopenmultiple = tokens[4] ;
+               if (fileopenmultiple === "true")
+               {
+                   fileInput.setAttribute('multiple', 'true'); 
+                   console.log("fileopen multiple: " + fileopenmultiple);
+               }
+           }
+           if (tokens.length > 5) 
+           {
+               fileopentypes = tokens.slice(5) ;
+               fileopentype = fileopentypes.join(" ") ;
+               fileInput.setAttribute('accept', fileopentype); 
+               console.log("fileopen accept: " + fileopentype);
+           }
            fileInput.click() ;      
         }
         
@@ -394,13 +449,18 @@ ws.onmessage = function (evt) {
         
         else if (tokens[0] === "audioend")
         {    
-            if (receivedAudioSize !== expectedAudioSize)
+            if (receivedAudioSize != expectedAudioSize)
             {
                 console.log("Audio transfer failure, received=" + receivedAudioSize + ", expected=" + expectedAudioSize + ", filename=" + fileName);
                 retransmitCount++ ;
                 if (retransmitCount < 2)
-                    ws.send("retransmit "+fileName) ;
-                return ;
+                {
+                    console.log("Attempting retransmit, source="+audiosource+" filename="+fileName);
+                    ws.send("retransmit "+audiosource+" "+fileName+" "+expectedAudioSize+" "+receivedAudioSize) ;
+                    return ;
+                }
+                console.log("Continuing anyway, retransmit has been attempted ...");
+                ws.send("notify retransmit failed for "+audiosource+" "+fileName+" "+expectedAudioSize+" "+receivedAudioSize+" continuing anyway ...") ;
             }
             
             // Reassemble the file when finished.
@@ -421,10 +481,13 @@ ws.onmessage = function (evt) {
                     
                     source.buffer = buffer;
                     source.connect(audioContext.destination);
+                    console.log("Playback begins for "+audioNameMap.get(source));
+                    ws.send("notify playback begins for "+audioNameMap.get(source)) ;
                     source.start(0); // Play immediately
                     
                     source.onended = () => {
                        console.log("Playback finished for "+audioNameMap.get(source));
+                       ws.send("notify playback finished for "+audioNameMap.get(source)) ;
                        // Send an audiostop message for this sound back to the server.
                        for (const [key, value] of audioSourceMap) 
                        {
@@ -453,22 +516,36 @@ ws.onmessage = function (evt) {
             // Reassemble the file when finished
             const blob = new Blob(audioChunks, { type: 'application/octet-stream' });
             const url = URL.createObjectURL(blob);
-    
+
+            // Only one midi at a time
+            if (!(player === undefined) && !playerstopped) 
+            { 
+               console.log("midi player stoppped: " + audioNameMap.get(player));
+               player.stop() ;
+               playerstopped = true ;
+               ws.send("audiostop " + tokens[1] + " " + audioNameMap.get(player)) ;
+               window.onblur = null ;
+               window.onfocus = null ;
+            }
+
             // https://github.com/fraigo/javascript-midi-player
-            var player = new MIDIPlayer(url) ;
+            player = new MIDIPlayer(url) ;
             console.log("new player assigned") ;
             
             
             // the load event is triggered when the player is loaded
             player.onload = function(song){
+                console.log("Playback begins for "+audioNameMap.get(player));
+                ws.send("notify playback begins for "+audioNameMap.get(player)) ;
                 player.play() ;
                 playerstopped = false ;
             } ;
             
             // The end event is triggered when the song ends
             player.onend=function(){
-                console.log("Playback finished for "+audioNameMap.get(player));
                 player.stop() ;  // necessary to terminate the player.
+                console.log("Playback finished for "+audioNameMap.get(player));
+                ws.send("notify playback finished for "+audioNameMap.get(player)) ;
                 playerstopped = true ;
                 console.log("Removing windows events for " + tokens[1]);
                 window.onblur = null ;
@@ -511,7 +588,7 @@ ws.onmessage = function (evt) {
         // from being played.  The client can be playing more than one sound
         // concurrently.  We use the source map to find the audio playback 
         // source based on the file name.
-        // "audiostop id filename filesize" ;
+        // "audiostop id filename filesize type" ;
         
         else if (tokens[0] === "audiostop")
         {
@@ -521,6 +598,7 @@ ws.onmessage = function (evt) {
                console.log("Undefined source node for " + tokens[2]);
             else   
             {
+               console.log("source stoppped: " + audioNameMap.get(source));
                source.stop() ;
                playerstopped = true ;
                audioSourceMap.delete(tokens[1]);
@@ -528,9 +606,16 @@ ws.onmessage = function (evt) {
             }
             if (tokens[2] === "all" || source instanceof MIDIPlayer)
             {
-                console.log("Removing windows events for " + tokens[2]);
-                window.onblur = null ;
-                window.onfocus = null ;
+               if (!(player === undefined)) 
+               { 
+                   console.log("midi player all stoppped: " + audioNameMap.get(player));
+                   player.stop() ;
+                   playerstopped = true ;
+                   ws.send("audiostop " + tokens[1] + " " + audioNameMap.get(player)) ;
+               }
+               console.log("Removing windows events for " + tokens[2]);
+               window.onblur = null ;
+               window.onfocus = null ;
             }
         }
         
@@ -550,7 +635,7 @@ ws.onmessage = function (evt) {
         
         else if (tokens[0] === "timeoutcancel")
         {
-            hideNonBlockingAlert();                
+            hideNonBlockingAlert() ;                
         }
         
         // Send an inactivity timeout warning.
@@ -560,6 +645,29 @@ ws.onmessage = function (evt) {
             showNonBlockingAlert("Inactivity timeout. Session has closed.");
         }
         
+        // Send an inactivity timeout warning.
+        
+        else if (tokens[0] === "notify")
+        {
+            const msgtokens = tokens.slice(1) ;
+            const textmsg = msgtokens.join(" ") ;
+            showNonBlockingAlert(textmsg) ;
+        }
+        
+        else if (tokens[0] === "notifycancel")
+        {
+            hideNonBlockingAlert() ;                
+        }
+        
+        // A "browser" message attempts to open a new browser window.
+        // Run this in a setTimeout() function to bypass pop-up blockers.
+        // "browser url"
+        
+        else if (tokens[0] === "browser")
+        {
+            setTimeout(() => { window.open(tokens[1], '_blank'); }, 100);    
+        }
+                
         // Close the session websocket.
         
         else if (tokens[0] === "close")
@@ -567,6 +675,7 @@ ws.onmessage = function (evt) {
             console.log("Close socket request on client.");
             window.onblur = null ;
             window.onfocus = null ;
+            terminated = true ;
             ws.close(1000,"UltraKiss terminated.") ;
         }
     } 
@@ -603,7 +712,7 @@ ws.onmessage = function (evt) {
                 const cw = canvas.width ;
                 const ch = canvas.height ;
                 
-                if (w === cw)     
+                if (w === cw && h === ch)     
                     ctx.drawImage(img, 0, 0); 
                 else
                 {
@@ -654,6 +763,7 @@ ws.onmessage = function (evt) {
         }       
     }
 };
+}
 
 
 // This is an explicit request to capture a screen image from the server.
@@ -693,24 +803,25 @@ function sendAudioStop(source)
  * send these to the server.
  */
 
-const canvas = document.getElementById('myCanvas');
-const ctx = canvas.getContext('2d');
-
 function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     // Redraw content here if needed after resizing
     // Example: ctx.fillRect(0, 0, canvas.width, canvas.height);
+    console.log("Resize canvas, width=" + canvas.width + " height=" + canvas.height);  
     if (ws.readyState === WebSocket.OPEN) {
         ws.send("screen " + canvas.width + " " + canvas.height);
     }
 }
 
 // Initial resize
-resizeCanvas();
+// resizeCanvas();
 
 // Resize when the window is resized
 window.addEventListener('resize', resizeCanvas);  
+
+// Initial connection attempt
+connectWebSocket();
 
 
 // Mouse events 

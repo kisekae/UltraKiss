@@ -784,6 +784,7 @@ final class FileSave implements ActionListener
 
    public static void copyStream(InputStream in, File outFile) throws IOException 
    {
+      if (in == null) return ;
       OutputStream out = new FileOutputStream(outFile) ;
       byte[] buffer = new byte[1024] ;
       int n ;
