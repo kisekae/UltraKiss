@@ -516,7 +516,18 @@ ws.onmessage = function (evt) {
             // Reassemble the file when finished
             const blob = new Blob(audioChunks, { type: 'application/octet-stream' });
             const url = URL.createObjectURL(blob);
-    
+
+            // Only one midi at a time
+            if (!(player === undefined) && !playerstopped) 
+            { 
+               console.log("midi player stoppped: " + audioNameMap.get(player));
+               player.stop() ;
+               playerstopped = true ;
+               ws.send("audiostop " + tokens[1] + " " + audioNameMap.get(player)) ;
+               window.onblur = null ;
+               window.onfocus = null ;
+            }
+
             // https://github.com/fraigo/javascript-midi-player
             player = new MIDIPlayer(url) ;
             console.log("new player assigned") ;
@@ -587,6 +598,7 @@ ws.onmessage = function (evt) {
                console.log("Undefined source node for " + tokens[2]);
             else   
             {
+               console.log("source stoppped: " + audioNameMap.get(source));
                source.stop() ;
                playerstopped = true ;
                audioSourceMap.delete(tokens[1]);
@@ -594,8 +606,9 @@ ws.onmessage = function (evt) {
             }
             if (tokens[2] === "all" || source instanceof MIDIPlayer)
             {
-               if (!(player === undefined) && !("sound" === tokens[4])) 
+               if (!(player === undefined)) 
                { 
+                   console.log("midi player all stoppped: " + audioNameMap.get(player));
                    player.stop() ;
                    playerstopped = true ;
                    ws.send("audiostop " + tokens[1] + " " + audioNameMap.get(player)) ;

@@ -608,6 +608,7 @@ final class GifCel extends Cel
    void reset()
    {
       super.reset() ;
+      animate = (frames != null && frames.size() > 1) ;
    	loop = 0 ;
       setTime(0) ;
 		setFrame(0) ;

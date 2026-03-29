@@ -448,6 +448,8 @@ public class JettyWebSocketEndpoint
                            Kisekae.importfile(attributes.file.getPath()) ; 
                         else if ("importpalette".equals(editimport))
                            Kisekae.importcelpalette(attributes.file.getPath()) ; 
+                        else if ("expand".equals(editimport))
+                           Kisekae.expandfile(attributes.file.getPath()) ; 
                         else
                            Kisekae.loadfile(attributes.file.getPath()) ; 
                      }

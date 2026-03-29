@@ -5920,7 +5920,7 @@ final public class OptionsDialog extends KissDialog
          if (mf != null)
          {
             mf.setVisible(false) ;
-            if (maximizewindow)
+            if (maximizewindow && BrowserControl.isWindowsPlatform())
                mf.setExtendedState(JFrame.MAXIMIZED_BOTH);
             else
                mf.setExtendedState(JFrame.NORMAL) ;

@@ -1456,7 +1456,7 @@ abstract class Cel extends KissObject
    // Reset the cel to its initial state.  This restores cel visibility,
    // ghost state, transparency state, visibility state and z-order level.
    // If we were imported then we have not been saved and we must retain
-   // a loaded state.
+   // a loaded state or cached (or expansion set).
 
    void reset()
    {
@@ -1464,7 +1464,7 @@ abstract class Cel extends KissObject
       loop = 0 ;
       visible = true ;
       animate = false ;
-      loaded = isImported() || isUpdated() ;
+//    loaded = isImported() || isUpdated() || OptionsDialog.getCacheImage() ;
       ghost = initghost ;
       setVisible(initvisible) ;
       setLevel((Integer) getIdentifier()) ;

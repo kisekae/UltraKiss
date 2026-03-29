@@ -110,6 +110,7 @@ final public class FileOpen implements Cloneable
    private boolean error = false ;           // Error if no find
    private boolean closed = false ;          // True if closed
    private boolean editimport = false ;      // True if edit import 
+   private boolean loadexpand = false ;      // True if loading expansion 
    private boolean editimportpalette = false ;  // True if import cel palette
 
    // File Filters
@@ -254,6 +255,10 @@ final public class FileOpen implements Cloneable
 
 	void setEditImportPalette(boolean b) { editimportpalette = b ; }
 
+	// Function to set the loadexpand flag for expansion set opens.
+
+	void setLoadExpand(boolean b) { loadexpand = b ; }
+
    // Return the websocket indicator that a KiSS cel needs a palette.
    
    boolean getEditImportPalette() { return editimportpalette ; }
@@ -367,7 +372,10 @@ final public class FileOpen implements Cloneable
             int id = (parent instanceof KissFrame) ? ((KissFrame)parent).getUniqueIdentifier() : 0 ;
             Class parentclass = (parent != null) ? parent.getClass() : null ;
             String classname = (parentclass != null) ? parentclass.getSimpleName() : "Unknown" ;
-            String s = (editimport) ? "import" : (editimportpalette) ? "importpalette" : "noimport" ;
+            String s = (editimport) ? "import" : 
+                    (editimportpalette) ? "importpalette" : 
+                    (loadexpand) ? "expand" : 
+                     "noimport" ;
             String filtertype = "" ;
             if ("archives".equals(filefilter)) filtertype = ((SimpleFilter) archives).getExtensionList() ;
             else if ("kissarchives".equals(filefilter)) filtertype = ((SimpleFilter) kissarchives).getExtensionList() ;

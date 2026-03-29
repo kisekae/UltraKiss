@@ -1505,6 +1505,7 @@ final public class MainMenu extends KissMenu
       if (c == null) return ;
       
       FileOpen fdnew = new FileOpen(parent) ;
+      fdnew.setLoadExpand(true) ;
       fdnew.show(Kisekae.getCaptions().getString("OpenExpansionTitle")) ;
       ArchiveEntry ze = fdnew.getZipEntry() ;
       ArchiveFile zip = fdnew.getZipFile() ;
