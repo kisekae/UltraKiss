@@ -332,7 +332,27 @@ final class TextObject extends KissObject
    {
       if (text == null) return null ;
       String s = text.getText() ;
-      if (s == null) return null ;
+      if (s == null) 
+      {
+         // RTF documents can have issues.
+         Document doc = getDocument() ;
+         EditorKit kit = getEditorKit() ;
+         ByteArrayOutputStream baos = new ByteArrayOutputStream() ;
+         if (doc != null && kit instanceof RTFEditorKit)
+         {
+            try
+            {
+               RTFEditorKit rtfKit = (RTFEditorKit) kit ;
+               rtfKit.write(baos, doc, 0, doc.getLength());
+               s = baos.toString() ;
+            }
+            catch (Exception e)
+            {
+               System.out.println("TextObject: exception converting RTF document to text, " + e.toString());
+            }
+         }
+         if (s == null) return null ;
+      }
       return new ByteArrayInputStream(s.getBytes()) ;
    }
 

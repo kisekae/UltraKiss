@@ -77,6 +77,8 @@ final class ExportDialog extends KissDialog implements ActionListener, WindowLis
    private PageSet startpage = null ;
    private PanelFrame panel = null ;
    private ArchiveFile zip = null ;
+   private Vector contents = null ;
+   private String pathname = null ;
 
    // User interface objects
 
@@ -181,7 +183,7 @@ final class ExportDialog extends KissDialog implements ActionListener, WindowLis
 
       String s = (zip != null) ? zip.getFileName() : "" ;
       if (s.indexOf('.') > 0) s = s.substring(0,s.indexOf('.')) ;
-      ImagePrefix.setText("snapshot-") ;
+      ImagePrefix.setText("snapshot-page") ;
 		ImagePrefix.setPreferredSize(new Dimension(100, 21));
       if (directory == null) directory = dirname ;
       if (directory == null) directory = FileOpen.getDirectory() ;
@@ -334,6 +336,29 @@ final class ExportDialog extends KissDialog implements ActionListener, WindowLis
       {
          exportall = !ExportCurrent.isSelected() ;
       }
+      
+		if ("FileWriter Callback".equals(evt.getActionCommand()))
+		{
+         if (contents == null) return ;
+         String s1 = Kisekae.getCaptions().getString("ExportMessage1") ;
+         int i1 = s1.indexOf('[') ;
+         int j1 = s1.indexOf(']') ;
+         if (i1 >= 0 && j1 > i1)
+            s1 = s1.substring(0,i1) + contents.size() + s1.substring(j1+1) ;
+         Object o = ExportBox.getSelectedItem() ;
+         String type = (o != null) ? o.toString() : "" ;
+         String prefix = ImagePrefix.getText() ;
+
+         Cel c = (Cel) contents.elementAt(0) ;
+         ArchiveEntry ze = c.getZipEntry() ;
+         String pathname = ze.getPathName() ;
+         String s2 = Kisekae.getCaptions().getString("ExportMessage2") ;
+         int i2 = s2.indexOf('[') ;
+         int j2 = s2.indexOf(']') ;
+         if (i2 >= 0 && j2 > i2)
+            s2 = s2.substring(0,i2) + pathname + s2.substring(j2+1) ;
+         JOptionPane.showMessageDialog(parent,s2,s1,JOptionPane.INFORMATION_MESSAGE) ;         
+      }
 	}
 
 
@@ -341,7 +366,7 @@ final class ExportDialog extends KissDialog implements ActionListener, WindowLis
 
 	private void saveimage()
 	{
-      Vector contents = new Vector() ;
+      contents = new Vector() ;
       String prefix = ImagePrefix.getText() ;
       Object o = ExportBox.getSelectedItem() ;
       String type = (o != null) ? o.toString() : null ;
@@ -380,7 +405,7 @@ final class ExportDialog extends KissDialog implements ActionListener, WindowLis
                
                // Create filename and cel
                
-               String filename = prefix + n + "." + type;
+               String filename = prefix + "[" + n + "]" + "." + type;
                ArchiveEntry ze = new DirEntry(directory,filename,zip) ;
                Cel c = Cel.createCel(zip,filename,null) ;
                if (c == null) return ;
@@ -428,6 +453,7 @@ final class ExportDialog extends KissDialog implements ActionListener, WindowLis
          // Write all pages
          
          FileWriter fw = new FileWriter(parent,zip,contents) ;
+        	fw.callback.addActionListener(this) ;
          Thread thread = new Thread(fw) ;
          thread.start() ;
       }
