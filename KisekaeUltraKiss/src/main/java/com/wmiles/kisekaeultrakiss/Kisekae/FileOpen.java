@@ -1078,16 +1078,19 @@ final public class FileOpen implements Cloneable
 			// Open the URL file.  Note that an open() request does not adjust
 			// the current dirname for the active directory on the host system.
 
-			if (".zip".equals(extension))
-				zip = new PkzFile(this,urlfile,mode) ;
-         else if (".gzip".equals(extension))
-				zip = new PkzFile(this,urlfile,mode) ;
-			else if (".jar".equals(extension))
-				zip = new PkzFile(this,urlfile,mode) ;
-			else if (".lzh".equals(extension))
-				zip = new LhaFile(this,urlfile,mode) ;
-			else
-				zip = new DirFile(this,(f.isDirectory()) ? urlfile : f.getParent()) ;
+         if (zip == null)
+         {
+   			if (".zip".equals(extension))
+   				zip = new PkzFile(this,urlfile,mode) ;
+            else if (".gzip".equals(extension))
+   				zip = new PkzFile(this,urlfile,mode) ;
+   			else if (".jar".equals(extension))
+   				zip = new PkzFile(this,urlfile,mode) ;
+   			else if (".lzh".equals(extension))
+   				zip = new LhaFile(this,urlfile,mode) ;
+   			else
+   				zip = new DirFile(this,(f.isDirectory()) ? urlfile : f.getParent()) ;
+         }
 
       	// Locate the required archive entry in the file.  Search on name only.
 

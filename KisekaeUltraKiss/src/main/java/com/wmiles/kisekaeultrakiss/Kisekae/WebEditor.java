@@ -64,6 +64,7 @@ import java.awt.Cursor ;
 final class WebEditor extends JEditorPane
 {
    private String hosted = null ;
+   private String encoding = "" ;
 
     /**
      * Sets the current URL being displayed.  The content type of the
@@ -127,9 +128,17 @@ final class WebEditor extends JEditorPane
       if (!(urlname.startsWith("file:") || urlname.startsWith("jar:")))
          if (hosted != null && !urlname.startsWith(hosted))
             throw new IOException("URL not found, " + urlname) ;
-      if (OptionsDialog.getDebugControl())
+      if (OptionsDialog.getDebugPortal())
          PrintLn.println("WebEditor: set page " + page.toString()) ;
- 		Kisekae.setCursor(this,Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
+      
+      // Correct file URL where directory contains spaces that were encoded as %20
+      
+      if (urlname.startsWith("file:"))
+      {
+         String s = page.getPath() ;
+         File f = new File(s) ;
+         page = f.toURI().toURL() ;
+      }
       super.setPage(page) ;
    }
    
@@ -144,7 +153,14 @@ final class WebEditor extends JEditorPane
       URLConnection c = page.openConnection() ;
       // HTTP Response code 403 for URL
 //      c.addRequestProperty("User-Agent", "UltraKiss");
+      String contentType = c.getContentType() ;
+      int i = contentType.indexOf("charset=") ;
+      encoding = (i > 0) ? contentType.substring(i) : "" ;
+      setContentType("text/html; " + encoding);
       InputStream is = c.getInputStream();     
       return is ;
    }
+   
+   protected String getEncoding() { return encoding ; }
+   
 }

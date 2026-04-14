@@ -1308,7 +1308,8 @@ final class FKissFrame extends KissFrame
       row -= 2 ;
       if (row < 0) row = 0 ;
 		int ypos = row * h ;
-		view.setViewPosition(new Point(r.x,ypos)) ;
+      if (me.isVisible()) 
+         view.setViewPosition(new Point(r.x,ypos)) ;
    }
 
 
