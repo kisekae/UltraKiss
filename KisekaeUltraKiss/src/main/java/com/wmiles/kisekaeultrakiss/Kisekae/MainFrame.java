@@ -371,6 +371,7 @@ final public class MainFrame extends KissFrame
                   public void run() 
                   { 
                      final WebFrame wf = new WebFrame(me) ;
+                     mainmenu.setWebFrame(wf) ;
                      Dimension d = Kisekae.getScreenSize() ;
                      PrintLn.println("MainFrame: load portal, set WebFrame size to " + d.width + " " + d.height) ;
                      wf.setSize(d) ;
@@ -1217,7 +1218,17 @@ final public class MainFrame extends KissFrame
                if (((ArchiveFile) include).isUpdated()) changed = true ;
             }
          }
-
+         Vector palettes = config.getPalettes() ;
+         if (palettes != null)
+         {
+            for (int i = 0 ; i < palettes.size(); i++)
+            {
+               Object palette = palettes.elementAt(i) ;
+               if (!(palette instanceof Palette)) continue ;
+               if (((Palette) palette).isUpdated()) changed = true ;
+            }
+         }
+         
 			// Show the save dialog.
          
          if (changed)

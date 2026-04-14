@@ -90,8 +90,8 @@ class UrlLoader extends KissFrame
 
 	// Stream references
 
-	protected InputStream is = null ;			// The file input stream
-	protected OutputStream os = null ;			// The file output stream
+	protected InputStream is = null ;		// The file input stream
+	protected OutputStream os = null ;		// The file output stream
 
    // Control definitions
 
@@ -168,10 +168,6 @@ class UrlLoader extends KissFrame
       CANCEL.addActionListener(this) ;
       LOAD.addActionListener(this) ;
       boolean b = OptionsDialog.getShowLoad() ;
-      KissFrame f = Kisekae.getBatchFrame() ;
-      boolean b1 = (f instanceof com.wmiles.kisekaeultrakiss.WebSearch.WebSearchFrame)
-         ? !((com.wmiles.kisekaeultrakiss.WebSearch.WebSearchFrame) f).isLocalSearch() : true ;
-      if (OptionsDialog.getUseDefaultWS()) b = b1 ;
       if (parent instanceof WebFrame)
          stop = ((WebFrame) parent).getCancel(url) ;
       if ((!Kisekae.isBatch() || b) && !stop) setVisible(true) ;
@@ -356,8 +352,8 @@ class UrlLoader extends KissFrame
          // Open the URL session.
 
          bytes = 0 ;
-         InputStream is = null ;
-         OutputStream os = null ;
+         is = null ;
+         os = null ;
          showStatus(Kisekae.getCaptions().getString("OpenConnectionStatus")) ;
          if (icon != null) ErrorMsg.setIcon(icon);
          URLConnection c = openurl.openConnection() ;
@@ -545,7 +541,6 @@ class UrlLoader extends KissFrame
             {
                ByteArrayOutputStream bos = (ByteArrayOutputStream) os ;
                memfile = new MemFile(openurl.getFile(),bos.toByteArray()) ;
-               os = null ;
             }
          }
 
@@ -554,6 +549,8 @@ class UrlLoader extends KissFrame
    		// currently has active focus.  Run the callback on the AWT
          // thread for thread safety.
 
+         is = null ;
+         os = null ;
          if (!stop) activeloader = null ;
          if (fatal && !Kisekae.isBatch()) return ;
    		if (active || autoload || Kisekae.isBatch())
@@ -698,6 +695,10 @@ class UrlLoader extends KissFrame
 
    Thread getLoadThread() { return thread ; }
 
+   // Method to determine if the loader is active.
+
+   boolean isRunning() { return (thread == null) ? false : thread.isAlive() ; }
+
    // Method to return our URL.
 
    URL getURL() { return openurl ; }
@@ -750,9 +751,9 @@ class UrlLoader extends KissFrame
 	public void close()
 	{
 		super.close() ;
-      try { is.close() ; }
+      try { if (is != null) is.close() ; }
       catch (Exception e) {}
-      try { os.close() ; }
+      try { if (os != null) os.close() ; }
       catch (Exception e) {}
       callback.removeActionListener(null) ;
       flush() ;
@@ -763,6 +764,8 @@ class UrlLoader extends KissFrame
 
 	private void flush()
    {
+      is = null ;
+      os = null ;
       thread = null ;
       setVisible(false) ;
       CANCEL.removeActionListener(this) ;

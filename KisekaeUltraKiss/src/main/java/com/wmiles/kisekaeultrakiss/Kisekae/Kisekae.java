@@ -71,6 +71,7 @@ import com.wmiles.kisekaeultrakiss.WebSocket.JettyServer ;
 import com.wmiles.kisekaeultrakiss.WebSocket.JettyWebSocketEndpoint;
 import com.wmiles.kisekaeultrakiss.WebSocket.CursorNameMapper;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URI;
 
 /**                     Kisekae UltraKiss Version 3.4
  *
@@ -110,6 +111,7 @@ public class Kisekae extends Applet
    private static String icondir1 = "Images/icon.gif" ; // Default icon
    private static String tipsapp = "Tips/tip.html" ; // Tips dir
    private static String tipsindex = "Tips/index.txt" ; // Tips index
+   private static String resourceindex = "hello.html" ; // top level resource
    private static String packagename = "Kisekae" ;	// Name of our package
    private static String encoding = null ;         // The language encoding
    private static Locale locale = null ;           // The current locale
@@ -197,7 +199,7 @@ public class Kisekae extends Applet
 
       LogFile.start() ;
       builddate = Calendar.getInstance() ;
-      builddate.set(2026,3-1,29) ;
+      builddate.set(2026,4-1,14) ;
       
       // Restore the properties.
       
@@ -900,7 +902,7 @@ public class Kisekae extends Applet
          mainframe.closeframe() ;
          try {Thread.currentThread().sleep(300) ; }
          catch (InterruptedException e) { } 
-         mainframe.loadfile(file) ;
+         mainframe.loadfile(file+",.cnf") ;
       }
    }
 
@@ -911,6 +913,14 @@ public class Kisekae extends Applet
    
    public void close() 
    {
+      if (!javax.swing.SwingUtilities.isEventDispatchThread())
+      {
+      	Runnable runner = new Runnable()
+			{ public void run() { close() ; } } ;
+   		javax.swing.SwingUtilities.invokeLater(runner) ;
+         return ;
+      }
+      
       batch = false ;
       batchframe = null ;
       if (mainframe != null)
@@ -919,7 +929,8 @@ public class Kisekae extends Applet
          mainframe.dispose() ;
       }      
       mainframe = new MainFrame(this) ;
-//    init() ;
+      mainframe.setVisible(true) ;
+      init() ;
    }
 
 
@@ -1503,6 +1514,24 @@ public class Kisekae extends Applet
       return null ;
    }
 
+   
+   public static URL getResourceBase() 
+   {
+      try
+      {
+         URL baseResource = getResource(resourceindex) ;
+         // Resolve file to directory
+         URI webRootUri = baseResource.toURI().resolve("./").normalize();
+         return webRootUri.toURL() ;
+      }
+      catch (Exception e)
+      {
+         PrintLn.println("Kisekae: unable to obtain resource base directory for " + resourceindex) ;
+         e.printStackTrace() ;        
+      }
+      return null ;
+   }
+   
 
    
    // Set the default code base.
@@ -1587,6 +1616,11 @@ public class Kisekae extends Applet
    {
       accept = b ; 
    }
+   
+   public static void setBatch(boolean b) 
+   {
+      batch = b ; 
+   }
 
    // When we are a server (websocket) we do not know the client screen size
    // until such time that the socket is established and the client sends a 
@@ -1668,6 +1702,14 @@ public class Kisekae extends Applet
       
    public static void setCursor(Component c, Cursor cursor)
    {
+ 		if (!SwingUtilities.isEventDispatchThread())
+		{
+			Runnable awt = new Runnable()
+			{ public void run() { setCursor(c,cursor) ; } } ;
+			SwingUtilities.invokeLater(awt) ;
+			return ;
+		}
+      
       if (c == null || cursor == null) return ;
       c.setCursor(cursor) ;
       if (!Kisekae.isWebsocket()) return ;
@@ -2676,7 +2718,7 @@ public class Kisekae extends Applet
                 + "KiSS sets must be saved as LZH or ZIP archive files for transfer to your computer.<br><br>"
                 + "To load and run your own KiSS sets packaged in LZH or ZIP files use <a href=\"file://fileopen\">File-Open</a>.<br>"
                 + "To save LZH or ZIP or other files from UltraKiss to your local computer use <a href=\"\">File-Save As</a>.<br>"
-                + "To run online KiSS demonstration sets available on the Internet use <a href=\"file://openportal\">File-Open Portal</a>.<br><br>"
+                + "To load and run thousands of online KiSS sets available on the Internet use <a href=\"file://openportal\">File-Open Portal</a>.<br><br>"
                 + "For full features without limitations <a href=\"https://github.com/kisekae/UltraKiss/releases\">download and install UltraKiss</a> from GitHub.<br><br>"
                 + "If you do not know what KiSS is, see the UltraKiss documentation using <a href=\"file://helpcontents\">Help-Contents</a>.<br>"
                 + "To learn how to make or visually edit KiSS sets within UltraKiss see <a href=\"file://helptutorial\">Help-Tutorials</a>.<br>"

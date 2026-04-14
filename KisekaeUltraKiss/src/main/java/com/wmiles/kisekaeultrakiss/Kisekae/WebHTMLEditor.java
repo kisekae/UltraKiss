@@ -55,6 +55,9 @@ package com.wmiles.kisekaeultrakiss.Kisekae ;
 *
 */
 
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.net.URL;
 import java.util.Hashtable;
 import javax.swing.text.* ;
 import javax.swing.text.html.* ;
@@ -63,7 +66,7 @@ import javax.swing.text.html.* ;
 final class WebHTMLEditor extends HTMLEditorKit
 {
 
-   private static Hashtable imagecache = new Hashtable() ; // Image cache
+   private static Hashtable imagecache = new ImageCache() ; // Image cache
    
 /*
    The JEditorPane.setPage() does an asynchronous loading of HTML
@@ -107,7 +110,30 @@ final class WebHTMLEditor extends HTMLEditorKit
    
    // Specific methods to manage cache
       
-   public Hashtable getImageCache() { return imagecache ; }
+   public static Hashtable getImageCache() { return imagecache ; }
    
    public void clearCache() { imagecache.clear() ; }
+   
+   
+   // A simple cache that loads images on demand and stores them
+   static class ImageCache extends Hashtable<URL, Image> 
+   {
+      @Override
+      public synchronized Image get(Object key) {
+         if (key == null) return null ;
+         Image result = super.get(key);
+         if (result != null && OptionsDialog.getDebugPortal())
+            PrintLn.println("WebHTMLEditor image cache hit for: " + key) ;
+         if (result == null && key instanceof URL) 
+         {
+            if (OptionsDialog.getDebugPortal())
+               PrintLn.println("WebHTMLEditor image cache put request: " + key) ;
+            // Load the image if it's not in the cache yet
+            result = Toolkit.getDefaultToolkit().createImage((URL) key);
+            if (result == null) return null ;
+            put((URL) key, result);
+         }
+         return result;
+      }
+   }
 }

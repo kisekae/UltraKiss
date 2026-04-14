@@ -106,6 +106,7 @@ final public class OptionsDialog extends KissDialog
 	private static boolean debugdisabled = false ;
 	private static boolean debugcomponent = false ;
 	private static boolean debugwebsocket = false ;
+	private static boolean debugportal = false ;
 	private static boolean javasound = true ;
 	private static boolean systemlf = false ;
 	private static boolean javalf = true ;
@@ -241,7 +242,7 @@ final public class OptionsDialog extends KissDialog
 
 	private static boolean savearchive = true ;
 	private static boolean saveimage = true ;
-	private static boolean saveaszip = true ;
+	private static boolean saveaszip = false ;
 	private static boolean showload = false ;
 	private static boolean usedefaultws = true ;
 	private static boolean clearmaster = false ;
@@ -280,6 +281,7 @@ final public class OptionsDialog extends KissDialog
 	private static boolean initdebugdisabled = debugdisabled ;
 	private static boolean initdebugcomponent = debugcomponent ;
 	private static boolean initdebugwebsocket = debugwebsocket ;
+	private static boolean initdebugportal = debugportal ;
 	private static boolean initjavasound = javasound ;
 	private static boolean initsystemlf = systemlf ;
 	private static boolean initjavalf = javalf ;
@@ -602,6 +604,7 @@ final public class OptionsDialog extends KissDialog
 	private JCheckBox DisabledDebug = new JCheckBox();
 	private JCheckBox ComponentDebug = new JCheckBox();
 	private JCheckBox WebSocketDebug = new JCheckBox();
+	private JCheckBox PortalDebug = new JCheckBox();
 	private JCheckBox JavaSoundDebug = new JCheckBox();
 	private JCheckBox SystemLF = new JCheckBox();
 	private JCheckBox JavaLF = new JCheckBox();
@@ -1231,6 +1234,9 @@ final public class OptionsDialog extends KissDialog
 		WebSocketDebug.setText(Kisekae.getCaptions().getString("OptionsLogWebSocketDebug"));
 		WebSocketDebug.setToolTipText(Kisekae.getCaptions().getString("ToolTipWebSocketDebug"));
 		WebSocketDebug.setSelected(debugwebsocket);
+		PortalDebug.setText(Kisekae.getCaptions().getString("OptionsLogPortalDebug"));
+		PortalDebug.setToolTipText(Kisekae.getCaptions().getString("ToolTipPortalDebug"));
+		PortalDebug.setSelected(debugportal);
 		jLabel2.setPreferredSize(new Dimension(60, 17));
 		jLabel2.setText(Kisekae.getCaptions().getString("OptionsDialogLogFileText"));
 		jLabel2.setToolTipText(Kisekae.getCaptions().getString("ToolTipLogFile"));
@@ -2101,6 +2107,7 @@ final public class OptionsDialog extends KissDialog
 		jPanel5.add(DisabledDebug, null);
 		jPanel5.add(ComponentDebug, null);
 		jPanel5.add(WebSocketDebug, null);
+		jPanel5.add(PortalDebug, null);
 		jPanel5a.add(jPanel6, BorderLayout.NORTH);
 		jPanel6.add(jLabel2, BorderLayout.WEST);
 		jPanel6.add(LogFileBox, BorderLayout.CENTER);
@@ -2314,6 +2321,7 @@ final public class OptionsDialog extends KissDialog
 	static public boolean getDebugDisabled() { return debugdisabled ; }
 	static public boolean getDebugComponent() { return debugcomponent ; }
 	static public boolean getDebugWebSocket() { return debugwebsocket ; }
+	static public boolean getDebugPortal() { return debugportal ; }
 	static public boolean getJavaSound() { return javasound ; }
 	static public boolean getBackupFileOn() { return backup ; }
 	static public boolean getSaveSourceOn() { return savesource ; }
@@ -2675,6 +2683,7 @@ final public class OptionsDialog extends KissDialog
 	static public void setDebugDisabled(boolean b) { debugdisabled = b ; }
 	static public void setDebugComponent(boolean b) { debugcomponent = b ; }
 	static public void setDebugWebSocket(boolean b) { debugwebsocket = b ; }
+	static public void setDebugPortal(boolean b) { debugportal = b ; }
 	static public void setJavaSound(boolean b) { javasound = b ; }
 	static public void setSaveSourceOn(boolean b) { savesource = b ; }
 	static public void setShowDLPrompt(boolean b) { showdlprompt = b ; }
@@ -3002,6 +3011,7 @@ final public class OptionsDialog extends KissDialog
       else if ("debugdisabled".equalsIgnoreCase(option)) setDebugDisabled(b) ;
       else if ("debugcomponent".equalsIgnoreCase(option)) setDebugComponent(b) ;
       else if ("debugwebsocket".equalsIgnoreCase(option)) setDebugWebSocket(b) ;
+      else if ("debugportal".equalsIgnoreCase(option)) setDebugPortal(b) ;
       else if ("javasound".equalsIgnoreCase(option)) setJavaSound(b) ;
       else if ("systemlf".equalsIgnoreCase(option)) setSystemLF(b) ;
       else if ("javalf".equalsIgnoreCase(option)) setJavaLF(b) ;
@@ -3162,6 +3172,7 @@ final public class OptionsDialog extends KissDialog
       else if ("debugdisabled".equalsIgnoreCase(option)) s += getDebugDisabled() ;
       else if ("debugcomponent".equalsIgnoreCase(option)) s += getDebugComponent() ;
       else if ("debugwebsocket".equalsIgnoreCase(option)) s += getDebugWebSocket() ;
+      else if ("debugportal".equalsIgnoreCase(option)) s += getDebugPortal() ;
       else if ("javasound".equalsIgnoreCase(option)) s += getJavaSound() ;
       else if ("systemlf".equalsIgnoreCase(option)) s += getSystemLF() ;
       else if ("applemac".equalsIgnoreCase(option)) s += getAppleMac() ;
@@ -3325,6 +3336,7 @@ final public class OptionsDialog extends KissDialog
 		DisabledDebug.setSelected(debugdisabled) ;
 		ComponentDebug.setSelected(debugcomponent) ;
 		WebSocketDebug.setSelected(debugwebsocket) ;
+		PortalDebug.setSelected(debugportal) ;
 		JavaSoundDebug.setSelected(javasound) ;
       SystemLF.setSelected(systemlf);
       JavaLF.setSelected(javalf);
@@ -3568,6 +3580,7 @@ final public class OptionsDialog extends KissDialog
 		debugdisabled = DisabledDebug.isSelected() ;
 		debugcomponent = ComponentDebug.isSelected() ;
 		debugwebsocket = WebSocketDebug.isSelected() ;
+		debugportal = PortalDebug.isSelected() ;
 		javasound = JavaSoundDebug.isSelected() ;
       systemlf = SystemLF.isSelected() ;
       javalf = JavaLF.isSelected() ;
@@ -3838,6 +3851,7 @@ final public class OptionsDialog extends KissDialog
 		debugdisabled = initdebugdisabled ;
 		debugcomponent = initdebugcomponent ;
 		debugwebsocket = initdebugwebsocket ;
+		debugportal = initdebugportal ;
 		javasound = initjavasound ;
 //    backup = initbackup ;
 //    savesource = initsavesource ;
@@ -3979,6 +3993,7 @@ final public class OptionsDialog extends KissDialog
 	   initdebugdisabled = debugdisabled ;
 	   initdebugcomponent = debugcomponent ;
 	   initdebugwebsocket = debugwebsocket ;
+	   initdebugportal = debugportal ;
 	   initjavasound = javasound ;
       initsystemlf = systemlf ;
       initjavalf = javalf ;
@@ -4129,6 +4144,7 @@ final public class OptionsDialog extends KissDialog
       debugdisabled = false ;
       debugcomponent = false ;
       debugwebsocket = false ;
+      debugportal = false ;
       javasound = true ;
       systemlf = false ;
       javalf = true ;
@@ -4302,6 +4318,7 @@ final public class OptionsDialog extends KissDialog
 	   if (initdebugdisabled != DisabledDebug.isSelected()) return true ;
 	   if (initdebugcomponent != ComponentDebug.isSelected()) return true ;
 	   if (initdebugwebsocket != WebSocketDebug.isSelected()) return true ;
+	   if (initdebugportal != PortalDebug.isSelected()) return true ;
 	   if (initjavasound != JavaSoundDebug.isSelected()) return true ;
 //    if (initbackup != Backup.isSelected()) return true ;
 //    if (initsavesource != SaveSource.isSelected()) return true ;
@@ -4441,6 +4458,7 @@ final public class OptionsDialog extends KissDialog
 	   if (debugdisabled != DisabledDebug.isSelected()) return true ;
 	   if (debugcomponent != ComponentDebug.isSelected()) return true ;
 	   if (debugwebsocket != WebSocketDebug.isSelected()) return true ;
+	   if (debugportal != PortalDebug.isSelected()) return true ;
 	   if (javasound != JavaSoundDebug.isSelected()) return true ;
 //    if (backup != Backup.isSelected()) return true ;
 //    if (savesource != SaveSource.isSelected()) return true ;
@@ -4748,6 +4766,7 @@ final public class OptionsDialog extends KissDialog
       p.put("debugdisabled",toString2(debugdisabled)) ;
       p.put("debugcomponent",toString2(debugcomponent)) ;
       p.put("debugwebsocket",toString2(debugwebsocket)) ;
+      p.put("debugportal",toString2(debugportal)) ;
       p.put("javasound",toString2(javasound)) ;
       p.put("systemlf",toString2(systemlf)) ;
       p.put("javalf",toString2(javalf)) ;
@@ -6520,6 +6539,7 @@ final public class OptionsDialog extends KissDialog
 //	   if (debugdisabled != initdebugdisabled) writeLine(out,"; debugdisabled = " + debugdisabled) ;
 //	   if (debugcomponent != initdebugcomponent) writeLine(out,"; debugcomponent = " + debugcomponent) ;
 //	   if (debugwebsocket != initdebugwebsocket) writeLine(out,"; debugwebsocket= " + debugwebsocket) ;
+//	   if (debugportal != initdebugportal) writeLine(out,"; debugportal= " + debugportal) ;
 //	   if (debugmouse != initdebugmouse) writeLine(out,"; debugmouse = " + debugmouse) ;
 //	   if (systemlf != initsystemlf) writeLine(out,"; systemlf = " + systemlf) ;
 //	   if (javalf != initjavalf) writeLine(out,"; javalf = " + javalf) ;

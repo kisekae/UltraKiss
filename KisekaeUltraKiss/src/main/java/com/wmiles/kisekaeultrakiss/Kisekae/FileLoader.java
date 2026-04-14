@@ -200,12 +200,10 @@ final public class FileLoader extends KissFrame
       FileOpen fileopen = (mm != null) ? mm.getFileOpen() : null ;
       boolean silent = (fileopen != null) ? fileopen.isSilent() : false ;
       
-      boolean b = OptionsDialog.getShowLoad() ;
-      KissFrame f = Kisekae.getBatchFrame() ;
-      boolean b1 = (f instanceof com.wmiles.kisekaeultrakiss.WebSearch.WebSearchFrame)
-         ? !((com.wmiles.kisekaeultrakiss.WebSearch.WebSearchFrame) f).isLocalSearch() : !silent ;
-      if (OptionsDialog.getUseDefaultWS()) b = b1 ;
-      if (!Kisekae.isBatch() || b) setVisible(b) ;
+      if (Kisekae.isBatch()) 
+         setVisible(OptionsDialog.getShowLoad()) ;
+      else
+         setVisible(!silent) ;
 	}
 
    // User interface initialization.

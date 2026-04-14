@@ -97,6 +97,7 @@ import javax.swing.* ;
 import javax.swing.event.* ;
 import javax.swing.text.* ;
 import javax.swing.text.html.* ;
+import java.nio.charset.StandardCharsets ;
 import com.wmiles.kisekaeultrakiss.Kisekae.Kisekae ;
 import com.wmiles.kisekaeultrakiss.Kisekae.MainFrame ; 
 import com.wmiles.kisekaeultrakiss.Kisekae.MainMenu ;
@@ -191,7 +192,8 @@ final public class WebSearchFrame extends KissFrame
    {
       StyleConstants.setForeground(errorset,Color.red) ;
       StyleConstants.setForeground(warnset,Color.blue) ;
-      StyleConstants.setForeground(goodset,Color.gray) ;
+      StyleConstants.setForeground(normalset,Color.gray) ;
+      StyleConstants.setForeground(goodset,new Color(0, 110, 0)) ;
    }
 
    // Callback button for URL validation.
@@ -200,6 +202,7 @@ final public class WebSearchFrame extends KissFrame
    protected JButton valcallback = new JButton("WebFrame Val Callback") ;
    protected JButton bldcallback = new JButton("WebFrame Bld Callback") ;
    protected JButton idxcallback = new JButton("WebFrame Idx Callback") ;
+   protected JButton schcallback = new JButton("WebFrame Sch Callback") ;
 
 	// Register for events.
 
@@ -235,10 +238,17 @@ final public class WebSearchFrame extends KissFrame
       this.parent = parent ;
       init() ;
       super.open() ;
+      Dimension d = Kisekae.getScreenSize() ;
+      d.height = (int) (0.95 * d.height) ;
+      setPreferredSize(new Dimension(d)) ;
+      setMaximumSize(new Dimension(d)) ;
+      setMinimumSize(new Dimension(d)) ;
+      pack() ;
       setVisible(true) ;
       if (helper != null) helper.setSize(getSize());
       if (parent != null) parent.setVisible(false) ;
       setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+      Kisekae.setCursor(this,Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
    }
 
 
@@ -300,8 +310,9 @@ final public class WebSearchFrame extends KissFrame
       fileMenu.add((cancel = new JMenuItem(Kisekae.getCaptions().getString("CancelMessage")))) ;
       cancel.setMnemonic(KeyEvent.VK_C) ;
       cancel.addActionListener(this) ;
+		cancel.setEnabled(activated) ; 
       fileMenu.addSeparator() ;
-      fileMenu.add((exit = new JMenuItem(Kisekae.getCaptions().getString("MenuFileExit")))) ;
+      fileMenu.add((exit = new JMenuItem(Kisekae.getCaptions().getString("MenuFileExitWebSearch")))) ;
       exit.setMnemonic(KeyEvent.VK_X) ;
       exit.addActionListener(this) ;
       mb.add(fileMenu) ;
@@ -353,6 +364,7 @@ final public class WebSearchFrame extends KissFrame
       valcallback.addActionListener(this);
       bldcallback.addActionListener(this);
       idxcallback.addActionListener(this);
+      schcallback.addActionListener(this);
       addWindowListener(this) ;
   }
 
@@ -419,7 +431,9 @@ final public class WebSearchFrame extends KissFrame
          baselocation = pageurl.toExternalForm() ;
          enterurl.setText(baselocation) ;
          activebtn.setEnabled(true) ;
-
+         cancel.setEnabled(true) ;
+         split1.setDividerLocation(0.5) ;
+ 
          // Initiate the parse.
 
          addTrace("Begin WebSearch",1) ;
@@ -429,10 +443,10 @@ final public class WebSearchFrame extends KissFrame
          GetLinks.reset() ;
          ValidateLinks.reset() ;
          BuildForm.reset() ;
-         scheduler = new Scheduler() ;
+         scheduler = new Scheduler(this) ;
          scheduler.startScheduler() ;
          addTrace("Begin URL scan",1) ;
-         GetLinks gl = new GetLinks(this,location) ;
+         GetLinks gl = new GetLinks(this,baselocation) ;
          Thread thread = new Thread(group,gl) ;
          thread.start() ;
       }
@@ -441,6 +455,8 @@ final public class WebSearchFrame extends KissFrame
          String s = e.toString() + "\n" + location ;
          JOptionPane.showMessageDialog(this,s,"Invalid URL",JOptionPane.ERROR_MESSAGE) ;
          activated = false ;
+         activebtn.setEnabled(false) ;
+         cancel.setEnabled(false) ;
       }
       finally
       {
@@ -599,14 +615,15 @@ final public class WebSearchFrame extends KissFrame
 
          if (source == cancel)
          {
+            PrintLn.println("WebSearch: cancel request.") ;
             stop = true ;
             GetLinks.stopsearch() ;
             ValidateLinks.stopsearch() ;
             BuildForm.stopsearch() ;
             Scheduler.stopScheduler() ;
             activebtn.setEnabled(false) ;
-            scheduler = null ;
             showStatus("Search cancelled") ;
+            addTrace("Search cancelled",2) ;
             waitbox = new WaitDialog(this,"Search interrupted, please wait ...") ;
             waitbox.setVisible(true) ;
             return ;
@@ -648,6 +665,7 @@ final public class WebSearchFrame extends KissFrame
          if (source == enterurl)
          {
             if (activated) return ;
+            stop = true ;
             GetLinks.stopsearch() ;
             ValidateLinks.stopsearch() ;
             BuildForm.stopsearch() ;
@@ -675,12 +693,45 @@ final public class WebSearchFrame extends KissFrame
                ((Timer) source).start();
          }
 
+         // The callback when the Scheduler is stopped.
+
+         if ("WebFrame Sch Callback".equals(evt.getActionCommand()))
+         {
+            if (terminating) { close() ; return ; }
+            if (waitbox != null) 
+            { 
+               waitbox.close() ; 
+               waitbox = null ;
+               activated = false ;
+               activebtn.setEnabled(false) ;
+         		cancel.setEnabled(false) ; 
+               JOptionPane.showMessageDialog(this,
+                  "WebSearch has been cancelled.",
+                  Kisekae.getCaptions().getString("OptionsDialogInfoTitle"),
+                  JOptionPane.INFORMATION_MESSAGE) ;
+            }
+            if (stop) return ;
+         }           
+
          // The callback when URL's are determined.
 
          if ("WebFrame URL Callback".equals(evt.getActionCommand()))
          {
-            if (waitbox != null) { waitbox.close() ; waitbox = null ; }
             if (terminating) { close() ; return ; }
+            if (waitbox != null) 
+            { 
+               waitbox.close() ; 
+               waitbox = null ;
+               activated = false ;
+               activebtn.setEnabled(false) ;
+         		cancel.setEnabled(false) ; 
+               JOptionPane.showMessageDialog(this,
+                  "WebSearch has been cancelled.",
+                  Kisekae.getCaptions().getString("OptionsDialogInfoTitle"),
+                  JOptionPane.INFORMATION_MESSAGE) ;
+            }
+            if (stop) return ;
+            
             Vector v = GetLinks.getArchives() ;
             if (v.size() > 0 && !stop)
             {
@@ -697,8 +748,21 @@ final public class WebSearchFrame extends KissFrame
 
          if ("WebFrame Val Callback".equals(evt.getActionCommand()))
          {
-            if (waitbox != null) { waitbox.close() ; waitbox = null ; }
             if (terminating) { close() ; return ; }
+            if (waitbox != null) 
+            { 
+               waitbox.close() ; 
+               waitbox = null ; 
+               activated = false ;
+               activebtn.setEnabled(false) ;
+         		cancel.setEnabled(false) ; 
+               JOptionPane.showMessageDialog(this,
+                  "WebSearch has been cancelled.",
+                  Kisekae.getCaptions().getString("OptionsDialogInfoTitle"),
+                  JOptionPane.INFORMATION_MESSAGE) ;
+            }
+            if (stop) return ;
+            
             Vector v = ValidateLinks.getSetState() ;
             if (v.size() > 0)
             {
@@ -716,8 +780,21 @@ final public class WebSearchFrame extends KissFrame
 
          if ("WebFrame Bld Callback".equals(evt.getActionCommand()))
          {
-            if (waitbox != null) { waitbox.close() ; waitbox = null ; }
             if (terminating) { close() ; return ; }
+            if (waitbox != null) 
+            { 
+               waitbox.close() ; 
+               waitbox = null ; 
+               activated = false ;
+               activebtn.setEnabled(false) ;
+         		cancel.setEnabled(false) ; 
+               JOptionPane.showMessageDialog(this,
+                  "WebSearch has been cancelled.",
+                  Kisekae.getCaptions().getString("OptionsDialogInfoTitle"),
+                  JOptionPane.INFORMATION_MESSAGE) ;
+            }
+            if (stop) return ;
+            
             String s2 = null ;
             String s1 = getBaseLocation() ;
             String formname = BuildForm.getFormName() ;
@@ -725,9 +802,9 @@ final public class WebSearchFrame extends KissFrame
             if (formtitle.length() == 0) formtitle = s1 ;
             if (s1.startsWith("http://")) s1 = s1.substring(7) ;
             if (s1.startsWith("https://")) s1 = s1.substring(8) ;
-            if (s1.startsWith("file:///")) s1 = s1.substring(11) ;
-            if (s1.startsWith("file://")) s1 = s1.substring(10) ;
-            if (s1.startsWith("file:/")) s1 = s1.substring(9) ;
+            if (s1.startsWith("file:///")) s1 = s1.substring(8) ;
+            if (s1.startsWith("file://")) s1 = s1.substring(7) ;
+            if (s1.startsWith("file:/")) s1 = s1.substring(6) ;
             s1 = s1.replace('/','.') ;
             if (s1.endsWith(".")) s1 = s1.substring(0,s1.length()-1) ;
             if (s1.endsWith(".html") || s1.endsWith(".htm"))
@@ -764,8 +841,21 @@ final public class WebSearchFrame extends KissFrame
 
          if ("WebFrame Idx Callback".equals(evt.getActionCommand()))
          {
-            if (waitbox != null) { waitbox.close() ; waitbox = null ; }
             if (terminating) { close() ; return ; }
+            if (waitbox != null) 
+            { 
+               waitbox.close() ; 
+               waitbox = null ; 
+               activated = false ;
+               activebtn.setEnabled(false) ;
+         		cancel.setEnabled(false) ; 
+               JOptionPane.showMessageDialog(this,
+                  "WebSearch has been cancelled.",
+                  Kisekae.getCaptions().getString("OptionsDialogInfoTitle"),
+                  JOptionPane.INFORMATION_MESSAGE) ;
+            }
+            if (stop) return ;
+            
             String s1 = OptionsDialog.getKissIndex() ;
             s1 = convertSeparator(s1) ;
             File f2 = new File(s1) ;
@@ -792,10 +882,12 @@ final public class WebSearchFrame extends KissFrame
             showStatus("") ;
             activated = false ;
             activebtn.setEnabled(false) ;
+            cancel.setEnabled(false) ;
             PrintLn.println("WebSearch: ends") ;
             addTrace("End WebSearch",1) ;
             Scheduler.stopScheduler() ;
             scheduler = null ;
+            Kisekae.setBatch(false) ;
                
             // Activate a Portal.  When this search form is closed
             // a new invocation of the Kisekae program is started.
@@ -894,11 +986,21 @@ final public class WebSearchFrame extends KissFrame
          activated = false ;
 		   super.close() ;
          dispose() ;
+         
+         // Close this invokaction and reestablish a new MainFrame.
+
+         Kisekae.setBatch(false) ;
          Kisekae.getKisekae().close() ;
          return ;
       }
         
       // If we are running, cancel execution.  This can take some time.
+      
+      int i = JOptionPane.showConfirmDialog(this,
+         "Search is active.  Terminate search?",
+         Kisekae.getCaptions().getString("OptionsDialogWarningTitle"),
+         JOptionPane.YES_NO_OPTION) ;
+      if (i != JOptionPane.YES_OPTION) return ;
        
       stop = true ;
       terminating = true ;
@@ -926,6 +1028,7 @@ final public class WebSearchFrame extends KissFrame
       showStatus("") ;
       activated = false ;
       activebtn.setEnabled(false) ;
+      cancel.setEnabled(false) ;
       PrintLn.println("WebSearch: ends") ;
       addTrace("End WebSearch",1) ;
       Scheduler.stopScheduler() ;
@@ -938,14 +1041,7 @@ final public class WebSearchFrame extends KissFrame
   private String resolveHex(String s) 
   {
      if (s == null) return null ;
-     int n = s.indexOf('%') ;
-     while (n >= 0)
-     {
-        if (s.substring(n).startsWith("%7")) 
-           s = s.substring(0,n) + "~" + s.substring(n+2) ;
-        if (s.substring(n).startsWith("%20")) 
-           s = s.substring(0,n) + " " + s.substring(n+3) ;
-     }
+     s = s.replace(" ", "%20") ;
      return s ;
    }
      

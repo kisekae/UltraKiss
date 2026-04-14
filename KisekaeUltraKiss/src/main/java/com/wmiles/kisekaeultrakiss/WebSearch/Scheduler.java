@@ -92,13 +92,15 @@ final class Scheduler
    private long firecount = 0 ;							// Count of events processed
 	private boolean active = false ;	         	   // True if handler is active
    private boolean wait = false ;						// True if waiting
-	private static long createtime = 0 ;			   // EventHandler creation time
+	private static long createtime = 0 ;            // EventHandler creation time
+	private WebSearchFrame webframe = null ;	      // Frame reference
 
 
 	// Constructor
 
-   public Scheduler()
+   public Scheduler(WebSearchFrame frame)
    {
+      webframe = frame ;
       threadname = "Scheduler-" + count++ ;
    }
 	
@@ -422,5 +424,14 @@ final class Scheduler
       firecount = 0 ;
       if (OptionsDialog.getDebugSearch())
          PrintLn.println(me.getName() + " terminated.");
+
+      // If stopping run the callback on the EDT thread.
+         
+      if (stop)
+      {        
+         Runnable runner = new Runnable()
+         { public void run() { webframe.schcallback.doClick() ; } } ;
+         javax.swing.SwingUtilities.invokeLater(runner) ;                 
+      }
 	}
 }

@@ -410,10 +410,6 @@ final class FileWriter extends KissFrame
 			addWindowListener(this) ;
 			CANCEL.addActionListener(this) ;
          boolean b = OptionsDialog.getShowLoad() ;
-         KissFrame f = Kisekae.getBatchFrame() ;
-         boolean b1 = (f instanceof com.wmiles.kisekaeultrakiss.WebSearch.WebSearchFrame)
-            ? !((com.wmiles.kisekaeultrakiss.WebSearch.WebSearchFrame) f).isLocalSearch() : true ;
-         if (OptionsDialog.getUseDefaultWS()) b = b1 ;
          if (!Kisekae.isBatch() || b) setVisible(true) ;
 		}
 

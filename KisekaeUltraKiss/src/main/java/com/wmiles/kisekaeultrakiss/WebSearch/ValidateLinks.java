@@ -133,11 +133,11 @@ class ValidateLinks implements Runnable, ActionListener
       if (baselocation.startsWith("https://"))
          baselocation = baselocation.substring(8) ;
       if (baselocation.startsWith("file:///"))
-         baselocation = baselocation.substring(11) ;
+         baselocation = baselocation.substring(8) ;
       if (baselocation.startsWith("file://"))
-         baselocation = baselocation.substring(10) ;
+         baselocation = baselocation.substring(7) ;
       if (baselocation.startsWith("file:/"))
-         baselocation = baselocation.substring(9) ;
+         baselocation = baselocation.substring(6) ;
       baselocation = baselocation.replace('/','.') ;
       if (baselocation.endsWith("."))
          baselocation = baselocation.substring(0,baselocation.length()-1) ;
@@ -157,6 +157,7 @@ class ValidateLinks implements Runnable, ActionListener
       webframe.vallinkactive = true ;
       kisekae = Kisekae.getKisekae() ;
       kisekae.setCallback(this) ;
+      kisekae.setBatch(true) ;
 
       // Process each entry.
 
@@ -179,7 +180,7 @@ class ValidateLinks implements Runnable, ActionListener
       catch (Throwable e) { }
       
       activecount-- ;
-      if (activecount <= 0)
+      if (activecount <= 0 || stop)
       {
          String s = (bytes  / 1024) + "K" ;
          webframe.addTrace("End Archive Validation. Pages: " + count + ". Bytes: " + s,1) ;
@@ -194,8 +195,8 @@ class ValidateLinks implements Runnable, ActionListener
       }
       
       kisekae.removeCallback(this) ;
-      if (OptionsDialog.getDebugSearch())
-         PrintLn.println(thread.getName() + " ends.") ;
+      if (OptionsDialog.getDebugSearch() || stop)
+         PrintLn.println(thread.getName() + " ends" + ((stop) ? " (stopped)" : ".")) ;
   }
 
 
@@ -209,6 +210,7 @@ class ValidateLinks implements Runnable, ActionListener
       {
          if (OptionsDialog.getDebugSearch())
             PrintLn.println("ValidateLinks: begin validation for " + s) ;
+         webframe.addTrace("Initializing validation for " + s) ;
          kisekae.init(s,OptionsDialog.getDownloadSize(),webframe) ;
          return true ;
       }
@@ -274,12 +276,9 @@ class ValidateLinks implements Runnable, ActionListener
             writename = setname ;
             
             boolean b = OptionsDialog.getSaveArchive() ;
-            if (OptionsDialog.getUseDefaultWS())
-               b = !webframe.isLocalSearch() ;
+            b = (b && !webframe.isLocalSearch()) ;
             if (!b) return ;
             b = OptionsDialog.getSaveAsZip() ;
-            if (OptionsDialog.getUseDefaultWS())
-               b = !webframe.isLocalSearch() ;
             if (b && !writename.endsWith("zip")) writename += ".zip" ;
             
             f = new File(f,writename) ;
@@ -462,14 +461,6 @@ class ValidateLinks implements Runnable, ActionListener
                if (OptionsDialog.getDebugSearch())
                   PrintLn.println("ValidateLinks: " + s) ;
                webframe.addTrace(s) ;
-               
-               // Get the directories
-               
-               String s1 = OptionsDialog.getHtmlDirectory() ;
-               s1 = convertSeparator(s1) ;
-               if (!s1.endsWith(File.separator)) s1 += File.separator ;
-               if (!s2.endsWith(File.separator)) s2 += File.separator ;
-               if (s2.startsWith(s1)) s2 = s2.substring(s1.length()) ;
                
                // Append the image and description attributes to the state.
                

@@ -60,12 +60,18 @@ import java.awt.event.* ;
 import java.util.Vector ;
 import java.util.Hashtable ;
 import java.util.Enumeration ;
-import javax.swing.* ;
+import java.util.HashMap;
+import java.util.Map;import javax.swing.* ;
 import javax.swing.event.* ;
 import javax.swing.text.* ;
 import javax.jnlp.* ;
 import java.beans.PropertyChangeListener ;
 import java.beans.PropertyChangeEvent ;
+import java.nio.charset.StandardCharsets;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import javax.swing.text.html.HTMLDocument;
+import javax.swing.text.html.HTMLEditorKit;
 
 
 final public class WebFrame extends KissFrame
@@ -84,7 +90,7 @@ final public class WebFrame extends KissFrame
    private String location = null ;                // Requested location
    private Thread runner = null ;                  // Our connection thread
    private Vector localhistory = null ;            // Local URL History list
-   private URL loadarchive = null ;                // Wait notify dialog
+   private URL loadarchiveurl = null ;             // URL for download
    private NotifyDialog nd = null ;                // Wait notify dialog
    private Hashtable cancel = new Hashtable() ;    // Cancel load 
    private int locallocation = 0 ;                 // Local history index
@@ -93,6 +99,8 @@ final public class WebFrame extends KissFrame
    private long setpagetime = 0 ;                  // Time when setPage() called
    private long hyperlinktime = 0 ;                // Time when hyperlink pressed
    private long pageloadtime = 0 ;                 // Time to load page 
+   private boolean waitstop = false ;              // Stop waiting dialog 
+   private boolean fault = false ;                 // True if setPage exception
 
 	// HelpSet interface objects.
 
@@ -115,6 +123,7 @@ final public class WebFrame extends KissFrame
 	private JTextField enterurl = new JTextField();
 	private WebEditor editor = new WebEditor();
    private EditorKit editorkit = null ;
+	private static PageCache pagecache = new PageCache();
 	private JButton backbtn = new JButton() ;
 	private JButton forwardbtn = new JButton() ;
 	private JButton searchbtn = new JButton() ;
@@ -162,7 +171,10 @@ final public class WebFrame extends KissFrame
       statusbar = new StatusBar(this) ;
       statusbar.setStatusBar(true) ;
       editor.setEditorKit(new WebHTMLEditor());
+      editor.setContentType("text/html") ;
+      editor.getDocument().putProperty("IgnoreCharsetDirective", Boolean.TRUE);
       editor.addPropertyChangeListener("page", this);
+      pagecache.clear() ;
       runner = new WebConnect() ;
       init() ;
    }
@@ -182,7 +194,10 @@ final public class WebFrame extends KissFrame
       statusbar = new StatusBar(this) ;
       statusbar.setStatusBar(true) ;
       editor.setEditorKit(new WebHTMLEditor());
+      editor.setContentType("text/html") ;
+      editor.getDocument().putProperty("IgnoreCharsetDirective", Boolean.TRUE);
       editor.addPropertyChangeListener("page", this);
+      pagecache.clear() ;
       runner = new WebConnect() ;
       init() ;
    }
@@ -202,6 +217,10 @@ final public class WebFrame extends KissFrame
       statusbar = new StatusBar(this) ;
       statusbar.setStatusBar(true) ;
       editor.setEditorKit(new WebHTMLEditor());
+      editor.setContentType("text/html") ;
+      editor.getDocument().putProperty("IgnoreCharsetDirective", Boolean.TRUE);
+      editor.addPropertyChangeListener("page", this);
+      pagecache.clear() ;
       runner = new WebConnect() ;
       init() ;
    }
@@ -435,13 +454,20 @@ final public class WebFrame extends KissFrame
       editor.addHyperlinkListener(this) ;
       enterurl.addActionListener(this) ;
       Vector v = getHistory() ;
-//      setPage((String) v.lastElement()) ;
       int i = getHistoryLocation() ;
       if (i < 0 || i >= v.size()) i = v.size() - 1 ;
       s = (currentweb == null) ? OptionsDialog.getKissWeb() : s ;
       String s1 = (i >= 0) ? (String) v.elementAt(i) : s ;
       setPage(s1) ;
+      Runtime.getRuntime().gc() ;
+      
 		addWindowListener(this) ;
+      Dimension d = Kisekae.getScreenSize() ;
+      d.height = (int) (0.95 * d.height) ;
+      setPreferredSize(new Dimension(d)) ;
+      setMaximumSize(new Dimension(d)) ;
+      setMinimumSize(new Dimension(d)) ;
+      pack() ;
       Kisekae.setCursor(this,Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
 	}
 
@@ -522,6 +548,8 @@ final public class WebFrame extends KissFrame
       if (currentweb != null && history != null) 
          if (history.size() == 0 || !history.lastElement().equals(currentweb))
             history.addElement(currentweb) ;
+      currentlocation = (history != null) ? history.size()-1 : 0 ;
+      if (currentlocation < 0) currentlocation = 0 ;
    }
 
 	// Method to set a redirect to map a URL to a set of FKiSS events.  
@@ -570,8 +598,8 @@ final public class WebFrame extends KissFrame
       currentlocation = history.size()-1 ;
       urlmap.clear(); 
    }
-
-
+   
+   
    // Set the JEditorPane page to view.   The connection is performed in a
    // separate thread.  Also look for a redirection to an event, typically 
    // a label() event.
@@ -596,7 +624,7 @@ final public class WebFrame extends KissFrame
             PanelFrame pf = (mf != null) ? mf.getPanel() : null ;
             if (pf != null)
             {
-               if (OptionsDialog.getDebugControl())
+               if (OptionsDialog.getDebugPortal())
                   PrintLn.println("WebFrame: redirect " + s + " to event \"" + ((Vector) o).elementAt(0) + "\"") ;
                setVisible(false) ;
                EventHandler.fireEvents((Vector) o,pf,Thread.currentThread(),s) ;
@@ -618,11 +646,12 @@ final public class WebFrame extends KissFrame
       
       if (runner == null || runner.isAlive()) return ;
       Kisekae.setCursor(this,Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
+      Kisekae.setCursor(editor,Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
       activebtn.setEnabled(true) ;
       enterurl.setText(location) ;
       runner = new WebConnect() ;
-      runner.start() ;
-//    runner.run() ;
+//    runner.start() ;
+      runner.run() ;
    }
 
 
@@ -650,6 +679,7 @@ final public class WebFrame extends KissFrame
       }
       location = (String) v.elementAt(i) ;
       setHistoryLocation(i) ;        
+      enterurl.setText(location) ;
 
       // If our current web is on a remote host and we link back to our
       // local file system, then we adjust our current web site to point
@@ -668,9 +698,49 @@ final public class WebFrame extends KissFrame
          if (n > 0) s = s.substring(0,n) ;
          editor.setHosted(s);
       }
-      Document doc = editor.getDocument();
-      doc.putProperty(Document.StreamDescriptionProperty, null);
-      setPage(location) ;
+      
+      // Reload the previous page.
+      
+      String cachedContent = pagecache.get(location) ;
+  		Kisekae.setCursor(this,Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
+      b = cachedContent != null && cachedContent.startsWith("<!-- corrected -->") ;
+      if (!b) cachedContent = null ;  // force a setPage() unless corrected content
+      
+      if (cachedContent != null) 
+      {
+         if (OptionsDialog.getDebugPortal())
+            PrintLn.println("WebFrame: go back, cached, setText(" + location + ")") ;
+         statusbar.showStatus("Load from cache, " + location) ;
+         try 
+         { 
+            editor.setText(cachedContent) ;
+            editor.setCaretPosition(0);
+            Document doc = editor.getDocument();
+            if (doc instanceof HTMLDocument) 
+            { 
+               URL base = new URL(location) ; 
+               ((HTMLDocument) doc).setBase(base) ;
+            }            
+        		Kisekae.setCursor(this,Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
+         }
+         catch (Exception e) 
+         { 
+            PrintLn.println("WebFrame: back setText(" + location + ") exception is " + e.toString()) ;   
+            cachedContent = null ;
+         }
+      }
+      
+      if (cachedContent == null) 
+      {
+         if (OptionsDialog.getDebugPortal())
+            PrintLn.println("WebFrame: go back, not cached, setPage(" + location + ")") ;
+         Document doc = editor.getDocument();
+         doc.putProperty(Document.StreamDescriptionProperty, null);
+         setPage(location) ;
+      }
+
+      Runtime.getRuntime().gc() ;      
+      update() ;
    }
 
    void forward()
@@ -680,6 +750,7 @@ final public class WebFrame extends KissFrame
       if (i < 0 || i >= v.size()) return ;
       location = (String) v.elementAt(i) ;
       setHistoryLocation(i) ;
+      enterurl.setText(location) ;
       
       boolean b = (location.contains("#currentweb")) ;
 
@@ -700,9 +771,49 @@ final public class WebFrame extends KissFrame
          if (n > 0) s = s.substring(0,n) ;
          editor.setHosted(s);
       }
-      Document doc = editor.getDocument();
-      doc.putProperty(Document.StreamDescriptionProperty, null);
-      setPage(location) ;
+      
+      // Reload the next page.
+      
+      String cachedContent = pagecache.get(location) ;
+      Kisekae.setCursor(this,Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
+      b = cachedContent != null && cachedContent.startsWith("<!-- corrected -->") ;
+      if (!b) cachedContent = null ;  // force a setPage() unless corrected content
+      
+      if (cachedContent != null) 
+      {
+         if (OptionsDialog.getDebugPortal())
+            PrintLn.println("WebFrame: go forward, cached, setText(" + location + ")") ;
+         statusbar.showStatus("Load from cache, " + location) ;
+         try 
+         { 
+            editor.setText(cachedContent) ;
+            editor.setCaretPosition(0);
+            Document doc = editor.getDocument();
+            if (doc instanceof HTMLDocument) 
+            { 
+               URL base = new URL(location) ; 
+               ((HTMLDocument) doc).setBase(base) ;
+            }            
+        		Kisekae.setCursor(this,Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
+         }
+         catch (Exception e) 
+         { 
+            PrintLn.println("WebFrame: forward setText(" + location + ") exception is " + e.toString()) ;   
+            cachedContent = null ;
+         }
+      }
+      
+      if (cachedContent == null) 
+      {
+         if (OptionsDialog.getDebugPortal())
+            PrintLn.println("WebFrame: go forward, not cached, setPage(" + location + ")") ;
+         Document doc = editor.getDocument();
+         doc.putProperty(Document.StreamDescriptionProperty, null);
+         setPage(location) ;
+      }
+
+      Runtime.getRuntime().gc() ;      
+      update() ;
    }
 
    
@@ -779,9 +890,49 @@ final public class WebFrame extends KissFrame
       if (i < 0 || i >= v.size()) return ;
       location = (String) v.elementAt(i) ;
       setHistoryLocation(i) ;
-      Document doc = editor.getDocument();
-      doc.putProperty(Document.StreamDescriptionProperty, null);
-      setPage(location) ;
+      editor.setEditorKit(new WebHTMLEditor());
+     
+      // Reload this page.
+
+      Kisekae.setCursor(this,Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
+      String cachedContent = pagecache.get(location) ;
+      boolean b = cachedContent != null && cachedContent.startsWith("<!-- corrected -->") ;
+      if (!b) cachedContent = null ;  // force a setPage() unless corrected content
+      
+      if (cachedContent != null)       
+      {
+         if (OptionsDialog.getDebugPortal())
+            PrintLn.println("WebFrame: refresh, cached, setText(" + location + ")") ;
+         statusbar.showStatus("Load from cache, " + location) ;
+         try 
+         { 
+            editor.setText(cachedContent) ;
+            Document doc = editor.getDocument();
+            if (doc instanceof HTMLDocument) 
+            { 
+               URL base = new URL(location) ; 
+               ((HTMLDocument) doc).setBase(base) ;
+            }            
+            Kisekae.setCursor(this,Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
+         }
+         catch (Exception e) 
+         { 
+            PrintLn.println("WebFrame: refresh setText(" + location + ") exception is " + e.toString()) ;   
+            cachedContent = null ;
+         }
+      }
+      
+      if (cachedContent == null) 
+      {
+         if (OptionsDialog.getDebugPortal())
+            PrintLn.println("WebFrame: refresh, not cached, setPage(" + location + ")") ;
+         Document doc = editor.getDocument();
+         doc.putProperty(Document.StreamDescriptionProperty, null);
+         setPage(location) ;
+      }
+
+      Runtime.getRuntime().gc() ;      
+      update() ;
    }
 
    
@@ -1237,12 +1388,11 @@ final public class WebFrame extends KissFrame
             if (OptionsDialog.getDebugControl())
                PrintLn.println("WebFrame: NotifyDialog Cancel, urlloader=" + urlloader) ;
             if (urlloader != null) urlloader.setInterrupted(true) ;
-            String urlname = (loadarchive != null) ? loadarchive.toExternalForm() : null;
+            String urlname = (loadarchiveurl != null) ? loadarchiveurl.toExternalForm() : null;
             if (urlname != null)
             {
                cancel.put(urlname, Boolean.valueOf(true)) ;
-               if (OptionsDialog.getDebugControl())
-                  PrintLn.println("WebFrame: interrupt archive load " + urlname) ;
+               PrintLn.println("WebFrame: Waitdialog interrupt archive load " + urlname) ;
             }
          }
 		}
@@ -1306,6 +1456,7 @@ final public class WebFrame extends KissFrame
 	}
 
    // This event is fired by the JEditorPane when the document is loaded.  
+   // Determine the page load time and save the page in cache.
    
    public void propertyChange(PropertyChangeEvent e)
 	{
@@ -1316,11 +1467,51 @@ final public class WebFrame extends KissFrame
             pageloadtime = System.currentTimeMillis() - Configuration.getTimestamp() ;
             long loadtime = pageloadtime - setpagetime ;
             String s = "Time to load: " + loadtime + " ms" ;
-            if (editor != null) statusbar.showStatus(s) ;
-            if (OptionsDialog.getDebugControl())
+            statusbar.showStatus(s) ;
+            if (OptionsDialog.getDebugControl() || OptionsDialog.getDebugPortal())
                PrintLn.println("WebFrame: Page loaded, location " + location + ", time to load = " + loadtime + " ms");
          } 
       } ;
+      
+      // Check for load error.
+      
+      if (e != null && e.getNewValue() == null) 
+      {
+         // Loading failed (null value after async load)
+         refresh() ;
+         return ;
+      }
+
+ 
+      // Retain the page in cache.
+      
+      URL url = editor.getPage() ;
+      String text = editor.getText() ;
+      String cachedContent = pagecache.put(url,text,editor.getPage()) ;
+      
+      // If images were corrected, update the editor pane.
+      
+      if (pagecache.isCorrected())
+      {
+         try 
+         { 
+            editor.setText(cachedContent) ;
+            editor.setCaretPosition(0);
+            Document doc = editor.getDocument();
+            if (doc instanceof HTMLDocument) 
+            { 
+               URL base = url ; 
+               ((HTMLDocument) doc).setBase(base) ;
+            }            
+         }
+         catch (Exception e1) 
+         { 
+            PrintLn.println("WebFrame: editor setText() exception is " + e1.toString()) ;   
+         }        
+      }
+      
+      // Show the page load time.
+      
 		javax.swing.SwingUtilities.invokeLater(awt) ;
   		if (editor != null) Kisekae.setCursor(editor,Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
   		Kisekae.setCursor(this,Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
@@ -1463,7 +1654,8 @@ final public class WebFrame extends KissFrame
       if (evt.getEventType() == HyperlinkEvent.EventType.ENTERED) 
       {
          URL evturl = evt.getURL() ;
-         String description = (evturl != null) ? evturl.toExternalForm() : "" ;
+         String description = (evturl != null) ? evturl.toString() : "" ;
+         description = UnicodeToAscii.convertAlpha(description) ;
          statusbar.showStatus(description) ;
          Kisekae.setCursor(me,Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)) ;
          return ;
@@ -1481,8 +1673,9 @@ final public class WebFrame extends KissFrame
          hyperlinktime = System.currentTimeMillis() - Configuration.getTimestamp() ;
          statusbar.showStatus("") ;
          URL evturl = evt.getURL() ;
-         String description = evt.getDescription() ;
-         if (OptionsDialog.getDebugControl())
+         String description = evturl.toString() ;
+         description = UnicodeToAscii.convertAlpha(description) ;
+         if (OptionsDialog.getDebugControl() || OptionsDialog.getDebugPortal())
             PrintLn.println("WebFrame: hyperlink to " + description) ;
 
 
@@ -1510,7 +1703,9 @@ final public class WebFrame extends KissFrame
          
          // If the link is to an archive, load it.
 
-         String urlname = evturl.toExternalForm() ;
+         evturl = evt.getURL() ;
+         String urlname = (evturl != null) ? evturl.toString() : "" ;
+         urlname = UnicodeToAscii.convertAlpha(urlname) ;
          if (ArchiveFile.isArchive(urlname))
             { loadArchive(evturl,true) ; return ; }
 
@@ -1599,8 +1794,46 @@ final public class WebFrame extends KissFrame
             
             // Add this URL to our history list and show in the portal.
 
-            v.addElement(urlname) ;
-            setPage(urlname) ;
+            v.addElement(urlname) ;      
+            enterurl.setText(urlname) ;
+            String cachedContent = pagecache.get(urlname) ;
+            Kisekae.setCursor(this,Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
+            
+            if (cachedContent != null) 
+            {
+               if (OptionsDialog.getDebugPortal())
+                  PrintLn.println("WebFrame: hyperlink, cached, setText(" + location + ")") ;
+               statusbar.showStatus("Load from cache, " + urlname) ;
+               try 
+               { 
+                  editor.setText(cachedContent) ;
+                  editor.setCaretPosition(0);
+                  Document doc = editor.getDocument();
+                  if (doc instanceof HTMLDocument) 
+                  { 
+                     URL base = new URL(urlname) ; 
+                     ((HTMLDocument) doc).setBase(base) ;
+                  }            
+              		Kisekae.setCursor(this,Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
+               }
+               catch (Exception e) 
+               { 
+                  PrintLn.println("WebFrame: hyperlink setText(" + urlname + ") exception is " + e.toString()) ;   
+                  cachedContent = null ;
+               }
+            }
+      
+            if (cachedContent == null) 
+            {
+               if (OptionsDialog.getDebugPortal())
+                  PrintLn.println("WebFrame: hyperlink, not cached, setPage(" + location + ")") ;
+               Document doc = editor.getDocument();
+               doc.putProperty(Document.StreamDescriptionProperty, null);
+               setPage(urlname) ;
+            }
+            
+            Runtime.getRuntime().gc() ;
+            update() ;
             return ;
          }
 
@@ -1611,8 +1844,8 @@ final public class WebFrame extends KissFrame
          return ;
       }
    }
-
-
+   
+   
    // A function to load an archive file.  Download prompts are not
    // shown for local files.
    //
@@ -1629,8 +1862,19 @@ final public class WebFrame extends KissFrame
       if (url == null) return ;
       String s = url.toExternalForm() ;
       cancel.remove(s) ;
-      loadarchive = url ;
+      loadarchiveurl = url ;
       boolean open = true ;
+      
+      // Allow only one load at a time.
+
+      if (urlloader != null && urlloader.isRunning()) 
+      {
+         PrintLn.println("WebFrame: loadArchive " + loadarchiveurl.toString() + " ignored, loader already active.") ;
+         return ;
+      }
+
+      // If local file, show download dialog confirmation.
+      
       if (!(s.startsWith("file:") || s.startsWith("jar:")))
       {
          if (WebDloadDialog.showDialog() && !Kisekae.isWebsocket())
@@ -1642,7 +1886,7 @@ final public class WebFrame extends KissFrame
          }
       }
       
-      // Open the wait dialog on a new ATW thread.  The modeless dialog
+      // Open the wait dialog on a new AWT thread.  The modeless dialog
       // does not draw otherwise.  The worker also has to be on a new thread.
 
       Runnable runner = new Runnable()
@@ -1708,10 +1952,7 @@ final public class WebFrame extends KissFrame
          if (mm != null) mm.setWebFrame(null) ;
       }
       
-      if (nd != null) nd.close() ; 
-      if (editorkit instanceof WebHTMLEditor) 
-         ((WebHTMLEditor) editorkit).clearCache() ;
-      
+      if (nd != null) nd.close() ;       
       super.close() ;
 		flush() ;
       dispose() ;
@@ -1765,20 +2006,32 @@ final public class WebFrame extends KissFrame
 		{ 
          public void run() 
          { 
+            boolean showing = false ;
             while (true)
             {
                try { Thread.sleep(1000) ; }
                catch (InterruptedException e) { break ; }
                if (nd == null) break ;
-               if (!nd.isVisible())
+               
+               // Show dialog after 1 second.
+               
+               if (!nd.isVisible() && !showing)
                {
+                  PrintLn.println("WebFrame: WaitDialog starts.") ;
                   nd.setVisible(true) ;
+                  showing = true ;
                   continue ;
                } 
+               
+               // Cancel download if notify dialog was cancelled.
+               
+               if (!nd.isVisible() && showing) break ;
                String s = nd.getText() ;
                s += ". " ;
                nd.setText(s) ;
             }
+            if (showing)
+               PrintLn.println("WebFrame: WaitDialog terminates.") ;
          } 
       } ;
   		Thread t = new Thread(awt) ;
@@ -1787,7 +2040,7 @@ final public class WebFrame extends KissFrame
 
  
    void closeWaitDialog()
-   {      
+   {   
       if (nd != null) nd.close() ; 
       nd = null ;
    }
@@ -1799,51 +2052,94 @@ final public class WebFrame extends KissFrame
 
    class WebConnect extends Thread
    {
+      InputStream in = null ;
+      
       public void run()
       {
          try
          {
-            Thread thread = Thread.currentThread() ;
-            thread.setPriority(Thread.MIN_PRIORITY) ;
             if (location == null) return ;
             connecting = true ;
             location = location.replace('\\','/') ;
-            Kisekae.setCursor(me,Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
             String s = Kisekae.getCaptions().getString("ConnectingToStatus") ;
             int i1 = s.indexOf('[') ;
             int j1 = s.indexOf(']') ;
             if (i1 >= 0 && j1 > i1)
                s = s.substring(0,i1) + location + s.substring(j1+1) ;
             if (parent != null) parent.showStatus(s) ;
-            if (OptionsDialog.getDebugControl())
+            if (OptionsDialog.getDebugPortal())
                PrintLn.println("WebFrame: setPage " + location) ;
             setpagetime = System.currentTimeMillis() - Configuration.getTimestamp() ;
-            editor.setPage(location);
-            if (location.equals(OptionsDialog.getKissWeb()))
-               currentweb = location ;
-            update() ;
+
+            // Special hack for World KiSS Project
+            s = location.toLowerCase() ;
+            if (s.contains("kiss-wkp.com"))
+            {
+               editor.setPage(location) ;  // required for Japanese SJIS encoding
+               return ;
+            }
+
+            // Synchronous loading 
+            URL url = new URL(location);
+            // Opens stream synchronously
+            in = url.openStream();    
+                        
+            // Read the stream synchronously           
+            in = url.openStream();    
+            String html = new String(in.readAllBytes(), StandardCharsets.UTF_8);
+            in.close() ;
+ 
+            // Remove <meta> tags for charset as these cause exceptions with read()        
+            String regex = "(?i)<meta\\s+[^>]*charset[^>]*>|<meta\\s+http-equiv=[\"']Content-Type[\"'][^>]*>";
+            String cleaned = html.replaceAll(regex, "");  
+            in = new ByteArrayInputStream(cleaned.getBytes(StandardCharsets.UTF_8));
+            
+            // Set content type for proper rendering (e.g., text/html)
+            editor.setContentType("text/html"); 
+            editor.read(in, url); 
+            in.close();
+            // Fire property change event
+            me.propertyChange(null) ;
+
          }
          catch (Exception e)
          {
-            String s = e.toString() ;
-            if (s != null && s.indexOf("security") > 0)
+            if (in != null) 
             {
-               JOptionPane.showMessageDialog(me,
-                  Kisekae.getCaptions().getString("InaccessibleSite") + "\n" + location ,
-                  Kisekae.getCaptions().getString("SecurityException"),
-                  JOptionPane.ERROR_MESSAGE) ;
+               try { in.close() ; }
+               catch (IOException ex) { }
             }
-            else
-            {
-               s = e.toString() + "\n" + location ;
-               JOptionPane.showMessageDialog(me,s,
-                  Kisekae.getCaptions().getString("InvalidURLError"),
-                  JOptionPane.ERROR_MESSAGE) ;
-            }
-            Vector v = getHistory() ;
-            v.remove(location) ;
-            setHistoryLocation(v.size() - 1) ;
-            update() ;
+            
+         	Runnable awt = new Runnable()
+    			{ 
+               public void run() 
+               { 
+                  if (e.toString().indexOf("security") > 0)
+                  {
+                     PrintLn.println("WebFrame: WebConnect setPage " + location + " Security Exception.") ;
+                     e.printStackTrace() ;
+                     JOptionPane.showMessageDialog(me,
+                        Kisekae.getCaptions().getString("InaccessibleSite") + "\n" + location ,
+                        Kisekae.getCaptions().getString("SecurityException"),
+                        JOptionPane.ERROR_MESSAGE) ;
+                  }
+                  else
+                  {
+                     PrintLn.println("WebFrame: WebConnect setPage " + location + " exception.") ;
+                     e.printStackTrace() ;
+                     JOptionPane.showMessageDialog(me,e.toString() + "\n" + location,
+                        Kisekae.getCaptions().getString("InvalidURLError"),
+                        JOptionPane.ERROR_MESSAGE) ;
+                  }
+                  
+                  // Back off history if unable to recover from fault.
+                  
+                  Vector v = getHistory() ;
+                  v.remove(location) ;
+                  setHistoryLocation(v.size() - 1) ;
+               } 
+            } ;
+        		javax.swing.SwingUtilities.invokeLater(awt) ;            
          }
          
          // End of connection.  Set display indicators.
@@ -1859,10 +2155,13 @@ final public class WebFrame extends KissFrame
     			{ public void run() { setEndConnection() ; } } ;
         		javax.swing.SwingUtilities.invokeLater(awt) ;
          }
-         if (me != null)
-            Kisekae.setCursor(me,Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
+         
+         if (location.equals(OptionsDialog.getKissWeb())) currentweb = location ;
+         Kisekae.setCursor(me,Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
+         Kisekae.setCursor(editor,Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
          if (parent != null) parent.showStatus(null);
          connecting = false ;
+         update() ;
       }
    }
  
@@ -1889,10 +2188,11 @@ final public class WebFrame extends KissFrame
       public void run()
       {
          if (url == null) return ;
-         String urlname = url.toExternalForm() ;
+         String urlname = (url != null) ? url.toString() : "" ;
+         urlname = UnicodeToAscii.convertAlpha(urlname) ;
          Object o = cancel.get(urlname) ;
          if ((o instanceof Boolean) && ((Boolean) o).booleanValue()) return ;
-         if (OptionsDialog.getDebugControl())
+         if (OptionsDialog.getDebugControl() || OptionsDialog.getDebugPortal())
             PrintLn.println("WebFrame: LoadArchive " + urlname) ;
          urlloader = new UrlLoader(parent,urlname) ;
          urlloader.callback.addActionListener(parent) ;
@@ -1902,4 +2202,168 @@ final public class WebFrame extends KissFrame
          loadthread.start() ;
       }
    }
+   
+   
+   // Some hyperlinks contain unicode characters 
+   // https://kisscafe.ephralon.de/dolls.php?page=2&artist=Kimiki%20&α=K
+   
+   public class UnicodeToAscii 
+   {
+      // Mapping specific Greek/Unicode chars to ASCII names
+      private static final Map<Character, String> ALPHA_MAP = new HashMap<>();
+      static 
+      {
+        ALPHA_MAP.put('\u03B1', "&alpha");
+        ALPHA_MAP.put('\u03B2', "&beta");
+        ALPHA_MAP.put('\u03B3', "&gamma");
+        // Add more mapping as needed
+      }
+
+      public static String convertAlpha(String input) 
+      {
+         if (input == null) return null;
+         StringBuilder result = new StringBuilder();
+         for (char c : input.toCharArray()) {
+            // Append mapped value or original character if not found
+            result.append(ALPHA_MAP.getOrDefault(c, String.valueOf(c)));
+         }
+         String s = result.toString() ;
+         if (!s.startsWith("file:")) s = s.replace(" ","%20") ;
+         return s ; 
+      }
+   }
+   
+   
+   // A simple cache that loads pages on demand and stores them
+   static class PageCache extends Hashtable<URL, String> 
+   {
+      private boolean corrected = false ;  // True if text is corrected on put().
+      
+      // Return a page from cache.  This will be a corrected page for images.
+      
+      public synchronized String get(String key) 
+      { return get(stringToUrl(key)) ; }
+      
+      public synchronized String get(URL url) 
+      {   
+         if (url == null) return null ;
+         String result = super.get(url);
+         if (OptionsDialog.getDebugPortal())
+         {
+            if (result != null)
+               PrintLn.println("WebFrame: page cache hit: " + url.toString()) ;
+            else
+               PrintLn.println("WebFrame: page cache miss: " + url.toString()) ;
+         }
+         return result ;
+      }
+      
+      // Store a page in cache.  The location is the base URL for relative images.
+      
+      public synchronized String put(String key, String text, URL location) 
+      { return put(stringToUrl(key),text,location) ; }
+         
+      public synchronized String put(URL url, String text, URL location) 
+      {
+         corrected = false ;
+         if (url == null || text == null) return null ;
+         if (this.containsKey(url)) return text ;
+         
+         // Correct text <img> specifications width and height
+
+         String regex = "<img\\s+[^>]*src\\s*=\\s*['\"]([^'\"]+)['\"][^>]*>";
+         Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE) ;
+         Matcher matcher = pattern.matcher(text) ;        
+         StringBuffer sb = new StringBuffer();
+
+         while (matcher.find())
+         {
+            String tag = matcher.group() ;
+            String s1 = tag.toLowerCase() ;
+            if (s1.contains("height")) continue ;
+            if (s1.contains("width")) continue ;
+            String src = matcher.group(1) ;
+
+            // Convert relative src to absolute URL
+            
+            try
+            {
+               s1 = src.toLowerCase() ;
+               boolean absolute = (s1.startsWith("http:") || s1.startsWith("https:") 
+                    || s1.startsWith("file:") || s1.startsWith("jar:")) ;
+               if (!absolute)
+               {
+                  if (src.startsWith(File.separator))
+                  {
+                     URL toplevel = new URL(location.getProtocol(),location.getHost(),src) ;
+                     src = toplevel.toExternalForm() ;
+                     location = new URL(src) ; 
+                  }
+                  else
+                  {
+                     File f = new File(location.getPath()) ;
+                     String base = f.getParent() ;
+                     src = base + File.separator + src ;
+                     location = new URL(location.getProtocol(),location.getHost(),src) ; 
+                  }
+               }
+               else
+                  location = new URL(src) ;
+            }
+            catch (MalformedURLException e) { continue ; }       
+            
+            // Locate image in cache.  Determine height and width.
+                            
+            Hashtable imagecache = WebHTMLEditor.getImageCache() ;
+            Image image = (Image) imagecache.get(location) ;
+            if (image == null) continue ;
+            int height = image.getHeight(null) ;
+            int width = image.getWidth(null) ;
+            
+            // If image is not loaded, perform a synchronous load.
+            
+            if (height < 0 || width < 0)
+            {
+               ImageIcon icon = new ImageIcon(image) ;
+               height = icon.getIconHeight(); // Will be the correct value
+               width = icon.getIconWidth(); // Will be the correct value
+               if (OptionsDialog.getDebugPortal())
+                  PrintLn.println("WebFrame image loaded: " + location + " height=" + height + " width=" + width) ;
+            }
+            if (height < 0 || width < 0) continue ;
+            
+            // Update <img> tag with missing height and width attributes.
+
+            corrected = true ;
+            String newtag = tag.replace("/>",">") ;             
+            newtag = newtag.replace(">", " height=\"" + height  + "\" width=\"" + width + "\" />") ;             
+            matcher.appendReplacement(sb,newtag) ;          
+         }
+         
+         matcher.appendTail(sb) ;
+         if (corrected)
+            text = "<!-- corrected -->" + sb.toString() ;    
+         else
+            text = sb.toString() ;    
+            
+         Object o = super.put(url,text) ;
+         if (OptionsDialog.getDebugPortal())
+         {
+            if (o == null) PrintLn.println("WebFrame: page cache put: " + url.toString()) ;
+         }
+         return text ;
+      }
+      
+      private URL stringToUrl(String key)
+      {
+         URL url = null ;
+         try { url = new URL(key); }
+         catch (MalformedURLException e) { }
+         return url ;
+      }
+      
+      public boolean isCorrected() { return corrected ; }
+
+      public void clearCache() { clear() ; }
+   }  
 }

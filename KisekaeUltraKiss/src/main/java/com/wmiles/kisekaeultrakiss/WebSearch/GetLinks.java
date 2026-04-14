@@ -99,16 +99,17 @@ class GetLinks implements Runnable
 {
    private static int count = 0 ;
    private static int bytes = 0 ;
-   private static int activecount = 0 ;
    private static boolean stop = false ;
-   private static boolean scheduled = false ;
+   private static boolean scheduled = false ; 
    private static Vector archives = new Vector() ;
+   private static Vector processed = new Vector() ;
    private static String title = null ;
    private boolean catchtitle = false ;
    private WebSearchFrame webframe = null ;
    private String location = null ;
    private URL parseurl = null ;
    private Vector v = new Vector() ;
+   private static SynchronizedCounter activecount = new SynchronizedCounter() ;
 
 
 
@@ -190,7 +191,7 @@ class GetLinks implements Runnable
    public void run()
    {
       count++ ;
-      activecount++ ;
+      activecount.increment() ;
       Thread thread = Thread.currentThread() ;
       thread.setName("GetLinks-" + count) ;
       if (OptionsDialog.getDebugSearch())
@@ -198,9 +199,18 @@ class GetLinks implements Runnable
       webframe.showStatus("GetLinks-" + count + " searching " + location) ;
       webframe.getlinkactive = true ;
       if (!stop) parse() ;
-      checkend() ;
-      if (OptionsDialog.getDebugSearch())
-    		PrintLn.println(thread.getName() + " ends.") ;
+      if (!scheduled) checkend() ;
+      if (OptionsDialog.getDebugSearch() || stop)
+    		PrintLn.println(thread.getName() + " ends" + ((stop) ? " (stopped)" : ".")) ;
+
+      // If stopping run the callback on the EDT thread.
+         
+      if (stop)
+      {        
+         Runnable runner = new Runnable()
+         { public void run() { webframe.urlcallback.doClick() ; } } ;
+         javax.swing.SwingUtilities.invokeLater(runner) ;                 
+      }
   }
 
    
@@ -208,14 +218,15 @@ class GetLinks implements Runnable
    
    synchronized void checkend()
    {
-      activecount-- ;
-      if (Scheduler.getQueueSize() == 0 && activecount <= 0)
+      activecount.decrement();
+      if (Scheduler.getQueueSize() == 0 && activecount.getCount() == 0)
       {
+         if (scheduled) return ;
          scheduled = true ;
          String s = (bytes  / 1024) + "K" ;
          webframe.addTrace("End URL Scan. Pages accessed: " + count + " Bytes downloaded: " + s,1) ;
          webframe.getlinkactive = false ;
-         activecount = 0 ;
+         activecount.reset() ;
          
          // Run the callback on the EDT thread.
          
@@ -251,6 +262,7 @@ class GetLinks implements Runnable
          Vector v1 = new Vector() ;
          for (int i = 0 ; i < v.size() ; i++)
          {
+            if (stop) return ;
             Object o = v.elementAt(i) ;
             if (o == null) continue ;
             String s = ((String) o).toLowerCase() ;
@@ -271,22 +283,35 @@ class GetLinks implements Runnable
                }
             }
             
-            // Links with parameters (?) are ignored.
-            
-            if (s.indexOf('?') > 0) continue ;
+            // Links with parameters (?) are no longer ignored.
+            // https://kisscafe.ephralon.de/dolls.php           
+//          if (s.indexOf('?') > 0) continue ;
+
+            String s1 = s ;
+            int j = s.indexOf('?') ;            
+            if (j > 0) s1 = s.substring(0,j) ;
 
             // Relative links are converted to full URLs without bookmarks.
 
-            if (s.endsWith(".html") || s.endsWith(".htm")
-               || s.endsWith(".shtml") || s.endsWith(".shtm")
-               || s.endsWith("/")
-               || s.endsWith(".zip") || s.endsWith(".lzh"))
+            if (s1.endsWith(".html") || s1.endsWith(".htm")
+               || s1.endsWith(".shtml") || s1.endsWith(".shtm")
+               || s1.endsWith(".php")
+               || s1.endsWith("/")
+               || s1.endsWith(".zip") || s1.endsWith(".lzh"))
             {
-               s = o.toString() ;
-               int j = s.lastIndexOf('#') ;
-               if (j > 0) s = s.substring(0,j) ;
-               URL url = new URL(parseurl,s) ;
-               v1.addElement(url.toString()) ;
+               String s2 = o.toString() ;
+               j = s2.lastIndexOf('#') ;
+               if (j > 0) s2 = s2.substring(0,j) ;
+               URL url = new URL(parseurl,s2) ;
+               s2 = url.toString() ;
+               
+               // Do not duplicate previously processed entries.
+               
+               if (!processed.contains(s2)) 
+               {
+                  processed.addElement(s2) ;
+                  v1.addElement(s2) ;
+               }
             }
          }
 
@@ -297,6 +322,7 @@ class GetLinks implements Runnable
          ThreadGroup group = thread.getThreadGroup() ;
          for (int i = 0 ; i < v1.size() ; i++)
          {
+            if (stop) return ;
             Object o = v1.elementAt(i) ;
             String s = ((String) o).toLowerCase() ;
             if (s.endsWith(".zip") || s.endsWith(".lzh"))
@@ -311,8 +337,9 @@ class GetLinks implements Runnable
 
             // HTML anchors or sub-directories cause a recursive search.
 
-            if (s.endsWith(".html") || s.endsWith(".htm")
-               || s.endsWith(".shtml") || s.endsWith(".shtm")
+            if (s.contains(".html") || s.contains(".htm")
+               || s.contains(".shtml") || s.contains(".shtm")
+               || s.contains(".php") 
                || (s.endsWith("/") && s.startsWith(location.toLowerCase())))
             {
                GetLinks gl = new GetLinks(webframe,o.toString()) ;
@@ -334,6 +361,7 @@ class GetLinks implements Runnable
             {
                for (int i = 0 ; i < files.length ; i++)
                {
+                  if (stop) return ;
                   File f2 = files[i] ;
                   if (f2.isDirectory()) 
                   {
@@ -411,7 +439,7 @@ class GetLinks implements Runnable
       stop = true ; 
       count = 0 ;
       bytes = 0 ;
-      activecount = 0 ;
+      activecount.reset() ;
       scheduled = false ;   
    }
 
@@ -437,4 +465,27 @@ class GetLinks implements Runnable
       stop = false ;
       scheduled = false ;
    }
+   
+   
+   public static class SynchronizedCounter 
+   {
+      private int count = 0;
+
+      // Only one thread can enter this method at a time
+      public synchronized void increment() {
+         count++;
+      }
+      
+      public synchronized void decrement() {
+         count--;
+      }
+
+      public synchronized int getCount() {
+         return count;
+      }
+         
+      public synchronized void reset() {
+         count = 0 ;
+       }
+   }  
 }
