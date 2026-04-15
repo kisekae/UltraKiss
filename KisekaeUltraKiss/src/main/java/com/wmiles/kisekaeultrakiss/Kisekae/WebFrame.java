@@ -2293,7 +2293,7 @@ final public class WebFrame extends KissFrame
                     || s1.startsWith("file:") || s1.startsWith("jar:")) ;
                if (!absolute)
                {
-                  if (src.startsWith(File.separator))
+                  if (src.startsWith("/"))
                   {
                      URL toplevel = new URL(location.getProtocol(),location.getHost(),src) ;
                      src = toplevel.toExternalForm() ;
@@ -2303,7 +2303,7 @@ final public class WebFrame extends KissFrame
                   {
                      File f = new File(location.getPath()) ;
                      String base = f.getParent() ;
-                     src = base + File.separator + src ;
+                     src = base + "/" + src ;
                      location = new URL(location.getProtocol(),location.getHost(),src) ; 
                   }
                }
