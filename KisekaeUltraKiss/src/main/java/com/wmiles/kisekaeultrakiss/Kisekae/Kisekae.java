@@ -2718,7 +2718,7 @@ public class Kisekae extends Applet
                 + "KiSS sets must be saved as LZH or ZIP archive files for transfer to your computer.<br><br>"
                 + "To load and run your own KiSS sets packaged in LZH or ZIP files use <a href=\"file://fileopen\">File-Open</a>.<br>"
                 + "To save LZH or ZIP or other files from UltraKiss to your local computer use <a href=\"\">File-Save As</a>.<br>"
-                + "To load and run thousands of online KiSS sets available on the Internet use <a href=\"file://openportal\">File-Open Portal</a>.<br><br>"
+                + "To load and run online KiSS sets available on the Internet use <a href=\"file://openportal\">File-Open Portal</a>.<br><br>"
                 + "For full features without limitations <a href=\"https://github.com/kisekae/UltraKiss/releases\">download and install UltraKiss</a> from GitHub.<br><br>"
                 + "If you do not know what KiSS is, see the UltraKiss documentation using <a href=\"file://helpcontents\">Help-Contents</a>.<br>"
                 + "To learn how to make or visually edit KiSS sets within UltraKiss see <a href=\"file://helptutorial\">Help-Tutorials</a>.<br>"
