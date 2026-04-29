@@ -87,6 +87,7 @@ public abstract class Audio extends KissObject
    static protected final Lock lock = new ReentrantLock();
    static boolean stoppedmedia = false ;
    static boolean stoppedsound = false ;
+   static Audio lastaudio = null ;
 
 	// Audio attributes
 
@@ -488,24 +489,8 @@ public abstract class Audio extends KissObject
    
    static String getLastAudio()
    {
-      if (players == null) return null ;
-      if (players.size() == 0) return null ;
-      Vector v = (Vector) players.clone() ;
-      Collections.sort(v, new Comparator() 
-      {
-         public int compare(Object o1, Object o2)
-         {
-            if (!(o1 instanceof Audio)) return 0 ;
-            if (!(o2 instanceof Audio)) return 0 ;
-            if (((Audio) o1).getStartTime() > ((Audio) o2).getStartTime()) return -1 ;
-            if (((Audio) o1).getStartTime() < ((Audio) o2).getStartTime()) return 1 ;
-            return 0 ;
-         }
-      }) ;
-      Object o = v.elementAt(0) ;
-      if (!(o instanceof Audio)) return null ;
-      Audio a = (Audio) o ;
-      return (a.getWriteName()) ;
+      if (lastaudio == null) return null ;
+      return (lastaudio.getWriteName()) ;
    }
    
    
@@ -881,6 +866,10 @@ public abstract class Audio extends KissObject
       }
 	}
    
+   // Keep track of last audio started (for letAudio() fkiss)
+   
+  	static void setLastAudio(Audio a) { lastaudio = a ; }
+
 	// Function to simulate a stop event on a Websocket audio line.   
 
    public void sendStopEvent() { }

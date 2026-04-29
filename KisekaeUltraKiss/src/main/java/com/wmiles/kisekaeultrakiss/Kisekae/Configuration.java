@@ -3240,6 +3240,7 @@ final public class Configuration extends KissObject
       // Terminate any configuration mediaplayer that is active.
 
       Audio.stop() ;
+      Audio.setLastAudio(null) ;
       if (Kisekae.isMediaInstalled()) Video.stop() ;
       MediaFrame unique = MediaFrame.getUniquePlayer() ;
       if (unique != null && unique != mediaframe) unique.stop() ;
@@ -4527,20 +4528,31 @@ final public class Configuration extends KissObject
          {
             
    			// See if we have a transparency specification.  Syntax is %t
+   			// A Japanese set (K8F_ALL) did not have a space after the digits
 
    			if (token.startsWith("%t"))
    			{
-   				comment += token + " " ;
+               String leadingDigits = "" ; 
+               String[] parts = {" "," "} ;
+               comment += token + " " ;
    				value = token.substring(2) ;
    				if (value.length() > 0)
    				{
    					i = value.indexOf(';') ;
    					if (i > 0) value = value.substring(0,i) ;
-   					try { transparency = 255 - Integer.parseInt(value) ; }
+                  parts = value.split("(?=\\D)", 2); // Split at the first non-digit character
+                  leadingDigits = parts[0] ; 
+   					try { transparency = 255 - Integer.parseInt(leadingDigits) ; }
    					catch (NumberFormatException e)
    					{ showError("Non-numeric transparency value " + value,value) ; }
    				}
-   				token = (st.hasMoreTokens()) ? st.nextToken() : " " ;
+               if (parts.length > 1 && !" ".equals(parts[1])) 
+               {
+                  showWarning("Line [" + line + "] " + file + " transparency value is " + leadingDigits + " extracted from " + token,leadingDigits) ; 
+                  token = parts[1] ;
+               }
+               else 
+                  token = (st.hasMoreTokens()) ? st.nextToken() : " " ;
                continue ;
    			}
 

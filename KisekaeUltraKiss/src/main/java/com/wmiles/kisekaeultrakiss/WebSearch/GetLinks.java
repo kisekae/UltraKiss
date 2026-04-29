@@ -224,7 +224,7 @@ class GetLinks implements Runnable
          if (scheduled) return ;
          scheduled = true ;
          String s = (bytes  / 1024) + "K" ;
-         webframe.addTrace("End URL Scan. Pages accessed: " + count + " Bytes downloaded: " + s,1) ;
+         webframe.addTrace("End URL Scan. Pages accessed: " + count + ". Bytes downloaded: " + s,1) ;
          webframe.getlinkactive = false ;
          activecount.reset() ;
          
@@ -461,31 +461,27 @@ class GetLinks implements Runnable
    {
       count = 0 ; bytes = 0 ;
       archives = new Vector() ;
+      processed = new Vector() ;
+      activecount = new SynchronizedCounter() ;
       title = null ;
       stop = false ;
       scheduled = false ;
    }
    
    
+   // An inner class to define a counter that cannot be updated simultaneously.
+   
    public static class SynchronizedCounter 
    {
       private int count = 0;
 
       // Only one thread can enter this method at a time
-      public synchronized void increment() {
-         count++;
-      }
+      public synchronized void increment() { count++; }
       
-      public synchronized void decrement() {
-         count--;
-      }
+      public synchronized void decrement() { count--; }
 
-      public synchronized int getCount() {
-         return count;
-      }
+      public synchronized int getCount() { return count; }
          
-      public synchronized void reset() {
-         count = 0 ;
-       }
+      public synchronized void reset() { count = 0 ; }
    }  
 }

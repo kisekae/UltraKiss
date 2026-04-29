@@ -92,7 +92,10 @@ final public class MainFrame extends KissFrame
    private static String lastset = "" ;   // The last set loaded this session
    private static String lastzip = "" ;   // The last archive loaded this session
    private static URL downloadurl = null ; // The last download this session
+   private static String downloaderr = null ; // The url loader error message
+   private static int downloadbytes = 0 ; // The bytes download this session
    private static int sets = 0 ;          // The sets loaded in this session
+   private static boolean copyrightstatus = false ; // True if statusbar 
 
 	private MainFrame me = null ;			   // Reference to ourselves
 	private Kisekae kisekae = null ;			// Reference to our main class
@@ -561,6 +564,8 @@ final public class MainFrame extends KissFrame
       ArchiveFile zip = (c != null) ? c.getZipFile() : null ;
       lastzip = (zip != null) ? zip.toString() : "unknown" ;
       downloadurl = (mainmenu != null) ? mainmenu.getDownloadURL() : null ;
+      downloadbytes = (mainmenu != null) ? mainmenu.getUrlBytes() : 0 ;
+      downloaderr = (mainmenu != null) ? mainmenu.getUrlError() : null ;
       sets = sets + 1 ;
    	initframe(c) ;
    }
@@ -570,7 +575,11 @@ final public class MainFrame extends KissFrame
 		try
 		{
          if (Kisekae.isBatch() && c != null && c.hasViewerAppend())
+         {
+            if (downloaderr == null)
+               downloaderr = "Unable to verify sets with APPEND directives" ;
             c = null ;
+         }
          
 			// If the load was cancelled restore our old fileopen object.
          // Search loads are cancelled if the cnf was to be appended.
@@ -582,6 +591,9 @@ final public class MainFrame extends KissFrame
             KissMenu m = (menu instanceof UserMenu) ? panelmenu : menu ;
 				if (m != null) m.setFileOpen(fileopen) ;
 		      KissObject.setLoader(null) ;
+            if (downloaderr == null && config != null)
+               downloaderr = "Configuration errors loading CNF " +  config.getName() ;
+            Kisekae.setErrorMessage(downloaderr) ;
             Kisekae.setLoaded(false) ;
             closeframe(); // cancel on syntax error CNF reload
       		if (fileopen != null) fileopen.close() ;
@@ -1577,8 +1589,23 @@ final public class MainFrame extends KissFrame
 	public void showStatus(String s) { showStatus(s,false) ; }
 	public void showStatus(String s, boolean print)
 	{
-		if (s == null) s = Kisekae.getCopyright() ;
-      if (OptionsDialog.getDebugControl() || print) PrintLn.println(s) ;
+		if (s == null) 
+      {
+         copyrightstatus = true ;
+         s = Kisekae.getCopyright() ;
+         int n = Kisekae.getScreenRate() ;
+         if (Kisekae.isWebsocket() && OptionsDialog.getDebugWebSocket()) 
+         {
+            if (n > 0)
+               s = s + "    Refresh rate = " + n + " screen refreshes per second." ;
+            else
+               s = s + "    No screen refresh." ;
+         }
+      }
+      else
+         copyrightstatus = false ;
+      if ((OptionsDialog.getDebugControl() || print) && !copyrightstatus)
+         PrintLn.println(s) ;
 		if (statusBar != null) statusBar.showStatus(s) ;
 	}
 
@@ -1609,6 +1636,14 @@ final public class MainFrame extends KissFrame
 
 	public FileLoader getLoader() { return loader ; }
 
+	// Return the bytes downloaded by the URL loader.
+
+	public int getDownloadBytes() { return downloadbytes ; }
+
+	// Return the bytes downloaded by the URL loader.
+
+	public String getError() { return downloaderr ; }
+
 	// Return a reference to our main menu.
 
 	public MainMenu getMainMenu() { return mainmenu ; }
@@ -1620,6 +1655,10 @@ final public class MainFrame extends KissFrame
 	// Return a reference to our status bar object.
 
 	StatusBar getStatusBar() { return statusBar ; }
+
+	// Return if we are showing copyright in our status bar object.
+
+	public static boolean getCopyrightStatus() { return copyrightstatus ; }
 
 	// Return a reference to our toolbar object.
 
@@ -2765,6 +2804,19 @@ final public class MainFrame extends KissFrame
       // Close the Tutorial Help if it had been opened on a File-New
       
       if (mainmenu != null) mainmenu.closeTutorial() ;
+      
+      // If we are closing a set launched by the Portal, restart the portal.
+
+      if (WebFrame.getRestorePortal())
+      {
+         String lastdownload = WebFrame.getLastDownload() ;
+         if (lastset != null && lastset.equals(lastdownload)) 
+         {
+            mainmenu.openportal.doClick() ;
+            lastset = "" ;
+         }
+      }
+      
       
       if (OptionsDialog.getRandomSplash()) setNewSplashPane(true) ;      
       if (scrollpane != null) scrollpane.setViewport(null) ;

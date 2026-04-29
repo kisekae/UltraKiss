@@ -21,10 +21,25 @@
 	releases, or problems and work-arounds that may affect you.&nbsp;</p>
                                         <p>&nbsp;</p>
                                        <p>&nbsp;</p>
+					<p><B>April 30, 2026</B></p>
+					<P>UltraKiss V5.3 is released. UltraKiss 5.3 corrects issues with the UltraKiss Portal and the Search feature.</P>
+                                        <P>UltraKiss is end-of-life.  Issues may be corrected if reported to project <a href="https://github.com/kisekae/UltraKiss">Kisekae UltraKiss</a> on GitHub or with <a href=\"file://helpbugreport\">Help-Bug Report</a> within UltraKiss. </P>
+                                        <p>&nbsp;</p>
+					<h3><FONT face=Arial>Updates to V5.3&nbsp; </FONT></h3>
+					<BLOCKQUOTE>
+                      <p><font face="Arial">1. The %t cel transparency setting will now parse a number immediately followed by text. Japanese sets have character encoding.</font></p>
+                      <p><font face="Arial">2. The letAudio() FKiSS command was not always returning the name of the last audio played.  This is corrected.</font></p>
+                      <p><font face="Arial">3. Corrected an index-out-of-bounds exception for a transparent index when encoding a GIF image file.</font></p>
+                      <p><font face="Arial">4. The URL loader now maintains the byte count for downloaded files.  Cumulative bytes are reported for WebSearch downloads.</font></p>
+                      <p><font face="Arial">5. WebSearch access to remote sites is now throttled and limited to small batches to manage download bandwidth. </font></p>
+                      <p><font face="Arial">6. Corrected an uncaught exception error with WebSearch updates on the EDT thread when searching for archive links. </font></p>
+                      <p><font face="Arial">7. Implemented a Restore Portal option to activate the portal when a set is closed after being downloaded from the Portal. </font></p>
+                      <p><font face="Arial">8. Introduced a WebSocket maximum file size upload limit (Options-Search-Maximum Archive Size) for WebSocket implementations. </font></p>
+                      <p><font face="Arial">9. Implemented WebSocket backpressure control for uploading files to the server. Upload percent completion is now reported. </font></p>
+          				</BLOCKQUOTE>
+                                       <p>&nbsp;</p>
 					<p><B>March 19, 2026</B></p>
 					<P>UltraKiss V5.2 is released. UltraKiss 5.2 corrects compatibility issues with DirectKiss and corrects set import and export of GUI components as cels.</P>
-					<P>UltraKiss 5.2 now correctly processes Dov Sherman's Final Fantasy set (mscloud2.lzh) and Kim McFarland's Kanji set (kanjkiss.lzh).</P>
-                                        <P>UltraKiss is end-of-life.  Issues may be corrected if reported to project <a href="https://github.com/kisekae/UltraKiss">Kisekae UltraKiss</a> on GitHub or with <a href=\"file://helpbugreport\">Help-Bug Report</a> within UltraKiss. </P>
                                         <p>&nbsp;</p>
 					<h3><FONT face=Arial>Updates to V5.2&nbsp; </FONT></h3>
 					<BLOCKQUOTE>
@@ -43,12 +58,12 @@
                       <p><font face="Arial">13. Corrected WebSearch operation to prevent duplicate set validations due to simultaneous activities.</font></p>
                       <p><font face="Arial">14. Packaged UltraKiss Installation Verification sets on installation and available through the UltraKiss Portal.</font></p>
                       <p><font face="Arial">15. Corrected the WebSearch cancel operation to properly interrupt and terminate an active search operation.</font></p>
-                      <p><font face="Arial">16. Numerous changes were made to the WebSearch operation to correct downloads from directories.</font></p>
+                      <p><font face="Arial">16. Numerous changes were made to the WebSearch operation to correct downloads from local directories.</font></p>
                       <p><font face="Arial">17. Implemented content type character set encoding for Portal web pages.  Japanese pages now display properly.</font></p>
                       <p><font face="Arial">18. Numerous changes were made to correct missing image width and height for website pages displayed in the UltraKiss Portal. </font></p>
                       <p><font face="Arial">19. Page and image caching was implemented for the UltraKiss Portal. Forward and Back navigation is improved.</font></p>
                       <p><font face="Arial">20. A new debug trace option was provided for the UltraKiss Portal. This shows portal activities in the log file.</font></p>
-                      <p><font face="Arial">21. Disabled all WebSearch functions.  Removed external sites from the Web Portal start page.</font></p>
+                      <p><font face="Arial">21. Disabled all WebSearch remote functions.  Removed external sites from the Web Portal start page.</font></p>
           				</BLOCKQUOTE>
                                        <p>&nbsp;</p>
 					<p><B>February 24, 2026</B></p>

@@ -74,6 +74,7 @@ class UrlLoader extends KissFrame
    protected String setname = null ;      // The original set name
    protected String cnfname = null ;      // The original CNF name
    protected String action = null ;       // The loader action state
+   protected String errormsg = null ;     // The loader error message
 
 
 	// Status indicators
@@ -219,6 +220,7 @@ class UrlLoader extends KissFrame
 
 	public void run()
 	{
+      errormsg = null ;
       boolean incache = false ;
 		if (activeloader != null) activeloader.stopload() ;
       activeloader = this ;
@@ -370,8 +372,9 @@ class UrlLoader extends KissFrame
       
          // Open the stream and read the data.  Read stream if not cached or 
          // the content size differs from cached file size.
-      
-         if (!incache || size != f.length())
+
+         long n1 = f.length() ;
+         if (!incache || size != n1 || n1 == 0)
          {
             s = (size  / 1024) + "K" ;
             String s1 = Kisekae.getCaptions().getString("TransferText") ;
@@ -381,6 +384,7 @@ class UrlLoader extends KissFrame
                s1 = s1.substring(0,i1) + s + s1.substring(j1+1) ;
             showMsg(s1) ;
             int maxdownload = Kisekae.getMaxDownload() ;
+            int kb = size / 1024 ;
             if (Kisekae.isBatch() && size > maxdownload*1024)
                throw new KissException("Batch URL size (" + size + ") exceeds " + maxdownload + " KB") ;
             is = c.getInputStream();
@@ -444,6 +448,7 @@ class UrlLoader extends KissFrame
          showStatus(Kisekae.getCaptions().getString("LoadTerminatedStatus")) ;
          showMsg(Kisekae.getCaptions().getString("LowMemoryFault")) ;
 			PrintLn.println("UrlLoader: Out of memory.") ;
+         errormsg = e.toString() ;
 		}
 
       catch (MalformedURLException e)
@@ -453,6 +458,7 @@ class UrlLoader extends KissFrame
          memfile = null ;
          showStatus(Kisekae.getCaptions().getString("LoadTerminatedStatus")) ;
          showMsg(Kisekae.getCaptions().getString("InvalidURLError") + " " + urlname + " " + e.getMessage()) ;
+         errormsg = e.toString() ;
          e.printStackTrace();
       }
 
@@ -463,6 +469,7 @@ class UrlLoader extends KissFrame
          memfile = null ;
          String msg = e.toString() ;
          showStatus(Kisekae.getCaptions().getString("LoadTerminatedStatus")) ;
+         errormsg = e.toString() ;
          showMsg(msg) ;
       }
 
@@ -493,6 +500,7 @@ class UrlLoader extends KissFrame
             msg += " " + Kisekae.getCaptions().getString("FileNotFound") ;
   			showStatus(msg) ;
          showMsg(e.toString()) ;
+         errormsg = e.toString() ;
          if (!stop) 
          {
             PrintLn.println("UrlLoader: " + threadname + " exception " + e) ;
@@ -706,6 +714,14 @@ class UrlLoader extends KissFrame
    // Method to return our original set name.
 
    String getSetName() { return setname ; }
+
+   // Method to get the bytes downloaded.
+
+   int getBytes() { return bytes ; }
+
+   // Method to return any error message.
+
+   String getErrorMessage() { return errormsg ; }
    
    // Method to return our optional original cnf name.
 

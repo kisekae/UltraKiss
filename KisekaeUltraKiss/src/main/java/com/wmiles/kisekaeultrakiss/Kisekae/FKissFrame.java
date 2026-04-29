@@ -1290,6 +1290,7 @@ final class FKissFrame extends KissFrame
       int viewrow = row ;
       if (!javax.swing.SwingUtilities.isEventDispatchThread())
       {    // Note - swing error 12/19/2025 
+         PrintLn.println("FKissFrame: setViewRow() is not on EDT ...") ;
          Runnable awt = new Runnable()
          { public void run() { setViewRow(viewrow) ; } } ;
          javax.swing.SwingUtilities.invokeLater(awt) ;         
@@ -1308,7 +1309,8 @@ final class FKissFrame extends KissFrame
       row -= 2 ;
       if (row < 0) row = 0 ;
 		int ypos = row * h ;
-      if (me.isVisible()) 
+      // Note - swing error 04/15/2026 - corrected to ensure within bounds
+      if (me.isVisible() && r.x >= 0 && ypos >=r.y && ypos < r.height) 
          view.setViewPosition(new Point(r.x,ypos)) ;
    }
 

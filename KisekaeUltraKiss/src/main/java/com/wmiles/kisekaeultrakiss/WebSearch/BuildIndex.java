@@ -104,6 +104,8 @@ import com.wmiles.kisekaeultrakiss.Kisekae.PrintLn ;
 class BuildIndex implements ActionListener
 {
    private static boolean stop = false ;           // Signal to stop thread
+   private static String kissindex = null ;        // Master or subindex name
+   private static String masterindex = null ;        // Master or subindex name
    private String formname = null ;                // Actual site name
    private String formurl = null ;                 // Catalogue URL string
    private String formcount = "0" ;                // Count of entries on form
@@ -180,10 +182,11 @@ class BuildIndex implements ActionListener
 
    // Constructor
 
-   public BuildIndex(WebSearchFrame web, String name, String url, int n)
+   public BuildIndex(WebSearchFrame web, String name, String master, String url, int n)
    {
       webframe = web ;
       formname = name ;
+      masterindex = master ;
       formurl = url ;
       formcount = Integer.valueOf(n).toString() ;
       kisekae = Kisekae.getKisekae() ;
@@ -201,22 +204,56 @@ class BuildIndex implements ActionListener
          // file is renamed to have a ".bak" extension.
 
          int n = 0 ;
-         String s = OptionsDialog.getKissIndex() + ".bak" ;
+         kissindex = OptionsDialog.getKissIndex() ;
+ 
+         // If we scanned a remote site we may be building an index for a 
+         // number of batches.  Rather than use the master index create a
+         // submaster index for this remote scan.
+         
+         if (ValidateLinks.getRemote())
+         {
+            File f = new File(kissindex) ;
+            String directory = f.getParent() ;
+            int n1 = masterindex.lastIndexOf('.') ;
+            String name = masterindex.substring(0,n1) ;
+            name = name + ".index.html" ;
+            f = new File(directory,name) ;
+            kissindex = f.getPath() ;
+         }
+         
+         String s = kissindex + ".bak" ;
          s = convertSeparator(s) ;
+
+         // Rename any existing master index as a backup.
          
          try
          {
-            String s1 = OptionsDialog.getKissIndex() ;
+            String s1 = kissindex ;
             s1 = convertSeparator(s1) ;
             if (OptionsDialog.getDebugSearch())
                PrintLn.println("BuildIndex: parse started. " + s1) ;
             File f1 = new File(s1) ;
             File f2 = new File(s) ;
-            if (f2.exists()) f2.delete() ;
-            f1.renameTo(f2) ;
-            if (OptionsDialog.getDebugSearch())
-               PrintLn.println("BuildIndex: rename " + f1.getName() + " to " + f2.getPath()) ;
-            if (!OptionsDialog.getClearMaster())
+            if (f1.exists())
+            {
+               if (f2.exists()) f2.delete() ;
+               f1.renameTo(f2) ;
+               if (OptionsDialog.getDebugSearch())
+                  PrintLn.println("BuildIndex: rename " + f1.getName() + " to " + f2.getPath()) ;
+            }
+
+            // We usually add this new scan as a line item in the master index
+            // unless we clearing the master.  However we always create a new 
+            // submaster index for remote scans for the remote site.
+ 
+            int batch = webframe.getBatchNumber() ;
+            if (ValidateLinks.getRemote() && batch != 0)
+            {
+               Reader rd = getReader(s) ;
+               if (rd == null) return ;
+               new ParserDelegator().parse(rd, callback, true);                 
+            }            
+            if (!ValidateLinks.getRemote() && !OptionsDialog.getClearMaster())
             {
                Reader rd = getReader(s) ;
                if (rd == null) return ;
@@ -225,7 +262,7 @@ class BuildIndex implements ActionListener
          }
          catch (FileNotFoundException e) 
          { 
-            PrintLn.println("BuildIndex: rename " + OptionsDialog.getKissIndex() + " to " + s + " failed.") ;
+            PrintLn.println("BuildIndex: rename " + kissindex + " to " + s + " failed.") ;
             PrintLn.println(e.toString()) ;
          }
 
@@ -347,7 +384,7 @@ class BuildIndex implements ActionListener
 
          // Save the text object.
 
-         formname = OptionsDialog.getKissIndex() ;
+         formname = kissindex ;
          File f1 = new File(formname) ;
          String directory = f1.getParent() ;
          formname = f1.getName() ;
@@ -392,6 +429,7 @@ class BuildIndex implements ActionListener
       return new FileReader(uri) ;
    }
 
+   static String getKissIndex() { return kissindex ; }
 
    // A function to return a newline terminated string.
 

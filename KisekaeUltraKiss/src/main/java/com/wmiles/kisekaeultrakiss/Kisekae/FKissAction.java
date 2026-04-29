@@ -1334,12 +1334,6 @@ final class FKissAction extends KissObject
             s = (String) parameters.elementAt(0) ;
             o1 = variable.getValue((String) parameters.elementAt(0),event) ;
             if ("".equals(o1)) { Audio.stop(config,audiotype) ;  break ; }
-            if (OptionsDialog.getSoundSingle() && !OptionsDialog.getLongSoundMedia())
-            {
-         		if (OptionsDialog.getDebugSound())
-         			PrintLn.println("FKissAction: SoundSingle about to play " + o1 + " stopping any sound") ;
-               if ("sound".equals(audiotype)) Audio.stop(config,audiotype) ;
-            }
 
             // Identify the action object.  Sounds were identified as audio objects
             // during the configuration parse on sound() or music() or mediaplayer() 
@@ -1421,8 +1415,14 @@ final class FKissAction extends KissObject
             // If single sound and stopping and currently playing this sound 
             // then set the indicator to wait for the stop to complete.
             
+            Audio.setLastAudio(a) ;
             if (OptionsDialog.getSoundSingle() && !OptionsDialog.getLongSoundMedia())
+            {
+         		if (OptionsDialog.getDebugSound())
+         			PrintLn.println("FKissAction: SoundSingle about to play " + o1 + " stopping any sound") ;
+               if ("sound".equals(audiotype)) Audio.stop(config,audiotype) ;
                if (a.isStarted()) a.setStopping(true) ;
+            }
             a.play() ;
             break ;
 

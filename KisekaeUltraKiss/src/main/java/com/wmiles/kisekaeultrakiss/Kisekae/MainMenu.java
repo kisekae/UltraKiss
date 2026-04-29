@@ -78,6 +78,8 @@ final public class MainMenu extends KissMenu
    private String webURL = null ;                  // Initial URL for portal
    private String openpath = null ;                // FileOpen path on open
    private static boolean filenew = false ;        // True if File-New 
+   private int bytes = 0 ;                         // Bytes loaded
+   private String errormsg = null ;                // Loader error message
 
    private static final int NEWFILE = 0 ;
    private static final int NEWPAGE = 1 ;
@@ -289,7 +291,6 @@ final public class MainMenu extends KissMenu
       fileMenu.add((websearch = new JMenuItem(Kisekae.getCaptions().getString("MenuFileWebSearch")))) ;
       websearch.addActionListener(this) ;
       websearch.setEnabled(!Kisekae.isSecure() && Kisekae.isSearchInstalled() && !Kisekae.isExpired() && !Kisekae.isWebsocket());
-      websearch.setEnabled(false);
       websearch.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, accelerator));
       if (!applemac) websearch.setMnemonic(KeyEvent.VK_S) ;
       fileMenu.addSeparator() ;
@@ -508,6 +509,14 @@ final public class MainMenu extends KissMenu
    // for load complete callbacks.
 
    void setUrlLoader(UrlLoader loader) { urlloader = loader ; }
+   
+   // Get the number of bytes downloaded.
+   
+   int getUrlBytes() { return bytes ; }
+   
+   // Get any download error message.
+   
+   String getUrlError() { return errormsg ; }
    
    // Set the original download URL (not the cache file)
    // the menu Save and Save As menu items.
@@ -1206,10 +1215,11 @@ final public class MainMenu extends KissMenu
             String setname = urlloader.getSetName() ;
             String cnfname = urlloader.getCnfName() ;
             downloadurl = urlloader.getURL() ;
+            bytes = urlloader.getBytes() ;
+            errormsg = urlloader.getErrorMessage() ;
 
             // Create a FileOpen object for this temporary file.
 
-            urlloader = null ;
             URL sourceURL = null ;
             try { sourceURL = new URL(urlname) ; }
             catch (MalformedURLException e) { sourceURL = null ; }
@@ -1219,6 +1229,7 @@ final public class MainMenu extends KissMenu
             // URL files may be in memory if not cached.
             
             MemFile mf = urlloader.getMemoryFile() ;
+            urlloader = null ;
             if (mf != null)
             {
                String filename = mf.getFileName() ;
@@ -1246,6 +1257,7 @@ final public class MainMenu extends KissMenu
                if (ze == null)
                {
                   fdnew.close() ;
+                  Kisekae.setErrorMessage(errormsg) ;
                   Kisekae.setLoaded(false) ;
                   return ;
                }
@@ -1737,6 +1749,7 @@ final public class MainMenu extends KissMenu
    {
       if (OptionsDialog.getDebugControl())
          PrintLn.println("MainMenu eventSearchWeb ") ;
+/*
       String msg = "The Search function scans a file directory or a website\n"
          + "to construct a thumbnail index of all KiSS files found.\n"
          + "Your current UltraKiss session will be closed.\n\n"
@@ -1746,7 +1759,7 @@ final public class MainMenu extends KissMenu
          JOptionPane.YES_NO_OPTION,
          JOptionPane.QUESTION_MESSAGE) ;
       if (i != JOptionPane.YES_OPTION) return ;
-
+*/
       Kisekae.setCursor(parent,Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
       com.wmiles.kisekaeultrakiss.WebSearch.WebSearchFrame wf = new com.wmiles.kisekaeultrakiss.WebSearch.WebSearchFrame(parent) ;
       Kisekae.setCursor(parent,Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;

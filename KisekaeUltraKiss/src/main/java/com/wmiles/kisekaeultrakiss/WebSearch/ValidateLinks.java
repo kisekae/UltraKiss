@@ -101,10 +101,13 @@ class ValidateLinks implements Runnable, ActionListener
    private static int count = 0 ;                  // Count of invokations
    private static int bytes = 0 ;                  // Total bytes loaded
    private static int activecount = 0 ;            // Active threads
+   private static int remotebatchstart = 0 ;       // Next remote batch start
    private static boolean stop = false ;           // Signal to stop thread
+   private static boolean remote = false ;         // True if remote website
    private static Vector setstate = new Vector() ; // State result returned
    private boolean savedataset = false ;           // True if save in progress
    private boolean savethumbnail = false ;         // True if save thumbnail
+   private boolean throttle = true ;               // True if throttle remote
    private String setname = null ;                 // Actual kiss set name
    private String writename = null ;               // Set name as written
    private String baselocation = null ;            // Web site location
@@ -128,15 +131,18 @@ class ValidateLinks implements Runnable, ActionListener
       webframe = web ;
       archives = v ;
       baselocation = webframe.getBaseLocation() ;
-      if (baselocation.startsWith("http://"))
+      String baselocation1 = baselocation.toLowerCase() ;
+      if (baselocation1.startsWith("http://") || baselocation1.startsWith("https://"))
+         remote = true ; 
+      if (baselocation1.startsWith("http://"))
          baselocation = baselocation.substring(7) ;
-      if (baselocation.startsWith("https://"))
+      if (baselocation1.startsWith("https://"))
          baselocation = baselocation.substring(8) ;
-      if (baselocation.startsWith("file:///"))
+      if (baselocation1.startsWith("file:///"))
          baselocation = baselocation.substring(8) ;
-      if (baselocation.startsWith("file://"))
+      if (baselocation1.startsWith("file://"))
          baselocation = baselocation.substring(7) ;
-      if (baselocation.startsWith("file:/"))
+      if (baselocation1.startsWith("file:/"))
          baselocation = baselocation.substring(6) ;
       baselocation = baselocation.replace('/','.') ;
       if (baselocation.endsWith("."))
@@ -155,6 +161,7 @@ class ValidateLinks implements Runnable, ActionListener
       if (OptionsDialog.getDebugSearch())
          PrintLn.println(thread.getName() + " started.") ;
       webframe.vallinkactive = true ;
+      webframe.setbatchstart.setEnabled(false) ;
       kisekae = Kisekae.getKisekae() ;
       kisekae.setCallback(this) ;
       kisekae.setBatch(true) ;
@@ -163,8 +170,9 @@ class ValidateLinks implements Runnable, ActionListener
 
       try
       {
-         for (int i = 0 ; i < archives.size() ; i++)
+         for (int i = remotebatchstart ; i < archives.size() ; i++)
          {
+            if (stop) break ;
             count++ ;
             location = (String) archives.elementAt(i) ;
             if (validate(location))
@@ -175,6 +183,22 @@ class ValidateLinks implements Runnable, ActionListener
                   catch (InterruptedException e) { stop = true ; }
                }
             }
+            if (throttle)
+            {
+               int n = OptionsDialog.getMaxRemoteBatch() ;
+               if (remote && (count - remotebatchstart >= n) && (n > 0)) 
+               {
+                  webframe.addTrace("Terminating validation, remote batch limit exceeded (" + OptionsDialog.getMaxRemoteBatch() + ") ... ") ;
+                  break ;
+               }
+               if (remote && OptionsDialog.getRemoteDelay() > 0)
+               {
+                  int randomNum = (int)(Math.random() * (OptionsDialog.getRemoteDelay()/1000)) + 1;  
+                  webframe.addTrace("Waiting " + randomNum + " seconds ... ") ;
+                  try { thread.sleep(randomNum*1000) ; }
+                  catch (InterruptedException e) { stop = true ; }               
+               }
+            }
          }
       }
       catch (Throwable e) { }
@@ -183,8 +207,9 @@ class ValidateLinks implements Runnable, ActionListener
       if (activecount <= 0 || stop)
       {
          String s = (bytes  / 1024) + "K" ;
-         webframe.addTrace("End Archive Validation. Pages: " + count + ". Bytes: " + s,1) ;
+         webframe.addTrace("End Archive Validation. Downloads from " + (remotebatchstart+1) + " to " + count + ". Cumulative bytes downloaded: " + s,1) ;
          webframe.vallinkactive = false ;
+         webframe.setbatchstart.setEnabled(true) ;
          activecount = 0 ;
          
          // Run the callback on the EDT thread.
@@ -209,9 +234,10 @@ class ValidateLinks implements Runnable, ActionListener
       try
       {
          if (OptionsDialog.getDebugSearch())
-            PrintLn.println("ValidateLinks: begin validation for " + s) ;
-         webframe.addTrace("Initializing validation for " + s) ;
+            PrintLn.println("ValidateLinks: begin validation for " + s + " (" + count + " of " + archives.size() + ")") ;
+         webframe.addTrace("Initializing validation for " + s + " (" + count + " of " + archives.size() + ")") ;
          kisekae.init(s,OptionsDialog.getDownloadSize(),webframe) ;
+         bytes += kisekae.getBytesLoaded() ;
          return true ;
       }
       catch (Throwable e)
@@ -273,6 +299,7 @@ class ValidateLinks implements Runnable, ActionListener
             savedataset = false ;
             File f = new File(directory) ;
             f.mkdirs() ;
+            setname = setname.replaceAll("%20", " ") ;
             writename = setname ;
             
             boolean b = OptionsDialog.getSaveArchive() ;
@@ -374,13 +401,32 @@ class ValidateLinks implements Runnable, ActionListener
 
    static Vector getSetState() { return setstate ; }
 
+   // A method to return the current count of download links processed.
+
+   static int getCount() { return count ; }
+
+   // A method to return the indicator that this is a remote website.
+
+   static boolean getRemote() { return remote ; }
+
+   // A method to return our result.
+
+   static void setRemoteBatchStart(int n) 
+   { 
+      remotebatchstart = n ; 
+      setstate = new Vector() ;
+   }
+
    // A method to reset our static counts.
 
    static void reset()
    {
       count = 0 ; bytes = 0 ;
+      remotebatchstart = 0 ;
+      activecount = 0 ;
       setstate = new Vector() ; 
       stop = false ;
+      remote = false ;
    }
 
 
@@ -422,6 +468,12 @@ class ValidateLinks implements Runnable, ActionListener
                if (savedataset && !stop) return ;
                saveimage() ;
                if (savethumbnail && !stop) return ;
+            }
+            else
+            {
+               String error = kisekae.getErrorMessage() ;
+               if (error != null && error.length() > 0)
+                  webframe.addTrace(" Fault: " + error,(b) ? 3 : 2) ;
             }
          }
          synchronized (queue) { queue.notify() ; }

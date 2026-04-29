@@ -299,7 +299,7 @@ final class PanelMenu extends KissMenu
       m[0].addSeparator() ;
       m[0].add((export = new JMenuItem(Kisekae.getCaptions().getString("MenuFileExport")))) ;
       export.addActionListener(this) ;
-      export.setEnabled(!Kisekae.isSecure() && !Kisekae.isExpired()) ;
+      export.setEnabled(!Kisekae.isSecure() && !Kisekae.isExpired() && !Kisekae.isWebsocket()) ;
       m[0].addSeparator() ;
       m[0].add((properties = new JMenuItem(Kisekae.getCaptions().getString("MenuFileProperties")))) ;
       properties.addActionListener(this) ;

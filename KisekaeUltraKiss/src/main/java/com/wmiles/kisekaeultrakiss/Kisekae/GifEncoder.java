@@ -284,7 +284,7 @@ public class GifEncoder extends ImageEncoder
 
 	               // If we have a frame with a palette this pixel should exist.
 
-						if ((frame != null && colors > 0) || palette != null)
+						if (transparentIndex >= 0 && ((frame != null && colors > 0) || palette != null))
 	               {
 	               	int a = (rgb & 0xff000000) >> 24 ;
 	               	int r = (rgb & 0xff0000) >> 16 ;

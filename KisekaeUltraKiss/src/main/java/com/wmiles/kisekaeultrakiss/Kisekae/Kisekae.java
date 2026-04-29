@@ -88,7 +88,7 @@ public class Kisekae extends Applet
    // Security variables
 
    private static String copyright = 
-      "Kisekae UltraKiss V5.2 (c) 2002-2026 William Miles" ;
+      "Kisekae UltraKiss V5.3(c) 2002-2026 William Miles" ;
    private static Object authorize = null ;        // Seigen module
    private static Calendar warningdate = null ;    // Secure warning
    private static Calendar expiredate = null ;     // Licence expire
@@ -141,7 +141,10 @@ public class Kisekae extends Applet
    private static String language = "" ;           // Our command line lang arg
    private static String kissweb = "http://" ;     // Our command line web arg
    private static String clientIP = "" ;           // Websocket client
+   private static String errormsg = "" ;           // General error message
+   private static int screenrate = 0 ;             // Websocket rate per second
    private static int maxdownload = 1024 ;         // Maximum download size KB
+   private static int bytesloaded = 0 ;            // Bytes downloaded for set
    private static int globalexception = 0 ;        // Global exception count
    private static int websocketport = 49152 ;      // Port for websocket server
    private static int maxconnection = 10000 ;      // Max websocket connection
@@ -199,7 +202,7 @@ public class Kisekae extends Applet
 
       LogFile.start() ;
       builddate = Calendar.getInstance() ;
-      builddate.set(2026,4-1,14) ;
+      builddate.set(2026,4-1,29) ;
       
       // Restore the properties.
       
@@ -891,6 +894,7 @@ public class Kisekae extends Applet
       helpinstalled = false ;
       jaiinstalled = false ;
       volatileimages = false ;
+      errormsg = "" ;
 
       // Activate the load.  Close any previously loaded set to
       // reduce the load memory requirements.
@@ -1076,6 +1080,8 @@ public class Kisekae extends Applet
    public static boolean isExpired() { return !currentdate.before(expiredate) || manualexpire ; }
    public static boolean isRestricted() { return currentdate.after(restrictdate) ; }
    public static int getMaxConnectionTime() { return maxconnection ; }
+   public static int getScreenRate() { return screenrate ; }
+   public static boolean getClientScreen() { return clientscreen ; }
    public static ResourceBundle getCaptions() { return captions ; }
    static TipsBox getTipsBox() { return tips ; }
    static URL getBase() { return codebase ; }
@@ -1085,7 +1091,9 @@ public class Kisekae extends Applet
    static String getLanguage() { return (language != null) ? language : "English" ; }
    static String getLanguageEncoding() { return (encoding != null) ? encoding : "UTF-8" ; }
    static Locale getCurrentLocale() { return locale ; }
-   static int getMaxDownload() { return maxdownload ; }
+   public static int getMaxDownload() { return maxdownload ; }
+   public static int getBytesLoaded() { return bytesloaded ; }
+   public static String getErrorMessage() { return errormsg ; }
    static int getWebsocketPort() { return websocketport ; }
    static String getClientIP() { return clientIP ; }
    static String getKissWeb() { return kissweb ; }
@@ -1621,6 +1629,9 @@ public class Kisekae extends Applet
    {
       batch = b ; 
    }
+   
+   public static void setErrorMessage(String s) { errormsg = s ; }
+   
 
    // When we are a server (websocket) we do not know the client screen size
    // until such time that the socket is established and the client sends a 
@@ -1656,6 +1667,7 @@ public class Kisekae extends Applet
       mainframe.repaint() ;      
    }
 
+   public static void setRefreshRate(int n) { screenrate = n ; }
    public static void setClientScreen() { clientscreen = true ; }
    public static void setClientIP(String remoteaddress) { clientIP = remoteaddress ; }
 
@@ -1681,6 +1693,7 @@ public class Kisekae extends Applet
       }
       
       loaded = b ;
+      bytesloaded = (mainframe != null) ? mainframe.getDownloadBytes() : 0 ;
       callback.doClick() ; 
    }
 
@@ -2881,9 +2894,12 @@ public class Kisekae extends Applet
                         if (y < 0) y = 0 ;
                         websocketdialog.setLocation(x,y) ;                         
                         websocketdialog.setVisible(true) ;
+                        Kisekae.setCursor(ep,Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
  
                         // This dialog was modal.  If we are here then the
                         // dialog has been closed.  
+                        
+                        mainframe.showStatus(null) ;
                         
                         // If the portal is visible make sure it is at the front
                         // unless a hyperlink closed the dialog.  If a hyperlink

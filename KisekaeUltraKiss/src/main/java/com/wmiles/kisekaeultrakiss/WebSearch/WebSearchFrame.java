@@ -133,12 +133,14 @@ final public class WebSearchFrame extends KissFrame
    private StatusBar statusbar = null ;            // Window status bar
    private WaitDialog waitbox = null ;             // Waiting dialog 
    private String baselocation = null ;            // Location of base site
+   private String mastername = null ;              // Name of master index
    private String absoluteformname = null ;        // Location of generated HTML
    private URL pageurl = null ;                    // URL of base page
    private boolean stop = false ;                  // If true, stop processing
    private boolean activated = false ;             // If true, search was activated
    private boolean terminating = false ;           // If true, terminating
    private int initdivider = 0 ;                   // Initial split divider
+   private int batchnumber = 0 ;                   // Remote batch 
    
    // User interface objects.
 
@@ -147,7 +149,7 @@ final public class WebSearchFrame extends KissFrame
    private JPanel panel3 = new JPanel() ;
    private JPanel panel4 = new JPanel() ;
    private JSplitPane split1 = new JSplitPane() ;
-   private JTextField enterurl = new JTextField() ;
+   private PlaceholderTextField enterurl = new PlaceholderTextField() ;
    private JTextPane tracearea = new JTextPane() ;
    private JEditorPane editor = new JEditorPane() ;
    private EditorKit editorkit = null ;
@@ -171,6 +173,7 @@ final public class WebSearchFrame extends KissFrame
    private JMenuItem cancel ;
    private JMenuItem about ;
    private JMenuItem options ;
+   protected JMenuItem setbatchstart ;
    private JMenuItem logfile ;
    private Insets insets = null ;
 
@@ -323,6 +326,8 @@ final public class WebSearchFrame extends KissFrame
       optionMenu.add((options = new JMenuItem(Kisekae.getCaptions().getString("MenuToolsOptions")))) ;
       options.setMnemonic(KeyEvent.VK_C) ;
       options.addActionListener(this) ;
+      optionMenu.add((setbatchstart = new JMenuItem(Kisekae.getCaptions().getString("MenuSetBatchStart")))) ;
+      setbatchstart.addActionListener(this) ;
       mb.add(optionMenu) ;
 
 		// Create the Help menu and About dialog.
@@ -366,6 +371,7 @@ final public class WebSearchFrame extends KissFrame
       idxcallback.addActionListener(this);
       schcallback.addActionListener(this);
       addWindowListener(this) ;
+      editor.requestFocusInWindow() ;
   }
 
 
@@ -405,7 +411,7 @@ final public class WebSearchFrame extends KissFrame
    {
       String title = "WebSearch Tool" ;
       setTitle(title) ;
-      enterurl.setText("") ;
+      enterurl.setPlaceholder("https://") ;
       try
       {
          URL url = getClass().getClassLoader().getResource(instructions) ;
@@ -436,6 +442,7 @@ final public class WebSearchFrame extends KissFrame
  
          // Initiate the parse.
 
+         addTrace(" ") ;
          addTrace("Begin WebSearch",1) ;
          PrintLn.println("WebSearch: begins for " + location) ;
          group = new ThreadGroup("SearchThreads") ;
@@ -469,6 +476,13 @@ final public class WebSearchFrame extends KissFrame
    
    public void showStatus(String s)
    {
+      if (!javax.swing.SwingUtilities.isEventDispatchThread())
+      {
+      	Runnable runner = new Runnable()
+			{ public void run() { showStatus(s) ; } } ;
+   		javax.swing.SwingUtilities.invokeLater(runner) ;
+         return ;
+      }
       if (statusbar == null) return ;
       statusbar.showStatus(s) ;
    }
@@ -522,11 +536,24 @@ final public class WebSearchFrame extends KissFrame
       return false ;
    }
 
+   // Method to return the batch number for remote searches.
+
+   int getBatchNumber() { return batchnumber ; }
+
+   // Method to identify if search is local or remote.
+
    // Method to add a trace entry to our trace area.
 
    void addTrace(String s) { addTrace(s,0) ; }
    void addTrace(String s, int type) 
    { 
+      if (!javax.swing.SwingUtilities.isEventDispatchThread())
+      {
+      	Runnable runner = new Runnable()
+			{ public void run() { addTrace(s,type) ; } } ;
+   		javax.swing.SwingUtilities.invokeLater(runner) ;
+         return ;
+      }
       if (type == 0) appendText(s + "\n",normalset) ; 
       else if (type == 1) appendText(s + "\n",warnset) ; 
       else if (type == 2) appendText(s + "\n",errorset) ; 
@@ -660,6 +687,33 @@ final public class WebSearchFrame extends KissFrame
             return ;
          }
 
+         // Batch start request.  Open a dialog.
+
+         if (source == setbatchstart)
+         {
+            int n = 0 ;
+            boolean valid = false ;
+            while (!valid)
+            {
+               String s = JOptionPane.showInputDialog(this,
+                  "A WebSearch of a remote website processes archive files in batches.\n" +
+                  "You are required to confirm continued processing for the next batch.\n" +
+                  "You may restart the search elsewhere in the archive list if necessary.\n\n" +
+                  "Enter the start index to be used for the next remote batch.",0) ;
+               try { n = Integer.parseInt(s) ; valid = true ; }
+               catch (NumberFormatException e) 
+               { 
+                  if (s == null) return ;
+                  JOptionPane.showMessageDialog(this, 
+                     "Invalid syntax. Please enter a valid integer.", 
+                     "Input Error", 
+                     JOptionPane.ERROR_MESSAGE);               
+               }
+            }
+            ValidateLinks.setRemoteBatchStart(n) ;
+            return ;
+         }
+
          // The URL text entry causes a switch to a new page.
 
          if (source == enterurl)
@@ -764,14 +818,14 @@ final public class WebSearchFrame extends KissFrame
             if (stop) return ;
             
             Vector v = ValidateLinks.getSetState() ;
-            if (v.size() > 0)
+            if (v.size() > 0 || ValidateLinks.getRemote())
             {
                addTrace("Begin HTML Form Generation",1) ;
                BuildForm bf = new BuildForm(this,v) ;
                Thread thread = new Thread(bf) ;
                thread.start() ;
             }
-            else
+            else 
                exitsearch("No KiSS archive files found") ;
          }
 
@@ -823,7 +877,7 @@ final public class WebSearchFrame extends KissFrame
                f1.renameTo(f2) ;
                if (OptionsDialog.getDebugSearch())
                   PrintLn.println("WebSearch: rename " + f1.getName() + " to " + f2.getPath()) ;
-               formname = f2.getName() ;
+               mastername = f2.getName() ;
                absoluteformname = f2.getAbsolutePath() ;
             }
             catch (Exception e)
@@ -832,9 +886,12 @@ final public class WebSearchFrame extends KissFrame
             }
                
             addTrace("Begin Index Form Generation",1) ;
-            BuildIndex bi = new BuildIndex(this,formtitle,formname,BuildForm.getFormSize()) ;
+            BuildIndex bi = new BuildIndex(this,formtitle,mastername,formname,BuildForm.getFormSize()) ;
             bi.parse() ;
             bi.buildform() ;
+            mastername = bi.getKissIndex() ;
+            File f = new File(mastername) ;
+            absoluteformname = f.getAbsolutePath() ;
          }
 
          // The callback when the HTML index is written.
@@ -856,7 +913,7 @@ final public class WebSearchFrame extends KissFrame
             }
             if (stop) return ;
             
-            String s1 = OptionsDialog.getKissIndex() ;
+            String s1 = BuildIndex.getKissIndex() ;
             s1 = convertSeparator(s1) ;
             File f2 = new File(s1) ;
             s1 = f2.getName() ;
@@ -878,6 +935,33 @@ final public class WebSearchFrame extends KissFrame
             {
                PrintLn.println("WebSearch: rename " + s1 + " to " + f2.getPath() + " failed.") ;
             }
+            
+            // If doing a remote search prompt to see if another batch should be processed.
+            
+            if (ValidateLinks.getRemote())
+            {
+               int next = ValidateLinks.getCount() ;
+               Vector v = GetLinks.getArchives() ;
+               Object o = (next < v.size()) ? v.elementAt(next) : null ;     
+               if (o != null) 
+               {
+                  int batchsize = OptionsDialog.getMaxRemoteBatch() ;
+                  int i = JOptionPane.showConfirmDialog(this,
+                     "Validate the next remote batch of " + batchsize + " candidates?" + "\n" + o.toString() + " (" + (next+1) + " of " + v.size() + ")",
+                     "Search Batch",
+                     JOptionPane.YES_NO_OPTION) ;
+                  if (i == JOptionPane.YES_OPTION)
+                  {
+                     batchnumber++ ;
+                     ValidateLinks.setRemoteBatchStart(next) ;
+                     ValidateLinks vl = new ValidateLinks(this,v) ;
+                     Thread thread = new Thread(vl) ;
+                     thread.start() ;
+                     return ;
+                  }
+               }
+            }
+            
                
             showStatus("") ;
             activated = false ;
@@ -1211,6 +1295,49 @@ final public class WebSearchFrame extends KissFrame
       void close()
       {
          dispose() ;
+      }
+   }
+   
+   // Inner class to create a JTextField with preload prompt text
+   
+   public class PlaceholderTextField extends JTextField 
+   {
+      private String placeholder;
+
+      public PlaceholderTextField() 
+      {
+         this.placeholder = "" ;
+         setText(placeholder);
+         setForeground(Color.GRAY); 
+
+         addFocusListener(new FocusAdapter() 
+         {
+            @Override
+            public void focusGained(FocusEvent e) 
+            {
+               if (getText().equals(placeholder)) 
+               {
+                  setText("");
+                  setForeground(Color.BLACK); // Set active text color
+               }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) 
+            {
+               if (getText().isEmpty()) {
+                  setText(placeholder);
+                  setForeground(Color.GRAY);
+               }
+            }
+         });
+      }
+      
+      public void setPlaceholder(String s) 
+      { 
+         placeholder = s ; 
+         setText(placeholder);
+         setForeground(Color.GRAY);
       }
    }
 }

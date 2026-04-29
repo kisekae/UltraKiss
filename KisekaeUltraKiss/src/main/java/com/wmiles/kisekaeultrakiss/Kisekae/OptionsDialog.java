@@ -206,6 +206,7 @@ final public class OptionsDialog extends KissDialog
    private static boolean pagesarescenes = false ;
    private static boolean lzhheader2 = false ;
    private static boolean multipleevents = true ;
+   private static boolean restoreportal = false ;
    private static String eventqueues = "1" ;
    private static String timerperiod = "10" ;
    private static String gifperiod = "100" ;
@@ -253,6 +254,8 @@ final public class OptionsDialog extends KissDialog
    private static String thumbwidth = "50" ;
    private static String thumbheight = "50" ;
    private static String downloadsize = "1024" ;
+   private static String maxremotebatch = "5" ;
+   private static String remotedelay = "5000" ;
    private static String thumbpage = "0" ;
 
    // Initial option values.
@@ -378,6 +381,7 @@ final public class OptionsDialog extends KissDialog
    private static boolean initpagesarescenes = pagesarescenes ;
    private static boolean initlzhheader2 = lzhheader2 ;
    private static boolean initmultipleevents = multipleevents ;
+   private static boolean initrestoreportal = restoreportal ;
    private static boolean initdirectkiss = directkiss ;
    private static boolean initgnomekiss = gnomekiss ;
    private static boolean initkissld = kissld ;
@@ -758,9 +762,11 @@ final public class OptionsDialog extends KissDialog
 	private JPanel panel1ws = new JPanel();
    private FlowLayout flowLayout1ws = new FlowLayout() ;
    private GridLayout gridLayout1ws = new GridLayout() ;
+   private GridLayout gridLayout2ws = new GridLayout() ;
 	private GridBagLayout gridBagLayout1ws = new GridBagLayout();
 	private GridBagLayout gridBagLayout2ws = new GridBagLayout();
    private GridBagLayout gridBagLayout3ws = new GridBagLayout();
+   private GridBagLayout gridBagLayout4ws = new GridBagLayout();
 	private JPanel jPanel1ws = new JPanel();
 	private JPanel jPanel2ws = new JPanel();
 	private JPanel jPanel3ws = new JPanel();
@@ -775,6 +781,8 @@ final public class OptionsDialog extends KissDialog
 	private JLabel jLabel8ws = new JLabel();
 	private JLabel jLabel9ws = new JLabel();
 	private JLabel jLabel10ws = new JLabel();
+	private JLabel jLabel11ws = new JLabel();
+	private JLabel jLabel12ws = new JLabel();
 	private JCheckBox UseDefaultWS = new JCheckBox();
 	private JCheckBox ClearMaster = new JCheckBox();
 	private JCheckBox SaveArchive = new JCheckBox();
@@ -786,6 +794,8 @@ final public class OptionsDialog extends KissDialog
    private JTextField DataDirectory = new JTextField();
 	private JTextField KissIndex = new JTextField();
 	private JTextField DownloadSize = new JTextField();
+	private JTextField MaxRemoteBatch = new JTextField();
+	private JTextField RemoteDelay = new JTextField();
 	private JTextField ThumbWidth = new JTextField();
 	private JTextField ThumbHeight = new JTextField();
 	private JTextField ThumbPage = new JTextField();
@@ -2156,9 +2166,11 @@ final public class OptionsDialog extends KissDialog
 		jPanel3ws.setBorder(eb3ws);
       jPanel3ws.setLayout(gridBagLayout3ws);
 		jPanel4ws.setBorder(eb4ws);
-      jPanel4ws.setLayout(flowLayout1ws);
+      jPanel4ws.setLayout(gridBagLayout4ws);
       gridLayout1ws.setRows(6);
       gridLayout1ws.setColumns(1);
+      gridLayout2ws.setRows(3);
+      gridLayout2ws.setColumns(1);
       
 		UseDefaultWS.setToolTipText("Use different search options for online versus local searches");
 		UseDefaultWS.setText("Use Default Search Options");
@@ -2198,6 +2210,14 @@ final public class OptionsDialog extends KissDialog
 		DownloadSize.setPreferredSize(new Dimension(50, 21));
 		DownloadSize.setMinimumSize(new Dimension(50, 21));
 		DownloadSize.setText(downloadsize);
+		MaxRemoteBatch.setPreferredSize(new Dimension(50, 21));
+		MaxRemoteBatch.setMinimumSize(new Dimension(50, 21));
+		MaxRemoteBatch.setText(maxremotebatch);
+      MaxRemoteBatch.setEnabled(false);
+		RemoteDelay.setPreferredSize(new Dimension(50, 21));
+		RemoteDelay.setMinimumSize(new Dimension(50, 21));
+		RemoteDelay.setText(remotedelay);
+      RemoteDelay.setEnabled(false);
 		ThumbWidth.setPreferredSize(new Dimension(50, 21));
 		ThumbWidth.setMinimumSize(new Dimension(50, 21));
 		ThumbWidth.setText(thumbwidth);
@@ -2232,6 +2252,12 @@ final public class OptionsDialog extends KissDialog
       jLabel10ws.setHorizontalAlignment(SwingConstants.RIGHT);
       jLabel10ws.setText("Thumbnail Page:");
 		jLabel10ws.setToolTipText("The preferred page set used for the thumbnail image");
+      jLabel11ws.setHorizontalAlignment(SwingConstants.RIGHT);
+      jLabel11ws.setText("Maximum Remote Batch Size:");
+		jLabel11ws.setToolTipText("The maximum number of archive files permitted for remote site downloads in one batch");
+      jLabel12ws.setHorizontalAlignment(SwingConstants.RIGHT);
+      jLabel12ws.setText("Maximum Remote Delay (ms):");
+		jLabel12ws.setToolTipText("The maximum delay time between remote site downloads to manage bandwidth use");
 
       // The General options.
 
@@ -2246,8 +2272,18 @@ final public class OptionsDialog extends KissDialog
 
       // The Limits options.
 
-		jPanel4ws.add(jLabel7ws, null);
-		jPanel4ws.add(DownloadSize, null);
+		jPanel4ws.add(jLabel7ws, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
+            ,GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+		jPanel4ws.add(DownloadSize, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0
+            ,GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+		jPanel4ws.add(jLabel11ws, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
+            ,GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 5), 0, 0));
+		jPanel4ws.add(MaxRemoteBatch, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0
+            ,GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(0, 5, 0, 5), 0, 0));
+		jPanel4ws.add(jLabel12ws, new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0
+            ,GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 5), 0, 0));
+		jPanel4ws.add(RemoteDelay,  new GridBagConstraints(1, 2, 1, 1, 0.0, 0.0
+            ,GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(0, 5, 0, 5), 0, 0));
       panel1ws.add(jPanel4ws, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
             ,GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(10, 0, 0, 0), 0, 0));
 
@@ -2416,6 +2452,7 @@ final public class OptionsDialog extends KissDialog
    static public boolean getPagesAreScenes() { return pagesarescenes ; }
    static public boolean getLzhHeader2() { return lzhheader2 ; }
    static public boolean getMultipleEvents() { return multipleevents ; }
+   static public boolean getRestorePortal() { return restoreportal ; }
 
    static public boolean getPlayFKissCompatibility() { return playfkiss ; }
    static public boolean getDirectKissCompatibility() { return directkiss ; }
@@ -2644,6 +2681,20 @@ final public class OptionsDialog extends KissDialog
       catch (Exception e) { }
       return 1024 ;
    }
+   
+	static public int getMaxRemoteBatch()
+   {
+      try { return (Integer.parseInt(maxremotebatch)) ; }
+      catch (Exception e) { }
+      return 1024 ;
+   }
+
+	static public int getRemoteDelay()
+   {
+      try { return (Integer.parseInt(remotedelay)) ; }
+      catch (Exception e) { }
+      return 1024 ;
+   }
 
 	static public int getThumbPage()
    {
@@ -2780,6 +2831,7 @@ final public class OptionsDialog extends KissDialog
    static public void setPagesAreScenes(boolean b) { pagesarescenes = b ; }
    static public void setLzhHeader2(boolean b) { lzhheader2 = b ; }
    static public void setMultipleEvents(boolean b) { multipleevents = b ; }
+   static public void setRestorePortal(boolean b) { restoreportal = b ; }
 
    static public void setLruFile(String s) 
    { 
@@ -2974,6 +3026,8 @@ final public class OptionsDialog extends KissDialog
    static public void setThumbnailHeight(String s) { thumbheight = s ; }
    static public void setThumbPage(String s) { thumbpage = s ; }
    static public void setDownloadSize(String s) { downloadsize = s ; }
+   static public void setMaxRemoteBatch(String s) { maxremotebatch = s ; }
+   static public void setRemoteDelay(String s) { remotedelay = s ; }
 
    // End of WebSearch extensions
    // ---------------------------
@@ -3139,6 +3193,7 @@ final public class OptionsDialog extends KissDialog
       else if ("pagesarescenes".equalsIgnoreCase(option)) setPagesAreScenes(b) ;
       else if ("lzhheader2".equalsIgnoreCase(option)) setLzhHeader2(b) ;
       else if ("multipleevents".equalsIgnoreCase(option)) setMultipleEvents(b) ;
+      else if ("restoreportal".equalsIgnoreCase(option)) setRestorePortal(b) ;
    }
 
 
@@ -3294,6 +3349,7 @@ final public class OptionsDialog extends KissDialog
       else if ("gnomekiss".equalsIgnoreCase(option)) s += getGnomeKissCompatibility() ;
       else if ("kissld".equalsIgnoreCase(option)) s += getKissLDCompatibility() ;
       else if ("multipleevents".equalsIgnoreCase(option)) s += getMultipleEvents() ;
+      else if ("restoreportal".equalsIgnoreCase(option)) s += getRestorePortal() ;
       else if ("websocket".equalsIgnoreCase(option)) s += Kisekae.isWebsocket() ;
       return s ;
    }
@@ -3532,6 +3588,8 @@ final public class OptionsDialog extends KissDialog
       ThumbHeight.setText(thumbheight) ;
       ThumbPage.setText(thumbpage) ;
       DownloadSize.setText(downloadsize) ;
+      MaxRemoteBatch.setText(maxremotebatch) ;
+      RemoteDelay.setText(remotedelay) ;
 
       // End of WebSearch extensions
       // --------------------------------
@@ -3782,6 +3840,8 @@ final public class OptionsDialog extends KissDialog
       thumbheight = ThumbHeight.getText() ;
       thumbpage = ThumbPage.getText() ;
       downloadsize = DownloadSize.getText() ;
+      maxremotebatch = MaxRemoteBatch.getText() ;
+      remotedelay = RemoteDelay.getText() ;
 
       // End of WebSearch extensions
       // ------------------------------
@@ -3829,6 +3889,7 @@ final public class OptionsDialog extends KissDialog
 		pagesarescenes = initpagesarescenes ;
 		lzhheader2 = initlzhheader2;
 		multipleevents = initmultipleevents ;
+		restoreportal = initrestoreportal ;
 		timer = inittimer ;
 		event = initevent ;
 		animate = initanimate ;
@@ -4113,6 +4174,7 @@ final public class OptionsDialog extends KissDialog
       initpagesarescenes = pagesarescenes ;
       initlzhheader2 = lzhheader2 ;
       initmultipleevents = multipleevents ;
+      initrestoreportal = restoreportal ;
 	   initsplashdir = new String(splashdir) ;
    }
    
@@ -4242,6 +4304,7 @@ final public class OptionsDialog extends KissDialog
       pagesarescenes = false ;
       lzhheader2 = false ;
       multipleevents = true ;
+      restoreportal = false ;
       compatapply = false ;
       eventqueues = "1" ;
       timerperiod = "10" ;
@@ -4671,6 +4734,7 @@ final public class OptionsDialog extends KissDialog
 	   pagesarescenes = toBoolean1(p.getProperty("pagesarescenes"),pagesarescenes) ;
 	   lzhheader2 = toBoolean1(p.getProperty("lzhheader2"),lzhheader2) ;
 	   multipleevents = toBoolean1(p.getProperty("multipleevents"),multipleevents) ;
+	   restoreportal = toBoolean1(p.getProperty("restoreportal"),restoreportal) ;
 	   directkiss = toBoolean1(p.getProperty("directkiss"),directkiss) ;
 	   gnomekiss = toBoolean1(p.getProperty("gnomekiss"),gnomekiss) ;
 	   kissld = toBoolean1(p.getProperty("kissld"),kissld) ;
@@ -4882,6 +4946,7 @@ final public class OptionsDialog extends KissDialog
       p.put("pagesarescenes",toString2(pagesarescenes)) ;
       p.put("lzhheader2",toString2(lzhheader2)) ;
       p.put("multipleevents",toString2(multipleevents)) ;
+      p.put("restoreportal",toString2(restoreportal)) ;
       p.put("directkiss",toString2(directkiss)) ;
       p.put("gnomekiss",toString2(gnomekiss)) ;
       p.put("kissld",toString2(kissld)) ;
@@ -6562,6 +6627,7 @@ final public class OptionsDialog extends KissDialog
       if (pagesarescenes != initpagesarescenes) writeLine(out,"; pagesarescenes = " + pagesarescenes) ;
       if (lzhheader2 != initlzhheader2) writeLine(out,"; lzhheader2 = " + lzhheader2) ;
       if (multipleevents != initmultipleevents && !b) writeLine(out,"; multipleevents = " + multipleevents) ;
+      if (restoreportal != initrestoreportal && !b) writeLine(out,"; restoreportal = " + restoreportal) ;
 //	   if (backup != initbackup) writeLine(out,"; backup = " + backup) ;
 //	   if (savesource != initsavesource) writeLine(out,"; savesource = " + savesource) ;
 //	   if (loadclose != initloadclose) writeLine(out,"; loadclose = " + loadclose) ;

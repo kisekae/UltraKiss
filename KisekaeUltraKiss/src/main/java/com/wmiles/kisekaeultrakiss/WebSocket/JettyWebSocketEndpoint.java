@@ -145,7 +145,7 @@ public class JettyWebSocketEndpoint
      	if (session == null) return ;
 		time = System.currentTimeMillis() - createtime ;
       
-      if (!(message.startsWith("mouse") || message.startsWith("cursor")))
+      if (!(message.startsWith("mouse") || message.startsWith("cursor") || message.startsWith("refresh")))
       {
          if (OptionsDialog.getDebugWebSocket() || (message.startsWith("file") 
                  || message.startsWith("close") || message.startsWith("screen")
@@ -250,6 +250,25 @@ public class JettyWebSocketEndpoint
             int height = Integer.parseInt(tokens[2]) ;
             Kisekae.setScreenSize(new Dimension(width,height)) ;
             Kisekae.setClientScreen();
+			} 
+         catch (Exception e) 
+         {
+            System.out.println("[" + time + "] "+"JettyWebSocketEndpoint: screen dimensions exception: " + e.getMessage());   
+        	}
+      }    
+            
+      // Screen refresh rate  "refreshrate N"
+      if (message.startsWith("refreshrate")) 
+      {
+			try 
+         {
+            String [] tokens = message.split(" ") ;
+            if (tokens.length < 2) return ;
+            int rate = Integer.parseInt(tokens[1]) ;
+            Kisekae.setRefreshRate(rate) ;
+            MainFrame mf = Kisekae.getMainFrame() ;
+            boolean showingcopyright = mf.getCopyrightStatus() ;
+            if (showingcopyright) mf.showStatus(null) ;
 			} 
          catch (Exception e) 
          {
@@ -388,11 +407,22 @@ public class JettyWebSocketEndpoint
       {
 			try 
          {
+            int filesize = 0 ;
             MainFrame mf = Kisekae.getMainFrame() ;
             String [] tokens = message.split(" ") ;
             if ("fileupload".equals(tokens[0]))
             {
-               if (tokens.length < 1) return ;
+               if (tokens.length < 4) return ;
+               try { filesize = Integer.parseInt(tokens[2]) ; }
+               catch (NumberFormatException e) { }
+               if ((filesize/1024) > OptionsDialog.getDownloadSize())
+               {
+                  System.out.println("JettyWebSocketEndpoint: sending file size warning.");
+                  send("cancelupload") ;
+                  send("alert File exceeds maximum upload size.  Limit is " + OptionsDialog.getDownloadSize() + " KB.") ;
+                  return ;
+               }
+                              
                String filename = tokens[1] ;
                int n = filename.lastIndexOf('.') ;
                String ext = (n > 0) ? filename.substring(n) : "" ;
@@ -401,7 +431,13 @@ public class JettyWebSocketEndpoint
                fosMap.put(session, new FileUploadClass(f,os)) ;               
                if (OptionsDialog.getDebugWebSocket())
                   System.out.println("[" + time + "] "+"JettyWebSocketEndpoint: file upload to server start, " + f.getPath()) ;
-               if (mf != null) mf.showStatus("WebSocket downloading file " + filename + " from client browser.") ;
+               if (mf != null) mf.showStatus("WebSocket uploading file " + filename + " from client browser.") ;
+            }
+            if ("fileuploadprogress".equals(tokens[0]))
+            {
+               if (tokens.length < 3) return ;
+               String filename = tokens[1] ;   
+               if (mf != null) mf.showStatus("WebSocket uploading file " + filename + " from client browser.  " + tokens[2] + "% complete.") ;
             }
             if ("fileuploadend".equals(tokens[0]))
             {
@@ -1046,6 +1082,7 @@ public class JettyWebSocketEndpoint
       long mintime = 0 ;
       long time = 0 ;
       boolean error = false ;
+      boolean first = true ;
       int errors = 0 ;
       
       @Override
@@ -1096,11 +1133,13 @@ public class JettyWebSocketEndpoint
       			time = System.currentTimeMillis() - createtime ;
                long starttime = System.currentTimeMillis() ;
 					BufferedImage bi = ScreenCapture.captureScreenImage() ;
+               int width = bi.getWidth() ;
+               int height = bi.getHeight() ;
 					ByteArrayOutputStream out = new ByteArrayOutputStream();
 					ImageIO.write(bi, "png", out);
 					ByteBuffer byteBuffer = ByteBuffer.wrap(addHeader(imageheader,out.toByteArray()));
                
-               if (!socketBusy) 
+               if (!socketBusy && Kisekae.getClientScreen()) 
                {
                   socketBusy = true ;
                   session.sendBinary(byteBuffer, new Callback() {
@@ -1108,6 +1147,11 @@ public class JettyWebSocketEndpoint
                      public void succeed() {
                         // Handle success (optional)
                         socketBusy = false ;
+                        if (first)
+                        {
+                           System.out.println("[" + time + "] "+"First screen capture sent to client, (" + width + "," + height + ")");
+                           first = false ;
+                        }
                      }
                      @Override
                      public void fail(Throwable cause) {
@@ -1117,7 +1161,7 @@ public class JettyWebSocketEndpoint
                         String reason = cause.getMessage() ;
                         if (reason == null) reason = "Unknown" ;
                         System.out.println("[" + time + "] "+"Failed to send screen capture to client, cause=" + reason);
-                        System.out.println("[" + time + "] "+"Session is open: " + session.isOpen());
+                        System.out.println("[" + time + "] "+"Session is open? " + session.isOpen());
                         error = !session.isOpen() ; 
                      }
                   });

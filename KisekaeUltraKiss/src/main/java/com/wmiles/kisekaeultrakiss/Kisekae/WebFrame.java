@@ -83,6 +83,7 @@ final public class WebFrame extends KissFrame
    private static int currentlocation = 0 ;        // Current history index
    private static String currentweb = null ;       // Last valid web
    private static Hashtable urlmap = new Hashtable(20) ; // Redirect URL to page set
+   private static String lastdownload = null ;     // Last CNF loaded
 
    private WebFrame me = null ;						   // Reference to ourselves
    private MainFrame parent = null ;               // Reference to mainframe
@@ -156,6 +157,7 @@ final public class WebFrame extends KissFrame
 	private JMenuItem refresh ;
    private JMenuItem showsource ;
    private JMenuItem register ;
+   private static JCheckBoxMenuItem restoreportal ;
 	private Insets insets = null ;
 
 
@@ -369,6 +371,10 @@ final public class WebFrame extends KissFrame
       optionMenu.add((options = new JMenuItem(Kisekae.getCaptions().getString("MenuToolsOptions")))) ;
       if (!applemac) options.setMnemonic(KeyEvent.VK_C) ;
       options.addActionListener(this) ;
+      optionMenu.add((restoreportal = new JCheckBoxMenuItem(Kisekae.getCaptions().getString("MenuRestorePortal")))) ;
+		restoreportal.setToolTipText(Kisekae.getCaptions().getString("ToolTipMenuRestorePortal")) ;
+      restoreportal.setState(OptionsDialog.getRestorePortal()) ;
+      restoreportal.addActionListener(this) ;
       mb.add(optionMenu) ;
       
 		windowMenu = new JMenu(Kisekae.getCaptions().getString("MenuWindow")) ;
@@ -1044,7 +1050,24 @@ final public class WebFrame extends KissFrame
       return ((Boolean) o).booleanValue() ; 
    }
    
+   // Get the indicator to restore the portal on set close.
+   
+   static boolean getRestorePortal() 
+   { 
+      if (restoreportal == null)
+         return OptionsDialog.getRestorePortal() ;
+      return restoreportal.getState() ; 
+   }
+    
+   // Get the last archive loaded.
+   
+   URL getLoadArchiveURL() { return loadarchiveurl ; }
+    
+   // Get the last archive loaded.
+   
+   static String getLastDownload() { return lastdownload ; }
 
+   
 	// Action event listener.  We only process menu item actions.
 
 	public void actionPerformed(ActionEvent evt)
@@ -1145,6 +1168,14 @@ final public class WebFrame extends KissFrame
          {
             OptionsDialog op = new OptionsDialog(this,3) ;
             op.setVisible(true) ;
+            return ;
+         }
+
+         // Restore the Portal on set close if launched from here.
+
+         if (source == restoreportal)
+         {
+            OptionsDialog.setRestorePortal(restoreportal.getState());
             return ;
          }
 
@@ -1373,7 +1404,11 @@ final public class WebFrame extends KissFrame
    	      if (menu != null)
             {
                menu.setNoCopy(nocopy);
-               if (ze.isConfiguration()) menu.setDownloadURL(sourceURL) ;
+               if (ze.isConfiguration())
+               {
+                  menu.setDownloadURL(sourceURL) ;
+                  lastdownload = ze.getName() ;
+               }
                menu.openContext(fdnew,ze) ;
             }
             else
@@ -1502,7 +1537,7 @@ final public class WebFrame extends KissFrame
             { 
                URL base = url ; 
                ((HTMLDocument) doc).setBase(base) ;
-            }            
+            }
          }
          catch (Exception e1) 
          { 
@@ -1975,6 +2010,7 @@ final public class WebFrame extends KissFrame
       toolbar = null ;
       editor = null ;
       editorkit = null ;
+      lastdownload = null ;
       aboutdialog = null ;
       helper = null ;
       helper2 = null ;
@@ -2327,9 +2363,10 @@ final public class WebFrame extends KissFrame
                ImageIcon icon = new ImageIcon(image) ;
                height = icon.getIconHeight(); // Will be the correct value
                width = icon.getIconWidth(); // Will be the correct value
-               if (OptionsDialog.getDebugPortal())
-                  PrintLn.println("WebFrame image loaded: " + location + " height=" + height + " width=" + width) ;
             }
+            
+            // If image is still not loaded, not sure why?  Ignore.
+            
             if (height < 0 || width < 0) continue ;
             
             // Update <img> tag with missing height and width attributes.
@@ -2337,7 +2374,9 @@ final public class WebFrame extends KissFrame
             corrected = true ;
             String newtag = tag.replace("/>",">") ;             
             newtag = newtag.replace(">", " height=\"" + height  + "\" width=\"" + width + "\" />") ;             
-            matcher.appendReplacement(sb,newtag) ;          
+            matcher.appendReplacement(sb,newtag) ;       
+            if (OptionsDialog.getDebugPortal())
+               PrintLn.println("WebFrame image size loaded: " + location + " " + newtag) ;          
          }
          
          matcher.appendTail(sb) ;
