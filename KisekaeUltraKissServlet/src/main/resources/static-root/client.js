@@ -58,6 +58,9 @@ var receivedFileSize = 0 ;   // received size of downloaded file message chunk
 var expectedAudioSize = 0 ;  // expected size of audio downloaded from server
 var receivedAudioSize = 0 ;  // received size of downloaded file message chunk
 var retransmitCount = 0 ;    // number of retransmissions attempted
+var screenrate = 0 ;         // number of screen transmissions received
+var first = true ;           // set false after first screen capture
+var cancelupload = false ;   // true if file upload to server stopped
 var playerstopped = true ;   // true if MIDI player is stopped
 var terminated = false ;     // true if UltraKiss terminated on server
 var player ;                 // MIDI player
@@ -127,7 +130,15 @@ console.log(now) ;
 // Detect browser closing.  Perform an orderly shutdown on the server.
 
 window.addEventListener("beforeunload", function (e) {
-    shutdown() ;
+   e.preventDefault();
+   // Chrome requires returnValue to be set.
+   e.returnValue = '';
+});
+
+window.addEventListener('unload', () => {
+  // Perform minor synchronous cleanup tasks here
+  console.log('Browser tab is closing...');
+  shutdown() ;
 });
 
 async function shutdown() {
@@ -176,21 +187,31 @@ fileInput.addEventListener('change', function(event) {
 
 function uploadFile(file, websocket) {
     const CHUNK_SIZE = 1024 * 32 ; // 32 KB chunks
+    const MAX_BUFFER = 1024 * 1024; // 1MB capacity before pausing
+    let lastSentThreshold = 0;
+    var percentComplete = 0 ;
     let offset = 0;
+    var first = true ;             // true for first throttle message
 
     const fileReader = new FileReader();
 
     fileReader.onload = function(event) {        // Send the chunk as binary data
+        var name = file.name.replaceAll(" ","_") ;            
+        offset += event.target.result.byteLength;
         if (websocket.readyState === WebSocket.OPEN) {
             websocket.send(event.target.result);
+            percentComplete = ((offset * 100) / file.size).toFixed(0) ;
+            if (percentComplete >= lastSentThreshold + 10) {
+                lastSentThreshold = Math.floor(percentComplete / 10) * 10; 
+                websocket.send("fileuploadprogress " + name + " " + percentComplete);
+                console.log("fileuploadprogress " + name + " " + percentComplete);
+            }
         }
-        offset += event.target.result.byteLength;
         // Check if more chunks need to be sent
         if (offset < file.size) {
             readNextChunk();
         } else {
-            var name = file.name.replaceAll(" ","_") ;            
-            console.log("File transfer to server complete, " + name + " size=" + offset);
+            console.log("File upload to server complete, " + name + " size = " + offset);
             if (websocket.readyState === WebSocket.OPEN) {
                 websocket.send("fileuploadend " + name + " " + offset + " " + fileopensource + " " + fileopenimport);
             }
@@ -202,15 +223,32 @@ function uploadFile(file, websocket) {
     };
 
     function readNextChunk() {
-        const slice = file.slice(offset, offset + CHUNK_SIZE);
-        fileReader.readAsArrayBuffer(slice);
+        var name = file.name.replaceAll(" ","_") ;            
+        if (websocket.readyState === WebSocket.OPEN && !cancelupload) {
+            // Limit bufferedAmount to prevent memory issues
+            if (websocket.bufferedAmount > MAX_BUFFER) { // 1MB threshold
+                if (first) {
+                    console.log("fileupload " + name + " waiting, buffer full, at " + offset + " (" + percentComplete + "%)");      
+                    first = false ;
+                }
+                setTimeout(readNextChunk, 10);
+                return;
+            }
+            const slice = file.slice(offset, offset + CHUNK_SIZE);
+            fileReader.readAsArrayBuffer(slice);
+            first = true ;
+        } else {
+            console.log("fileupload " + name + " cancelled.");     
+        }
     }
-
+    
     // Start the process.
     // First, send metadata (like filename, size) as a text message
     
     if (websocket.readyState === WebSocket.OPEN) {
         var name = file.name.replaceAll(" ","_") ;            
+        console.log("fileupload " + name + " begins, size = " + file.size);           
+        cancelupload = false ;
         websocket.send("fileupload " + name + " " + file.size + " " + fileopenimport);
     }
     readNextChunk();
@@ -292,17 +330,20 @@ function initwebsocket(host,port,ssl)
 function connectWebSocket() {
     initwebsocket(host,port,ssl) ;
 
-    ws.onopen = function(event) {
-        console.log('Connection established');
-        // Clear any previous reconnection timer on successful connection
-        if (window.reconnectTimeoutId) {
-            clearTimeout(window.reconnectTimeoutId);
-            window.reconnectTimeoutId = null;
-        }
-        if (ws.readyState === WebSocket.OPEN) {
-            ws.send("screen " + canvas.width + " " + canvas.height);
-        }
-    };
+ws.onopen = function(event) {
+    console.log('Connection established');
+    // Clear any previous reconnection timer on successful connection
+    if (window.reconnectTimeoutId) {
+        clearTimeout(window.reconnectTimeoutId);
+        window.reconnectTimeoutId = null;
+    }
+    if (ws.readyState === WebSocket.OPEN) {
+        console.log("screen " + canvas.width + " " + canvas.height);
+        ws.send("screen " + canvas.width + " " + canvas.height);
+    }
+    // Start the loop to report the screen rate to the server.
+//    measureScreenRate(); 
+};
 
 
 ws.onclose = function(event) {
@@ -385,6 +426,11 @@ ws.onmessage = function (evt) {
                console.log("fileopen accept: " + fileopentype);
            }
            fileInput.click() ;      
+        }
+        
+        else if (tokens[0] === "cancelupload")
+        {
+            cancelupload = true ;
         }
         
         // This begins the process for downloading a server file to the client.
@@ -626,7 +672,7 @@ ws.onmessage = function (evt) {
             uploadLogFile(consolelog,ws) ;
         }
         
-        // Send an inactivity timeout warning.
+        // Show an inactivity timeout warning.
         
         else if (tokens[0] === "timeoutalert")
         {
@@ -637,15 +683,13 @@ ws.onmessage = function (evt) {
         {
             hideNonBlockingAlert() ;                
         }
-        
-        // Send an inactivity timeout warning.
-        
+                
         else if (tokens[0] === "timeout")
         {
             showNonBlockingAlert("Inactivity timeout. Session has closed.");
         }
         
-        // Send an inactivity timeout warning.
+        // Show a non-blocking message.
         
         else if (tokens[0] === "notify")
         {
@@ -657,6 +701,15 @@ ws.onmessage = function (evt) {
         else if (tokens[0] === "notifycancel")
         {
             hideNonBlockingAlert() ;                
+        }
+        
+        // Show a blocking message.
+        
+        else if (tokens[0] === "alert")
+        {
+            const msgtokens = tokens.slice(1) ;
+            const textmsg = msgtokens.join(" ") ;
+            alert(textmsg) ;
         }
         
         // A "browser" message attempts to open a new browser window.
@@ -712,6 +765,10 @@ ws.onmessage = function (evt) {
                 const cw = canvas.width ;
                 const ch = canvas.height ;
                 
+                if (first) {
+                    console.log("first screen capture (" + w + "," + h + ")");
+                    first = false ;
+                }
                 if (w === cw && h === ch)     
                     ctx.drawImage(img, 0, 0); 
                 else
@@ -722,6 +779,7 @@ ws.onmessage = function (evt) {
                     console.log("Drawing centered image");
                }
             };    
+            screenrate++ ;
             img.src = "data:image/png;base64,"+window.btoa(data);
         }
         
@@ -764,6 +822,22 @@ ws.onmessage = function (evt) {
     }
 };
 }
+
+
+// Send the received screen capture rate per second to the server.
+
+function measureScreenRate() {
+    if (ws.readyState === WebSocket.OPEN) {
+        const period = 5 ;
+        const screenratepersec = screenrate / period ;
+        ws.send("refreshrate " + screenratepersec);
+        screenrate = 0 ;
+        // Schedule the next execution after this one finishes
+        setTimeout(measureScreenRate, period * 1000);
+    }
+    console.log('Screen rate transmission terminated.');
+}
+
 
 
 // This is an explicit request to capture a screen image from the server.
