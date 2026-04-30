@@ -1295,6 +1295,7 @@ final class FKissEvent extends KissObject
       {
          synchronized (queue)
          {
+            Thread thread = Thread.currentThread() ;
             AlarmTimer.suspendTimer(true) ;
             EventHandler.suspendEventHandler(true) ;
         		if (panel != null) panel.redraw(box) ;
@@ -1320,7 +1321,7 @@ final class FKissEvent extends KissObject
             // editor will reactivate event processing through a resume
             // processing or step processing call.
 
-            Object frame = debugframe.get(Thread.currentThread()) ;
+            Object frame = debugframe.get(thread) ;
             if (frame instanceof FKissFrame)
             {
                Rectangle drawbox = (initialbreak && panel != null)
@@ -1331,13 +1332,16 @@ final class FKissEvent extends KissObject
             {
                if (breakframe == null || !breakframe.isVisible())
                {
-                  frame = new FKissFrame(this,config,o) ;
-                  debugframe.put(Thread.currentThread(),frame) ;
-                  ((FKissFrame) frame).setVisible(true) ;
+                  SwingUtilities.invokeLater(() -> 
+                  {
+                     FKissFrame f = new FKissFrame(this,config,o) ;
+                     debugframe.put(thread,f) ;
+                     f.setVisible(true) ;
+                  });                  
                }
                else
                {
-                  debugframe.put(Thread.currentThread(),breakframe) ;
+                  debugframe.put(thread,breakframe) ;
                   breakframe.doBreakpoint(this,o,box,end) ;
                }
             }

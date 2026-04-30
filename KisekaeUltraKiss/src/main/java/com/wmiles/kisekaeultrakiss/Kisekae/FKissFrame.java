@@ -685,13 +685,13 @@ final class FKissFrame extends KissFrame
       if (!applemac) helpMenu.setMnemonic(KeyEvent.VK_H) ;
 		helpMenu.setMargin(insets) ;
 		mb.add(helpMenu);
-//		helpMenu.add((help = new JMenuItem(Kisekae.getCaptions().getString("MenuHelpContents")))) ;
-//    if (!applemac) help.setMnemonic(KeyEvent.VK_C) ;
-//    help.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F1,0)) ;
-//		help.setEnabled(helper != null && helper.isLoaded()) ;
-//    if (helper != null) helper.addActionListener(help) ;
-//    if (!Kisekae.isHelpInstalled()) help.addActionListener(this) ;
-//    if (!Kisekae.isHelpInstalled()) help.setEnabled(true) ;
+		helpMenu.add((help = new JMenuItem(Kisekae.getCaptions().getString("MenuHelpContents")))) ;
+      if (!applemac) help.setMnemonic(KeyEvent.VK_C) ;
+      help.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F1,0)) ;
+		help.setEnabled(helper != null && helper.isLoaded()) ;
+      if (helper != null) helper.addActionListener(help) ;
+      if (!Kisekae.isHelpInstalled()) help.addActionListener(this) ;
+      if (!Kisekae.isHelpInstalled()) help.setEnabled(true) ;
 		helpMenu.add((refhelp = new JMenuItem(Kisekae.getCaptions().getString("MenuHelpFKiss")))) ;
 		refhelp.setEnabled(helper2 != null && helper2.isLoaded()) ;
       if (!applemac) refhelp.setMnemonic(KeyEvent.VK_F) ;
@@ -1286,16 +1286,7 @@ final class FKissFrame extends KissFrame
    // The event tree is set to show on row 3 of the display.
 
 	private void setViewRow(int row)
-   {
-      int viewrow = row ;
-      if (!javax.swing.SwingUtilities.isEventDispatchThread())
-      {    // Note - swing error 12/19/2025 
-         PrintLn.println("FKissFrame: setViewRow() is not on EDT ...") ;
-         Runnable awt = new Runnable()
-         { public void run() { setViewRow(viewrow) ; } } ;
-         javax.swing.SwingUtilities.invokeLater(awt) ;         
-      }
-      
+   {     
 		if (TREE == null) return ;
 		if (treescroll == null) return ;
 		JViewport view = treescroll.getViewport() ;
@@ -1309,9 +1300,7 @@ final class FKissFrame extends KissFrame
       row -= 2 ;
       if (row < 0) row = 0 ;
 		int ypos = row * h ;
-      // Note - swing error 04/15/2026 - corrected to ensure within bounds
-      if (me.isVisible() && r.x >= 0 && ypos >=r.y && ypos < r.height) 
-         view.setViewPosition(new Point(r.x,ypos)) ;
+      view.setViewPosition(new Point(r.x,ypos)) ;
    }
 
 
@@ -1579,6 +1568,14 @@ final class FKissFrame extends KissFrame
 
 	void doBreakpoint(FKissEvent caller, Object o, Rectangle box, boolean end)
    {
+      if (!javax.swing.SwingUtilities.isEventDispatchThread())
+      {    // Note - swing error 12/19/2025 
+         Runnable awt = new Runnable()
+         { public void run() { doBreakpoint(caller,o,box,end) ; } } ;
+         javax.swing.SwingUtilities.invokeLater(awt) ;  
+         return ;
+      }
+      
       invoker = caller ;
       FKissEvent lastevent = event ;
       FKissAction lastaction = action ;
