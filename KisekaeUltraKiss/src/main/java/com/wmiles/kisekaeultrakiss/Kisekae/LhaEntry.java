@@ -349,7 +349,7 @@ class LhaEntry extends ArchiveEntry
 
 	public InputStream getInputStream() throws IOException
    {
-      if (memfile != null) return memfile.getInputStream() ;
+//      if (memfile != null) return memfile.getInputStream() ;
 		if (archive == null || !archive.isOpen()) return null ;
       return archive.getInputStream(this) ;
    }

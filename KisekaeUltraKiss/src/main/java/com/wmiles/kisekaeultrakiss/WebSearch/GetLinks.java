@@ -228,8 +228,12 @@ class GetLinks implements Runnable
          webframe.getlinkactive = false ;
          activecount.reset() ;
          
-         // Run the callback on the EDT thread.
+         // Run the callback on the EDT thread.  Insert the baselocation 
+         // header into the sorted archive list as the first record.
+         // The archives list is stored in ValidateLinks.
          
+         Collections.sort(archives) ;       
+         archives.insertElementAt(webframe.getBaseLocation(),0);
          Runnable runner = new Runnable()
          { public void run() { webframe.urlcallback.doClick() ; } } ;
          javax.swing.SwingUtilities.invokeLater(runner) ;        
@@ -355,6 +359,7 @@ class GetLinks implements Runnable
          {
             URL url = new URL(location) ;
             String path = url.getPath() ;
+            path = path.replace("%20"," ") ;
             File f = new File(path) ;
             File [] files = f.listFiles() ;
             if (files != null)
@@ -454,6 +459,10 @@ class GetLinks implements Runnable
    // A method to return our archives.
 
    static Vector getArchives() { return archives ; }
+   
+   // A method to set the archives if there was a batch start request.
+
+   static void setArchives(Vector v) { archives = v ; }
 
    // A method to reset our static counts.
 

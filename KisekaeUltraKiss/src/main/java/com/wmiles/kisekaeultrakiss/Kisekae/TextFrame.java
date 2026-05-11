@@ -1181,12 +1181,15 @@ final public class TextFrame extends KissFrame
 				if (kit == null)
             {
                InputStreamReader isr = null ;
-               String encoding = Kisekae.getLanguageEncoding() ;
+               String encoding = Kisekae.getLanguageEncoding() ;               
+               byte[] data = in.readAllBytes() ;
+               if (Kisekae.isMaybeShiftJIS(data)) encoding = "Shift-JIS" ;         
+               ByteArrayInputStream bais = new ByteArrayInputStream(data);
                if (encoding != null)
-                  isr = new InputStreamReader(in,encoding) ;
+                  isr = new InputStreamReader(bais,encoding) ;
                else
-                  isr = new InputStreamReader(in) ;
-					text.read(isr,file) ;
+                  isr = new InputStreamReader(bais) ;
+               text.read(isr,file) ;
             }
 				else if (kit instanceof RTFEditorKit)
 				{

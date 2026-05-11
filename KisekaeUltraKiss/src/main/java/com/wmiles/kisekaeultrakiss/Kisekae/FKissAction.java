@@ -1400,13 +1400,19 @@ final class FKissAction extends KissObject
             // is zero then this is a request to stop the named sound.
             // Otherwise the play request is performed in a separate thread 
             // (AudioSound) so as to not restrict event processing.
+            // A non-integer repeat count (string) does not stop.
 
             n1 = 0 ;
+            n2 = 0 ;
             if (parameters.size() > 1)
+            {
                n1 = variable.getIntValue((String) parameters.elementAt(1),event) ;
+               n2 = variable.getType((String) parameters.elementAt(1),event) ;
+            }
+            
             a.setRepeat(n1) ;
             a.setType(audiotype) ;
-            if (parameters.size() > 1 && n1 == 0)
+            if (parameters.size() > 1 && n1 == 0 && n2 != 4)
             {
                Audio.stop(a) ;
                break ;

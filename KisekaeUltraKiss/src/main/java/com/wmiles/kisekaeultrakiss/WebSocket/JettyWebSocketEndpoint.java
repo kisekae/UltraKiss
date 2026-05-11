@@ -361,7 +361,7 @@ public class JettyWebSocketEndpoint
             if (tokens.length < 1) return ;
             Object o = KeyCodeMapper.getJavaKeyCode(tokens[1]) ;
             if (!(o instanceof KeyCodeMapper.KeyClass)) 
-               throw new Exception(tokens[1] + "is Undefined key") ;
+               throw new Exception(tokens[1] + " is Undefined key") ;
             if (((KeyCodeMapper.KeyClass) o).shift)
             {
                ScreenCapture.keyPress(KeyEvent.VK_SHIFT) ;
@@ -386,7 +386,7 @@ public class JettyWebSocketEndpoint
             Object o = KeyCodeMapper.getJavaKeyCode(tokens[1]) ;
             if (tokens.length < 1) return ;
             if (!(o instanceof KeyCodeMapper.KeyClass)) 
-               throw new Exception(tokens[1] + "is Undefined key") ;
+               throw new Exception(tokens[1] + " is Undefined key") ;
             if (((KeyCodeMapper.KeyClass) o).shift)
             {
                ScreenCapture.keyRelease(((KeyCodeMapper.KeyClass) o).key);

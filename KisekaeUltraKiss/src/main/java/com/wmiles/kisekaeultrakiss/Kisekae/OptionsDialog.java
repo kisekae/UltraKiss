@@ -241,7 +241,7 @@ final public class OptionsDialog extends KissDialog
 
    // WebSearch Option values.
 
-	private static boolean savearchive = true ;
+	private static boolean savearchive = false ;
 	private static boolean saveimage = true ;
 	private static boolean saveaszip = false ;
 	private static boolean showload = false ;
@@ -251,10 +251,12 @@ final public class OptionsDialog extends KissDialog
    private static String datadirectory = "WebSearch/Data/" ;
    private static String imagedirectory = "WebSearch/HTML/Images/" ;
    private static String kissindex = "WebSearch/HTML/index.html" ;
-   private static String thumbwidth = "50" ;
-   private static String thumbheight = "50" ;
-   private static String downloadsize = "1024" ;
+   private static String masterindex = "WebSearch/HTML/master.html" ;
+   private static String thumbwidth = "100" ;
+   private static String thumbheight = "100" ;
+   private static String downloadsize = "4096" ;
    private static String maxremotebatch = "5" ;
+   private static String maxlocalbatch = "25" ;
    private static String remotedelay = "5000" ;
    private static String thumbpage = "0" ;
 
@@ -783,6 +785,8 @@ final public class OptionsDialog extends KissDialog
 	private JLabel jLabel10ws = new JLabel();
 	private JLabel jLabel11ws = new JLabel();
 	private JLabel jLabel12ws = new JLabel();
+	private JLabel jLabel13ws = new JLabel();
+   private JLabel jLabel14ws = new JLabel();
 	private JCheckBox UseDefaultWS = new JCheckBox();
 	private JCheckBox ClearMaster = new JCheckBox();
 	private JCheckBox SaveArchive = new JCheckBox();
@@ -793,8 +797,10 @@ final public class OptionsDialog extends KissDialog
 	private JTextField HtmlDirectory = new JTextField();
    private JTextField DataDirectory = new JTextField();
 	private JTextField KissIndex = new JTextField();
+	private JTextField MasterIndex = new JTextField();
 	private JTextField DownloadSize = new JTextField();
 	private JTextField MaxRemoteBatch = new JTextField();
+	private JTextField MaxLocalBatch = new JTextField();
 	private JTextField RemoteDelay = new JTextField();
 	private JTextField ThumbWidth = new JTextField();
 	private JTextField ThumbHeight = new JTextField();
@@ -2207,13 +2213,20 @@ final public class OptionsDialog extends KissDialog
 		KissIndex.setPreferredSize(new Dimension(200, 21));
 		KissIndex.setMinimumSize(new Dimension(200, 21));
 		KissIndex.setText(kissindex);
+		MasterIndex.setPreferredSize(new Dimension(200, 21));
+		MasterIndex.setMinimumSize(new Dimension(200, 21));
+		MasterIndex.setText(masterindex);
 		DownloadSize.setPreferredSize(new Dimension(50, 21));
 		DownloadSize.setMinimumSize(new Dimension(50, 21));
 		DownloadSize.setText(downloadsize);
+		MaxLocalBatch.setPreferredSize(new Dimension(50, 21));
+		MaxLocalBatch.setMinimumSize(new Dimension(50, 21));
+		MaxLocalBatch.setText(maxlocalbatch);
+      MaxLocalBatch.setEnabled(true);
 		MaxRemoteBatch.setPreferredSize(new Dimension(50, 21));
 		MaxRemoteBatch.setMinimumSize(new Dimension(50, 21));
 		MaxRemoteBatch.setText(maxremotebatch);
-      MaxRemoteBatch.setEnabled(false);
+      MaxRemoteBatch.setEnabled(!Kisekae.isSearchThrottled());
 		RemoteDelay.setPreferredSize(new Dimension(50, 21));
 		RemoteDelay.setMinimumSize(new Dimension(50, 21));
 		RemoteDelay.setText(remotedelay);
@@ -2235,14 +2248,14 @@ final public class OptionsDialog extends KissDialog
       jLabel4ws.setText("HTML Directory:");
 		jLabel4ws.setToolTipText("The local folder for generated HTML files");
       jLabel5ws.setHorizontalAlignment(SwingConstants.RIGHT);
-      jLabel5ws.setText("Index File:");
-		jLabel5ws.setToolTipText("The local HTML index file.  This is a table to the generated HTML files");
+      jLabel5ws.setText("Local Index File:");
+		jLabel5ws.setToolTipText("The local HTML index file.  This is a table to the local generated HTML files");
       jLabel6ws.setHorizontalAlignment(SwingConstants.RIGHT);
       jLabel6ws.setText("Data Directory:");
 		jLabel6ws.setToolTipText("The local folder for saving downloaded archive files");
       jLabel7ws.setHorizontalAlignment(SwingConstants.RIGHT);
-      jLabel7ws.setText("Maximum Archive Size (KB):");
-		jLabel7ws.setToolTipText("The maximum size of an archive file for download transfer");
+      jLabel7ws.setText("Maximum Archive Size (KiB):");
+		jLabel7ws.setToolTipText("The maximum size of a file for download transfer or websocket transfer");
       jLabel8ws.setHorizontalAlignment(SwingConstants.RIGHT);
       jLabel8ws.setText("Thumbnail Width:");
 		jLabel8ws.setToolTipText("The width, in pixels, of a generated thumbnail image");
@@ -2258,6 +2271,12 @@ final public class OptionsDialog extends KissDialog
       jLabel12ws.setHorizontalAlignment(SwingConstants.RIGHT);
       jLabel12ws.setText("Maximum Remote Delay (ms):");
 		jLabel12ws.setToolTipText("The maximum delay time between remote site downloads to manage bandwidth use");
+      jLabel13ws.setHorizontalAlignment(SwingConstants.RIGHT);
+      jLabel13ws.setText("Maximum Local Batch Size:");
+		jLabel13ws.setToolTipText("The maximum number of archive files permitted for local search downloads in one batch");
+      jLabel14ws.setHorizontalAlignment(SwingConstants.RIGHT);
+      jLabel14ws.setText("Master Index File:");
+		jLabel14ws.setToolTipText("The master index HTML index file.  This is a table to the generated local and remote HTML files");
 
       // The General options.
 
@@ -2276,13 +2295,17 @@ final public class OptionsDialog extends KissDialog
             ,GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
 		jPanel4ws.add(DownloadSize, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0
             ,GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-		jPanel4ws.add(jLabel11ws, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
+		jPanel4ws.add(jLabel13ws, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
             ,GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 5), 0, 0));
-		jPanel4ws.add(MaxRemoteBatch, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0
+		jPanel4ws.add(MaxLocalBatch, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0
             ,GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(0, 5, 0, 5), 0, 0));
-		jPanel4ws.add(jLabel12ws, new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0
+		jPanel4ws.add(jLabel11ws, new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0
             ,GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 5), 0, 0));
-		jPanel4ws.add(RemoteDelay,  new GridBagConstraints(1, 2, 1, 1, 0.0, 0.0
+		jPanel4ws.add(MaxRemoteBatch, new GridBagConstraints(1, 2, 1, 1, 0.0, 0.0
+            ,GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(0, 5, 0, 5), 0, 0));
+		jPanel4ws.add(jLabel12ws, new GridBagConstraints(0, 3, 1, 1, 0.0, 0.0
+            ,GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 5), 0, 0));
+		jPanel4ws.add(RemoteDelay,  new GridBagConstraints(1, 3, 1, 1, 0.0, 0.0
             ,GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(0, 5, 0, 5), 0, 0));
       panel1ws.add(jPanel4ws, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
             ,GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(10, 0, 0, 0), 0, 0));
@@ -2304,6 +2327,10 @@ final public class OptionsDialog extends KissDialog
       jPanel2ws.add(jLabel5ws, new GridBagConstraints(0, 3, 1, 1, 0.0, 0.0
             ,GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 5), 0, 0));
       jPanel2ws.add(KissIndex, new GridBagConstraints(1, 3, 1, 1, 0.0, 0.0
+            ,GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(0, 5, 0, 5), 0, 0));
+      jPanel2ws.add(jLabel14ws, new GridBagConstraints(0, 4, 1, 1, 0.0, 0.0
+            ,GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 5), 0, 0));
+      jPanel2ws.add(MasterIndex, new GridBagConstraints(1, 4, 1, 1, 0.0, 0.0
             ,GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(0, 5, 0, 5), 0, 0));
       panel1ws.add(jPanel2ws, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0
             ,GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 10, 0, 0), 0, 0));
@@ -2625,6 +2652,7 @@ final public class OptionsDialog extends KissDialog
    }
    
 	static public String getKissWeb() { return kissweb ; }
+	static public String getMasterWeb() { return masterindex ; }
 	static public String getUserDir() { return userdir ; }
 	static public String getWebSite() { return website ; }
 	static public String getOnlineHelp() { return onlinehelp ; }
@@ -2686,14 +2714,21 @@ final public class OptionsDialog extends KissDialog
    {
       try { return (Integer.parseInt(maxremotebatch)) ; }
       catch (Exception e) { }
-      return 1024 ;
+      return 10 ;
+   }
+   
+	static public int getMaxLocalBatch()
+   {
+      try { return (Integer.parseInt(maxlocalbatch)) ; }
+      catch (Exception e) { }
+      return 10 ;
    }
 
 	static public int getRemoteDelay()
    {
       try { return (Integer.parseInt(remotedelay)) ; }
       catch (Exception e) { }
-      return 1024 ;
+      return 5000 ;
    }
 
 	static public int getThumbPage()
@@ -3027,6 +3062,7 @@ final public class OptionsDialog extends KissDialog
    static public void setThumbPage(String s) { thumbpage = s ; }
    static public void setDownloadSize(String s) { downloadsize = s ; }
    static public void setMaxRemoteBatch(String s) { maxremotebatch = s ; }
+   static public void setMaxLocalBatch(String s) { maxlocalbatch = s ; }
    static public void setRemoteDelay(String s) { remotedelay = s ; }
 
    // End of WebSearch extensions
@@ -3589,6 +3625,7 @@ final public class OptionsDialog extends KissDialog
       ThumbPage.setText(thumbpage) ;
       DownloadSize.setText(downloadsize) ;
       MaxRemoteBatch.setText(maxremotebatch) ;
+      MaxLocalBatch.setText(maxlocalbatch) ;
       RemoteDelay.setText(remotedelay) ;
 
       // End of WebSearch extensions
@@ -3841,6 +3878,7 @@ final public class OptionsDialog extends KissDialog
       thumbpage = ThumbPage.getText() ;
       downloadsize = DownloadSize.getText() ;
       maxremotebatch = MaxRemoteBatch.getText() ;
+      maxlocalbatch = MaxLocalBatch.getText() ;
       remotedelay = RemoteDelay.getText() ;
 
       // End of WebSearch extensions

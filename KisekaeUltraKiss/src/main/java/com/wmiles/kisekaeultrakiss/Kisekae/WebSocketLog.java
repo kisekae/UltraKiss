@@ -86,10 +86,14 @@ final public class WebSocketLog extends PrintStream
          File f = new File(lastzip) ;
          if (url!= null && url.startsWith("jar:") && url.contains("!")) 
             url = url.substring(url.indexOf('!')) ;
+         String setname = f.getName() ;
+         String setpath = f.getAbsolutePath() ;
+         if (!setpath.startsWith("file:"))
+            setpath = "file://" + setpath ;
 			String s = "Websocket session on " + begindate.toString() ;
          s += " for " + duration + " minutes, sets loaded " + sets ;
          if (lastset != null && lastset.length() > 0) 
-            s += "\n- Last set was " + lastset + ", in archive " + f.getName() ;
+            s += "\n- Last set was " + lastset + ", in archive " + "<a href='" + setpath + "' target='_blank'>" + setname  + "</a>";
          if (url != null && url.length() > 0)
             s += "\n- Archive downloaded from " + url ;
          if (logfilename != null && logfilename.length() > 0)

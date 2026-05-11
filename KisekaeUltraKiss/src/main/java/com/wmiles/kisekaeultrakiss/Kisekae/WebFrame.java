@@ -129,6 +129,7 @@ final public class WebFrame extends KissFrame
 	private JButton forwardbtn = new JButton() ;
 	private JButton searchbtn = new JButton() ;
 	private JButton remotebtn = new JButton() ;
+	private JButton masterbtn = new JButton() ;
 	private JButton activebtn = new JButton() ;
    private JScrollPane scrollpane = new JScrollPane() ;
 	private BorderLayout borderLayout1 = new BorderLayout();
@@ -151,6 +152,7 @@ final public class WebFrame extends KissFrame
    private JMenuItem open ;
    private JMenuItem search ;
    private JMenuItem remote ;
+   private JMenuItem master ;
 	private JMenuItem back ;
 	private JMenuItem forward ;
 	private JMenuItem clearhistory ;
@@ -286,6 +288,18 @@ final public class WebFrame extends KissFrame
 		remotebtn.addActionListener(this) ;
       remotebtn.setEnabled(false);
 
+		// Master index button
+
+		masterbtn = new JButton() ;
+		iconfile = Kisekae.getResource("Images/folder" + ext) ;
+		if (iconfile != null) masterbtn.setIcon(new ImageIcon(iconfile)) ;
+		masterbtn.setMargin(new Insets(1,1,1,1)) ;
+      masterbtn.setText(Kisekae.getCaptions().getString("MasterMessage"));
+		masterbtn.setToolTipText(Kisekae.getCaptions().getString("ToolTipMaster")) ;
+		masterbtn.setAlignmentY(0.5f) ;
+		masterbtn.addActionListener(this) ;
+      masterbtn.setEnabled(false);
+
 		// Active button
 
 		activebtn = new JButton() ;
@@ -335,6 +349,10 @@ final public class WebFrame extends KissFrame
       if (!applemac) search.setMnemonic(KeyEvent.VK_L) ;
       search.setEnabled(false) ;
       search.addActionListener(this) ;
+      fileMenu.add((master = new JMenuItem(Kisekae.getCaptions().getString("MenuFileMaster")))) ;
+      if (!applemac) master.setMnemonic(KeyEvent.VK_M) ;
+      master.setEnabled(false) ;
+      master.addActionListener(this) ;
       fileMenu.add((remote = new JMenuItem(Kisekae.getCaptions().getString("MenuFileRemote")))) ;
       if (!applemac) remote.setMnemonic(KeyEvent.VK_R) ;
       remote.setEnabled(false) ;
@@ -427,14 +445,17 @@ final public class WebFrame extends KissFrame
       Dimension d2 = forwardbtn.getPreferredSize() ;
       Dimension d3 = searchbtn.getPreferredSize() ;
       Dimension d4 = remotebtn.getPreferredSize() ;
+      Dimension d5 = masterbtn.getPreferredSize() ;
       int w = Math.max(d1.width,d2.width) ;
       w = Math.max(w,d3.width) ;
       w = Math.max(w,d4.width) ;
+      w = Math.max(w,d5.width) ;
       d1.width = Math.max(w,80) ;
       backbtn.setPreferredSize(d1) ;
       forwardbtn.setPreferredSize(d1) ;
       searchbtn.setPreferredSize(d1) ;
       remotebtn.setPreferredSize(d1) ;
+      masterbtn.setPreferredSize(d1) ;
 
 		// Size the frame for the window space.
 
@@ -497,9 +518,14 @@ final public class WebFrame extends KissFrame
       toolbar.addSeparator() ;
  		toolbar.add(forwardbtn) ;
       toolbar.addSeparator() ;
-// 	  toolbar.add(searchbtn) ;
-//      toolbar.addSeparator() ;
-// 	  toolbar.add(remotebtn) ;
+      if (!Kisekae.isWebsocket())
+      {
+    	   toolbar.add(searchbtn) ;
+         toolbar.addSeparator() ;
+         toolbar.add(masterbtn) ;
+         toolbar.addSeparator() ;
+      }
+      toolbar.add(remotebtn) ;
 		toolbar.add(Box.createGlue()) ;
 		toolbar.add(activebtn) ;
 		panel3.add(toolbar,BorderLayout.CENTER) ;
@@ -531,10 +557,16 @@ final public class WebFrame extends KissFrame
          String formname = OptionsDialog.getKissIndex() ;
          File f1 = new File(formname) ;
          search.setEnabled(f1.exists()) ;
-         remote.setEnabled(OptionsDialog.getKissWeb() != null) ;
+         formname = OptionsDialog.getKissWeb() ;
+         f1 = new File(formname) ;
+         remote.setEnabled(f1.exists()) ;
+         formname = OptionsDialog.getMasterWeb() ;
+         f1 = new File(formname) ;
+         master.setEnabled(f1.exists()) ;
          searchbtn.setEnabled(search.isEnabled()) ;
          remotebtn.setEnabled(remote.isEnabled()) ;
-      }
+         masterbtn.setEnabled(master.isEnabled()) ;
+     }
       catch (Exception e) { }
 	}
 
@@ -882,7 +914,33 @@ final public class WebFrame extends KissFrame
          
          setCurrentWeb(s) ;
       }
-      catch (Exception e) { } ;
+      catch (Exception e) { } 
+   }
+
+   
+   // A method to show the master index result.
+   
+   private void showMasterIndex()
+   {
+      try 
+      { 
+         String formname = OptionsDialog.getMasterWeb() ;
+         File f1 = new File(formname) ;
+         if (!f1.exists()) return ;
+         URL formurl = f1.toURL() ; 
+         String s = formurl.toExternalForm() ;
+         enterurl.setText(s) ;
+ 
+         // Signal a textfield input event.
+      
+         ActionEvent ae = new ActionEvent(enterurl,ActionEvent.ACTION_PERFORMED,s) ;
+         actionPerformed(ae) ;
+         
+         // Reset the history.
+         
+         setCurrentWeb(s) ;
+      }
+      catch (Exception e) { } 
    }
 
    
@@ -976,6 +1034,7 @@ final public class WebFrame extends KissFrame
          remote.setEnabled(OptionsDialog.getKissWeb() != null) ; 
          searchbtn.setEnabled(search.isEnabled()) ; 
          remotebtn.setEnabled(remote.isEnabled()) ;
+         masterbtn.setEnabled(master.isEnabled()) ;
       }
       catch (Exception e) { }
    }
@@ -1110,6 +1169,14 @@ final public class WebFrame extends KissFrame
          if (source == remote || source == remotebtn)
          {
              showRemoteIndex() ;
+             return ;
+         }
+
+         // Master index request.
+
+         if (source == master || source == masterbtn)
+         {
+             showMasterIndex() ;
              return ;
          }
 

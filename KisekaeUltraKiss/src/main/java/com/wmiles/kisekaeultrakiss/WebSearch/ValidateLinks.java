@@ -94,27 +94,29 @@ import javax.swing.text.html.*;
 import com.wmiles.kisekaeultrakiss.Kisekae.Kisekae ;
 import com.wmiles.kisekaeultrakiss.Kisekae.OptionsDialog ;
 import com.wmiles.kisekaeultrakiss.Kisekae.PrintLn ;
+import javax.swing.JTextArea;
 
 
 class ValidateLinks implements Runnable, ActionListener
 {
-   private static int count = 0 ;                  // Count of invokations
+   private static WebSearchFrame webframe = null ; // Our parent frame
+   private static int count = 0 ;                  // Count of invocations
    private static int bytes = 0 ;                  // Total bytes loaded
    private static int activecount = 0 ;            // Active threads
-   private static int remotebatchstart = 0 ;       // Next remote batch start
+   private static int remotebatchstart = 1 ;       // Next remote batch start
+   private static int batchnumber = 0 ;            // Batchnumber validated
    private static boolean stop = false ;           // Signal to stop thread
-   private static boolean remote = false ;         // True if remote website
+   private static boolean remote = false ;         // True if set batch start
+   private static boolean manualset = false ;      // True if remote website
    private static Vector setstate = new Vector() ; // State result returned
+   private static Vector archives = new Vector() ; // Archives to test
+   private static String baselocation = null ;     // Web site location
    private boolean savedataset = false ;           // True if save in progress
    private boolean savethumbnail = false ;         // True if save thumbnail
-   private boolean throttle = true ;               // True if throttle remote
    private String setname = null ;                 // Actual kiss set name
    private String writename = null ;               // Set name as written
-   private String baselocation = null ;            // Web site location
    private String thumbname = null ;               // Actual thumbnail name
    private String statestring = null ;             // Set state information
-   private Vector archives = new Vector() ;        // Archives to test
-   private WebSearchFrame webframe = null ;        // Our parent frame
    private String location = null ;                // Current archive name
    private URL parseurl = null ;                   // Current archive URL
    private Kisekae kisekae = null ;                // The Kisekae loader
@@ -130,25 +132,55 @@ class ValidateLinks implements Runnable, ActionListener
    {
       webframe = web ;
       archives = v ;
-      baselocation = webframe.getBaseLocation() ;
-      String baselocation1 = baselocation.toLowerCase() ;
-      if (baselocation1.startsWith("http://") || baselocation1.startsWith("https://"))
-         remote = true ; 
-      if (baselocation1.startsWith("http://"))
-         baselocation = baselocation.substring(7) ;
-      if (baselocation1.startsWith("https://"))
-         baselocation = baselocation.substring(8) ;
-      if (baselocation1.startsWith("file:///"))
-         baselocation = baselocation.substring(8) ;
-      if (baselocation1.startsWith("file://"))
-         baselocation = baselocation.substring(7) ;
-      if (baselocation1.startsWith("file:/"))
-         baselocation = baselocation.substring(6) ;
-      baselocation = baselocation.replace('/','.') ;
-      if (baselocation.endsWith("."))
-         baselocation = baselocation.substring(0,baselocation.length()-1) ;
+      if (archives == null || archives.size() == 0) return ;
+      
+      // Set the base location for the search.  It is the first line in the
+      // archive list.
+   
+      savearchive() ;
+      setBaseLocation() ;
    }
 
+         
+   // Save the archives for a possible restart at a different location.
+      
+   private void savearchive()
+   {
+      if (!javax.swing.SwingUtilities.isEventDispatchThread())
+      {
+      	Runnable runner = new Runnable()
+			{ public void run() { savearchive() ; } } ;
+   		javax.swing.SwingUtilities.invokeLater(runner) ;
+         return ;
+      }
+      
+      kisekae.setBatch(true) ;
+      String directory = OptionsDialog.getDataDirectory() ;
+      String archivelinks = "archivelinks.txt" ;
+      try
+      {
+         JTextArea text = new JTextArea();
+         for (int i = 0 ; i < archives.size() ; i++) 
+         {
+            Object o = archives.elementAt(i) ;
+            if (o instanceof String) text.append(((String) o) + "\n");
+         }
+
+         File f = new File(directory) ;
+         f.mkdirs() ;
+         f = new File(f,archivelinks) ;
+         if (f.exists()) f.delete() ;
+         boolean b = f.createNewFile() ;
+         if (b) Kisekae.getKisekae().saveText(null,directory,archivelinks,text) ;
+         webframe.addTrace("Archive list for validation saved to " + f.getPath() + ", size = " + (archives.size()-1)) ;
+      }      
+      catch (IOException ioex)
+      {
+         PrintLn.println(ioex.toString()) ;
+         webframe.addTrace("IOException, unable to write "+directory,2) ;
+         webframe.addTrace("Ensure "+OptionsDialog.getDataDirectory()+" is write enabled.",2) ;
+      }      
+   }
 
 
    // Thread interface.
@@ -166,7 +198,8 @@ class ValidateLinks implements Runnable, ActionListener
       kisekae.setCallback(this) ;
       kisekae.setBatch(true) ;
 
-      // Process each entry.
+      // Process each entry.  There is a 1 record header that has the 
+      // baselocation used during websearch so the first index is 1.
 
       try
       {
@@ -183,14 +216,21 @@ class ValidateLinks implements Runnable, ActionListener
                   catch (InterruptedException e) { stop = true ; }
                }
             }
-            if (throttle)
+
+            // Always break into batches.
+            
+            int n = OptionsDialog.getMaxLocalBatch() ;
+            if (remote) n = OptionsDialog.getMaxRemoteBatch() ;
+            if (((count - (remotebatchstart-1)) == n) && (n > 0)) 
             {
-               int n = OptionsDialog.getMaxRemoteBatch() ;
-               if (remote && (count - remotebatchstart >= n) && (n > 0)) 
-               {
-                  webframe.addTrace("Terminating validation, remote batch limit exceeded (" + OptionsDialog.getMaxRemoteBatch() + ") ... ") ;
-                  break ;
-               }
+               webframe.addTrace("Terminating validation, batch limit reached (" + n + ") ... ") ;
+               break ;
+            }
+
+            // Delay if remote website scan.
+            
+            if (Kisekae.isSearchThrottled())
+            {
                if (remote && OptionsDialog.getRemoteDelay() > 0)
                {
                   int randomNum = (int)(Math.random() * (OptionsDialog.getRemoteDelay()/1000)) + 1;  
@@ -207,16 +247,19 @@ class ValidateLinks implements Runnable, ActionListener
       if (activecount <= 0 || stop)
       {
          String s = (bytes  / 1024) + "K" ;
-         webframe.addTrace("End Archive Validation. Downloads from " + (remotebatchstart+1) + " to " + count + ". Cumulative bytes downloaded: " + s,1) ;
+         webframe.addTrace("End Archive Validation. Downloads from " + (remotebatchstart) + " to " + (count) + ". Cumulative bytes downloaded: " + s,1) ;
          webframe.vallinkactive = false ;
          webframe.setbatchstart.setEnabled(true) ;
          activecount = 0 ;
          
          // Run the callback on the EDT thread.
-         
-         Runnable runner = new Runnable()
-         { public void run() { webframe.valcallback.doClick() ; } } ;
-         javax.swing.SwingUtilities.invokeLater(runner) ;        
+
+         if (remotebatchstart < count)
+         {
+            Runnable runner = new Runnable()
+            { public void run() { webframe.valcallback.doClick() ; } } ;
+            javax.swing.SwingUtilities.invokeLater(runner) ;     
+         }
       }
       
       kisekae.removeCallback(this) ;
@@ -234,8 +277,8 @@ class ValidateLinks implements Runnable, ActionListener
       try
       {
          if (OptionsDialog.getDebugSearch())
-            PrintLn.println("ValidateLinks: begin validation for " + s + " (" + count + " of " + archives.size() + ")") ;
-         webframe.addTrace("Initializing validation for " + s + " (" + count + " of " + archives.size() + ")") ;
+            PrintLn.println("ValidateLinks: begin validation for " + s + " (" + count + " of " + (archives.size()-1) + ")") ;
+         webframe.addTrace("Initializing validation for " + s + " (" + count + " of " + (archives.size()-1) + ")") ;
          kisekae.init(s,OptionsDialog.getDownloadSize(),webframe) ;
          bytes += kisekae.getBytesLoaded() ;
          return true ;
@@ -272,7 +315,15 @@ class ValidateLinks implements Runnable, ActionListener
          String directory = OptionsDialog.getDataDirectory() ;
          directory = convertSeparator(directory) ;
          if (!directory.endsWith(File.separator)) directory += File.separator ;
-         directory += baselocation + File.separator ;
+         String s = baselocation ;
+         s = s.replaceAll("%20", " ") ;
+         int n = s.lastIndexOf('.') ;
+         if (n > 0) s = s.substring(n+1) ;
+         n = location.indexOf(s) ;
+         if (n > 0) s = location.substring(n) ;
+         n = s.lastIndexOf(File.separator) ;
+         if (n > 0) s = s.substring(0,n) ;
+         directory += s + File.separator ;
          Object [] state = kisekae.getState() ;
          if (state == null) return ;
          setname = (String) state[0] ;
@@ -297,13 +348,13 @@ class ValidateLinks implements Runnable, ActionListener
          try
          {
             savedataset = false ;
+            setname = setname.replaceAll("%20", " ") ;
+            directory = directory.replaceAll("%20", " ") ;
             File f = new File(directory) ;
             f.mkdirs() ;
-            setname = setname.replaceAll("%20", " ") ;
             writename = setname ;
             
             boolean b = OptionsDialog.getSaveArchive() ;
-            b = (b && !webframe.isLocalSearch()) ;
             if (!b) return ;
             b = OptionsDialog.getSaveAsZip() ;
             if (b && !writename.endsWith("zip")) writename += ".zip" ;
@@ -311,7 +362,7 @@ class ValidateLinks implements Runnable, ActionListener
             f = new File(f,writename) ;
             if (f.exists()) f.delete() ;
             savedataset = f.createNewFile() ;
-            String s = f.getAbsolutePath() ;
+            s = f.getAbsolutePath() ;
             if (!s.startsWith(File.separator)) s = File.separator + s ;
             s = convertSeparator("file://"+s) ;
             if (savedataset) statestring = s + "\t" + setname + "\t" 
@@ -395,6 +446,7 @@ class ValidateLinks implements Runnable, ActionListener
       bytes = 0 ;                  // Total bytes loaded
       activecount = 0 ;            // Active threads
       setstate = new Vector() ;    // State result returned
+      archives = new Vector() ;    // Entries to process
    }
 
    // A method to return our result.
@@ -409,30 +461,87 @@ class ValidateLinks implements Runnable, ActionListener
 
    static boolean getRemote() { return remote ; }
 
-   // A method to return our result.
+   // A method to return the list of archives to process.
+
+   static Vector getArchives() { return archives ; }
+
+   // A method to return the indicator the batch number processed.
+
+   static int getBatchNumber() { return batchnumber ; }
+
+   // A method to return the indicator that this was a manual batch validation.
+
+   static boolean isManualBatchStart() { return manualset ; }
+
+   // A method to set the batch start index (not 0 based).
+   // The archive list is established from the "archivelink.txt" file
+   // created in the constructor for this class.
 
    static void setRemoteBatchStart(int n) 
    { 
-      remotebatchstart = n ; 
       setstate = new Vector() ;
-   }
+      archives = GetLinks.getArchives() ;
+      
+      // We start on a batch boundary.
+
+      manualset = true ;
+      int n1 = OptionsDialog.getMaxLocalBatch() ;
+      if (remote) n1 = OptionsDialog.getMaxRemoteBatch() ;
+      batchnumber = ((n-1) / n1) ;
+      n = batchnumber * n1 + 1 ;
+      remotebatchstart = n ; 
+      if (remotebatchstart < 1) remotebatchstart = 1 ;
+      count = n - 1 ;
+      if (webframe == null) return ;
+      webframe.addTrace("Batch start index set to " + n + " as starting index for batch " + batchnumber + " where the batch size is " + n1) ;
+    }
 
    // A method to reset our static counts.
 
    static void reset()
    {
       count = 0 ; bytes = 0 ;
-      remotebatchstart = 0 ;
+      remotebatchstart = 1 ;    // 1 record header for the baselocation
       activecount = 0 ;
       setstate = new Vector() ; 
       stop = false ;
-      remote = false ;
+      manualset = false ;
+      setBaseLocation() ;
    }
+      
+   // Establish the search base location.  This is the first line in the 
+   // archive list.
 
-
-   // A function to convert file separator characters.
-   // If we have a URL all separators are '/'.
-
+   static void setBaseLocation()
+   {
+      baselocation = null ;
+      if (archives == null || archives.size() == 0) return ;
+      
+      baselocation = (String) archives.elementAt(0) ;
+      String baselocation1 = baselocation.toLowerCase() ;
+      remote = (baselocation1.startsWith("http://") || baselocation1.startsWith("https://")) ;
+      if (baselocation1.startsWith("http://"))
+         baselocation = baselocation.substring(7) ;
+      if (baselocation1.startsWith("https://"))
+         baselocation = baselocation.substring(8) ;
+      if (baselocation1.startsWith("file:///"))
+         baselocation = baselocation.substring(8) ;
+      if (baselocation1.startsWith("file://"))
+         baselocation = baselocation.substring(7) ;
+      if (baselocation1.startsWith("file:/"))
+         baselocation = baselocation.substring(6) ;
+      baselocation = baselocation.replace('/','.') ;
+      if (baselocation.endsWith("."))
+         baselocation = baselocation.substring(0,baselocation.length()-1) ;      
+   }  
+   
+   static String getBaselocation()
+   {
+      setBaseLocation() ;
+      return baselocation ;
+   }
+   
+   
    private String convertSeparator(String s)
    {
       if (s == null) return null ;

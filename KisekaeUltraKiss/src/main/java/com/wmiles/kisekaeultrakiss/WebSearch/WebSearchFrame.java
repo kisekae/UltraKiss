@@ -135,12 +135,16 @@ final public class WebSearchFrame extends KissFrame
    private String baselocation = null ;            // Location of base site
    private String mastername = null ;              // Name of master index
    private String absoluteformname = null ;        // Location of generated HTML
+   private String searchname = null ;              // Fileopen selected name
    private URL pageurl = null ;                    // URL of base page
    private boolean stop = false ;                  // If true, stop processing
    private boolean activated = false ;             // If true, search was activated
    private boolean terminating = false ;           // If true, terminating
+   private boolean validsearch = false ;           // If true, have valid archive
    private int initdivider = 0 ;                   // Initial split divider
    private int batchnumber = 0 ;                   // Remote batch 
+   private static int nextbatchstart = 0 ;         // Next batch start index
+   private int totalcount = 0 ;                    // Total valid sets
    
    // User interface objects.
 
@@ -168,6 +172,7 @@ final public class WebSearchFrame extends KissFrame
    private JMenu optionMenu ;
    private JMenu helpMenu ;
    private JMenuItem open ;
+   private JMenuItem portal ;
    private JMenuItem exit ;
    private JMenuItem help ;
    private JMenuItem cancel ;
@@ -206,6 +211,7 @@ final public class WebSearchFrame extends KissFrame
    protected JButton bldcallback = new JButton("WebFrame Bld Callback") ;
    protected JButton idxcallback = new JButton("WebFrame Idx Callback") ;
    protected JButton schcallback = new JButton("WebFrame Sch Callback") ;
+   protected JButton mtrcallback = new JButton("WebFrame Mtr Callback") ;
 
 	// Register for events.
 
@@ -299,6 +305,7 @@ final public class WebSearchFrame extends KissFrame
 
       // Set up the menu bar.
 
+      int accelerator = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask() ;
       JMenuBar mb = new JMenuBar() ;
       fileMenu = new JMenu(Kisekae.getCaptions().getString("MenuFile")) ;
       String jv = System.getProperty("java.version") ;
@@ -310,10 +317,18 @@ final public class WebSearchFrame extends KissFrame
       fileMenu.add((open = new JMenuItem(Kisekae.getCaptions().getString("MenuFileOpen")))) ;
       open.setMnemonic(KeyEvent.VK_O) ;
       open.addActionListener(this) ;
+      open.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, accelerator));
       fileMenu.add((cancel = new JMenuItem(Kisekae.getCaptions().getString("CancelMessage")))) ;
       cancel.setMnemonic(KeyEvent.VK_C) ;
       cancel.addActionListener(this) ;
 		cancel.setEnabled(activated) ; 
+      cancel.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, accelerator));
+      fileMenu.addSeparator() ;
+      fileMenu.add((portal = new JMenuItem(Kisekae.getCaptions().getString("MenuFileOpenPortal")))) ;
+      portal.addActionListener(this) ;
+      portal.setEnabled(true);
+      portal.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, accelerator+ActionEvent.SHIFT_MASK));
+      portal.setMnemonic(KeyEvent.VK_P) ;
       fileMenu.addSeparator() ;
       fileMenu.add((exit = new JMenuItem(Kisekae.getCaptions().getString("MenuFileExitWebSearch")))) ;
       exit.setMnemonic(KeyEvent.VK_X) ;
@@ -326,6 +341,7 @@ final public class WebSearchFrame extends KissFrame
       optionMenu.add((options = new JMenuItem(Kisekae.getCaptions().getString("MenuToolsOptions")))) ;
       options.setMnemonic(KeyEvent.VK_C) ;
       options.addActionListener(this) ;
+      options.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, accelerator+ActionEvent.SHIFT_MASK));
       optionMenu.add((setbatchstart = new JMenuItem(Kisekae.getCaptions().getString("MenuSetBatchStart")))) ;
       setbatchstart.addActionListener(this) ;
       mb.add(optionMenu) ;
@@ -351,6 +367,7 @@ final public class WebSearchFrame extends KissFrame
          logfile.setEnabled(LogFile.isOpen()) ;
          logfile.addActionListener(menu) ;
          logfile.setMnemonic(KeyEvent.VK_L) ;
+         logfile.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, accelerator+ActionEvent.SHIFT_MASK));
       }
 		helpMenu.addSeparator() ;
 		helpMenu.add((about = new JMenuItem(Kisekae.getCaptions().getString("MenuHelpAbout")))) ;
@@ -370,6 +387,7 @@ final public class WebSearchFrame extends KissFrame
       bldcallback.addActionListener(this);
       idxcallback.addActionListener(this);
       schcallback.addActionListener(this);
+      mtrcallback.addActionListener(this);
       addWindowListener(this) ;
       editor.requestFocusInWindow() ;
   }
@@ -397,6 +415,7 @@ final public class WebSearchFrame extends KissFrame
       scrollpane2 = new JScrollPane(tracearea) ;
       panel2.add(scrollpane2,BorderLayout.CENTER) ;
       split1 = new JSplitPane(JSplitPane.VERTICAL_SPLIT,panel1,panel2) ;
+      split1.setDividerLocation(0.9) ;
       panel4 = new JPanel() ;
       panel4.setLayout(borderLayout4) ;
       panel4.add(split1,BorderLayout.CENTER) ;
@@ -421,6 +440,10 @@ final public class WebSearchFrame extends KissFrame
       { 
          PrintLn.println("WebSearch: " + e) ;
       }
+      
+      ValidateLinks.setRemoteBatchStart(1) ;
+      setbatchstart.setEnabled(scheduler == null && ValidateLinks.getArchives().size() > 0);
+      ValidateLinks.reset() ;      
    }
 
 
@@ -439,7 +462,7 @@ final public class WebSearchFrame extends KissFrame
          activebtn.setEnabled(true) ;
          cancel.setEnabled(true) ;
          split1.setDividerLocation(0.5) ;
- 
+
          // Initiate the parse.
 
          addTrace(" ") ;
@@ -459,9 +482,11 @@ final public class WebSearchFrame extends KissFrame
       }
       catch (Exception e)
       {
+         setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
          String s = e.toString() + "\n" + location ;
          JOptionPane.showMessageDialog(this,s,"Invalid URL",JOptionPane.ERROR_MESSAGE) ;
          activated = false ;
+         portal.setEnabled(true) ;
          activebtn.setEnabled(false) ;
          cancel.setEnabled(false) ;
       }
@@ -526,6 +551,10 @@ final public class WebSearchFrame extends KissFrame
 
    String getBaseLocation() { return baselocation ; }
 
+   // Method to return the relative directory name selected with fileopen.  
+
+   String getSearchName() { return searchname ; }
+
    // Method to identify if search is local or remote.
 
    public boolean isLocalSearch() 
@@ -539,8 +568,6 @@ final public class WebSearchFrame extends KissFrame
    // Method to return the batch number for remote searches.
 
    int getBatchNumber() { return batchnumber ; }
-
-   // Method to identify if search is local or remote.
 
    // Method to add a trace entry to our trace area.
 
@@ -580,6 +607,7 @@ final public class WebSearchFrame extends KissFrame
       fo.show("Search Directory",null,true) ;
       String s = fo.getPath() ;
       if (s == null) return ;
+      searchname = fo.getFile() ;
       File f = new File(s) ;
       if (f.isFile()) s = f.getParent() ;
       if (!(s.endsWith(File.separator))) s += File.separator ;
@@ -637,6 +665,21 @@ final public class WebSearchFrame extends KissFrame
             showFileOpen() ;
             return ;
          }
+                    
+         // Show the local portal.  This closes this Search window.
+         // We show the local search index or the master index or the
+         // default KissWeb screen.
+
+         if (source == portal)
+         {
+            if (activated) return ;
+            showStatus("") ;
+            activated = false ;
+            activebtn.setEnabled(false) ;
+            cancel.setEnabled(false) ;
+            Kisekae.setBatch(false) ;
+            showPortal() ;
+         }                  
 
          // Cancel request.
 
@@ -691,15 +734,50 @@ final public class WebSearchFrame extends KissFrame
 
          if (source == setbatchstart)
          {
-            int n = 0 ;
+            int n = 0 ;  
+            stop = false ;
+            Vector archives = new Vector() ;
+            
+            // Read the last archive links list.  Note that the first line
+            // in the list is a header line that identifies the base location
+            // for the search.  This location is used for batch file names.
+
+            baselocation = null ;
+            String directory = OptionsDialog.getDataDirectory() ;
+            String archivelinks = "archivelinks.txt" ;
+            File f = new File(directory,archivelinks) ;      
+            try (BufferedReader br = new BufferedReader(new FileReader(f))) 
+            {
+               String line;
+               while ((line = br.readLine()) != null) 
+               {
+                  if (baselocation == null) baselocation = line ;
+                  archives.add(line);
+               }
+            } 
+            catch (IOException e) 
+            {
+               JOptionPane.showMessageDialog(this, 
+                  "Prior archive list does not exist.  Unable to restart processing. \n" +
+                  "Perform a search with File-Open or a remote search by entering a URL. ", 
+                  "Input Error", 
+                  JOptionPane.ERROR_MESSAGE);               
+               return ;
+            }        
+
+            GetLinks.setArchives(archives) ;
+            URL url = new URL(baselocation) ;
+            String s1 = baselocation.replace("%20"," ") ;
+            
             boolean valid = false ;
             while (!valid)
             {
                String s = JOptionPane.showInputDialog(this,
-                  "A WebSearch of a remote website processes archive files in batches.\n" +
-                  "You are required to confirm continued processing for the next batch.\n" +
-                  "You may restart the search elsewhere in the archive list if necessary.\n\n" +
-                  "Enter the start index to be used for the next remote batch.",0) ;
+                  "A Web Search of a website or a directory processes files in batches.\n" +
+                  "For remote sites processing must be confirmed for the next batch.\n" +
+                  "You may restart the processing elsewhere in the list if necessary.\n" +
+                  "The current list contains " + (archives.size()-1) + " entries from " + s1 + "\n\n" +
+                  "Enter the new start index to be used for the next batch.",(nextbatchstart+1)) ;
                try { n = Integer.parseInt(s) ; valid = true ; }
                catch (NumberFormatException e) 
                { 
@@ -707,11 +785,25 @@ final public class WebSearchFrame extends KissFrame
                   JOptionPane.showMessageDialog(this, 
                      "Invalid syntax. Please enter a valid integer.", 
                      "Input Error", 
-                     JOptionPane.ERROR_MESSAGE);               
+                     JOptionPane.ERROR_MESSAGE);  
                }
             }
+                       
+            // Start a new batch.  Note, the start index is set to a batch start.
+            
+            activebtn.setEnabled(true) ;
+            cancel.setEnabled(true) ;
+            split1.setDividerLocation(0.5) ;
+            Scheduler.reset();
+            ValidateLinks.reset() ;
+            BuildForm.reset() ;
+            
+            scheduler = new Scheduler(this) ;
+            scheduler.startScheduler() ;                     
+            ValidateLinks vl = new ValidateLinks(this,archives) ;
             ValidateLinks.setRemoteBatchStart(n) ;
-            return ;
+            Thread thread = new Thread(vl) ;
+            thread.start() ;
          }
 
          // The URL text entry causes a switch to a new page.
@@ -719,14 +811,42 @@ final public class WebSearchFrame extends KissFrame
          if (source == enterurl)
          {
             if (activated) return ;
+            
+            String s = evt.getActionCommand() ;
+            if (s == null || "".equals(s.trim())) return ;
+            String s1 = s.toLowerCase() ;
+            boolean remote = !s1.startsWith("file:") ;
+            if (OptionsDialog.getClearMaster())
+            {
+               String type = (remote) ? "master" : "local" ;
+               String history = (remote) ? "website" : "local" ;
+               String backup = (remote) ? OptionsDialog.getMasterWeb() : OptionsDialog.getKissIndex() ;
+               backup = backup + ".bak" ;
+               String msg = "Warning - The " + type + " search index will be cleared. \n" +
+                 "All previous " + history + " search history will be lost. \n\n" +
+                 "A backup file for the index will be saved in: \n" + backup + " \n\n" + 
+                 "See Options-Search to clear this setting. \n\n" +
+                 "Continue?" ;
+               int i = JOptionPane.showConfirmDialog(this,msg,"Clear Master Index",JOptionPane.YES_NO_OPTION) ;
+               if (i == JOptionPane.NO_OPTION) return ;
+            }                       
+            
             stop = true ;
             GetLinks.stopsearch() ;
             ValidateLinks.stopsearch() ;
             BuildForm.stopsearch() ;
             Scheduler.stopScheduler() ;
-            stop = false ;
+            stop = false ;           
             activated = true ;
-            String s = evt.getActionCommand() ;
+            portal.setEnabled(false) ;
+            totalcount = 0 ;
+            nextbatchstart = 0 ;
+            
+            // Default missing protocol to https
+            
+            s = evt.getActionCommand() ;
+            boolean hasprotocol = (s1.startsWith("file:") || s1.startsWith("http:") || s1.startsWith("https:")) ;
+            if (!hasprotocol) s = "https://" + s ;
             s = resolveHex(s) ;
             setPage(s) ;
          }
@@ -757,14 +877,42 @@ final public class WebSearchFrame extends KissFrame
                waitbox.close() ; 
                waitbox = null ;
                activated = false ;
+               portal.setEnabled(true) ;
                activebtn.setEnabled(false) ;
          		cancel.setEnabled(false) ; 
                JOptionPane.showMessageDialog(this,
-                  "WebSearch has been cancelled.",
+                  "WebSearch has been cancelled.\n" +
+                  "Next batch start index is " + (nextbatchstart+1),
                   Kisekae.getCaptions().getString("OptionsDialogInfoTitle"),
                   JOptionPane.INFORMATION_MESSAGE) ;
             }
-            if (stop) return ;
+            if (!stop) return ;
+                         
+            // Add the index to the master index.
+            
+            if (ValidateLinks.getRemote() && mastername != null)
+            {
+               addTrace("Begin HTML Master Index Generation",1) ;
+               File f = new File(mastername) ;
+               BuildMaster bf = new BuildMaster(this,mastername,GetLinks.getTitle(),f.getName(),""+totalcount) ;
+               bf.parse() ;
+               bf.buildform() ;
+               return ;
+            }
+            
+            // Show the local portal.
+            
+            showStatus("") ;
+            activated = false ;
+            portal.setEnabled(true) ;
+            activebtn.setEnabled(false) ;
+            cancel.setEnabled(false) ;
+            PrintLn.println("WebSearch: ends") ;
+            addTrace("End WebSearch",1) ;
+            Scheduler.stopScheduler() ;
+            scheduler = null ;
+            Kisekae.setBatch(false) ;
+            showPortal() ;
          }           
 
          // The callback when URL's are determined.
@@ -772,20 +920,9 @@ final public class WebSearchFrame extends KissFrame
          if ("WebFrame URL Callback".equals(evt.getActionCommand()))
          {
             if (terminating) { close() ; return ; }
-            if (waitbox != null) 
-            { 
-               waitbox.close() ; 
-               waitbox = null ;
-               activated = false ;
-               activebtn.setEnabled(false) ;
-         		cancel.setEnabled(false) ; 
-               JOptionPane.showMessageDialog(this,
-                  "WebSearch has been cancelled.",
-                  Kisekae.getCaptions().getString("OptionsDialogInfoTitle"),
-                  JOptionPane.INFORMATION_MESSAGE) ;
-            }
             if (stop) return ;
-            
+
+            validsearch = false ;
             Vector v = GetLinks.getArchives() ;
             if (v.size() > 0 && !stop)
             {
@@ -793,6 +930,7 @@ final public class WebSearchFrame extends KissFrame
                ValidateLinks vl = new ValidateLinks(this,v) ;
                Thread thread = new Thread(vl) ;
                thread.start() ;
+               return ;
             }
             else
                exitsearch("No archive files located") ;
@@ -803,29 +941,22 @@ final public class WebSearchFrame extends KissFrame
          if ("WebFrame Val Callback".equals(evt.getActionCommand()))
          {
             if (terminating) { close() ; return ; }
-            if (waitbox != null) 
-            { 
-               waitbox.close() ; 
-               waitbox = null ; 
-               activated = false ;
-               activebtn.setEnabled(false) ;
-         		cancel.setEnabled(false) ; 
-               JOptionPane.showMessageDialog(this,
-                  "WebSearch has been cancelled.",
-                  Kisekae.getCaptions().getString("OptionsDialogInfoTitle"),
-                  JOptionPane.INFORMATION_MESSAGE) ;
-            }
             if (stop) return ;
-            
+           
+            batchnumber = ValidateLinks.getBatchNumber() ;
             Vector v = ValidateLinks.getSetState() ;
-            if (v.size() > 0 || ValidateLinks.getRemote())
+            if (v.size() > 0) validsearch = true ;
+            Vector v2 = GetLinks.getArchives() ;
+            int n = ValidateLinks.getCount() ;
+            if (n <= v2.size())
             {
                addTrace("Begin HTML Form Generation",1) ;
                BuildForm bf = new BuildForm(this,v) ;
                Thread thread = new Thread(bf) ;
                thread.start() ;
+               return ;
             }
-            else 
+            else if (!validsearch)
                exitsearch("No KiSS archive files found") ;
          }
 
@@ -835,24 +966,13 @@ final public class WebSearchFrame extends KissFrame
          if ("WebFrame Bld Callback".equals(evt.getActionCommand()))
          {
             if (terminating) { close() ; return ; }
-            if (waitbox != null) 
-            { 
-               waitbox.close() ; 
-               waitbox = null ; 
-               activated = false ;
-               activebtn.setEnabled(false) ;
-         		cancel.setEnabled(false) ; 
-               JOptionPane.showMessageDialog(this,
-                  "WebSearch has been cancelled.",
-                  Kisekae.getCaptions().getString("OptionsDialogInfoTitle"),
-                  JOptionPane.INFORMATION_MESSAGE) ;
-            }
             if (stop) return ;
             
             String s2 = null ;
             String s1 = getBaseLocation() ;
             String formname = BuildForm.getFormName() ;
             String formtitle = GetLinks.getTitle() ;
+            String startname = BuildForm.getStartName() ;
             if (formtitle.length() == 0) formtitle = s1 ;
             if (s1.startsWith("http://")) s1 = s1.substring(7) ;
             if (s1.startsWith("https://")) s1 = s1.substring(8) ;
@@ -886,7 +1006,12 @@ final public class WebSearchFrame extends KissFrame
             }
                
             addTrace("Begin Index Form Generation",1) ;
-            BuildIndex bi = new BuildIndex(this,formtitle,mastername,formname,BuildForm.getFormSize()) ;
+            mastername = mastername.replace("%20"," ") ;
+            formname = formname.replace("%20"," ") ;
+            formtitle = formtitle.replace("%20"," ") ;
+            startname = startname.replace("%20"," ") ;
+            totalcount = totalcount + BuildForm.getFormSize() ;
+            BuildIndex bi = new BuildIndex(this,formtitle,mastername,formname,BuildForm.getFormSize(),startname) ;
             bi.parse() ;
             bi.buildform() ;
             mastername = bi.getKissIndex() ;
@@ -899,18 +1024,6 @@ final public class WebSearchFrame extends KissFrame
          if ("WebFrame Idx Callback".equals(evt.getActionCommand()))
          {
             if (terminating) { close() ; return ; }
-            if (waitbox != null) 
-            { 
-               waitbox.close() ; 
-               waitbox = null ; 
-               activated = false ;
-               activebtn.setEnabled(false) ;
-         		cancel.setEnabled(false) ; 
-               JOptionPane.showMessageDialog(this,
-                  "WebSearch has been cancelled.",
-                  Kisekae.getCaptions().getString("OptionsDialogInfoTitle"),
-                  JOptionPane.INFORMATION_MESSAGE) ;
-            }
             if (stop) return ;
             
             String s1 = BuildIndex.getKissIndex() ;
@@ -937,34 +1050,54 @@ final public class WebSearchFrame extends KissFrame
             }
             
             // If doing a remote search prompt to see if another batch should be processed.
+
+            boolean nextbatch = true ;
+            nextbatchstart = ValidateLinks.getCount() ;
+            Vector v = GetLinks.getArchives() ;
+            Object o = ((nextbatchstart+1) < v.size()) ? v.elementAt(nextbatchstart+1) : null ;  
+            if (o != null && ValidateLinks.getRemote() && Kisekae.isSearchThrottled()) 
+            {
+                  int batchsize = OptionsDialog.getMaxRemoteBatch() ;
+                  if (isLocalSearch()) batchsize = OptionsDialog.getMaxLocalBatch() ;
+                  int i = JOptionPane.showConfirmDialog(this,
+                     "Validate the next batch of " + batchsize + " candidates?" + "\n" + o.toString() + " (" + (nextbatchstart+1) + " of " + (v.size()-1) + ")",
+                     "Search Batch",
+                     JOptionPane.YES_NO_OPTION) ;
+                  if (i == JOptionPane.NO_OPTION)
+                     nextbatch = false ;
+            }
+            
+            // Start a new batch.
+            
+            if (o != null && nextbatch && v.size() > 0)
+            {
+               batchnumber++ ;
+               ValidateLinks.setRemoteBatchStart(nextbatchstart+1) ;
+               ValidateLinks vl = new ValidateLinks(this,v) ;
+               Thread thread = new Thread(vl) ;
+               thread.start() ;
+               return ;
+            }   
+                         
+            // Add the index to the master index.
             
             if (ValidateLinks.getRemote())
             {
-               int next = ValidateLinks.getCount() ;
-               Vector v = GetLinks.getArchives() ;
-               Object o = (next < v.size()) ? v.elementAt(next) : null ;     
-               if (o != null) 
-               {
-                  int batchsize = OptionsDialog.getMaxRemoteBatch() ;
-                  int i = JOptionPane.showConfirmDialog(this,
-                     "Validate the next remote batch of " + batchsize + " candidates?" + "\n" + o.toString() + " (" + (next+1) + " of " + v.size() + ")",
-                     "Search Batch",
-                     JOptionPane.YES_NO_OPTION) ;
-                  if (i == JOptionPane.YES_OPTION)
-                  {
-                     batchnumber++ ;
-                     ValidateLinks.setRemoteBatchStart(next) ;
-                     ValidateLinks vl = new ValidateLinks(this,v) ;
-                     Thread thread = new Thread(vl) ;
-                     thread.start() ;
-                     return ;
-                  }
-               }
+               addTrace("Begin HTML Master Index Generation",1) ;
+               File f = new File(mastername) ;
+               CountEntries countEntries = new CountEntries(this,mastername) ;
+               totalcount = countEntries.parse() ;
+               BuildMaster bf = new BuildMaster(this,mastername,GetLinks.getTitle(),f.getName(),""+totalcount) ;
+               bf.parse() ;
+               bf.buildform() ;
+               return ;
             }
             
-               
+            // Show the local portal.
+            
             showStatus("") ;
             activated = false ;
+            portal.setEnabled(true) ;
             activebtn.setEnabled(false) ;
             cancel.setEnabled(false) ;
             PrintLn.println("WebSearch: ends") ;
@@ -972,48 +1105,50 @@ final public class WebSearchFrame extends KissFrame
             Scheduler.stopScheduler() ;
             scheduler = null ;
             Kisekae.setBatch(false) ;
-               
-            // Activate a Portal.  When this search form is closed
-            // a new invocation of the Kisekae program is started.
-            // The web portal is opened in a new thread after a 2
-            // second delay.
+            showPortal() ;
+         }
+      
+         // The callback when the master HTML index is written.
+
+         if ("WebFrame Mtr Callback".equals(evt.getActionCommand()))
+         {            
+            if (terminating) { close() ; return ; }
             
-            if (absoluteformname != null)
+            String s1 = OptionsDialog.getMasterWeb() ;
+            s1 = convertSeparator(s1) ;
+            File f2 = new File(s1) ;
+            s1 = f2.getName() ;
+            if (s1.endsWith(".html") || s1.endsWith(".htm"))
             {
-               int i = JOptionPane.showConfirmDialog(this,
-                  "Launch the UltraKiss Portal?",
-                  "Search Complete",
-                  JOptionPane.YES_NO_OPTION) ;
-               if (i == JOptionPane.YES_OPTION)
-               {
-                  Runnable showportal = new Runnable()
-                  {
-                     public void run()
-                     {
-                        try { Thread.sleep(1000) ; }
-                        catch (InterruptedException e) { }
-                        
-               			Runnable awt = new Runnable()
-               			{ 
-                           public void run() 
-                           { 
-                              String s = absoluteformname ;
-                              if (!s.startsWith(File.separator)) s = File.separator + s ;
-                              s = ("file://"+s).replace('\\','/') ;
-                              MainFrame mf = Kisekae.getMainFrame() ;
-                              WebFrame.setCurrentWeb(s) ;
-                              WebFrame wf = new WebFrame(mf) ; 
-                              wf.setVisible(true) ;
-                              wf.toFront() ;
-                           } 
-                        } ;
-               			SwingUtilities.invokeLater(awt) ;
-                     }
-                  } ;
-                  new Thread(showportal).start() ;
-                  close() ;
-               }
+               s1 = s1.substring(0,s1.lastIndexOf('.')) ;
+               s1 += ".txt" ;
             }
+            try
+            {
+               String directory = f2.getParent() ;
+               File f1 = new File(directory,s1) ;
+               if (f2.exists()) f2.delete() ;
+               f1.renameTo(f2) ;
+               if (OptionsDialog.getDebugSearch())
+                  PrintLn.println("WebSearch: rename " + f1.getName() + " to " + f2.getPath()) ;
+            }
+            catch (Exception e)
+            {
+               PrintLn.println("WebSearch: rename " + s1 + " to " + f2.getPath() + " failed.") ;
+            }
+
+            showStatus("") ;
+            activated = false ;
+            portal.setEnabled(true) ;
+            activebtn.setEnabled(false) ;
+            cancel.setEnabled(false) ;
+            PrintLn.println("WebSearch: ends") ;
+            addTrace("End WebSearch",1) ;
+            Scheduler.stopScheduler() ;
+            scheduler = null ;
+            Kisekae.setBatch(false) ;
+            absoluteformname = f2.getAbsolutePath() ;
+            showPortal() ;
          }
       }
 
@@ -1111,6 +1246,7 @@ final public class WebSearchFrame extends KissFrame
       addTrace(s,3) ;
       showStatus("") ;
       activated = false ;
+      portal.setEnabled(true) ;
       activebtn.setEnabled(false) ;
       cancel.setEnabled(false) ;
       PrintLn.println("WebSearch: ends") ;
@@ -1118,15 +1254,101 @@ final public class WebSearchFrame extends KissFrame
       Scheduler.stopScheduler() ;
       scheduler = null ;
    }
+
+   
+   // Activate a Portal.  When this search form is closed a new invocation of 
+   // the Kisekae program is started. The web portal is opened in a new thread 
+   // after a 1 second delay.  If there is no absoluteformname from a search
+   // we show the local search index or the master index or the default KissWeb 
+   // screen.
+   
+   private void showPortal()
+   { 
+      int i = JOptionPane.showConfirmDialog(this,
+         "Launch the UltraKiss Portal?",
+         "Search Complete",
+         JOptionPane.YES_NO_OPTION) ;
+      if (i == JOptionPane.NO_OPTION) return ;
+      
+      try
+      {
+         if (absoluteformname == null)
+         {
+            String formname = OptionsDialog.getKissIndex() ;
+            File f1 = new File(formname) ;
+            if (f1.exists())  
+            {
+               URL formurl = f1.toURL() ;
+               String s = formurl.toExternalForm() ;
+               absoluteformname = s ;
+            }
+         }
+         if (absoluteformname == null)
+         {
+            String formname = OptionsDialog.getMasterWeb() ;
+            File f1 = new File(formname) ;
+            if (f1.exists())  
+            {
+               URL formurl = f1.toURL() ;
+               String s = formurl.toExternalForm() ;
+               absoluteformname = s ;
+            }
+         }
+         if (absoluteformname == null)
+         {
+            String formname = OptionsDialog.getKissWeb() ;
+            absoluteformname = formname ;
+         }                      
+      }
+      catch (MalformedURLException e) 
+      {
+         PrintLn.println("WebSearchFrame: unable to show portal, " + e.toString());
+      }
+      
+      if (absoluteformname == null) 
+      {
+         addTrace("This is odd, no Portal index form is available?",2) ;        
+         return ;
+      }
+      if (absoluteformname.startsWith("file:"))
+         absoluteformname = absoluteformname.substring(5) ;            
+
+      Runnable showportal = new Runnable()
+      {
+         public void run()
+         {
+            try { Thread.sleep(1000) ; }
+            catch (InterruptedException e) { }
+                        
+     			Runnable awt = new Runnable()
+     			{ 
+               public void run() 
+               { 
+                  String s = absoluteformname ;
+                  if (!s.startsWith(File.separator)) s = File.separator + s ;
+                  s = ("file://"+s).replace('\\','/') ;
+                  MainFrame mf = Kisekae.getMainFrame() ;
+                  WebFrame.setCurrentWeb(s) ;
+                  WebFrame wf = new WebFrame(mf) ; 
+                  wf.setVisible(true) ;
+                  wf.toFront() ;
+               } 
+            } ;
+     			SwingUtilities.invokeLater(awt) ;
+         }
+      } ;
+      new Thread(showportal).start() ;
+      close() ;
+   }
      
+   
+   // Function to replace spaces in URL string with hexadecimal
      
-  // Function to exit the search.
-     
-  private String resolveHex(String s) 
-  {
-     if (s == null) return null ;
-     s = s.replace(" ", "%20") ;
-     return s ;
+   private String resolveHex(String s) 
+   {
+      if (s == null) return null ;
+      s = s.replace(" ", "%20") ;
+      return s ;
    }
      
      

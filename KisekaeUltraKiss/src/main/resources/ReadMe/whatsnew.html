@@ -30,13 +30,17 @@
                       <p><font face="Arial">1. The %t cel transparency setting will now parse a number immediately followed by text. Japanese sets have character encoding.</font></p>
                       <p><font face="Arial">2. The letAudio() FKiSS command was not always returning the name of the last audio played.  This is corrected.</font></p>
                       <p><font face="Arial">3. Corrected an index-out-of-bounds exception for a transparent index when encoding a GIF image file.</font></p>
-                      <p><font face="Arial">4. The URL loader now maintains the byte count for downloaded files.  Cumulative bytes are reported for WebSearch downloads.</font></p>
-                      <p><font face="Arial">5. WebSearch access to remote sites is now throttled and limited to small batches to manage download bandwidth. </font></p>
-                      <p><font face="Arial">6. Corrected an uncaught exception error with WebSearch updates on the EDT thread when searching for archive links. </font></p>
+                      <p><font face="Arial">4. The URL loader now maintains the byte count for downloaded files.  Cumulative bytes are reported for Web Search downloads.</font></p>
+                      <p><font face="Arial">5. Web Search access to remote sites is now throttled and limited to small batches to manage download bandwidth. </font></p>
+                      <p><font face="Arial">6. Corrected an uncaught exception error with Web Search updates on the EDT thread when searching for archive links. </font></p>
                       <p><font face="Arial">7. Implemented a Restore Portal option to activate the portal when a set is closed after being downloaded from the Portal. </font></p>
                       <p><font face="Arial">8. Introduced a WebSocket maximum file size upload limit (Options-Search-Maximum Archive Size) for WebSocket implementations. </font></p>
                       <p><font face="Arial">9. Implemented WebSocket backpressure control for uploading files to the server. Upload percent completion is now reported. </font></p>
                       <p><font face="Arial">10. Corrected FKissEditor internal errors for breakpoint processing.  Breakpoints were not always on the EDT thread. </font></p>
+                      <p><font face="Arial">11. Implemented custom batch sizes for Web Searches on local files.  Large local collections can now be processed in batches. </font></p>
+                      <p><font face="Arial">12. UltraKiss now recognizes Japanese text encoding (Shift-JIS) in text files.  Set documentation is now displayed correctly.</font></p>
+                      <p><font face="Arial">13. Implemented a new master index for Web Searches on remote websites.  Remote searches and local searches now have separate indexes.</font></p>
+                      <p><font face="Arial">14. Enabled a comma as a delimiter for cel page specifications after the colon.  Some sets delimited with commas rather than spaces. </font></p>
           				</BLOCKQUOTE>
                                        <p>&nbsp;</p>
 					<p><B>March 19, 2026</B></p>

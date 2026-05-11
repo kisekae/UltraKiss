@@ -105,10 +105,11 @@ class BuildIndex implements ActionListener
 {
    private static boolean stop = false ;           // Signal to stop thread
    private static String kissindex = null ;        // Master or subindex name
-   private static String masterindex = null ;        // Master or subindex name
+   private static String masterindex = null ;      // Master index name
    private String formname = null ;                // Actual site name
    private String formurl = null ;                 // Catalogue URL string
    private String formcount = "0" ;                // Count of entries on form
+   private String startname = "" ;                 // Starting name for batch
    private String baselocation = null ;            // Web site location
    private Vector entries = new Vector() ;         // URL's to generate
    private ListEntry entry = null ;                // URL and site name entry
@@ -116,6 +117,7 @@ class BuildIndex implements ActionListener
    private Kisekae kisekae = null ;                // The Kisekae loader
    private boolean gettitle = false ;
    private boolean getsize = false ;
+   private boolean getstart = false ;
 
 
 
@@ -123,6 +125,8 @@ class BuildIndex implements ActionListener
 
    HTMLEditorKit.ParserCallback callback = new HTMLEditorKit.ParserCallback()
    {
+      private int tdCounter = 0 ;
+      
       public void handleText(char[] data, int pos)
       {
          if (data == null) return ;
@@ -139,6 +143,12 @@ class BuildIndex implements ActionListener
             int n = 0 ;
             String size = new String(data) ;
             entry.entrycount = size.trim() ;
+         }
+         
+         if (getstart)
+         {
+            String start = new String(data) ;
+            entry.startname = start.trim() ;
          }
       }
 
@@ -162,14 +172,23 @@ class BuildIndex implements ActionListener
          // TD ref
          if (t == HTML.Tag.TD && a != null)
          {
-            getsize = true ;
+            tdCounter++ ;
+            if (tdCounter == 2)
+               getsize = true ;
+            if (tdCounter == 3)
+               getstart = true ;
          }
       }
 
       public void handleEndTag(HTML.Tag t, int pos)
       {
          gettitle = false ;
-         getsize = false ;
+         if (tdCounter == 2)
+           getsize = false ;
+         if (tdCounter == 3)
+           getstart = false ;
+         if (t == HTML.Tag.TR) 
+            tdCounter = 0; // Reset for new row
       }
 
       public void handleSimpleTag(HTML.Tag t, MutableAttributeSet a, int pos) { }
@@ -182,12 +201,13 @@ class BuildIndex implements ActionListener
 
    // Constructor
 
-   public BuildIndex(WebSearchFrame web, String name, String master, String url, int n)
+   public BuildIndex(WebSearchFrame web, String name, String master, String url, int n, String start)
    {
       webframe = web ;
       formname = name ;
       masterindex = master ;
       formurl = url ;
+      startname = start ;
       formcount = Integer.valueOf(n).toString() ;
       kisekae = Kisekae.getKisekae() ;
    }
@@ -244,16 +264,18 @@ class BuildIndex implements ActionListener
 
             // We usually add this new scan as a line item in the master index
             // unless we clearing the master.  However we always create a new 
-            // submaster index for remote scans for the remote site.
+            // submaster index for remote scans for the remote site or for
+            // local directory scans that exceed one batch.
  
             int batch = webframe.getBatchNumber() ;
+            boolean b = ValidateLinks.isManualBatchStart() ;
             if (ValidateLinks.getRemote() && batch != 0)
             {
                Reader rd = getReader(s) ;
                if (rd == null) return ;
                new ParserDelegator().parse(rd, callback, true);                 
             }            
-            if (!ValidateLinks.getRemote() && !OptionsDialog.getClearMaster())
+            if (!ValidateLinks.getRemote() && (!OptionsDialog.getClearMaster() || batch != 0))
             {
                Reader rd = getReader(s) ;
                if (rd == null) return ;
@@ -279,6 +301,7 @@ class BuildIndex implements ActionListener
          entry.urlname = formurl ;
          entry.sitename = formname ;
          entry.entrycount = formcount ;
+         entry.startname = startname ;
          for (n = 0 ; n < entries.size() ; n++)
             if (formurl.equals(((ListEntry) entries.elementAt(n)).urlname)) break ;
          if (n < entries.size())
@@ -296,7 +319,7 @@ class BuildIndex implements ActionListener
                   + entry.sitename + "' " + entry.entrycount) ;
          }
 
-         // Sort by site name.
+         // Sort by url name.
 
          Collections.sort(entries) ;
          if (OptionsDialog.getDebugSearch())
@@ -325,8 +348,15 @@ class BuildIndex implements ActionListener
          JTextArea text = new JTextArea() ;
          String title = "UltraKiss Search Index" ;
          URL url = getClass().getClassLoader().getResource("Images/ultrakiss.gif") ;
-         String s = (url != null) ? url.toString() : null ;
-
+         String s = (url != null) ? url.toString() : "" ;
+         int width = 0 ;
+         int height = 0 ;
+         if (url != null)
+         {
+            ImageIcon icon = new ImageIcon(url);
+            width = icon.getIconWidth();
+            height = icon.getIconHeight();
+         }
          text.append(newline("<html>")) ;
          text.append(newline("<head>")) ;
          text.append(newline("<title>"+title+"</title>")) ;
@@ -336,9 +366,11 @@ class BuildIndex implements ActionListener
          if (s != null)
          {
             text.append(newline("<p align=\"center\">")) ;
-            text.append(newline("<img src=\""+s+"\" border=\"0\">")) ;
+            text.append(newline("<img src=\""+s+"\" border=\"0\" width=\""+width+"\" height=\""+height+"\">")) ;
             text.append(newline("</p>")) ;
          }
+
+//       text.append(newline("<center><h1>Local KiSS Index</h1></center>")) ;
          
          text.append(newline("<div align\"center\">")) ;
          text.append(newline("<center>")) ;
@@ -346,6 +378,7 @@ class BuildIndex implements ActionListener
          text.append(newline("<tr>")) ;
          text.append(newline("<td><b>Site</b></td>")) ;
          text.append(newline("<td align=\"center\"><b>Entries</b></td>")) ;
+         text.append(newline("<td align=\"left\"><b>Starting Set</b></td>")) ;
          text.append(newline("</tr>")) ;
 
          // Build the table.
@@ -356,13 +389,19 @@ class BuildIndex implements ActionListener
             String urlstring = entry.urlname ;
             String sitename = entry.sitename ;
             String count = entry.entrycount ;
+            String start = entry.startname ;
             if (sitename == null || urlstring == null) continue ;
-            String title2 = sitename ;
-            if (title2.startsWith("file:///")) title2 = title2.substring(8) ;
-            if (title2.startsWith("file:/")) title2 = title2.substring(6) ;
+            String title2 = urlstring ;
+            int n = title2.lastIndexOf('.') ;
+            if (n > 0) title2 = title2.substring(0,n) ;
+            n = title2.lastIndexOf('.') ;
+            if (n > 0) title2 = title2.substring(n+1) ;
+            title2 = title2.replace("%20"," ") ;
+            start = start.replace("%20"," ") ;
             text.append(newline("<tr>")) ;
             text.append(newline(" <td><a href=\""+urlstring+"\">"+title2+"</a></td>")) ;
             text.append(newline(" <td align=\"center\">"+count+"</td>")) ;
+            text.append(newline(" <td align=\"left\">"+start+"</td>")) ;
             text.append(newline("</tr>")) ;
             if (OptionsDialog.getDebugSearch())
                PrintLn.println("BuildIndex: index for " + urlstring + " to " + title2) ;
@@ -372,11 +411,12 @@ class BuildIndex implements ActionListener
 
          Calendar date = Calendar.getInstance() ;
          String datestring = DateFormat.getDateInstance().format(date.getTime()) ;
+         datestring = (new Date()).toString() ;
          text.append(newline("</table>")) ;
          text.append(newline("</center>")) ;
          text.append(newline("</div>")) ;
          text.append(newline("<p>&nbsp;</p>")) ;
-         text.append("<p align=\"center\"><font size=\"2\">Generated by UltraKiss WebSearch V1.2<br>") ;
+         text.append("<p align=\"center\"><font size=\"2\">Generated by UltraKiss WebSearch V1.3<br>") ;
          text.append(newline(datestring+"</font></p>")) ;
          text.append(newline("<p>&nbsp;</p>")) ;
          text.append(newline("</body>")) ;
@@ -495,6 +535,7 @@ class BuildIndex implements ActionListener
       protected String urlname = null ;
       protected String sitename = null ;
       protected String entrycount = "0" ;
+      protected String startname = "" ;
 
       public String toString() { return (urlname != null) ? urlname : "" ; }
 
@@ -504,10 +545,10 @@ class BuildIndex implements ActionListener
       public int compareTo(Object o)
       {
          if (!(o instanceof ListEntry)) return -1 ;
-         String s = ((ListEntry) o).sitename ;
+         String s = ((ListEntry) o).urlname ;
          if (s == null) return -1 ;
-         if (sitename == null) return -1 ;
-         return (sitename.compareTo(s)) ;
+         if (urlname == null) return -1 ;
+         return (urlname.compareTo(s)) ;
       }
    }
 }

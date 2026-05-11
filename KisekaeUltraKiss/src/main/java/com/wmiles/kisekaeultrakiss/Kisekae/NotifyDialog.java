@@ -122,7 +122,7 @@ final class NotifyDialog extends KissDialog
          return ;
       }
 
-      // Put the text into the TEXT object.
+      // Put the text into the TEXT object.  
 
       int i = 0 ;
       if (text != null)

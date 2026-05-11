@@ -107,6 +107,7 @@ class BuildForm implements Runnable, ActionListener
    private static boolean stop = false ;           // Signal to stop thread
    private static Vector state = new Vector() ;    // URL's to generate
    private static String formname = null ;         // Actual HTML name
+   private static String startname = null ;        // Starting name in form
    private String baselocation = null ;            // Web site location
    private WebSearchFrame webframe = null ;        // Our parent frame
    private Kisekae kisekae = null ;                // The Kisekae loader
@@ -121,20 +122,8 @@ class BuildForm implements Runnable, ActionListener
    {
       webframe = web ;
       state = v ;
-      baselocation = webframe.getBaseLocation() ;
-      if (baselocation.startsWith("http://"))
-         baselocation = baselocation.substring(7) ;
-      if (baselocation.startsWith("https://"))
-         baselocation = baselocation.substring(8) ;
-      if (baselocation.startsWith("file:///"))
-         baselocation = baselocation.substring(8) ;
-      if (baselocation.startsWith("file://"))
-         baselocation = baselocation.substring(7) ;
-      if (baselocation.startsWith("file:/"))
-         baselocation = baselocation.substring(6) ;
-      baselocation = baselocation.replace('/','.') ;
-      if (baselocation.endsWith("."))
-         baselocation = baselocation.substring(0,baselocation.length()-1) ;
+      startname = null ;
+      baselocation = ValidateLinks.getBaselocation() ;
    }
 
 
@@ -182,16 +171,33 @@ class BuildForm implements Runnable, ActionListener
       try
       {
          if (state == null) throw new Exception("BuildForm: no state information") ;
+         formname = baselocation ;
+         String directory = OptionsDialog.getHtmlDirectory() ;
+         directory = convertSeparator(directory) ;
+         if (!directory.endsWith(File.separator)) directory += File.separator ;
+         formname = formname.replace("%20"," ") ;
+         String s = formname.toLowerCase() ;
+         if (s.endsWith(".html") || s.endsWith(".htm"))
+            formname = formname.substring(0,formname.lastIndexOf('.')) ;
+         int n = ValidateLinks.getBatchNumber() ;
+         int n1 = n + 1 ;
+         s = (n1 < 10) ? "-00" : "-" ;
+         s = (n1 >= 10 && n1 < 100) ? "-0" : s ;
+         formname = formname + s + n1 ;
 
          // Open the HTML page.
 
          JTextArea text = new JTextArea() ;
-         String s = webframe.getBaseLocation() ;
+         s = ValidateLinks.getBaselocation() ;
          String title = GetLinks.getTitle() ;
          String title2 = title ;
+         String title3 = formname ;
          if (title2.length() == 0) title2 = s ;
          if (title2.startsWith("file:///")) title2 = title2.substring(8) ;
          if (title2.startsWith("file:/")) title2 = title2.substring(6) ;
+         title = title.replace("%20"," ") ;
+         title2 = title2.replace("%20"," ") ;
+         title3 = title3.replace("%20"," ") ;
          text.append(newline("<html>")) ;
          text.append(newline("<head>")) ;
          text.append(newline("<title>"+title2+"</title>")) ;
@@ -200,7 +206,7 @@ class BuildForm implements Runnable, ActionListener
 
          if (title.length() > 0)
             text.append(newline("<h1 align=\"center\"><font color=\"#800000\">"+title+"</font></h1>")) ;
-         text.append(newline("<p align=\"center\">"+title2+"</p>")) ;
+         text.append(newline("<p align=\"center\">"+title3+"</p>")) ;
          text.append(newline("<p align=\"center\">&nbsp;</p>")) ;
          text.append(newline("<div align=\"center\">")) ;
          text.append(newline("<center>")) ;
@@ -244,6 +250,7 @@ class BuildForm implements Runnable, ActionListener
             String descr = (st.hasMoreTokens()) ? st.nextToken() : "" ;
             try { setsize = Integer.parseInt(size) ; }
             catch (NumberFormatException e) { }
+            if (startname == null) startname = name ;
                 
             // Correct image file URL where directory contains spaces that were encoded as %20
       
@@ -261,11 +268,14 @@ class BuildForm implements Runnable, ActionListener
                PrintLn.println("BuildForm: image URL %20 correction" + image + " exception " + e.toString()) ;               
             }
             
+            int width = OptionsDialog.getThumbnailWidth() ;
+            int height = OptionsDialog.getThumbnailHeight() ;
+            name = name.replace("%20"," ") ;
             text.append(newline("<tr>")) ;
             text.append("<td align=\"center\" rowspan=\"2\">") ;
-            text.append("<img border\"0\" src=\""+image+"\" width=\"50\" height=\"50\"></td>") ;
+            text.append("<img border=\"1\" src=\""+image+"\" width=\""+width+"\" height=\""+height+"\"></td>") ;
             text.append(newline("<td align=\"center\"><a href=\""+location+"\">"+name+"</td>")) ;
-            text.append(newline("<td align=\"center\">"+(setsize/1024)+" KB"+"</td>")) ;
+            text.append(newline("<td align=\"center\">"+(setsize/1024)+" KiB"+"</td>")) ;
             text.append(newline("<td align=\"center\">"+entrycount+"</td>")) ;
             text.append(newline("<td align=\"center\">"+cels+"</td>")) ;
             text.append(newline("<td align=\"center\">"+palettes+"</td>")) ;
@@ -284,13 +294,14 @@ class BuildForm implements Runnable, ActionListener
 
          Calendar date = Calendar.getInstance() ;
          String datestring = DateFormat.getDateInstance().format(date.getTime()) ;
+         datestring = (new Date()).toString() ;
          text.append(newline("</table>")) ;
          text.append(newline("</center>")) ;
          text.append(newline("</div>")) ;
          text.append(newline("<p>&nbsp;</p>")) ;
 //       text.append(newline("<p align=\"center\"><a href=\"index.html\" target=\"_top\">Return</a></p>")) ;
 //       text.append(newline("<p align=\"center\">&nbsp;</p>")) ;
-         text.append("<p align=\"center\"><font size=\"2\">Generated by UltraKiss WebSearch V1.2<br>") ;
+         text.append("<p align=\"center\"><font size=\"2\">Generated by UltraKiss WebSearch V1.3<br>") ;
          text.append(newline(datestring+"</font></p>")) ;
          text.append(newline("<p>&nbsp;</p>")) ;
          text.append(newline("</body>")) ;
@@ -299,18 +310,9 @@ class BuildForm implements Runnable, ActionListener
          // Save the generated text object as a text file.  We rename it to an
          // HTML file on the write callback.
 
-         formname = baselocation ;
-         String directory = OptionsDialog.getHtmlDirectory() ;
-         directory = convertSeparator(directory) ;
-         if (!directory.endsWith(File.separator)) directory += File.separator ;
-         s = formname.toLowerCase() ;
-         if (s.endsWith(".html") || s.endsWith(".htm"))
-            formname = formname.substring(0,formname.lastIndexOf('.')) ;
-         int n = webframe.getBatchNumber() ;
-         formname = formname + "-" + (n+1) ;
-         formname += ".txt" ;
          try
          {
+            formname += ".txt" ;
             File f = new File(directory) ;
             f.mkdirs() ;
             f = new File(f,formname) ;
@@ -343,7 +345,12 @@ class BuildForm implements Runnable, ActionListener
 
    // A function to return the form name.
 
-   public static String getFormName() { return formname ; }
+   public static String getFormName() { return (formname != null) ? formname : "" ; }
+
+
+   // A function to return the starting name in the form.
+
+   public static String getStartName() { return (startname != null) ? startname : "" ; }
 
 
    // A function to get the form size.
@@ -364,6 +371,7 @@ class BuildForm implements Runnable, ActionListener
    static void reset()
    {
       count = 0 ; bytes = 0 ;
+      startname = null ;
       stop = false ;
    }
 

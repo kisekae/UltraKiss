@@ -321,7 +321,7 @@ final public class MainFrame extends KissFrame
       String file = filename ;
       if (file != null && cnf == null)
       {
-         int n = file.indexOf(',') ;
+         int n = file.lastIndexOf(',') ;
          if (n > 0) 
          {
             cnf = file.substring(n+1).trim() ;

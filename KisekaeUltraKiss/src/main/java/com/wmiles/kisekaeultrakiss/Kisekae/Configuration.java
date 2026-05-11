@@ -1521,12 +1521,15 @@ final public class Configuration extends KissObject
                         playfkiss = true ;
                   }
 
-                  // The default for strict syntax is false, unless UltraKiss.
-                  
-                  if (ultrakiss && OptionsDialog.getCompatibilityMode() == null)
-                     OptionsDialog.setStrictSyntax(true) ;
-                  else
-                     OptionsDialog.setStrictSyntax(false) ;
+                  // The default for strict syntax is false, unless specifically UltraKiss.
+
+                  if (!isOptionChanged())
+                  {
+                     if (ultrakiss && OptionsDialog.getCompatibilityMode() == null)
+                        OptionsDialog.setStrictSyntax(true) ;
+                     else 
+                        OptionsDialog.setStrictSyntax(false) ;
+                  }
 
                   // Parse UltraKiss options.
 
@@ -1672,7 +1675,7 @@ final public class Configuration extends KissObject
 	               addLeadComment(leadingtext) ;
                else
                	leadsize.addAll(leadingtext) ;
-					st = new StringTokenizer(s," \t,()") ;
+					st = new StringTokenizer(s," \t,.()") ;
 					try
 					{
 						screen.width = Integer.parseInt(st.nextToken()) ;
@@ -4723,9 +4726,9 @@ final public class Configuration extends KissObject
 
    			while (token.startsWith("!"))
    			{
-               if (fkisslevel < 4) fkisslevel = 4 ;
                remainder = (st.hasMoreTokens()) ? st.nextToken(";") : "" ;
-               parseCelGroup(token + remainder,celgroups) ;
+               boolean b = parseCelGroup(token + remainder,celgroups) ;
+               if (b && fkisslevel < 4) fkisslevel = 4 ;
                comment += token + remainder ;
                comment = comment.trim() ;
                token = "" ;
@@ -4901,6 +4904,7 @@ final public class Configuration extends KissObject
 
 		while (token.startsWith("!"))
 		{
+         if (!(token.length() > 1 && Character.isLetterOrDigit(token.charAt(1)))) break ;
          havecelgroup = true ;
          String framelist = "" ;
    		int celgroupframe = 0 ;

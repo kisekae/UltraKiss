@@ -126,12 +126,29 @@ class UrlLoader extends KissFrame
 
       if (url != null)
       {
-         int n = url.indexOf(',') ;
+         // Watch for URL with comma to specify CNF name for load.
+         // Web Search appends ".cnf" to accept 1st CNF on batch load
+         int n = url.lastIndexOf(',') ;
          if (n > 0) 
          {
-            cnfname = url.substring(n+1).trim() ;
-            cnfname = Variable.getStringLiteralValue(cnfname) ;
-            url = url.substring(0,n) ;
+            String s = url.substring(n+1) ;
+            if (".cnf".equals(s))
+               url = url.substring(0,n) ;     
+            else
+            {
+               int n1 = n - 4 ;
+               if (n1 > 0)
+               {
+                  s = url.substring(n1,n) ;
+                  s = s.toLowerCase() ;
+                  if (".zip".equals(s) || ".lzh".equals(s) || ".jar".equals(s))
+                  {
+                     cnfname = url.substring(n+1).trim() ;
+                     cnfname = Variable.getStringLiteralValue(cnfname) ;
+                     url = url.substring(0,n) ;
+                  }
+               }
+            }
          }
          url = Variable.getStringLiteralValue(url) ;      
       }
@@ -376,7 +393,7 @@ class UrlLoader extends KissFrame
          long n1 = f.length() ;
          if (!incache || size != n1 || n1 == 0)
          {
-            s = (size  / 1024) + "K" ;
+            s = (size  / 1024) + "KiB" ;
             String s1 = Kisekae.getCaptions().getString("TransferText") ;
             i1 = s1.indexOf('[') ;
             j1 = s1.indexOf(']') ;
@@ -385,8 +402,9 @@ class UrlLoader extends KissFrame
             showMsg(s1) ;
             int maxdownload = Kisekae.getMaxDownload() ;
             int kb = size / 1024 ;
-            if (Kisekae.isBatch() && size > maxdownload*1024)
-               throw new KissException("Batch URL size (" + size + ") exceeds " + maxdownload + " KB") ;
+            s = urlname.toLowerCase() ;
+            if (Kisekae.isBatch() && kb > maxdownload && !s.startsWith("file:"))
+               throw new KissException("Batch URL size (" + kb + " KiB) exceeds " + maxdownload + " KiB") ;
             is = c.getInputStream();
             if (pathname != null)
                os = new FileOutputStream(f) ;

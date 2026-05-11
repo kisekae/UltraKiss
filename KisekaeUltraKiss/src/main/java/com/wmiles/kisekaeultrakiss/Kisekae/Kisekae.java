@@ -175,6 +175,7 @@ public class Kisekae extends Applet
    private static boolean manualexpire = false ;   // True if set is expired
    private static boolean tipsinstalled = true ;   // True if tips system
    private static boolean showtips = true ;        // True if tips allowed
+   private static boolean throttle = true ;        // True if remote throttle
    private static boolean hyperlinkactivated = false ; // True websocket dialog
    private boolean suspended = false ;					// True if applet suspended
    private boolean error = false ;						// True if error occured
@@ -202,7 +203,7 @@ public class Kisekae extends Applet
 
       LogFile.start() ;
       builddate = Calendar.getInstance() ;
-      builddate.set(2026,4-1,30) ;
+      builddate.set(2026,5-1,11) ;
       
       // Restore the properties.
       
@@ -1067,6 +1068,7 @@ public class Kisekae extends Applet
    public static boolean isWebsocket() { return websocket ; }
    public static boolean isWebsocketSSL() { return websocketssl ; }
    public static boolean isBatch() { return batch ; }
+   public static boolean isSearchThrottled() { return throttle ; }
    public static boolean isAccept() { return accept ; }
    public static boolean isLoaded() { return loaded ; }
    public static boolean isHelpInstalled() { return helpinstalled ; }
@@ -2066,7 +2068,13 @@ public class Kisekae extends Applet
          StringBuffer sb = new StringBuffer() ;
          InputStream is = ze.getInputStream() ;
          if (is == null) { fileopen.close() ; return null ; }
-         InputStreamReader isr = new InputStreamReader(is,encoding) ;
+         
+         String enc = encoding ;
+         byte[] data = is.readNBytes(300) ;
+         if (isMaybeShiftJIS(data)) enc = "Shift-JIS" ;
+         
+         ByteArrayInputStream bais = new ByteArrayInputStream(data);
+         InputStreamReader isr = new InputStreamReader(bais,enc) ;
          while ((b = isr.read()) >= 0)
          {
             char c = (char) b ;
@@ -2092,6 +2100,28 @@ public class Kisekae extends Applet
          fileopen.close() ;
       }
       return null ;
+   }
+
+   public static boolean isMaybeShiftJIS(byte[] data) 
+   {
+      for (int i = 0; i < data.length; i++) 
+      {
+         int b = data[i] & 0xFF;
+         if ((b >= 0x81 && b <= 0x9F) || (b >= 0xE0 && b <= 0xFC)) {
+            // It's a lead byte, check if next byte is a valid trail byte
+            if (i + 1 < data.length) {
+                int next = data[++i] & 0xFF;
+                if (!((next >= 0x40 && next <= 0x7E) || (next >= 0x80 && next <= 0xFC))) {
+                    return false; // Invalid trail byte
+                }
+            } else {
+                return false; // Truncated multi-byte character
+            }
+         } else if (!((b <= 0x7F) || (b >= 0xA1 && b <= 0xDF))) {
+            return false; // Not a valid single-byte Shift-JIS char
+         }
+      }
+      return true;
    }
 
 
@@ -2538,6 +2568,18 @@ public class Kisekae extends Applet
             websocketssl = Boolean.parseBoolean(s) ; 
          }
       }
+      
+      // Check if restrictions on remote Web Search downloads.
+      
+      if (args.length > 8)
+      {
+         String s = Configuration.trim(args[8]) ;
+         if (s.length() > 0)
+         {
+            throttle = Boolean.parseBoolean(s) ; 
+         }
+      }
+
       
       kisekae = new Kisekae() ;
            
