@@ -91,6 +91,7 @@ canvas.height = window.innerHeight;
 
 const originalLog = console.log;
 let logs = [];
+console.log("UltraKiss websocket client.js released May 16, 2026") ;  
 
 console.log = function() {
     // Log to the console (optional, if you still want to see output there)
@@ -130,9 +131,12 @@ console.log(now) ;
 // Detect browser closing.  Perform an orderly shutdown on the server.
 
 window.addEventListener("beforeunload", function (e) {
-   e.preventDefault();
-   // Chrome requires returnValue to be set.
-   e.returnValue = '';
+  if (!terminated)
+  {
+     e.preventDefault();
+     // Chrome requires returnValue to be set.
+     e.returnValue = '';
+  }
 });
 
 window.addEventListener('unload', () => {
