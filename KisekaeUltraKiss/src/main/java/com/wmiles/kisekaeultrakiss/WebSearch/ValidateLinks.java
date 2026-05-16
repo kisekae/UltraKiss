@@ -246,7 +246,7 @@ class ValidateLinks implements Runnable, ActionListener
       activecount-- ;
       if (activecount <= 0 || stop)
       {
-         String s = (bytes  / 1024) + "K" ;
+         String s = (bytes  / 1024) + "KiB" ;
          webframe.addTrace("End Archive Validation. Downloads from " + (remotebatchstart) + " to " + (count) + ". Cumulative bytes downloaded: " + s,1) ;
          webframe.vallinkactive = false ;
          webframe.setbatchstart.setEnabled(true) ;
@@ -254,7 +254,7 @@ class ValidateLinks implements Runnable, ActionListener
          
          // Run the callback on the EDT thread.
 
-         if (remotebatchstart < count)
+         if ((remotebatchstart-1) < count)
          {
             Runnable runner = new Runnable()
             { public void run() { webframe.valcallback.doClick() ; } } ;
@@ -400,6 +400,7 @@ class ValidateLinks implements Runnable, ActionListener
          directory = convertSeparator(directory) ;
          if (!directory.endsWith(File.separator)) directory += File.separator ;
          directory += baselocation + File.separator ;
+         directory = directory.replace("%20"," ") ;
          int i = setname.lastIndexOf('.') ;
          thumbname = (i < 0) ? setname : setname.substring(0,i) ;
          thumbname += ".gif" ;

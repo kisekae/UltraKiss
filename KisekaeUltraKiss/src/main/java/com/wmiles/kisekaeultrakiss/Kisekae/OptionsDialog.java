@@ -2866,7 +2866,8 @@ final public class OptionsDialog extends KissDialog
    static public void setPagesAreScenes(boolean b) { pagesarescenes = b ; }
    static public void setLzhHeader2(boolean b) { lzhheader2 = b ; }
    static public void setMultipleEvents(boolean b) { multipleevents = b ; }
-   static public void setRestorePortal(boolean b) { restoreportal = b ; }
+   static public void setRestorePortal(boolean b) 
+   { restoreportal = b ; }
 
    static public void setLruFile(String s) 
    { 
@@ -3927,7 +3928,7 @@ final public class OptionsDialog extends KissDialog
 		pagesarescenes = initpagesarescenes ;
 		lzhheader2 = initlzhheader2;
 		multipleevents = initmultipleevents ;
-		restoreportal = initrestoreportal ;
+//		restoreportal = initrestoreportal ;
 		timer = inittimer ;
 		event = initevent ;
 		animate = initanimate ;

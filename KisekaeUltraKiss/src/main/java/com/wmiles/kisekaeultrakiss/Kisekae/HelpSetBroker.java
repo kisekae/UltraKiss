@@ -56,6 +56,7 @@ package com.wmiles.kisekaeultrakiss.Kisekae ;
 
 import java.awt.* ;
 import java.awt.event.* ;
+import java.net.URL;
 import javax.help.* ;
 import javax.swing.* ;
 import javax.swing.event.HyperlinkEvent;
@@ -114,7 +115,7 @@ final class HelpSetBroker extends DefaultHelpBroker
          // so that proper cursors can be sent to the client browser
          // if we are running a websocket.
 
-         if (!Kisekae.isWebsocket()) return ;
+//         if (!Kisekae.isWebsocket()) return ;
          if (!(frame instanceof JFrame)) return ;
          Container contentPane = ((JFrame) frame).getContentPane() ;
          if (contentPane == null) return ;
@@ -135,6 +136,19 @@ final class HelpSetBroker extends DefaultHelpBroker
                {
                   Kisekae.setCursor(viewer,Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
                   return ;
+               }
+               if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) 
+               {
+                  // If the url has a fragment "#browser" then invoke a standard browser
+                  // to view this site. The site may not be compatible with the Portal.
+          
+                  URL evturl = e.getURL() ;
+                  String urlname = (evturl != null) ? evturl.toString() : "" ;
+                  if (urlname.toLowerCase().contains("#browser"))
+                  {
+                     BrowserControl.displayURL(urlname) ;
+                     return ;           
+                  }                  
                }
             }            
          }) ;

@@ -116,6 +116,11 @@ final class Alarm extends KissObject implements Comparable
 	// -------------
 
 	static Hashtable getKeyTable() { return key ; }
+   
+   // Flush the key table on set close.
+   
+	static void closeKeyTable() { key = new Hashtable(600,0.855f) ; }
+   
 
 	// Hashtable keys are compound entities that contain a reference
 	// to a configuration.  Thus, multiple configurations can coexist

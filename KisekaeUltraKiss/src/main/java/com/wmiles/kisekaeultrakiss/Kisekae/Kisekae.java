@@ -203,7 +203,7 @@ public class Kisekae extends Applet
 
       LogFile.start() ;
       builddate = Calendar.getInstance() ;
-      builddate.set(2026,5-1,11) ;
+      builddate.set(2026,5-1,16) ;
       
       // Restore the properties.
       
@@ -907,6 +907,8 @@ public class Kisekae extends Applet
          mainframe.closeframe() ;
          try {Thread.currentThread().sleep(300) ; }
          catch (InterruptedException e) { } 
+         Alarm.closeKeyTable() ;  // Memory leak
+         Audio.closeKeyTable() ;
          mainframe.loadfile(file+",.cnf") ;
       }
    }
@@ -1803,7 +1805,7 @@ public class Kisekae extends Applet
       // a directory file or there was only one configuration.
 
       packet[0] = new String(name) ;
-      packet[1] = Long.valueOf(zip.getCompressedSize()) ;
+      packet[1] = Long.valueOf(bytesloaded) ;
       packet[2] = Integer.valueOf(entrycount) ;
       packet[3] = Integer.valueOf(config.getPaletteCount()) ;
       packet[4] = Integer.valueOf(config.getCelCount()) ;
@@ -2070,7 +2072,7 @@ public class Kisekae extends Applet
          if (is == null) { fileopen.close() ; return null ; }
          
          String enc = encoding ;
-         byte[] data = is.readNBytes(300) ;
+         byte[] data = is.readAllBytes() ;
          if (isMaybeShiftJIS(data)) enc = "Shift-JIS" ;
          
          ByteArrayInputStream bais = new ByteArrayInputStream(data);
@@ -2778,6 +2780,7 @@ public class Kisekae extends Applet
                 + "If you do not know what KiSS is, see the UltraKiss documentation using <a href=\"file://helpcontents\">Help-Contents</a>.<br>"
                 + "To learn how to make or visually edit KiSS sets within UltraKiss see <a href=\"file://helptutorial\">Help-Tutorials</a>.<br>"
                 + "To submit an issue report or offer suggestions for improvement see <a href=\"file://helpbugreport\">Help-Bug Report</a>.</p>"
+                + "<p style=\"font-size: 0.8em;font-weight:normal;\">Last updated "+getBuildDate()+"</p>"
                 + "</body></html>");
             
             // handle link events
@@ -2903,6 +2906,7 @@ public class Kisekae extends Applet
             });
             ep.setEditable(false);
             ep.setBackground(label.getBackground());
+            Kisekae.setCursor(ep,Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
 
             // Run this a little later, once the websocket is connected and
             // the client screen size is established.  If we do not see a

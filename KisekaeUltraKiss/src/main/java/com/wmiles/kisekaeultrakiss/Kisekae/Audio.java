@@ -189,6 +189,11 @@ public abstract class Audio extends KissObject
 	// -------------
 
 	static Hashtable getKeyTable() { return key ; }
+   
+      // Flush the key table on set close.
+   
+	static void closeKeyTable() { key = new Hashtable(300,0.855f) ; }
+
 
 	// Hashtable keys are compound entities that contain a reference
 	// to a configuration.  Thus, multiple configurations can coexist

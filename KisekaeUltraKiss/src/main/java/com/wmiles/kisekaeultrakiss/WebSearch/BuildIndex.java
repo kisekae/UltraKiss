@@ -99,6 +99,10 @@ import java.text.DateFormat ;
 import com.wmiles.kisekaeultrakiss.Kisekae.Kisekae ;
 import com.wmiles.kisekaeultrakiss.Kisekae.OptionsDialog ;
 import com.wmiles.kisekaeultrakiss.Kisekae.PrintLn ;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 
 
 class BuildIndex implements ActionListener
@@ -347,8 +351,9 @@ class BuildIndex implements ActionListener
 
          JTextArea text = new JTextArea() ;
          String title = "UltraKiss Search Index" ;
-         URL url = getClass().getClassLoader().getResource("Images/ultrakiss.gif") ;
-         String s = (url != null) ? url.toString() : "" ;
+         String headerimage = "Images/ultrakiss.gif" ;
+         URL url = getClass().getClassLoader().getResource(headerimage) ;
+         String s = (url != null) ? url.toExternalForm() : null ;
          int width = 0 ;
          int height = 0 ;
          if (url != null)
@@ -356,9 +361,31 @@ class BuildIndex implements ActionListener
             ImageIcon icon = new ImageIcon(url);
             width = icon.getIconWidth();
             height = icon.getIconHeight();
+         }        
+         
+         // Relative image src is being used.
+         String directory = OptionsDialog.getHtmlDirectory() ;
+         directory = convertSeparator(directory) ;
+         if (!directory.endsWith(File.separator)) directory += File.separator ;
+         File f1 = new File(directory) ;
+         URL url1 = f1.toURI().toURL() ;
+         String base = url1.toExternalForm() ;
+         
+         // Copy the ultrakiss.gif header image to the HTML/Images directory 
+         // so that it can be referenced by this HTML file.
+         
+         File f2 = new File(directory + headerimage) ;
+         URL url2 = f2.toURI().toURL() ;
+         if (url != null)
+         {
+            Path sourcePath = Paths.get(url.toURI());
+            Path destPath = Paths.get(url2.toURI());
+            Files.copy(sourcePath, destPath, StandardCopyOption.REPLACE_EXISTING);
          }
+         
          text.append(newline("<html>")) ;
          text.append(newline("<head>")) ;
+//       text.append(newline("<base href=\"" + base + "\">")) ;
          text.append(newline("<title>"+title+"</title>")) ;
          text.append(newline("</head>")) ;
          text.append(newline("<body>")) ;
@@ -366,7 +393,7 @@ class BuildIndex implements ActionListener
          if (s != null)
          {
             text.append(newline("<p align=\"center\">")) ;
-            text.append(newline("<img src=\""+s+"\" border=\"0\" width=\""+width+"\" height=\""+height+"\">")) ;
+            text.append(newline("<img src=\""+headerimage+"\" border=\"0\" width=\""+width+"\" height=\""+height+"\">")) ;
             text.append(newline("</p>")) ;
          }
 
@@ -425,8 +452,8 @@ class BuildIndex implements ActionListener
          // Save the text object.
 
          formname = kissindex ;
-         File f1 = new File(formname) ;
-         String directory = f1.getParent() ;
+         f1 = new File(formname) ;
+         directory = f1.getParent() ;
          formname = f1.getName() ;
          if (formname.endsWith(".html") || formname.endsWith(".htm"))
          {

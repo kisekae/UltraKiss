@@ -189,6 +189,7 @@ class BuildForm implements Runnable, ActionListener
 
          JTextArea text = new JTextArea() ;
          s = ValidateLinks.getBaselocation() ;
+         if (!s.endsWith(File.separator)) s += File.separator ;
          String title = GetLinks.getTitle() ;
          String title2 = title ;
          String title3 = formname ;
@@ -198,8 +199,15 @@ class BuildForm implements Runnable, ActionListener
          title = title.replace("%20"," ") ;
          title2 = title2.replace("%20"," ") ;
          title3 = title3.replace("%20"," ") ;
+         
+         // Relative image src is being used.
+         File f1 = new File(directory) ;
+         URL url = f1.toURI().toURL() ;
+         String base = url.toExternalForm() ;
+
          text.append(newline("<html>")) ;
          text.append(newline("<head>")) ;
+//       text.append(newline("<base href=\"" + base + "\">")) ;
          text.append(newline("<title>"+title2+"</title>")) ;
          text.append(newline("</head>")) ;
          text.append(newline("<body>")) ;
@@ -252,10 +260,13 @@ class BuildForm implements Runnable, ActionListener
             catch (NumberFormatException e) { }
             if (startname == null) startname = name ;
                 
-            // Correct image file URL where directory contains spaces that were encoded as %20
-      
+            // Correct image file URL. We want to make it relative to the 
+            // directory in which this form is being saved.  The image
+            // directory must be a subdirectory of the form directory.         
+/*
             try
             {
+               // Absolute image location
                if (!(image.startsWith("file:"))) image = "file:" + image ;
                URL url = new URL(image) ;
                String s1 = url.getPath() ;
@@ -267,15 +278,26 @@ class BuildForm implements Runnable, ActionListener
             {
                PrintLn.println("BuildForm: image URL %20 correction" + image + " exception " + e.toString()) ;               
             }
-            
+*/            
+            // Relative image location.  
+            s = directory ;
+            s = s.replace("\\","/") ;      // URLs have forward slashes.
+            n = image.indexOf(s) ; 
+            if (n >= 0) image = image.substring(n+s.length()) ;                           
+            image = image.replace(" ","%20") ;
+
             int width = OptionsDialog.getThumbnailWidth() ;
             int height = OptionsDialog.getThumbnailHeight() ;
+            int kbsize = setsize / 1024 ;
+            int mbsize = kbsize / 1024 ;
+            s = (mbsize > 0) ? (mbsize + " MiB") : (kbsize + " KiB") ;
+            
             name = name.replace("%20"," ") ;
             text.append(newline("<tr>")) ;
             text.append("<td align=\"center\" rowspan=\"2\">") ;
             text.append("<img border=\"1\" src=\""+image+"\" width=\""+width+"\" height=\""+height+"\"></td>") ;
             text.append(newline("<td align=\"center\"><a href=\""+location+"\">"+name+"</td>")) ;
-            text.append(newline("<td align=\"center\">"+(setsize/1024)+" KiB"+"</td>")) ;
+            text.append(newline("<td align=\"center\">"+s+"</td>")) ;
             text.append(newline("<td align=\"center\">"+entrycount+"</td>")) ;
             text.append(newline("<td align=\"center\">"+cels+"</td>")) ;
             text.append(newline("<td align=\"center\">"+palettes+"</td>")) ;

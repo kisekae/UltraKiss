@@ -391,7 +391,8 @@ final public class WebFrame extends KissFrame
       options.addActionListener(this) ;
       optionMenu.add((restoreportal = new JCheckBoxMenuItem(Kisekae.getCaptions().getString("MenuRestorePortal")))) ;
 		restoreportal.setToolTipText(Kisekae.getCaptions().getString("ToolTipMenuRestorePortal")) ;
-      restoreportal.setState(OptionsDialog.getRestorePortal()) ;
+      boolean b = OptionsDialog.getRestorePortal() ;
+      restoreportal.setState(b) ;
       restoreportal.addActionListener(this) ;
       mb.add(optionMenu) ;
       
@@ -748,7 +749,7 @@ final public class WebFrame extends KissFrame
       {
          if (OptionsDialog.getDebugPortal())
             PrintLn.println("WebFrame: go back, cached, setText(" + location + ")") ;
-         statusbar.showStatus("Load from cache, " + location) ;
+         statusbar.showStatus("Load from page cache, " + location) ;
          try 
          { 
             editor.setText(cachedContent) ;
@@ -757,6 +758,7 @@ final public class WebFrame extends KissFrame
             if (doc instanceof HTMLDocument) 
             { 
                URL base = new URL(location) ; 
+               base = base.toURI().resolve(".").toURL() ;
                ((HTMLDocument) doc).setBase(base) ;
             }            
         		Kisekae.setCursor(this,Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
@@ -821,7 +823,7 @@ final public class WebFrame extends KissFrame
       {
          if (OptionsDialog.getDebugPortal())
             PrintLn.println("WebFrame: go forward, cached, setText(" + location + ")") ;
-         statusbar.showStatus("Load from cache, " + location) ;
+         statusbar.showStatus("Load from page cache, " + location) ;
          try 
          { 
             editor.setText(cachedContent) ;
@@ -830,6 +832,7 @@ final public class WebFrame extends KissFrame
             if (doc instanceof HTMLDocument) 
             { 
                URL base = new URL(location) ; 
+               base = base.toURI().resolve(".").toURL() ;
                ((HTMLDocument) doc).setBase(base) ;
             }            
         		Kisekae.setCursor(this,Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
@@ -967,7 +970,7 @@ final public class WebFrame extends KissFrame
       {
          if (OptionsDialog.getDebugPortal())
             PrintLn.println("WebFrame: refresh, cached, setText(" + location + ")") ;
-         statusbar.showStatus("Load from cache, " + location) ;
+         statusbar.showStatus("Load from page cache, " + location) ;
          try 
          { 
             editor.setText(cachedContent) ;
@@ -975,6 +978,7 @@ final public class WebFrame extends KissFrame
             if (doc instanceof HTMLDocument) 
             { 
                URL base = new URL(location) ; 
+               base = base.toURI().resolve(".").toURL() ;
                ((HTMLDocument) doc).setBase(base) ;
             }            
             Kisekae.setCursor(this,Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
@@ -1242,7 +1246,8 @@ final public class WebFrame extends KissFrame
 
          if (source == restoreportal)
          {
-            OptionsDialog.setRestorePortal(restoreportal.getState());
+            boolean b = restoreportal.getState() ;
+            OptionsDialog.setRestorePortal(b) ;
             return ;
          }
 
@@ -1569,7 +1574,7 @@ final public class WebFrame extends KissFrame
             pageloadtime = System.currentTimeMillis() - Configuration.getTimestamp() ;
             long loadtime = pageloadtime - setpagetime ;
             String s = "Time to load: " + loadtime + " ms" ;
-            statusbar.showStatus(s) ;
+            if (statusbar != null) statusbar.showStatus(s) ;
             if (OptionsDialog.getDebugControl() || OptionsDialog.getDebugPortal())
                PrintLn.println("WebFrame: Page loaded, location " + location + ", time to load = " + loadtime + " ms");
          } 
@@ -1602,7 +1607,7 @@ final public class WebFrame extends KissFrame
             Document doc = editor.getDocument();
             if (doc instanceof HTMLDocument) 
             { 
-               URL base = url ; 
+               URL base = url.toURI().resolve(".").toURL() ;
                ((HTMLDocument) doc).setBase(base) ;
             }
          }
@@ -1820,6 +1825,15 @@ final public class WebFrame extends KissFrame
 
          if (ArchiveFile.isAudio(urlname))
             { loadArchive(evturl,true) ; return ; }
+         
+         // If the url has a fragment "#browser" then invoke a standard browser
+         // to view this site. The site may not be compatible with the Portal.
+         
+         if (urlname.toLowerCase().contains("#browser"))
+         {
+            BrowserControl.displayURL(urlname) ;
+            return ;           
+         }
 
          // If our current web is on our local file system and we link to
          // a remote HTML page, or if our url has a fragment "#currentweb" 
@@ -1840,7 +1854,7 @@ final public class WebFrame extends KissFrame
             if (n > 0) s = s.substring(0,n) ;
             editor.setHosted(s);
          }
-                        
+         
          // Not all internal links on remote URL's start with www.  If it is 
          // missing we correct the URL.
       
@@ -1900,12 +1914,12 @@ final public class WebFrame extends KissFrame
             enterurl.setText(urlname) ;
             String cachedContent = pagecache.get(urlname) ;
             Kisekae.setCursor(this,Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
-            
+
             if (cachedContent != null) 
             {
                if (OptionsDialog.getDebugPortal())
                   PrintLn.println("WebFrame: hyperlink, cached, setText(" + location + ")") ;
-               statusbar.showStatus("Load from cache, " + urlname) ;
+               statusbar.showStatus("Load from page cache, " + urlname) ;
                try 
                { 
                   editor.setText(cachedContent) ;
@@ -1914,6 +1928,7 @@ final public class WebFrame extends KissFrame
                   if (doc instanceof HTMLDocument) 
                   { 
                      URL base = new URL(urlname) ; 
+                     base = base.toURI().resolve(".").toURL() ;
                      ((HTMLDocument) doc).setBase(base) ;
                   }            
               		Kisekae.setCursor(this,Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;

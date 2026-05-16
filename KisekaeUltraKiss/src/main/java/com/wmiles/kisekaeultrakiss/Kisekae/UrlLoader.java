@@ -403,8 +403,14 @@ class UrlLoader extends KissFrame
             int maxdownload = Kisekae.getMaxDownload() ;
             int kb = size / 1024 ;
             s = urlname.toLowerCase() ;
-            if (Kisekae.isBatch() && kb > maxdownload && !s.startsWith("file:"))
+            
+            // Limit batch download size unless this is a local search or max size is 0.
+            // Note, websocket uploads to the server are also restricted to this limit.
+            // A zero value here prohibits uploads to the server.
+            
+            if (Kisekae.isBatch() && kb > maxdownload && !s.startsWith("file:") && maxdownload > 0)
                throw new KissException("Batch URL size (" + kb + " KiB) exceeds " + maxdownload + " KiB") ;
+
             is = c.getInputStream();
             if (pathname != null)
                os = new FileOutputStream(f) ;
