@@ -201,6 +201,7 @@ final class LhaFile extends ArchiveFile
 				in.close() ;
 				return new ByteArrayInputStream(buf) ;
 			case LhaEntry.LH1:
+   		case LhaEntry.LH2:
 				out = new ByteArrayOutputStream((int) le.getSize()) ;
 				new Lzhuf().decode(in,out) ;
 				buf = out.toByteArray() ;
@@ -208,6 +209,8 @@ final class LhaFile extends ArchiveFile
 				in.close() ;
 				out.close() ;
 				return new ByteArrayInputStream(buf) ;
+   		case LhaEntry.LH3:
+   		case LhaEntry.LH4:
    		case LhaEntry.LH5:
    		case LhaEntry.LH6:
    		case LhaEntry.LH7:
@@ -220,8 +223,10 @@ final class LhaFile extends ArchiveFile
    			return new ByteArrayInputStream(buf) ;
 
    		default:
-   			throw new ZipException("LHA unimplemented method: "
-            	+ ((LhaEntry) le).getMethodText());
+            int method = ((LhaEntry) le).getMethod() ;
+   			String s = "LHA unimplemented method: " + 
+              ((LhaEntry) le).getMethodText() + Integer.toString(method) ;
+   			throw new ZipException(s) ;
    		}
       }
 
