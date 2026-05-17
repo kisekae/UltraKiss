@@ -65,6 +65,9 @@ class LhaEntry extends ArchiveEntry
 {
 	static final public int LH0 = 0 ;      // Compression method code for -lh0-
 	static final public int LH1 = 1 ;  		// Compression method code for -lh1-
+	static final public int LH2 = 2 ;      // Compression method code for -lh2-
+	static final public int LH3 = 3 ;      // Compression method code for -lh3-
+	static final public int LH4 = 4 ;      // Compression method code for -lh4-
 	static final public int LH5 = 5 ;      // Compression method code for -lh5-
 	static final public int LH6 = 6 ;		// Compression method code for -lh6-
 	static final public int LH7 = 7 ;		// Compression method code for -lh7-
@@ -472,6 +475,9 @@ class LhaEntry extends ArchiveEntry
 	{
 		if ("-lh0-".equals(method)) return LH0 ;
 		if ("-lh1-".equals(method)) return LH1 ;
+		if ("-lh2-".equals(method)) return LH2 ;
+		if ("-lh3-".equals(method)) return LH3 ;
+		if ("-lh4-".equals(method)) return LH4 ;
 		if ("-lh5-".equals(method)) return LH5 ;
 		if ("-lh6-".equals(method)) return LH6 ;
 		if ("-lh7-".equals(method)) return LH7 ;
@@ -486,6 +492,9 @@ class LhaEntry extends ArchiveEntry
 		method = "" ;
 		if (m == LH0) method = "-lh0-" ;
 		if (m == LH1) method = "-lh1-" ;
+		if (m == LH2) method = "-lh2-" ;
+		if (m == LH3) method = "-lh3-" ;
+		if (m == LH4) method = "-lh4-" ;
 		if (m == LH5) method = "-lh5-" ;
 		if (m == LH6) method = "-lh6-" ;
 		if (m == LH7) method = "-lh7-" ;

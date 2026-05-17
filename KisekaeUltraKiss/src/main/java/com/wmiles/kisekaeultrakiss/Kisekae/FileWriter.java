@@ -1535,9 +1535,11 @@ final class FileWriter extends KissFrame
             if (!OptionsDialog.getExportImageAsCel() && !cel.isUpdated())
             {
                String s1 = (zip != null) ? zip.getDirectoryName() : "" ;
+               if (s1 == null) s1 = "" ;
                s1 = s1.substring(0, s1.length() - (s1.endsWith("/") ? 1 : 0));
                s1 = s1.substring(0, s1.length() - (s1.endsWith("\\") ? 1 : 0));
                String s2 = (directory != null) ? directory : "" ;
+               if (s2 == null) s2 = "" ;
                s2 = s2.substring(0, s2.length() - (s2.endsWith("/") ? 1 : 0));
                s2 = s2.substring(0, s2.length() - (s2.endsWith("\\") ? 1 : 0));
                if (mode == SAVE) continue ;

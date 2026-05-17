@@ -246,7 +246,7 @@ class ValidateLinks implements Runnable, ActionListener
       activecount-- ;
       if (activecount <= 0 || stop)
       {
-         String s = (bytes  / 1024) + "KiB" ;
+         String s = (bytes  / 1024) + " KiB" ;
          webframe.addTrace("End Archive Validation. Downloads from " + (remotebatchstart) + " to " + (count) + ". Cumulative bytes downloaded: " + s,1) ;
          webframe.vallinkactive = false ;
          webframe.setbatchstart.setEnabled(true) ;
