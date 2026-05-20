@@ -175,7 +175,7 @@ public class Kisekae extends Applet
    private static boolean manualexpire = false ;   // True if set is expired
    private static boolean tipsinstalled = true ;   // True if tips system
    private static boolean showtips = true ;        // True if tips allowed
-   private static boolean throttle = true ;        // True if remote throttle
+   private static boolean throttle = false ;        // True if remote throttle
    private static boolean hyperlinkactivated = false ; // True websocket dialog
    private boolean suspended = false ;					// True if applet suspended
    private boolean error = false ;						// True if error occured
@@ -203,7 +203,7 @@ public class Kisekae extends Applet
 
       LogFile.start() ;
       builddate = Calendar.getInstance() ;
-      builddate.set(2026,5-1,19) ;
+      builddate.set(2026,5-1,20) ;
       
       // Restore the properties.
       
