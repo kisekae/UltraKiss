@@ -1,6 +1,16 @@
 # UltraKiss
 
-**UltraKiss 5.2** is now released. This release provides improved DirectKiss compatibility amd improved support for new UltraKiss components.  For all corrections use the UltraKiss menu command **Help-Read Me-What's New**.  
+
+**UltraKiss 5.3** is now released. This release improves the Web Search function and resolves stability issues with the UltraKiss Portal.  Performance improvements are also made to the websocket server implementation described below.  For all corrections use the UltraKiss menu command **Help-Read Me-What's New**.  
+
+Unfinished work from UltraKiss 3.3 (2008) is now complete.  **UltraKiss is now end-of-life.**  Submit support issues on GitHub or from within UltraKiss using the menu command **Help-Bug Report**. 
+
+Online browser access to KISS sets is provided using the Jetty server implementation shown below.  Use the menu command **File-Open Portal**. This service will remain operational for the forseeable future.
+
+![UltraKiss Portal](https://github.com/kisekae/UltraKiss/blob/master/KisekaeUltraKiss/src/main/resources/Images/portal.png)
+
+
+**UltraKiss 5.2** provided improved DirectKiss compatibility and improved support for new UltraKiss components.  For all corrections use the UltraKiss menu command **Help-Read Me-What's New**.  
 
 **UltraKiss 5.1** provided a new online Issue Reporting system for bug reports or suggestions for improvement.  You can now submit issues directly from within UltraKiss using the menu command **Help-Bug Report**.  
 
@@ -13,7 +23,7 @@ January 3, 2026. UltraKiss version 5.0 now offers SSL secure connections to the 
 To run UltraKiss in your browser simply connect to “https://www.wmiles.com/ultrakiss”.
 ```
 
-Press this button to run UltraKiss.  
+Press this button to run UltraKiss in your browser.  
 [![UltraKiss](https://github.com/kisekae/UltraKiss/blob/master/src/Images/ultrakissbtn.svg)](https://www.wmiles.com/ultrakiss)
 
 
