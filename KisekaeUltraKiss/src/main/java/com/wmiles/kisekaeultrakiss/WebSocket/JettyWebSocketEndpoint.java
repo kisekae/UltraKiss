@@ -58,8 +58,10 @@ import com.wmiles.kisekaeultrakiss.Kisekae.OptionsDialog;
 import com.wmiles.kisekaeultrakiss.Kisekae.TextFrame;
 import com.wmiles.kisekaeultrakiss.Kisekae.FileLoader;
 import com.wmiles.kisekaeultrakiss.Kisekae.ZipManager;
+import com.wmiles.kisekaeultrakiss.WebSearch.WebSearchFrame;
 import java.awt.AWTException;
 import java.awt.Dimension;
+import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
@@ -110,6 +112,7 @@ public class JettyWebSocketEndpoint
    private final byte[] imageheader = {0} ;    // binary type for image transfer
    private final byte[] fileheader = {1} ;     // binary type for file transfer
    private final byte[] soundheader = {2} ;    // binary type for audio transfer
+   private final byte[] clippedheader = {3} ;  // binary type for clipped image
    private boolean socketBusy = false ;        // Set true if file transfer to client
    private boolean bufferBusy = false ;        // Set true if partial buffer is sent
    private boolean audioIsPlaying = false ;    // Set true audio sent and no stop
@@ -1022,13 +1025,17 @@ public class JettyWebSocketEndpoint
 
    
    // Binary messages have a header to identify if image, file, or sound data.
-   // 0 = image, 1 = file, 2 = sound.
+   // 0 = image, 1 = file, 2 = sound, 3 = clipped image with rectangle buffer.  
+   // Images can have a dirty area rectangle.
    
    byte[] addHeader(byte[] header, byte[] message) 
+   { return addHeader(header,new byte[0],message) ; }
+   byte[] addHeader(byte[] header, byte[] buffer, byte[] message) 
    {
-      byte[] combinedbuffer = new byte[header.length+message.length] ;
+      byte[] combinedbuffer = new byte[header.length+buffer.length+message.length] ;
       System.arraycopy(header,0,combinedbuffer,0,header.length) ;
-      System.arraycopy(message,0,combinedbuffer,header.length,message.length) ;
+      System.arraycopy(buffer,0,combinedbuffer,header.length,buffer.length) ;
+      System.arraycopy(message,0,combinedbuffer,header.length+buffer.length,message.length) ;
       return combinedbuffer ;
    }
    
@@ -1075,8 +1082,8 @@ public class JettyWebSocketEndpoint
    class ProcessThread extends Thread 
    {
       int delay = 100 ;  // screen capture period
-//      int delay = 5000 ;  // screen capture period
       int iterations = 0 ;
+      int screensent = 0 ;
       long totaltime = 0 ;
       long maxtime = 0 ;
       long mintime = 0 ;
@@ -1084,6 +1091,9 @@ public class JettyWebSocketEndpoint
       boolean error = false ;
       boolean first = true ;
       int errors = 0 ;
+      BufferedImage previousImage = null ;
+      BufferedImage currentImage = null ;
+      Rectangle dirtyArea = null ;
       
       @Override
       public void run()
@@ -1132,43 +1142,69 @@ public class JettyWebSocketEndpoint
                iterations++ ;
       			time = System.currentTimeMillis() - createtime ;
                long starttime = System.currentTimeMillis() ;
-					BufferedImage bi = ScreenCapture.captureScreenImage() ;
-               int width = bi.getWidth() ;
-               int height = bi.getHeight() ;
-					ByteArrayOutputStream out = new ByteArrayOutputStream();
-					ImageIO.write(bi, "png", out);
-					ByteBuffer byteBuffer = ByteBuffer.wrap(addHeader(imageheader,out.toByteArray()));
+					currentImage = ScreenCapture.captureScreenImage() ;
+               int width = currentImage.getWidth() ;
+               int height = currentImage.getHeight() ;
+               if (first) 
+                  dirtyArea = new Rectangle(0,0,width,height) ;
+               else
+                  dirtyArea = getDirtyRegion(previousImage, currentImage) ;
+               previousImage = currentImage ;
                
-               if (!socketBusy && Kisekae.getClientScreen()) 
+               // Draw any changed screen area.
+               
+               if (dirtyArea != null)
                {
-                  socketBusy = true ;
-                  session.sendBinary(byteBuffer, new Callback() {
-                     @Override
-                     public void succeed() {
-                        // Handle success (optional)
-                        socketBusy = false ;
-                        if (first)
-                        {
-                           System.out.println("[" + time + "] "+"First screen capture sent to client, (" + width + "," + height + ")");
-                           first = false ;
+                  int x = dirtyArea.x ;
+                  int y = dirtyArea.y ;
+                  int w = dirtyArea.width ;
+                  int h = dirtyArea.height ;
+                  BufferedImage clipped = currentImage.getSubimage(x,y,w,h) ;
+                  ByteArrayOutputStream out = new ByteArrayOutputStream();
+                  ImageIO.write(clipped, "png", out);
+                  ByteBuffer buffer = ByteBuffer.allocate(16);
+                  buffer.putInt(x);
+                  buffer.putInt(y);
+                  buffer.putInt(w);
+                  buffer.putInt(h);
+                  ByteBuffer byteBuffer = ByteBuffer.wrap(addHeader(clippedheader,buffer.array(),out.toByteArray()));
+               
+                  if (!socketBusy && Kisekae.getClientScreen()) 
+                  {
+                     screensent++ ;
+                     socketBusy = true ;
+                     session.sendBinary(byteBuffer, new Callback() 
+                     {
+                        @Override
+                        public void succeed() {
+                           // Handle success (optional)
+                           socketBusy = false ;
+                           if (first)
+                           {
+                              System.out.println("[" + time + "] "+"First screen capture sent to client, (" + width + "," + height + ")");
+                              first = false ;
+                           }
+                           if (OptionsDialog.getDebugWebSocket())
+                              System.out.println("[" + time + "] "+"clipped screen capture sent to client, (" + x + "," + y + "," + w + "," + h + ")");
                         }
-                     }
-                     @Override
-                     public void fail(Throwable cause) {
-                        // Failed to send screen capture to client, cause=DataFrame before fin==true                                   
-                        errors++ ;
-                        socketBusy = false ;
-                        String reason = cause.getMessage() ;
-                        if (reason == null) reason = "Unknown" ;
-                        System.out.println("[" + time + "] "+"Failed to send screen capture to client, cause=" + reason);
-                        System.out.println("[" + time + "] "+"Session is open? " + session.isOpen());
-                        error = !session.isOpen() ; 
-                     }
-                  });
+                        @Override
+                        public void fail(Throwable cause) {
+                           // Failed to send screen capture to client, cause=DataFrame before fin==true                                   
+                           errors++ ;
+                           socketBusy = false ;
+                           String reason = cause.getMessage() ;
+                           if (reason == null) reason = "Unknown" ;
+                           System.out.println("[" + time + "] "+"Failed to send screen capture to client, cause=" + reason);
+                           System.out.println("[" + time + "] "+"Session is open? " + session.isOpen());
+                           error = !session.isOpen() ; 
+                        }
+                     });
+                  }
+   					out.close();
+   					byteBuffer.clear();
+                  buffer.clear() ;
                }
                
-					out.close();
-					byteBuffer.clear();
                long endtime = System.currentTimeMillis() ;
                long time = endtime - starttime ;
                if (time > maxtime || maxtime == 0) maxtime = time ;
@@ -1200,6 +1236,35 @@ public class JettyWebSocketEndpoint
             Kisekae.exit() ;
          }
       }
+
+      // Compare two screen captures to find the dirty part that needs a refresh.
+      
+      private static Rectangle getDirtyRegion(BufferedImage img1, BufferedImage img2) 
+      {
+         int minX = Integer.MAX_VALUE;
+         int minY = Integer.MAX_VALUE;
+         int maxX = Integer.MIN_VALUE;
+         int maxY = Integer.MIN_VALUE;
+         boolean hasChanges = false;
+
+         for (int x = 0; x < img1.getWidth(); x++) 
+         {
+            for (int y = 0; y < img1.getHeight(); y++) 
+            {
+               if (img1.getRGB(x, y) != img2.getRGB(x, y)) 
+               {
+                  minX = Math.min(minX, x);
+                  minY = Math.min(minY, y);
+                  maxX = Math.max(maxX, x);
+                  maxY = Math.max(maxY, y);
+                  hasChanges = true;
+               }
+            }
+         }
+
+         if (!hasChanges) return null ;
+         return new Rectangle(minX, minY, (maxX - minX + 1), (maxY - minY + 1)) ;
+      }      
    }
    
    /**
@@ -1272,7 +1337,7 @@ public class JettyWebSocketEndpoint
                
                // If duration exceeds timeout value, show a warning prompt.
                
-               if (duration > timeout  && !audioIsPlaying) 
+               if (duration > timeout  && !audioIsPlaying && !WebSearchFrame.isActivated()) 
                {
                   if (warningsent)
                   {

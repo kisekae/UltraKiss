@@ -260,6 +260,10 @@ class ValidateLinks implements Runnable, ActionListener
             { public void run() { webframe.valcallback.doClick() ; } } ;
             javax.swing.SwingUtilities.invokeLater(runner) ;     
          }
+         else
+         {
+            webframe.exitsearch("No archives to process.") ;  
+         }
       }
       
       kisekae.removeCallback(this) ;

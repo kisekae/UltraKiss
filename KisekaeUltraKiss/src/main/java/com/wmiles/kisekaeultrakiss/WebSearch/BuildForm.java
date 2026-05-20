@@ -290,14 +290,27 @@ class BuildForm implements Runnable, ActionListener
             int height = OptionsDialog.getThumbnailHeight() ;
             int kbsize = setsize / 1024 ;
             int mbsize = kbsize / 1024 ;
-            s = (mbsize > 0) ? (mbsize + " MiB") : (kbsize + " KiB") ;
+            String s1 = (mbsize > 0) ? (mbsize + " MiB") : (kbsize + " KiB") ;
+            
+            // Relative data location.  
+            s = OptionsDialog.getDataDirectory() ;
+            s = convertSeparator(s) ;
+            s = s.replace("\\","/") ;      // URLs have forward slashes.
+            n = location.indexOf(s) ;            
+            String datalocation = location ;
+            if (n >= 0) 
+            {
+               datalocation = location.substring(n+s.length()) ;
+               datalocation = "../Data/" + datalocation ;
+            }
+            datalocation = datalocation.replace(" ","%20") ;
             
             name = name.replace("%20"," ") ;
             text.append(newline("<tr>")) ;
             text.append("<td align=\"center\" rowspan=\"2\">") ;
             text.append("<img border=\"1\" src=\""+image+"\" width=\""+width+"\" height=\""+height+"\"></td>") ;
-            text.append(newline("<td align=\"center\"><a href=\""+location+"\">"+name+"</td>")) ;
-            text.append(newline("<td align=\"center\">"+s+"</td>")) ;
+            text.append(newline("<td align=\"center\"><a href=\""+datalocation+"\">"+name+"</td>")) ;
+            text.append(newline("<td align=\"center\">"+s1+"</td>")) ;
             text.append(newline("<td align=\"center\">"+entrycount+"</td>")) ;
             text.append(newline("<td align=\"center\">"+cels+"</td>")) ;
             text.append(newline("<td align=\"center\">"+palettes+"</td>")) ;

@@ -332,12 +332,18 @@ class BuildMaster implements ActionListener
          // so that it can be referenced by this HTML file.
          
          File f2 = new File(directory + headerimage) ;
-         URL url2 = f2.toURI().toURL() ;
+         String fileName = f2.getPath() ;
          if (url != null)
          {
-            Path sourcePath = Paths.get(url.toURI());
-            Path destPath = Paths.get(url2.toURI());
-            Files.copy(sourcePath, destPath, StandardCopyOption.REPLACE_EXISTING);
+            // Try-with-resources automatically closes the InputStream
+            try (InputStream in = url.openStream()) 
+            {
+               Files.copy(in, Paths.get(fileName), StandardCopyOption.REPLACE_EXISTING);
+            } 
+            catch (IOException e) 
+            {
+               System.err.println("BuildMaster: unable to save UtraKiss header image, " + e.getMessage());
+            } 
          }
          
          text.append(newline("<html>")) ;

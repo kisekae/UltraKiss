@@ -379,10 +379,18 @@ class UrlLoader extends KissFrame
          // HTTP Response code 403 for URL
 //         c.addRequestProperty("User-Agent", "UltraKiss");
 
-         // Authorize the session if necessary.
+         // Set the connection timeout (in milliseconds)
+         // This is the time allowed to establish the TCP connection.
+         c.setConnectTimeout(5000); 
 
+         // Set the read timeout (in milliseconds)
+         // This is the time allowed to wait for data after the connection is established.
+         c.setReadTimeout(5000);  
+         
+         // Authorize the session if necessary.
          if (connid != null)
             c.setRequestProperty("Authorization", "Basic " + connid);
+         
          ErrorMsg.setIcon(null);
          int size = c.getContentLength() ;
          initProgress(size) ;
@@ -393,7 +401,7 @@ class UrlLoader extends KissFrame
          long n1 = f.length() ;
          if (!incache || size != n1 || n1 == 0)
          {
-            s = (size  / 1024) + "KiB" ;
+            s = (size  / 1024) + " KiB" ;
             String s1 = Kisekae.getCaptions().getString("TransferText") ;
             i1 = s1.indexOf('[') ;
             j1 = s1.indexOf(']') ;
@@ -462,6 +470,15 @@ class UrlLoader extends KissFrame
          interrupted = true ;
          if (OptionsDialog.getDebugControl())
    			PrintLn.println("URL loader " + threadname + " interrupted.") ;
+      }
+      
+      catch (java.net.SocketTimeoutException e) 
+      {
+         String msg = Kisekae.getCaptions().getString("LoadTerminatedStatus") ;
+         msg += " " + "Connection timeout, " + openurl ;
+			PrintLn.println("UrlLoader: " + msg) ;
+  			showStatus(msg) ;
+         showMsg(e.toString()) ;        
       }
 
 		catch (OutOfMemoryError e)

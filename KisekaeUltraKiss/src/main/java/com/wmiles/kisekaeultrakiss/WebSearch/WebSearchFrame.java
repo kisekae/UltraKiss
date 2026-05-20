@@ -138,7 +138,7 @@ final public class WebSearchFrame extends KissFrame
    private String searchname = null ;              // Fileopen selected name
    private URL pageurl = null ;                    // URL of base page
    private boolean stop = false ;                  // If true, stop processing
-   private boolean activated = false ;             // If true, search was activated
+   private static boolean activated = false ;      // If true, search was activated
    private boolean terminating = false ;           // If true, terminating
    private boolean validsearch = false ;           // If true, have valid archive
    private int initdivider = 0 ;                   // Initial split divider
@@ -376,6 +376,8 @@ final public class WebSearchFrame extends KissFrame
 
       setJMenuBar(mb) ;
       setValues() ;
+      pack() ;
+      split1.setDividerLocation(0.9) ;
 
       // Set listeners.
 
@@ -568,6 +570,10 @@ final public class WebSearchFrame extends KissFrame
    // Method to return the batch number for remote searches.
 
    int getBatchNumber() { return batchnumber ; }
+
+   // Method to identify if a search is in progress.
+
+   public static boolean isActivated() { return activated ; }
 
    // Method to add a trace entry to our trace area.
 
@@ -1241,7 +1247,7 @@ final public class WebSearchFrame extends KissFrame
      
    // Function to exit the search.
      
-   private void exitsearch(String s) 
+   public void exitsearch(String s) 
    {
       addTrace(s,3) ;
       showStatus("") ;
