@@ -111,6 +111,7 @@ import com.wmiles.kisekaeultrakiss.Kisekae.WebFrame ;
 import com.wmiles.kisekaeultrakiss.Kisekae.FileOpen ;
 import com.wmiles.kisekaeultrakiss.Kisekae.KissPreferences ;
 import com.wmiles.kisekaeultrakiss.Kisekae.PrintLn ;
+import java.util.Scanner;
 
 
 final public class WebSearchFrame extends KissFrame
@@ -136,6 +137,7 @@ final public class WebSearchFrame extends KissFrame
    private String mastername = null ;              // Name of master index
    private String absoluteformname = null ;        // Location of generated HTML
    private String searchname = null ;              // Fileopen selected name
+   private Vector archives = null ;                // List of archives to search
    private URL pageurl = null ;                    // URL of base page
    private boolean stop = false ;                  // If true, stop processing
    private static boolean activated = false ;      // If true, search was activated
@@ -443,6 +445,9 @@ final public class WebSearchFrame extends KissFrame
          PrintLn.println("WebSearch: " + e) ;
       }
       
+      // Establish any past archive list.
+      
+      if (ValidateLinks.getArchives().size() == 0) loadarchives() ;
       ValidateLinks.setRemoteBatchStart(1) ;
       setbatchstart.setEnabled(scheduler == null && ValidateLinks.getArchives().size() > 0);
       ValidateLinks.reset() ;      
@@ -644,6 +649,34 @@ final public class WebSearchFrame extends KissFrame
          doc.insertString(offset,s,a) ;
       }
       catch (BadLocationException e) { }
+   }
+         
+   // Load any past archive list for a possible restart at a different location.
+      
+   private void loadarchives()
+   {
+      String directory = OptionsDialog.getDataDirectory() ;
+      String archivelinks = "archivelinks.txt" ;
+      File f = new File(directory,archivelinks) ;
+      if (!f.exists()) return ;
+      
+      try
+      {
+         archives = new Vector() ;
+         Scanner reader = new Scanner(f) ;            
+         while (reader.hasNextLine()) 
+         {
+            String data = reader.nextLine();
+            archives.add(data); // Add each line to the vector
+         }
+         reader.close();
+         if (!archives.isEmpty()) GetLinks.setArchives(archives) ;
+      }      
+      catch (IOException ioex)
+      {
+         addTrace("IOException, unable to load previous archives " + f.getPath()) ;
+         PrintLn.println("WebSearchFrame: unable to load previous archives "+ioex.toString()) ;
+      }      
    }
 
 
