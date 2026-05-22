@@ -275,7 +275,7 @@ public class JettyWebSocketEndpoint
 			} 
          catch (Exception e) 
          {
-            System.out.println("[" + time + "] "+"JettyWebSocketEndpoint: screen dimensions exception: " + e.getMessage());   
+            System.out.println("[" + time + "] "+"JettyWebSocketEndpoint: refreshrate exception: " + e.getMessage());   
         	}
       }    
  
@@ -372,6 +372,8 @@ public class JettyWebSocketEndpoint
             }
             else
                ScreenCapture.keyPress(((KeyCodeMapper.KeyClass) o).key);
+            if (((KeyCodeMapper.KeyClass) o).key == KeyEvent.VK_ESCAPE)
+               sendFullScreen() ;
             setTimeoutStart() ;
    		} 
          catch (Exception e) 
@@ -1067,6 +1069,12 @@ public class JettyWebSocketEndpoint
       timeoutstart = new Date().getTime() ;      
    }
    
+   public void sendFullScreen()
+   {
+      System.out.println("JettyWebSocketEndpoint: sendFullScreen()");
+      ProcessThread.setFirst(true) ;      
+   }
+   
    public static String removeSpaces(String source, String sub)
    {
       if (source == null) return null ;
@@ -1089,7 +1097,7 @@ public class JettyWebSocketEndpoint
       long mintime = 0 ;
       long time = 0 ;
       boolean error = false ;
-      boolean first = true ;
+      static boolean first = true ;
       int errors = 0 ;
       BufferedImage previousImage = null ;
       BufferedImage currentImage = null ;
@@ -1181,11 +1189,11 @@ public class JettyWebSocketEndpoint
                            socketBusy = false ;
                            if (first)
                            {
-                              System.out.println("[" + time + "] "+"First screen capture sent to client, (" + width + "," + height + ")");
+                              System.out.println("[" + time + "] "+"Full screen capture sent to client (" + width + "," + height + ")");
                               first = false ;
                            }
                            if (OptionsDialog.getDebugWebSocket())
-                              System.out.println("[" + time + "] "+"clipped screen capture sent to client, (" + x + "," + y + "," + w + "," + h + ")");
+                              System.out.println("[" + time + "] "+"clipped screen capture sent to client (" + x + "," + y + "," + w + "," + h + ")");
                         }
                         @Override
                         public void fail(Throwable cause) {
@@ -1264,7 +1272,11 @@ public class JettyWebSocketEndpoint
 
          if (!hasChanges) return null ;
          return new Rectangle(minX, minY, (maxX - minX + 1), (maxY - minY + 1)) ;
-      }      
+      }  
+      
+      // Request a full screen refresh.
+      
+      public static void setFirst(boolean b) { first = b ; }
    }
    
    /**

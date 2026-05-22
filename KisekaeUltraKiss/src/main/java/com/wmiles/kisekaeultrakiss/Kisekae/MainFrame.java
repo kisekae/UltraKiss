@@ -1566,7 +1566,7 @@ final public class MainFrame extends KissFrame
             if (getPanelMenu() != null) setMenu(getPanelMenu()) ;
             else setMenu(getMainMenu()) ; 
             OptionsDialog.setInitMenubar(true);
-         }                  
+         }   
       }
    }
    public void keyPressed(KeyEvent e) { }
