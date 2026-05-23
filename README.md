@@ -63,6 +63,10 @@ Some examples of interactive KiSS sets are shown below.
 
 #### Example KiSS Sets
 
+![FRKISMI4](https://github.com/kisekae/UltraKiss/blob/master/KisekaeUltraKiss/src/main/resources/Images/FRKISMI4.png)
+
+![PK_ASK33](https://github.com/kisekae/UltraKiss/blob/master/KisekaeUltraKiss/src/main/resources/Images/pk_ask33.png)
+
 ![NoGodsLand - Mindy's Secret Place](https://github.com/kisekae/UltraKiss/blob/master/src/Splash/MindySecretPlace.png)
 
 ![A Slot Machine](https://github.com/kisekae/UltraKiss/blob/master/src/Demo/slotmachine.jpg)
