@@ -93,7 +93,7 @@ canvas.height = window.innerHeight;
 
 const originalLog = console.log;
 let logs = [];
-console.log("UltraKiss websocket client.js released May 18, 2026") ;  
+console.log("UltraKiss websocket client.js released May 23, 2026") ;  
 
 console.log = function() {
     // Log to the console (optional, if you still want to see output there)
@@ -684,7 +684,6 @@ ws.onmessage = function (evt) {
         {
             timeoutwarnings = 0;
             inactivityalert = setInterval(sendTimeoutWarning, 1000);
-            beep();
         }
         
         else if (tokens[0] === "timeoutcancel")
@@ -895,6 +894,7 @@ function sendTimeoutWarning() {
     var n = 30 - timeoutwarnings ;
     showNonBlockingAlert("Inactivity timeout. Session will close in " + n + " seconds.");
     timeoutwarnings++ ;
+    beep();
 }
 
 
