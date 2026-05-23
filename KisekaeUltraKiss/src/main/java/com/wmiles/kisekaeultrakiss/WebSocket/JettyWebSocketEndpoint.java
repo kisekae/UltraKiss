@@ -825,12 +825,18 @@ public class JettyWebSocketEndpoint
             // Send the binary data (use sendBytes for blocking or async with callback)
             bufferBusy = true ;
             session.sendPartialBinary(data, last, new Callback() {
+               double lastSentThreshold ;    
                @Override
                public void succeed() {
                   // Handle success (optional)
         				time = System.currentTimeMillis() - createtime ;
+                  long percentComplete = (bytesSent * 100) / totalBytes ;
+                  if (percentComplete >= lastSentThreshold + 10) {
+                     lastSentThreshold = Math.floor(percentComplete / 10) * 10; 
+                     if (mf != null) mf.showStatus("WebSocket uploading file " + file.getName()  + " " + percentComplete + " percent complete.") ;                         
+                  }
                   if (OptionsDialog.getDebugWebSocket())
-                     System.out.println("[" + time + "] "+"JettyWebSocketEndpoint: Sent file binary data length: " + bytesSent);
+                     System.out.println("[" + time + "] "+"JettyWebSocketEndpoint: Sent file binary data length: " + bytesSent + " percent complete is " + percentComplete);
                   if (last) socketBusy = false ;
                   bufferBusy = false ;
                }
@@ -953,12 +959,18 @@ public class JettyWebSocketEndpoint
             bufferBusy = true ;
   				long starttime = System.currentTimeMillis()  - createtime ;
             session.sendPartialBinary(data, last, new Callback() {
+               double lastSentThreshold ;    
                @Override
                public void succeed() {
                   // Handle success (optional)
         				time = System.currentTimeMillis() - createtime ;
+                  long percentComplete = (bytesSent * 100) / totalBytes ;
+                  if (percentComplete >= lastSentThreshold + 10) {
+                     lastSentThreshold = Math.floor(percentComplete / 10) * 10; 
+                     if (mf != null) mf.showStatus("WebSocket uploading audio " + name + " " + percentComplete + " percent complete.") ;                         
+                  }
                   if (OptionsDialog.getDebugWebSocket())
-                     System.out.println("[" + time + "] "+"JettyWebSocketEndpoint: Sent audio buffer data length: " + bytesSent + " chunk " + chunk + " time = " + (time-starttime));
+                     System.out.println("[" + time + "] "+"JettyWebSocketEndpoint: Sent audio binary data length: " + bytesSent + " percent complete is " + percentComplete);
                   if (last) socketBusy = false ;
                   bufferBusy = false ;
                }

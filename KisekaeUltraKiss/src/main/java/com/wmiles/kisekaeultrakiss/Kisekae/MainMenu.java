@@ -212,11 +212,17 @@ final public class MainMenu extends KissMenu
       if (!applemac) help.setMnemonic(KeyEvent.VK_C) ;
       help.setEnabled(false) ;
       tutorial = new JMenuItem(Kisekae.getCaptions().getString("MenuHelpTutorials")) ;
-      tutorial.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T,accelerator+ActionEvent.SHIFT_MASK)) ;
-      if (!applemac) tutorial.setMnemonic(KeyEvent.VK_T) ;
+      if (!Kisekae.isWebsocket())
+      {
+         tutorial.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T,accelerator+ActionEvent.SHIFT_MASK)) ;
+         if (!applemac) tutorial.setMnemonic(KeyEvent.VK_T) ;
+      }
       tutorial.setEnabled(false) ;
 		refhelp = new JMenuItem(Kisekae.getCaptions().getString("MenuHelpFKiss")) ;
-      if (!applemac) refhelp.setMnemonic(KeyEvent.VK_F) ;
+      if (!Kisekae.isWebsocket())
+      {
+         if (!applemac) refhelp.setMnemonic(KeyEvent.VK_F) ;
+      }
       refhelp.setEnabled(false) ;
       if (Kisekae.isHelpInstalled())
       {
@@ -266,8 +272,11 @@ final public class MainMenu extends KissMenu
 
       fileMenu.add((newkiss = new JMenuItem(Kisekae.getCaptions().getString("MenuFileNew")))) ;
       newkiss.addActionListener(this) ;
-      if (!applemac) newkiss.setMnemonic(KeyEvent.VK_N) ;
-      newkiss.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, accelerator));
+      if (!Kisekae.isWebsocket())
+      {
+         if (!applemac) newkiss.setMnemonic(KeyEvent.VK_N) ;
+         newkiss.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, accelerator));
+      }
       newkiss.setEnabled(OptionsDialog.getEditEnable());
       newpage = new JMenuItem(Kisekae.getCaptions().getString("MenuFileNewPage")) ;
       if (!applemac) newpage.setMnemonic(KeyEvent.VK_P) ;
@@ -284,37 +293,52 @@ final public class MainMenu extends KissMenu
       writepage.setEnabled(OptionsDialog.getEditEnable() && !Kisekae.isSecure());
       fileMenu.add((open = new JMenuItem(Kisekae.getCaptions().getString("MenuFileOpen")))) ;
       open.addActionListener(this) ;
-      if (!applemac) open.setMnemonic(KeyEvent.VK_O) ;
-      open.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, accelerator));
+      if (!Kisekae.isWebsocket())
+      {
+         if (!applemac) open.setMnemonic(KeyEvent.VK_O) ;
+         open.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, accelerator));
+      }
       expand = new JMenuItem(Kisekae.getCaptions().getString("MenuFileAdd")) ;
       expand.addActionListener(this) ;
       fileMenu.add((websearch = new JMenuItem(Kisekae.getCaptions().getString("MenuFileWebSearch")))) ;
       websearch.addActionListener(this) ;
       websearch.setEnabled(!Kisekae.isSecure() && Kisekae.isSearchInstalled() && !Kisekae.isExpired() 
               && (!Kisekae.isWebsocket() || !Kisekae.isSearchThrottled()));
-      websearch.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, accelerator));
-      if (!applemac) websearch.setMnemonic(KeyEvent.VK_S) ;
+      if (!Kisekae.isWebsocket())
+      {
+         websearch.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, accelerator));
+         if (!applemac) websearch.setMnemonic(KeyEvent.VK_S) ;
+      }
       fileMenu.addSeparator() ;
       fileMenu.add((openurl = new JMenuItem(Kisekae.getCaptions().getString("MenuFileOpenURL")))) ;
       openurl.addActionListener(this) ;
       openurl.setEnabled(!Kisekae.isSecure()) ;
-      openurl.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, accelerator+ActionEvent.SHIFT_MASK));
-      if (!applemac) openurl.setMnemonic(KeyEvent.VK_R) ;
+      if (!Kisekae.isWebsocket())
+      {
+         openurl.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, accelerator+ActionEvent.SHIFT_MASK));
+         if (!applemac) openurl.setMnemonic(KeyEvent.VK_R) ;
+      }
       fileMenu.add((openweb = new JMenuItem(Kisekae.getCaptions().getString("MenuFileOpenWeb")))) ;
       openweb.addActionListener(this) ;
       openweb.setEnabled(!Kisekae.isSecure());
-      openweb.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_B, accelerator+ActionEvent.SHIFT_MASK));
-      if (!applemac) openweb.setMnemonic(KeyEvent.VK_B) ;
+      if (!Kisekae.isWebsocket())
+      {
+         openweb.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_B, accelerator+ActionEvent.SHIFT_MASK));
+         if (!applemac) openweb.setMnemonic(KeyEvent.VK_B) ;
+      }
       fileMenu.add((openportal = new JMenuItem(Kisekae.getCaptions().getString("MenuFileOpenPortal")))) ;
       openportal.addActionListener(this) ;
       openportal.setEnabled(true);
-      openportal.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, accelerator+ActionEvent.SHIFT_MASK));
-      if (!applemac) openportal.setMnemonic(KeyEvent.VK_P) ;
+      if (!Kisekae.isWebsocket())
+      {
+         openportal.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, accelerator+ActionEvent.SHIFT_MASK));
+         if (!applemac) openportal.setMnemonic(KeyEvent.VK_P) ;
+      }
       fileMenu.addSeparator() ;
       String mfe = (OptionsDialog.getAppleMac()) ? "MenuFileQuit" : "MenuFileExit" ;
 		fileMenu.add((exit = new JMenuItem(Kisekae.getCaptions().getString(mfe)))) ;
       exit.addActionListener(this) ;
-      if (!applemac) exit.setMnemonic(KeyEvent.VK_X) ;
+      if (!applemac && !Kisekae.isWebsocket()) exit.setMnemonic(KeyEvent.VK_X) ;
       if (lru.length > 0 && lru[0] != null) fileMenu.addSeparator() ;
       for (int i = 0 ; i < lru.length ; i++) 
          if (lru[i] != null) fileMenu.add(lru[i]) ;
@@ -349,29 +373,44 @@ final public class MainMenu extends KissMenu
       mb.add(toolsMenu) ;
       toolsMenu.add((texteditor = new JMenuItem(Kisekae.getCaptions().getString("MenuToolsTextEditor")))) ;
       texteditor.addActionListener(this) ;
-      texteditor.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, accelerator+ActionEvent.SHIFT_MASK));
       texteditor.setEnabled(!Kisekae.isSecure()) ;
-      if (!applemac) texteditor.setMnemonic(KeyEvent.VK_T) ;
+      if (!Kisekae.isWebsocket())
+      {
+         texteditor.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, accelerator+ActionEvent.SHIFT_MASK));
+         if (!applemac) texteditor.setMnemonic(KeyEvent.VK_T) ;
+      }
       toolsMenu.add((coloreditor = new JMenuItem(Kisekae.getCaptions().getString("MenuToolsColorEditor")))) ;
       coloreditor.addActionListener(this) ;
-      coloreditor.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, accelerator+ActionEvent.SHIFT_MASK));
       coloreditor.setEnabled(!Kisekae.isSecure()) ;
-      if (!applemac) coloreditor.setMnemonic(KeyEvent.VK_C) ;
+      if (!Kisekae.isWebsocket())
+      {
+         coloreditor.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, accelerator+ActionEvent.SHIFT_MASK));
+         if (!applemac) coloreditor.setMnemonic(KeyEvent.VK_C) ;
+      }
       toolsMenu.add((imageeditor = new JMenuItem(Kisekae.getCaptions().getString("MenuToolsImageEditor")))) ;
       imageeditor.addActionListener(this) ;
-      imageeditor.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_J, accelerator+ActionEvent.SHIFT_MASK));
       imageeditor.setEnabled(!Kisekae.isSecure()) ;
-      if (!applemac) imageeditor.setMnemonic(KeyEvent.VK_I) ;
+      if (!Kisekae.isWebsocket())
+      {
+         imageeditor.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_J, accelerator+ActionEvent.SHIFT_MASK));
+         if (!applemac) imageeditor.setMnemonic(KeyEvent.VK_I) ;
+      }
       toolsMenu.add((archive = new JMenuItem(Kisekae.getCaptions().getString("MenuToolsArchiveManager")))) ;
       archive.addActionListener(this) ;
-      archive.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, accelerator+ActionEvent.SHIFT_MASK));
       archive.setEnabled(!Kisekae.isSecure()) ;
-      if (!applemac) archive.setMnemonic(KeyEvent.VK_Z) ;
+      if (!Kisekae.isWebsocket())
+      {
+         archive.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, accelerator+ActionEvent.SHIFT_MASK));
+         if (!applemac) archive.setMnemonic(KeyEvent.VK_Z) ;
+      }
       toolsMenu.add((mediaplayer = new JMenuItem(Kisekae.getCaptions().getString("MenuToolsMediaPlayer")))) ;
       mediaplayer.addActionListener(this) ;
-      mediaplayer.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_M, accelerator+ActionEvent.SHIFT_MASK));
       mediaplayer.setEnabled(!Kisekae.isSecure()) ;
-      if (!applemac) mediaplayer.setMnemonic(KeyEvent.VK_M) ;
+      if (!Kisekae.isWebsocket())
+      {
+         mediaplayer.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_M, accelerator+ActionEvent.SHIFT_MASK));
+         if (!applemac) mediaplayer.setMnemonic(KeyEvent.VK_M) ;
+      }
       mediaplayer.setVisible(true) ;
 
       // Create the Options menu
@@ -382,12 +421,18 @@ final public class MainMenu extends KissMenu
       mb.add(optionsMenu) ;
       optionsMenu.add((options = new JMenuItem(Kisekae.getCaptions().getString("MenuOptionsOptions")))) ;
       options.addActionListener(this) ;
-      options.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, accelerator+ActionEvent.SHIFT_MASK));
       options.setEnabled(!Kisekae.isSecure()) ;
-      if (!applemac) options.setMnemonic(KeyEvent.VK_O) ;
+      if (!Kisekae.isWebsocket())
+      {
+         options.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, accelerator+ActionEvent.SHIFT_MASK));
+         if (!applemac) options.setMnemonic(KeyEvent.VK_O) ;
+      }
       optionsMenu.add((memory = new JMenuItem(Kisekae.getCaptions().getString("MenuOptionsMemory")))) ;
-      memory.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_M, accelerator));
-      if (!applemac) memory.setMnemonic(KeyEvent.VK_M) ;
+      if (!Kisekae.isWebsocket())
+      {
+         memory.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_M, accelerator));
+         if (!applemac) memory.setMnemonic(KeyEvent.VK_M) ;
+      }
       memory.addActionListener(this) ;
       toolbarMenu = new JMenu(Kisekae.getCaptions().getString("MenuOptionsToolbarOptions")) ;
       optionsMenu.add(toolbarMenu) ;
@@ -418,14 +463,20 @@ final public class MainMenu extends KissMenu
       windowMenu.add((fitpanel = new JCheckBoxMenuItem(Kisekae.getCaptions().getString("MenuViewSizeToFit")))) ;
       fitpanel.setState(priorfitpanel) ;
       fitpanel.addItemListener(this) ;
-      if (!applemac) fitpanel.setMnemonic(KeyEvent.VK_F) ;
-      fitpanel.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F9,apple)) ;
+      if (!Kisekae.isWebsocket() || apple == 0)
+      {
+         if (!applemac) fitpanel.setMnemonic(KeyEvent.VK_F) ;
+         fitpanel.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F9,apple)) ;
+      }
       priorfitscreen = (fitscreen != null) ? fitscreen.getState() : false ;
       windowMenu.add((fitscreen = new JCheckBoxMenuItem(Kisekae.getCaptions().getString("MenuViewScaleToFit")))) ;
       fitscreen.setState(priorfitscreen) ;
       fitscreen.addItemListener(this) ;
-      if (!applemac) fitscreen.setMnemonic(KeyEvent.VK_S) ;
-      fitscreen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F10,apple)) ;
+      if (!Kisekae.isWebsocket() || apple == 0)
+      {
+         if (!applemac) fitscreen.setMnemonic(KeyEvent.VK_S) ;
+         fitscreen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F10,apple)) ;
+      }
       fitscreen.setVisible(true) ;
       priorshowborder = (showborder != null) ? showborder.getState() : false ;
       windowMenu.add((showborder = new JCheckBoxMenuItem(Kisekae.getCaptions().getString("MenuViewShowBorder")))) ;
@@ -448,19 +499,28 @@ final public class MainMenu extends KissMenu
       helpMenu.add(help) ;
 //    helpMenu.add(refhelp) ;
       helpMenu.add((readme = new JMenuItem(Kisekae.getCaptions().getString("MenuHelpReadMe")))) ;
-      if (!applemac) readme.setMnemonic(KeyEvent.VK_M) ;
-      readme.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, ActionEvent.SHIFT_MASK));
+      if (!Kisekae.isWebsocket())
+      {
+         if (!applemac) readme.setMnemonic(KeyEvent.VK_M) ;
+         readme.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, ActionEvent.SHIFT_MASK));
+      }
       readme.addActionListener(this);
       readme.setVisible(Kisekae.getReadMeIndex() != null);
       helpMenu.addSeparator() ;
       helpMenu.add((showtips = new JMenuItem(Kisekae.getCaptions().getString("MenuHelpTips")))) ;
-      if (!applemac) showtips.setMnemonic(KeyEvent.VK_S) ;
-      showtips.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F1, ActionEvent.SHIFT_MASK));
+      if (!Kisekae.isWebsocket())
+      {
+         if (!applemac) showtips.setMnemonic(KeyEvent.VK_S) ;
+         showtips.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F1, ActionEvent.SHIFT_MASK));
+      }
       showtips.addActionListener(this);
       showtips.setEnabled(Kisekae.isTipsInstalled());
       helpMenu.add((rundemo = new JMenuItem(Kisekae.getCaptions().getString("MenuHelpDemo")))) ;
-      if (!applemac) rundemo.setMnemonic(KeyEvent.VK_D) ;
-      rundemo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, accelerator+ActionEvent.SHIFT_MASK));
+      if (!Kisekae.isWebsocket())
+      {
+         if (!applemac) rundemo.setMnemonic(KeyEvent.VK_D) ;
+         rundemo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, accelerator+ActionEvent.SHIFT_MASK));
+      }
       rundemo.addActionListener(this);
       rundemo.setEnabled(Kisekae.getDemoIndex() != null) ;
       helpMenu.add(tutorial) ;
@@ -470,8 +530,11 @@ final public class MainMenu extends KissMenu
       helpMenu.add((logfile = new JMenuItem(Kisekae.getCaptions().getString("MenuViewLogFile")))) ;
       logfile.setEnabled(LogFile.isOpen()) ;
       logfile.addActionListener(this) ;
-      if (!applemac) logfile.setMnemonic(KeyEvent.VK_L) ;
-      logfile.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, accelerator+ActionEvent.SHIFT_MASK));
+      if (!Kisekae.isWebsocket())
+      {
+         if (!applemac) logfile.setMnemonic(KeyEvent.VK_L) ;
+         logfile.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, accelerator+ActionEvent.SHIFT_MASK));
+      }
       helpMenu.addSeparator() ;
 //    helpMenu.add((register = new JMenuItem(Kisekae.getCaptions().getString("MenuHelpRegister")))) ;
 //    if (!applemac) register.setMnemonic(KeyEvent.VK_R) ;

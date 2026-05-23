@@ -548,21 +548,33 @@ final class FKissFrame extends KissFrame
 		Insets insets = new Insets(2,2,2,rm) ;
 		fileMenu.setMargin(insets) ;
 		fileMenu.add((eventwiz = new JMenuItem(Kisekae.getCaptions().getString("EventWizardMessage")))) ;
-      if (!applemac) eventwiz.setMnemonic(KeyEvent.VK_W) ;
-      eventwiz.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W, accelerator));
+      if (!Kisekae.isWebsocket())
+      {
+         if (!applemac) eventwiz.setMnemonic(KeyEvent.VK_W) ;
+         eventwiz.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W, accelerator));
+      }
 		eventwiz.addActionListener(this) ;
 		fileMenu.add((newevent = new JMenuItem(Kisekae.getCaptions().getString("MenuFileNewEvent")))) ;
-      if (!applemac) newevent.setMnemonic(KeyEvent.VK_N) ;
-      newevent.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, accelerator));
+      if (!Kisekae.isWebsocket())
+      {
+         if (!applemac) newevent.setMnemonic(KeyEvent.VK_N) ;
+         newevent.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, accelerator));
+      }
 		newevent.addActionListener(this) ;
 		fileMenu.add((editevent = new JMenuItem(Kisekae.getCaptions().getString("MenuFileEditEvent")))) ;
-      if (!applemac) editevent.setMnemonic(KeyEvent.VK_E) ;
-      editevent.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, accelerator));
+      if (!Kisekae.isWebsocket())
+      {
+         if (!applemac) editevent.setMnemonic(KeyEvent.VK_E) ;
+         editevent.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, accelerator));
+      }
 		editevent.addActionListener(this) ;
 		editevent.setEnabled(false) ;
 		fileMenu.add((deleteevent = new JMenuItem(Kisekae.getCaptions().getString("MenuFileDeleteEvent")))) ;
-      if (!applemac) deleteevent.setMnemonic(KeyEvent.VK_D) ;
-      deleteevent.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, accelerator));
+      if (!Kisekae.isWebsocket())
+      {
+         if (!applemac) deleteevent.setMnemonic(KeyEvent.VK_D) ;
+         deleteevent.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, accelerator));
+      }
 		deleteevent.addActionListener(this) ;
 		deleteevent.setEnabled(false) ;
 		fileMenu.addSeparator() ;
@@ -580,8 +592,11 @@ final class FKissFrame extends KissFrame
       printpreview.setEnabled(Kisekae.isPrintInstalled() && !Kisekae.isSecure() && !Kisekae.isExpired()) ;
 		fileMenu.add((print = new JMenuItem(Kisekae.getCaptions().getString("MenuFilePrint")))) ;
 		print.addActionListener(this) ;
-      if (!applemac) print.setMnemonic(KeyEvent.VK_P) ;
-      print.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, accelerator));
+      if (!Kisekae.isWebsocket())
+      {
+         if (!applemac) print.setMnemonic(KeyEvent.VK_P) ;
+         print.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, accelerator));
+      }
       print.setEnabled(Kisekae.isPrintInstalled() && !Kisekae.isSecure() && !Kisekae.isExpired()) ;
 		fileMenu.addSeparator() ;
 		fileMenu.add((properties = new JMenuItem(Kisekae.getCaptions().getString("MenuFileProperties")))) ;
@@ -1103,12 +1118,18 @@ final class FKissFrame extends KissFrame
 
 		undoAction = new UndoAction() ;
 		JMenuItem undo = menu.add(undoAction) ;
-      undo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, accelerator));
-      if (!applemac) undo.setMnemonic(KeyEvent.VK_U) ;
+      if (!Kisekae.isWebsocket())
+      {
+         undo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, accelerator));
+         if (!applemac) undo.setMnemonic(KeyEvent.VK_U) ;
+      }
 		redoAction = new RedoAction() ;
 		JMenuItem redo = menu.add(redoAction) ;
-      redo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y, accelerator));
-      if (!applemac) redo.setMnemonic(KeyEvent.VK_R) ;
+      if (!Kisekae.isWebsocket())
+      {
+         redo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y, accelerator));
+         if (!applemac) redo.setMnemonic(KeyEvent.VK_R) ;
+      }
 		menu.add((undoall = new JMenuItem(Kisekae.getCaptions().getString("MenuEditUndoAll")))) ;
 		undoall.setEnabled(false) ;
 		undoall.addActionListener(this);

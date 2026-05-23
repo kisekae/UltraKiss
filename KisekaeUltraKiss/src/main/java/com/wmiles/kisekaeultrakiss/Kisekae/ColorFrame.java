@@ -754,32 +754,50 @@ final public class ColorFrame extends KissFrame
 		newmulti.setEnabled(palette != null && !palette.isInternal()) ;
 		newmulti.addActionListener(this) ;
 		fileMenu.add((open = new JMenuItem(Kisekae.getCaptions().getString("MenuFileOpen")))) ;
-		if (!applemac) open.setMnemonic(KeyEvent.VK_O) ;
 		open.addActionListener(this) ;
-      open.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, accelerator));
+      if (!Kisekae.isWebsocket())
+      {
+   		if (!applemac) open.setMnemonic(KeyEvent.VK_O) ;
+        open.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, accelerator));
+      }
 		fileMenu.add((close = new JMenuItem(Kisekae.getCaptions().getString("MenuFileClose")))) ;
-		if (!applemac) close.setMnemonic(KeyEvent.VK_C) ;
 		close.addActionListener(this) ;
-      close.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W, accelerator));
+      if (!Kisekae.isWebsocket())
+      {
+   		if (!applemac) close.setMnemonic(KeyEvent.VK_C) ;
+         close.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W, accelerator));
+      }
 		close.setEnabled(false) ;
 		fileMenu.add((save = new JMenuItem(Kisekae.getCaptions().getString("MenuFileSave")))) ;
-		if (!applemac) save.setMnemonic(KeyEvent.VK_S) ;
 		save.addActionListener(this) ;
-      save.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, accelerator));
+      if (!Kisekae.isWebsocket())
+      {
+   		if (!applemac) save.setMnemonic(KeyEvent.VK_S) ;
+         save.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, accelerator));
+      }
 		save.setEnabled((palette != null || cel != null) && !Kisekae.isSecure() && !Kisekae.isExpired()) ;
 		fileMenu.add((saveas = new JMenuItem(Kisekae.getCaptions().getString("MenuFileSaveAs")))) ;
-		if (!applemac) saveas.setMnemonic(KeyEvent.VK_A) ;
+      if (!Kisekae.isWebsocket())
+      {
+   		if (!applemac) saveas.setMnemonic(KeyEvent.VK_A) ;
+      }
 		saveas.addActionListener(this) ;
 		saveas.setEnabled((palette != null || cel != null) && !Kisekae.isSecure() && !Kisekae.isExpired()) ;
 		fileMenu.addSeparator() ;
 		fileMenu.add((importp = new JMenuItem(Kisekae.getCaptions().getString("MenuFileImport")))) ;
 		importp.addActionListener(this) ;
 		importp.setEnabled(!Kisekae.isSecure()) ;
-      importp.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I, accelerator));
+      if (!Kisekae.isWebsocket())
+      {
+         importp.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I, accelerator));
+      }
 		fileMenu.add((exportp = new JMenuItem(Kisekae.getCaptions().getString("MenuFileExport")))) ;
 		exportp.addActionListener(this) ;
 		exportp.setEnabled(!Kisekae.isSecure()) ;
-      exportp.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, accelerator));
+      if (!Kisekae.isWebsocket())
+      {
+         exportp.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, accelerator));
+      }
 		fileMenu.add((mergep = new JMenuItem(Kisekae.getCaptions().getString("MenuFileMerge")))) ;
 		mergep.addActionListener(this) ;
 		mergep.setEnabled(!Kisekae.isSecure()) ;
@@ -793,9 +811,12 @@ final public class ColorFrame extends KissFrame
 		printpreview.addActionListener(this) ;
       printpreview.setEnabled(Kisekae.isPrintInstalled() && !Kisekae.isSecure() && !Kisekae.isExpired()) ;
 		fileMenu.add((print = new JMenuItem(Kisekae.getCaptions().getString("MenuFilePrint")))) ;
-		if (!applemac) print.setMnemonic(KeyEvent.VK_P) ;
 		print.addActionListener(this) ;
-      print.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, accelerator));
+      if (!Kisekae.isWebsocket())
+      {
+   		if (!applemac) print.setMnemonic(KeyEvent.VK_P) ;
+         print.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, accelerator));
+      }
       print.setEnabled(Kisekae.isPrintInstalled() && !Kisekae.isSecure() && !Kisekae.isExpired()) ;
 		fileMenu.addSeparator() ;
 		fileMenu.add((properties = new JMenu(Kisekae.getCaptions().getString("MenuFileProperties")))) ;
@@ -884,8 +905,11 @@ final public class ColorFrame extends KissFrame
          helpMenu.add((logfile = new JMenuItem(Kisekae.getCaptions().getString("MenuViewLogFile")))) ;
          logfile.setEnabled(LogFile.isOpen()) ;
          logfile.addActionListener(menu) ;
-         if (!applemac) logfile.setMnemonic(KeyEvent.VK_L) ;
-         logfile.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, accelerator+ActionEvent.SHIFT_MASK));
+         if (!Kisekae.isWebsocket())
+         {
+            if (!applemac) logfile.setMnemonic(KeyEvent.VK_L) ;
+            logfile.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, accelerator+ActionEvent.SHIFT_MASK));
+         }
       }
 		helpMenu.addSeparator() ;
 		helpMenu.add((about = new JMenuItem(Kisekae.getCaptions().getString("MenuHelpAbout")))) ;
@@ -1292,12 +1316,18 @@ final public class ColorFrame extends KissFrame
 
 		undoAction = new UndoAction() ;
 		JMenuItem undo = menu.add(undoAction) ;
-      undo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, accelerator));
-      if (!applemac) undo.setMnemonic(KeyEvent.VK_U) ;
+      if (!Kisekae.isWebsocket())
+      {
+         undo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, accelerator));
+         if (!applemac) undo.setMnemonic(KeyEvent.VK_U) ;
+      }
 		redoAction = new RedoAction() ;
 		JMenuItem redo = menu.add(redoAction) ;
-      redo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y, accelerator));
-      if (!applemac) redo.setMnemonic(KeyEvent.VK_R) ;
+      if (!Kisekae.isWebsocket())
+      {
+         redo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y, accelerator));
+         if (!applemac) redo.setMnemonic(KeyEvent.VK_R) ;
+      }
 		menu.add((reload = new JMenuItem(Kisekae.getCaptions().getString("MenuEditUndoAll")))) ;
 		reload.setEnabled(false) ;
 		reload.addActionListener(this);
@@ -1307,22 +1337,34 @@ final public class ColorFrame extends KissFrame
 		// them.  Get the ones we want and stick them in the menu.
 
 		menu.add((cut = new JMenuItem(Kisekae.getCaptions().getString("MenuEditCut")))) ;
-		if (!applemac) cut.setMnemonic(KeyEvent.VK_T) ;
-		cut.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, accelerator));
+      if (!Kisekae.isWebsocket())
+      {
+   		if (!applemac) cut.setMnemonic(KeyEvent.VK_T) ;
+   		cut.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, accelerator));
+      }
 		cut.addActionListener(this);
 		menu.add((copy = new JMenuItem(Kisekae.getCaptions().getString("MenuEditCopy")))) ;
-		if (!applemac) copy.setMnemonic(KeyEvent.VK_C) ;
-		copy.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, accelerator));
+      if (!Kisekae.isWebsocket())
+      {
+   		if (!applemac) copy.setMnemonic(KeyEvent.VK_C) ;
+   		copy.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, accelerator));
+      }
 		copy.addActionListener(this);
 		menu.add((paste = new JMenuItem(Kisekae.getCaptions().getString("MenuEditPaste")))) ;
 		paste.setEnabled(false) ;
-		if (!applemac) paste.setMnemonic(KeyEvent.VK_P) ;
-		paste.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, accelerator));
+      if (!Kisekae.isWebsocket())
+      {
+   		if (!applemac) paste.setMnemonic(KeyEvent.VK_P) ;
+   		paste.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, accelerator));
+      }
 		paste.addActionListener(this);
 		menu.addSeparator() ;
 		menu.add((selectall = new JMenuItem(Kisekae.getCaptions().getString("MenuEditSelectAll")))) ;
-		if (!applemac) selectall.setMnemonic(KeyEvent.VK_L) ;
-		selectall.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, accelerator));
+      if (!Kisekae.isWebsocket())
+      {
+   		if (!applemac) selectall.setMnemonic(KeyEvent.VK_L) ;
+   		selectall.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, accelerator));
+      }
 		selectall.addActionListener(this) ;
 		menu.add((selectclip = new JMenuItem(Kisekae.getCaptions().getString("MenuEditSelectCopy")))) ;
 		selectclip.setEnabled(false) ;
@@ -1340,16 +1382,25 @@ final public class ColorFrame extends KissFrame
 		setbackground.addActionListener(this) ;
 		menu.addSeparator() ;
 		menu.add((deletemp = new JMenuItem(Kisekae.getCaptions().getString("MenuEditDeletePaletteGroup")))) ;
-		if (!applemac) deletemp.setMnemonic(KeyEvent.VK_DELETE) ;
-		deletemp.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, accelerator));
+      if (!Kisekae.isWebsocket())
+      {
+   		if (!applemac) deletemp.setMnemonic(KeyEvent.VK_DELETE) ;
+   		deletemp.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, accelerator));
+      }
 		deletemp.addActionListener(this) ;
 		menu.add((insertmp = new JMenuItem(Kisekae.getCaptions().getString("MenuEditInsertPaletteGroup")))) ;
-		if (!applemac) insertmp.setMnemonic(KeyEvent.VK_INSERT) ;
-		insertmp.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, accelerator));
+      if (!Kisekae.isWebsocket())
+      {
+   		if (!applemac) insertmp.setMnemonic(KeyEvent.VK_INSERT) ;
+   		insertmp.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, accelerator));
+      }
 		insertmp.addActionListener(this) ;
 		menu.add((addmp = new JMenuItem(Kisekae.getCaptions().getString("MenuEditAddPaletteGroup")))) ;
-		if (!applemac) addmp.setMnemonic(KeyEvent.VK_END) ;
-		addmp.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, ActionEvent.SHIFT_MASK+accelerator));
+      if (!Kisekae.isWebsocket())
+      {
+   		if (!applemac) addmp.setMnemonic(KeyEvent.VK_END) ;
+   		addmp.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, ActionEvent.SHIFT_MASK+accelerator));
+      }
 		addmp.addActionListener(this) ;
 		return menu;
 	}

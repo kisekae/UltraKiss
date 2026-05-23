@@ -346,8 +346,11 @@ final public class MediaFrame extends KissFrame
          helpMenu.add((logfile = new JMenuItem(Kisekae.getCaptions().getString("MenuViewLogFile")))) ;
          logfile.setEnabled(LogFile.isOpen()) ;
          logfile.addActionListener(menu) ;
-         if (!applemac) logfile.setMnemonic(KeyEvent.VK_L) ;
-         logfile.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, accelerator+ActionEvent.SHIFT_MASK));
+         if (!Kisekae.isWebsocket())
+         {
+            if (!applemac) logfile.setMnemonic(KeyEvent.VK_L) ;
+            logfile.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, accelerator+ActionEvent.SHIFT_MASK));
+         }
       }
 		helpMenu.addSeparator() ;
 		helpMenu.add((about = new JMenuItem(Kisekae.getCaptions().getString("MenuHelpAbout")))) ;
