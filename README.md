@@ -24,6 +24,7 @@ To run UltraKiss in your browser simply connect to “https://www.wmiles.com/ult
 ```
 
 Press this button to run UltraKiss in your browser.  
+(use CTRL+click on Windows or Linux to open in a new tab, use CMD+click on MacOS)
 [![UltraKiss](https://github.com/kisekae/UltraKiss/blob/master/src/Images/ultrakissbtn.svg)](https://www.wmiles.com/ultrakiss)
 
 
