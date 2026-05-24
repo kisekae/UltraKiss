@@ -744,6 +744,18 @@ public abstract class Audio extends KissObject
       b = null ;
       ref = null ;
    }
+
+   // Reset static resources on configuration close.  Observed some instances
+   // of midi internal resources being a memory leak when web search.
+   
+   static void flushOnClose()
+   {
+      key = new Hashtable(300,0.855f) ;
+      players = new Vector() ;
+      stoppedmedia = false ;
+      stoppedsound = false ;
+      lastaudio = null ;      
+   }
    
 
 	// Abstract methods

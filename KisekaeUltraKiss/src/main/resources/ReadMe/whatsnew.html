@@ -22,7 +22,7 @@
                                         <p>&nbsp;</p>
                                        <p>&nbsp;</p>
 					<p><B>May 23, 2026</B></p>
-					<P>UltraKiss V5.3 update 3 is released. UltraKiss 5.3 corrects issues with the UltraKiss Portal and the Search feature.</P>
+					<P>UltraKiss V5.3 update 4 is released. UltraKiss 5.3 corrects issues with the UltraKiss Portal and the Search feature.</P>
                                         <P>UltraKiss is end-of-life.  Issues may be corrected if reported to project <a href="https://github.com/kisekae/UltraKiss">Kisekae UltraKiss</a> on GitHub or with <a href=\"file://helpbugreport\">Help-Bug Report</a> within UltraKiss. </P>
                                         <p>&nbsp;</p>
 					<h3><FONT face=Arial>Updates to V5.3&nbsp; </FONT></h3>
@@ -34,8 +34,8 @@
                       <p><font face="Arial">5. Web Search access to remote sites is now throttled and limited to small batches to manage download bandwidth. </font></p>
                       <p><font face="Arial">6. Corrected an uncaught exception error with Web Search updates on the EDT thread when searching for archive links. </font></p>
                       <p><font face="Arial">7. Implemented a Restore Portal option to activate the portal when a set is closed after being downloaded from the Portal. </font></p>
-                      <p><font face="Arial">8. Introduced a WebSocket maximum file size upload limit (Options-Search-Maximum Archive Size) for WebSocket implementations. </font></p>
-                      <p><font face="Arial">9. Implemented WebSocket backpressure control for uploading files to the server. Upload percent completion is now reported. </font></p>
+                      <p><font face="Arial">8. Introduced a websocket maximum file size upload limit (Options-Search-Maximum Archive Size) for WebSocket implementations. </font></p>
+                      <p><font face="Arial">9. Implemented websocket backpressure control for uploading files to the server. Upload percent completion is now reported. </font></p>
                       <p><font face="Arial">10. Corrected FKissEditor internal errors for breakpoint processing.  Breakpoints were not always on the EDT thread. </font></p>
                       <p><font face="Arial">11. Implemented custom batch sizes for Web Searches for local files.  Large local collections can now be processed in batches. </font></p>
                       <p><font face="Arial">12. UltraKiss now recognizes Japanese text encoding (Shift-JIS) in text files.  Set documentation is now displayed correctly.</font></p>
@@ -45,7 +45,8 @@
                       <p><font face="Arial">16. Websocket screen transmissions to the client now send only the changed screen area. This significantly reduces socket overhead.</font></p>
                       <p><font face="Arial">17. WebSearch has a new option to set the batch starting index for a repeat or continuing validation of the candidate archive files found.</font></p>
                       <p><font face="Arial">18. Set the ESC key to send a full screen capture to the client for websocket implementations.  This can fix faults with partial screen updates.</font></p>
-                      <p><font face="Arial">19. Keyboard accelerator keys are removed for WebSocket implementations.  A reboot is required for multi-key accelerator combinations.</font></p>
+                      <p><font face="Arial">19. Keyboard accelerator keys are removed for websocket implementations.  Multi-key accelerator combinations corrupt the system.</font></p>
+                      <p><font face="Arial">20. Corrected a memory leak when internal midi audio buffers were not being released on a configuration close.</font></p>
           				</BLOCKQUOTE>
                                        <p>&nbsp;</p>
 					<p><B>March 19, 2026</B></p>

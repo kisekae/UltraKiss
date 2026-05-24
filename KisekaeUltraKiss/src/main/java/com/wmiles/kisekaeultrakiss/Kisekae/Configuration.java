@@ -3248,6 +3248,8 @@ final public class Configuration extends KissObject
       MediaFrame unique = MediaFrame.getUniquePlayer() ;
       if (unique != null && unique != mediaframe) unique.stop() ;
       if (mediaframe != null) mediaframe.stop() ;
+      Audio.flushOnClose() ;
+      MediaFrame.flushOnClose() ;
       mediaframe = null ;
 		timer = null ;
       animator = null ;

@@ -2003,6 +2003,14 @@ final public class MediaFrame extends KissFrame
 		getContentPane().removeNotify() ;
 	}
 
+   // Reset static resources on configuration close.  Observed some instances
+   // of midi internal resources being a memory leak when web search.
+   
+   static void flushOnClose()
+   {
+      unique = null ;
+   }
+
 
    // Inner class to listen for events on our Player object.
 
