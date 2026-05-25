@@ -1321,7 +1321,8 @@ abstract class KissObject
 
       // If this object has a parent we must update the parent restrictions.
 
-      if ((x != null || y != null) && parent != null)
+//      if ((x != null || y != null) && parent != null)
+      if (parent != null)
       {
          parent.updateMoveRestrictions(parent.getChildren()) ;
       }
