@@ -496,7 +496,8 @@ final class Group extends KissObject
    // placements set.
 
 	void setPlacement(int x, int y) { setPlacement(x,y,true) ; }
-	void setPlacement(int x, int y, boolean restrict)
+	void setPlacement(int x, int y, boolean restrict) { setPlacement(x,y,restrict,false) ; }
+	void setPlacement(int x, int y, boolean restrict, boolean fkissmove)
 	{
       if (!restrict || !restricted)
       {
@@ -533,7 +534,7 @@ final class Group extends KissObject
       for (int i = 0 ; i < groups.size() ; i++)
       {
          Group g = (Group) groups.elementAt(i) ;
-         if (OptionsDialog.getRestrictChild())
+         if (OptionsDialog.getRestrictChild() && !fkissmove)
          {
             Point displacement = placement ;
             KissObject o = g.getParentObject() ;

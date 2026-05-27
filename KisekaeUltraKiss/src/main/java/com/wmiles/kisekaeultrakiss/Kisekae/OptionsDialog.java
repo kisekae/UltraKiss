@@ -6281,7 +6281,7 @@ final public class OptionsDialog extends KissDialog
       RestrictChild.setSelected((b) ? true : true);
       DetachMove.setSelected((b) ? false : true);
       DetachFix.setSelected((b) ? false : true);
-      DetachPage.setSelected((b) ? true : false);
+      DetachPage.setSelected((b) ? false : false);
       RetainKey.setSelected((b) ? false : true);
       StrictSyntax.setSelected((b) ? false : false);
       AutoEndif.setSelected((b) ? true : false);
@@ -6329,7 +6329,7 @@ final public class OptionsDialog extends KissDialog
       setRestrictChild(true);
       setDetachMove(false);
       setDetachFix(false);
-      setDetachPage(true);
+      setDetachPage(false);
       setRetainKey(false);
       setStrictSyntax(false);
       setShowUndefs(true);

@@ -1276,7 +1276,7 @@ final class FKissAction extends KissObject
 
             // Move the object.
 
-            kiss.setPlacement(m.x,m.y) ;
+            kiss.setPlacement(m.x,m.y,true,true) ;
             kiss.drop() ;
 //          panel.resetDrag(kiss) ;
             

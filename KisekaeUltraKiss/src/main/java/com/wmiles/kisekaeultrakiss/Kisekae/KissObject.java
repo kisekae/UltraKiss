@@ -1140,6 +1140,7 @@ abstract class KissObject
 
 	void setPlacement(int x, int y) { }
 	void setPlacement(int x, int y, boolean b) { }
+	void setPlacement(int x, int y, boolean b1, boolean b2) { }
 
 	// Set the indicator that the movement offset was set by restrictions.
    // We can force clear this restriction, or only clear it if the object
