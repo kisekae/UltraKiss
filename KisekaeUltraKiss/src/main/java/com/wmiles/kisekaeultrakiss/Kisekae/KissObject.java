@@ -1367,7 +1367,7 @@ abstract class KissObject
    void rebuildMoveRestrictions()
    {
       Vector v = getChildren() ;
-      if (v != null)
+      if (v != null && v.size() > 0)
       {
          for (int i = 0 ; i < v.size() ; i++)
          {

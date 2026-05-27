@@ -3708,8 +3708,10 @@ final class PanelFrame extends JPanel
       for (int i = 0 ; i < groups.size() ; i++)
       {
          Group group = (Group) groups.elementAt(i) ;
-         group.setRestrictX(group.getInitialRestrictX()) ;
-         group.setRestrictY(group.getInitialRestrictY()) ;
+         group.clearRestrictedPlacement() ;
+         group.setPlacement(0,0,false) ;
+         group.setRestrictX(null) ;
+         group.setRestrictY(null) ;
          Point flex = group.getInitialFlex() ;
          if (flex != null) flex = new Point(flex) ;
          group.setFlex(flex) ;

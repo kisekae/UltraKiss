@@ -154,6 +154,7 @@ final public class OptionsDialog extends KissDialog
 	private static boolean visibleunfix = true ;
 	private static boolean earlyfix = false ;
 	private static boolean detachrestricted = true ;
+	private static boolean restrictchild = true ;
 	private static boolean detachmove = true ;
 	private static boolean detachfix = true ;
 	private static boolean detachpage = false ;
@@ -334,6 +335,7 @@ final public class OptionsDialog extends KissDialog
 	private static boolean initvisibleunfix = visibleunfix ;
 	private static boolean initearlyfix = earlyfix ;
 	private static boolean initdetachrestricted = detachrestricted ;
+	private static boolean initrestrictchild = restrictchild ;
 	private static boolean initdetachmove = detachmove ;
 	private static boolean initdetachfix = detachfix ;
 	private static boolean initdetachpage = detachpage ;
@@ -661,6 +663,7 @@ final public class OptionsDialog extends KissDialog
 	private JCheckBox VisibleUnfix = new JCheckBox();
 	private JCheckBox EarlyFix = new JCheckBox();
 	private JCheckBox DetachRestricted = new JCheckBox();
+	private JCheckBox RestrictChild = new JCheckBox();
 	private JCheckBox DetachMove = new JCheckBox();
 	private JCheckBox DetachFix = new JCheckBox();
 	private JCheckBox DetachPage = new JCheckBox();
@@ -1501,6 +1504,9 @@ final public class OptionsDialog extends KissDialog
 		DetachRestricted.setText(Kisekae.getCaptions().getString("OptionsDetachRestricted"));
       DetachRestricted.setToolTipText(Kisekae.getCaptions().getString("ToolTipDetachRestricted"));
 		DetachRestricted.setSelected(detachrestricted);
+		RestrictChild.setText(Kisekae.getCaptions().getString("OptionsRestrictChild"));
+      RestrictChild.setToolTipText(Kisekae.getCaptions().getString("ToolTipRestrictChild"));
+		RestrictChild.setSelected(restrictchild);
 		DetachMove.setText(Kisekae.getCaptions().getString("OptionsDetachMove"));
       DetachMove.setToolTipText(Kisekae.getCaptions().getString("ToolTipDetachMove"));
 		DetachMove.setSelected(detachmove);
@@ -1953,6 +1959,7 @@ final public class OptionsDialog extends KissDialog
 		jPanel42.add(ReleaseMove, null);
 		jPanel42.add(DragMove, null);
 		jPanel42.add(ConstrainVisible, null);
+		jPanel42.add(RestrictChild, null);
 		jPanel42.add(RetainKey, null);
 		jTabbedPane2.add(jPanel44, Kisekae.getCaptions().getString("ViewerSettingsBoxText"));
 		jPanel44.add(XYOffsets, null);
@@ -2425,6 +2432,7 @@ final public class OptionsDialog extends KissDialog
 	static public boolean getVisibleUnfix() { return visibleunfix ; }
 	static public boolean getEarlyFix() { return earlyfix ; }
 	static public boolean getDetachRestricted() { return detachrestricted ; }
+	static public boolean getRestrictChild() { return restrictchild ; }
 	static public boolean getDetachMove() { return detachmove ; }
 	static public boolean getDetachFix() { return detachfix ; }
 	static public boolean getDetachPage() { return detachpage ; }
@@ -2809,6 +2817,7 @@ final public class OptionsDialog extends KissDialog
 	static public void setVisibleUnfix(boolean b) { visibleunfix = b ; }
 	static public void setEarlyFix(boolean b) { earlyfix = b ; }
 	static public void setDetachRestricted(boolean b) { detachrestricted = b ; }
+	static public void setRestrictChild(boolean b) { restrictchild = b ; }
 	static public void setDetachMove(boolean b) { detachmove = b ; }
 	static public void setDetachFix(boolean b) { detachfix = b ; }
 	static public void setDetachPage(boolean b) { detachpage = b ; }
@@ -3152,6 +3161,7 @@ final public class OptionsDialog extends KissDialog
       else if ("visibleunfix".equalsIgnoreCase(option)) setVisibleUnfix(b) ;
       else if ("earlyfix".equalsIgnoreCase(option)) setEarlyFix(b) ;
       else if ("detachrestricted".equalsIgnoreCase(option)) setDetachRestricted(b) ;
+      else if ("restrictchild".equalsIgnoreCase(option)) setRestrictChild(b) ;
       else if ("detachmove".equalsIgnoreCase(option)) setDetachMove(b) ;
       else if ("detachfix".equalsIgnoreCase(option)) setDetachFix(b) ;
       else if ("detachpage".equalsIgnoreCase(option)) setDetachPage(b) ;
@@ -3312,6 +3322,7 @@ final public class OptionsDialog extends KissDialog
       else if ("visibleunfix".equalsIgnoreCase(option)) s += getVisibleUnfix() ;
       else if ("earlyfix".equalsIgnoreCase(option)) s += getEarlyFix() ;
       else if ("detachrestricted".equalsIgnoreCase(option)) s += getDetachRestricted() ;
+      else if ("restrictchild".equalsIgnoreCase(option)) s += getRestrictChild() ;
       else if ("detachmove".equalsIgnoreCase(option)) s += getDetachMove() ;
       else if ("detachfix".equalsIgnoreCase(option)) s += getDetachFix() ;
       else if ("detachpage".equalsIgnoreCase(option)) s += getDetachPage() ;
@@ -3497,6 +3508,7 @@ final public class OptionsDialog extends KissDialog
 		VisibleUnfix.setSelected(visibleunfix);
 		EarlyFix.setSelected(earlyfix);
 		DetachRestricted.setSelected(detachrestricted);
+		RestrictChild.setSelected(restrictchild);
 		DetachMove.setSelected(detachmove);
 		DetachFix.setSelected(detachfix);
 		DetachPage.setSelected(detachpage);
@@ -3742,6 +3754,7 @@ final public class OptionsDialog extends KissDialog
 		visibleunfix = VisibleUnfix.isSelected() ;
 		earlyfix = EarlyFix.isSelected() ;
 		detachrestricted = DetachRestricted.isSelected() ;
+		restrictchild = RestrictChild.isSelected() ;
 		detachmove = DetachMove.isSelected() ;
 		detachfix = DetachFix.isSelected() ;
 		detachpage = DetachPage.isSelected() ;
@@ -4003,6 +4016,7 @@ final public class OptionsDialog extends KissDialog
 		visibleunfix = initvisibleunfix ;
 		earlyfix = initearlyfix ;
 		detachrestricted = initdetachrestricted ;
+		restrictchild = initrestrictchild ;
 		detachmove = initdetachmove ;
 		detachfix = initdetachfix ;
 		detachpage = initdetachpage ;
@@ -4149,6 +4163,7 @@ final public class OptionsDialog extends KissDialog
 	   initvisibleunfix = visibleunfix ;
 	   initearlyfix = earlyfix ;
 	   initdetachrestricted = detachrestricted ;
+	   initrestrictchild = restrictchild ;
 	   initdetachmove = detachmove ;
 	   initdetachfix = detachfix ;
 	   initdetachpage = detachpage ;
@@ -4293,6 +4308,7 @@ final public class OptionsDialog extends KissDialog
       visibleunfix = true ;
       earlyfix = false ;
       detachrestricted = true ;
+      restrictchild = true ;
       detachmove = true ;
       detachfix = true ;
       detachpage = false ;
@@ -4475,6 +4491,7 @@ final public class OptionsDialog extends KissDialog
 	   if (initvisibleunfix != VisibleUnfix.isSelected()) return true ;
 	   if (initearlyfix != EarlyFix.isSelected()) return true ;
 	   if (initdetachrestricted != DetachRestricted.isSelected()) return true ;
+	   if (initrestrictchild != RestrictChild.isSelected()) return true ;
 	   if (initdetachmove != DetachMove.isSelected()) return true ;
 	   if (initdetachfix != DetachFix.isSelected()) return true ;
 	   if (initdetachpage != DetachPage.isSelected()) return true ;
@@ -4615,6 +4632,7 @@ final public class OptionsDialog extends KissDialog
 	   if (visibleunfix != VisibleUnfix.isSelected()) return true ;
 	   if (earlyfix != EarlyFix.isSelected()) return true ;
 	   if (detachrestricted != DetachRestricted.isSelected()) return true ;
+	   if (restrictchild != RestrictChild.isSelected()) return true ;
 	   if (detachmove != DetachMove.isSelected()) return true ;
 	   if (detachfix != DetachFix.isSelected()) return true ;
 	   if (detachpage != DetachPage.isSelected()) return true ;
@@ -4731,6 +4749,7 @@ final public class OptionsDialog extends KissDialog
 	   visibleunfix = toBoolean1(p.getProperty("visibleunfix"),visibleunfix) ;
 	   earlyfix = toBoolean1(p.getProperty("earlyfix"),earlyfix) ;
 	   detachrestricted = toBoolean1(p.getProperty("detachrestricted"),detachrestricted) ;
+	   restrictchild = toBoolean1(p.getProperty("restrictchild"),restrictchild) ;
 	   detachmove = toBoolean1(p.getProperty("detachmove"),detachmove) ;
 	   detachfix = toBoolean1(p.getProperty("detachfix"),detachfix) ;
 	   detachpage = toBoolean1(p.getProperty("detachpage"),detachpage) ;
@@ -4925,6 +4944,7 @@ final public class OptionsDialog extends KissDialog
       p.put("visibleunfix",toString2(visibleunfix)) ;
       p.put("earlyfix",toString2(earlyfix)) ;
       p.put("detachrestricted",toString2(detachrestricted)) ;
+      p.put("restrictchild",toString2(restrictchild)) ;
       p.put("detachmove",toString2(detachmove)) ;
       p.put("detachfix",toString2(detachfix)) ;
       p.put("detachpage",toString2(detachpage)) ;
@@ -6079,6 +6099,7 @@ final public class OptionsDialog extends KissDialog
       setVisibleUnfix(true);
       setEarlyFix(false);
       setDetachRestricted(true);
+      setRestrictChild(true);
       setDetachMove(true);
       setDetachFix(true);
       setDetachPage(false);
@@ -6154,6 +6175,7 @@ final public class OptionsDialog extends KissDialog
       VisibleUnfix.setSelected((b) ? false : true);
       EarlyFix.setSelected((b) ? true : false);
       DetachRestricted.setSelected((b) ? false : true);
+      RestrictChild.setSelected((b) ? false : true);
       DetachMove.setSelected((b) ? false : true);
       DetachFix.setSelected((b) ? false : true);
       DetachPage.setSelected((b) ? true : false);
@@ -6201,6 +6223,7 @@ final public class OptionsDialog extends KissDialog
       setVisibleUnfix(false);
       setEarlyFix(true);
       setDetachRestricted(false);
+      setRestrictChild(false);
       setDetachMove(false);
       setDetachFix(false);
       setDetachPage(true);
@@ -6255,6 +6278,7 @@ final public class OptionsDialog extends KissDialog
       VisibleUnfix.setSelected((b) ? false : true);
       EarlyFix.setSelected((b) ? true : false);
       DetachRestricted.setSelected((b) ? false : true);
+      RestrictChild.setSelected((b) ? true : true);
       DetachMove.setSelected((b) ? false : true);
       DetachFix.setSelected((b) ? false : true);
       DetachPage.setSelected((b) ? true : false);
@@ -6302,6 +6326,7 @@ final public class OptionsDialog extends KissDialog
       setVisibleUnfix(false);
       setEarlyFix(true);
       setDetachRestricted(false);
+      setRestrictChild(true);
       setDetachMove(false);
       setDetachFix(false);
       setDetachPage(true);
@@ -6355,6 +6380,7 @@ final public class OptionsDialog extends KissDialog
       VisibleUnfix.setSelected((b) ? false : true);
       EarlyFix.setSelected((b) ? false : false);
       DetachRestricted.setSelected((b) ? false : true);
+      RestrictChild.setSelected((b) ? false : true);
       DetachMove.setSelected((b) ? false : true);
       DetachFix.setSelected((b) ? false : true);
       DetachPage.setSelected((b) ? true : false);
@@ -6401,6 +6427,7 @@ final public class OptionsDialog extends KissDialog
       setVisibleUnfix(false);
       setEarlyFix(false);
       setDetachRestricted(false);
+      setRestrictChild(false);
       setDetachMove(false);
       setDetachFix(false);
       setDetachPage(true);
@@ -6453,6 +6480,7 @@ final public class OptionsDialog extends KissDialog
       VisibleUnfix.setSelected((b) ? true : true);
       EarlyFix.setSelected((b) ? false : false);
       DetachRestricted.setSelected((b) ? false : true);
+      RestrictChild.setSelected((b) ? false : true);
       DetachMove.setSelected((b) ? false : true);
       DetachFix.setSelected((b) ? false : true);
       DetachPage.setSelected((b) ? true : false);
@@ -6499,6 +6527,7 @@ final public class OptionsDialog extends KissDialog
       setVisibleUnfix(true);
       setEarlyFix(false);
       setDetachRestricted(false);
+      setRestrictChild(false);
       setDetachMove(false);
       setDetachFix(false);
       setDetachFix(true);
@@ -6714,6 +6743,7 @@ final public class OptionsDialog extends KissDialog
 	   if (visibleunfix != initvisibleunfix && !b) writeLine(out,"; visibleunfix = " + visibleunfix) ;
 	   if (earlyfix != initearlyfix && !b) writeLine(out,"; earlyfix = " + earlyfix) ;
 	   if (detachrestricted != initdetachrestricted && !b) writeLine(out,"; detachrestricted = " + detachrestricted) ;
+	   if (restrictchild != initrestrictchild && !b) writeLine(out,"; restrictchild = " + restrictchild) ;
 	   if (detachmove != initdetachmove && !b) writeLine(out,"; detachmove = " + detachmove) ;
 	   if (detachfix != initdetachfix && !b) writeLine(out,"; detachfix = " + detachfix) ;
 	   if (detachpage != initdetachpage && !b) writeLine(out,"; detachpage = " + detachpage) ;

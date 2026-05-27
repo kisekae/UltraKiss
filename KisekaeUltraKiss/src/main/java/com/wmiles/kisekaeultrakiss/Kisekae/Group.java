@@ -526,12 +526,22 @@ final class Group extends KissObject
          else if (y1 > restricty.y) placement.y = restricty.y - r.y ;
       }
 
-      // Set the placement value for all contained groups.
+      // Set the placement value for all contained groups. If a parent group
+      // in a chain is restricted then the children are also restricted from
+      // moving with the parent.
 
       for (int i = 0 ; i < groups.size() ; i++)
       {
          Group g = (Group) groups.elementAt(i) ;
-         g.setPlacement(x,y,restrict) ;
+         if (OptionsDialog.getRestrictChild())
+         {
+            Point displacement = placement ;
+            KissObject o = g.getParentObject() ;
+            if (o instanceof Group) displacement = ((Group) o).getPlacement() ;
+            g.setPlacement(displacement.x,displacement.y,restrict) ;
+         }
+         else
+            g.setPlacement(x,y,restrict) ;
       }
 	}
 
@@ -554,7 +564,7 @@ final class Group extends KissObject
 	{
       setPlacement(x,y) ;
       restricted = true ;
-
+ 
       // Set the restricted placement for all children.
 
       Vector children = getChildren() ;
@@ -1084,6 +1094,10 @@ final class Group extends KissObject
 	// Return the primary group in the set of groups.
 
 	Group getPrimaryGroup() { return primary ; }
+   
+	// Return the parent group if attached.
+
+	KissObject getParentObject() { return parent ; }
 
 	// Return the group size.
 

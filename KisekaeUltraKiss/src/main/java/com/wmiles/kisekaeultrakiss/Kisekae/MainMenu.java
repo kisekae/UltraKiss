@@ -1772,6 +1772,7 @@ final public class MainMenu extends KissMenu
    {
       if (OptionsDialog.getDebugControl())
          PrintLn.println("MainMenu eventPortal ") ;
+      Kisekae.setCursor(parent,Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
       String website = null ;
       URL currentweb = null ;
       parent.showStatus("Connecting ...");
@@ -1793,6 +1794,7 @@ final public class MainMenu extends KissMenu
          parent.showStatus(null);
          Dimension screenArea = Kisekae.getScreenSize() ;
          webframe.setSize(screenArea) ;
+         Kisekae.setCursor(parent,Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
          webframe.setVisible(true) ;
          webframe.toFront() ;
          return ;
@@ -1802,6 +1804,7 @@ final public class MainMenu extends KissMenu
 
       webframe.clearLocalHistory(webURL) ;
       webframe.setPage(webURL) ;
+      Kisekae.setCursor(parent,Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
       webframe.toFront() ;
    }
 
