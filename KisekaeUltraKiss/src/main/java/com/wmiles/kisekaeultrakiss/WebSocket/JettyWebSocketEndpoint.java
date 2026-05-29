@@ -196,6 +196,8 @@ public class JettyWebSocketEndpoint
 				session.sendBinary(byteBuffer, Callback.NOOP);
 				out.close();
 				byteBuffer.clear();
+            if (OptionsDialog.getDebugWebSocket())
+               System.out.println("[" + time + "] "+"JettyWebSocketEndpoint: capture screen.");   
 			} 
          catch (Exception e) 
          {
@@ -1108,8 +1110,10 @@ public class JettyWebSocketEndpoint
       long maxtime = 0 ;
       long mintime = 0 ;
       long time = 0 ;
+      long lastscreen = 0 ;
       boolean error = false ;
       static boolean first = true ;
+      static int firstcount = 2 ;
       int errors = 0 ;
       BufferedImage previousImage = null ;
       BufferedImage currentImage = null ;
@@ -1152,6 +1156,8 @@ public class JettyWebSocketEndpoint
             {
         			time = System.currentTimeMillis() - createtime ;
                System.out.println("[" + time + "] "+"JettyWebSocketEndpoint: MainFrame established, continuing with screen capture ...");                
+               try { Thread.currentThread().sleep(500) ; }
+               catch (InterruptedException e) { }
             }
          }
                                      
@@ -1165,7 +1171,10 @@ public class JettyWebSocketEndpoint
 					currentImage = ScreenCapture.captureScreenImage() ;
                int width = currentImage.getWidth() ;
                int height = currentImage.getHeight() ;
-               if (first) 
+               
+               // Send a full screen periodically to refresh the display.
+               
+               if (first || (time-lastscreen > 1000)) 
                   dirtyArea = new Rectangle(0,0,width,height) ;
                else
                   dirtyArea = getDirtyRegion(previousImage, currentImage) ;
@@ -1192,6 +1201,7 @@ public class JettyWebSocketEndpoint
                   if (!socketBusy && Kisekae.getClientScreen()) 
                   {
                      screensent++ ;
+                     lastscreen = time ;
                      socketBusy = true ;
                      session.sendBinary(byteBuffer, new Callback() 
                      {
@@ -1202,7 +1212,8 @@ public class JettyWebSocketEndpoint
                            if (first)
                            {
                               System.out.println("[" + time + "] "+"Full screen capture sent to client (" + width + "," + height + ")");
-                              first = false ;
+                              if (firstcount > 0) firstcount-- ;
+                              if (firstcount <= 0) first = false ;
                            }
                            if (OptionsDialog.getDebugWebSocket())
                               System.out.println("[" + time + "] "+"clipped screen capture sent to client (" + x + "," + y + "," + w + "," + h + ")");
@@ -1226,10 +1237,10 @@ public class JettyWebSocketEndpoint
                }
                
                long endtime = System.currentTimeMillis() ;
-               long time = endtime - starttime ;
-               if (time > maxtime || maxtime == 0) maxtime = time ;
-               if (time < mintime || mintime == 0) mintime = time ;
-               totaltime += time ;
+               long time1 = endtime - starttime ;
+               if (time1 > maxtime || maxtime == 0) maxtime = time1 ;
+               if (time1 < mintime || mintime == 0) mintime = time1 ;
+               totaltime += time1 ;
                sleep(delay) ;
 				} 
             catch (InterruptedException e) 

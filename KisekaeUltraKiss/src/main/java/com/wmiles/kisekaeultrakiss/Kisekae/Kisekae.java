@@ -203,7 +203,7 @@ public class Kisekae extends Applet
 
       LogFile.start() ;
       builddate = Calendar.getInstance() ;
-      builddate.set(2026,5-1,27) ;
+      builddate.set(2026,5-1,29) ;
       
       // Restore the properties.
       
