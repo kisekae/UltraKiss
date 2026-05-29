@@ -93,7 +93,7 @@ canvas.height = window.innerHeight;
 
 const originalLog = console.log;
 let logs = [];
-console.log("UltraKiss websocket client.js released May 23, 2026") ;  
+console.log("UltraKiss websocket client.js released May 30, 2026") ;  
 
 console.log = function() {
     // Log to the console (optional, if you still want to see output there)
@@ -865,10 +865,22 @@ ws.onmessage = function (evt) {
                     first = false ;
                 }
                 
-                ctx.drawImage(img, x, y, w, h); 
+                try {
+                    ctx.drawImage(img, x, y, w, h); 
+                } catch (e) {
+                    console.log("Error, drawImage() failed: " + e.toString()) ;
+                    send("capture") ;
+                    return ;
+                }                
             };    
             screenrate++ ;
-            img.src = "data:image/png;base64,"+window.btoa(data);
+            try {
+                img.src = "data:image/png;base64,"+window.btoa(data);
+            } catch (e) {
+                console.log("Error, window.btoa() failed: " + e.toString()) ;
+                send("capture") ;
+                return ;
+            }                
         }
     }
 };
@@ -1012,6 +1024,9 @@ document.addEventListener('keydown', function(event) {
             ws.send("keypress" +" "+"Space") ;
         else
             ws.send("keypress" +" "+event.key) ;
+        if(event.key === "Escape") {
+            console.log("Sending keypress " + event.key + " to server.");
+        }
     }
 });
 
