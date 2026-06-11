@@ -182,6 +182,7 @@ final class ExportDialog extends KissDialog implements ActionListener, WindowLis
       ExportCurrent.setText(Kisekae.getCaptions().getString("ExportCurrent")) ;
 
       String s = (zip != null) ? zip.getFileName() : "" ;
+      if (s == null) s = "" ;
       if (s.indexOf('.') > 0) s = s.substring(0,s.indexOf('.')) ;
       ImagePrefix.setText("snapshot-page") ;
 		ImagePrefix.setPreferredSize(new Dimension(100, 21));
@@ -379,6 +380,7 @@ final class ExportDialog extends KissDialog implements ActionListener, WindowLis
       {
          PageSet startpage = panel.getPage() ;
          String directory = WriteDirectory.getText() ;
+         if ("".equals(directory)) directory = System.getProperty("java.io.tmpdir");
          ArchiveFile zip = new DirFile(null,directory) ;
          
          while (true)
@@ -451,7 +453,7 @@ final class ExportDialog extends KissDialog implements ActionListener, WindowLis
          }
          
          // Write all pages
-         
+
          FileWriter fw = new FileWriter(parent,zip,contents) ;
         	fw.callback.addActionListener(this) ;
          Thread thread = new Thread(fw) ;

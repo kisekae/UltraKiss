@@ -3441,9 +3441,13 @@ final class FKissAction extends KissObject
                         // shows the log file
                         if ("logfile".equalsIgnoreCase(vs2)) mm.logfile.doClick() ;
                         // turns the status bar on and off
-                        if ("statusbar".equalsIgnoreCase(vs2)) mm.statusbar.doClick() ;
+                        if ("statusbar".equalsIgnoreCase(vs2) && "".equals(vs3)) mm.statusbar.doClick() ;
+                        if ("statusbar".equalsIgnoreCase(vs2) && "1".equals(vs3) && mf != null) mf.setStatusBar(true) ;
+                        if ("statusbar".equalsIgnoreCase(vs2) && "0".equals(vs3) && mf != null) mf.setStatusBar(false) ;
                         // turns the toolbar on and off
-                        if ("toolbar".equalsIgnoreCase(vs2)) mm.toolbar.doClick() ;
+                        if ("toolbar".equalsIgnoreCase(vs2) && "".equals(vs3)) mm.toolbar.doClick() ;
+                        if ("toolbar".equalsIgnoreCase(vs2) && "1".equals(vs3) && mf != null) mf.setToolBar(true) ;
+                        if ("toolbar".equalsIgnoreCase(vs2) && "0".equals(vs3) && mf != null) mf.setToolBar(false) ;
                         // launches the default web browser
                         if ("openweb".equalsIgnoreCase(vs2)) mm.openweb.doClick() ;
                         // launches the default web brower and shows the GitHub page
@@ -3613,11 +3617,15 @@ final class FKissAction extends KissObject
                   else if ("view".equalsIgnoreCase(vs1))
                   {
                      TextFrame tf = null ;
+                     boolean undecorated = ("undecorated".equals(vs3)) ;
+                     int w = (parameters.size() >= 4) ? variable.getIntValue((String) parameters.elementAt(3),event) : -1 ;
+                     int h = (parameters.size() >= 5) ? variable.getIntValue((String) parameters.elementAt(4),event) : -1 ;
+
                      TextObject text = TextObject.findTextObject("\""+vs2+"\"",config,null) ;
                      if (text != null) 
                      {
                         InputStream is = text.getInputStream() ;
-                        tf = new TextFrame(null,is,false,false,text.getName()) ;
+                        tf = new TextFrame(null,is,false,false,text.getName(),undecorated) ;                        if (w > 0 && h > 0) tf.setSize(w,h) ;
                      }
                      else if (config != null)
                      {
@@ -3630,7 +3638,7 @@ final class FKissAction extends KissObject
                         ArchiveEntry ze = fd.getZipEntry() ;
                         if (ze != null) 
                         {
-                           tf = new TextFrame(ze) ;
+                           tf = new TextFrame(ze,null,false,false,null,undecorated) ;                           if (w > 0 && h > 0) tf.setSize(w,h) ;
                            fd.close() ;
                         }
                         
@@ -3646,7 +3654,7 @@ final class FKissAction extends KissObject
                            ze = fd.getZipEntry() ;
                            if (ze != null) 
                            {
-                              tf = new TextFrame(ze) ;
+                              tf = new TextFrame(ze,null,false,false,null,undecorated) ;                              if (w > 0 && h > 0) tf.setSize(w,h) ;
                               fd.close() ;
                            }
                         }
@@ -3666,7 +3674,7 @@ final class FKissAction extends KissObject
                               ze = fd.getZipEntry() ;
                               if (ze != null) 
                               {
-                                 tf = new TextFrame(ze) ;
+                                 tf = new TextFrame(ze,null,false,false,null,undecorated) ;                                 if (w > 0 && h > 0) tf.setSize(w,h) ;
                                  fd.close() ;
                               }
                            }
@@ -3684,6 +3692,18 @@ final class FKissAction extends KissObject
                      }
 
                      if (tf == null) return ;
+                     
+                     // If frame size is set then center in the screen.
+                     
+                     if (w > 0 && h > 0) 
+                     {
+                        Dimension d = Kisekae.getScreenSize() ;
+                        int x = (d.width - w) / 2 ;
+                        int y = (d.height - h) / 2 ;
+                        tf.setSize(w,h) ;
+                        tf.setLocation(x,y) ;
+                     }
+                     
                      tf.setEditable(false) ;
                      tf.setVisible(true) ;
                   }
@@ -3716,14 +3736,14 @@ final class FKissAction extends KissObject
                            i = i + 1 ;
                         }
                      }
-                     mf.setToolBar(false) ;
+//                   mf.setToolBar(false) ;
 //                   mf.setStatusBar(false) ;
                      mf.setMenu(usermenu);
                   }
                   else if ("restoremenu".equalsIgnoreCase(vs1))
                   {
                      if (mf == null) return ;
-                     mf.setToolBar(OptionsDialog.getInitToolbar()) ;
+//                   mf.setToolBar(OptionsDialog.getInitToolbar()) ;
 //                   mf.setStatusBar(OptionsDialog.getInitStatusbar()) ;
                      mf.setMenu((pm != null) ? pm : mm);
                   }
@@ -4236,7 +4256,12 @@ final class FKissAction extends KissObject
                         byte[] decoded = Base64.getDecoder().decode(s) ; 
                         s = Arrays.toString(decoded) ;
                      }
-                     catch (SecurityException e) { }
+                     catch (Exception e) 
+                     { 
+                        PrintLn.println("FKissAction: open decoded file " + text.getPath() + " " + e.toString());
+                        n1 = -1 ; 
+                        s = "" ;
+                     }
                      text.setText(s) ;
                   }
                }
@@ -4291,11 +4316,11 @@ final class FKissAction extends KissObject
 
             // Write a line to the text object.
 
-            o1 = variable.getValue((String) parameters.elementAt(2),event) ;
-            if (o1 == null) break ;
-            s1 = o1.toString() ;
-            text.append(s1) ;
-            variable.setIntValue((String) parameters.elementAt(0),s1.length(),event) ;
+            o2 = variable.getValue((String) parameters.elementAt(2),event) ;
+            if (o2 == null) break ;
+            s2 = o2.toString() ;
+            text.append(s2) ;
+            variable.setIntValue((String) parameters.elementAt(0),s2.length(),event) ;
             break;
 
          // Close an external file.
@@ -4618,10 +4643,15 @@ final class FKissAction extends KissObject
             // This may stop alarms from being processed if only one EventHandler
             // is running.
 
-            javax.swing.SwingUtilities.invokeLater(confirm) ;
-            synchronized (confirmlock)
+            if (SwingUtilities.isEventDispatchThread())
+               confirm.run();
+            else
             {
-               confirmlock.wait() ;
+               javax.swing.SwingUtilities.invokeLater(confirm) ;
+               synchronized (confirmlock)
+               {
+                  confirmlock.wait() ;
+               }
             }
 
             // Set the return value and continue.
@@ -5307,6 +5337,6 @@ final class FKissAction extends KissObject
       }                 
 
       public int getConfirmValue() { return confirmvalue ; }
-   } 
-}
+   }
+} 
 

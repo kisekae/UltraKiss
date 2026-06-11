@@ -20,7 +20,7 @@ The music() command will initiate the playback of an audio stream file. The file
 <p>A music() command is independent from a sound() command.  </p>
 <p>&nbsp;</p>
 <p><font color="#FF0000"><b>FKiSS 5 Syntax:</b></font>&nbsp;&nbsp;&nbsp;&nbsp; music (filename[,repeat])</p>
-<p>FKiSS 5 introduced an optional <em>repeat</em> parameter for audio playback. This parameter specifies the number of times that the sound is to be repeated. Note that the repeat value specifies the number of sound repetitions, thus a value of 1 repeats the sound once, resulting in the original playback being heard plus one repetition of the sound. A negative repeat value will result in the sound being repeated indefinately.</p>
+<p>FKiSS 5 introduced an optional <em>repeat</em> parameter for audio playback. This parameter specifies the number of times that the sound is to be played. A value of 1 plays the sound once.  A value of zero terminates any music playback. A negative repeat value will result in the sound being repeated indefinitely.</p>
 <p>FKiSS provided no easy way to control or manage sound playback. There was no way to determine when a sound file terminated such that it could be repeated. </p>
 <p>The FKiSS5 mediastart() and mediastop() events can  be used to recognize sound playback events. These events fire on sound initiation and sound termination for the specified sound file. These events fire on completion of the command and not on completion of the sound. Thus, if repetition was specified, one mediastart event fires at the beginning of the command and one mediastop event fires when all repetitions are complete. </p>
 <p>&nbsp;</p>

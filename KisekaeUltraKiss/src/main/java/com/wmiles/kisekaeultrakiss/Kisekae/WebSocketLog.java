@@ -58,6 +58,7 @@ final public class WebSocketLog extends PrintStream
    private static PrintWriter w = null;
    private static String myIPprefix = "70.73.153.45" ;
    private static String displayUrl = "https://www.wmiles.com/DisplayLogFile.php?file=" ;
+   private static String downloadUrl = "https://www.wmiles.com/DownloadArchive.php?file=" ;
 
 	// Constructor
 	
@@ -87,13 +88,11 @@ final public class WebSocketLog extends PrintStream
          if (url!= null && url.startsWith("jar:") && url.contains("!")) 
             url = url.substring(url.indexOf('!')) ;
          String setname = f.getName() ;
-         String setpath = f.getAbsolutePath() ;
-         if (!setpath.startsWith("file:"))
-            setpath = "file://" + setpath ;
+         String setpath = setname ;
 			String s = "Websocket session on " + begindate.toString() ;
          s += " for " + duration + " minutes, sets loaded " + sets ;
          if (lastset != null && lastset.length() > 0) 
-            s += "\n- Last set was " + lastset + ", in archive " + "<a href='" + setpath + "' target='_blank'>" + setname  + "</a>";
+            s += "\n- Last set was " + lastset + ", in archive " + "<a href='" + downloadUrl + setpath + "' target='_blank'>" + setname  + "</a>";
          if (url != null && url.length() > 0)
             s += "\n- Archive downloaded from " + url ;
          if (logfilename != null && logfilename.length() > 0)

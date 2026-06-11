@@ -1023,8 +1023,8 @@ final public class MainFrame extends KissFrame
 					evt.fireEvent(panel,endthread,null) ;
                do
                {
-   					try { Thread.currentThread().sleep(2000) ; }
-   					catch (InterruptedException e) { }
+   					try { Thread.currentThread().sleep(200) ; }
+   					catch (InterruptedException e) { break ; }
                }
                while (evt.getConfirmWait()) ;
                
@@ -1777,6 +1777,8 @@ final public class MainFrame extends KissFrame
 		{
          statusBar.setStatusBar(state) ;
 		}
+      revalidate() ;
+      repaint() ;
 	}
 
 
@@ -1798,6 +1800,8 @@ final public class MainFrame extends KissFrame
 			toolBar = null ;
 		}
       OptionsDialog.setInitToolbar(state) ;
+      revalidate() ;
+      repaint() ;
 	}
 
 

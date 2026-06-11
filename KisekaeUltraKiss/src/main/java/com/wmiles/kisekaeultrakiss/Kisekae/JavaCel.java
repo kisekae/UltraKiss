@@ -142,6 +142,16 @@ final class JavaCel extends Cel
             v = ((Group) o).getEvent("release") ;
             EventHandler.queueEvents(v,Thread.currentThread(),this) ;
          }
+         
+         // Checkbox menu items when modal should not change state.
+         
+         if (component instanceof JCheckBoxMenuItem && EventHandler.isModal())
+         {
+            boolean selected = ((JCheckBoxMenuItem) component).getState() ;
+            ((JCheckBoxMenuItem) component).setState(!selected) ;
+            return ;
+         }
+         
          Vector v = getEvent("press") ;
          EventHandler.queueEvents(v,Thread.currentThread(),this) ;
          v = getEvent("release") ;
@@ -2361,9 +2371,11 @@ final class JavaCel extends Cel
 
    synchronized int getSelected()
    {
-      if (!(component instanceof AbstractButton)) return -1 ;
-      if (((AbstractButton) component).isSelected()) return 1 ;
-      return 0 ;
+      if (component instanceof JCheckBoxMenuItem) 
+         return ((JCheckBoxMenuItem) component).isSelected() ? 1 : 0 ;      
+      if (component instanceof AbstractButton)
+         return (((AbstractButton) component).isSelected()) ? 1 : 0 ;
+      return -1 ;
    }
 
 

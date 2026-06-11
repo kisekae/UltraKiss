@@ -65,6 +65,7 @@ import java.awt.event.* ;
 import java.awt.print.* ;
 import java.awt.font.* ;
 import java.awt.geom.Rectangle2D ;
+import java.awt.image.BufferedImage;
 import java.util.Hashtable ;
 import java.util.Collections ;
 import java.util.Enumeration ;
@@ -81,11 +82,13 @@ import javax.swing.plaf.* ;
 import javax.swing.plaf.basic.* ;
 import java.net.URL ;
 import java.net.MalformedURLException ;
+import java.util.Base64;
+import javax.imageio.ImageIO;
 
 
 final public class TextFrame extends KissFrame
 	implements UndoableEditListener, DocumentListener, ActionListener,
-   	ItemListener, WindowListener, Printable
+   	ItemListener, WindowListener, HyperlinkListener, Printable
 {
 	private static final int EDIT = 0 ;  		// Edit text mode
 	private static final int INPUT = 1 ;     	// Input text mode
@@ -131,6 +134,7 @@ final public class TextFrame extends KissFrame
 	private boolean error = false ;				// True, document is in error
 	private boolean skipupdate = false ;		// True, do not update toolbar
 	private boolean fkisshelp = false ;		   // True, show fkiss tooltips
+   private boolean undecorated = false ;     // True, frame is undecorated
 
 	// File objects
 
@@ -554,7 +558,7 @@ final public class TextFrame extends KissFrame
 
 	public TextFrame(ArchiveEntry ze)
 	{ this(ze,null,false) ; }
-
+   
 	public TextFrame(ArchiveEntry ze, ActionListener al)
 	{ this(ze,null,false) ; writelistener = al ; }
 
@@ -569,13 +573,17 @@ final public class TextFrame extends KissFrame
 	{ this(ze,in,updateable,showline,null) ; }
 
 	public TextFrame(ArchiveEntry ze, InputStream in, boolean updateable, boolean showline, String type)
+	{ this(ze,in,updateable,showline,null,false) ; }
+   
+	public TextFrame(ArchiveEntry ze, InputStream in, boolean updateable, boolean showline, String type, boolean undecorated)
 	{
    	super(Kisekae.getCaptions().getString("TextEditorTitle")) ;
 		me = this ;
-		this.in = in ;
+      this.in = in ;
 		this.ze = ze ;
 		this.zip = (ze == null) ? null : ze.getZipFile() ;
       this.showline = showline ;
+      this.undecorated = undecorated ;
 		file = (ze == null) ? null : ze.getPath() ;
       int n = (file == null) ? -1 : file.lastIndexOf('.') ;
       extension = (file == null || n < 0) ? null : file.substring(n) ;
@@ -795,7 +803,7 @@ final public class TextFrame extends KissFrame
 		helpMenu.add((about = new JMenuItem(Kisekae.getCaptions().getString("MenuHelpAbout")))) ;
 		about.addActionListener(this);
       if (!applemac) about.setMnemonic(KeyEvent.VK_A) ;
-		setJMenuBar(mb) ;
+		if (!undecorated) setJMenuBar(mb) ;
 
 		// Create the tool bar.
 
@@ -1044,12 +1052,12 @@ final public class TextFrame extends KissFrame
 		scrollpane.getViewport().putClientProperty("EnableWindowBlit", Boolean.TRUE);
       scrollpane.getViewport().setBackground(text.getBackground());
       int vspolicy = JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED ;
-      vspolicy = JScrollPane.VERTICAL_SCROLLBAR_ALWAYS ;
+      if (!undecorated) vspolicy = JScrollPane.VERTICAL_SCROLLBAR_ALWAYS ;
       int hspolicy = JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED ;
       if (OptionsDialog.getAppleMac()) hspolicy = JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS ;
       scrollpane.setVerticalScrollBarPolicy(vspolicy) ;
       scrollpane.setHorizontalScrollBarPolicy(hspolicy) ;			
-		c.add(toolbar,BorderLayout.NORTH) ;
+		if (!undecorated) c.add(toolbar,BorderLayout.NORTH) ;
 		c.add(scrollpane,BorderLayout.CENTER) ;
 
       // The following is a kludge to fix a scrolling repaint problem.
@@ -1119,15 +1127,17 @@ final public class TextFrame extends KissFrame
 				doc = new DefaultStyledDocument(context) ;
 				((JTextPane) text).setEditorKit(kit) ;
 				((JTextPane) text).setDocument(doc);
+            ((JTextPane) text).addHyperlinkListener(this) ;
 			}
 			else if (ArchiveFile.isHTMLText(type))
 			{
 				text = new JTextPane() ;
-				kit = new HTMLEditorKit() ;
+				kit = new Base64HTMLEditorKit() ;
 				context = new StyleContext() ;
 				doc = new HTMLDocument() ;
 				((JTextPane) text).setEditorKit(kit) ;
 				((JTextPane) text).setDocument(doc);
+            ((JTextPane) text).addHyperlinkListener(this) ;
 			}
 			else
 			{
@@ -2396,6 +2406,33 @@ final public class TextFrame extends KissFrame
       }
 	}
 
+
+	// Hyperlink event listener.  We process LZH, ZIP and JAR file downloads
+   // with our UrlLoader. Normal hyperlinks switch to the required page.
+
+	public void hyperlinkUpdate(HyperlinkEvent evt)
+	{
+      if (evt.getEventType() == HyperlinkEvent.EventType.ENTERED) 
+      {
+         Kisekae.setCursor(me,Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)) ;
+         return ;
+      }
+      
+      if (evt.getEventType() == HyperlinkEvent.EventType.EXITED) 
+      {
+         Kisekae.setCursor(me,Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
+         return ;
+      }
+      
+      if (evt.getEventType() == HyperlinkEvent.EventType.ACTIVATED) 
+      {
+         URL evturl = evt.getURL() ;
+         if (evturl == null) { close() ; return ; }
+         BrowserControl.displayURL(evturl.toExternalForm()) ;
+      }
+   }
+   
+
    // Implementation of the menu item update of our state when we become
    // visible.  We remove all prior entries and rebuild the Window menu. 
    
@@ -2551,13 +2588,22 @@ final public class TextFrame extends KissFrame
 	}
 
 
-   // We close the frame after clean up.
+   // We close the frame after clean up.  Text frames do not adjust the 
+   // frame size for modified preferences.
 
 	public void close()
 	{
 		if (OptionsDialog.getDebugControl())
       	PrintLn.println("TextFrame terminates") ;
       callback.removeActionListener(null) ;
+      setVisible(false) ;
+      if (Kisekae.isVolatileImage())
+      {
+         boolean b = OptionsDialog.getRetainWindowSize() ;
+         OptionsDialog.setRetainWindowSize(false) ;
+         KissPreferences.openPreferences(this) ;
+         OptionsDialog.setRetainWindowSize(b) ;
+      }
 		super.close() ;
       flush() ;
       dispose() ;
@@ -3023,4 +3069,89 @@ final public class TextFrame extends KissFrame
          return errorlines ;
       }
    }
-}
+   
+
+   /**
+    * Custom HTMLEditorKit that overrides the ViewFactory to deliver our 
+    * custom Base64-aware ImageView.
+    */
+   static class Base64HTMLEditorKit extends HTMLEditorKit {
+      private final ViewFactory defaultFactory = super.getViewFactory();
+
+      @Override
+      public ViewFactory getViewFactory() {
+         return new ViewFactory() {
+            @Override
+            public View create(Element elem) {
+               Object o = elem.getAttributes().getAttribute(javax.swing.text.AttributeSet.NameAttribute);
+               if (o instanceof HTML.Tag) {
+                  HTML.Tag kind = (HTML.Tag) o;
+                  if (kind == HTML.Tag.IMG) {
+                     // Intercept image tags with our custom view
+                     return new Base64ImageView(elem);
+                  }
+               }
+               return defaultFactory.create(elem);
+            }
+         };
+      }
+   }
+
+   /**
+    * Custom ImageView that decodes Base64 data strings if present,
+    * otherwise falls back to normal URL processing.
+    */
+   static class Base64ImageView extends ImageView {
+      private Image customImage = null;
+
+      public Base64ImageView(Element elem) {
+         super(elem);
+         initializeBase64Image();
+      }
+
+      private void initializeBase64Image() {
+         String src = (String) getElement().getAttributes().getAttribute(HTML.Attribute.SRC);
+         if (src != null && src.startsWith("data:image/") && src.contains(";base64,")) {
+            try {
+               // Extract the base64 content after the comma
+               String base64Content = src.substring(src.indexOf(",") + 1).trim();
+               byte[] imageBytes = Base64.getDecoder().decode(base64Content);
+                    
+               // Convert raw bytes into a renderable BufferedImage
+               try (ByteArrayInputStream bais = new ByteArrayInputStream(imageBytes)) {
+                  BufferedImage img = ImageIO.read(bais);
+                  if (img != null) {
+                     this.customImage = img;
+                  }
+               }
+            } catch (IllegalArgumentException | IOException e) {
+               System.out.println("TextFrame: Failed to parse inline Base64 image: " + e.getMessage());
+            }
+         }
+      }
+
+      @Override
+      public Image getImage() {
+         // If we successfully decoded a Base64 image, return it.
+         // Otherwise, fall back to standard URL behavior.
+         if (customImage != null) {
+            return customImage;
+         }
+         return super.getImage();
+      }
+
+      @Override
+      public URL getImageURL() {
+         // Prevent the parent class from throwing MalformedURLException on data: text strings
+         if (customImage != null) {
+            try {
+               return new URL("http://localhost/embedded-base64-image");
+            } catch (MalformedURLException e) {
+               return null;
+            }
+         }
+         return super.getImageURL();
+      }
+   }
+}   
+
