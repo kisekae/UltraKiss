@@ -93,7 +93,6 @@ canvas.height = window.innerHeight;
 
 const originalLog = console.log;
 let logs = [];
-console.log("UltraKiss websocket client.js released May 30, 2026") ;  
 
 console.log = function() {
     // Log to the console (optional, if you still want to see output there)
@@ -102,6 +101,49 @@ console.log = function() {
     logs.push(message); 
     originalLog.apply(console, arguments);
 };
+
+// Timestamp our console log file.
+console.log("UltraKiss websocket client.js released June 13, 2026") ;  
+const now = new Date() ;
+console.log(now) ;
+
+if (navigator.userAgentData) {
+  // Identify the browser
+  const platform = navigator.userAgentData.platform;
+  console.log("Platform: ", platform); 
+
+  // Identify mobile vs desktop
+  if (navigator.userAgentData.mobile) {
+    console.log("Device Type: Mobile");
+  } else {
+    console.log("Device Type: Desktop");
+  }
+} else {
+  console.log("UserAgentData API not supported. Fall back to string parsing.");
+}
+     
+function getBrowserName() {
+  const ua = navigator.userAgent;
+  if (ua.includes("Firefox")) return "Mozilla Firefox";
+  if (ua.includes("SamsungBrowser")) return "Samsung Internet";
+  if (ua.includes("Opera") || ua.includes("OPR")) return "Opera";
+  if (ua.includes("Trident")) return "Internet Explorer";
+  if (ua.includes("Edge")) return "Microsoft Edge";
+  if (ua.includes("Chrome")) return "Google Chrome";
+  if (ua.includes("Safari")) return "Apple Safari";
+  return "Unknown Browser";
+}
+console.log("Browser:", getBrowserName());
+
+function getDeviceType() {
+  const ua = navigator.userAgent;
+  // Checks for mobile keywords
+  if (/Mobi|Android|iPhone|iPad/i.test(ua)) {
+    return "Mobile/Tablet " + ua ;
+  }
+  return "Desktop";
+}
+console.log("Device Type: ", getDeviceType());
 
 // Function to download the logs as a file to the client computer.
 // Not used.  Rather, we download the console log to the server when 
@@ -124,10 +166,6 @@ window.downloadLogs = function () {
    document.body.removeChild(a);
    URL.revokeObjectURL(url);
 };
-
-// Timestamp our console log file.
-const now = new Date() ;
-console.log(now) ;
 
 
 // Detect browser closing.  Perform an orderly shutdown on the server.
@@ -545,6 +583,7 @@ ws.onmessage = function (evt) {
                        {
                           if (value === source) 
                           {
+                             console.log("send audiostop to server, key=" + key + " name=" + audioNameMap.get(source));
                              ws.send("audiostop " + key + " " + audioNameMap.get(source)) ;
                              audioSourceMap.delete(key) ;
                              audioNameMap.delete(source) ;
