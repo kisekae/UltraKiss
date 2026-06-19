@@ -1665,6 +1665,10 @@ final class JavaCel extends Cel
          {
             ((JEditorPane) pane).setMargin(insets) ;
          }
+         if (list instanceof JList)
+         {
+            ((JList) list).setBorder(BorderFactory.createEmptyBorder(top, left, bottom, right)) ;
+         }
       }
 
       if ((i = s1.indexOf("borderstyle")) >= 0)        // set the border style

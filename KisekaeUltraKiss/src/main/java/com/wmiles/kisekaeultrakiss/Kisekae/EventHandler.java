@@ -131,7 +131,7 @@ final class EventHandler extends KissObject
 
 	private static String definedActions[] = {
 
-	 // FKiSS 1 and FKiSS 2 commands.
+	 // FKiSS 1 and FKiSS 2 commands.   Line 1
 
 	 "altmap",			// [0]  Inverts an object or cel visibility
 	 "changecol",		// [1]  Switches to a new color palette
@@ -165,7 +165,7 @@ final class EventHandler extends KissObject
 	 "viewport",		// [29] Changes the viewport offset
 	 "windowsize",		// [30] Changes the window size
 
-	 // FKiSS 3 commands.
+	 // FKiSS 3 commands.   Line 2
 
 	 "goto",				// [31] Jump to label event
 	 "gosub",			// [32] Subroutine call to label event
@@ -199,7 +199,7 @@ final class EventHandler extends KissObject
 	 "endif",			// [60] If statement end
 	 "ghost",			// [61] Makes cels ungrabbable
 
-	 // FKiSS 5 Kisekae extension commands.
+	 // FKiSS 5 Kisekae extension commands.   Line 3
 
 	 "letobjectw",		// [62] Width of object
 	 "letobjecth",		// [63] Height of object
@@ -215,7 +215,7 @@ final class EventHandler extends KissObject
     "next",          // [73] Loop terminator statement
 	 "movie",         // [74] Shows a movie
 
-	 // FKiSS 4 commands.
+	 // FKiSS 4 commands.   Line 4
 
 	 "letinitx",		// [75] Initial x ordinate of object
 	 "letinity",		// [76] Initial y ordinate of object
@@ -232,7 +232,7 @@ final class EventHandler extends KissObject
 	 "letkey",			// [87] Index of first key pressed in list
 	 "letkeymap", 		// [88] Binary key mapping for multiple key strokes
 
-	 // FKiSS 5 Kisekae extension commands.
+	 // FKiSS 5 Kisekae extension commands.   Line 5
 
 	 "letkeychar",	  			// [89] The last key typed character
 	 "letkeycode",   			// [90] The last key typed virtual key code
@@ -240,14 +240,14 @@ final class EventHandler extends KissObject
 	 "letkeystring",   		// [92] The last key typed string name
     "mediaplayer",		 	// [93] Invoke the media player for a playlist
 
-	 // FKiSS 4 elseif commands.
+	 // FKiSS 4 elseif commands.   Line 6
 
 	 "elseifequal",	 		// [94] Else variant (equal)
 	 "elseifnotequal", 		// [95] Else variant (notequal)
 	 "elseifgreaterthan",	// [96] Else variant (greaterthan)
 	 "elseiflessthan",		// [97] Else variant (lessthan)
 
-	 // FKiSS 5 Kisekae extension commands.
+	 // FKiSS 5 Kisekae extension commands.   Line 7
 
     "clone",		 	      // [98] Create a new object
     "destroy",		 	      // [99] Destroy an object
@@ -256,24 +256,24 @@ final class EventHandler extends KissObject
     "indexof",		 	      // [102] Returns index of substring in string
     "replacestr",		 	   // [103] Replaces a substring in string
 
-	 // FKiSS 4 movement restriction commands.
+	 // FKiSS 4 movement restriction commands.   Line 8
 
     "restrictx",		 	   // [104] Restrict object movement in X direction
     "restricty",		 	   // [105] Restrict object movement in Y direction
 
-    // FKiSS 4 new proposed commands.
+    // FKiSS 4 new proposed commands.   Line 9
 
     "lettimer",		 	   // [106] Return the remaining time on a timer
     "setpal",		 	      // [107] Set a cel/object/cel palette group
     "letkcf",		 	      // [108] Return a cel palette file number
     "setkcf",		 	      // [109] Set a cel/object/cel new palette file
 
-    // FKiSS 5 commands to interface with the viewer.
+    // FKiSS 5 commands to interface with the viewer.   Line 10
 
     "viewer",		 	      // [110] Viewer specific commands
     "strlen",		 	      // [111] Length of a string
 
-    // FKiSS 5 commands to adjust component attributes.
+    // FKiSS 5 commands to adjust component attributes.   Line 11
 
     "getText",		 	      // [112] Get component text
     "setText",		 	      // [113] Set component text
@@ -297,7 +297,7 @@ final class EventHandler extends KissObject
     "getNextSelectedIndex", // [131] Get the next selected index
     "setAttributes",       // [132] Set the component attributes
 
-    // FKiSS 5 commands for file access.
+    // FKiSS 5 commands for file access.   Line 12
 
     "open",		 	         // [133] Open a file
     "read",		 	         // [134] Read a line
@@ -305,7 +305,7 @@ final class EventHandler extends KissObject
     "close", 		 	      // [136] Close a file
     "edit", 		 	      // [137] Edit a file
 
-    // FKiSS 5 commands for environment access.
+    // FKiSS 5 commands for environment access.   Line 13
 
     "environment",		 	// [138] A generic system request
     "confirm", 		 	   // [139] Show a modal confirm dialog
@@ -319,7 +319,7 @@ final class EventHandler extends KissObject
     "mouseRelease", 		 	// [147] Force a mouse release
     "sqrt",		 	         // [148] Square root of a number
 
-    // FKiSS 4 new proposed commands.
+    // FKiSS 4 new proposed commands.   Line 14
 
     "repeat",		 	      // [149] Repeat a gosub 'n' times
     "valuepool",		 	   // [150] Establish a local poperties pool
@@ -328,7 +328,7 @@ final class EventHandler extends KissObject
     "deletevalue",		   // [153] Set a property variable
     "exitloop",		 	   // [154] Exit the Repeat 
 
-    // FKiSS 5 commands for environment access.
+    // FKiSS 5 commands for environment access.   Line 15
 
     "letmaxpage",          // [155] Get the maximum pages defined
     "letmaxcolor",         // [156] Get the maximum color sets defined
@@ -336,16 +336,15 @@ final class EventHandler extends KissObject
     "math",                // [158] Math function library
     "format",              // [159] Decimal format function
 
-    // FKiSS 5 additional commands for cloned objects.
+    // FKiSS 5 additional commands  Line 16
   
     "letcloned",           // [160] Cloned object source
-
-    // FKiSS 5 additional commands.
-  
     "letaudio",            // [161] Last audio name started
     "setPage",             // [162] Set url page for text pane
     "letoffsetx",          // [163] X-offset of object or cel
-    "letoffsety"           // [164] Y-offset of object or cel
+    "letoffsety",          // [164] Y-offset of object or cel
+    "getPlaylistIndex",    // [165] Y-offset of object or cel
+    "setPlaylistIndex"     // [166] Y-offset of object or cel
 	} ;
 
    // FKiSS event specification levels.
@@ -408,7 +407,7 @@ final class EventHandler extends KissObject
       1,2,0,1,1,0,1,1,1,0,2,
       3,1,2,2,1,0,
       1,1,2,2,6,
-      2,1,2,2,2 } ;
+      2,1,2,2,2,1,1 } ;
 
    // FKiSS event valid parameter types by parameter position.
    // These are according to the fuzzy FKiSS specifications.
@@ -477,7 +476,7 @@ final class EventHandler extends KissObject
       132,132,7,132,20,12,4,4,12,0,132,
       76,16,132,16,16,0,
       132,132,132,132,132, 
-      132,4,6,132,132 },
+      132,4,6,132,132,7,132 },
       
       { 0,0,0,0,76,76,76,76,76,76,0,12,5,5,12,12,12,0,0,0,16,0,12,12,0,0,12,12,0,12,12,
       0,0,76,76,0,12,12,12,12,12,12,12,5,5,5,39,0,6,0,0,0,39,39,39,12,12,12,12,0,0,12,
@@ -494,7 +493,7 @@ final class EventHandler extends KissObject
       20,20,0,0,20,0,12,0,0,0,12,
       12,0,16,28,0,0,
       0,0,6,20,12, 
-      5,0,28,5,5 },
+      5,0,28,5,5,0,0 },
       
       { 0,0,0,0,12,12,12,12,12,12,0,12,12,12,12,12,12,0,0,0,0,0,12,0,0,0,0,0,0,0,0,
       0,0,76,76,0,0,12,12,12,12,12,12,0,0,0,0,0,0,0,0,0,39,39,0,0,0,0,0,0,0,0,
@@ -511,7 +510,7 @@ final class EventHandler extends KissObject
       20,20,0,0,20,0,0,0,0,0,0,
       132,0,0,0,0,0,
       0,0,20,12,12, 
-      0,0,0,0,0 },
+      0,0,0,0,0,0,0 },
       
       { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
       0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -528,7 +527,7 @@ final class EventHandler extends KissObject
       20,20,0,0,20,0,0,0,0,0,0,
       0,0,0,0,0,0,
       0,0,0,12,12, 
-      0,0,0,0,0 }
+      0,0,0,0,0,0,0 }
       } ;
       
 
@@ -554,7 +553,7 @@ final class EventHandler extends KissObject
       132,132,7,132,20,12,4,4,12,0,132,
       76,16,132,16,16,0,
       132,132,132,132,132,
-      132,4,6,132,132 },
+      132,4,6,132,132,7,132 },
       
       { 0,0,0,0,76,76,76,76,76,76,0,12,5,5,12,12,12,0,0,0,16,0,12,12,0,0,12,12,0,12,12,
       0,0,76,76,0,12,12,12,12,12,12,12,5,5,5,39,0,6,0,0,0,39,39,39,12,12,12,12,0,0,12,
@@ -571,7 +570,7 @@ final class EventHandler extends KissObject
       20,20,0,0,20,0,12,0,0,0,12,
       12,0,16,28,0,0,
       0,0,6,20,12,
-      5,0,28,5,5 },
+      5,0,28,5,5,0,0 },
       
       { 0,0,0,0,12,12,12,12,12,12,0,12,12,12,12,12,12,0,0,0,0,0,12,0,0,0,0,0,0,0,0,
       0,0,76,76,0,0,12,12,12,12,12,12,0,0,0,0,0,0,0,0,0,39,39,0,0,0,0,0,0,0,0,
@@ -588,7 +587,7 @@ final class EventHandler extends KissObject
       20,20,0,0,20,0,0,0,0,0,0,
       132,0,0,0,0,0,
       0,0,20,12,12,
-      0,0,0,0,0 },
+      0,0,0,0,0,0,0 },
       
       { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
       0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -605,7 +604,7 @@ final class EventHandler extends KissObject
       20,20,0,0,20,0,0,0,0,0,0,
       0,0,0,0,0,0,
       0,0,0,12,12,
-      0,0,0,0,0 }
+      0,0,0,0,0,0,0 }
       } ;
 
    // FKiSS action valid parameter types by parameter position.
@@ -633,7 +632,7 @@ final class EventHandler extends KissObject
       148,132,7,132,20,12,4,4,12,0,132,
       76,16,132,16,16,0,
       132,132,132,132,132,
-      132,4,6,132,132 },
+      132,4,6,132,132,7,132 },
       
       { 0,0,0,28,76,76,76,76,76,76,0,12,7,7,12,12,12,0,12,0,28,0,12,12,0,12,12,12,0,12,12,
       28,28,76,76,0,540,12,12,12,12,12,12,7,7,7,39,0,6,0,0,39,39,39,39,28,28,28,28,0,0,12,
@@ -650,7 +649,7 @@ final class EventHandler extends KissObject
       20,28,0,0,20,0,12,0,0,0,12,
       12,0,16,28,0,0,
       0,0,6,20,12,
-      5,0,28,7,7 },
+      5,0,28,7,7,0,0 },
       
       { 0,0,0,28,12,12,12,12,12,12,0,12,12,12,12,12,12,0,0,0,28,0,12,0,0,0,28,28,0,0,0,
       28,28,76,76,0,0,12,12,12,12,12,12,0,0,0,0,0,0,0,0,0,39,39,0,0,0,0,0,0,0,0,
@@ -667,7 +666,7 @@ final class EventHandler extends KissObject
       20,28,0,0,20,0,0,0,0,0,0,
       132,0,0,0,0,0,
       0,0,20,12,12,
-      0,0,0,0,0 },
+      0,0,0,0,0,0,0 },
       
       { 0,0,0,28,28,28,28,28,28,28,0,24,24,24,24,24,24,0,0,0,28,0,0,0,0,0,28,0,0,0,0,
       28,28,28,28,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -684,7 +683,7 @@ final class EventHandler extends KissObject
       20,20,0,0,20,0,0,0,0,0,0,
       0,0,0,0,0,0,
       0,0,0,12,12,
-      0,0,0,0,0 }
+      0,0,0,0,0,0,0 }
       } ;
 
 
@@ -917,6 +916,10 @@ final class EventHandler extends KissObject
          signatures.put("letcloned","format(variable,object) ; Returns the source objecy number if cloned") ;
          signatures.put("letaudio","format(variable) ; Returns the last sound name played") ;
          signatures.put("setPage","setPage(component,string) ; Set text pane component url") ;
+         signatures.put("letoffsetx","letoffsetx(variable,object) ; returns X-offset of object or cel") ;
+         signatures.put("letoffsety","letoffsety(variable,object) ; returns Y-offset of object or cel") ;
+         signatures.put("setPlaylistIndex","setPlaylistIndex(variable) ; sets audio file index in list to play") ;
+         signatures.put("getPlaylistIndex","getPlaylistIndex(variable) ; returns audio file index in list currently playing") ;
       }
    }
 

@@ -885,6 +885,11 @@ final public class MediaFrame extends KissFrame
       OptionsDialog.setAutoMediaLoop(loopcontrol.getState()) ;
    }
 
+   
+   // Set and retrieve the playlist index
+   
+   public int getPlaylistIndex() { return playindex ; }
+   public void setPlaylistIndex(int n) { playindex = n ; }
 
 	// Return true if the object is internally generated through FKissAction.
 
@@ -1122,6 +1127,7 @@ final public class MediaFrame extends KissFrame
 
 		// Start playing the media file.
 
+      if (audio != null) Audio.setLastAudio(audio) ;
 		if (audio != null) audio.play() ;
 		if (video != null) video.play() ;
 
@@ -1204,7 +1210,12 @@ final public class MediaFrame extends KissFrame
             ko = new AudioSound(ze.getZipFile(),ze.getPath()) ;
       }
 		if (ze.isAudioMedia())
-         ko = new AudioMedia(ze.getZipFile(),ze.getPath()) ;
+      {
+         if (Kisekae.isWebsocket())
+            ko = new AudioWebSocket(ze.getZipFile(),ze.getPath()) ;
+         else
+            ko = new AudioMedia(ze.getZipFile(),ze.getPath()) ;
+      }
 		if (ze.isVideo())
          ko = new Video(ze.getZipFile(),ze.getPath(),null) ;
 		if (ko != null) ko.setInternal(true) ;
@@ -1232,7 +1243,12 @@ final public class MediaFrame extends KissFrame
             ko = new AudioSound(ze.getZipFile(),ze.getPath()) ;
       }
 		if (ze.isAudioMedia())
-         ko = new AudioMedia(ze.getZipFile(),ze.getPath()) ;
+      {
+         if (Kisekae.isWebsocket())
+            ko = new AudioWebSocket(ze.getZipFile(),ze.getPath()) ;
+         else
+            ko = new AudioSound(ze.getZipFile(),ze.getPath()) ;
+      }
 		if (ze.isVideo())
          ko = new Video(ze.getZipFile(),ze.getPath(),null) ;
       if (ze.isList()) 
@@ -1259,7 +1275,8 @@ final public class MediaFrame extends KissFrame
      	save.setEnabled(!Kisekae.isSecure() && !Kisekae.isExpired()) ;
 		list1 = new JList(playlist) ;
 		scrollpane = new JScrollPane(list1) ;
-      playindex = 0 ;
+      if (playindex < 0) playindex = 0 ;
+      if (playindex > list1.getModel().getSize()) playindex = 0 ;
      	playNext() ;
 
       // Find any playlist mediastart() events.
@@ -1417,7 +1434,8 @@ final public class MediaFrame extends KissFrame
       if (unique == me) unique = null ;
       play.removeActionListener(this);
       reset.removeActionListener(this);
-		list1.removeListSelectionListener(listListener);
+      if (list1 != null)
+         list1.removeListSelectionListener(listListener);
       if (timer != null) 
       {
          timer.removeActionListener(timerTask) ;
@@ -1841,7 +1859,8 @@ final public class MediaFrame extends KissFrame
 	void closeMedia()
 	{
    	statelabel.setText(Kisekae.getCaptions().getString("MediaInactiveState")) ;
-		list1.removeListSelectionListener(listListener);
+      if (list1 != null)
+         list1.removeListSelectionListener(listListener);
 		if (audio != null)
       {
          audio.setLoader(null) ;
@@ -2010,6 +2029,92 @@ final public class MediaFrame extends KissFrame
    {
       unique = null ;
    }
+      
+   
+   // This method can be invoked with a null event so as to enable
+   // Websocket sound stop events from the client.
+      
+   public void processStopEvent(LineEvent event)
+   {
+      boolean complete = false ;
+      
+ 		if (OptionsDialog.getDebugSound())
+         PrintLn.println("MediaPlayer: " + getName() + " ClipStopEvent") ;
+
+      // Determine if we completed the current media file.
+
+      if (currentmedia instanceof Clip)
+      {
+         Clip p = (Clip) currentmedia ;
+         long duration = p.getMicrosecondLength() ;
+         long diff = Math.abs(p.getMicrosecondPosition() - duration) ;
+         if (diff <= (int) (duration * 0.02)) complete = true ;
+      }
+      else
+         complete = true ;
+
+      // Fire any generic mediastop() events.  For websocket implementation
+      // this mediaframe event comes from the AudioWebSocket as there is no
+      // cliplistenerfor an audio stop event.
+
+      if (Kisekae.isWebsocket())
+      {
+         MainFrame mf = Kisekae.getMainFrame() ;
+         Configuration config = (mf != null) ? mf.getConfig() : null ;
+         PanelFrame panel = (mf != null) ? mf.getPanel() : null ;
+         EventHandler handler = (config != null) ? config.getEventHandler() : null ;
+         Vector v = (handler != null) ? handler.getEvent("mediastop") : null ;
+         if (v != null)
+         {  
+            Vector mediaevents = new Vector() ;
+            for (int i = 0; i < v.size(); i++)
+            {
+               FKissEvent e = (FKissEvent) v.elementAt(i) ;
+               Vector params = e.getParameters() ;
+               if (params == null || params.size() > 0) continue ;
+               mediaevents.add(e) ;
+            }
+            if (mediaevents.size() > 0)
+               EventHandler.fireEvents(mediaevents,panel,Thread.currentThread(),null) ;
+         }  
+      }
+      
+      // If we have a playlist start the next item in the list.
+
+      if (playlist != null && complete)
+      {
+       	playindex++ ;
+			Runnable runner = new Runnable()
+			{ public void run() { playNext() ; } } ;
+			javax.swing.SwingUtilities.invokeLater(runner) ;
+         return ;
+      }
+
+      // Start the player in a new thread as player initiation can take 
+      // time.  This frees the Player thread.
+
+      else if (OptionsDialog.getAutoMediaLoop() && complete)
+		{
+			if (audio != null && audio.isLooping()) return ;
+      	if (OptionsDialog.getDebugSound() || OptionsDialog.getDebugMovie())
+            PrintLn.println("MediaPlayer: " + getName() + " Repeat count = " + repeatcount) ;
+         if (audio != null) audio.stop(audio) ;
+         if (repeatcount > 0) repeatcount-- ;
+         if (repeatcount == 0) return ;
+  			Runnable runner = new Runnable()
+			{ public void run() { play() ; } } ;
+			javax.swing.SwingUtilities.invokeLater(runner) ;
+         return ;
+      }
+
+      // Otherwise stop and update our status
+
+      else
+      {
+         if (audio != null) audio.stop(audio) ;
+      	updateStatus() ;
+      }
+   }
 
 
    // Inner class to listen for events on our Player object.
@@ -2103,6 +2208,8 @@ final public class MediaFrame extends KissFrame
       }
 	}
 
+     
+
 	// Inner class to catch sound clip events.
 
 	class ClipListener implements LineListener
@@ -2113,57 +2220,7 @@ final public class MediaFrame extends KissFrame
 
 			if (event.getType() == LineEvent.Type.STOP)
 			{
-				if (OptionsDialog.getDebugSound())
-					PrintLn.println("MediaPlayer: " + getName() + " ClipStopEvent") ;
-
-            // Determine if we completed the current media file.
-
-            boolean complete = false ;
-            if (currentmedia instanceof Clip)
-            {
-               Clip p = (Clip) currentmedia ;
-               long duration = p.getMicrosecondLength() ;
-               long diff = Math.abs(p.getMicrosecondPosition() - duration) ;
-               if (diff <= (int) (duration * 0.02)) complete = true ;
-            }
-            else
-               complete = true ;
-
-            // If we have a playlist start the next item in the list.
-
-            if (playlist != null && complete)
-            {
-            	playindex++ ;
-					Runnable runner = new Runnable()
-					{ public void run() { playNext() ; } } ;
-   				javax.swing.SwingUtilities.invokeLater(runner) ;
-               return ;
-           }
-
-				// Start the player in a new thread as player initiation can take
-	         // time.  This frees the Player thread.
-
-		      else if (OptionsDialog.getAutoMediaLoop() && complete)
-				{
-					if (audio != null && audio.isLooping()) return ;
-		      	if (OptionsDialog.getDebugSound() || OptionsDialog.getDebugMovie())
-                  PrintLn.println("MediaPlayer: " + getName() + " Repeat count = " + repeatcount) ;
-               if (audio != null) audio.stop(audio) ;
-               if (repeatcount > 0) repeatcount-- ;
-               if (repeatcount == 0) return ;
-					Runnable runner = new Runnable()
-					{ public void run() { play() ; } } ;
-   				javax.swing.SwingUtilities.invokeLater(runner) ;
-               return ;
-            }
-
-            // Otherwise stop and update our status
-
-            else
-            {
-               if (audio != null) audio.stop(audio) ;
-            	updateStatus() ;
-            }
+            processStopEvent(event) ;
 			}
 
 			// Start events update our status.

@@ -58,6 +58,7 @@ import static com.wmiles.kisekaeultrakiss.Kisekae.Audio.lock;
 import static com.wmiles.kisekaeultrakiss.Kisekae.Audio.players;
 import com.wmiles.kisekaeultrakiss.WebSocket.JettyWebSocketEndpoint;
 import java.io.* ;
+import java.util.Vector;
 import javax.sound.midi.Sequencer;
 import javax.sound.sampled.* ;
 
@@ -89,7 +90,6 @@ final class AudioWebSocket extends AudioSound
 
 	void open()
 	{
-  System.out.println("AudioWebSocket: open " + error + " " + cache + " " + (b == null) + " " + getPath());
 		if (error || (cache && b == null)) return ;
 		if ("".equals(getPath())) return ;
 		if (!OptionsDialog.getJavaSound()) return ;
@@ -229,9 +229,45 @@ final class AudioWebSocket extends AudioSound
                cache = true ;
                auconverted = true ;
            		if (OptionsDialog.getDebugSound())
-                  System.out.println("Audio: load, "+getName()+" is cached, bytes = "+bytes) ;
+                  System.out.println("Audio: load, "+getName()+" is now cached, bytes = "+bytes) ;
+            }
+            
+            // Determine if the file is known in the key table.  Files in a
+            // playlist may not be recognized.  The audio needs to be in the
+            // key table to be recognized for a mediastop event from the client.
+
+            Audio a1 = Audio.getAudioByIdentifier(System.identityHashCode(me)) ;
+            if (a1 == null)
+            {
+               a1 = me ;
+      			a1.setID(cid) ;
+      			a1.setIdentifier(Integer.valueOf(-1)) ;
+      			a1.setKey(a1.getKeyTable(),cid,a1.getPath().toUpperCase()) ;
+      			a1.setKey(a1.getKeyTable(),cid,a1.getName().toUpperCase()) ;
+      			a1.setKey(a1.getKeyTable(),cid,file.toUpperCase()) ;
             }
 
+            // Fire any generic mediastart() events.
+      
+            MainFrame mf = Kisekae.getMainFrame() ;
+            Configuration config = (mf != null) ? mf.getConfig() : null ;
+            PanelFrame panel = (mf != null) ? mf.getPanel() : null ;
+            EventHandler handler = (config != null) ? config.getEventHandler() : null ;
+      		Vector v = (handler != null) ? handler.getEvent("mediastart") : null ;
+            if (v != null)
+            {
+               Vector mediaevents = new Vector() ;
+               for (int i = 0; i < v.size(); i++)
+               {
+                  FKissEvent e = (FKissEvent) v.elementAt(i) ;
+                  Vector params = e.getParameters() ;
+                  if (params == null || params.size() > 0) continue ;
+                  mediaevents.add(e) ;
+               }
+               if (mediaevents.size() > 0)
+            		EventHandler.fireEvents(mediaevents,panel,Thread.currentThread(),null) ;
+            }
+           
             // Send the file to the server.
             
             JettyWebSocketEndpoint endpoint = Kisekae.getServerEndpoint() ;
@@ -379,5 +415,20 @@ final class AudioWebSocket extends AudioSound
    public void sendStopEvent()
    {
       processStopEvent(null) ;      
+   }
+     
+      
+   // This method can be invoked with a null event so as to enable
+   // Websocket sound stop events from the client.
+      
+   public void processStopEvent(LineEvent event)
+   {
+      MainFrame mf = Kisekae.getMainFrame() ;
+      Configuration config = (mf != null) ? mf.getConfig() : null ;
+      MediaFrame mediaframe = (config != null) ? config.getMediaFrame() : null ;
+      if (mediaframe != null)
+         mediaframe.processStopEvent(null) ;
+      else
+         super.processStopEvent(null) ;
    }
 }

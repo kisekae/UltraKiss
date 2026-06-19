@@ -60,6 +60,7 @@ import com.wmiles.kisekaeultrakiss.Kisekae.FileLoader;
 import com.wmiles.kisekaeultrakiss.Kisekae.ZipManager;
 import com.wmiles.kisekaeultrakiss.WebSearch.WebSearchFrame;
 import java.awt.AWTException;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
@@ -84,6 +85,7 @@ import java.util.Map;
 import java.util.Queue;
 import javax.imageio.ImageIO;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.Callback;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
@@ -101,6 +103,7 @@ public class JettyWebSocketEndpoint
    private boolean warningsent = false ;       // timeout warning sent
    private static int busytimeout = 300 ;      // partial binary send timeout  
    private static int busywait = 10 ;          // sleep time while waiting
+   private static Timer timer = null ;         // notify timer
    private long createtime = 0 ;
    private long time = 0 ;
 	private Session session ;                   // set on websocket open
@@ -150,9 +153,10 @@ public class JettyWebSocketEndpoint
       
       if (!(message.startsWith("mouse") || message.startsWith("cursor") || message.startsWith("refresh")))
       {
-         if (OptionsDialog.getDebugWebSocket() || (message.startsWith("file") 
+         if (OptionsDialog.getDebugWebSocket() 
+                 || message.startsWith("file") || message.startsWith("audio")
                  || message.startsWith("close") || message.startsWith("screen")
-                 || message.startsWith("retransmit") || message.startsWith("notify")))
+                 || message.startsWith("retransmit") || message.startsWith("notify"))
          {
             System.out.println("[" + time + "] "+"Message receive: " + message);
          }
@@ -419,10 +423,11 @@ public class JettyWebSocketEndpoint
             String [] tokens = message.split(" ") ;
             if ("fileupload".equals(tokens[0]))
             {
-               if (tokens.length < 4) return ;
+               if (tokens.length < 3) return ;
                try { filesize = Integer.parseInt(tokens[2]) ; }
                catch (NumberFormatException e) { }
-               if ((filesize/1024) > OptionsDialog.getDownloadSize())
+               int maxdownload = OptionsDialog.getDownloadSize() ;
+               if ((filesize/1024) > maxdownload && maxdownload > 0)
                {
                   System.out.println("JettyWebSocketEndpoint: sending file size warning.");
                   send("cancelupload") ;
@@ -543,6 +548,14 @@ public class JettyWebSocketEndpoint
                clientlogfile = (f != null) ? f.getPath() : null ;
                if (OptionsDialog.getDebugWebSocket())
                   System.out.println("[" + time + "] "+"JettyWebSocketEndpoint: logfile " + filename + " successfully saved.");
+               TextFrame tf = new TextFrame() ;
+               tf.loadfile(clientlogfile) ; 
+               tf.setVisible(true);
+               try { Thread.currentThread().sleep(200) ; }
+               catch (InterruptedException e) { }
+               Cursor cursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR) ;
+               String jsCursor = CursorNameMapper.getJavascriptCursorStyleCode(cursor.getName()) ;
+               send("cursor " + jsCursor);
             }
          }
          catch (Exception e) 
@@ -614,9 +627,32 @@ public class JettyWebSocketEndpoint
          catch (Exception e) 
          {
             System.out.println("[" + time + "] "+"JettyWebSocketEndpoint: retransmit exception: " + e.getMessage());   
-         }
-         
+         }         
       }     
+      
+       
+      // notify message
+      if (message.startsWith("notify"))
+      {
+         int n = message.indexOf(" ") ;
+         if (n < 0) return ;
+         String s = message.substring(n+1) ;
+         s = s.trim() ;
+         MainFrame mf = Kisekae.getMainFrame() ;
+         if (mf != null) mf.showStatus(s) ;      
+         
+         // Cancel the notification 5 seconds after the last notification.
+
+         if (timer != null) timer.stop() ;
+         timer = new Timer(5000, e -> 
+         {
+            MainFrame mf1 = Kisekae.getMainFrame() ;
+            if (mf1 != null) mf1.showStatus(null) ;  
+            timer = null ;
+         });
+         timer.setRepeats(false); 
+         timer.start();
+      }
    }
    
    /*
@@ -1066,9 +1102,13 @@ public class JettyWebSocketEndpoint
       if (!session.isOpen()) return ;
       try { Thread.currentThread().sleep(200) ; } catch (InterruptedException e) { }
       onMessage("image Images/KisekaeUltraKiss.png") ;
-      try { Thread.currentThread().sleep(300) ; } catch (InterruptedException e) { }
+      try { Thread.currentThread().sleep(200) ; } catch (InterruptedException e) { }
       send("sendconsolelog") ;   // request console log file
-      try { Thread.currentThread().sleep(500) ; } catch (InterruptedException e) { }
+      try { Thread.currentThread().sleep(200) ; } catch (InterruptedException e) { }
+      Cursor cursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR) ;
+      String jsCursor = CursorNameMapper.getJavascriptCursorStyleCode(cursor.getName()) ;
+      send("cursor " + jsCursor);
+      try { Thread.currentThread().sleep(400) ; } catch (InterruptedException e) { }
       onMessage("close UltraKiss terminated.") ;
    }
    
@@ -1110,7 +1150,7 @@ public class JettyWebSocketEndpoint
       long maxtime = 0 ;
       long mintime = 0 ;
       long time = 0 ;
-      long lastscreen = 0 ;
+      long lastfullscreen = 0 ;
       boolean error = false ;
       static boolean first = true ;
       static int firstcount = 2 ;
@@ -1174,7 +1214,7 @@ public class JettyWebSocketEndpoint
                
                // Send a full screen periodically to refresh the display.
                
-               if (first || (time-lastscreen > 1000)) 
+               if (first || (time-lastfullscreen > 1000)) 
                   dirtyArea = new Rectangle(0,0,width,height) ;
                else
                   dirtyArea = getDirtyRegion(previousImage, currentImage) ;
@@ -1201,7 +1241,6 @@ public class JettyWebSocketEndpoint
                   if (!socketBusy && Kisekae.getClientScreen()) 
                   {
                      screensent++ ;
-                     lastscreen = time ;
                      socketBusy = true ;
                      session.sendBinary(byteBuffer, new Callback() 
                      {
@@ -1215,8 +1254,17 @@ public class JettyWebSocketEndpoint
                               if (firstcount > 0) firstcount-- ;
                               if (firstcount <= 0) first = false ;
                            }
-                           if (OptionsDialog.getDebugWebSocket())
-                              System.out.println("[" + time + "] "+"clipped screen capture sent to client (" + x + "," + y + "," + w + "," + h + ")");
+                           if (x != 0 || y != 0 || w != width || h != height)
+                           {
+                              if (OptionsDialog.getDebugWebSocket()) 
+                                 System.out.println("[" + time + "] "+"clipped screen capture sent to client (" + x + "," + y + "," + w + "," + h + ")");
+                           }
+                           else
+                           {
+                              lastfullscreen = time ;
+                              if (OptionsDialog.getDebugWebSocket()) 
+                                 System.out.println("[" + time + "] "+"full screen capture sent to client (" + x + "," + y + "," + w + "," + h + ")");
+                           }
                         }
                         @Override
                         public void fail(Throwable cause) {

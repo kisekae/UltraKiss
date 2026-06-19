@@ -203,7 +203,7 @@ public class Kisekae extends Applet
 
       LogFile.start() ;
       builddate = Calendar.getInstance() ;
-      builddate.set(2026,6-1,10) ;
+      builddate.set(2026,6-1,18) ;
       
       // Restore the properties.
       
@@ -2784,7 +2784,8 @@ public class Kisekae extends Applet
                 + "To load and run online KiSS sets available on the Internet use <a href=\"file://openportal\">File-Open Portal</a>.<br><br>"
                 + "If you do not know what KiSS is, see the UltraKiss documentation using <a href=\"file://helpcontents\">Help-Contents</a>.<br>"
                 + "To learn how to make or visually edit KiSS sets within UltraKiss see <a href=\"file://helptutorial\">Help-Tutorials</a>.<br>"
-                + "To submit an issue report or offer suggestions for improvement see <a href=\"file://helpbugreport\">Help-Bug Report</a>.</p>"
+                + "To submit an issue report or offer suggestions for improvement see <a href=\"file://helpbugreport\">Help-Bug Report</a>.<br><br>"
+                + "Use the ESC key to refresh your screen if required.</p>"
                 + "<p style=\"font-size: 0.8em;font-weight:normal;\">Last updated "+getBuildDate()+"</p>"
                 + "</body></html>");
             

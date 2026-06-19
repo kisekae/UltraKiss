@@ -1598,8 +1598,6 @@ final public class MainFrame extends KissFrame
          {
             if (n > 0)
                s = s + "    Refresh rate = " + n + " screen refreshes per second." ;
-            else
-               s = s + "    No screen refresh." ;
          }
       }
       else

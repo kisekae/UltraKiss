@@ -451,6 +451,8 @@ final public class FileOpen implements Cloneable
       catch (SecurityException e)
       {
          PrintLn.println("KiSS file open exception, " + e.toString()) ;
+         if (parent != null)
+				Kisekae.setCursor(parent,Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
          if (!silent)
          {
    			JOptionPane.showMessageDialog(parent,
@@ -459,8 +461,6 @@ final public class FileOpen implements Cloneable
             	captions.getString("SecurityException"),
                JOptionPane.ERROR_MESSAGE) ;
          }
-         if (parent != null)
-				Kisekae.setCursor(parent,Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
 			close() ;
          return ;
       }
@@ -471,6 +471,8 @@ final public class FileOpen implements Cloneable
 		{
          error = true ;
          PrintLn.println("KiSS file open exception, " + e.toString()) ;
+         if (parent != null)
+				Kisekae.setCursor(parent,Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
          if (!silent)
          {
    			JOptionPane.showMessageDialog(parent, e.toString(),
@@ -478,8 +480,6 @@ final public class FileOpen implements Cloneable
                JOptionPane.ERROR_MESSAGE) ;
          }
          e.printStackTrace() ;
-         if (parent != null)
-				Kisekae.setCursor(parent,Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
 			close() ;
 			return ;
 		}
@@ -585,6 +585,8 @@ final public class FileOpen implements Cloneable
       catch (SecurityException e)
       {
          PrintLn.println("KiSS file open exception, " + e.toString()) ;
+         if (parent != null)
+				Kisekae.setCursor(parent,Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
          if (!silent)
          {
    			JOptionPane.showMessageDialog(parent,
@@ -609,6 +611,8 @@ final public class FileOpen implements Cloneable
 		{
          error = true ;
          PrintLn.println("KiSS file open exception, " + e.toString()) ;
+         if (parent != null)
+				Kisekae.setCursor(parent,Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
          if (!silent)
          {
    			JOptionPane.showMessageDialog(parent, e.toString(),
@@ -631,6 +635,8 @@ final public class FileOpen implements Cloneable
 		{
          error = true ;
          PrintLn.println("KiSS file open exception, " + e.toString()) ;
+         if (parent != null)
+				Kisekae.setCursor(parent,Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
          if (!silent)
          {
    			JOptionPane.showMessageDialog(parent, e.toString(),
@@ -1111,6 +1117,8 @@ final public class FileOpen implements Cloneable
 		{
          error = true ;
          PrintLn.println("KiSS file open exception, " + e.toString()) ;
+         if (parent != null)
+				Kisekae.setCursor(parent,Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
          String msg = e.getMessage() ;
          if (msg == null) msg = e.toString() ;
          if (msg.contains("zip END header")) msg += "\nCheck download protocol, use https" ;

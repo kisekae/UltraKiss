@@ -304,7 +304,7 @@ final class FKissAction extends KissObject
 
    synchronized Object [] doAction(PanelFrame panel, Thread thread, Thread currentthread, Hashtable eventstate)
    {
-      int i, n1, n2, n3, n4 ;
+      int i, n1, n2, n3, n4, n5 ;
       long l1, l2, l3, l4 ;
       double d1, d2, d3, d4 ;
       String s, s1, s2, s3, s4 ;
@@ -2900,7 +2900,7 @@ final class FKissAction extends KissObject
                   { public void run() { mf1.stop() ; } } ;
                   Thread runthread = new Thread(runner) ;
                   runthread.start() ;
-                  if (config != null) config.setMediaFrame(null) ;
+//                  if (config != null) config.setMediaFrame(null) ;
                }
                else
                   Audio.stop(config,audiotype) ;
@@ -2939,6 +2939,7 @@ final class FKissAction extends KissObject
             n2 = 1 ;     // minimized
             n3 = 0 ;     // x position
             n4 = 0 ;     // y position
+            n5 = 0 ;     // playlist start index
             if (parameters.size() > 1)
                n1 = variable.getIntValue((String) parameters.elementAt(1),event) ;
             if (parameters.size() > 2)
@@ -2947,6 +2948,8 @@ final class FKissAction extends KissObject
                n3 = variable.getIntValue((String) parameters.elementAt(3),event) ;
             if (parameters.size() > 4)
                n4 = variable.getIntValue((String) parameters.elementAt(4),event) ;
+            if (parameters.size() > 5)
+               n5 = variable.getIntValue((String) parameters.elementAt(5),event) ;
             
             // If we are a background sound transitioned to the MediaPlayer
             // and the MediaPlayer option id set to repeat sounds, then set 
@@ -2971,6 +2974,7 @@ final class FKissAction extends KissObject
             if (config != null) config.setMediaFrame(mf) ;
             mf.setRepeat(n1) ;
             mf.setMinimized(n2 != 0,n3,n4) ;
+            mf.setPlaylistIndex(n5) ;
             mf.setInternal(true) ;
             if (kiss == null)
                mf.play(ze) ;
@@ -4956,6 +4960,30 @@ final class FKissAction extends KissObject
             s = Audio.getLastAudio() ;
             if (s == null) s = "unknown" ;
             variable.setValue((String) parameters.elementAt(0),s,event) ;
+            break ;
+
+         // getPlaylistIndex command.
+
+         case 165:	// "getPlaylistIndex(variable)"
+            if (parameters.size() < 1) break ;
+            if (config == null) break ;
+            variable.setValue((String) parameters.elementAt(0),-1,event) ;
+            mf = config.getMediaFrame() ;
+            if (mf == null) break ;
+            n1 = mf.getPlaylistIndex() ;
+            variable.setValue((String) parameters.elementAt(0),n1,event) ;
+            break ;
+
+         // setPlaylistIndex command.
+
+         case 166:	// "setPlaylistIndex(integer)"
+            if (parameters.size() < 1) break ;
+            if (config == null) break ;
+            mf = config.getMediaFrame() ;
+            if (mf == null) break ;
+            n1 = variable.getIntValue((String) parameters.elementAt(0),event) ;
+            if (n1 < 0) break ;
+            mf.setPlaylistIndex(n1) ;
             break ;
          }
       }

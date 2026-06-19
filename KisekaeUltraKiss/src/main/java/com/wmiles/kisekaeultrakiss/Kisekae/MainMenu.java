@@ -53,6 +53,7 @@ package com.wmiles.kisekaeultrakiss.Kisekae ;
 *
 */
 
+import com.wmiles.kisekaeultrakiss.WebSocket.JettyWebSocketEndpoint;
 import java.awt.* ;
 import java.awt.event.* ; 
 import java.io.* ;
@@ -61,7 +62,6 @@ import java.util.ResourceBundle;
 import java.util.Locale;
 import java.util.Vector ;
 import java.net.MalformedURLException ;
-import java.applet.AppletContext ;
 import javax.swing.* ;
 import javax.swing.border.*;
 import javax.jnlp.* ;
@@ -162,6 +162,7 @@ final public class MainMenu extends KissMenu
    protected JMenuItem imageeditor = null ;
    protected JMenuItem mediaplayer = null ;
    protected JMenuItem logfile = null ;
+   protected JMenuItem clientlogfile = null ;
    protected JMenuItem [] lru = null ;
 
 
@@ -527,13 +528,22 @@ final public class MainMenu extends KissMenu
       helpMenu.add((tutorialfiles = new JMenuItem(Kisekae.getCaptions().getString("MenuHelpTutorialFiles")))) ;
       tutorialfiles.addActionListener(this);
       tutorialfiles.setEnabled(tutorial.isEnabled());
-      helpMenu.add((logfile = new JMenuItem(Kisekae.getCaptions().getString("MenuViewLogFile")))) ;
+      if (!Kisekae.isWebsocket())      {
+         helpMenu.add((logfile = new JMenuItem(Kisekae.getCaptions().getString("MenuViewLogFile")))) ;      } 
+      else
+         helpMenu.add((logfile = new JMenuItem(Kisekae.getCaptions().getString("MenuViewServerLogFile")))) ;
       logfile.setEnabled(LogFile.isOpen()) ;
       logfile.addActionListener(this) ;
       if (!Kisekae.isWebsocket())
       {
          if (!applemac) logfile.setMnemonic(KeyEvent.VK_L) ;
          logfile.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, accelerator+ActionEvent.SHIFT_MASK));
+      }
+      else
+      {
+         helpMenu.add((clientlogfile = new JMenuItem(Kisekae.getCaptions().getString("MenuViewClientLogFile")))) ;
+         clientlogfile.setEnabled(true) ;
+         clientlogfile.addActionListener(this) ;         
       }
       helpMenu.addSeparator() ;
 //    helpMenu.add((register = new JMenuItem(Kisekae.getCaptions().getString("MenuHelpRegister")))) ;
@@ -1221,6 +1231,21 @@ final public class MainMenu extends KissMenu
                tf.setVisible(true) ;
                tf.toFront() ;
             }
+            return ;
+         }
+
+         // A Websocket client Log File request shows the javascript log file.
+         // When the endpoint receives a fileuploadlogfileend message the file
+         // is saved on the server.
+
+         if (clientlogfile == source)
+         {
+            if (OptionsDialog.getDebugControl())
+               PrintLn.println("MainMenu view client logfile request") ;
+            Kisekae.setCursor(parent,Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
+            JettyWebSocketEndpoint endpoint = Kisekae.getServerEndpoint() ;
+            if (endpoint == null) return ;
+            endpoint.send("sendconsolelog");
             return ;
          }
          
