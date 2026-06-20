@@ -103,7 +103,7 @@ console.log = function() {
 };
 
 // Timestamp our console log file.
-console.log("UltraKiss websocket client.js released June 13, 2026") ;  
+console.log("UltraKiss websocket client.js released June 19, 2026") ;  
 const now = new Date() ;
 console.log(now) ;
 
@@ -1046,8 +1046,10 @@ canvas.addEventListener('mouseup', function(event) {
 
 canvas.addEventListener('wheel', function(event) {
     // Determine scroll direction and amount
-    const deltaY = event.deltaY; // Vertical scroll amount
-    const deltaX = event.deltaX; // Horizontal scroll amount (less common)
+    let rawX = event.deltaX;
+    let rawY = event.deltaY;
+    const deltaX = Math.round(rawX); // Vertical scroll amount
+    const deltaY = Math.round(rawY); // Horizontal scroll amount (less common)
     const deltaMode = event.deltaMode; // Unit of delta values (pixels, lines, or pages)
     const ctrlKey = event.ctrlKey; // true if CTRL key is pressed
     // Send the event data to the Java server via WebSocket
