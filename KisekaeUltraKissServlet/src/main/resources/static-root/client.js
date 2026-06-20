@@ -572,12 +572,12 @@ ws.onmessage = function (evt) {
                     source.buffer = buffer;
                     source.connect(audioContext.destination);
                     console.log("Playback begins for "+audioNameMap.get(source));
-                    ws.send("notify playback begins for "+audioNameMap.get(source)) ;
+                    ws.send("notify Playback begins for "+audioNameMap.get(source)) ;
                     source.start(0); // Play immediately
                     
                     source.onended = () => {
                        console.log("Playback finished for "+audioNameMap.get(source));
-                       ws.send("notify playback finished for "+audioNameMap.get(source)) ;
+                       ws.send("notify Playback finished for "+audioNameMap.get(source)) ;
                        // Send an audiostop message for this sound back to the server.
                        for (const [key, value] of audioSourceMap) 
                        {
@@ -627,7 +627,7 @@ ws.onmessage = function (evt) {
             // the load event is triggered when the player is loaded
             player.onload = function(song){
                 console.log("Playback begins for "+audioNameMap.get(player));
-                ws.send("notify playback begins for "+audioNameMap.get(player)) ;
+                ws.send("notify Playback begins for "+audioNameMap.get(player)) ;
                 player.play() ;
                 playerstopped = false ;
             } ;
@@ -636,7 +636,7 @@ ws.onmessage = function (evt) {
             player.onend=function(){
                 player.stop() ;  // necessary to terminate the player.
                 console.log("Playback finished for "+audioNameMap.get(player));
-                ws.send("notify playback finished for "+audioNameMap.get(player)) ;
+                ws.send("notify Playback finished for "+audioNameMap.get(player)) ;
                 playerstopped = true ;
                 console.log("Removing windows events for " + tokens[1]);
                 window.onblur = null ;
