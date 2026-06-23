@@ -203,7 +203,7 @@ public class Kisekae extends Applet
 
       LogFile.start() ;
       builddate = Calendar.getInstance() ;
-      builddate.set(2026,6-1,18) ;
+      builddate.set(2026,6-1,23) ;
       
       // Restore the properties.
       
@@ -233,7 +233,7 @@ public class Kisekae extends Applet
          
          OptionsDialog.setFactoryOptions() ;
          OptionsDialog.setInitOptions() ;
-         OptionsDialog.setDebugControl(true) ;
+//       OptionsDialog.setDebugControl(true) ;
          
          // Set random splash set.
          

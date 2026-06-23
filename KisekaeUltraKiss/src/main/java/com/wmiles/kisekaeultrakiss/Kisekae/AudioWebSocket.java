@@ -106,7 +106,7 @@ final class AudioWebSocket extends AudioSound
          if (is == null) return ;
          if (cache) is.reset() ;
          
-         Clip clip = prepareClip() ;
+         Clip clip = null ;  //  prepareClip() used for webswing ;
          currentsound = clip ;
          if (clip == null) return ;
          linelistener = new ClipListener() ;
@@ -245,6 +245,7 @@ final class AudioWebSocket extends AudioSound
       			a1.setKey(a1.getKeyTable(),cid,a1.getPath().toUpperCase()) ;
       			a1.setKey(a1.getKeyTable(),cid,a1.getName().toUpperCase()) ;
       			a1.setKey(a1.getKeyTable(),cid,file.toUpperCase()) ;
+      			a1.setKey(a1.getKeyTable(),cid,System.identityHashCode(me)) ;
             }
 
             // Fire any generic mediastart() events.
@@ -324,7 +325,7 @@ final class AudioWebSocket extends AudioSound
       finally { lock.unlock() ; }
 	}
    
-   // Websocket interface.  Clip must be closed when stopped otherwise 
+   // WebSwing interface.  Clip must be closed when stopped otherwise 
    // line resources will not be released.
    
    private Clip prepareClip()
@@ -336,7 +337,7 @@ final class AudioWebSocket extends AudioSound
          AudioInputStream ais = AudioSystem.getAudioInputStream(is) ;
          Clip clip = AudioSystem.getClip() ;
          currentsound = clip ;
-// causes websocket to hang?
+// causes webswing to hang?
 // Linux reports NoLineAvailableException at times if line not closed?
 /*
          clip.addLineListener(event -> {
@@ -355,7 +356,7 @@ final class AudioWebSocket extends AudioSound
       catch (Exception e)
       {
          long time = System.currentTimeMillis() - Configuration.getTimestamp() ;
-         System.out.println("[" + time + "] AudioWebSocket: " + getName() + " prepareClip, " + e.toString()) ;   
+//         System.out.println("[" + time + "] AudioWebSocket: " + getName() + " prepareClip, " + e.toString()) ;   
       }
       return null ;
    }

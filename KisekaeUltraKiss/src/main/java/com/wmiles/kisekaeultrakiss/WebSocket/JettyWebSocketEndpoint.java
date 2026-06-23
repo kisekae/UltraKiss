@@ -79,7 +79,9 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
@@ -846,6 +848,7 @@ public class JettyWebSocketEndpoint
          int bytesRead;
          int chunks = 0 ;
          int offset = 0 ;
+         double lastSentThreshold = 0 ;
          ByteBuffer data ;
          
          while ((bytesRead = fis.read(buffer)) != -1) {
@@ -858,24 +861,27 @@ public class JettyWebSocketEndpoint
             chunks++ ;
             offset += bytesRead ;
             final int bytesSent = bytesRead ;
+            final long cummulativesent = offset ;
             boolean last = (offset >= totalBytes) ;
             
             // Send the binary data (use sendBytes for blocking or async with callback)
             bufferBusy = true ;
             session.sendPartialBinary(data, last, new Callback() {
-               double lastSentThreshold ;    
+               static double lastSentThreshold = 0 ;    
                @Override
                public void succeed() {
                   // Handle success (optional)
         				time = System.currentTimeMillis() - createtime ;
-                  long percentComplete = (bytesSent * 100) / totalBytes ;
+                  long percentComplete = (cummulativesent * 100) / totalBytes ;
                   if (percentComplete >= lastSentThreshold + 10) {
                      lastSentThreshold = Math.floor(percentComplete / 10) * 10; 
                      if (mf != null) mf.showStatus("WebSocket uploading file " + file.getName()  + " " + percentComplete + " percent complete.") ;                         
                   }
-                  if (OptionsDialog.getDebugWebSocket())
-                     System.out.println("[" + time + "] "+"JettyWebSocketEndpoint: Sent file binary data length: " + bytesSent + " percent complete is " + percentComplete);
-                  if (last) socketBusy = false ;
+                  if (last) 
+                  {
+                     socketBusy = false ;
+                     lastSentThreshold = 0 ;
+                  }
                   bufferBusy = false ;
                }
                 
@@ -886,6 +892,7 @@ public class JettyWebSocketEndpoint
                   System.out.println("[" + time + "] "+"JettyWebSocketEndpoint: File chunk send failed: " + cause.getMessage());
                   socketBusy = false ;
                   bufferBusy = false ;
+                  lastSentThreshold = 0 ;
                   session.close(); // Consider closing the session on failure
                }
             });
@@ -990,6 +997,7 @@ public class JettyWebSocketEndpoint
             chunks++ ;
             offset += bytesRead ;
             final int bytesSent = bytesRead ;
+            final long cummulativesent = offset ;
             final int chunk = chunks ;
             boolean last = (offset >= totalBytes) ;
             
@@ -997,19 +1005,21 @@ public class JettyWebSocketEndpoint
             bufferBusy = true ;
   				long starttime = System.currentTimeMillis()  - createtime ;
             session.sendPartialBinary(data, last, new Callback() {
-               double lastSentThreshold ;    
+               static double lastSentThreshold = 0 ;    
                @Override
                public void succeed() {
                   // Handle success (optional)
         				time = System.currentTimeMillis() - createtime ;
-                  long percentComplete = (bytesSent * 100) / totalBytes ;
+                  long percentComplete = (cummulativesent * 100) / totalBytes ;
                   if (percentComplete >= lastSentThreshold + 10) {
                      lastSentThreshold = Math.floor(percentComplete / 10) * 10; 
                      if (mf != null) mf.showStatus("WebSocket uploading audio " + name + " " + percentComplete + " percent complete.") ;                         
                   }
-                  if (OptionsDialog.getDebugWebSocket())
-                     System.out.println("[" + time + "] "+"JettyWebSocketEndpoint: Sent audio binary data length: " + bytesSent + " percent complete is " + percentComplete);
-                  if (last) socketBusy = false ;
+                  if (last) 
+                  {
+                     socketBusy = false ;
+                     lastSentThreshold = 0 ;  
+                  }
                   bufferBusy = false ;
                }
                 
@@ -1020,6 +1030,7 @@ public class JettyWebSocketEndpoint
                   System.out.println("[" + time + "] "+"JettyWebSocketEndpoint: Audio chunk send failed: " + cause.getMessage() + " chunk " + chunk + " time = " + (time-starttime));
                   socketBusy = false ;
                   bufferBusy = false ;
+                  lastSentThreshold = 0 ;  
                   session.close(); // Consider closing the session on failure
                }
             });
