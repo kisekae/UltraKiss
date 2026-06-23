@@ -103,7 +103,7 @@ console.log = function() {
 };
 
 // Timestamp our console log file.
-console.log("UltraKiss websocket client.js released June 19, 2026") ;  
+console.log("UltraKiss websocket client.js released June 22, 2026") ;  
 const now = new Date() ;
 console.log(now) ;
 
@@ -182,6 +182,8 @@ window.addEventListener("beforeunload", function (e) {
 window.addEventListener('unload', () => {
   // Perform minor synchronous cleanup tasks here
   console.log('Browser tab is closing...');
+  terminated = true ;
+  shutdownAudio() ;
   shutdown() ;
 });
 
@@ -406,7 +408,7 @@ ws.onclose = function(event) {
             window.reconnectTimeoutId = setTimeout(function() {
                 reconnectcount++ ;
                 connectWebSocket();
-            }, 5000); // Reconnect after 5 seconds (5000 milliseconds)
+            }, 2000); // Reconnect after 2 seconds (2000 milliseconds)
         }
     }
     else
@@ -571,9 +573,14 @@ ws.onmessage = function (evt) {
                     
                     source.buffer = buffer;
                     source.connect(audioContext.destination);
-                    console.log("Playback begins for "+audioNameMap.get(source));
-                    ws.send("notify Playback begins for "+audioNameMap.get(source)) ;
-                    source.start(0); // Play immediately
+                    if (!terminated)
+                    {
+                        console.log("Playback begins for "+audioNameMap.get(source));
+                        ws.send("notify Playback begins for "+audioNameMap.get(source)) ;
+                        source.start(0); // Play immediately
+                    }
+                    else
+                        console.log("Source for "+audioNameMap.get(source)+" not started, client is terminated") ;
                     
                     source.onended = () => {
                        console.log("Playback finished for "+audioNameMap.get(source));
@@ -621,15 +628,19 @@ ws.onmessage = function (evt) {
 
             // https://github.com/fraigo/javascript-midi-player
             player = new MIDIPlayer(url) ;
-            console.log("new player assigned") ;
-            
+            console.log("new player assigned") ;            
             
             // the load event is triggered when the player is loaded
-            player.onload = function(song){
-                console.log("Playback begins for "+audioNameMap.get(player));
-                ws.send("notify Playback begins for "+audioNameMap.get(player)) ;
-                player.play() ;
-                playerstopped = false ;
+            player.onload = function(song) {
+                if (!terminated)
+                {
+                    console.log("Playback begins for "+audioNameMap.get(player));
+                    ws.send("notify Playback begins for "+audioNameMap.get(player)) ;
+                    player.play() ;
+                    playerstopped = false ;
+                }
+                else
+                    console.log("Player for "+audioNameMap.get(player)+" not started, client is terminated") ;
             } ;
             
             // The end event is triggered when the song ends
@@ -776,9 +787,10 @@ ws.onmessage = function (evt) {
         else if (tokens[0] === "close")
         {
             console.log("Close socket request on client.");
+            terminated = true ;
+            shutdownAudio() ;
             window.onblur = null ;
             window.onfocus = null ;
-            terminated = true ;
             ws.close(1000,"UltraKiss terminated.") ;
         }
     } 
@@ -986,6 +998,24 @@ function sendAudioStop(source)
    }                           
 }
 
+
+// Shutdown all audio.
+
+function shutdownAudio()
+{
+    for (const [key, source] of audioSourceMap) 
+    {
+        console.log("shutdown audio source " + audioNameMap.get(source));
+        source.stop(0) ;
+        source.disconnect() ;
+    }     
+    if (!(player === undefined)) 
+    { 
+        console.log("shutdown midi player for " + audioNameMap.get(player));
+        player.stop() ;
+        playerstopped = true ;
+    }
+}
 
 /* 
  * Canvas and Document events.  These are used to capture user actions and
