@@ -103,7 +103,7 @@ console.log = function() {
 };
 
 // Timestamp our console log file.
-console.log("UltraKiss websocket client.js released June 22, 2026") ;  
+console.log("UltraKiss websocket client.js released July 1, 2026") ;  
 const now = new Date() ;
 console.log(now) ;
 
@@ -386,7 +386,9 @@ ws.onopen = function(event) {
     if (ws.readyState === WebSocket.OPEN) {
         console.log("screen " + canvas.width + " " + canvas.height);
         ws.send("screen " + canvas.width + " " + canvas.height);
-    }
+        ws.send("browser " + getBrowserName()) ;
+        ws.send("device " + getDeviceType()) ;
+     }
     // Start the loop to report the screen rate to the server.
 //    measureScreenRate(); 
 };
@@ -441,7 +443,10 @@ ws.onmessage = function (evt) {
         // "cursor cursortype"
         
         if (tokens[0] === "cursor")
+        {
            setCursor(tokens[1]) ;
+           ws.send("setcursor changed to "+tokens[1]) ;
+        }
        
         // Show file open dialog to begin uploading a client file to the server.
         // This is the click() event that initiates the uploadFile() process.
@@ -991,7 +996,9 @@ function sendAudioStop(source)
    {
       if (value === source) 
       {
-         ws.send("audiostop " + key + " " + audioNameMap.get(source)) ;
+         if (ws.readyState === WebSocket.OPEN) {
+            ws.send("audiostop " + key + " " + audioNameMap.get(source)) ;
+         }
          audioSourceMap.delete(key) ;
          audioNameMap.delete(source) ;
       }
