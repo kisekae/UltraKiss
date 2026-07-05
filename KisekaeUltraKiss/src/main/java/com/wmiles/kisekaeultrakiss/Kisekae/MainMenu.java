@@ -1819,8 +1819,8 @@ final public class MainMenu extends KissMenu
          parent.showStatus(null);
          Dimension screenArea = Kisekae.getScreenSize() ;
          webframe.setSize(screenArea) ;
-         Kisekae.setCursor(parent,Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
          webframe.setVisible(true) ;
+         Kisekae.setCursor(parent,Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) ;
          webframe.toFront() ;
          return ;
       }

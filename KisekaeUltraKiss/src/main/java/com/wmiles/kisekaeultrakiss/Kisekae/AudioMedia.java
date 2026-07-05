@@ -719,7 +719,7 @@ final class AudioMedia extends Audio
 				{
 					if (repeatcount > 0) repeatcount-- ;
 					repeat = (repeatcount != 0) ;
-               if (repeatcount > 0)
+               if (repeatcount != 0)
                {
                   time = System.currentTimeMillis() - Configuration.getTimestamp() ;
                   if (OptionsDialog.getDebugSound())
@@ -729,13 +729,42 @@ final class AudioMedia extends Audio
                   javax.swing.SwingUtilities.invokeLater(runner) ;
                }
 				}
-				else
+            
+      		if (!repeat || repeatcount == 0)
             {
 					doCallback() ;
             	started = false ;
                stopping = false ;
                time = System.currentTimeMillis() - Configuration.getTimestamp() ;
                setStopTime(time) ;   
+            }
+
+            // Fire any generic mediastop() events.  
+      
+      		if (!repeat || repeatcount == 0)
+            {
+               MainFrame mf = Kisekae.getMainFrame() ;
+               Configuration config = (mf != null) ? mf.getConfig() : null ;
+               PanelFrame panel = (mf != null) ? mf.getPanel() : null ;
+               EventHandler handler = (config != null) ? config.getEventHandler() : null ;
+         		Vector v = (handler != null) ? handler.getEvent("mediastop") : null ;
+               if (v != null)
+               {
+                  Vector mediaevents = new Vector() ;
+                  for (int i = 0; i < v.size(); i++)
+                  {
+                     FKissEvent e = (FKissEvent) v.elementAt(i) ;
+                     Vector params = e.getParameters() ;
+                     if (params == null) continue ;
+                     String name = getName() ;
+                     String p0 = e.getFirstParameter() ;
+                     p0 = (p0 != null) ? Variable.getStringLiteralValue(p0) : name ;
+                     if (name == null || !name.equals(p0)) continue ;
+                     mediaevents.add(e) ;
+                  }
+                 if (mediaevents.size() > 0)
+                		EventHandler.fireEvents(mediaevents,panel,Thread.currentThread(),null) ;
+               } 
             }
 			}
          
@@ -848,7 +877,7 @@ final class AudioMedia extends Audio
 				{
 					if (repeatcount > 0) repeatcount-- ;
 					repeat = (repeatcount != 0) ;
-					if (repeatcount > 0 || restart) 
+					if (repeatcount != 0 || restart) 
                {
                   time = System.currentTimeMillis() - Configuration.getTimestamp() ;
                   if (OptionsDialog.getDebugSound())
@@ -858,6 +887,7 @@ final class AudioMedia extends Audio
         				javax.swing.SwingUtilities.invokeLater(runner) ;
    				}
             }
+            
 				if (!repeat || repeatcount == 0)
             {
                doCallback() ;
@@ -866,23 +896,30 @@ final class AudioMedia extends Audio
 
             // Fire any generic mediastop() events.  
       
-            MainFrame mf = Kisekae.getMainFrame() ;
-            Configuration config = (mf != null) ? mf.getConfig() : null ;
-            PanelFrame panel = (mf != null) ? mf.getPanel() : null ;
-            EventHandler handler = (config != null) ? config.getEventHandler() : null ;
-      		Vector v = (handler != null) ? handler.getEvent("mediastop") : null ;
-            if (v != null)
+      		if (!repeat || repeatcount == 0)
             {
-               Vector mediaevents = new Vector() ;
-               for (int i = 0; i < v.size(); i++)
+               MainFrame mf = Kisekae.getMainFrame() ;
+               Configuration config = (mf != null) ? mf.getConfig() : null ;
+               PanelFrame panel = (mf != null) ? mf.getPanel() : null ;
+               EventHandler handler = (config != null) ? config.getEventHandler() : null ;
+         		Vector v = (handler != null) ? handler.getEvent("mediastop") : null ;
+               if (v != null)
                {
-                  FKissEvent e = (FKissEvent) v.elementAt(i) ;
-                  Vector params = e.getParameters() ;
-                  if (params == null || params.size() > 0) continue ;
-                  mediaevents.add(e) ;
-               }
-               if (mediaevents.size() > 0)
-            		EventHandler.fireEvents(mediaevents,panel,Thread.currentThread(),null) ;
+                  Vector mediaevents = new Vector() ;
+                  for (int i = 0; i < v.size(); i++)
+                  {
+                     FKissEvent e = (FKissEvent) v.elementAt(i) ;
+                     Vector params = e.getParameters() ;
+                     if (params == null) continue ;
+                     String name = getName() ;
+                     String p0 = e.getFirstParameter() ;
+                     p0 = (p0 != null) ? Variable.getStringLiteralValue(p0) : name ;
+                     if (name == null || !name.equals(p0)) continue ;
+                     mediaevents.add(e) ;
+                  }
+                 if (mediaevents.size() > 0)
+                		EventHandler.fireEvents(mediaevents,panel,Thread.currentThread(),null) ;
+               } 
             }
 	      }
 

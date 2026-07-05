@@ -4,7 +4,7 @@
   <groupId>com.wmiles</groupId>
   <artifactId>KisekaeUltraKiss</artifactId>
   <name>KisekaeUltraKiss</name>
-  <version>5.3</version>
+  <version>5.4</version>
   <build>
     <plugins>
       <plugin>

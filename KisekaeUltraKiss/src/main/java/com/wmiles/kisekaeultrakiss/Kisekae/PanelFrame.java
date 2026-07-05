@@ -2682,6 +2682,19 @@ final class PanelFrame extends JPanel
       // Use our FileWriter to copy the files.
 
 		FileWriter w = new FileWriter(parent,zip,contents,true) ;
+      w.callback.addActionListener(new ActionListener() 
+      {
+         @Override
+         public void actionPerformed(ActionEvent e) 
+         {
+            if (zip != null) 
+            {
+               String type = (zip.isDirectory()) ? "directory" : "archive" ;
+               String s = "New file imports are saved to " + type + " \"" + zip.getFileName() +"\"";
+               JOptionPane.showMessageDialog(parent, s, "Import File", JOptionPane.INFORMATION_MESSAGE) ;
+            }
+         }
+      });
 		Thread thread = new Thread(w) ;
       thread.start() ;
    }

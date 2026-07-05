@@ -997,6 +997,17 @@ class AudioSound extends Audio
       stopping = false ;
       setStopTime(time) ;      
 
+      // Flush the line to remove any queued data.
+           
+      if (event != null)
+      {
+         Line line = event.getLine() ;
+         if (line instanceof DataLine)
+         {
+            ((DataLine) line).flush() ;
+         }
+      }
+
 		// The repeat count is a count of the number of times to play the 
       // sound.  If zero this is a request to stop playing the sound.
 
@@ -1004,7 +1015,7 @@ class AudioSound extends Audio
 		{
 			if (repeatcount > 0) repeatcount-- ;
 			repeat = (repeatcount != 0) ;
-			if (repeatcount > 0) 
+			if (repeatcount != 0) 
          {
             Runnable runner = new Runnable()
             { public void run() { play() ; } } ;
@@ -1019,37 +1030,33 @@ class AudioSound extends Audio
         	started = false ;
       }
 
-      // Flush the line to remove any queued data.
-           
-      if (event != null)
-      {
-         Line line = event.getLine() ;
-         if (line instanceof DataLine)
-         {
-            ((DataLine) line).flush() ;
-         }
-      }
-
       // Fire any generic mediastop() events.  
      
-      MainFrame mf = Kisekae.getMainFrame() ;
-      Configuration config = (mf != null) ? mf.getConfig() : null ;
-      PanelFrame panel = (mf != null) ? mf.getPanel() : null ;
-      EventHandler handler = (config != null) ? config.getEventHandler() : null ;
-  		Vector v = (handler != null) ? handler.getEvent("mediastop") : null ;
-      if (v != null)
+		if (!repeat || repeatcount == 0)
       {
-         Vector mediaevents = new Vector() ;
-         for (int i = 0; i < v.size(); i++)
+         MainFrame mf = Kisekae.getMainFrame() ;
+         Configuration config = (mf != null) ? mf.getConfig() : null ;
+         PanelFrame panel = (mf != null) ? mf.getPanel() : null ;
+         EventHandler handler = (config != null) ? config.getEventHandler() : null ;
+     		Vector v = (handler != null) ? handler.getEvent("mediastop") : null ;
+         if (v != null)
          {
-            FKissEvent e = (FKissEvent) v.elementAt(i) ;
-            Vector params = e.getParameters() ;
-            if (params == null || params.size() > 0) continue ;
-            mediaevents.add(e) ;
-         }
-         if (mediaevents.size() > 0)
-       		EventHandler.fireEvents(mediaevents,panel,Thread.currentThread(),null) ;
-      }        
+            Vector mediaevents = new Vector() ;
+            for (int i = 0; i < v.size(); i++)
+            {
+               FKissEvent e = (FKissEvent) v.elementAt(i) ;
+               Vector params = e.getParameters() ;
+               if (params == null) continue ;
+               String name = getName() ;
+               String p0 = e.getFirstParameter() ;
+               p0 = (p0 != null) ? Variable.getStringLiteralValue(p0) : name ;
+               if (name == null || !name.equals(p0)) continue ;
+               mediaevents.add(e) ;
+            }
+           if (mediaevents.size() > 0)
+          		EventHandler.fireEvents(mediaevents,panel,Thread.currentThread(),null) ;
+         }    
+      }
    }
       
 	// Inner class to catch sound clip events.

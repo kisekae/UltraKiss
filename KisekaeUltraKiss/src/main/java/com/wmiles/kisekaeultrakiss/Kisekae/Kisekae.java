@@ -88,7 +88,7 @@ public class Kisekae extends Applet
    // Security variables
 
    private static String copyright = 
-      "Kisekae UltraKiss V5.3(c) 2002-2026 William Miles" ;
+      "Kisekae UltraKiss V5.4(c) 2002-2026 William Miles" ;
    private static Object authorize = null ;        // Seigen module
    private static Calendar warningdate = null ;    // Secure warning
    private static Calendar expiredate = null ;     // Licence expire
@@ -183,6 +183,7 @@ public class Kisekae extends Applet
    // Environment variables
 
    private static JettyServer server = null ;		// The websocket server
+   private static SignalHandler signal = null ;    // Websocket cursor wait
    private Toolkit toolkit = null ;						// Our environment toolkit
    private Thread engine = null ;						// Our thread and groups
    private String statusMsg = null ;					// The current status message
@@ -203,7 +204,7 @@ public class Kisekae extends Applet
 
       LogFile.start() ;
       builddate = Calendar.getInstance() ;
-      builddate.set(2026,6-1,23) ;
+      builddate.set(2026,7-1,1) ;
       
       // Restore the properties.
       
@@ -218,11 +219,12 @@ public class Kisekae extends Applet
       callback = new JButton("Kisekae Callback") ;
       
       // A Jetty server for an UltraKiss session is started to listen on 
-      // port 49152-49155.
+      // port 49152-49154.
       // Websocket resets to factory options.  
       
       if (Kisekae.isWebsocket())
       {
+         signal = new SignalHandler() ;
          boolean ssl = isWebsocketSSL() ;
          PrintLn.println("Kisekae: Jetty server thread about to start.  Port = " + websocketport + " SSL = " + ssl) ;
          server = new JettyServer(websocketport,ssl) ;
@@ -1718,7 +1720,8 @@ public class Kisekae extends Applet
    {
       callback.removeActionListener(al);
    }
-    
+
+   
    // Function to update the WebSocket client cursor on mouse movements.
    // Unknown cursors show the default cursor.
       
@@ -1739,8 +1742,25 @@ public class Kisekae extends Applet
       if (endpoint == null) return ;
       String jsCursor = CursorNameMapper.getJavascriptCursorStyleCode(cursor.getName()) ;
       endpoint.send("cursor " + jsCursor);
-   }
+      
+      // Wait for cursor notify reply from client.  Note, this is locking
+      // the AWT thread so it has to wake up on its own.
 
+      if (signal != null)
+      {
+         try { signal.waitForSignal(300) ; }
+         catch (InterruptedException e) { }
+      }
+   }
+    
+   
+   // Function to resume execution when the client cursor is updated.
+      
+   public static void notifyCursor()
+   {
+      if (signal != null) signal.sendSignal() ;
+   }
+   
    
    // Function to load a file.  
    
@@ -3083,5 +3103,37 @@ public class Kisekae extends Applet
          System.exit(-1) ;
       }
    }
+   
+   
+   public static class SignalHandler 
+   {
+      private boolean signalReceived = true;
+
+      // Pause the thread until signaled, or wake up after timeout
+      public synchronized void waitForSignal(long timeoutMillis) throws InterruptedException 
+      {
+         long targetTime = System.currentTimeMillis() + timeoutMillis;
+         long timeRemaining = timeoutMillis;
+         signalReceived = false ;
+
+         while (!signalReceived && timeRemaining > 0) 
+         {
+            wait(timeRemaining);
+            timeRemaining = targetTime - System.currentTimeMillis();
+         }
+
+         if (!signalReceived) 
+         {
+            PrintLn.println("Kisekae: setCursor timeout reached ("+timeoutMillis+"). Waking up without signal.");
+         }
+      }
+
+      // Send the signal to resume the thread
+      public synchronized void sendSignal() 
+      {
+        signalReceived = true;
+        notify();
+      }
+   }   
 }
 

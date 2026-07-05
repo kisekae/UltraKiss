@@ -6250,7 +6250,7 @@ final public class OptionsDialog extends KissDialog
       setDragMove(true) ;
       setConstrainVisible(true) ;
       setImportImageAsCel(true) ;
-      setExportImageAsCel(true) ;
+      setExportImageAsCel(false) ;
       setImportComponentAsCel(true) ;
       setExportComponentAsCel(true) ;
       setWriteCelOffset(true) ;

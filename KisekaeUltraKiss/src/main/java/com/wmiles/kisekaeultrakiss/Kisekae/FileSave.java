@@ -213,13 +213,25 @@ final class FileSave implements ActionListener
             if (Kisekae.isWebsocket())
             {
                if (OptionsDialog.getDebugWebSocket())
-                  PrintLn.println("FileSave: Websocket kiss object is " + kiss + ", source is " + source);            
+                  PrintLn.println("FileSave: Websocket kiss object is " + kiss + ", source is " + source + ", filename=" + filename);            
                JettyWebSocketEndpoint endpoint = Kisekae.getServerEndpoint() ;
                int id = (parent instanceof KissFrame) ? ((KissFrame)parent).getUniqueIdentifier() : 0 ;
                long n = (sourcefile != null) ? sourcefile.length() : 0 ;
                if (endpoint != null) 
                {
                   String name = endpoint.removeSpaces(filename,"_"); 
+                  // Remove /var/tmp/ and /var/tmp/Cache/
+                  if (name.startsWith("/var/tmp/"))
+                  {
+                     File f = new File(name) ;
+                     name = f.getName() ;
+                  }
+                  // Remove UltraKiss- and 20 temp file digits before extension
+                  if (name.startsWith("UltraKiss-"))
+                  {
+                     String s = name.substring(10) ;
+                     name = s.replaceAll("\\d{19,20}(\\.[^.]+)$", "$1");                     
+                  }
                   endpoint.send("filesave " + id + " " + name + " " + n) ;
                   endpoint.sendFile(sourcefile) ;
                } 
@@ -331,11 +343,23 @@ final class FileSave implements ActionListener
                }
 
                if (OptionsDialog.getDebugWebSocket())
-                  PrintLn.println("FileSave: Websocket kiss object is " + kiss + ", source is " + source);            
+                  PrintLn.println("FileSave: Websocket kiss object is " + kiss + ", source is " + source + ", filename=" + filename);            
                long n = (sourcefile != null) ? sourcefile.length() : 0 ;
                if (endpoint != null) 
                {
                   String name = endpoint.removeSpaces(filename,"_"); 
+                  // Remove /var/tmp/ and /var/tmp/Cache/
+                  if (name.startsWith("/var/tmp/"))
+                  {
+                     File f = new File(name) ;
+                     name = f.getName() ;
+                  }
+                  // Remove UltraKiss- and 20 temp file digits before extension
+                  if (name.startsWith("UltraKiss-"))
+                  {
+                     String s = name.substring(10) ;
+                     name = s.replaceAll("\\d{19,20}(\\.[^.]+)$", "$1");                     
+                  }
                   endpoint.send("filesave " + id + " " + name + " " + n) ;
                   endpoint.sendFile(sourcefile) ;
                }

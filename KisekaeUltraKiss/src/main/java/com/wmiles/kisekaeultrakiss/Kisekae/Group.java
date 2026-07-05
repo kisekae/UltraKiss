@@ -698,7 +698,7 @@ final class Group extends KissObject
 
 	// Set the animation flag for this object. An animated object
    // shows all cels for a constant frame display time. For backwards
-   // compatibiity, an animate(group,0) stops all group cels from 
+   // compatibility, an animate(group,0) stops all group cels from 
    // animating and an animate(group,1) starts all group cels.
 
 	void setAnimate(int n)

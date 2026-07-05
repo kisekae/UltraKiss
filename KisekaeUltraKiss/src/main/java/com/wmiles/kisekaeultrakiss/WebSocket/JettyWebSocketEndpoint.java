@@ -153,7 +153,7 @@ public class JettyWebSocketEndpoint
      	if (session == null) return ;
 		time = System.currentTimeMillis() - createtime ;
       
-      if (!(message.startsWith("mouse") || message.startsWith("cursor") || message.startsWith("refresh")))
+      if (!(message.startsWith("mouse") || message.contains("cursor") || message.startsWith("refresh")))
       {
          if (OptionsDialog.getDebugWebSocket() 
                  || message.startsWith("file") || message.startsWith("audio")
@@ -633,6 +633,13 @@ public class JettyWebSocketEndpoint
       }     
       
        
+      // notify cursor message
+      if (message.startsWith("setcursor"))
+      {
+         Kisekae.notifyCursor() ;
+      } 
+      
+       
       // notify message
       if (message.startsWith("notify"))
       {
@@ -789,7 +796,7 @@ public class JettyWebSocketEndpoint
         	   	time = System.currentTimeMillis() - createtime ;
                System.out.println("[" + time + "] "+"JettyWebSocketEndpoint: sendText failed: " + cause.getMessage());
                socketBusy = false ;
-               session.close(); // Consider closing the session on failure
+      //         session.close(); // Consider closing the session on failure
             }
          });
       } 
@@ -893,7 +900,7 @@ public class JettyWebSocketEndpoint
                   socketBusy = false ;
                   bufferBusy = false ;
                   lastSentThreshold = 0 ;
-                  session.close(); // Consider closing the session on failure
+//                  session.close(); // Consider closing the session on failure
                }
             });
                   
@@ -1031,7 +1038,7 @@ public class JettyWebSocketEndpoint
                   socketBusy = false ;
                   bufferBusy = false ;
                   lastSentThreshold = 0 ;  
-                  session.close(); // Consider closing the session on failure
+//                  session.close(); // Consider closing the session on failure
                }
             });
                   
