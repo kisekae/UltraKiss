@@ -1,7 +1,7 @@
 # UltraKiss
 
 
-**UltraKiss 5.3** is now released. This release improves the Web Search function and resolves stability issues with the UltraKiss Portal.  Performance improvements are also made to the websocket server implementation described below.  For all corrections use the UltraKiss menu command **Help-Read Me-What's New**.  
+**UltraKiss 5.4** is now released. This release consolidate corrections since version 5.3.  For all corrections use the UltraKiss menu command **Help-Read Me-What's New**.  
 
 Unfinished work from UltraKiss 3.3 (2008) is now complete.  **UltraKiss is now end-of-life.**  Submit support issues on GitHub or from within UltraKiss using the menu command **Help-Bug Report**. 
 
