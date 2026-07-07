@@ -43,6 +43,7 @@ openssl pkcs12 -export \
 if [ $? -eq 0 ]; then
     # If conversion is successful, move the temporary file to the target location
     mv "$TARGET_P12_FILE.tmp" "$TARGET_P12_FILE"
+    chown wmiles:wmiles "$TARGET_P12_FILE"
     echo "Successfully converted PEM to PKCS12: $TARGET_P12_FILE"
 
     # 3. Signal Jetty to reload the SSL context
