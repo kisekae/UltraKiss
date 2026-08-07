@@ -1101,7 +1101,7 @@ final class ToolBar extends JPanel
 		}
 
 		select.setEnabled(b1) ;
-		save.setEnabled(b2 && !Kisekae.isExpired()) ;
+		save.setEnabled(b2 && !Kisekae.isExpired() && !Kisekae.isWebsocket()) ;
 		cut.setEnabled(b3) ;
 		copy.setEnabled(b3) ;
 		paste.setEnabled(b4) ;

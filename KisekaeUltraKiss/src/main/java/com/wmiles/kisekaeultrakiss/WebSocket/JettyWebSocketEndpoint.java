@@ -1438,7 +1438,8 @@ public class JettyWebSocketEndpoint
                
                // If duration exceeds timeout value, show a warning prompt.
                
-               if (duration > timeout  && !audioIsPlaying && !WebSearchFrame.isActivated()) 
+               if ((duration > timeout && Kisekae.isWebsocketDialog()) ||
+                   (duration > timeout && !audioIsPlaying && !WebSearchFrame.isActivated())) 
                {
                   if (warningsent)
                   {

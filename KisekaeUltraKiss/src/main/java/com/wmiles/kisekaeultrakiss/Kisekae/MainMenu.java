@@ -917,13 +917,43 @@ final public class MainMenu extends KissMenu
 
          if (imageeditor == source)
          {
-           if (OptionsDialog.getDebugControl())
+            if (OptionsDialog.getDebugControl())
                PrintLn.println("MainMenu image editor request") ;
-            Kisekae.setCursor(parent,Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
-            ImageFrame editor = new ImageFrame() ;
-            editor.setVisible(true) ;
-            editor.toFront() ;
-            return ;
+            String s = OptionsDialog.getImageEditor() ;
+            if ((s == null || "UltraKiss Image Editor".equalsIgnoreCase(s)) || Kisekae.isWebsocket())
+            {
+               Kisekae.setCursor(parent,Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) ;
+               ImageFrame editor = new ImageFrame() ;
+               editor.setVisible(true) ;
+               editor.toFront() ;
+               return ;
+            }
+            
+            // Run an external image editor tool.
+            
+            parent.showStatus("Starting external Image Editor: " + s);
+            new Thread(() -> {
+               try 
+               {
+                  ProcessBuilder processBuilder = new ProcessBuilder(s) ;
+                  // Start the process
+                  Process process = processBuilder.start();
+                  // Wait for the process to complete and get the exit code
+                  int exitCode = process.waitFor();
+                  // Safely pass final results back to the EDT
+                  SwingUtilities.invokeLater(() -> {
+                     parent.showStatus("Image Editor exited with status code: " + exitCode);
+                  });
+               }
+               catch (InterruptedException e) { }
+               catch (IOException e) 
+               {
+                  e.printStackTrace();
+                  SwingUtilities.invokeLater(() -> {
+                     parent.showStatus("Image Editor IOException " + e.getMessage());
+                  });
+               }   
+            }).start(); // Starts the background thread
          }
 
          // A Media Player request invokes the media player tool to play audio

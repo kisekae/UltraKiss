@@ -204,7 +204,7 @@ public class Kisekae extends Applet
 
       LogFile.start() ;
       builddate = Calendar.getInstance() ;
-      builddate.set(2026,7-1,6) ;
+      builddate.set(2026,8-1,7) ;
       
       // Restore the properties.
       
@@ -1071,6 +1071,7 @@ public class Kisekae extends Applet
    public static boolean isSecure() { return secure ; }
    public static boolean isWebsocket() { return websocket ; }
    public static boolean isWebsocketSSL() { return websocketssl ; }
+   public static boolean isWebsocketDialog() { return websocketdialog != null && websocketdialog.isVisible(); }
    public static boolean isBatch() { return batch ; }
    public static boolean isSearchThrottled() { return throttle ; }
    public static boolean isAccept() { return accept ; }
@@ -2801,7 +2802,7 @@ public class Kisekae extends Applet
                 + "KiSS sets must be saved as LZH or ZIP archive files for transfer to your computer.<br><br>"
                 + "To load and run your own KiSS sets packaged in LZH or ZIP files use <a href=\"file://fileopen\">File-Open</a>.<br>"
                 + "To save LZH or ZIP or other files from UltraKiss to your local computer use <a href=\"\">File-Save As</a>.<br>"
-                + "To load and run online KiSS sets available on the Internet use <a href=\"file://openportal\">File-Open Portal</a>.<br><br>"
+                + "To download and run online KiSS sets available on the Internet use <a href=\"file://openportal\">File-Open Portal</a>.<br><br>"
                 + "If you do not know what KiSS is, see the UltraKiss documentation using <a href=\"file://helpcontents\">Help-Contents</a>.<br>"
                 + "To learn how to make or visually edit KiSS sets within UltraKiss see <a href=\"file://helptutorial\">Help-Tutorials</a>.<br>"
                 + "To submit an issue report or offer suggestions for improvement see <a href=\"file://helpbugreport\">Help-Bug Report</a>.<br><br>"

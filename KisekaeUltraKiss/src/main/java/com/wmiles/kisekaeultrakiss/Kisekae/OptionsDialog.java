@@ -235,6 +235,7 @@ final public class OptionsDialog extends KissDialog
    private static String splashdir = Kisekae.getSplashDir() ; 
    private static String icondir = Kisekae.getIconDir() ; 
    private static String cachedir = Kisekae.getCacheDir() ; 
+   private static String imageeditor = "UltraKiss Image Editor" ; 
    private static String onlinehelp = "HelpFiles/product/" ;
    private static Integer iconnumber = Integer.valueOf(0) ;
    private static Integer splashsetnumber = Integer.valueOf(0) ;
@@ -412,6 +413,7 @@ final public class OptionsDialog extends KissDialog
    private static String initsplashdir = new String(splashdir) ;
    private static String initicondir = new String(icondir) ;
    private static String initcachedir = new String(cachedir) ;
+   private static String initimageeditor = new String(imageeditor) ;
    private static String initonlinehelp = new String(onlinehelp) ;
    private static Object initlanguage = language ;
    private static Object initencoding = encoding ;
@@ -595,6 +597,7 @@ final public class OptionsDialog extends KissDialog
 	private JLabel jLabel22 = new JLabel();
 	private JLabel jLabel23 = new JLabel();
 	private JLabel jLabel24 = new JLabel();
+	private JLabel jLabel25 = new JLabel();
    private JLabel SplashSetName = new JLabel();
 	private JCheckBox MouseDebug = new JCheckBox();
 	private JCheckBox ControlDebug = new JCheckBox();
@@ -746,6 +749,7 @@ final public class OptionsDialog extends KissDialog
 	private JTextField SplashDirectory = new JTextField();
 	private JTextField IconDirectory = new JTextField();
 	private JTextField CacheDirectory = new JTextField();
+	private JTextField ImageEditor = new JTextField();
 	private JList IconList = new JList();
 	private JList SplashList = new JList();
    private JScrollPane IconScrollPane = new JScrollPane(IconList) ;
@@ -753,6 +757,7 @@ final public class OptionsDialog extends KissDialog
    private JButton SplashBtn = new JButton() ;
    private JButton IconBtn = new JButton() ;
    private JButton CacheBtn = new JButton() ;
+   private JButton ImageEditorBtn = new JButton() ;
    private JButton HelpBtn = new JButton() ;
    private JButton UserBtn = new JButton() ;
    private JButton PortalBtn = new JButton() ;
@@ -1684,6 +1689,7 @@ final public class OptionsDialog extends KissDialog
 		jLabel18.setText(Kisekae.getCaptions().getString("SplashDirectoryText"));
 		jLabel19.setText(Kisekae.getCaptions().getString("IconDirectoryText"));
 		jLabel24.setText(Kisekae.getCaptions().getString("CacheDirectoryText"));
+		jLabel25.setText(Kisekae.getCaptions().getString("ImageEditorText"));
 		KissWeb.setText(kissweb);
 		jLabel14.setToolTipText(Kisekae.getCaptions().getString("ToolTipKissWeb"));
 		KissWeb.addActionListener(this);
@@ -1699,6 +1705,9 @@ final public class OptionsDialog extends KissDialog
 		CacheDirectory.setText(cachedir);
 		jLabel24.setToolTipText(Kisekae.getCaptions().getString("ToolTipCacheDir"));
 		CacheDirectory.addActionListener(this);
+		ImageEditor.setText(imageeditor);
+		jLabel25.setToolTipText(Kisekae.getCaptions().getString("ToolTipImageEditor"));
+		ImageEditor.addActionListener(this);
 		SplashDirectory.setText(splashdir);
 		jLabel18.setToolTipText(Kisekae.getCaptions().getString("ToolTipSplashDir"));
 		SplashDirectory.addActionListener(this);
@@ -1727,6 +1736,10 @@ final public class OptionsDialog extends KissDialog
       UserBtn.setBorder(eb3) ;
 		UserBtn.setToolTipText(Kisekae.getCaptions().getString("ChooseDirectoryText"));
 		UserBtn.addActionListener(this);
+      ImageEditorBtn.setIcon(folderIcon) ;
+      ImageEditorBtn.setBorder(eb3) ;
+		ImageEditorBtn.setToolTipText(Kisekae.getCaptions().getString("ChooseDirectoryText"));
+		ImageEditorBtn.addActionListener(this);
       HelpBtn.setIcon(folderIcon) ;
       HelpBtn.setBorder(eb3) ;
 		HelpBtn.setToolTipText(Kisekae.getCaptions().getString("ChooseDirectoryText"));
@@ -1894,6 +1907,8 @@ final public class OptionsDialog extends KissDialog
             ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(5, 0, 5, 10), 0, 0));
 		jPanel31.add(jLabel24, new GridBagConstraints(0, 6, 1, 1, 0.0, 0.0
             ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(5, 0, 5, 10), 0, 0));
+		jPanel31.add(jLabel25, new GridBagConstraints(0, 7, 1, 1, 0.0, 0.0
+            ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(5, 0, 5, 10), 0, 0));
 		jPanel31.add(KissWeb, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0
             ,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
 		jPanel31.add(PortalBtn, new GridBagConstraints(2, 1, 1, 1, 0.0, 0.0
@@ -1919,6 +1934,10 @@ final public class OptionsDialog extends KissDialog
 		jPanel31.add(CacheDirectory, new GridBagConstraints(1, 6, 1, 1, 0.0, 0.0
             ,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
 		jPanel31.add(CacheBtn, new GridBagConstraints(2, 6, 1, 1, 0.0, 0.0
+            ,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 10, 0, 0), 0, 0));
+		jPanel31.add(ImageEditor, new GridBagConstraints(1, 7, 1, 1, 0.0, 0.0
+            ,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
+		jPanel31.add(ImageEditorBtn, new GridBagConstraints(2, 7, 1, 1, 0.0, 0.0
             ,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 10, 0, 0), 0, 0));
 		jPanel30.add(jPanel51, new GridBagConstraints(0, 1, 2, 1, 0.0, 0.0
 				,GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(5, 5, 5, 5), 0, 0));
@@ -2667,6 +2686,7 @@ final public class OptionsDialog extends KissDialog
 	static public String getSplashDir() { return splashdir ; }
 	static public String getIconDir() { return icondir ; }
 	static public String getCacheDir() { return cachedir ; }
+	static public String getImageEditor() { return imageeditor ; }
    static public Object getLanguage() { return language ; }
    static public Object getEncoding() { return encoding ; }
    static public Object getExportType() { return exporttype ; }
@@ -2962,6 +2982,9 @@ final public class OptionsDialog extends KissDialog
    
 	static public void setCacheDir(String s)
    { cachedir = Variable.getStringLiteralValue(s) ; }
+   
+	static public void setImageEditor(String s)
+   { imageeditor = Variable.getStringLiteralValue(s) ; }
 
 	static public void setIconNumber(int n)
    { iconnumber = Integer.valueOf(n) ; }
@@ -3227,6 +3250,7 @@ final public class OptionsDialog extends KissDialog
       else if ("splashdir".equalsIgnoreCase(option)) setSplashDir(value) ;
       else if ("icondir".equalsIgnoreCase(option)) setIconDir(value) ;
       else if ("cachedir".equalsIgnoreCase(option)) setCacheDir(value) ;
+      else if ("imageeditor".equalsIgnoreCase(option)) setImageEditor(value) ;
       else if ("language".equalsIgnoreCase(option)) setLanguage(value) ;
       else if ("encoding".equalsIgnoreCase(option)) setEncoding(value) ;
       else if ("exporttype".equalsIgnoreCase(option)) setExportType(value) ;
@@ -3388,6 +3412,7 @@ final public class OptionsDialog extends KissDialog
       else if ("splashdir".equalsIgnoreCase(option)) s += getSplashDir() ;
       else if ("icondir".equalsIgnoreCase(option)) s += getIconDir() ;
       else if ("cachedir".equalsIgnoreCase(option)) s += getCacheDir() ;
+      else if ("imageeditor".equalsIgnoreCase(option)) s += getImageEditor() ;
       else if ("language".equalsIgnoreCase(option)) s += getLanguage() ;
       else if ("encoding".equalsIgnoreCase(option)) s += getEncoding() ;
       else if ("exporttype".equalsIgnoreCase(option)) s += getExportType() ;
@@ -3561,6 +3586,7 @@ final public class OptionsDialog extends KissDialog
       SplashDirectory.setText(splashdir);
       IconDirectory.setText(icondir);
       CacheDirectory.setText(cachedir);
+      ImageEditor.setText(imageeditor);
 		EventPause.setSelected(eventpause);
 		ActionPause.setSelected(actionpause);
 		DisableAll.setSelected(disableall);
@@ -3806,6 +3832,7 @@ final public class OptionsDialog extends KissDialog
 		splashdir = SplashDirectory.getText() ;
 		icondir = IconDirectory.getText() ;
 		cachedir = CacheDirectory.getText() ;
+		imageeditor = ImageEditor.getText() ;
 		eventpause = EventPause.isSelected() ;
 		actionpause = ActionPause.isSelected() ;
 		disableall = DisableAll.isSelected() ;
@@ -3924,6 +3951,7 @@ final public class OptionsDialog extends KissDialog
 		splashdir = initsplashdir ;
 //		icondir = initicondir ;
 //		cachedir = initcachedir ;
+//		imageeditor = initimageeditor ;
 //    language = initlanguage ;
 //    encoding = initencoding ;
 //    exporttype = initexporttype ;
@@ -4385,6 +4413,7 @@ final public class OptionsDialog extends KissDialog
       kissweb = Kisekae.getKissWeb() ;
       userdir = Kisekae.getBaseDir() ;
       cachedir = Kisekae.getCacheDir() ; 
+      imageeditor = "UltraKiss Image Editor" ;
       website = Kisekae.getWebSite() ; ;
       splashdir = Kisekae.getFactorySplashDir() ; 
       splashsetnumber = Integer.valueOf(0) ;
@@ -4814,6 +4843,7 @@ final public class OptionsDialog extends KissDialog
       splashdir = toString1(p.getProperty("splashdir"),splashdir) ;
       icondir = toString1(p.getProperty("icondir"),icondir) ;
       cachedir = toString1(p.getProperty("cachedir"),cachedir) ;
+      imageeditor = toString1(p.getProperty("imageeditor"),imageeditor) ;
 	   iconnumber = Integer.valueOf(toInteger1(p.getProperty("iconnumber"),iconnumber)) ;
 	   splashsetnumber = Integer.valueOf(toInteger1(p.getProperty("splashsetnumber"),splashsetnumber)) ;
       setLanguage(toString1(p.getProperty("language"),language)) ;
@@ -5016,6 +5046,7 @@ final public class OptionsDialog extends KissDialog
       p.put("splashsetnumber",(""+getSplashSetNumber())) ;
       p.put("icondir",toString2(icondir)) ;
       p.put("cachedir",toString2(cachedir)) ;
+      p.put("imageeditor",toString2(imageeditor)) ;
       p.put("iconnumber",(""+getIconNumber())) ;
      
       if (lrufiles != null)
@@ -5039,6 +5070,7 @@ final public class OptionsDialog extends KissDialog
       p.put("splashdir",toString2(splashdir)) ;
       p.put("icondir",toString2(icondir)) ;
       p.put("cachedir",toString2(cachedir)) ;
+      p.put("imageeditor",toString2(imageeditor)) ;
       p.put("iconnumber",(""+getIconNumber())) ;
       p.put("splashsetnumber",(""+getSplashSetNumber())) ;
       
@@ -5174,7 +5206,8 @@ final public class OptionsDialog extends KissDialog
 	public void windowClosed(WindowEvent evt) { }
 	public void windowIconified(WindowEvent evt) { }
 	public void windowDeiconified(WindowEvent evt) { }
-  	public void windowActivated(WindowEvent evt) { setControls() ; }
+//  	public void windowActivated(WindowEvent evt) { setControls() ; }
+  	public void windowActivated(WindowEvent evt) { }
 	public void windowDeactivated(WindowEvent evt) { }
 
 
@@ -5271,6 +5304,22 @@ final public class OptionsDialog extends KissDialog
                s = Kisekae.setBase(s) ;
                UserDirectory.setText(s) ;
                UserDirectory.setCaretPosition(0) ;
+            }
+            return ;
+         }
+
+         // A directory button opens a file chooser.
+
+         if (source == ImageEditorBtn)
+         {
+            JFileChooser fc = new JFileChooser() ;
+            fc.setFileSelectionMode(JFileChooser.FILES_ONLY) ;
+            if (fc.showDialog(getParentFrame(),"OK") == JFileChooser.APPROVE_OPTION)
+            {
+               File f = fc.getSelectedFile() ;
+               String s = (f != null) ? f.getPath() : null ;
+               ImageEditor.setText(s) ;
+               ImageEditor.setCaretPosition(0) ;
             }
             return ;
          }
@@ -5867,6 +5916,7 @@ final public class OptionsDialog extends KissDialog
          SplashDirectory.setCaretPosition(0);
          IconDirectory.setCaretPosition(0);
          CacheDirectory.setCaretPosition(0);
+         ImageEditor.setCaretPosition(0);
       }
       
       if (source == UseDefaultWS)
@@ -6684,6 +6734,7 @@ final public class OptionsDialog extends KissDialog
 	   if (!splashdir.equals(initsplashdir)) writeLine(out,"; splashdir = \"" + splashdir + "\"") ;
 //	   if (!icondir.equals(initicondir)) writeLine(out,"; icondir = \"" + icondir + "\"") ;
 //	   if (!cachedir.equals(initcachedir)) writeLine(out,"; cachedir = \"" + cachedir + "\"") ;
+//	   if (!imageeditor.equals(initimiageeditor)) writeLine(out,"; imageeditor = \"" + imageeditor + "\"") ;
 //    if (applemac != initapplemac) writeLine(out,"; applemac = \"" + applemac + "\"") ;
 //    if (linux != initlinux) writeLine(out,"; linux = \"" + linux + "\"") ;
       if (playfkiss) writeLine(out,"; playfkiss = \"" + playfkiss + "\"") ;
