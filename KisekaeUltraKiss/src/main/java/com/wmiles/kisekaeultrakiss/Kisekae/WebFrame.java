@@ -70,6 +70,7 @@ import java.beans.PropertyChangeEvent ;
 import java.nio.charset.StandardCharsets;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 
@@ -1620,6 +1621,45 @@ final public class WebFrame extends KissFrame
          }        
       }
       
+      // Scroll to the anchor reference if we had an anchor on the url.
+
+      if (url != null) 
+      {
+         // Extract the anchor component (the portion after the '#')
+         final String anchorName = url.getRef();
+            
+         // Only scroll if an anchor reference actually exists in the URL
+         if (anchorName != null && !anchorName.isEmpty()) 
+         {
+            SwingUtilities.invokeLater(() -> {
+               Document doc = editor.getDocument();
+               if (doc instanceof HTMLDocument) 
+               {
+                  HTMLDocument htmlDoc = (HTMLDocument) doc;
+            
+                  // JEditorPane's default HTMLEditorKit looks for <a name="reference">
+                  // This retrieves the element directly by its anchor name identifier.
+                  Element element = htmlDoc.getElement(anchorName);
+                  
+                  if (element == null)
+                      element = htmlDoc.getElement(htmlDoc.getDefaultRootElement(),HTML.Attribute.NAME,anchorName) ;
+            
+                  if (element != null) 
+                  {
+                     if (OptionsDialog.getDebugPortal())
+                        PrintLn.println("WebFrame: found anchor reference: " + anchorName);
+                     editor.scrollToReference(anchorName);
+                  }
+                  else
+                  {
+                     if (OptionsDialog.getDebugPortal())
+                        PrintLn.println("WebFrame: anchor reference: " + anchorName + " not found in " + url) ;
+                  }
+               }  
+            });
+         }
+      }
+      
       // Show the page load time.
       
 		javax.swing.SwingUtilities.invokeLater(awt) ;
@@ -1927,6 +1967,43 @@ final public class WebFrame extends KissFrame
                { 
                   editor.setText(cachedContent) ;
                   editor.setCaretPosition(0);
+                        
+                  // Scroll to the anchor reference if we had an anchor on the url.
+
+                  final String anchorName = evturl.getRef();
+                  final URL url = evturl ;
+          
+                  // Only scroll if an anchor reference actually exists in the URL
+                  if (anchorName != null && !anchorName.isEmpty()) 
+                  {
+                     SwingUtilities.invokeLater(() -> {                       
+                        Document doc = editor.getDocument();
+                        if (doc instanceof HTMLDocument) 
+                        {
+                           HTMLDocument htmlDoc = (HTMLDocument) doc;
+            
+                           // JEditorPane's default HTMLEditorKit looks for <a name="reference">
+                           // This retrieves the element directly by its anchor name identifier.
+                           Element element = htmlDoc.getElement(anchorName);
+                           
+                           if (element == null)
+                               element = htmlDoc.getElement(htmlDoc.getDefaultRootElement(),HTML.Attribute.NAME,anchorName) ;
+            
+                           if (element != null) 
+                           {
+                              if (OptionsDialog.getDebugPortal())
+                                 PrintLn.println("WebFrame: found anchor reference: " + anchorName);
+                              editor.scrollToReference(anchorName);
+                           }
+                           else
+                           {
+                              if (OptionsDialog.getDebugPortal())
+                                 PrintLn.println("WebFrame: anchor reference: " + anchorName + " not found in " + url) ;
+                           }
+                        }  
+                     });
+                  }
+                  
                   Document doc = editor.getDocument();
                   if (doc instanceof HTMLDocument) 
                   { 

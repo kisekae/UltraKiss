@@ -1156,7 +1156,7 @@ final public class ZipManager extends KissFrame
 			Object o = tabledata.getValueAt(row,0) ;
 			if (!(o instanceof String)) continue ;
          String filename = (String) o ;
-         o = tabledata.getValueAt(row,5) ;
+         o = tabledata.getValueAt(row,6) ;
          String dir = (o instanceof String) ? o.toString() : "" ;
          if ("".equals(dir)) dir = null ;
          File f = new File(dir,filename) ;
