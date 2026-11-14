@@ -2,16 +2,16 @@
 
 **UltraKiss 5.4 update 1** is now released.  This update ensures that URL fragments are now recognized in the UltraKiss Portal tool.  The Portal now correctly interprets links from the OtakuWorld website.
 
-Unfinished work from UltraKiss 3.3 (2008) is now complete.  **UltraKiss is now end-of-life.**  Submit support issues on GitHub or from within UltraKiss using the menu command **Help-Bug Report**. 
+Unfinished work from UltraKiss 3.3 (2008) is now complete.  **UltraKiss is now end-of-life.**  Submit support issues through this [GitHub App](https://www.wmiles.com/IssueForm.html) or from within UltraKiss using the menu command **Help-Bug Report**. 
 
-Online browser access to KISS sets is provided using the Jetty server implementation shown below.  Use the menu command **File-Open Portal**. This service will remain operational for the forseeable future.
+Online browser access to KISS sets is provided using a Jetty server. This service will remain operational for the foreseeable future.
 
 Press this button to run UltraKiss in your browser.  
 (use CTRL+click on Windows or Linux to open in a new tab, use CMD+click on MacOS)
 
 [![UltraKiss](https://github.com/kisekae/UltraKiss/blob/master/src/Images/ultrakissbtn.svg)](https://www.wmiles.com/ultrakiss)
 
-To directly download and run KiSS sets available on the Internet use the UltraKiss menu command **File-Open Portal**
+When UltraKiss starts, to directly download and run KiSS sets available on the Internet select the appropriate option from the startup screen or use the UltraKiss menu command **File-Open Portal** from within UltraKiss.
 
 ![UltraKiss Portal](https://github.com/kisekae/UltraKiss/blob/master/KisekaeUltraKiss/src/main/resources/Images/portal.png)
 
@@ -25,7 +25,7 @@ To directly download and run KiSS sets available on the Internet use the UltraKi
 
 *UltraKiss 5.1* provided a new online Issue Reporting system for bug reports or suggestions for improvement.  You can now submit issues directly from within UltraKiss using the menu command **Help-Bug Report**.  
 
-*KisekaeUltraKiss 5.0* and later is a modern GitHub release that provides a websocket server environment to run UltraKiss with HTML 5 capable web browsers.  *KisekaeUltraKissServlet 5.0* and later is a new GitHub release that provides the client environment to run UltraKiss with modern web browsers.   
+*UltraKiss 5.0* and later is a modern GitHub release that provides a websocket server environment to run UltraKiss with HTML 5 capable web browsers.  *KisekaeUltraKissServlet 5.0* and later is a new GitHub release that provides the client environment to run UltraKiss with modern web browsers.   
 
 **$${\color{red}Webswing}$$** service is no longer available due to licensing issues.  Further, the replacement service provided with UltraKiss 5.0 and a Jetty server is more functionally capable than is possible with Webswing.
 
